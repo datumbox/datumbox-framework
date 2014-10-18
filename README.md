@@ -39,6 +39,6 @@ By far the most important part missing from the Framework is the Documentation a
 Useful Links
 ------------
 
-Datumbox: https://www.datumbox.com/
+Datumbox: http://www.datumbox.com/
 
-Machine Learning Blog: https://blog.datumbox.com/
+Machine Learning Blog: http://blog.datumbox.com/
