@@ -1,12 +1,14 @@
 Datumbox Machine Learning Framework
 ===================================
 
-[![Datumbox](http://www.testdatumbox.com/img/logo.png)](http://www.datumbox.com/)
+[![Datumbox](http://www.datumbox.com/img/logo.png)](http://www.datumbox.com/)
 
 The Datumbox Machine Learning Framework is an open-source framework written in Java which allows the rapid development Machine Learning and Statistical applications. The main focus of the framework is to include a large number of machine learning algorithms & statistical tests and being able to handle small-medium sized datasets. 
 
 Author: [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/)
+
 Version: 0.5.0 alpha
+
 Build: 20141018
 
 Technical Details
