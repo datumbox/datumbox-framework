@@ -1,0 +1,57 @@
+NEW ALGORITHMS
+==============
+
+- include an anomaly detection algorithm
+- develop the FunkSVD: Also PLSI as probabilistic version of SVD
+
+
+CODE IMPROVEMENT
+================
+
+- avoid having final static memory configuration that can't be changed during analysis.
+- create the required exceptions
+- create a proper logger for the messages
+- document the code
+
+
+MODEL PERSISTANCE
+=================
+
+- check out prepersist and postpersist instead of reflection: http://stackoverflow.com/questions/8312101/storing-multidimensional-arrays-with-morphia
+- create MySQLDBStructureFactory, MemCacheStructureFactory (http://dustin.sallings.org/java-memcached-client/apidocs/net/spy/memcached/CacheMap.html)
+- create a MapDBStructureFactory: https://github.com/jankotek/MapDB/blob/master/src/test/java/examples/_HelloWorld.java 
+	- Building such factories is not a simple task. The library is heavily binded to Morphia and uses its functions (pre/post savers/loaders) and annotations to store data. Also transient fields are added to avoid in-memory serialization. The whole serialization should be redesigned to enable a custom and modular solution.
+Genetic auto trainer that searches through the space of configuration to provide the best performing algorithmic configuration
+
+
+CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE:
+================================================
+
+Java StoredMap + BerkeleyDB:
+http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
+http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
+
+Redis:
+http://redis.io/
+
+Cassandra Collections:
+https://github.com/otaviojava/Easy-Cassandra/wiki
+
+Vanilla-java - HugeCollections:
+https://code.google.com/p/vanilla-java/wiki/HugeCollections
+
+Fastutil:
+http://fastutil.di.unimi.it/#install
+http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22it.unimi.dsi%22
+
+Joafip:
+http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
+
+Hibernate:
+http://docs.jboss.org/hibernate/orm/3.6/reference/en-US/html/collections.html
+
+MapDB:
+https://github.com/jankotek/MapDB/blob/master/src/test/java/examples/_HelloWorld.java
+
+Lazy loading persistent objects
+https://today.java.net/pub/a/today/2006/07/13/lazy-loading-is-easy.html
