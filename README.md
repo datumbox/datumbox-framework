@@ -39,6 +39,8 @@ By far the most important part missing from the Framework is the Documentation a
 Useful Links
 ------------
 
+Project Description: http://blog.datumbox.com/new-open-source-machine-learning-framework-written-in-java/
+
 Datumbox: http://www.datumbox.com/
 
 Machine Learning Blog: http://blog.datumbox.com/
