@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
-    <version>0.5.0</version>
+    <version>0.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <!-- Versioning for libraries -->
@@ -24,7 +24,7 @@
     </properties>
     <name>Datumbox Machine Learning Framework</name>
     <description>Datumbox is an open-source Machine Learning framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
-    <url>http://www.datumbox.com/</url>
+    <url>https://github.com/datumbox/datumbox-framework/</url>
     <issueManagement>
         <url>https://github.com/datumbox/datumbox-framework/issues/</url>
         <system>GitHub Issues</system>
@@ -142,4 +142,8 @@
             <version>${morphia-version}</version>
         </dependency>
     </dependencies>
+    <organization>
+    	<name>Datumbox</name>
+    	<url>http://www.datumbox.com/</url>
+    </organization>
 </project>
