@@ -3,6 +3,7 @@ NEW ALGORITHMS
 
 - include an anomaly detection algorithm
 - develop the FunkSVD: Also PLSI as probabilistic version of SVD
+- ability to search through the configuration space and find the best performing algorithmic configuration
 
 
 CODE IMPROVEMENT
@@ -21,7 +22,14 @@ MODEL PERSISTANCE
 - create MySQLDBStructureFactory, MemCacheStructureFactory (http://dustin.sallings.org/java-memcached-client/apidocs/net/spy/memcached/CacheMap.html)
 - create a MapDBStructureFactory: https://github.com/jankotek/MapDB/blob/master/src/test/java/examples/_HelloWorld.java 
 	- Building such factories is not a simple task. The library is heavily binded to Morphia and uses its functions (pre/post savers/loaders) and annotations to store data. Also transient fields are added to avoid in-memory serialization. The whole serialization should be redesigned to enable a custom and modular solution.
-Genetic auto trainer that searches through the space of configuration to provide the best performing algorithmic configuration
+
+
+DOCUMENTATION
+=============
+
+- Documenting the code
+- How-to blog post on the installation of the framework
+- How-to blog post on building a Text Classification model
 
 
 CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE:
