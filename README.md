@@ -7,9 +7,9 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 
 Author: [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/)
 
-Version: 0.5.0 alpha
+Version: 0.5.1 alpha
 
-Build: 20141018
+Build: 20141102
 
 Technical Details
 -----------------
