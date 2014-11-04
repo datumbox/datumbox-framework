@@ -22,7 +22,7 @@ package com.datumbox.configuration;
  */
 public class GeneralConfiguration {
     public static final String VERSION = "0.5.1";
-    public static final Integer BUILD = 20141102; //YYYYMMDD format
+    public static final Integer BUILD = 20141105; //YYYYMMDD format
     
     public static final boolean DEBUG = true; //if true it prints debug/info messages on console
 }
