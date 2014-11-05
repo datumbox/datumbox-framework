@@ -8,4 +8,4 @@
 .classpath
 .project
 nbactions.xml
-build.sh
+build-datumbox-framework.sh
