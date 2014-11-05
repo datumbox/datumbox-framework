@@ -8,3 +8,4 @@
 .classpath
 .project
 nbactions.xml
+build.sh
