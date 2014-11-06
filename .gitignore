@@ -9,3 +9,6 @@
 .project
 nbactions.xml
 build-datumbox-framework.sh
+
+.idea/*
+*.iml

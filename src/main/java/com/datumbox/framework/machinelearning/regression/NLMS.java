@@ -54,6 +54,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         private int totalIterations=1000; 
         private double learningRate=0.1;
 
+        //TODO add more ways to adjust learningRate
+
         public int getTotalIterations() {
             return totalIterations;
         }

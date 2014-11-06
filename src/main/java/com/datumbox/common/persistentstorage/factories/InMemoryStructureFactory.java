@@ -28,20 +28,13 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
+ * Inmemory storage and its supported data structures
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
@@ -53,7 +46,7 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
 
         private final boolean inMemory;
         private final boolean concurrent;
-        
+
         private MapType(boolean inMemory, boolean concurrent) {
             this.inMemory = inMemory;
             this.concurrent = concurrent;
@@ -68,7 +61,7 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
         public boolean isConcurrent() {
             return concurrent;
         }
-        
+
     }
     
     public enum CollectionType implements BigDataStructureFactory.CollectionType {
@@ -226,8 +219,8 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
     
     @Override
     public <K,V,T extends BigDataStructureFactory.MapType> Map<K,V> getMap(String collectionName, T mapType, int LRUsize) {
-        Map<K,V> map;    
-        
+        Map<K,V> map;
+
         if(mapType == MapType.CONCURRENT_HASH_MAP) {
             map = getConcurrentHashMap();
         }
@@ -237,8 +230,8 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
         else {
             //map = getHashMap();
             throw new IllegalArgumentException("Unsupported map");
-        }    
-        
+        }
+
         return map;
     }
     
@@ -278,7 +271,8 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
     }
        
     private <E> Collection<E> getLinkedListCollection() {
-        return new LinkedList<>();
+//        return new LinkedList<>();
+        return new ArrayDeque<>();
     }
        
     private <E> Collection<E> getSynchronizedArrayListCollection() {
@@ -336,7 +330,8 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
     }
     
     private <E> Queue<E> getLinkedListQueue() {
-        return new LinkedList<>();
+//        return new LinkedList<>();
+        return new ArrayDeque<>();
     }
 
     @Override
