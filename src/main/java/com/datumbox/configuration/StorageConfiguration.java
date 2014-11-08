@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Configuration of InMemory storage or MongoDB storage
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */

@@ -21,6 +21,7 @@ import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * configuration of what data structures are used for one particular storage(InMemory or MongoDB)
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
@@ -31,19 +32,18 @@ public class MemoryConfiguration implements Cloneable {
     private BigDataStructureFactory.SetType setType;
     private BigDataStructureFactory.QueueType queueType;
 
+    // only used for MongoDB
     private int LRUsize;
-            
-    
+
     
     public MemoryConfiguration() {
-        
         
         if(StorageConfiguration.IN_MEMORY_TRAINING) {
             mapType = InMemoryStructureFactory.getDefaultMapType();
             collectionType = InMemoryStructureFactory.getDefaultCollectionType();
             setType = InMemoryStructureFactory.getDefaultSetType();
             queueType = InMemoryStructureFactory.getDefaultQueueType();
-            LRUsize = InMemoryStructureFactory.getDefaultLRUsize();
+//            LRUsize = InMemoryStructureFactory.getDefaultLRUsize();
         }
         else {
             try {
@@ -60,10 +60,6 @@ public class MemoryConfiguration implements Cloneable {
                 throw new RuntimeException(ex);
             } 
         }
-        
-
-        
-        
     }
 
     
