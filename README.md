@@ -11,10 +11,26 @@ Version: 0.5.1 alpha
 
 Build: 20141105
 
+Installation
+------------
+
+Datumbox Framework is available on Maven Central Repository. 
+
+Maven:
+```
+    <dependency>
+        <groupId>com.datumbox</groupId>
+        <artifactId>datumbox-framework</artifactId>
+        <version>0.5.1</version>
+    </dependency>
+```
+
+Note: A couple nof classes that focus on Linear Programming require installing an external C library called [lpsolve](http://sourceforge.net/projects/lpsolve/). Installing this binary library is optional; please check the [Detailed Installation Guide](http://blog.datumbox.com/how-to-install-and-use-the-datumbox-machine-learning-framework/) for more info.
+
 Technical Details
 -----------------
 
-The core part of the project is about 30000 lines of code, uses Java 8 features, requires only a limited number of non-java libraries (lp_solve and LIBSVM) for a couple of algorithms and uses Maven Project Structure. The code is licensed under the GNU General Public License v3.0 so feel free to clone the repository and experiment with it. If you find a bug or decide to document particular parts of the code, please consider contributing your changes by sending a pull request.
+The core part of the project is about 30000 lines of code, uses Java 8 features and uses Maven Project Structure. The code is licensed under the GNU General Public License v3.0 so feel free to clone the repository and experiment with it. If you find a bug or decide to document particular parts of the code, please consider contributing your changes by sending a pull request.
 
 What methods/algorithms are supported?
 --------------------------------------
