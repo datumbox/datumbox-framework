@@ -25,7 +25,7 @@ Maven:
     </dependency>
 ```
 
-Note: A couple nof classes that focus on Linear Programming require installing an external C library called [lpsolve](http://sourceforge.net/projects/lpsolve/). Installing this binary library is optional; please check the [Detailed Installation Guide](http://blog.datumbox.com/how-to-install-and-use-the-datumbox-machine-learning-framework/) for more info.
+Note: A couple of classes which use Linear Programming require installing an external C library called [lpsolve](http://sourceforge.net/projects/lpsolve/). Most users won't use these classes and thus installing the binary library can be considered optional; please check the [Detailed Installation Guide](http://blog.datumbox.com/how-to-install-and-use-the-datumbox-machine-learning-framework/) for more info.
 
 Technical Details
 -----------------
