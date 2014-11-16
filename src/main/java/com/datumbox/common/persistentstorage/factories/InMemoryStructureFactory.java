@@ -103,15 +103,6 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
     }
     
     @Override
-    public void clearDatabase() {
-        if(!existsDatabase()) {
-            return;
-        }
-        //we can't do anything better than delete the file
-        dropDatabase();
-    }
-    
-    @Override
     public <T extends Map> void dropMap(String collectionName, T map) {
         map.clear();
     }
@@ -119,11 +110,6 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
     @Override
     public <K,V> Map<K,V> getMap(String collectionName) {
         return new HashMap<>();
-    }    
-
-    @Override
-    public void cleanUp() {
-        //no necessary clean up actions
-    }
+    }   
 
 }

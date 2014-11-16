@@ -140,7 +140,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         }
         
         bdsf.save(this);
-        bdsf.cleanUp();
     }
 
     @Override
@@ -180,13 +179,8 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     }
     
     @Override
-    public void erase(boolean complete) {
-        if(complete) {
-            bdsf.dropDatabase();
-        }
-        else {
-            bdsf.clearDatabase();
-        }
+    public void erase() {
+    	bdsf.dropDatabase();
         
         modelParameters = null;
         trainingParameters = null;
@@ -195,7 +189,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     
     @Override
     public void reinitialize() {
-        erase(false);
+        erase();
 
         try {
             modelParameters = mpClass.getConstructor().newInstance();

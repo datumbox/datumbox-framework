@@ -69,8 +69,8 @@ public abstract class BaseTrainable<MP extends BigDataStructureContainer, TP ext
     }
     
     @Override
-    public void erase(boolean complete) {
-        knowledgeBase.erase(complete);
+    public void erase() {
+        knowledgeBase.erase();
     }
     
     @Override

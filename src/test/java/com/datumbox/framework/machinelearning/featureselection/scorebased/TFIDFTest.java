@@ -90,7 +90,7 @@ public class TFIDFTest {
         Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
         Set<Object> result = trainingData.getColumns().keySet();
         assertEquals(expResult, result);
-        instance.erase(true);
+        instance.erase();
     }
     
 }

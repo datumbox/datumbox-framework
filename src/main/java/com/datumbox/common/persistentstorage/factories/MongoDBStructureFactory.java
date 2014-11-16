@@ -59,8 +59,6 @@ import org.mongodb.morphia.logging.MorphiaLoggerFactory;
  */
 public class MongoDBStructureFactory implements BigDataStructureFactory {
     //In Memory MongoDB: http://edgystuff.tumblr.com/post/49304254688/how-to-use-mongodb-as-a-pure-in-memory-db-redis-style
-    
-    private static final String SYSTEM_COLLECTION_PREFIX = "system.";
      
     static {
         if(!GeneralConfiguration.DEBUG) {
@@ -145,19 +143,6 @@ public class MongoDBStructureFactory implements BigDataStructureFactory {
     }
     
     @Override
-    public void clearDatabase() {
-        if(!existsDatabase()) {
-            return;
-        }
-        //remove all collections
-        for(String collectionName : db.getCollectionNames()) {
-            if(!collectionName.startsWith(SYSTEM_COLLECTION_PREFIX)) {
-                db.getCollection(collectionName).drop();
-            }
-        }
-    }
-    
-    @Override
     public <T extends Map> void dropMap(String collectionName, T map) {
         db.getCollection(collectionName).drop();
         map.clear();
@@ -209,33 +194,12 @@ public class MongoDBStructureFactory implements BigDataStructureFactory {
                 
         return mongoMap;
     }
-
-    @Override
-    public void cleanUp() {
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
-        //remove all collections starting with TMP_ if we forgot to do it already
-        int remainingCollections = 0;
-        for(String collectionName : db.getCollectionNames()) {
-            if(collectionName.startsWith(tmpPrefix)) {
-                db.getCollection(collectionName).drop();
-            }
-            else if(!collectionName.startsWith(SYSTEM_COLLECTION_PREFIX)) {
-                ++remainingCollections;
-            }
-        }
-        
-        if(remainingCollections==0) { //if the db is empty drop it
-            dropDatabase();
-        }
-    }
-
-
     
     
     
     
     
-    public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+    private static List<Field> getAllFields(List<Field> fields, Class<?> type) {
         fields.addAll(Arrays.asList(type.getDeclaredFields()));
 
         if (type.getSuperclass() != null) {

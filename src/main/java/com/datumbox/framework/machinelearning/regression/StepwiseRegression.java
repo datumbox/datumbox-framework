@@ -138,7 +138,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
         
         BaseMLregressor.ValidationMetrics vm =(BaseMLregressor.ValidationMetrics) mlregressor.kFoldCrossValidation(trainingData,k);
-        mlregressor.erase(true);
+        mlregressor.erase();
         
         return vm;
         */
@@ -233,11 +233,11 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     }
     
     @Override
-    public void erase(boolean complete) {
+    public void erase() {
         loadRegressor();
-        mlregressor.erase(complete);
+        mlregressor.erase();
         
-        super.erase(complete);
+        super.erase();
     }
     
     private void loadRegressor() {
@@ -265,7 +265,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
 
         //get pvalues
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
-        mlregressor.erase(false);
+        mlregressor.erase();
         
         return pvalues;
     }

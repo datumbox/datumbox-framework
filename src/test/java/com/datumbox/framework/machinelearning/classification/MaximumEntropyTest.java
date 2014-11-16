@@ -96,7 +96,7 @@ public class MaximumEntropyTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -176,7 +176,7 @@ public class MaximumEntropyTest {
         double expResult = 0.6051098901098901;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase(true);
+        instance.erase();
     }
 
     

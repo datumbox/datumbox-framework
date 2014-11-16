@@ -173,7 +173,7 @@ public class ModelerTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
     
 }

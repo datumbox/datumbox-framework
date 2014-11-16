@@ -93,7 +93,7 @@ public class BayesianEnsembleMethodTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -103,7 +103,7 @@ public class BayesianEnsembleMethodTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
 }

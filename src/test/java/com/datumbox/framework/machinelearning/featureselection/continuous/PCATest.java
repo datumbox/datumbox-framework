@@ -91,7 +91,7 @@ public class PCATest {
             }
         }
         
-        instance.erase(true);
+        instance.erase();
     }
     
 }

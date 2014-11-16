@@ -183,7 +183,7 @@ public class CollaborativeFilteringTest {
         }
         
         
-        instance.erase(true);
+        instance.erase();
     }
 
     

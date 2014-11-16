@@ -32,7 +32,7 @@ public interface BigDataStructureContainerHolder extends Serializable {
     public void save();
     public void load();
     public void reinitialize();
-    public void erase(boolean completed);
+    public void erase();
     
     /**
      * The configuration takes place when the initializeTrainingConfiguration()

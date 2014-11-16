@@ -102,7 +102,7 @@ public class MultinomialDPMMTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
     
@@ -140,7 +140,7 @@ public class MultinomialDPMMTest {
         double expResult = 1.0;
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
-        instance.erase(true);
+        instance.erase();
     }
 
     

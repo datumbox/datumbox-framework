@@ -131,10 +131,9 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             //perform complete erase ONLY if it is the last fold. 
             //There is unnecessary code here which is written for clarification purposes.
             boolean isLast=(fold==k-1);
-            boolean complete=(isLast)?true:false; 
             
             //delete algorithm
-            mlmodel.erase(complete);
+            mlmodel.erase();
             mlmodel = null;
             
             //add the validationMetrics in the list

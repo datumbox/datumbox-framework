@@ -725,7 +725,7 @@ public class SoftMaxRegressionTest {
         	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
 
 
         Map<Integer, Object> expResult = new HashMap<>();
@@ -736,7 +736,7 @@ public class SoftMaxRegressionTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -822,14 +822,14 @@ public class SoftMaxRegressionTest {
 
         	        
         df.denormalize(trainingData);
-        df.erase(true);
+        df.erase();
 
 
         
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase(true);
+        instance.erase();
     }
 
     

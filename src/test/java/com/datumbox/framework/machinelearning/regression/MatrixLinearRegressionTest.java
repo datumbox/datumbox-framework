@@ -111,14 +111,14 @@ public class MatrixLinearRegressionTest {
 	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
 
 
         for(Record r : validationData) {
             assertEquals(Dataset.toDouble(r.getY()), Dataset.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -183,12 +183,12 @@ public class MatrixLinearRegressionTest {
         MatrixLinearRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         df.denormalize(trainingData);
-        df.erase(true);
+        df.erase();
 
         double expResult = 1;
         double result = vm.getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
-        instance.erase(true);
+        instance.erase();
     }
 
 

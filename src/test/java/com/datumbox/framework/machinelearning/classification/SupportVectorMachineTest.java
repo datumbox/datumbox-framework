@@ -116,7 +116,7 @@ public class SupportVectorMachineTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
 
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -127,7 +127,7 @@ public class SupportVectorMachineTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -208,7 +208,7 @@ public class SupportVectorMachineTest {
         double result = vm.getMacroF1();
         assertTrue(result>expResult); //The SVM implementation uses Math.Rand() internally, thus the accuraccy depends on the seed and can only roughly validated
         //assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase(true);
+        instance.erase();
     }
 
 

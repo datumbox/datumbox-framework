@@ -50,10 +50,6 @@ public interface BigDataStructureFactory {
     public boolean existsDatabase();
     
     public void dropDatabase();
-    
-    public void clearDatabase();
-    
-    public void cleanUp();
         
     public <T extends Map> void dropMap(String collectionName, T map);
     

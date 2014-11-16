@@ -52,13 +52,10 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
     
     /**
      * Deletes the particular algorithm and all the associated parameters. 
-     * The boolean determines whether the erase will drop the database completely 
-     * or the tables. In some db systems dropping the database is very slow and 
-     * thus dropping the tables instead is advised.
      * 
      * @param complete
      */
-    public void erase(boolean complete);
+    public void erase();
     
     /**
      * Returns the model parameters that were estimated after training.

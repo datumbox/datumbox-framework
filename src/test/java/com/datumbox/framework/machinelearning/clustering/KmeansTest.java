@@ -271,7 +271,7 @@ public class KmeansTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -288,7 +288,7 @@ public class KmeansTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
     
@@ -330,13 +330,13 @@ public class KmeansTest {
         Kmeans.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
 
         df.denormalize(trainingData);
-        df.erase(true);
+        df.erase();
 
         
         double expResult = 0.7888888888888889;
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
-        instance.erase(true);
+        instance.erase();
     }
 
     

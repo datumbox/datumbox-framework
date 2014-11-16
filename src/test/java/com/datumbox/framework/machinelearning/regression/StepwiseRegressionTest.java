@@ -118,14 +118,14 @@ public class StepwiseRegressionTest {
 	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
         
         double std = Descriptives.std(trainingData.extractYValues().toFlatDataCollection(), true);
         for(Record r : validationData) {
             assertEquals(Dataset.toDouble(r.getY()), Dataset.toDouble(r.getYPredicted()), std);
         }
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -215,7 +215,7 @@ public class StepwiseRegressionTest {
         double expResult = 1.0;
         double result = ((MatrixLinearRegression.ValidationMetrics)vm).getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
-        instance.erase(true);
+        instance.erase();
     }
     */
 }

@@ -112,7 +112,7 @@ public class MultinomialNaiveBayesTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
 
 
         
@@ -124,7 +124,7 @@ public class MultinomialNaiveBayesTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -205,7 +205,7 @@ public class MultinomialNaiveBayesTest {
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase(true);
+        instance.erase();
     }
     
 }

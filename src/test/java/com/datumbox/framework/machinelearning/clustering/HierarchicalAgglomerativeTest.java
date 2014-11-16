@@ -79,7 +79,7 @@ public class HierarchicalAgglomerativeTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -96,7 +96,7 @@ public class HierarchicalAgglomerativeTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
     
@@ -135,13 +135,13 @@ public class HierarchicalAgglomerativeTest {
         HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
 
         df.denormalize(trainingData);
-        df.erase(true);
+        df.erase();
 
         
         double expResult = 0.76111111111111;
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
-        instance.erase(true);
+        instance.erase();
     }
 
 }

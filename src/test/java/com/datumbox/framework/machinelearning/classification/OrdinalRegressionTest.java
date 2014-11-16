@@ -686,7 +686,7 @@ public class OrdinalRegressionTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
 
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -696,7 +696,7 @@ public class OrdinalRegressionTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -730,14 +730,14 @@ public class OrdinalRegressionTest {
 
         	        
         df.denormalize(trainingData);
-        df.erase(true);
+        df.erase();
 
 
         
         double expResult = 0.9823403146614675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase(true);
+        instance.erase();
     }
 
 }

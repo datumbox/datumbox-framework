@@ -137,7 +137,7 @@ public class TextClassifierTest {
         List<Object> expResult = Arrays.asList("subjective","objective");
         assertEquals(expResult, result);
         
-        instance.erase(true);
+        instance.erase();
 		*/
     }
 

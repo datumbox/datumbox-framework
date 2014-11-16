@@ -174,17 +174,17 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
       
     
     @Override
-    public void erase(boolean complete) {
+    public void erase() {
         if(dataTransformer!=null) {
-            dataTransformer.erase(complete);
+            dataTransformer.erase();
         }
         if(featureSelection!=null) {
-            featureSelection.erase(complete);
+            featureSelection.erase();
         }
         if(mlmodel!=null) {
-            mlmodel.erase(complete);
+            mlmodel.erase();
         }
-        knowledgeBase.erase(complete);
+        knowledgeBase.erase();
     }
 
     @Override

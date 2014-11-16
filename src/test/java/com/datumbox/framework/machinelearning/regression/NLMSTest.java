@@ -109,14 +109,14 @@ public class NLMSTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase(true);
+        df.erase();
 
 
         for(Record r : validationData) {
             assertEquals(Dataset.toDouble(r.getY()), Dataset.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
-        instance.erase(true);
+        instance.erase();
     }
 
 
@@ -189,7 +189,7 @@ public class NLMSTest {
         featureSelection = new PCA(dbName);
         */
         featureSelection.clearFeatures(trainingData);
-        featureSelection.erase(true);
+        featureSelection.erase();
         
         
         NLMS instance = new NLMS(dbName);
@@ -200,13 +200,13 @@ public class NLMSTest {
         NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
 
         df.denormalize(trainingData);
-        df.erase(true);
+        df.erase();
 
         
         double expResult = 1.0;
         double result = vm.getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
-        instance.erase(true);
+        instance.erase();
     }
 
     

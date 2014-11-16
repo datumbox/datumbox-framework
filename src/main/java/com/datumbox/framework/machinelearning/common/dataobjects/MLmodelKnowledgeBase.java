@@ -98,8 +98,8 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
     }
     
     @Override
-    public void erase(boolean complete) {
-        super.erase(complete);
+    public void erase() {
+        super.erase();
         
         validationMetrics = null;
     }

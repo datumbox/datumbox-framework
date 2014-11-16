@@ -245,12 +245,12 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     protected abstract boolean updateObservationAndClassifierWeights(Dataset validationDataset, Map<Object, Object> observationWeights);
     
     @Override
-    public void erase(boolean complete) {
-        eraseWeakClassifiers(complete);
-        super.erase(complete);
+    public void erase() {
+        eraseWeakClassifiers();
+        super.erase();
     }
     
-    protected void eraseWeakClassifiers(boolean complete) {
+    protected void eraseWeakClassifiers() {
         if(knowledgeBase.isConfigured()) {
             ModelParameters modelParameters = knowledgeBase.getModelParameters();
             TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -260,8 +260,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
             for(int t=0;t<totalWeakClassifiers;++t) {
                 BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR+String.valueOf(t));
-                //We can't use erase(false) here because it leaves undeleted databases of the Kcross validation
-                mlclassifier.erase(complete);
+                mlclassifier.erase();
             }
         }
     }

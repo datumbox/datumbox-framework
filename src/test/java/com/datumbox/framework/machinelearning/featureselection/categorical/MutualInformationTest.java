@@ -63,7 +63,7 @@ public class MutualInformationTest {
         Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));
         Set<Object> result = trainingData.getColumns().keySet();
         assertEquals(expResult, result);
-        instance.erase(true);
+        instance.erase();
     }
 
 }
