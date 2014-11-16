@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -83,7 +82,7 @@ public class ChisquareSelectTest {
         
         String dbName = "JUnitChisquareFeatureSelection";
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         ChisquareSelect.TrainingParameters param = new ChisquareSelect.TrainingParameters();
         param.setRareFeatureThreshold(2);
@@ -93,14 +92,14 @@ public class ChisquareSelectTest {
         
         Dataset trainingData = generateDataset(1000);
         ChisquareSelect instance = new ChisquareSelect(dbName);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         
         instance.evaluateFeatures(trainingData);
         instance = null;
         
         
         instance = new ChisquareSelect(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.clearFeatures(trainingData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));

@@ -24,7 +24,6 @@ import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLrecommender;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.parametrics.relatedsamples.PearsonCorrelation;
@@ -67,13 +66,10 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            similarities = bdsf.getMap("similarities", mapType, LRUsize);
+            similarities = bdsf.getMap("similarities");
         }
         
         

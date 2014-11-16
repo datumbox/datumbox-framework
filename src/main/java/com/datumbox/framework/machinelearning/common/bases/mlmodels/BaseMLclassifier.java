@@ -55,7 +55,7 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         
         /*
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
             super.bigDataStructureInitializer(bdsf, memoryConfiguration);
         }
         */

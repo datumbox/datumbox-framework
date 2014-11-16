@@ -20,7 +20,6 @@ import com.datumbox.framework.machinelearning.classification.BernoulliNaiveBayes
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,20 +71,20 @@ public class BernoulliNaiveBayesTest {
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClassifier";
         BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName);
         
         BernoulliNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new BernoulliNaiveBayes(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         
         instance.predict(validationData);
         
@@ -163,7 +162,7 @@ public class BernoulliNaiveBayesTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         
@@ -171,7 +170,7 @@ public class BernoulliNaiveBayesTest {
         BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName);
         
         BernoulliNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         BernoulliNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         double expResult = 0.6631318681318682;

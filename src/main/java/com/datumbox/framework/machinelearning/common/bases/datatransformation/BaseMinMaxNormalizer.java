@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,15 +50,12 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         protected Map<Object, Object> referenceLevels;
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            minColumnValues = bdsf.getMap("minColumnValues", mapType, LRUsize);
-            maxColumnValues = bdsf.getMap("maxColumnValues", mapType, LRUsize);
-            referenceLevels = bdsf.getMap("referenceLevels", mapType, LRUsize);
+            minColumnValues = bdsf.getMap("minColumnValues");
+            maxColumnValues = bdsf.getMap("maxColumnValues");
+            referenceLevels = bdsf.getMap("referenceLevels");
         }
 
         public Map<Object, Double> getMinColumnValues() {

@@ -25,7 +25,6 @@ import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
 import com.datumbox.framework.machinelearning.common.validation.LatentDirichletAllocationValidation;
@@ -134,17 +133,14 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            topicAssignmentOfDocumentWord = bdsf.getMap("topicAssignmentOfDocumentWord", mapType, LRUsize);
-            documentTopicCounts = bdsf.getMap("documentTopicCounts", mapType, LRUsize);
-            topicWordCounts = bdsf.getMap("topicWordCounts", mapType, LRUsize);
-            documentWordCounts = bdsf.getMap("documentWordCounts", mapType, LRUsize);
-            topicCounts = bdsf.getMap("topicCounts", mapType, LRUsize);
+            topicAssignmentOfDocumentWord = bdsf.getMap("topicAssignmentOfDocumentWord");
+            documentTopicCounts = bdsf.getMap("documentTopicCounts");
+            topicWordCounts = bdsf.getMap("topicWordCounts");
+            documentWordCounts = bdsf.getMap("documentWordCounts");
+            topicCounts = bdsf.getMap("topicCounts");
         }
 
         public int getTotalIterations() {
@@ -524,15 +520,13 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        BigDataStructureFactory.MapType mapType = knowledgeBase.getMemoryConfiguration().getMapType();
-        int LRUsize = knowledgeBase.getMemoryConfiguration().getLRUsize();
         BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = bdsf.getMap(tmpPrefix+"topicAssignmentOfDocumentWord", mapType, LRUsize);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = bdsf.getMap(tmpPrefix+"documentTopicCounts", mapType, LRUsize);
-        Map<List<Object>, Integer> tmp_topicWordCounts = bdsf.getMap(tmpPrefix+"topicWordCounts", mapType, LRUsize);
-        Map<Integer, Integer> tmp_topicCounts = bdsf.getMap(tmpPrefix+"topicCounts", mapType, LRUsize);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = bdsf.getMap(tmpPrefix+"topicAssignmentOfDocumentWord");
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = bdsf.getMap(tmpPrefix+"documentTopicCounts");
+        Map<List<Object>, Integer> tmp_topicWordCounts = bdsf.getMap(tmpPrefix+"topicWordCounts");
+        Map<Integer, Integer> tmp_topicCounts = bdsf.getMap(tmpPrefix+"topicCounts");
         
         //initialize topic assignments of each word randomly and update the counters
         for(Record r : newData) {
@@ -672,10 +666,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         //Drop the temporary Collection
-        bdsf.dropTable(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        bdsf.dropTable(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
-        bdsf.dropTable(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
-        bdsf.dropTable(tmpPrefix+"topicCounts", tmp_topicCounts);
+        bdsf.dropMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        bdsf.dropMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
+        bdsf.dropMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
+        bdsf.dropMap(tmpPrefix+"topicCounts", tmp_topicCounts);
         
         
         validationMetrics.setPerplexity(perplexity);

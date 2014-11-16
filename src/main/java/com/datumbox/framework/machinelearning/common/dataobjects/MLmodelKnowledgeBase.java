@@ -79,8 +79,6 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
             trainingParameters = (TP) kbObject.trainingParameters;
             validationMetrics = (VM) kbObject.validationMetrics;
             
-            bdsf.postLoad(modelParameters, memoryConfiguration);
-            
             setTrained(true);
         }
     }

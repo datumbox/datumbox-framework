@@ -306,11 +306,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
 
-        BigDataStructureFactory.MapType mapType = knowledgeBase.getMemoryConfiguration().getMapType();
-        int LRUsize = knowledgeBase.getMemoryConfiguration().getLRUsize();
-
-        Map<List<Object>, Double> distanceArray = bdsf.getMap(tmpPrefix+"distanceArray", mapType, LRUsize); //it holds the distances between clusters
-        Map<Integer, Integer> minClusterDistanceId = bdsf.getMap(tmpPrefix+"minClusterDistanceId", mapType, LRUsize); //it holds the ids of the min distances
+        Map<List<Object>, Double> distanceArray = bdsf.getMap(tmpPrefix+"distanceArray"); //it holds the distances between clusters
+        Map<Integer, Integer> minClusterDistanceId = bdsf.getMap(tmpPrefix+"minClusterDistanceId"); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -382,8 +379,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
         
         //Drop the temporary Collection
-        bdsf.dropTable(tmpPrefix+"distanceArray", distanceArray);
-        bdsf.dropTable(tmpPrefix+"minClusterDistanceId", minClusterDistanceId);
+        bdsf.dropMap(tmpPrefix+"distanceArray", distanceArray);
+        bdsf.dropMap(tmpPrefix+"minClusterDistanceId", minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.framework.machinelearning.common.validation.LinearRegressionValidation;
@@ -52,13 +51,10 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            thitas = bdsf.getMap("thitas", mapType, LRUsize);
+            thitas = bdsf.getMap("thitas");
         }
         
         public Map<Object, Double> getThitas() {

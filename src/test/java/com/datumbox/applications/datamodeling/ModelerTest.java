@@ -19,7 +19,6 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
@@ -106,7 +105,7 @@ public class ModelerTest {
         
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnit";
         
@@ -144,7 +143,7 @@ public class ModelerTest {
         trainingParameters.setFeatureSelectionClass(null);
         trainingParameters.setFeatureSelectionTrainingParameters(null);
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, trainingParameters);
+        instance.initializeTrainingConfiguration(trainingParameters);
         instance.train(trainingData);
         
         
@@ -161,7 +160,7 @@ public class ModelerTest {
         
         
         instance = new Modeler(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(newData);
         
         

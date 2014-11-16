@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
 import java.util.Map;
@@ -151,20 +150,20 @@ public class CollaborativeFilteringTest {
         newData.add(profileData);
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitRecommender";
         CollaborativeFiltering instance = new CollaborativeFiltering(dbName);
         
         CollaborativeFiltering.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData);
         
         
         instance = null;
         instance = new CollaborativeFiltering(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(newData);
         
         Map<Object, Double> expResult = new HashMap<>();

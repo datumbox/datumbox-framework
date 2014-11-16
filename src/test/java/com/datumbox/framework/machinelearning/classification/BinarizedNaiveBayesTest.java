@@ -20,7 +20,6 @@ import com.datumbox.framework.machinelearning.classification.BinarizedNaiveBayes
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,20 +70,20 @@ public class BinarizedNaiveBayesTest {
         Dataset validationData = new Dataset();
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClassifier";
         BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName);
         
         BinarizedNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new BinarizedNaiveBayes(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -161,7 +160,7 @@ public class BinarizedNaiveBayesTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         
@@ -169,7 +168,7 @@ public class BinarizedNaiveBayesTest {
         BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName);
         
         BinarizedNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         BinarizedNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         double expResult = 0.6631318681318682;

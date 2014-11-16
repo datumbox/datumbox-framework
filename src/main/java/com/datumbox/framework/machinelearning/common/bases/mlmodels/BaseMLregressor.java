@@ -35,7 +35,7 @@ public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters
         private Integer d =0 ;
         /*
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
             super.bigDataStructureInitializer(bdsf, memoryConfiguration);
         }
         */

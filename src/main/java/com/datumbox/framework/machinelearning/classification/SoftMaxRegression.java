@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.configuration.GeneralConfiguration;
@@ -58,13 +57,10 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf); 
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            thitas = bdsf.getMap("thitas", mapType, LRUsize);
+            thitas = bdsf.getMap("thitas");
         }
         
         public Map<List<Object>, Double> getThitas() {
@@ -204,7 +200,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas", knowledgeBase.getMemoryConfiguration().getMapType(), knowledgeBase.getMemoryConfiguration().getLRUsize());
+            Map<List<Object>, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             batchGradientDescent(trainingData, newThitas, learningRate);
@@ -225,7 +221,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             }
             
             //Drop the temporary Collection
-            bdsf.dropTable(tmpPrefix+"newThitas", newThitas);
+            bdsf.dropMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

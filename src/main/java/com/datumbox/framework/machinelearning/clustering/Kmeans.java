@@ -24,7 +24,6 @@ import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
 import com.datumbox.framework.mathematics.distances.Distance;
@@ -125,13 +124,10 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            featureWeights = bdsf.getMap("featureWeights", mapType, LRUsize);
+            featureWeights = bdsf.getMap("featureWeights");
         }
         
         
@@ -364,12 +360,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
             
-            BigDataStructureFactory.MapType mapType = knowledgeBase.getMemoryConfiguration().getMapType();
-            int LRUsize = knowledgeBase.getMemoryConfiguration().getLRUsize();
-            
-            Map<Object, Double> categoricalFrequencies = bdsf.getMap(tmpPrefix+"categoricalFrequencies", mapType, LRUsize);
-            Map<Object, Double> varianceSumX = bdsf.getMap(tmpPrefix+"varianceSumX", mapType, LRUsize);
-            Map<Object, Double> varianceSumXsquare = bdsf.getMap(tmpPrefix+"varianceSumXsquare", mapType, LRUsize);
+            Map<Object, Double> categoricalFrequencies = bdsf.getMap(tmpPrefix+"categoricalFrequencies");
+            Map<Object, Double> varianceSumX = bdsf.getMap(tmpPrefix+"varianceSumX");
+            Map<Object, Double> varianceSumXsquare = bdsf.getMap(tmpPrefix+"varianceSumXsquare");
         
             //calculate variance and frequencies
             for(Record r : trainingData) {
@@ -433,9 +426,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //Drop the temporary Collection
-            bdsf.dropTable(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
-            bdsf.dropTable(tmpPrefix+"varianceSumX", categoricalFrequencies);
-            bdsf.dropTable(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
+            bdsf.dropMap(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
+            bdsf.dropMap(tmpPrefix+"varianceSumX", categoricalFrequencies);
+            bdsf.dropMap(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
         }
     }
     

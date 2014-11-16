@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.utilities.DeepCopy;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import java.util.Arrays;
@@ -208,14 +207,11 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            //BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            //int LRUsize = memoryConfiguration.getLRUsize();
-            
-            //clusterList = bdsf.getMap("clusterList", mapType, LRUsize);
-            
+            //clusterList = bdsf.getMap("clusterList");
+
             if(clusterList==null) {
                 clusterList = new HashMap<>();
             }

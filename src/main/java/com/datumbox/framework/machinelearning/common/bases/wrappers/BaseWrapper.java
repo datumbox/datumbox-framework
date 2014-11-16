@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.common.bases.wrappers;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -52,12 +51,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
     public static abstract class ModelParameters implements BigDataStructureContainer {
 
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            
-        }
-        
-        @Override
-        public void bigDataStructureCleaner(BigDataStructureFactory bdsf) {
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
             
         }
         

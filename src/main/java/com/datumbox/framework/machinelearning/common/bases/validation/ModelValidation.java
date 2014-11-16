@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         super();
     }
     
-    public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, Class<? extends BaseMLmodel> aClass, TP trainingParameters, MemoryConfiguration memoryConfiguration) {
+    public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds");
@@ -107,7 +106,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             mlmodel.setTemporary(true);
             
             //set training configuration
-            mlmodel.initializeTrainingConfiguration(memoryConfiguration, trainingParameters);
+            mlmodel.initializeTrainingConfiguration(trainingParameters);
                         
             //shallow copy for the trainingData and the validaitonData. 
             Dataset trainingData = dataset.generateNewSubset(foldTrainingIds);

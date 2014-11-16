@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.common.bases;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.common.dataobjects.TrainableKnowledgeBase;
 
 /**
@@ -63,16 +62,10 @@ public abstract class BaseTrainable<MP extends BigDataStructureContainer, TP ext
     }
     
     @Override
-    public void initializeTrainingConfiguration(MemoryConfiguration memoryConfiguration, TP trainingParameters) {
+    public void initializeTrainingConfiguration(TP trainingParameters) {
         //reset knowledge base
-        knowledgeBase.setMemoryConfiguration(memoryConfiguration);
         knowledgeBase.reinitialize();
         knowledgeBase.setTrainingParameters(trainingParameters);
-    }
-    
-    @Override
-    public void setMemoryConfiguration(MemoryConfiguration memoryConfiguration) {
-        knowledgeBase.setMemoryConfiguration(memoryConfiguration);
     }
     
     @Override

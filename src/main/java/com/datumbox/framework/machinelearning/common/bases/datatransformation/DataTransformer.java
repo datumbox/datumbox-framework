@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
@@ -39,12 +38,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public static abstract class ModelParameters implements BigDataStructureContainer {
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            
-        }
-        
-        @Override
-        public void bigDataStructureCleaner(BigDataStructureFactory bdsf) {
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
             
         }
             
@@ -143,7 +137,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
                 if(GeneralConfiguration.DEBUG) {
                     System.out.println("Saving feature model");
                 }
-                knowledgeBase.save(true);
+                knowledgeBase.save();
             }
             knowledgeBase.setTrained(true);
             

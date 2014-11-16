@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
 import java.util.Iterator;
@@ -71,13 +70,10 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            maxTFIDFfeatureScores = bdsf.getMap("maxTFIDFfeatureScores", mapType, LRUsize);
+            maxTFIDFfeatureScores = bdsf.getMap("maxTFIDFfeatureScores");
         }
         
         public int getN() {
@@ -121,7 +117,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         modelParameters.setN(n);
         
         BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
-        Map<Object, Double> idfMap = bdsf.getMap(tmpPrefix+"idf", knowledgeBase.getMemoryConfiguration().getMapType(), knowledgeBase.getMemoryConfiguration().getLRUsize());
+        Map<Object, Double> idfMap = bdsf.getMap(tmpPrefix+"idf");
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -205,7 +201,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         }
         
         //Drop the temporary Collection
-        bdsf.dropTable(tmpPrefix+"idf", idfMap);
+        bdsf.dropMap(tmpPrefix+"idf", idfMap);
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<maxTFIDFfeatureScores.size()) {

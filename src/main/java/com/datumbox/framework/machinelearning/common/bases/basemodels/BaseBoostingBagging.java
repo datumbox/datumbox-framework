@@ -128,7 +128,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR+String.valueOf(t));
-            mlclassifier.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
             mlclassifier.predict(newData);
             mlclassifier = null;
             
@@ -190,7 +189,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> observationWeights = bdsf.getMap(tmpPrefix+"observationWeights", knowledgeBase.getMemoryConfiguration().getMapType(), knowledgeBase.getMemoryConfiguration().getLRUsize());
+        Map<Object, Object> observationWeights = bdsf.getMap(tmpPrefix+"observationWeights");
         
         //calculate the training parameters of bagging
         for(Record r : trainingData) {
@@ -211,7 +210,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             }
             
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR+String.valueOf(t));
-            mlclassifier.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), weakClassifierTrainingParameters);
+            mlclassifier.initializeTrainingConfiguration(weakClassifierTrainingParameters);
             
             Dataset validationDataset = trainingData;
             if(mlclassifier.modifiesData()) {
@@ -233,7 +232,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //Drop the temporary Collection
-        bdsf.dropTable(tmpPrefix+"observationWeights", observationWeights);
+        bdsf.dropMap(tmpPrefix+"observationWeights", observationWeights);
     }
 
     /**

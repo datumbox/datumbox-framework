@@ -135,7 +135,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         mlregressor.setTemporary(true); //avoid storing its db
 
         //configure the algorithm
-        mlregressor.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getRegressionTrainingParameters());
+        mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
         
         BaseMLregressor.ValidationMetrics vm =(BaseMLregressor.ValidationMetrics) mlregressor.kFoldCrossValidation(trainingData,k);
         mlregressor.erase(true);
@@ -200,7 +200,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName); 
-        mlregressor.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getRegressionTrainingParameters());
+        mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
         
         int k = trainingParameters.getkFolds();
         if(k>1) {
@@ -244,7 +244,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         if(mlregressor==null) {
             //initialize algorithm
             mlregressor = BaseMLmodel.newInstance(knowledgeBase.getTrainingParameters().getRegressionClass(), dbName); 
-            mlregressor.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
         }
     }
     
@@ -256,7 +255,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         mlregressor.setTemporary(true); //avoid storing its db
 
         //configure the algorithm
-        mlregressor.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getRegressionTrainingParameters());
+        mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
 
         //turn on the pvalue calcuation
         ((StepwiseCompatible)mlregressor).setCalculateFeaturePvalues(true);

@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import java.util.HashMap;
@@ -50,13 +49,13 @@ public class HierarchicalAgglomerativeTest {
         validationData.add(Record.newDataVector(new Object[] {51,"M","3",100,222,"no","0",143,"yes", 1.2,2,0,"3"}, "healthy"));
         validationData.add(Record.newDataVector(new Object[] {67,"M","4",120,229,"no","2",129,"yes", 2.6,2,2,"7"}, "problem"));
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClusterer";
         
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
-        df.initializeTrainingConfiguration(memoryConfiguration, df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -69,13 +68,13 @@ public class HierarchicalAgglomerativeTest {
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new HierarchicalAgglomerative(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         df.denormalize(trainingData);
@@ -112,13 +111,13 @@ public class HierarchicalAgglomerativeTest {
         
         Dataset trainingData = KmeansTest.generateDataset();
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
-        df.initializeTrainingConfiguration(memoryConfiguration, df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
 
@@ -132,7 +131,7 @@ public class HierarchicalAgglomerativeTest {
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
 
         df.denormalize(trainingData);

@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.InMemoryStructureFactory;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -54,17 +53,14 @@ public class LatentDirichletAllocationTest {
         /*
         RandomValue.randomGenerator = new Random(42);
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
-        //the analysis is VERY slow if not performed in memory training, so we force it anyway.
-        memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP);
         
         String dbName = "JUnitTopicSelection";
 
         
         Map<Object, URI> dataset = new HashMap<>();
 
-        dataset.put("negative", new URI("file:///home/bbriniotis/movie-reviews.neg"));
-        dataset.put("positive", new URI("file:///home/bbriniotis/movie-reviews.pos"));
+        dataset.put("negative", new URI("file:///home/bbriniotis/test.neg"));
+        dataset.put("positive", new URI("file:///home/bbriniotis/test.pos"));
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
         wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
@@ -79,7 +75,7 @@ public class LatentDirichletAllocationTest {
         trainingParameters.setBeta(0.01);
         trainingParameters.setK(25);        
         
-        lda.initializeTrainingConfiguration(memoryConfiguration, trainingParameters);
+        lda.initializeTrainingConfiguration(trainingParameters);
         lda.train(trainingData, new Dataset());
         
         lda.predict(trainingData);
@@ -99,7 +95,7 @@ public class LatentDirichletAllocationTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
         
-        smr.initializeTrainingConfiguration(memoryConfiguration, tp);
+        smr.initializeTrainingConfiguration(tp);
         BaseMLclassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, 1);
         
         double expResult = 0.6849291090495362;

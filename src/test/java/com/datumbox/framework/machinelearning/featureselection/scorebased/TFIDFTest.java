@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -46,7 +45,7 @@ public class TFIDFTest {
         
         String dbName = "JUnitChisquareFeatureSelection";
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();
         param.setBinarized(false);
@@ -78,14 +77,14 @@ public class TFIDFTest {
         trainingData.add(r3);
         
         TFIDF instance = new TFIDF(dbName);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         
         instance.evaluateFeatures(trainingData);
         instance = null;
         
         
         instance = new TFIDF(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.clearFeatures(trainingData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));

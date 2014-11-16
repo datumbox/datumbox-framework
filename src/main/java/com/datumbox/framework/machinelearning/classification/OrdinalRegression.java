@@ -22,7 +22,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.framework.machinelearning.common.validation.OrdinalRegressionValidation;
@@ -75,14 +74,11 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         private Map<Object, Double> thitas; 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf); 
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            weights = bdsf.getMap("weights", mapType, LRUsize);
-            thitas = bdsf.getMap("thitas", mapType, LRUsize);
+            weights = bdsf.getMap("weights");
+            thitas = bdsf.getMap("thitas");
         }
         
         public Map<Object, Double> getWeights() {
@@ -239,9 +235,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas", knowledgeBase.getMemoryConfiguration().getMapType(), knowledgeBase.getMemoryConfiguration().getLRUsize());
+            Map<Object, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas");
             
-            Map<Object, Double> newWeights = bdsf.getMap(tmpPrefix+"newWeights", knowledgeBase.getMemoryConfiguration().getMapType(), knowledgeBase.getMemoryConfiguration().getLRUsize());
+            Map<Object, Double> newWeights = bdsf.getMap(tmpPrefix+"newWeights");
             
             newThitas.putAll(thitas);
             newWeights.putAll(weights);
@@ -267,8 +263,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             }
             
             //Drop the temporary Collections
-            bdsf.dropTable(tmpPrefix+"newWeights", newWeights);
-            bdsf.dropTable(tmpPrefix+"newThitas", newThitas);
+            bdsf.dropMap(tmpPrefix+"newWeights", newWeights);
+            bdsf.dropMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

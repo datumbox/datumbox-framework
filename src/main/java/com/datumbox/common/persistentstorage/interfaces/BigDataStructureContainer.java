@@ -18,14 +18,10 @@ package com.datumbox.common.persistentstorage.interfaces;
 
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.configuration.MemoryConfiguration;
 
 /**
  * This interface is used to mark Objects which are added in the database
- * and contain big data structures (maps, sets, collections etc). When objects contain such
- objects they must be identified by the preSave() method of the StructureFactory
- and saved appropriately in the memory/db. Note that BigDataStructureContainers
- can contain other containers.
+ * and contain big data structures (maps). 
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
@@ -34,15 +30,8 @@ public interface BigDataStructureContainer extends Learnable {
      * Links the large variables with DB-backed collections.
      * 
      * @param bdsf 
-     * @param memoryConfiguration 
      */
     
-    public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration);
+    public void bigDataStructureInitializer(BigDataStructureFactory bdsf);
     
-    /**
-     * Clears unnecessary large variables before they are saved in the DB-backed Collection.
-     * 
-     * @param bdsf 
-     */
-    public void bigDataStructureCleaner(BigDataStructureFactory bdsf);
 }

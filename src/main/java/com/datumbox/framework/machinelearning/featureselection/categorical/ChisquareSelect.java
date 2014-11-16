@@ -24,6 +24,7 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.independentsamples.Chisquare;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -63,7 +64,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
     }
     
     @Override
-    protected void estimateFeatureScores() {
+    protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -78,15 +79,15 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         
         
         double N = modelParameters.getN();
-        for(Map.Entry<Object, Double> featureCount : modelParameters.getFeatureCounts().entrySet()) {
+        for(Map.Entry<Object, Double> featureCount : featureCounts.entrySet()) {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
             
-            for(Map.Entry<Object, Integer> classCount : modelParameters.getClassCounts().entrySet()) {
+            for(Map.Entry<Object, Integer> classCount : classCounts.entrySet()) {
                 Object theClass = classCount.getKey();
                 
-                Integer featureClassC = modelParameters.getFeatureClassCounts().get(Arrays.<Object>asList(feature, theClass));                
+                Integer featureClassC = featureClassCounts.get(Arrays.<Object>asList(feature, theClass));                
                 double N11 = (featureClassC!=null)?featureClassC:0.0; //N11 is the number of records that have the feature and belong on the specific class
                 double N01 = classCount.getValue() - N11; //N01 is the total number of records that do not have the particular feature BUT they belong to the specific class
                 

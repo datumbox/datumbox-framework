@@ -19,7 +19,6 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.persistentstorage.factories.InMemoryStructureFactory;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 
@@ -55,15 +54,12 @@ public class TextClassifierTest {
 		/*
         RandomValue.randomGenerator = new Random(42);
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
-        //the analysis is VERY slow if not performed in memory training, so we force it anyway.
-        memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP); 
         
         String dbName = "JUnit";
         
         Map<Object, URI> dataset = new HashMap<>();
-        dataset.put("negative", new URI("file:///home/bbriniotis/movie-reviews.neg"));
-        dataset.put("positive", new URI("file:///home/bbriniotis/movie-reviews.pos"));
+        dataset.put("objective", new URI("file:///home/bbriniotis/training.subjectivity.en.obj"));
+        dataset.put("subjective", new URI("file:///home/bbriniotis/training.subjectivity.en.subj"));
         
         TextClassifier instance = new TextClassifier(dbName);
         TextClassifier.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
@@ -119,7 +115,7 @@ public class TextClassifierTest {
         trainingParameters.setTextExtractorClass(NgramsExtractor.class);
         trainingParameters.setTextExtractorTrainingParameters(new NgramsExtractor.Parameters());
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, trainingParameters);
+        instance.initializeTrainingConfiguration(trainingParameters);
         instance.train(dataset);
         
         
@@ -134,11 +130,11 @@ public class TextClassifierTest {
         
         
         instance = new TextClassifier(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
-        URI datasetURI = new URI("file:///home/bbriniotis/movie-reviews.test");
+        
+        URI datasetURI = new URI("file:///home/bbriniotis/testing.txt");
         List<Object> result = instance.predict(datasetURI);
         
-        List<Object> expResult = Arrays.asList("negative","positive");
+        List<Object> expResult = Arrays.asList("subjective","objective");
         assertEquals(expResult, result);
         
         instance.erase(true);

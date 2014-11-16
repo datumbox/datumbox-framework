@@ -21,7 +21,6 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -58,14 +57,11 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            logPriors = bdsf.getMap("logPriors", mapType, LRUsize);
-            logLikelihoods = bdsf.getMap("logLikelihoods", mapType, LRUsize);
+            logPriors = bdsf.getMap("logPriors");
+            logLikelihoods = bdsf.getMap("logLikelihoods");
             
         }
         

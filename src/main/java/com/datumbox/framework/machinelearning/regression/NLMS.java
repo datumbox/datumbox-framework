@@ -122,7 +122,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas", knowledgeBase.getMemoryConfiguration().getMapType(), knowledgeBase.getMemoryConfiguration().getLRUsize());
+            Map<Object, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             
@@ -145,7 +145,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             }
             
             //Drop the temporary Collection
-            bdsf.dropTable(tmpPrefix+"newThitas", newThitas);
+            bdsf.dropMap(tmpPrefix+"newThitas", newThitas);
         }
     }
 

@@ -16,15 +16,10 @@
  */
 package com.datumbox.common.persistentstorage.factories;
 
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * DB Drivers which can be used to permanently store/handle the parameters of the
@@ -47,42 +42,10 @@ public interface BigDataStructureFactory {
             throw new RuntimeException(ex);
         }
     }
-        
-    /**
-     * Basic supported DataStructureType interface
-     */
-    public interface DataStructureType {
-        public boolean isInMemory();
-        public boolean isConcurrent();
-    }
-    
-    //Supported maps
-    public interface MapType extends DataStructureType {
-        
-    }
-    
-    //Supported collections
-    public interface CollectionType extends DataStructureType {
-        
-    }
-    
-    //Supported set
-    public interface SetType extends DataStructureType {
-        
-    }
-    
-    //Supported queue
-    public interface QueueType extends DataStructureType {
-        
-    }
-
-    public void preSave(BigDataStructureContainer learnedParameters, MemoryConfiguration memoryConfiguration);
     
     public <H extends BigDataStructureContainerHolder> void save(H holderObject);
     
     public <H extends BigDataStructureContainerHolder> H load(Class<H> klass);
-    
-    public void postLoad(BigDataStructureContainer learnedParameters, MemoryConfiguration memoryConfiguration);
     
     public boolean existsDatabase();
     
@@ -92,28 +55,8 @@ public interface BigDataStructureFactory {
     
     public void cleanUp();
         
-    public <T extends Map> void dropTable(String collectionName, T map);
+    public <T extends Map> void dropMap(String collectionName, T map);
     
-    public <T extends Collection> void dropTable(String collectionName, T anyCollection);
+    public <K,V> Map<K,V> getMap(String collectionName);
     
-    public <K,V,T extends BigDataStructureFactory.MapType> Map<K,V> getMap(String collectionName, T mapType, int LRUsize);
-    
-    public <E,T extends BigDataStructureFactory.CollectionType> Collection<E> getCollection(String collectionName, T collectionType);
-    
-    public <E,T extends BigDataStructureFactory.SetType> Set<E> getSet(String collectionName, T setType);
-    
-    public <E,T extends BigDataStructureFactory.QueueType> Queue<E> getQueue(String collectionName, T queueType);
-    
-    /*
-    //can't be defined in the interface because they are static but they must be included in all the classes that implement the interface
-    public static BigDataStructureFactory.MapType getDefaultMapType();
-    
-    public static BigDataStructureFactory.CollectionType getDefaultCollectionType();
-    
-    public static BigDataStructureFactory.SetType getDefaultSetType();
-    
-    public static BigDataStructureFactory.QueueType getDefaultQueueType();
-    
-    public static int getDefaultLRUsize();
-    */
 }

@@ -22,7 +22,6 @@ import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
-import com.datumbox.configuration.MemoryConfiguration;
 import java.lang.reflect.InvocationTargetException;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
@@ -52,9 +51,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     
     @Transient
     protected transient String dbName; 
-    
-    @Transient
-    protected transient MemoryConfiguration memoryConfiguration;
     
     @Transient
     protected transient BigDataStructureFactory bdsf;
@@ -109,26 +105,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     public String getDbName() {
         return dbName;
     }
-    
-    @Override
-    public MemoryConfiguration getMemoryConfiguration() {
-        try {
-            return (MemoryConfiguration) memoryConfiguration.clone(); //MAKE SURE you clone it. The algorithms modify the contents of the memoryConfiguration during save
-        } 
-        catch (CloneNotSupportedException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public void setMemoryConfiguration(MemoryConfiguration memoryConfiguration) {
-        try {
-            this.memoryConfiguration = (MemoryConfiguration) memoryConfiguration.clone(); //MAKE SURE you clone it. The algorithms modify the contents of the memoryConfiguration during save
-        } 
-        catch (CloneNotSupportedException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 
     @Override
     public BigDataStructureFactory getBdsf() {
@@ -158,20 +134,9 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     
 
     @Override
-    public void save(boolean callPresave) {
+    public void save() {
         if(modelParameters==null) {
             throw new IllegalArgumentException("Can not store an empty KnowledgeBase.");
-        }
-        
-        if(BigDataStructureContainer.class.isAssignableFrom(modelParameters.getClass())) {
-            //do preSave
-            if(callPresave) {
-                //clears unnecessary variables
-                ((BigDataStructureContainer)modelParameters).bigDataStructureCleaner(bdsf);
-                
-                //perform any necessary manipulation on data before save based on the selected big data structure factory
-                bdsf.preSave((BigDataStructureContainer) modelParameters, memoryConfiguration);
-            }
         }
         
         bdsf.save(this);
@@ -200,11 +165,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
             
             trainingParameters = (TP) kbObject.trainingParameters;
             modelParameters = (MP) kbObject.modelParameters;
-            
-            if(BigDataStructureContainer.class.isAssignableFrom(modelParameters.getClass())) {
-                //perform postLoading to the modelParameters 
-                bdsf.postLoad((BigDataStructureContainer) modelParameters, memoryConfiguration);
-            }
             
             setTrained(true);
         }
@@ -240,7 +200,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         try {
             modelParameters = mpClass.getConstructor().newInstance();
             if(BigDataStructureContainer.class.isAssignableFrom(modelParameters.getClass())) {
-                ((BigDataStructureContainer)modelParameters).bigDataStructureInitializer(bdsf, memoryConfiguration);
+                ((BigDataStructureContainer)modelParameters).bigDataStructureInitializer(bdsf);
             }
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {

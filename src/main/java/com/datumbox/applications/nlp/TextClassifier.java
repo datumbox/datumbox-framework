@@ -132,7 +132,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean transformData = (dtClass!=null);
         if(transformData) {
             dataTransformer = DataTransformer.newInstance(dtClass, dbName);
-            dataTransformer.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getDataTransformerTrainingParameters());
+            dataTransformer.initializeTrainingConfiguration(trainingParameters.getDataTransformerTrainingParameters());
             dataTransformer.transform(trainingDataset, true);
             dataTransformer.normalize(trainingDataset);
         }
@@ -146,7 +146,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(CategoricalFeatureSelection.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((CategoricalFeatureSelection.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
             }
-            featureSelection.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getFeatureSelectionTrainingParameters());
+            featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
 
             //find the most popular features
             featureSelection.evaluateFeatures(trainingDataset);   
@@ -157,7 +157,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //initialize mlmodel
         mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
-        mlmodel.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getMLmodelTrainingParameters());
+        mlmodel.initializeTrainingConfiguration(trainingParameters.getMLmodelTrainingParameters());
         
         int k = trainingParameters.getkFolds();
         if(k>1) {
@@ -185,7 +185,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
         
         //store database
-        knowledgeBase.save(true);
+        knowledgeBase.save();
         knowledgeBase.setTrained(true);
     }
     
@@ -268,7 +268,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(dataTransformer==null) {
                 dataTransformer = DataTransformer.newInstance(dtClass, dbName);
             }        
-            dataTransformer.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
+            
             dataTransformer.transform(testDataset, false);
             dataTransformer.normalize(testDataset);
         }
@@ -280,7 +280,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(featureSelection==null) {
                 featureSelection = FeatureSelection.newInstance(fsClass, dbName);
             }
-            featureSelection.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
 
             //remove unnecessary features
             featureSelection.clearFeatures(testDataset);
@@ -293,7 +292,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
         
         //call predict of the mlmodel for the new dataset
-        mlmodel.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
         BaseMLmodel.ValidationMetrics vm = mlmodel.test(testDataset);
         
         if(transformData) {
@@ -343,7 +341,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(dataTransformer==null) {
                 dataTransformer = DataTransformer.newInstance(dtClass, dbName);
             }        
-            dataTransformer.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
             dataTransformer.transform(newData, false);
             dataTransformer.normalize(newData);
         }
@@ -355,7 +352,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(featureSelection==null) {
                 featureSelection = FeatureSelection.newInstance(fsClass, dbName);
             }
-            featureSelection.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
 
             //remove unnecessary features
             featureSelection.clearFeatures(newData);
@@ -368,7 +364,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
         
         //call predict of the mlmodel for the new dataset
-        mlmodel.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
         mlmodel.predict(newData);
         
         if(transformData) {

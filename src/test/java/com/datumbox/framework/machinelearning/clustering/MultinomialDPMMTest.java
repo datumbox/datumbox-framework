@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public class MultinomialDPMMTest {
         Dataset validationData = trainingData;
 
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClusterer";
         
@@ -78,13 +77,13 @@ public class MultinomialDPMMTest {
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new MultinomialDPMM(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         
@@ -118,7 +117,7 @@ public class MultinomialDPMMTest {
         
         Dataset trainingData = generateDataset();
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         String dbName = "JUnitRegressor";
@@ -134,7 +133,7 @@ public class MultinomialDPMMTest {
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
 
         

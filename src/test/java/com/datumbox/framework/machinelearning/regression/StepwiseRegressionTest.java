@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.regression;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Random;
@@ -83,14 +82,14 @@ public class StepwiseRegressionTest {
         
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         //the analysis is VERY slow if not performed in memory training, so we force it anyway.
         //memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP);
         
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
-        df.initializeTrainingConfiguration(memoryConfiguration, df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -107,13 +106,13 @@ public class StepwiseRegressionTest {
         trainingParams.setCalculatePvalue(true);
         param.setRegressionTrainingParameters(trainingParams);
                 
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new StepwiseRegression(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
 	        
@@ -192,7 +191,7 @@ public class StepwiseRegressionTest {
         trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
         trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         //the analysis is VERY slow if not performed in memory training, so we force it anyway.
         //memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP);
         
@@ -210,7 +209,7 @@ public class StepwiseRegressionTest {
         trainingParams.setDataTransformerClass(DummyXYMinMaxNormalizer.class);
         param.setRegressionTrainingParameters(trainingParams);
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         StepwiseRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         double expResult = 1.0;

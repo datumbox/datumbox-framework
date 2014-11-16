@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.configuration.TestConfiguration;
@@ -90,12 +89,12 @@ public class AdaboostTest {
         
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClassifier";
         
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
-        df.initializeTrainingConfiguration(memoryConfiguration, df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -114,13 +113,13 @@ public class AdaboostTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new Adaboost(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         
@@ -204,7 +203,7 @@ public class AdaboostTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         
@@ -221,7 +220,7 @@ public class AdaboostTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         Adaboost.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         double expResult = 0.6923992673992675;

@@ -85,7 +85,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean transformData = (dtClass!=null);
         if(transformData) {
             dataTransformer = DataTransformer.newInstance(dtClass, dbName);
-            dataTransformer.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), knowledgeBase.getTrainingParameters().getDataTransformerTrainingParameters());
+            dataTransformer.initializeTrainingConfiguration(knowledgeBase.getTrainingParameters().getDataTransformerTrainingParameters());
             dataTransformer.transform(trainingData, true);
             dataTransformer.normalize(trainingData);
         }
@@ -97,7 +97,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             featureSelection = FeatureSelection.newInstance(fsClass, dbName);
-            featureSelection.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getFeatureSelectionTrainingParameters());
+            featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
             featureSelection.evaluateFeatures(trainingData); 
         
             //remove unnecessary features
@@ -109,7 +109,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         //initialize mlmodel
         mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
-        mlmodel.initializeTrainingConfiguration(knowledgeBase.getMemoryConfiguration(), trainingParameters.getMLmodelTrainingParameters());
+        mlmodel.initializeTrainingConfiguration(trainingParameters.getMLmodelTrainingParameters());
         
         int k = trainingParameters.getkFolds();
         if(k>1) {
@@ -136,7 +136,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         }
         
         //store database
-        knowledgeBase.save(true);
+        knowledgeBase.save();
         knowledgeBase.setTrained(true);
     }
     
@@ -170,7 +170,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
             if(dataTransformer==null) {
                 dataTransformer = DataTransformer.newInstance(dtClass, dbName);
             }        
-            dataTransformer.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
             dataTransformer.transform(data, false);
             dataTransformer.normalize(data);
         }
@@ -182,7 +181,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
             if(featureSelection==null) {
                 featureSelection = FeatureSelection.newInstance(fsClass, dbName);
             }
-            featureSelection.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
 
             //remove unnecessary features
             featureSelection.clearFeatures(data);
@@ -195,7 +193,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         }
         
         //call predict of the mlmodel for the new dataset
-        mlmodel.setMemoryConfiguration(knowledgeBase.getMemoryConfiguration());
         
         BaseMLmodel.ValidationMetrics vm = null;
         if(estimateValidationMetrics) {

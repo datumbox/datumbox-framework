@@ -16,8 +16,6 @@
  */
 package com.datumbox.common.objecttypes;
 
-import com.datumbox.configuration.MemoryConfiguration;
-
 /**
  * This interface is used to mark classes that can be trained and generate a
  * storable database. This interface is meant to be used for classes that
@@ -51,13 +49,6 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * @return 
      */
     public boolean alreadyExists();
-
-    /**
-     * Sets the memory configuration object (Map types, LRU etc).
-     * 
-     * @param memoryConfiguration 
-     */
-    public void setMemoryConfiguration(MemoryConfiguration memoryConfiguration);
     
     /**
      * Deletes the particular algorithm and all the associated parameters. 
@@ -97,7 +88,7 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * @param trainingParameters
      * @param memoryConfiguration 
      */
-    public void initializeTrainingConfiguration(MemoryConfiguration memoryConfiguration, TP trainingParameters);
+    public void initializeTrainingConfiguration(TP trainingParameters);
     
     /**
      * Getter for temporary flag which indicates that the creation of the model

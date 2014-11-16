@@ -20,7 +20,6 @@ import com.datumbox.framework.machinelearning.classification.SupportVectorMachin
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,12 +89,12 @@ public class SupportVectorMachineTest {
         Dataset validationData = new Dataset();
         validationData.add(Record.newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClassifier";
         
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
-        df.initializeTrainingConfiguration(memoryConfiguration, df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -105,13 +104,13 @@ public class SupportVectorMachineTest {
         
         SupportVectorMachine.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new SupportVectorMachine(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         
@@ -193,7 +192,7 @@ public class SupportVectorMachineTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         String dbName = "JUnitClassifier";
@@ -201,7 +200,7 @@ public class SupportVectorMachineTest {
         
         SupportVectorMachine.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.getSvmParameter().kernel_type = svm_parameter.LINEAR;
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         SupportVectorMachine.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         //double expResult = 0.5861704961704961;

@@ -21,11 +21,13 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
+import com.datumbox.configuration.StorageConfiguration;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -41,20 +43,6 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
         private int N;
-        
-        @BigDataStructureMarker
-        @Transient
-        private Map<List<Object>, Integer> featureClassCounts; //set which stores the counts of feature-class combinations.
-        
-        
-        @BigDataStructureMarker
-        @Transient
-        private Map<Object, Integer> classCounts; //map which stores the counts of the classes
-        
-        
-        @BigDataStructureMarker
-        @Transient
-        private Map<Object, Double> featureCounts; //map which stores the counts of the features
 
         @BigDataStructureMarker
         @Transient
@@ -69,31 +57,6 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         public void setN(int N) {
             this.N = N;
         }
-
-        public Map<List<Object>, Integer> getFeatureClassCounts() {
-            return featureClassCounts;
-        }
-
-        public void setFeatureClassCounts(Map<List<Object>, Integer> featureClassCounts) {
-            this.featureClassCounts = featureClassCounts;
-        }
-
-        public Map<Object, Integer> getClassCounts() {
-            return classCounts;
-        }
-
-        public void setClassCounts(Map<Object, Integer> classCounts) {
-            this.classCounts = classCounts;
-        }
-
-        public Map<Object, Double> getFeatureCounts() {
-            return featureCounts;
-        }
-
-        public void setFeatureCounts(Map<Object, Double> featureCounts) {
-            this.featureCounts = featureCounts;
-        }
-
         public Map<Object, Double> getFeatureScores() {
             return featureScores;
         }
@@ -103,28 +66,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         }
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            //String tmpPrefix=StorageConfiguration.getTmpPrefix(); //ensure that these are temporary and that will be dropped automatically
-            classCounts = bdsf.getMap("classCounts", mapType, LRUsize);
-            featureClassCounts = bdsf.getMap("featureClassCounts", mapType, LRUsize);
-            featureCounts = bdsf.getMap("featureCounts", mapType, LRUsize);
-            featureScores = bdsf.getMap("featureScores", mapType, LRUsize);
+            featureScores = bdsf.getMap("featureScores");
         }
         
-        @Override
-        public void bigDataStructureCleaner(BigDataStructureFactory bdsf) {
-            super.bigDataStructureCleaner(bdsf);
-            
-            //drop the unnecessary stastistics tables
-            bdsf.dropTable("classCounts", classCounts);
-            bdsf.dropTable("featureClassCounts", featureClassCounts);
-            bdsf.dropTable("featureCounts", featureCounts);
-        }
     }
     
     
@@ -179,15 +126,29 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         modelParameters.setN(data.size());
         
         
+        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        
+        String tmpPrefix=StorageConfiguration.getTmpPrefix(); 
+        Map<Object, Integer> classCounts = bdsf.getMap(tmpPrefix+"classCounts"); //map which stores the counts of the classes
+        Map<List<Object>, Integer> featureClassCounts = bdsf.getMap(tmpPrefix+"featureClassCounts"); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> featureCounts = bdsf.getMap(tmpPrefix+"featureCounts"); //map which stores the counts of the features
+
+        
         //build the maps with teh feature statistics and counts
-        buildFeatureStatistics(data);
+        buildFeatureStatistics(data, classCounts, featureClassCounts, featureCounts);
         
         
         
         
         //call the overriden method to get the scores of the features.
         //WARNING: do not use feature scores for any weighting. Sometimes the features are selected based on a minimum and others on a maximum criterion.
-        estimateFeatureScores();
+        estimateFeatureScores(classCounts, featureClassCounts, featureCounts);
+        
+
+        //drop the unnecessary stastistics tables
+        bdsf.dropMap("classCounts", classCounts);
+        bdsf.dropMap("featureClassCounts", featureClassCounts);
+        bdsf.dropMap("featureCounts", featureCounts);
     }
     
     @Override
@@ -294,16 +255,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         }
     }
     
-    private void buildFeatureStatistics(Dataset data) {        
+    private void buildFeatureStatistics(Dataset data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         MP modelParameters = knowledgeBase.getModelParameters();
-        
-        Map<Object, Double> featureCounts = modelParameters.getFeatureCounts();
-        Map<Object, Integer> classCounts = modelParameters.getClassCounts();
-        Map<List<Object>,Integer> featureClassCounts = modelParameters.getFeatureClassCounts();
         
         //the method below does not only removes the rare features but also
         //first and formost calculates the contents of featureCounts map. 
@@ -352,5 +309,5 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
     }
     
-    protected abstract void estimateFeatureScores();
+    protected abstract void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts);
 }

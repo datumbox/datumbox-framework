@@ -34,8 +34,6 @@ public class StorageConfiguration {
     //public static final Class PERMANENT_STORAGE = MongoDB.class;
     public static final Class PERMANENT_STORAGE = InMemory.class;   
     
-    public static final boolean IN_MEMORY_TRAINING = true; //this causes the memoryconfiguration object to be initialized for in-memory storage but the user can override this
-    
     public static class MongoDB {
         //Mandatory constants
         public static final Class<? extends BigDataStructureFactory> STRUCTURE_FRACTORY_CLASS = MongoDBStructureFactory.class;
@@ -43,6 +41,7 @@ public class StorageConfiguration {
         public static final String TMP_PREFIX = "TMP_";
         
         //DB specific constants
+        public static final int LRUsize = 100000;
         public static final Boolean USE_HASH_INDEXES_IN_MAPS = false; //DO NOT TURN ON, MONGO DOES NOT SUPPORT LISTS WITH HASH INDEXES YET
 
         public static final List<ServerAddress> SERVER_LIST;
@@ -50,7 +49,7 @@ public class StorageConfiguration {
         
         static {
             try {
-                SERVER_LIST = Arrays.asList(new ServerAddress("localhost", 27017));
+                SERVER_LIST = Arrays.asList(new ServerAddress("localhost", 27017)); 
             } 
             catch (UnknownHostException ex) {
                 throw new RuntimeException(ex);

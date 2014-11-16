@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public class GaussianDPMMTest {
         Dataset validationData = trainingData;
 
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClusterer";
         
@@ -96,13 +95,13 @@ public class GaussianDPMMTest {
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new GaussianDPMM(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         
@@ -136,7 +135,7 @@ public class GaussianDPMMTest {
         
         Dataset trainingData = generateDataset();
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         String dbName = "JUnitRegressor";
@@ -155,7 +154,7 @@ public class GaussianDPMMTest {
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         GaussianDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
 
         

@@ -18,7 +18,6 @@ package com.datumbox.common.persistentstorage.interfaces;
 
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.configuration.MemoryConfiguration;
 import java.io.Serializable;
 
 /**
@@ -30,7 +29,7 @@ import java.io.Serializable;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public interface BigDataStructureContainerHolder extends Serializable {
-    public void save(boolean callPresave);
+    public void save();
     public void load();
     public void reinitialize();
     public void erase(boolean completed);
@@ -48,8 +47,6 @@ public interface BigDataStructureContainerHolder extends Serializable {
     public void setTrained(boolean trained);
     
     public String getDbName();
-    public MemoryConfiguration getMemoryConfiguration();
-    public void setMemoryConfiguration(MemoryConfiguration memoryConfiguration);
     public BigDataStructureFactory getBdsf();
     
 

@@ -20,7 +20,6 @@ import com.datumbox.framework.machinelearning.ensemblelearning.BootstrapAggregat
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.configuration.TestConfiguration;
@@ -90,14 +89,14 @@ public class BootstrapAggregatingTest {
         validationData.add(Record.newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClassifier";
         
         
 
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
-        df.initializeTrainingConfiguration(memoryConfiguration, df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -116,13 +115,13 @@ public class BootstrapAggregatingTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
         
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new BootstrapAggregating(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         df.denormalize(trainingData);
@@ -203,7 +202,7 @@ public class BootstrapAggregatingTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         
@@ -220,7 +219,7 @@ public class BootstrapAggregatingTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         BootstrapAggregating.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         double expResult = 0.6609432234432234;

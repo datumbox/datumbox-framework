@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class PCATest {
         originaldata.add(Record.<Double>newDataVector(new Double[]{10.0, 0.0, 12.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{13.0, 14.0, 15.0}, null));
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitPCAdimred";
         
@@ -55,7 +54,7 @@ public class PCATest {
         
         PCA.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMaxDimensions(null);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         
         instance.evaluateFeatures(originaldata);
         instance=null;
@@ -63,7 +62,7 @@ public class PCATest {
         Dataset newdata = originaldata;
         
         instance = new PCA(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         
         Dataset expResult = new Dataset();
         expResult.add(Record.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));

@@ -20,11 +20,9 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Parameterizable;
-import com.datumbox.common.persistentstorage.factories.InMemoryStructureFactory;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.utilities.text.cleaners.HTMLCleaner;
@@ -189,11 +187,8 @@ public class CETR {
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration(); //EXPAND: find way to ensure that this will performed only in memory despite the global memory configuration
-        memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP); //enforce inmemory training
-        
         instance.setTemporary(true); //enforce temporary/not saved training
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(dataset, dataset);
         
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();

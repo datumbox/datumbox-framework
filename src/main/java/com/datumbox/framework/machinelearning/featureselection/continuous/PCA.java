@@ -22,7 +22,6 @@ import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Map;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -120,13 +119,10 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
-            
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
 
-            feature2ColumnId = bdsf.getMap("feature2ColumnId", mapType, LRUsize);
+            feature2ColumnId = bdsf.getMap("feature2ColumnId");
         }
 
         public Map<Object, Integer> getFeature2ColumnId() {

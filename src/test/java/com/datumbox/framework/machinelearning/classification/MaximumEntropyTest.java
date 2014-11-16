@@ -20,7 +20,6 @@ import com.datumbox.framework.machinelearning.classification.MaximumEntropy;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,20 +72,20 @@ public class MaximumEntropyTest {
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         String dbName = "JUnitClassifier";
         MaximumEntropy instance = new MaximumEntropy(dbName);
         
         MaximumEntropy.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(10);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         
         
         instance = null;
         instance = new MaximumEntropy(dbName);
-        instance.setMemoryConfiguration(memoryConfiguration);
+        
         instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -163,7 +162,7 @@ public class MaximumEntropyTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
         
-        MemoryConfiguration memoryConfiguration = new MemoryConfiguration();
+        
         
         
         String dbName = "JUnitClassifier";
@@ -171,7 +170,7 @@ public class MaximumEntropyTest {
         
         MaximumEntropy.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(10);
-        instance.initializeTrainingConfiguration(memoryConfiguration, param);
+        instance.initializeTrainingConfiguration(param);
         MaximumEntropy.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         
         double expResult = 0.6051098901098901;

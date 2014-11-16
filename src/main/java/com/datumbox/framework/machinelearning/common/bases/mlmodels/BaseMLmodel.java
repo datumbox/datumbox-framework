@@ -24,7 +24,6 @@ import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.dataobjects.MLmodelKnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.TrainableKnowledgeBase;
@@ -50,12 +49,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     public static abstract class ModelParameters implements BigDataStructureContainer {
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            
-        }
-        
-        @Override
-        public void bigDataStructureCleaner(BigDataStructureFactory bdsf) {
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
             
         }
             
@@ -175,7 +169,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
             System.out.println("kFoldCrossValidation()");
         }
         
-        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, this.getClass(), knowledgeBase.getTrainingParameters(), knowledgeBase.getMemoryConfiguration());
+        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, this.getClass(), knowledgeBase.getTrainingParameters());
     }
      
     /**
@@ -225,7 +219,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Saving model");
             }
-            knowledgeBase.save(true);
+            knowledgeBase.save();
         }
         knowledgeBase.setTrained(true);
     }
@@ -282,7 +276,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Updating model");
             }
-            knowledgeBase.save(false);
+            knowledgeBase.save();
         }
     }
     

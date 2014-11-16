@@ -24,7 +24,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.configuration.MemoryConfiguration;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,13 +63,10 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf, MemoryConfiguration memoryConfiguration) {
-            super.bigDataStructureInitializer(bdsf, memoryConfiguration);
+        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+            super.bigDataStructureInitializer(bdsf);
             
-            BigDataStructureFactory.MapType mapType = memoryConfiguration.getMapType();
-            int LRUsize = memoryConfiguration.getLRUsize();
-            
-            featureIds = bdsf.getMap("featureIds", mapType, LRUsize);
+            featureIds = bdsf.getMap("featureIds");
         }
         
         public Map<Object, Integer> getFeatureIds() {
