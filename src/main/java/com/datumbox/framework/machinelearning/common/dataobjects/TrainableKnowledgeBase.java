@@ -119,19 +119,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     @Override
     public void setOwnerClass(Class<? extends Trainable> ownerClass) {
         this.ownerClass = ownerClass;
-    }    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }       
 
     @Override
     public void save() {

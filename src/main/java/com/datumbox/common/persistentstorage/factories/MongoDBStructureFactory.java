@@ -16,42 +16,30 @@
  */
 package com.datumbox.common.persistentstorage.factories;
 
-import com.datumbox.configuration.StorageConfiguration;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.map.LRUMap;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.logging.MorphiaLoggerFactory;
+
 import com.datumbox.common.loggers.MorphiaNullLoggerFactory;
-import com.datumbox.common.objecttypes.Learnable;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.github.mongoutils.collections.CachingConcurrentMap;
+import com.datumbox.configuration.StorageConfiguration;
 import com.github.mongoutils.collections.CachingMap;
 import com.github.mongoutils.collections.DBObjectSerializer;
-import com.github.mongoutils.collections.MongoCollection;
 import com.github.mongoutils.collections.MongoConcurrentMap;
-import com.github.mongoutils.collections.MongoQueue;
-import com.github.mongoutils.collections.MongoSet;
 import com.github.mongoutils.collections.SimpleFieldDBObjectSerializer;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.collections4.map.LRUMap;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Transient;
-import org.mongodb.morphia.logging.MorphiaLoggerFactory;
 
 /**
  *
@@ -78,13 +66,7 @@ public class MongoDBStructureFactory implements BigDataStructureFactory {
             connection = new MongoClient(StorageConfiguration.MongoDB.SERVER_LIST, StorageConfiguration.MongoDB.CREDENTIAL_LIST);
         }
         db = connection.getDB(database);
-    }
-        
-    
-    
-    
-    
-    
+    } 
 
     /**
      * Opens a Datastore on MongoDBDB with Morphia.
