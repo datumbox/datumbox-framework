@@ -43,7 +43,6 @@ public interface BigDataStructureContainerHolder extends Serializable {
      */
     public boolean isConfigured();
     public boolean isTrained();
-    public boolean alreadyExists();
     public void setTrained(boolean trained);
     
     public String getDbName();

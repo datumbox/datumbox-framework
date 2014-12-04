@@ -40,16 +40,6 @@ public abstract class BaseTrainable<MP extends BigDataStructureContainer, TP ext
     public String getDBname() {
         return dbName;
     }
-    
-    @Override
-    public boolean alreadyExists() {
-        return knowledgeBase.alreadyExists();
-    }
-
-    @Override
-    public MP getModelParameters() {
-        return knowledgeBase.getModelParameters();
-    }
 
     @Override
     public TP getTrainingParametersObject() {

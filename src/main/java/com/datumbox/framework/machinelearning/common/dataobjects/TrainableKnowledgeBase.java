@@ -141,11 +141,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         
         bdsf.save(this);
     }
-
-    @Override
-    public boolean alreadyExists() {
-        return (bdsf.load(this.getClass())!=null);
-    }
     
     @Override
     public void load() {

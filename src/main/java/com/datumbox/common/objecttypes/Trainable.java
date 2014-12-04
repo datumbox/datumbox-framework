@@ -44,13 +44,6 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
     public String shortMethodName();
     
     /**
-     * Checks if a classifier with the same name already exists.
-     * 
-     * @return 
-     */
-    public boolean alreadyExists();
-    
-    /**
      * Deletes the particular algorithm and all the associated parameters. 
      * 
      * @param complete
