@@ -72,5 +72,13 @@ public abstract class BaseTrainable<MP extends BigDataStructureContainer, TP ext
     public void setTemporary(boolean temporary) {
         this.temporary = temporary;
     }
+    
+    @Override
+     public MP getModelParameters() {
+       return knowledgeBase.getModelParameters();
+
+     }
+
+
         
 }
