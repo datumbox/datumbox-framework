@@ -16,10 +16,6 @@
  */
 package com.datumbox.common.persistentstorage.factories;
 
-import com.datumbox.common.utilities.DeepCopy;
-import com.datumbox.configuration.StorageConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -27,17 +23,12 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
+import com.datumbox.common.utilities.DeepCopy;
+import com.datumbox.configuration.StorageConfiguration;
 
 
 /**
