@@ -33,7 +33,7 @@ import com.datumbox.framework.statistics.sampling.SRS;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -80,7 +80,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The value is the Id of the topic to which the word is assigned.
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
         /**
@@ -92,7 +92,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The value is the number of counts of the pair.
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
         /**
@@ -105,7 +105,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The value is the number of counts of the pair.
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
         /**
@@ -118,7 +118,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The Value is the number of counts.
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Integer, Integer> documentWordCounts; //the n.(d) in the papers
         
         /**
@@ -128,7 +128,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The Value is the number of counts.
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         

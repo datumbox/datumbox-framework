@@ -30,7 +30,7 @@ import com.datumbox.framework.statistics.sampling.SRS;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -44,7 +44,7 @@ import org.mongodb.morphia.annotations.Transient;
 public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.ModelParameters, TP extends BaseDPMM.TrainingParameters, VM extends BaseDPMM.ValidationMetrics>  extends BaseMLclusterer<CL, MP, TP, VM> {
     
     public static abstract class Cluster extends BaseMLclusterer.Cluster {
-        @Transient
+        
         protected transient Map<Object, Integer> featureIds; //This is only a reference to the real Map. It is used to convert the Records to Arrays
         
         public Cluster(Integer clusterId) {
@@ -77,7 +77,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
          * Feature set
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         

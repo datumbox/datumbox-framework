@@ -33,10 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.PostLoad;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -48,14 +45,13 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP extends BaseMLclusterer.ModelParameters, TP extends BaseMLclusterer.TrainingParameters, VM extends BaseMLclusterer.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
-    @Embedded
     public static abstract class Cluster implements Learnable, Iterable<Record> {
         //variables
         protected Integer clusterId;
         
         protected int size; //we store this value because we want to know the number of elements in the cluster even when clear() was called
         
-        @Transient
+        
         protected transient Set<Record> recordSet; //it is not stored in the DB and it is cleared after the end of training
         
         protected Object labelY = null;
@@ -186,24 +182,8 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         //MORPHIA does not support complex objects in maps inside it. Thus to 
         //store it I have to serialize deserialize it and store it as binary.
-        @Transient
+        
         private Map<Integer, CL> clusterList; //the cluster objects of the model
-        private transient byte[] clusterList_serialized;
-        
-        @PrePersist
-        public void prePersist(){
-            if(clusterList != null && clusterList_serialized==null){
-                clusterList_serialized = DeepCopy.serialize(clusterList);
-            }
-        }
-
-        @PostLoad
-        public void postLoad(){
-            if(clusterList==null && clusterList_serialized!=null){
-                clusterList = (Map<Integer, CL>) DeepCopy.deserialize(clusterList_serialized);
-            }
-        }
-        
         
         
         @Override

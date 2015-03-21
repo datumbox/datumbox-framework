@@ -55,10 +55,7 @@
         <guava-version>17.0</guava-version>
         <libsvm-version>3.17</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
-        <mongo-collections-version>1.4</mongo-collections-version>
-        <mongo-java-driver-version>2.12.1</mongo-java-driver-version>
-        <morphia-version>0.107</morphia-version>
-		<gpg.keyname>7083A486</gpg.keyname>
+        <gpg.keyname>7083A486</gpg.keyname>
     </properties>
     
     <scm>
@@ -156,27 +153,6 @@
             <groupId>com.datumbox</groupId>
             <artifactId>lpsolve</artifactId>
             <version>${lpsolve-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mongoutils</groupId>
-            <artifactId>mongo-collections</artifactId>
-            <version>${mongo-collections-version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mongo-java-driver</artifactId>
-                    <groupId>org.mongodb</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>${mongo-java-driver-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb.morphia</groupId>
-            <artifactId>morphia</artifactId>
-            <version>${morphia-version}</version>
         </dependency>
     </dependencies>
     

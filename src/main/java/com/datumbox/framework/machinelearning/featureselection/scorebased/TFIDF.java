@@ -24,7 +24,7 @@ import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
 import java.util.Iterator;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -65,7 +65,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         private int N;
         
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
 
         

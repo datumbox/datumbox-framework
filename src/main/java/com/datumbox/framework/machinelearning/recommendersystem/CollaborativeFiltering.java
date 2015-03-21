@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -61,7 +61,6 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
         
         @BigDataStructureMarker
-        @Transient
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
         

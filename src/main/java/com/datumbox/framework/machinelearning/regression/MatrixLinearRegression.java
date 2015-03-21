@@ -31,7 +31,7 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -53,7 +53,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
          * Feature set
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Integer> featureIds; //list of all the supported features
         
         /**

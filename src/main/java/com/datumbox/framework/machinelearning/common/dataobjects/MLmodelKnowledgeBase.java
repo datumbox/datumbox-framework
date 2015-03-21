@@ -69,8 +69,6 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }
             
-            id = kbObject.id;
-            
             mpClass = kbObject.mpClass;
             tpClass = kbObject.tpClass;
             vmClass = kbObject.vmClass;

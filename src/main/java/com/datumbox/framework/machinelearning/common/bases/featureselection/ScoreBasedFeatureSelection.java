@@ -48,19 +48,12 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
         
         Double minPermittedScore=Ordering.<Double>natural().greatestOf(featureScores.values().iterator(), maxFeatures).get(maxFeatures-1);
 
-        boolean mongoDBhackRequired = featureScores.getClass().getName().contains("mongo"); //the MongoDB does not support iterator remove. We use this nasty hack to detect it and use remove instead
-
         //remove any entry with score less than the minimum permitted one
         Iterator<Map.Entry<Object, Double>> it = featureScores.entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<Object, Double> entry = it.next();
             if(entry.getValue()<minPermittedScore) { 
-                if(!mongoDBhackRequired) {
-                    it.remove(); 
-                }
-                else {
-                    featureScores.remove(entry.getKey()); //hack for mongo
-                }
+                it.remove(); 
             }
         }
 
@@ -71,12 +64,7 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
             while(it.hasNext() && numOfExtraFeatures>0) {
                 Map.Entry<Object, Double> entry = it.next();
                 if(entry.getValue()-minPermittedScore<=0.0) { //DO NOT COMPARE THEM DIRECTLY USE SUBTRACTION!
-                    if(!mongoDBhackRequired) {
-                        it.remove(); 
-                    }
-                    else {
-                        featureScores.remove(entry.getKey()); //hack for mongo
-                    }
+                    it.remove(); 
                     --numOfExtraFeatures;
                 }
             }

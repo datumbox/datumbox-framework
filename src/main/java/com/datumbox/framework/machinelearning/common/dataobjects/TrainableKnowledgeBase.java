@@ -23,10 +23,7 @@ import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
 import java.lang.reflect.InvocationTargetException;
-import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -34,7 +31,6 @@ import org.mongodb.morphia.annotations.Transient;
  * @param <MP>
  * @param <TP>
  */
-@Entity("KnowledgeBase")
 public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameterizable & TrainableKnowledgeBase.SelfConstructible> implements BigDataStructureContainerHolder {
 
     public interface SelfConstructible<O> {
@@ -46,13 +42,9 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         VARIABLES
         =========
     */
-    @Id 
-    protected ObjectId id;
-    
-    @Transient
     protected transient String dbName; 
     
-    @Transient
+    
     protected transient BigDataStructureFactory bdsf;
     
     
@@ -142,8 +134,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }
-            
-            id = kbObject.id;
             
             trainingParameters = (TP) kbObject.trainingParameters;
             modelParameters = (MP) kbObject.modelParameters;

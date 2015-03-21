@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -58,7 +58,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
          * Lambda weights
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
 
         

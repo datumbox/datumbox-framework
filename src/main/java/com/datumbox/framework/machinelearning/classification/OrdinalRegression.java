@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -63,14 +63,14 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
          * W weights
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> weights; //the W parameters of the model
 
         /**
          * Right-side limits of the class on the ordinal regression line. 
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> thitas; 
         
         @Override

@@ -27,9 +27,7 @@ import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
-import org.mongodb.morphia.annotations.PostLoad;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.Transient;
+
 
 
 /**
@@ -342,39 +340,9 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private double[] mu0;
         
         
-        //MORPHIA does not support storing 2d arrays. svmModel has 2d arrays 
-        //inside it. Thus to store it I have to serialize deserialize it and store
-        //it as binary.
-        @Transient
         private double[][] psi0; //the parameters of the svm model
-        private transient double[] psi0_1d;
         
-        @PrePersist
-        public void prePersist(){
-            if(psi0 != null && psi0_1d==null){
-                int dimensions = psi0.length;
-                psi0_1d = new double[dimensions*dimensions];
-                for(int row=0;row<dimensions;++row) {
-                    for(int col=0;col<dimensions;++col) {
-                        psi0_1d[row*dimensions+col] = psi0[row][col];
-                    }
-                }
-            }
-        }
-
-        @PostLoad
-        public void postLoad(){
-            if(psi0 == null && psi0_1d!=null){
-                int dimensions = (int)Math.sqrt(psi0_1d.length);
-                psi0 = new double[dimensions][dimensions];
-                for(int row=0;row<dimensions;++row) {
-                    for(int col=0;col<dimensions;++col) {
-                        psi0[row][col] = psi0_1d[row*dimensions+col];
-                    }
-                }
-            }
-        }
-
+        
         public int getKappa0() {
             return kappa0;
         }

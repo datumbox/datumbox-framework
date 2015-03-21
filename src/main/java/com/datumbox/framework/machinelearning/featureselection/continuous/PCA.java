@@ -29,9 +29,7 @@ import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.apache.commons.math3.linear.EigenDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.StatUtils;
-import org.mongodb.morphia.annotations.PostLoad;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.Transient;
+
 
 
 public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.TrainingParameters> {
@@ -77,7 +75,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     
     public static class ModelParameters extends ContinuousFeatureSelection.ModelParameters {
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Integer> feature2ColumnId;
         
         private int rows; //rows of the eigenvector matrix
@@ -88,35 +86,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
 
         //MORPHIA does not support storing 2d arrays. Thus to store it I have to
         //make it a single 1d array and convert it back to 2d
-        @Transient
+        
         private double[][] components; //components weights 
-        private transient double [] components_1d;
-        
-        @PrePersist
-        public void prePersist(){
-            if(components != null && components_1d==null){
-                components_1d = new double[rows*cols];
-                for(int row=0;row<rows;++row) {
-                    for(int col=0;col<cols;++col) {
-                        components_1d[row*cols+col] = components[row][col];
-                    }
-                }
-            }
-        }
-
-        @PostLoad
-        public void postLoad(){
-            if(components == null && components_1d!=null){
-                components = new double[rows][cols];
-                for(int row=0;row<rows;++row) {
-                    for(int col=0;col<cols;++col) {
-                        components[row][col] = components_1d[row*cols+col];
-                    }
-                }
-            }
-        }
-        
-        
         
         @Override
         public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
@@ -171,14 +142,6 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
 
         public void setComponents(double[][] components) {
             this.components = components;
-        }
-
-        public double[] getComponents_1d() {
-            return components_1d;
-        }
-
-        public void setComponents_1d(double[] components_1d) {
-            this.components_1d = components_1d;
         }
 
         

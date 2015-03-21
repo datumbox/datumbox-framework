@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -52,7 +52,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
          * Thita weights
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
 
         

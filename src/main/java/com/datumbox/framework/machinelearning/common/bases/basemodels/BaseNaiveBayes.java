@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -45,14 +45,14 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
          * log priors for log( P(c) )
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> logPriors; //prior log probabilities of the classes
 
         /**
          * log likelihood for log( P(x|c) ) 
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
 
         

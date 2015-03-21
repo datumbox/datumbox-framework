@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -119,7 +119,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         private int totalIterations;
         
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> featureWeights; 
         
         

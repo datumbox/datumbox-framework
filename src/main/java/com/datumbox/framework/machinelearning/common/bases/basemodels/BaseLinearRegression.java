@@ -28,7 +28,7 @@ import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
 import com.datumbox.framework.statistics.parametrics.onesample.DurbinWatson;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -46,7 +46,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
          * Thita weights
          */
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         

@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.
@@ -45,7 +45,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         private int N;
 
         @BigDataStructureMarker
-        @Transient
+        
         private Map<Object, Double> featureScores; //map which stores the scores of the features
         
         //Getters and Setters
@@ -234,19 +234,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
 
         //remove rare features
         if(rareFeatureThreshold != null && rareFeatureThreshold>0) {
-            boolean mongoDBhackRequired = featureCounts.getClass().getName().contains("mongo"); //the MongoDB does not support iterator remove. We use this nasty hack to detect it and use remove instead
-            
             //remove features from the featureCounts list
             Iterator<Map.Entry<Object, Double>> it = featureCounts.entrySet().iterator();
             while(it.hasNext()) {
                 Map.Entry<Object, Double> entry = it.next();
                 if(entry.getValue()<=rareFeatureThreshold) {
-                    if(!mongoDBhackRequired) {
-                        it.remove(); 
-                    }
-                    else {
-                        featureCounts.remove(entry.getKey()); //hack for mongo
-                    }
+                    it.remove(); 
                 }
             }
             

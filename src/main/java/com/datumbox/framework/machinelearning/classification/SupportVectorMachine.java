@@ -34,9 +34,7 @@ import libsvm.svm_node;
 import libsvm.svm_parameter;
 import libsvm.svm_print_interface;
 import libsvm.svm_problem;
-import org.mongodb.morphia.annotations.PostLoad;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -63,34 +61,12 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
          * Feature set
          */
         @BigDataStructureMarker
-        @Transient
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         private Map<Object, Integer> classIds = new HashMap<>(); //this is small. Size equal to class numbers;
         
         
-        //MORPHIA does not support storing 2d arrays. svmModel has 2d arrays 
-        //inside it. Thus to store it I have to serialize deserialize it and store
-        //it as binary.
-        @Transient
         private svm_model svmModel; //the parameters of the svm model
-        private transient byte[] svmModel_serialized;
-        
-        @PrePersist
-        public void prePersist(){
-            if(svmModel != null && svmModel_serialized==null){
-                svmModel_serialized = DeepCopy.serialize(svmModel);
-            }
-        }
-
-        @PostLoad
-        public void postLoad(){
-            if(svmModel == null && svmModel_serialized!=null){
-                svmModel = (svm_model) DeepCopy.deserialize(svmModel_serialized);
-            }
-        }
-        
-        
         
         @Override
         public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {

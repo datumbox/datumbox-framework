@@ -23,7 +23,7 @@ import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -33,7 +33,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     public static final String SHORT_METHOD_NAME = "SwReg";
 
-    @Transient
+    
     private transient BaseMLregressor mlregressor = null;
     
     

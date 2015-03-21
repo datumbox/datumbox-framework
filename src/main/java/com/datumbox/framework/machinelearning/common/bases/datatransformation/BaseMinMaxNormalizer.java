@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.mongodb.morphia.annotations.Transient;
+
 
 /**
  *
@@ -38,15 +38,15 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
     public static class ModelParameters extends DataTransformer.ModelParameters {
             
         @BigDataStructureMarker
-        @Transient
+        
         protected Map<Object, Double> minColumnValues;
 
         @BigDataStructureMarker
-        @Transient
+        
         protected Map<Object, Double> maxColumnValues;
     
         @BigDataStructureMarker
-        @Transient
+        
         protected Map<Object, Object> referenceLevels;
         
         @Override
