@@ -94,12 +94,12 @@ public class InMemoryStructureFactory implements BigDataStructureFactory {
     }
     
     @Override
-    public <T extends Map> void dropMap(String tableName, T map) {
+    public <T extends Map> void dropMap(String collectionName, T map) {
         map.clear();
     }
     
     @Override
-    public <K,V> Map<K,V> getMap(String tableName) {
+    public <K,V> Map<K,V> getMap(String collectionName) {
         return new HashMap<>();
     }   
 
