@@ -51,8 +51,8 @@ public interface BigDataStructureFactory {
     
     public void dropDatabase();
         
-    public <T extends Map> void dropMap(String collectionName, T map);
+    public <T extends Map> void dropMap(String tableName, T map);
     
-    public <K,V> Map<K,V> getMap(String collectionName);
+    public <K,V> Map<K,V> getMap(String tableName);
     
 }
