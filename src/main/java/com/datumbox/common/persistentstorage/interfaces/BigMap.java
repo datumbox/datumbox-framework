@@ -16,22 +16,24 @@
  */
 package com.datumbox.common.persistentstorage.interfaces;
 
-import com.datumbox.common.objecttypes.Learnable;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * This interface is used to mark Objects which are added in the database
- * and contain big data structures (maps). 
+ * BigMap annotation is used to declare large Maps or Collections in the ModelParameters
+ Objects, which at the same time are defined as Transient for Morphia. The 
+ * reason why we mark them with this annotation is because if for example HashMaps are used
+ * during training, their values will not be stored by Morphia. As a result
+ * we must identify those fields and store them manually.
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public interface BigDataStructureContainer extends Learnable {
-    /**
-     * Links the large variables with DB-backed collections.
-     * 
-     * @param dbf 
-     */
-    
-    public void bigDataStructureInitializer(DatabaseFactory dbf);
-    
+@Target(ElementType.FIELD)
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+public @interface BigMap {
+        
 }

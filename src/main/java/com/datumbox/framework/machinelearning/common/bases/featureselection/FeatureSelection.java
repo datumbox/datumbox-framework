@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.objecttypes.Parameterizable;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
@@ -38,7 +38,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     public static abstract class ModelParameters implements BigDataStructureContainer {
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
             
         }
         

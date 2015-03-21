@@ -19,9 +19,9 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -57,16 +57,16 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         /**
          * Lambda weights
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            lambdas = bdsf.getMap("lambdas");
+            lambdas = dbf.getMap("lambdas");
         }
         
         public Map<List<Object>, Double> getLambdas() {
@@ -153,8 +153,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         
         //create a temporary map for the observed probabilities in training set
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
-        Map<List<Object>, Double> EpFj_observed = bdsf.getMap(tmpPrefix+"EpFj_observed");
+        DatabaseFactory dbf = knowledgeBase.getDbf();
+        Map<List<Object>, Double> EpFj_observed = dbf.getMap(tmpPrefix+"EpFj_observed");
         
         double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
         double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
@@ -210,7 +210,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         
         //Drop the temporary Collection
-        bdsf.dropMap(tmpPrefix+"EpFj_observed", EpFj_observed);
+        dbf.dropMap(tmpPrefix+"EpFj_observed", EpFj_observed);
     }
     
 
@@ -225,14 +225,14 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         int n = modelParameters.getN();
         
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> EpFj_model = bdsf.getMap(tmpPrefix+"EpFj_model");
+            Map<List<Object>, Double> EpFj_model = dbf.getMap(tmpPrefix+"EpFj_model");
             Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();
             
             //initialize the model probabilities with 0. We will start estimating them piece by piece
@@ -381,8 +381,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             
             //Drop the temporary Collection
-            bdsf.dropMap(tmpPrefix+"EpFj_model", EpFj_model);
-            infiniteLambdaWeights = null; //bdsf.dropTable(tmpPrefix+"infiniteLambdaWeights", infiniteLambdaWeights);
+            dbf.dropMap(tmpPrefix+"EpFj_model", EpFj_model);
+            infiniteLambdaWeights = null; //dbf.dropTable(tmpPrefix+"infiniteLambdaWeights", infiniteLambdaWeights);
         }
         
     }

@@ -19,8 +19,8 @@ package com.datumbox.framework.machinelearning.common.bases.basemodels;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
@@ -76,16 +76,16 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         /**
          * Feature set
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            featureIds = bdsf.getMap("featureIds");
+            featureIds = dbf.getMap("featureIds");
         }
         
         public int getTotalIterations() {

@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.InMemoryStructureFactory;
+import com.datumbox.common.persistentstorage.factories.InMemoryFactory;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;

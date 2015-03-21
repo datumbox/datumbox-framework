@@ -16,8 +16,8 @@
  */
 package com.datumbox.configuration;
 
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.factories.InMemoryStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.factories.InMemoryFactory;
 
 /**
  *
@@ -29,7 +29,7 @@ public class StorageConfiguration {
     
     public static class InMemory {
         //Mandatory constants
-        public static final Class<? extends BigDataStructureFactory> STRUCTURE_FRACTORY_CLASS = InMemoryStructureFactory.class;
+        public static final Class<? extends DatabaseFactory> STRUCTURE_FRACTORY_CLASS = InMemoryFactory.class;
         public static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
         public static final String TMP_PREFIX = "TMP_";
         
@@ -40,10 +40,10 @@ public class StorageConfiguration {
     
     //Useful Static methods
     
-    public static Class<? extends BigDataStructureFactory> getSelectedBDSFClass() {
+    public static Class<? extends DatabaseFactory> getSelectedDBFClass() {
         //get from General StorageConfiguration the class that handles permanent storage and call the default*Type methods
-        Class<? extends BigDataStructureFactory> selectedBDSFClass = (Class<? extends BigDataStructureFactory>) getStorageConstant("STRUCTURE_FRACTORY_CLASS");
-        return selectedBDSFClass;
+        Class<? extends DatabaseFactory> selectedDBFClass = (Class<? extends DatabaseFactory>) getStorageConstant("STRUCTURE_FRACTORY_CLASS");
+        return selectedDBFClass;
     }
 
     public static String getDBnameSeparator() {

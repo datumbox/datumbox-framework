@@ -20,8 +20,8 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
@@ -79,7 +79,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * an Integer but stored as object because the Record stores columns as Objects).
          * The value is the Id of the topic to which the word is assigned.
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
@@ -91,7 +91,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The key is a combination of Record.id and Topic id.
          * The value is the number of counts of the pair.
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
@@ -104,7 +104,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * record as an Object.
          * The value is the number of counts of the pair.
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
@@ -117,7 +117,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The key the Record.Id.
          * The Value is the number of counts.
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Integer, Integer> documentWordCounts; //the n.(d) in the papers
         
@@ -127,20 +127,20 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * The key the Topic Id.
          * The Value is the number of counts.
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            topicAssignmentOfDocumentWord = bdsf.getMap("topicAssignmentOfDocumentWord");
-            documentTopicCounts = bdsf.getMap("documentTopicCounts");
-            topicWordCounts = bdsf.getMap("topicWordCounts");
-            documentWordCounts = bdsf.getMap("documentWordCounts");
-            topicCounts = bdsf.getMap("topicCounts");
+            topicAssignmentOfDocumentWord = dbf.getMap("topicAssignmentOfDocumentWord");
+            documentTopicCounts = dbf.getMap("documentTopicCounts");
+            topicWordCounts = dbf.getMap("topicWordCounts");
+            documentWordCounts = dbf.getMap("documentWordCounts");
+            topicCounts = dbf.getMap("topicCounts");
         }
 
         public int getTotalIterations() {
@@ -520,13 +520,13 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = bdsf.getMap(tmpPrefix+"topicAssignmentOfDocumentWord");
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = bdsf.getMap(tmpPrefix+"documentTopicCounts");
-        Map<List<Object>, Integer> tmp_topicWordCounts = bdsf.getMap(tmpPrefix+"topicWordCounts");
-        Map<Integer, Integer> tmp_topicCounts = bdsf.getMap(tmpPrefix+"topicCounts");
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbf.getMap(tmpPrefix+"topicAssignmentOfDocumentWord");
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbf.getMap(tmpPrefix+"documentTopicCounts");
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbf.getMap(tmpPrefix+"topicWordCounts");
+        Map<Integer, Integer> tmp_topicCounts = dbf.getMap(tmpPrefix+"topicCounts");
         
         //initialize topic assignments of each word randomly and update the counters
         for(Record r : newData) {
@@ -666,10 +666,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         //Drop the temporary Collection
-        bdsf.dropMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        bdsf.dropMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
-        bdsf.dropMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
-        bdsf.dropMap(tmpPrefix+"topicCounts", tmp_topicCounts);
+        dbf.dropMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        dbf.dropMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
+        dbf.dropMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
+        dbf.dropMap(tmpPrefix+"topicCounts", tmp_topicCounts);
         
         
         validationMetrics.setPerplexity(perplexity);

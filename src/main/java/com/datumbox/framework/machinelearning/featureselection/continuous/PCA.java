@@ -20,8 +20,8 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Cont
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Map;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -74,7 +74,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     }
     
     public static class ModelParameters extends ContinuousFeatureSelection.ModelParameters {
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Integer> feature2ColumnId;
         
@@ -90,10 +90,10 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         private double[][] components; //components weights 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
 
-            feature2ColumnId = bdsf.getMap("feature2ColumnId");
+            feature2ColumnId = dbf.getMap("feature2ColumnId");
         }
 
         public Map<Object, Integer> getFeature2ColumnId() {

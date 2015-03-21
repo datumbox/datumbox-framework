@@ -16,7 +16,7 @@
  */
 package com.datumbox.applications.nlp;
 
-import com.datumbox.common.persistentstorage.factories.InMemoryStructureFactory;
+import com.datumbox.common.persistentstorage.factories.InMemoryFactory;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.TestConfiguration;

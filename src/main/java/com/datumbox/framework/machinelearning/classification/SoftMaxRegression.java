@@ -19,9 +19,9 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
@@ -51,16 +51,16 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         /**
          * Thita weights
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf); 
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf); 
             
-            thitas = bdsf.getMap("thitas");
+            thitas = dbf.getMap("thitas");
         }
         
         public Map<List<Object>, Double> getThitas() {
@@ -193,14 +193,14 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas");
+            Map<List<Object>, Double> newThitas = dbf.getMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             batchGradientDescent(trainingData, newThitas, learningRate);
@@ -221,7 +221,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             }
             
             //Drop the temporary Collection
-            bdsf.dropMap(tmpPrefix+"newThitas", newThitas);
+            dbf.dropMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

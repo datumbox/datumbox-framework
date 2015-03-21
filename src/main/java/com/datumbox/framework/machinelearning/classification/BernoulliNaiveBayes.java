@@ -20,8 +20,8 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,15 +45,15 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     public static final String SHORT_METHOD_NAME = "BerNB";
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf); 
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf); 
             
-            sumOfLog1minusProb = bdsf.getMap("sumOfLog1minusProb");
+            sumOfLog1minusProb = dbf.getMap("sumOfLog1minusProb");
         }
         
         public Map<Object, Double> getSumOfLog1minusProb() {

@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
@@ -187,10 +187,10 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            //clusterList = bdsf.getMap("clusterList");
+            //clusterList = dbf.getMap("clusterList");
 
             if(clusterList==null) {
                 clusterList = new HashMap<>();

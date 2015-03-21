@@ -17,7 +17,7 @@
 package com.datumbox.common.persistentstorage.interfaces;
 
 import com.datumbox.common.objecttypes.Trainable;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import java.io.Serializable;
 
 /**
@@ -46,7 +46,7 @@ public interface BigDataStructureContainerHolder extends Serializable {
     public void setTrained(boolean trained);
     
     public String getDbName();
-    public BigDataStructureFactory getBdsf();
+    public DatabaseFactory getDbf();
     
 
     public Class<? extends Trainable> getOwnerClass();

@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
@@ -304,10 +304,10 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         String tmpPrefix=StorageConfiguration.getTmpPrefix();
         
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
 
-        Map<List<Object>, Double> distanceArray = bdsf.getMap(tmpPrefix+"distanceArray"); //it holds the distances between clusters
-        Map<Integer, Integer> minClusterDistanceId = bdsf.getMap(tmpPrefix+"minClusterDistanceId"); //it holds the ids of the min distances
+        Map<List<Object>, Double> distanceArray = dbf.getMap(tmpPrefix+"distanceArray"); //it holds the distances between clusters
+        Map<Integer, Integer> minClusterDistanceId = dbf.getMap(tmpPrefix+"minClusterDistanceId"); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -379,8 +379,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
         
         //Drop the temporary Collection
-        bdsf.dropMap(tmpPrefix+"distanceArray", distanceArray);
-        bdsf.dropMap(tmpPrefix+"minClusterDistanceId", minClusterDistanceId);
+        dbf.dropMap(tmpPrefix+"distanceArray", distanceArray);
+        dbf.dropMap(tmpPrefix+"minClusterDistanceId", minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

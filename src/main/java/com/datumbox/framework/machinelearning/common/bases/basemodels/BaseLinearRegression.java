@@ -19,9 +19,9 @@ package com.datumbox.framework.machinelearning.common.bases.basemodels;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.machinelearning.common.validation.LinearRegressionValidation;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
@@ -45,16 +45,16 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         /**
          * Thita weights
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            thitas = bdsf.getMap("thitas");
+            thitas = dbf.getMap("thitas");
         }
         
         public Map<Object, Double> getThitas() {

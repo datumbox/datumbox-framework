@@ -20,8 +20,8 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,24 +44,24 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         /**
          * log priors for log( P(c) )
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Double> logPriors; //prior log probabilities of the classes
 
         /**
          * log likelihood for log( P(x|c) ) 
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            logPriors = bdsf.getMap("logPriors");
-            logLikelihoods = bdsf.getMap("logLikelihoods");
+            logPriors = dbf.getMap("logPriors");
+            logLikelihoods = dbf.getMap("logLikelihoods");
             
         }
         

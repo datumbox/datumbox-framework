@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Parameterizable;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
@@ -38,7 +38,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public static abstract class ModelParameters implements BigDataStructureContainer {
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
             
         }
             

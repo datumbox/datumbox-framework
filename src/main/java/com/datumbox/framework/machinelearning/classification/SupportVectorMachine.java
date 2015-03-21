@@ -19,10 +19,10 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         /**
          * Feature set
          */
-        @BigDataStructureMarker
+        @BigMap
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         private Map<Object, Integer> classIds = new HashMap<>(); //this is small. Size equal to class numbers;
@@ -69,10 +69,10 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         private svm_model svmModel; //the parameters of the svm model
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf); 
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf); 
             
-            featureIds = bdsf.getMap("featureIds");
+            featureIds = dbf.getMap("featureIds");
         }
         
         public Map<Object, Integer> getFeatureIds() {

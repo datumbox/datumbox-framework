@@ -19,8 +19,8 @@ package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,25 +37,25 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
     
     public static class ModelParameters extends DataTransformer.ModelParameters {
             
-        @BigDataStructureMarker
+        @BigMap
         
         protected Map<Object, Double> minColumnValues;
 
-        @BigDataStructureMarker
+        @BigMap
         
         protected Map<Object, Double> maxColumnValues;
     
-        @BigDataStructureMarker
+        @BigMap
         
         protected Map<Object, Object> referenceLevels;
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf);
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf);
             
-            minColumnValues = bdsf.getMap("minColumnValues");
-            maxColumnValues = bdsf.getMap("maxColumnValues");
-            referenceLevels = bdsf.getMap("referenceLevels");
+            minColumnValues = dbf.getMap("minColumnValues");
+            maxColumnValues = dbf.getMap("maxColumnValues");
+            referenceLevels = dbf.getMap("referenceLevels");
         }
 
         public Map<Object, Double> getMinColumnValues() {

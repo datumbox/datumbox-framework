@@ -20,7 +20,7 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinear
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import java.util.Map;
@@ -115,14 +115,14 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbf.getMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             
@@ -145,7 +145,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             }
             
             //Drop the temporary Collection
-            bdsf.dropMap(tmpPrefix+"newThitas", newThitas);
+            dbf.dropMap(tmpPrefix+"newThitas", newThitas);
         }
     }
 

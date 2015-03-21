@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.configuration.StorageConfiguration;
@@ -186,10 +186,10 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         
         //create a temporary map for the observed probabilities in training set
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> observationWeights = bdsf.getMap(tmpPrefix+"observationWeights");
+        Map<Object, Object> observationWeights = dbf.getMap(tmpPrefix+"observationWeights");
         
         //calculate the training parameters of bagging
         for(Record r : trainingData) {
@@ -232,7 +232,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //Drop the temporary Collection
-        bdsf.dropMap(tmpPrefix+"observationWeights", observationWeights);
+        dbf.dropMap(tmpPrefix+"observationWeights", observationWeights);
     }
 
     /**

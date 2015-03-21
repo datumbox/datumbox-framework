@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.common.dataobjects;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
 import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +45,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     protected transient String dbName; 
     
     
-    protected transient BigDataStructureFactory bdsf;
+    protected transient DatabaseFactory dbf;
     
     
     protected Class<? extends Trainable> ownerClass; //the Class name of the algorithm
@@ -76,7 +76,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     public TrainableKnowledgeBase(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
         this.dbName = dbName;
         //get an instance on the permanent storage handler
-        bdsf = BigDataStructureFactory.newInstance(dbName);
+        dbf = DatabaseFactory.newInstance(dbName);
         
         this.mpClass = mpClass;
         this.tpClass = tpClass;
@@ -99,8 +99,8 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     }
 
     @Override
-    public BigDataStructureFactory getBdsf() {
-        return bdsf;
+    public DatabaseFactory getDbf() {
+        return dbf;
     }
     
     @Override
@@ -119,7 +119,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
             throw new IllegalArgumentException("Can not store an empty KnowledgeBase.");
         }
         
-        bdsf.save(this);
+        dbf.save(this);
     }
     
     @Override
@@ -127,10 +127,10 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         if(modelParameters==null) {
 
             //NOTE: the kbObject was constructed with the default protected no-argument
-            //constructor. As a result it does not have an initialized bdsf object.
-            //We don't care for that though because this instance has a valid bdsf object
+            //constructor. As a result it does not have an initialized dbf object.
+            //We don't care for that though because this instance has a valid dbf object
             //and the kbObject is only used to copy its values (we don't use it).
-            TrainableKnowledgeBase kbObject = bdsf.load(this.getClass());
+            TrainableKnowledgeBase kbObject = dbf.load(this.getClass());
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }
@@ -153,7 +153,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
     
     @Override
     public void erase() {
-    	bdsf.dropDatabase();
+    	dbf.dropDatabase();
         
         modelParameters = null;
         trainingParameters = null;
@@ -167,7 +167,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         try {
             modelParameters = mpClass.getConstructor().newInstance();
             if(BigDataStructureContainer.class.isAssignableFrom(modelParameters.getClass())) {
-                ((BigDataStructureContainer)modelParameters).bigDataStructureInitializer(bdsf);
+                ((BigDataStructureContainer)modelParameters).bigDataStructureInitializer(dbf);
             }
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {

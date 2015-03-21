@@ -19,8 +19,8 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.BigDataStructureFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureMarker;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -62,23 +62,23 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         /**
          * W weights
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Double> weights; //the W parameters of the model
 
         /**
          * Right-side limits of the class on the ordinal regression line. 
          */
-        @BigDataStructureMarker
+        @BigMap
         
         private Map<Object, Double> thitas; 
         
         @Override
-        public void bigDataStructureInitializer(BigDataStructureFactory bdsf) {
-            super.bigDataStructureInitializer(bdsf); 
+        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+            super.bigDataStructureInitializer(dbf); 
             
-            weights = bdsf.getMap("weights");
-            thitas = bdsf.getMap("thitas");
+            weights = dbf.getMap("weights");
+            thitas = dbf.getMap("thitas");
         }
         
         public Map<Object, Double> getWeights() {
@@ -228,16 +228,16 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        BigDataStructureFactory bdsf = knowledgeBase.getBdsf();
+        DatabaseFactory dbf = knowledgeBase.getDbf();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = bdsf.getMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbf.getMap(tmpPrefix+"newThitas");
             
-            Map<Object, Double> newWeights = bdsf.getMap(tmpPrefix+"newWeights");
+            Map<Object, Double> newWeights = dbf.getMap(tmpPrefix+"newWeights");
             
             newThitas.putAll(thitas);
             newWeights.putAll(weights);
@@ -263,8 +263,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             }
             
             //Drop the temporary Collections
-            bdsf.dropMap(tmpPrefix+"newWeights", newWeights);
-            bdsf.dropMap(tmpPrefix+"newThitas", newThitas);
+            dbf.dropMap(tmpPrefix+"newWeights", newWeights);
+            dbf.dropMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     
