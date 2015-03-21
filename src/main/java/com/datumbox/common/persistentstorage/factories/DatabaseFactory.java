@@ -16,8 +16,8 @@
  */
 package com.datumbox.common.persistentstorage.factories;
 
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
 import com.datumbox.configuration.StorageConfiguration;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
@@ -43,9 +43,9 @@ public interface DatabaseFactory {
         }
     }
     
-    public <H extends BigDataStructureContainerHolder> void save(H holderObject);
+    public <KB extends KnowledgeBase> void save(KB holderObject);
     
-    public <H extends BigDataStructureContainerHolder> H load(Class<H> klass);
+    public <KB extends KnowledgeBase> KB load(Class<KB> klass);
     
     public boolean existsDatabase();
     

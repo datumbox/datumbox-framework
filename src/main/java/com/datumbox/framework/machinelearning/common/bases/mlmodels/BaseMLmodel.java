@@ -22,11 +22,11 @@ import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
+import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.dataobjects.MLmodelKnowledgeBase;
-import com.datumbox.framework.machinelearning.common.dataobjects.TrainableKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -46,7 +46,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     /**
      * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
      */
-    public static abstract class ModelParameters implements BigDataStructureContainer {
+    public static abstract class ModelParameters implements BigMapContainer {
         
         @Override
         public void bigDataStructureInitializer(DatabaseFactory dbf) {
@@ -59,7 +59,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     /**
      * Training Parameters of an algorithm: For example in regression you have the number of total regressors
      */
-    public static abstract class TrainingParameters implements Parameterizable, TrainableKnowledgeBase.SelfConstructible<BaseMLmodel.TrainingParameters> {    
+    public static abstract class TrainingParameters implements Parameterizable, KnowledgeBase.SelfConstructible<BaseMLmodel.TrainingParameters> {    
 
         public TrainingParameters() {
             //here goes initialization of parameters that are private and must be overriden by inherited classes
@@ -87,7 +87,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     /**
      * Validation metrics: For example in regression you have the likelihood, the R^2 etc
      */
-    public static abstract class ValidationMetrics implements Learnable, TrainableKnowledgeBase.SelfConstructible<BaseMLmodel.ValidationMetrics> {
+    public static abstract class ValidationMetrics implements Learnable, KnowledgeBase.SelfConstructible<BaseMLmodel.ValidationMetrics> {
         
         /**
          * This method allows us to build a new empty object of the current object

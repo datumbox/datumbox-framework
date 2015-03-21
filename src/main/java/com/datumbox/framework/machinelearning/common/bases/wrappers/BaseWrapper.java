@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.common.bases.wrappers;
 
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
+import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
-import com.datumbox.framework.machinelearning.common.dataobjects.TrainableKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +39,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP extends BaseWrapper.TrainingParameters> extends BaseTrainable<MP, TP, TrainableKnowledgeBase<MP, TP>> {
+public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP extends BaseWrapper.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
     
     //internal objects
@@ -48,7 +48,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
     protected BaseMLmodel mlmodel = null;
     
 
-    public static abstract class ModelParameters implements BigDataStructureContainer {
+    public static abstract class ModelParameters implements BigMapContainer {
 
         @Override
         public void bigDataStructureInitializer(DatabaseFactory dbf) {
@@ -57,7 +57,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         
     }
     
-    public static abstract class TrainingParameters<DT extends DataTransformer, FS extends FeatureSelection, ML extends BaseMLmodel> implements Parameterizable, TrainableKnowledgeBase.SelfConstructible<BaseWrapper.TrainingParameters> {
+    public static abstract class TrainingParameters<DT extends DataTransformer, FS extends FeatureSelection, ML extends BaseMLmodel> implements Parameterizable, KnowledgeBase.SelfConstructible<BaseWrapper.TrainingParameters> {
         
         /**
          * This method allows us to build a new empty object of the current object
@@ -168,7 +168,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         }
         
         this.dbName = dbName;
-        knowledgeBase = new TrainableKnowledgeBase<>(dbName, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     }
       

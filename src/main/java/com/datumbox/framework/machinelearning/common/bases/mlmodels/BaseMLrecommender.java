@@ -20,10 +20,10 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
+import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
-import com.datumbox.framework.machinelearning.common.dataobjects.TrainableKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -33,12 +33,12 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParameters, TP extends BaseMLrecommender.TrainingParameters> extends BaseTrainable<MP, TP, TrainableKnowledgeBase<MP, TP>> {
+public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParameters, TP extends BaseMLrecommender.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
     
     /**
      * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
      */
-    public static abstract class ModelParameters implements BigDataStructureContainer {
+    public static abstract class ModelParameters implements BigMapContainer {
         
         @Override
         public void bigDataStructureInitializer(DatabaseFactory dbf) {
@@ -51,7 +51,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     /**
      * Training Parameters of an algorithm: For example in regression you have the number of total regressors
      */
-    public static abstract class TrainingParameters implements Parameterizable, TrainableKnowledgeBase.SelfConstructible<BaseMLrecommender.TrainingParameters> {    
+    public static abstract class TrainingParameters implements Parameterizable, KnowledgeBase.SelfConstructible<BaseMLrecommender.TrainingParameters> {    
 
         public TrainingParameters() {
             //here goes initialization of parameters that are private and must be overriden by inherited classes
@@ -116,7 +116,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         dbName += StorageConfiguration.getDBnameSeparator() + methodName;
         
         this.dbName = dbName;
-        knowledgeBase = new TrainableKnowledgeBase<>(dbName, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     } 
     

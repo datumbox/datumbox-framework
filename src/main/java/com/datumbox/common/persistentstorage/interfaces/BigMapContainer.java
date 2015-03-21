@@ -25,7 +25,7 @@ import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public interface BigDataStructureContainer extends Learnable {
+public interface BigMapContainer extends Learnable {
     /**
      * Links the large variables with DB-backed collections.
      * 

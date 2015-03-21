@@ -19,11 +19,11 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
+import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
-import com.datumbox.framework.machinelearning.common.dataobjects.TrainableKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -32,10 +32,10 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public abstract class FeatureSelection<MP extends FeatureSelection.ModelParameters, TP extends FeatureSelection.TrainingParameters> extends BaseTrainable<MP, TP, TrainableKnowledgeBase<MP, TP>> {
+public abstract class FeatureSelection<MP extends FeatureSelection.ModelParameters, TP extends FeatureSelection.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
     
-    public static abstract class ModelParameters implements BigDataStructureContainer {
+    public static abstract class ModelParameters implements BigMapContainer {
         
         @Override
         public void bigDataStructureInitializer(DatabaseFactory dbf) {
@@ -45,7 +45,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         //here goes the parameters of the feature slection
     }
     
-    public static abstract class TrainingParameters implements Parameterizable, TrainableKnowledgeBase.SelfConstructible<FeatureSelection.TrainingParameters> {
+    public static abstract class TrainingParameters implements Parameterizable, KnowledgeBase.SelfConstructible<FeatureSelection.TrainingParameters> {
         
         /**
          * This method allows us to build a new empty object of the current object
@@ -97,7 +97,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         dbName += StorageConfiguration.getDBnameSeparator() + methodName;
         
         this.dbName = dbName;
-        knowledgeBase = new TrainableKnowledgeBase<>(dbName, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     }
 

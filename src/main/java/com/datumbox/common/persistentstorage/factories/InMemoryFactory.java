@@ -26,9 +26,9 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.configuration.StorageConfiguration;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 
 /**
@@ -49,7 +49,7 @@ public class InMemoryFactory implements DatabaseFactory {
     }
 
     @Override
-    public <H extends BigDataStructureContainerHolder> void save(H holderObject) {
+    public <H extends KnowledgeBase> void save(H holderObject) {
         try { 
             Files.write(filepath, DeepCopy.serialize(holderObject));
         } 
@@ -60,7 +60,7 @@ public class InMemoryFactory implements DatabaseFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <H extends BigDataStructureContainerHolder> H load(Class<H> klass) {
+    public <H extends KnowledgeBase> H load(Class<H> klass) {
         try { 
             //read the stored serialized object
             H holderObject = (H)DeepCopy.deserialize(Files.readAllBytes(filepath));

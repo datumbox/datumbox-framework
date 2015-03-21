@@ -20,8 +20,8 @@ import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainer;
-import com.datumbox.common.persistentstorage.interfaces.BigDataStructureContainerHolder;
+import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 
@@ -31,7 +31,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameterizable & TrainableKnowledgeBase.SelfConstructible> implements BigDataStructureContainerHolder {
+public class KnowledgeBase<MP extends Learnable, TP extends Parameterizable & KnowledgeBase.SelfConstructible> implements Serializable {
 
     public interface SelfConstructible<O> {
         public O getEmptyObject();
@@ -69,11 +69,11 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         ==================
     */
 
-    protected TrainableKnowledgeBase() {
+    protected KnowledgeBase() {
         //constructor only used in serialization/deserialization
     }
 
-    public TrainableKnowledgeBase(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
+    public KnowledgeBase(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
         this.dbName = dbName;
         //get an instance on the permanent storage handler
         dbf = DatabaseFactory.newInstance(dbName);
@@ -82,38 +82,30 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         this.tpClass = tpClass;
     }
     
-        
-    @Override
     public boolean isTrained() {
         return trained;
     }
     
-    @Override
     public void setTrained(boolean trained) {
         this.trained = trained;
     }
 
-    @Override
     public String getDbName() {
         return dbName;
     }
 
-    @Override
     public DatabaseFactory getDbf() {
         return dbf;
     }
     
-    @Override
     public Class<? extends Trainable> getOwnerClass() {
         return ownerClass;
     }
 
-    @Override
     public void setOwnerClass(Class<? extends Trainable> ownerClass) {
         this.ownerClass = ownerClass;
     }       
 
-    @Override
     public void save() {
         if(modelParameters==null) {
             throw new IllegalArgumentException("Can not store an empty KnowledgeBase.");
@@ -122,7 +114,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         dbf.save(this);
     }
     
-    @Override
     public void load() {
         if(modelParameters==null) {
 
@@ -130,7 +121,7 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
             //constructor. As a result it does not have an initialized dbf object.
             //We don't care for that though because this instance has a valid dbf object
             //and the kbObject is only used to copy its values (we don't use it).
-            TrainableKnowledgeBase kbObject = dbf.load(this.getClass());
+            KnowledgeBase kbObject = dbf.load(this.getClass());
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }
@@ -142,7 +133,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         }
     }
 
-    @Override
     public boolean isConfigured() {
         if(modelParameters==null || trainingParameters==null) {
             return false;
@@ -151,7 +141,6 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         return true;
     }
     
-    @Override
     public void erase() {
     	dbf.dropDatabase();
         
@@ -160,14 +149,13 @@ public class TrainableKnowledgeBase<MP extends Learnable, TP extends Parameteriz
         setTrained(false);
     }
     
-    @Override
     public void reinitialize() {
         erase();
 
         try {
             modelParameters = mpClass.getConstructor().newInstance();
-            if(BigDataStructureContainer.class.isAssignableFrom(modelParameters.getClass())) {
-                ((BigDataStructureContainer)modelParameters).bigDataStructureInitializer(dbf);
+            if(BigMapContainer.class.isAssignableFrom(modelParameters.getClass())) {
+                ((BigMapContainer)modelParameters).bigDataStructureInitializer(dbf);
             }
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
