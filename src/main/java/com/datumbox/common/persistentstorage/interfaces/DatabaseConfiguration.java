@@ -24,7 +24,5 @@ public interface DatabaseConfiguration {
     
     public String getDBnameSeparator();
     
-    public String getTmpPrefix();
-    
     public DatabaseConnector getConnector(String database);
 }

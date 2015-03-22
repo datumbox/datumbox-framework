@@ -126,10 +126,9 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
-        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix(); 
-        Map<Object, Integer> classCounts = dbc.getBigMap(tmpPrefix+"classCounts"); //map which stores the counts of the classes
-        Map<List<Object>, Integer> featureClassCounts = dbc.getBigMap(tmpPrefix+"featureClassCounts"); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> featureCounts = dbc.getBigMap(tmpPrefix+"featureCounts"); //map which stores the counts of the features
+        Map<Object, Integer> classCounts = dbc.getBigMap("classCounts"); //map which stores the counts of the classes
+        Map<List<Object>, Integer> featureClassCounts = dbc.getBigMap("featureClassCounts"); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> featureCounts = dbc.getBigMap("featureCounts"); //map which stores the counts of the features
 
         
         //build the maps with teh feature statistics and counts

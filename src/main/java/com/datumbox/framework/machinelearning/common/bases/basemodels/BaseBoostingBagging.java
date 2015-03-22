@@ -168,7 +168,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
         
@@ -193,7 +192,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> observationWeights = dbc.getBigMap(tmpPrefix+"observationWeights");
+        Map<Object, Object> observationWeights = dbc.getBigMap("observationWeights");
         
         //calculate the training parameters of bagging
         for(Record r : trainingData) {
@@ -236,7 +235,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap(tmpPrefix+"observationWeights", observationWeights);
+        dbc.dropBigMap("observationWeights", observationWeights);
     }
 
     /**

@@ -94,8 +94,6 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
 
     @Override
     protected void estimateModelParameters(Dataset trainingData) {
-        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
-        
         int n = trainingData.size();
         int d = trainingData.getColumnSize()+1;//plus one for the constant
         
@@ -127,7 +125,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbc.getBigMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbc.getBigMap("newThitas");
             
             newThitas.putAll(thitas);
             
@@ -150,7 +148,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap(tmpPrefix+"newThitas", newThitas);
+            dbc.dropBigMap("newThitas", newThitas);
         }
     }
 

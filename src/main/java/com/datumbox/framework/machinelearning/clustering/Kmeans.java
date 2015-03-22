@@ -351,15 +351,14 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         }
         else {
             //calculate weights for the features
-            String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
             
             int n = modelParameters.getN();
             
             DatabaseConnector dbc = knowledgeBase.getDbc();
             
-            Map<Object, Double> categoricalFrequencies = dbc.getBigMap(tmpPrefix+"categoricalFrequencies");
-            Map<Object, Double> varianceSumX = dbc.getBigMap(tmpPrefix+"varianceSumX");
-            Map<Object, Double> varianceSumXsquare = dbc.getBigMap(tmpPrefix+"varianceSumXsquare");
+            Map<Object, Double> categoricalFrequencies = dbc.getBigMap("categoricalFrequencies");
+            Map<Object, Double> varianceSumX = dbc.getBigMap("varianceSumX");
+            Map<Object, Double> varianceSumXsquare = dbc.getBigMap("varianceSumXsquare");
         
             //calculate variance and frequencies
             for(Record r : trainingData) {
@@ -423,9 +422,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
-            dbc.dropBigMap(tmpPrefix+"varianceSumX", categoricalFrequencies);
-            dbc.dropBigMap(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
+            dbc.dropBigMap("categoricalFrequencies", categoricalFrequencies);
+            dbc.dropBigMap("varianceSumX", categoricalFrequencies);
+            dbc.dropBigMap("varianceSumXsquare", categoricalFrequencies);
         }
     }
     

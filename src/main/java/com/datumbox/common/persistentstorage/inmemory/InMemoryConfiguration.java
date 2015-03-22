@@ -27,7 +27,6 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     
     //Mandatory constants
     private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
-    private static final String TMP_PREFIX = "TMP_";
 
     //DB specific properties
     private String dbRootFolder = "";
@@ -40,11 +39,6 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     @Override
     public String getDBnameSeparator() {
         return DBNAME_SEPARATOR;
-    }
-
-    @Override
-    public String getTmpPrefix() {
-        return TMP_PREFIX;
     }
 
     public String getDbRootFolder() {

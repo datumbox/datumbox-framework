@@ -176,7 +176,6 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     @Override
     @SuppressWarnings("unchecked")
     protected void estimateModelParameters(Dataset trainingData) {
-        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize();//no constant, thresholds can be seen as constants
@@ -233,9 +232,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbc.getBigMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbc.getBigMap("newThitas");
             
-            Map<Object, Double> newWeights = dbc.getBigMap(tmpPrefix+"newWeights");
+            Map<Object, Double> newWeights = dbc.getBigMap("newWeights");
             
             newThitas.putAll(thitas);
             newWeights.putAll(weights);
@@ -261,8 +260,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             }
             
             //Drop the temporary Collections
-            dbc.dropBigMap(tmpPrefix+"newWeights", newWeights);
-            dbc.dropBigMap(tmpPrefix+"newThitas", newThitas);
+            dbc.dropBigMap("newWeights", newWeights);
+            dbc.dropBigMap("newThitas", newThitas);
         }
     }
     

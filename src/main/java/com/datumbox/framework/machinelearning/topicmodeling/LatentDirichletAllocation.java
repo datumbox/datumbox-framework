@@ -502,8 +502,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         //create new validation metrics object
         ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
-        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
-        
         //get model parameters
         int n = modelParameters.getN();
         int d = modelParameters.getD();
@@ -517,10 +515,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap(tmpPrefix+"topicAssignmentOfDocumentWord");
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap(tmpPrefix+"documentTopicCounts");
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap(tmpPrefix+"topicWordCounts");
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap(tmpPrefix+"topicCounts");
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("topicAssignmentOfDocumentWord");
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("documentTopicCounts");
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("topicWordCounts");
+        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("topicCounts");
         
         //initialize topic assignments of each word randomly and update the counters
         for(Record r : newData) {
@@ -660,10 +658,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        dbc.dropBigMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
-        dbc.dropBigMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
-        dbc.dropBigMap(tmpPrefix+"topicCounts", tmp_topicCounts);
+        dbc.dropBigMap("topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        dbc.dropBigMap("documentTopicCounts", tmp_documentTopicCounts);
+        dbc.dropBigMap("topicWordCounts", tmp_topicWordCounts);
+        dbc.dropBigMap("topicCounts", tmp_topicCounts);
         
         
         validationMetrics.setPerplexity(perplexity);

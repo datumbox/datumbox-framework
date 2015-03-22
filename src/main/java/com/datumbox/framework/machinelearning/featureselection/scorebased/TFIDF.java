@@ -106,7 +106,6 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     protected void estimateModelParameters(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         boolean binarized = trainingParameters.isBinarized();
         
@@ -115,7 +114,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         modelParameters.setN(n);
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Double> idfMap = dbc.getBigMap(tmpPrefix+"idf");
+        Map<Object, Double> idfMap = dbc.getBigMap("idf");
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -199,7 +198,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap(tmpPrefix+"idf", idfMap);
+        dbc.dropBigMap("idf", idfMap);
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<maxTFIDFfeatureScores.size()) {
