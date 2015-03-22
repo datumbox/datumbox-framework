@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
-import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 
@@ -50,27 +50,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     /**
      * Training Parameters of an algorithm: For example in regression you have the number of total regressors
      */
-    public static abstract class TrainingParameters implements Parameterizable, KnowledgeBase.SelfConstructible<BaseMLrecommender.TrainingParameters> {    
-
-        public TrainingParameters() {
-            //here goes initialization of parameters that are private and must be overriden by inherited classes
-        }
-        
-        /**
-         * This method allows us to build a new empty object of the current object
-         * directly from it. Casting to the appropriate type is required.
-         * 
-         * @return 
-         */
-        @Override
-        public BaseMLrecommender.TrainingParameters getEmptyObject() {
-            try {
-                return this.getClass().getConstructor().newInstance();
-            } 
-            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+    public static abstract class TrainingParameters extends BaseTrainingParameters {
         
         //here goes public fields that are used as initial training parameters
     } 

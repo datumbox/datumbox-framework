@@ -17,12 +17,12 @@
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 
@@ -44,24 +44,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         //here goes the parameters of the feature slection
     }
     
-    public static abstract class TrainingParameters implements Parameterizable, KnowledgeBase.SelfConstructible<FeatureSelection.TrainingParameters> {
-        
-        /**
-         * This method allows us to build a new empty object of the current object
-         * directly from it. Casting to the appropriate type is required.
-         * 
-         * @return 
-         */
-        @Override
-        public FeatureSelection.TrainingParameters getEmptyObject() {
-            try {
-                return this.getClass().getConstructor().newInstance();
-            } 
-            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        
+    public static abstract class TrainingParameters extends BaseTrainingParameters {
         //here goes public fields that are used as initial training parameters        
     }
     

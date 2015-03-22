@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.datumbox.framework.machinelearning.common.bases;
+package com.datumbox.framework.machinelearning.common.bases.dataobjects;
 
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;

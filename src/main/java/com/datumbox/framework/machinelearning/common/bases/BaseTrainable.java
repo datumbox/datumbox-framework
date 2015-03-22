@@ -16,8 +16,9 @@
  */
 package com.datumbox.framework.machinelearning.common.bases;
 
-import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 /**
@@ -27,7 +28,7 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  * @param <TP>
  * @param <KB>
  */
-public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends Parameterizable & KnowledgeBase.SelfConstructible, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
+public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends BaseTrainingParameters, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
     //Variables necessary for hanlding the BigDataStructureContainerHolder
     

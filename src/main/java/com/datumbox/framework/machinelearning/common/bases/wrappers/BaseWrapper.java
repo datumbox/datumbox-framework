@@ -16,11 +16,11 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.wrappers;
 
-import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.configuration.StorageConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
@@ -56,23 +56,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         
     }
     
-    public static abstract class TrainingParameters<DT extends DataTransformer, FS extends FeatureSelection, ML extends BaseMLmodel> implements Parameterizable, KnowledgeBase.SelfConstructible<BaseWrapper.TrainingParameters> {
-        
-        /**
-         * This method allows us to build a new empty object of the current object
-         * directly from it. Casting to the appropriate type is required.
-         * 
-         * @return 
-         */
-        @Override
-        public BaseWrapper.TrainingParameters getEmptyObject() {
-            try {
-                return this.getClass().getConstructor().newInstance();
-            } 
-            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+    public static abstract class TrainingParameters<DT extends DataTransformer, FS extends FeatureSelection, ML extends BaseMLmodel> extends BaseTrainingParameters {
         
         
         //Classes

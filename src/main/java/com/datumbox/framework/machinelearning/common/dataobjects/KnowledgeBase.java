@@ -16,10 +16,10 @@
  */
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
-import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.framework.machinelearning.common.bases.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
@@ -30,12 +30,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class KnowledgeBase<MP extends BaseModelParameters, TP extends Parameterizable & KnowledgeBase.SelfConstructible> implements Serializable {
-
-    public interface SelfConstructible<O> {
-        public O getEmptyObject();
-    }
-
+public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements Serializable {
     
     /*
         VARIABLES
