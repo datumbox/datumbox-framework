@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;

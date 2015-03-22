@@ -17,7 +17,7 @@
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 
 /**

@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.

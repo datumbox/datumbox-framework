@@ -16,8 +16,8 @@
  */
 package com.datumbox.configuration;
 
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.factories.InMemoryFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.InMemoryFactory;
 
 /**
  *

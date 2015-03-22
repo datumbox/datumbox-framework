@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.wrappers;
 
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;

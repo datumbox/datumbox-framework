@@ -17,7 +17,7 @@
 package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;

@@ -18,8 +18,8 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.BigMap;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
 

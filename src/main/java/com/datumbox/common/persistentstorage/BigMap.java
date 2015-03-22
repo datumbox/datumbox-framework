@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.datumbox.common.persistentstorage.interfaces;
+package com.datumbox.common.persistentstorage;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

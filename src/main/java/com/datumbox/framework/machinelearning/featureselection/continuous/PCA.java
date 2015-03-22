@@ -20,8 +20,8 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Cont
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.BigMap;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Map;
 import org.apache.commons.math3.linear.BlockRealMatrix;

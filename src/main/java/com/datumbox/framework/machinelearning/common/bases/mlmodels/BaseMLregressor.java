@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 
 /**

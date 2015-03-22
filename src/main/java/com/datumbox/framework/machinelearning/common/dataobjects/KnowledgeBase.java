@@ -17,7 +17,7 @@
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
 import com.datumbox.common.objecttypes.Trainable;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import java.io.Serializable;

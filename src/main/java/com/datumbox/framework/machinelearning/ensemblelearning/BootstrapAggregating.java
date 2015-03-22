@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import java.util.List;
 import java.util.Map;
 

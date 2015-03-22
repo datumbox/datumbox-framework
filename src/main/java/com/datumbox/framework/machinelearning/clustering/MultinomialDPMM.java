@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Collection;

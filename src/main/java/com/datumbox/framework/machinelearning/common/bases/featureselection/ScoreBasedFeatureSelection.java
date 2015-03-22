@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
-import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.DatabaseFactory;
 import com.google.common.collect.Ordering;
 import java.util.Iterator;
 import java.util.Map;
