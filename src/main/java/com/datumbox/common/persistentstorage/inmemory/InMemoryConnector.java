@@ -52,9 +52,9 @@ public class InMemoryConnector implements DatabaseConnector {
     }
 
     @Override
-    public <H extends KnowledgeBase> void save(H holderObject) {
+    public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
         try { 
-            Files.write(filepath, DeepCopy.serialize(holderObject));
+            Files.write(filepath, DeepCopy.serialize(knowledgeBaseObject));
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -63,11 +63,11 @@ public class InMemoryConnector implements DatabaseConnector {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <H extends KnowledgeBase> H load(Class<H> klass) {
+    public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
         try { 
             //read the stored serialized object
-            H holderObject = (H)DeepCopy.deserialize(Files.readAllBytes(filepath));
-            return holderObject;
+            KB knowledgeBaseObject = (KB)DeepCopy.deserialize(Files.readAllBytes(filepath));
+            return knowledgeBaseObject;
         } 
         catch (NoSuchFileException ex) {
             return null;

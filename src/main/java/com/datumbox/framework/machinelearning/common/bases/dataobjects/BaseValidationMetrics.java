@@ -16,7 +16,6 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.dataobjects;
 
-import com.datumbox.common.objecttypes.Parameterizable;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -24,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 
-public abstract class BaseValidationMetrics implements Parameterizable {
+public abstract class BaseValidationMetrics {
 
     /**
      * This method allows us to build a new empty object of the current object

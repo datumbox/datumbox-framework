@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public interface DatabaseConnector {
     
-    public <KB extends KnowledgeBase> void save(KB holderObject);
+    public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject);
     
     public <KB extends KnowledgeBase> KB load(Class<KB> klass);
     

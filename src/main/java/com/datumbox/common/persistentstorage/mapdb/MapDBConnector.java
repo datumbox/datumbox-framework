@@ -21,13 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.util.concurrent.ConcurrentNavigableMap;
 import org.mapdb.DB;
@@ -65,22 +62,22 @@ public class MapDBConnector implements DatabaseConnector {
     }
 
     @Override
-    public <H extends KnowledgeBase> void save(H holderObject) {
+    public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
         //TODO: do not store the @BigMaps here. Find a way to exclude them. Should we make the fields transient? This affects the InMemory too.
         db.commit();
         db.compact();
-        ConcurrentNavigableMap<Integer, H> map = db.getTreeMap("KnowledgeBase");
-        map.put(0, holderObject);
+        ConcurrentNavigableMap<Integer, KB> map = db.getTreeMap("KnowledgeBase");
+        map.put(0, knowledgeBaseObject);
         db.commit();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <H extends KnowledgeBase> H load(Class<H> klass) {
-        ConcurrentNavigableMap<Integer, H> map = db.getTreeMap("KnowledgeBase");
-        H holderObject = map.get(0);
+    public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
+        ConcurrentNavigableMap<Integer, KB> map = db.getTreeMap("KnowledgeBase");
+        KB knowledgeBaseObject = map.get(0);
         
-        return holderObject;
+        return knowledgeBaseObject;
     }
     
     @Override
