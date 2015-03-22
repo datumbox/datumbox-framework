@@ -34,14 +34,19 @@ public abstract class BaseModelParameters implements Learnable {
     
     public BaseModelParameters(DatabaseFactory dbf) {
         //Initialize all the BigMap fields
-        
+        bigMapInitializer(dbf);
+    }
+    
+    public final void bigMapInitializer(DatabaseFactory dbf) {
         //get all the fields from all the inherited classes
         for(Field field : getAllFields(new LinkedList<>(), this.getClass())){
             
+            //if the field is annotated with BigMap
             if (field.isAnnotationPresent(BigMap.class)) {
                 field.setAccessible(true);
                 
                 try {
+                    //call the getBigMap method to load it
                     field.set(this, dbf.getBigMap(field.getName()));
                 } 
                 catch (IllegalArgumentException | IllegalAccessException ex) {
