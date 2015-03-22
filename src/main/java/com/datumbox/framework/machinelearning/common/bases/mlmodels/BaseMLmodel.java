@@ -46,10 +46,10 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     /**
      * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
      */
-    public static abstract class ModelParameters implements BigMapContainer {
+    public static abstract class ModelParameters implements Learnable, BigMapContainer {
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+        public void mapInitializer(DatabaseFactory dbf) {
             
         }
             

@@ -17,6 +17,7 @@
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
@@ -35,10 +36,10 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class FeatureSelection<MP extends FeatureSelection.ModelParameters, TP extends FeatureSelection.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
     
-    public static abstract class ModelParameters implements BigMapContainer {
+    public static abstract class ModelParameters implements Learnable, BigMapContainer {
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+        public void mapInitializer(DatabaseFactory dbf) {
             
         }
         

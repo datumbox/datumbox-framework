@@ -50,8 +50,8 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         protected Map<Object, Object> referenceLevels;
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             minColumnValues = dbf.getMap("minColumnValues");
             maxColumnValues = dbf.getMap("maxColumnValues");

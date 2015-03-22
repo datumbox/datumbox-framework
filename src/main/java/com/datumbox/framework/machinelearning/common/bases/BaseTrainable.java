@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases;
 
+import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
@@ -28,7 +29,7 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  * @param <TP>
  * @param <KB>
  */
-public abstract class BaseTrainable<MP extends BigMapContainer, TP extends Parameterizable & KnowledgeBase.SelfConstructible, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
+public abstract class BaseTrainable<MP extends Learnable & BigMapContainer, TP extends Parameterizable & KnowledgeBase.SelfConstructible, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
     //Variables necessary for hanlding the BigDataStructureContainerHolder
     

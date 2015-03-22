@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.wrappers;
 
+import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
@@ -48,10 +49,10 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
     protected BaseMLmodel mlmodel = null;
     
 
-    public static abstract class ModelParameters implements BigMapContainer {
+    public static abstract class ModelParameters implements Learnable, BigMapContainer {
 
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+        public void mapInitializer(DatabaseFactory dbf) {
             
         }
         

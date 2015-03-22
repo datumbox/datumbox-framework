@@ -51,8 +51,8 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
 
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             thitas = dbf.getMap("thitas");
         }

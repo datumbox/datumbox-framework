@@ -124,8 +124,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             featureWeights = dbf.getMap("featureWeights");
         }

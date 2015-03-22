@@ -16,7 +16,6 @@
  */
 package com.datumbox.common.persistentstorage.interfaces;
 
-import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 
 /**
@@ -25,13 +24,13 @@ import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public interface BigMapContainer extends Learnable {
+public interface BigMapContainer {
     /**
      * Links the large variables with DB-backed collections.
      * 
      * @param dbf 
      */
     
-    public void bigDataStructureInitializer(DatabaseFactory dbf);
+    public void mapInitializer(DatabaseFactory dbf);
     
 }

@@ -133,8 +133,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             topicAssignmentOfDocumentWord = dbf.getMap("topicAssignmentOfDocumentWord");
             documentTopicCounts = dbf.getMap("documentTopicCounts");

@@ -66,8 +66,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         }
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             featureScores = dbf.getMap("featureScores");
         }

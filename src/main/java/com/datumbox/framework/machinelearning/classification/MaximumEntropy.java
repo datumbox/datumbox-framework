@@ -63,8 +63,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
 
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             lambdas = dbf.getMap("lambdas");
         }

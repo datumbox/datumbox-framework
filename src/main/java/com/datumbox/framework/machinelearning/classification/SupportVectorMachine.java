@@ -69,8 +69,8 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         private svm_model svmModel; //the parameters of the svm model
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf); 
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf); 
             
             featureIds = dbf.getMap("featureIds");
         }

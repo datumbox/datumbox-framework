@@ -65,8 +65,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             similarities = dbf.getMap("similarities");
         }

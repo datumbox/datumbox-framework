@@ -17,6 +17,7 @@
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
@@ -38,10 +39,10 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     /**
      * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
      */
-    public static abstract class ModelParameters implements BigMapContainer {
+    public static abstract class ModelParameters implements Learnable, BigMapContainer {
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+        public void mapInitializer(DatabaseFactory dbf) {
             
         }
             

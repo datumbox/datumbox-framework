@@ -31,7 +31,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class KnowledgeBase<MP extends Learnable, TP extends Parameterizable & KnowledgeBase.SelfConstructible> implements Serializable {
+public class KnowledgeBase<MP extends Learnable & BigMapContainer, TP extends Parameterizable & KnowledgeBase.SelfConstructible> implements Serializable {
 
     public interface SelfConstructible<O> {
         public O getEmptyObject();
@@ -154,9 +154,7 @@ public class KnowledgeBase<MP extends Learnable, TP extends Parameterizable & Kn
 
         try {
             modelParameters = mpClass.getConstructor().newInstance();
-            if(BigMapContainer.class.isAssignableFrom(modelParameters.getClass())) {
-                ((BigMapContainer)modelParameters).bigDataStructureInitializer(dbf);
-            }
+            modelParameters.mapInitializer(dbf);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

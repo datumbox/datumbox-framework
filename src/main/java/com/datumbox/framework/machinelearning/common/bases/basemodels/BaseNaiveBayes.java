@@ -52,13 +52,12 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
          * log likelihood for log( P(x|c) ) 
          */
         @BigMap
-        
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
 
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
             logPriors = dbf.getMap("logPriors");
             logLikelihoods = dbf.getMap("logLikelihoods");

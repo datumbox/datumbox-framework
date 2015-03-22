@@ -17,6 +17,7 @@
 package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
@@ -35,10 +36,10 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class DataTransformer<MP extends DataTransformer.ModelParameters, TP extends DataTransformer.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
     
-    public static abstract class ModelParameters implements BigMapContainer {
+    public static abstract class ModelParameters implements Learnable, BigMapContainer {
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
+        public void mapInitializer(DatabaseFactory dbf) {
             
         }
             

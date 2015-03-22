@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
@@ -180,21 +181,15 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         
         
-        //MORPHIA does not support complex objects in maps inside it. Thus to 
-        //store it I have to serialize deserialize it and store it as binary.
-        
+        @BigMap
         private Map<Integer, CL> clusterList; //the cluster objects of the model
         
         
         @Override
-        public void bigDataStructureInitializer(DatabaseFactory dbf) {
-            super.bigDataStructureInitializer(dbf);
+        public void mapInitializer(DatabaseFactory dbf) {
+            super.mapInitializer(dbf);
             
-            //clusterList = dbf.getMap("clusterList");
-
-            if(clusterList==null) {
-                clusterList = new HashMap<>();
-            }
+            clusterList = dbf.getMap("clusterList");
         }
         
         
