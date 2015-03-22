@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

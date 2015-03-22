@@ -55,7 +55,11 @@
         <guava-version>17.0</guava-version>
         <libsvm-version>3.17</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
+        <mapdb-version>1.0.7</mapdb-version>
         <gpg.keyname>7083A486</gpg.keyname>
+        
+        <buildNumber>${maven.build.timestamp}</buildNumber>
+        <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
     </properties>
     
     <scm>
@@ -65,6 +69,12 @@
     </scm>
     
     <build>
+        <resources>
+           <resource>
+              <directory>src/main/resources</directory>
+              <filtering>true</filtering>
+           </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -154,36 +164,43 @@
             <artifactId>lpsolve</artifactId>
             <version>${lpsolve-version}</version>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.mapdb</groupId>
+            <artifactId>mapdb</artifactId>
+            <version>${mapdb-version}</version>
+        </dependency>
+        -->
     </dependencies>
     
-	<profiles>
-	    <profile>
-	        <id>release-sign-artifacts</id>
-	        <activation>
-	            <property>
-	                <name>performRelease</name>
-	                <value>true</value>
-	            </property>
-	        </activation>
-	        <build>
-	            <plugins>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-gpg-plugin</artifactId>
-		                <version>${gpg-plugin-version}</version>
-		                <executions>
-		                    <execution>
-		                        <id>sign-artifacts</id>
-		                        <phase>verify</phase>
-		                        <goals>
-		                            <goal>sign</goal>
-		                        </goals>
-		                    </execution>
-		                </executions>
-		            </plugin>
-	            </plugins>
-	        </build>
-	    </profile>
-	</profiles>
-	
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>${gpg-plugin-version}</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

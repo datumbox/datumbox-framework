@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
     private static final String TMP_PREFIX = "TMP_";
 
-    //DB specific constants
+    //DB specific properties
     private String dbRootFolder = "";
 
     @Override

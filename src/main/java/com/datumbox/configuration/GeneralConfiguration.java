@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2014 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,5 @@ package com.datumbox.configuration;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class GeneralConfiguration {
-    public static final String VERSION = "0.6.0";
-    public static final Integer BUILD = 20150322; //YYYYMMDD format
-    
-    public static final boolean DEBUG = true; //if true it prints debug/info messages on console
+    public static boolean DEBUG = true; //if true it prints debug/info messages on console
 }
