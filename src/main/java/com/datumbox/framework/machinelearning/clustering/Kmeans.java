@@ -19,12 +19,13 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -122,8 +123,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         private Map<Object, Double> featureWeights; 
         
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         
@@ -247,8 +248,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     }
     
     
-    public Kmeans(String dbName) {
-        super(dbName, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class);
+    public Kmeans(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class);
     } 
 
     @Override
@@ -350,15 +351,15 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         }
         else {
             //calculate weights for the features
-            String tmpPrefix=StorageConfiguration.getTmpPrefix();
+            String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
             
             int n = modelParameters.getN();
             
-            DatabaseFactory dbf = knowledgeBase.getDbf();
+            DatabaseConnector dbc = knowledgeBase.getDbc();
             
-            Map<Object, Double> categoricalFrequencies = dbf.getBigMap(tmpPrefix+"categoricalFrequencies");
-            Map<Object, Double> varianceSumX = dbf.getBigMap(tmpPrefix+"varianceSumX");
-            Map<Object, Double> varianceSumXsquare = dbf.getBigMap(tmpPrefix+"varianceSumXsquare");
+            Map<Object, Double> categoricalFrequencies = dbc.getBigMap(tmpPrefix+"categoricalFrequencies");
+            Map<Object, Double> varianceSumX = dbc.getBigMap(tmpPrefix+"varianceSumX");
+            Map<Object, Double> varianceSumXsquare = dbc.getBigMap(tmpPrefix+"varianceSumXsquare");
         
             //calculate variance and frequencies
             for(Record r : trainingData) {
@@ -422,9 +423,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //Drop the temporary Collection
-            dbf.dropBigMap(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
-            dbf.dropBigMap(tmpPrefix+"varianceSumX", categoricalFrequencies);
-            dbf.dropBigMap(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
+            dbc.dropBigMap(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
+            dbc.dropBigMap(tmpPrefix+"varianceSumX", categoricalFrequencies);
+            dbc.dropBigMap(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
         }
     }
     

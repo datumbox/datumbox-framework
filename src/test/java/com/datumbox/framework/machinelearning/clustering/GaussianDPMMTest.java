@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
@@ -85,7 +86,7 @@ public class GaussianDPMMTest {
         
         String dbName = "JUnitClusterer";
         
-        GaussianDPMM instance = new GaussianDPMM(dbName);
+        GaussianDPMM instance = new GaussianDPMM(dbName, new InMemoryConfiguration());
         
         GaussianDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setAlpha(0.01);
@@ -100,7 +101,7 @@ public class GaussianDPMMTest {
         
         
         instance = null;
-        instance = new GaussianDPMM(dbName);
+        instance = new GaussianDPMM(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -144,7 +145,7 @@ public class GaussianDPMMTest {
         
         
         
-        GaussianDPMM instance = new GaussianDPMM(dbName);
+        GaussianDPMM instance = new GaussianDPMM(dbName, new InMemoryConfiguration());
         
         GaussianDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setAlpha(0.01);

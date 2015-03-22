@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Parameterizable;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomValue;
@@ -79,11 +80,11 @@ public class CETR {
         }
     }
     
-    public String extract(String text, CETR.Parameters parameters) {
+    public String extract(String text, DatabaseConfiguration dbConf, CETR.Parameters parameters) {
         text = clearText(text); //preprocess the Document by removing irrelevant HTML tags and empty lines
         List<String> rows = extractRows(text); //break the document to its lines
         
-        List<Integer> selectedRowIds = selectRows(rows, parameters);
+        List<Integer> selectedRowIds = selectRows(rows, dbConf, parameters);
         
         StringBuilder sb = new StringBuilder();
         for(Integer rowId : selectedRowIds) {
@@ -101,7 +102,7 @@ public class CETR {
     }
     
     
-    private List<Integer> selectRows(List<String> rows, Parameters parameters) {
+    private List<Integer> selectRows(List<String> rows, DatabaseConfiguration dbConf, Parameters parameters) {
         List<Double> TTRlist = calculateTTRlist(rows, parameters);
         gaussianSmoothing(TTRlist); //perform smoothing
         
@@ -130,7 +131,7 @@ public class CETR {
         
         
         //perform clustering
-        performClustering(dataset, parameters.getNumberOfClusters());
+        performClustering(dataset, dbConf, parameters.getNumberOfClusters());
         
         Map<Object, Double> avgTTRscorePerCluster = new HashMap<>();
         Map<Object, Integer> clusterCounts = new HashMap<>();
@@ -174,9 +175,9 @@ public class CETR {
         return selectedRows;
     }
 
-    private void performClustering(Dataset dataset, int numberOfClusters) {
+    private void performClustering(Dataset dataset, DatabaseConfiguration dbConf, int numberOfClusters) {
         String dbName = new BigInteger(130, RandomValue.randomGenerator).toString(32);
-        Kmeans instance = new Kmeans(dbName);
+        Kmeans instance = new Kmeans(dbName, dbConf);
         
         Kmeans.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setK(numberOfClusters);

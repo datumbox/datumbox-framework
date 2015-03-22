@@ -18,7 +18,8 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 /**
  *
@@ -36,8 +37,8 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
 
     } 
@@ -54,8 +55,8 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
 
     protected static final boolean IS_BINARIZED = true;
     
-    public BinarizedNaiveBayes(String dbName) {
-        super(dbName, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class);
+    public BinarizedNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class);
     }
     
     @Override

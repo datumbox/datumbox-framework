@@ -17,7 +17,8 @@
 package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -34,8 +35,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     }
@@ -59,8 +60,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
 
     
     
-    public Modeler(String dbName) {
-        super(dbName, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
+    public Modeler(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
     }
     
     @Override
@@ -82,14 +83,14 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         //get the training parameters
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         //transform the training dataset
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = DataTransformer.newInstance(dtClass, dbName);
+            dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             dataTransformer.initializeTrainingConfiguration(knowledgeBase.getTrainingParameters().getDataTransformerTrainingParameters());
             dataTransformer.transform(trainingData, true);
             dataTransformer.normalize(trainingData);
@@ -101,7 +102,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = FeatureSelection.newInstance(fsClass, dbName);
+            featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
             featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
             featureSelection.evaluateFeatures(trainingData); 
         
@@ -113,7 +114,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         
         //initialize mlmodel
-        mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
+        mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         mlmodel.initializeTrainingConfiguration(trainingParameters.getMLmodelTrainingParameters());
         
         int k = trainingParameters.getkFolds();
@@ -167,13 +168,14 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         knowledgeBase.load();
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.newInstance(dtClass, dbName);
+                dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             }        
             dataTransformer.transform(data, false);
             dataTransformer.normalize(data);
@@ -184,7 +186,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.newInstance(fsClass, dbName);
+                featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -194,7 +196,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
+            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
         
         //call predict of the mlmodel for the new dataset

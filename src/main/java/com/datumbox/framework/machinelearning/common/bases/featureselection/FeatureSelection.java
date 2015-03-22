@@ -17,9 +17,9 @@
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
@@ -37,8 +37,8 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         //here goes the parameters of the feature slection
@@ -58,10 +58,10 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
      * @param aClass
      * @return 
      */
-    public static <F extends FeatureSelection> F newInstance(Class<F> aClass, String dbName) {
+    public static <F extends FeatureSelection> F newInstance(Class<F> aClass, String dbName, DatabaseConfiguration dbConfig) {
         F algorithm = null;
         try {
-            algorithm = (F) aClass.getConstructor(String.class).newInstance(dbName);
+            algorithm = (F) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -74,12 +74,12 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     /*
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
-    protected FeatureSelection(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
+    protected FeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         String methodName = shortMethodName(); //this.getClass().getSimpleName();
-        dbName += StorageConfiguration.getDBnameSeparator() + methodName;
+        dbName += dbConf.getDBnameSeparator() + methodName;
         
         this.dbName = dbName;
-        knowledgeBase = new KnowledgeBase<>(dbName, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     }
 

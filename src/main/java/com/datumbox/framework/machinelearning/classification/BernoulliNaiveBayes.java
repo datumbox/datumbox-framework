@@ -20,8 +20,9 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,8 +49,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         @BigMap
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         
@@ -74,8 +75,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
 
     protected static final boolean IS_BINARIZED = true;
     
-    public BernoulliNaiveBayes(String dbName) {
-        super(dbName, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class);
+    public BernoulliNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class);
     }
     
     @Override

@@ -17,7 +17,8 @@
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
 import com.datumbox.common.objecttypes.Trainable;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import java.io.Serializable;
@@ -39,7 +40,8 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     protected String dbName; 
     
     
-    protected transient DatabaseFactory dbf;
+    protected transient DatabaseConnector dbc;
+    protected transient DatabaseConfiguration dbConf;
     
     
     protected Class<? extends Trainable> ownerClass; //the Class name of the algorithm
@@ -67,10 +69,12 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         //constructor only used in serialization/deserialization
     }
 
-    public KnowledgeBase(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
+    public KnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         this.dbName = dbName;
+        this.dbConf = dbConf;
+        
         //get an instance on the permanent storage handler
-        dbf = DatabaseFactory.newInstance(dbName);
+        dbc = dbConf.getConnector(dbName);
         
         this.mpClass = mpClass;
         this.tpClass = tpClass;
@@ -88,8 +92,12 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         return dbName;
     }
 
-    public DatabaseFactory getDbf() {
-        return dbf;
+    public DatabaseConnector getDbc() {
+        return dbc;
+    }
+
+    public DatabaseConfiguration getDbConf() {
+        return dbConf;
     }
     
     public Class<? extends Trainable> getOwnerClass() {
@@ -105,17 +113,17 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
             throw new IllegalArgumentException("Can not store an empty KnowledgeBase.");
         }
         
-        dbf.save(this);
+        dbc.save(this);
     }
     
     public void load() {
         if(modelParameters==null) {
 
             //NOTE: the kbObject was constructed with the default protected no-argument
-            //constructor. As a result it does not have an initialized dbf object.
-            //We don't care for that though because this instance has a valid dbf object
+            //constructor. As a result it does not have an initialized dbc object.
+            //We don't care for that though because this instance has a valid dbc object
             //and the kbObject is only used to copy its values (we don't use it).
-            KnowledgeBase kbObject = dbf.load(this.getClass());
+            KnowledgeBase kbObject = dbc.load(this.getClass());
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }
@@ -136,7 +144,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     }
     
     public void erase() {
-    	dbf.dropDatabase();
+    	dbc.dropDatabase();
         
         modelParameters = null;
         trainingParameters = null;
@@ -147,7 +155,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         erase();
 
         try {
-            modelParameters = mpClass.getConstructor(DatabaseFactory.class).newInstance(dbf);
+            modelParameters = mpClass.getConstructor(DatabaseConnector.class).newInstance(dbc);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

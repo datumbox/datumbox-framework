@@ -19,10 +19,11 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.framework.machinelearning.common.validation.OrdinalRegressionValidation;
 import java.util.HashMap;
@@ -74,8 +75,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         private Map<Object, Double> thitas; 
         
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         public Map<Object, Double> getWeights() {
@@ -142,8 +143,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
     }
     
-    public OrdinalRegression(String dbName) {
-        super(dbName, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidation());
+    public OrdinalRegression(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidation());
     }
     
     @Override
@@ -175,7 +176,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     @Override
     @SuppressWarnings("unchecked")
     protected void estimateModelParameters(Dataset trainingData) {
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize();//no constant, thresholds can be seen as constants
@@ -225,16 +226,16 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbf.getBigMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbc.getBigMap(tmpPrefix+"newThitas");
             
-            Map<Object, Double> newWeights = dbf.getBigMap(tmpPrefix+"newWeights");
+            Map<Object, Double> newWeights = dbc.getBigMap(tmpPrefix+"newWeights");
             
             newThitas.putAll(thitas);
             newWeights.putAll(weights);
@@ -260,8 +261,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             }
             
             //Drop the temporary Collections
-            dbf.dropBigMap(tmpPrefix+"newWeights", newWeights);
-            dbf.dropBigMap(tmpPrefix+"newThitas", newThitas);
+            dbc.dropBigMap(tmpPrefix+"newWeights", newWeights);
+            dbc.dropBigMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

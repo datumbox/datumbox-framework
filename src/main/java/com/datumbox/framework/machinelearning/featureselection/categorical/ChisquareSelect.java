@@ -19,7 +19,8 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.independentsamples.Chisquare;
@@ -38,8 +39,8 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
        
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     }
@@ -59,8 +60,8 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         }
     }
     
-    public ChisquareSelect(String dbName) {
-        super(dbName, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
+    public ChisquareSelect(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
     }
     
     @Override

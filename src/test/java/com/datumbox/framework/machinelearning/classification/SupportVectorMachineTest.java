@@ -16,9 +16,9 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.framework.machinelearning.classification.SupportVectorMachine;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import java.util.HashMap;
@@ -93,14 +93,14 @@ public class SupportVectorMachineTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        SupportVectorMachine instance = new SupportVectorMachine(dbName);
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, new InMemoryConfiguration());
         
         SupportVectorMachine.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
@@ -109,7 +109,7 @@ public class SupportVectorMachineTest {
         
         
         instance = null;
-        instance = new SupportVectorMachine(dbName);
+        instance = new SupportVectorMachine(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -196,7 +196,7 @@ public class SupportVectorMachineTest {
         
         
         String dbName = "JUnitClassifier";
-        SupportVectorMachine instance = new SupportVectorMachine(dbName);
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, new InMemoryConfiguration());
         
         SupportVectorMachine.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.getSvmParameter().kernel_type = svm_parameter.LINEAR;

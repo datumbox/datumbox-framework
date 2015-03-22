@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.InMemoryFactory;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
@@ -67,7 +67,7 @@ public class LatentDirichletAllocationTest {
         Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor);
         
         
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName);
+        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, new InMemoryConfiguration());
         
         LatentDirichletAllocation.TrainingParameters trainingParameters = lda.getEmptyTrainingParametersObject();
         trainingParameters.setMaxIterations(15);
@@ -90,7 +90,7 @@ public class LatentDirichletAllocationTest {
             reducedTrainingData.add(newRecord);
         }
         
-        SoftMaxRegression smr = new SoftMaxRegression(dbName);
+        SoftMaxRegression smr = new SoftMaxRegression(dbName, new InMemoryConfiguration());
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);

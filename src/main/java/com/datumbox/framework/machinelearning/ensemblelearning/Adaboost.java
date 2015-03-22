@@ -20,7 +20,8 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoosti
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,8 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     } 
@@ -64,8 +65,8 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     }
     
     
-    public Adaboost(String dbName) {
-        super(dbName, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
+    public Adaboost(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
     } 
     
     @Override

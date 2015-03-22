@@ -20,8 +20,9 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Cont
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Map;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -88,8 +89,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         private double[][] components; //components weights 
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
 
@@ -144,8 +145,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
     }
 
-    public PCA(String dbName) {
-        super(dbName, PCA.ModelParameters.class, PCA.TrainingParameters.class);
+    public PCA(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
     }
     
     @Override

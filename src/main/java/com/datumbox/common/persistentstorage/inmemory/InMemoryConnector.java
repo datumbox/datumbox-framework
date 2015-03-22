@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.datumbox.common.persistentstorage;
+package com.datumbox.common.persistentstorage.inmemory;
 
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -27,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.datumbox.common.utilities.DeepCopy;
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 
@@ -35,16 +35,23 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public class InMemoryFactory implements DatabaseFactory {
+public class InMemoryConnector implements DatabaseConnector {
+    
+    //Mandatory constants
+    public static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
+    public static final String TMP_PREFIX = "TMP_";
         
     private final Path filepath;
+    private final InMemoryConfiguration dbConf;
     
-    public InMemoryFactory(String database) {       
-        if(StorageConfiguration.InMemory.DB_ROOT_FOLDER.isEmpty()) {
+    public InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
+        this.dbConf = dbConf;
+        String rootDbFolder = this.dbConf.getDbRootFolder();
+        if(rootDbFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }
         else {
-            filepath= Paths.get(StorageConfiguration.InMemory.DB_ROOT_FOLDER + File.separator + database);
+            filepath= Paths.get(rootDbFolder + File.separator + database);
         }
     }
 

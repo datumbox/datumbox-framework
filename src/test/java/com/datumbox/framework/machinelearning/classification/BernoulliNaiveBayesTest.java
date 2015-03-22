@@ -16,9 +16,9 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.framework.machinelearning.classification.BernoulliNaiveBayes;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
@@ -74,7 +74,7 @@ public class BernoulliNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName);
+        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, new InMemoryConfiguration());
         
         BernoulliNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         
@@ -83,7 +83,7 @@ public class BernoulliNaiveBayesTest {
         
         
         instance = null;
-        instance = new BernoulliNaiveBayes(dbName);
+        instance = new BernoulliNaiveBayes(dbName, new InMemoryConfiguration());
         
         
         instance.predict(validationData);
@@ -167,7 +167,7 @@ public class BernoulliNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName);
+        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, new InMemoryConfiguration());
         
         BernoulliNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         instance.initializeTrainingConfiguration(param);

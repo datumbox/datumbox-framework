@@ -16,9 +16,8 @@
  */
 package com.datumbox.applications.nlp;
 
-import com.datumbox.common.persistentstorage.InMemoryFactory;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 
@@ -50,8 +49,8 @@ public class TextClassifierTest {
     @Test
     public void testTrainAndPredict() throws URISyntaxException {
         System.out.println("TrainAndPredict");
-		//TODO: change the test so that it does not require reading from local file
-		/*
+	//TODO: change the test so that it does not require reading from local file
+	/*	
         RandomValue.randomGenerator = new Random(42);
         
         
@@ -61,7 +60,7 @@ public class TextClassifierTest {
         dataset.put("objective", new URI("file:///home/bbriniotis/training.subjectivity.en.obj"));
         dataset.put("subjective", new URI("file:///home/bbriniotis/training.subjectivity.en.subj"));
         
-        TextClassifier instance = new TextClassifier(dbName);
+        TextClassifier instance = new TextClassifier(dbName, new InMemoryConfiguration());
         TextClassifier.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
         
         trainingParameters.setkFolds(5);
@@ -129,7 +128,7 @@ public class TextClassifierTest {
         
         
         
-        instance = new TextClassifier(dbName);
+        instance = new TextClassifier(dbName, new InMemoryConfiguration());
         
         URI datasetURI = new URI("file:///home/bbriniotis/testing.txt");
         List<Object> result = instance.predict(datasetURI);
@@ -138,7 +137,7 @@ public class TextClassifierTest {
         assertEquals(expResult, result);
         
         instance.erase();
-		*/
+        */
     }
 
 }

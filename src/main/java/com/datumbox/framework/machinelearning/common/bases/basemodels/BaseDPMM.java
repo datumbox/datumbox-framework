@@ -19,8 +19,9 @@ package com.datumbox.framework.machinelearning.common.bases.basemodels;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
@@ -79,8 +80,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         @BigMap
         private Map<Object, Integer> featureIds; //list of all the supported features
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
 
         
@@ -151,8 +152,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
     }
     
-    protected BaseDPMM(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, mpClass, tpClass, vmClass);
+    protected BaseDPMM(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass);
     } 
     
 

@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
@@ -70,7 +71,7 @@ public class MultinomialDPMMTest {
         
         String dbName = "JUnitClusterer";
         
-        MultinomialDPMM instance = new MultinomialDPMM(dbName);
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, new InMemoryConfiguration());
         
         MultinomialDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setAlpha(0.01);
@@ -82,7 +83,7 @@ public class MultinomialDPMMTest {
         
         
         instance = null;
-        instance = new MultinomialDPMM(dbName);
+        instance = new MultinomialDPMM(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -126,7 +127,7 @@ public class MultinomialDPMMTest {
         
         
         
-        MultinomialDPMM instance = new MultinomialDPMM(dbName);
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, new InMemoryConfiguration());
         
         MultinomialDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setAlpha(0.01);

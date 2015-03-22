@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.
@@ -29,8 +30,8 @@ public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSel
 
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     }
@@ -41,8 +42,8 @@ public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSel
     }
     
 
-    protected ContinuousFeatureSelection(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, mpClass, tpClass);
+    protected ContinuousFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, dbConf, mpClass, tpClass);
     }
     
 }

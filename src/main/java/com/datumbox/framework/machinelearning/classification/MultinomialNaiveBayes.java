@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 
 
@@ -35,8 +36,8 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     } 
@@ -51,8 +52,8 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
 
     }
 
-    public MultinomialNaiveBayes(String dbName) {
-        super(dbName, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class);
+    public MultinomialNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class);
     }
     
     @Override

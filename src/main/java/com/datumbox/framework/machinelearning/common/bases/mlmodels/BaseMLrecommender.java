@@ -17,10 +17,10 @@
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
@@ -40,8 +40,8 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      */
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
             
         //here goes the parameters of the Machine Learning model
@@ -68,10 +68,10 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * @param aClass
      * @return 
      */
-    public static <M extends BaseMLrecommender> M newInstance(Class<M> aClass, String dbName) {
+    public static <M extends BaseMLrecommender> M newInstance(Class<M> aClass, String dbName, DatabaseConfiguration dbConfig) {
         M algorithm = null;
         try {
-            algorithm = (M) aClass.getConstructor(String.class).newInstance(dbName);
+            algorithm = (M) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);;
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -89,13 +89,13 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     /*
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
-    protected BaseMLrecommender(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
+    protected BaseMLrecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         //the line below calls an overrided method in the constructor. This is not elegant but the only thing that this method does is to rename the short name of classifier
         String methodName = shortMethodName(); //this.getClass().getSimpleName();
-        dbName += StorageConfiguration.getDBnameSeparator() + methodName;
+        dbName += dbConf.getDBnameSeparator() + methodName;
         
         this.dbName = dbName;
-        knowledgeBase = new KnowledgeBase<>(dbName, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     } 
     

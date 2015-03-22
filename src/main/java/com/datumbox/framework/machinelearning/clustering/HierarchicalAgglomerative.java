@@ -19,9 +19,10 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.configuration.StorageConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -129,8 +130,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
           
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
     } 
     
@@ -200,8 +201,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     }
     
     
-    public HierarchicalAgglomerative(String dbName) {
-        super(dbName, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class);
+    public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class);
     } 
 
     @Override
@@ -305,12 +306,12 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
 
-        Map<List<Object>, Double> distanceArray = dbf.getBigMap(tmpPrefix+"distanceArray"); //it holds the distances between clusters
-        Map<Integer, Integer> minClusterDistanceId = dbf.getBigMap(tmpPrefix+"minClusterDistanceId"); //it holds the ids of the min distances
+        Map<List<Object>, Double> distanceArray = dbc.getBigMap(tmpPrefix+"distanceArray"); //it holds the distances between clusters
+        Map<Integer, Integer> minClusterDistanceId = dbc.getBigMap(tmpPrefix+"minClusterDistanceId"); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -382,8 +383,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
         
         //Drop the temporary Collection
-        dbf.dropBigMap(tmpPrefix+"distanceArray", distanceArray);
-        dbf.dropBigMap(tmpPrefix+"minClusterDistanceId", minClusterDistanceId);
+        dbc.dropBigMap(tmpPrefix+"distanceArray", distanceArray);
+        dbc.dropBigMap(tmpPrefix+"minClusterDistanceId", minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

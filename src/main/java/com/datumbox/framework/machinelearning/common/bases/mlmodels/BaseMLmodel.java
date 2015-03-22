@@ -18,10 +18,10 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseValidationMetrics;
@@ -47,8 +47,8 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      */
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
             
         //here goes the parameters of the Machine Learning model
@@ -79,12 +79,13 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param <M>
      * @param dbName
      * @param aClass
+     * @param dbConfig
      * @return 
      */
-    public static <M extends BaseMLmodel> M newInstance(Class<M> aClass, String dbName) {
+    public static <M extends BaseMLmodel> M newInstance(Class<M> aClass, String dbName, DatabaseConfiguration dbConfig) {
         M algorithm = null;
         try {
-            algorithm = (M) aClass.getConstructor(String.class).newInstance(dbName);
+            algorithm = (M) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -102,15 +103,15 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     /*
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
-    protected BaseMLmodel(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
+    protected BaseMLmodel(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         //the line below calls an overrided method in the constructor. This is not elegant but the only thing that this method does is to rename the short name of classifier
         String methodName = shortMethodName(); //this.getClass().getSimpleName();
         if(!dbName.contains(methodName)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
-            dbName += StorageConfiguration.getDBnameSeparator() + methodName;
+            dbName += dbConf.getDBnameSeparator() + methodName;
         }
         
         this.dbName = dbName;
-        knowledgeBase = new MLmodelKnowledgeBase<>(dbName, mpClass, tpClass, vmClass);
+        knowledgeBase = new MLmodelKnowledgeBase<>(dbName, dbConf, mpClass, tpClass, vmClass);
         knowledgeBase.setOwnerClass(this.getClass());
         this.modelValidator = modelValidator;
     } 
@@ -129,7 +130,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
             System.out.println("kFoldCrossValidation()");
         }
         
-        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, this.getClass(), knowledgeBase.getTrainingParameters());
+        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getDbConf(), this.getClass(), knowledgeBase.getTrainingParameters());
     }
      
     /**

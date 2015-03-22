@@ -19,9 +19,10 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
@@ -68,8 +69,8 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         private svm_model svmModel; //the parameters of the svm model
         
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         public Map<Object, Integer> getFeatureIds() {
@@ -139,8 +140,8 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
 
     
-    public SupportVectorMachine(String dbName) {
-        super(dbName, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class);
+    public SupportVectorMachine(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class);
     }
     
     

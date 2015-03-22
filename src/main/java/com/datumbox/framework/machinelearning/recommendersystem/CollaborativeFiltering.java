@@ -21,8 +21,9 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.dataobjects.TransposeDataList;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLrecommender;
 import com.datumbox.framework.mathematics.distances.Distance;
@@ -63,8 +64,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         @BigMap
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         
@@ -118,8 +119,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     }
     
 
-    public CollaborativeFiltering(String dbName) {
-        super(dbName, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
+    public CollaborativeFiltering(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
     } 
 
     @Override

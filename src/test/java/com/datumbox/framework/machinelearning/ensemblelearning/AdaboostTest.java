@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -93,14 +94,14 @@ public class AdaboostTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        Adaboost instance = new Adaboost(dbName);
+        Adaboost instance = new Adaboost(dbName, new InMemoryConfiguration());
         
         Adaboost.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMaxWeakClassifiers(5);
@@ -118,7 +119,7 @@ public class AdaboostTest {
         
         
         instance = null;
-        instance = new Adaboost(dbName);
+        instance = new Adaboost(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -208,7 +209,7 @@ public class AdaboostTest {
         
         
         String dbName = "JUnitClassifier";
-        Adaboost instance = new Adaboost(dbName);
+        Adaboost instance = new Adaboost(dbName, new InMemoryConfiguration());
         
         Adaboost.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMaxWeakClassifiers(5);

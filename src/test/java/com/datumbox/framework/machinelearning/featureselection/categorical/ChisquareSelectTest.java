@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomValue;
 import java.util.Arrays;
@@ -91,14 +92,14 @@ public class ChisquareSelectTest {
         param.setALevel(0.05);
         
         Dataset trainingData = generateDataset(1000);
-        ChisquareSelect instance = new ChisquareSelect(dbName);
+        ChisquareSelect instance = new ChisquareSelect(dbName, new InMemoryConfiguration());
         instance.initializeTrainingConfiguration(param);
         
         instance.evaluateFeatures(trainingData);
         instance = null;
         
         
-        instance = new ChisquareSelect(dbName);
+        instance = new ChisquareSelect(dbName, new InMemoryConfiguration());
         
         instance.clearFeatures(trainingData);
         

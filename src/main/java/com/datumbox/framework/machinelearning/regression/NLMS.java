@@ -20,9 +20,10 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinear
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 import java.util.Map;
 
 /**
@@ -48,8 +49,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
     } 
 
@@ -82,8 +83,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     }
 
     
-    public NLMS(String dbName) {
-        super(dbName, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
+    public NLMS(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
     }
     
     @Override
@@ -93,7 +94,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
 
     @Override
     protected void estimateModelParameters(Dataset trainingData) {
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize()+1;//plus one for the constant
@@ -119,14 +120,14 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbf.getBigMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbc.getBigMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             
@@ -149,7 +150,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             }
             
             //Drop the temporary Collection
-            dbf.dropBigMap(tmpPrefix+"newThitas", newThitas);
+            dbc.dropBigMap(tmpPrefix+"newThitas", newThitas);
         }
     }
 

@@ -19,7 +19,8 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
@@ -51,8 +52,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     }
@@ -101,8 +102,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     
     
-    public TextClassifier(String dbName) {
-        super(dbName, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
+    public TextClassifier(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
     }
     
     @Override
@@ -123,7 +124,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //get the training parameters
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
@@ -136,7 +137,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = DataTransformer.newInstance(dtClass, dbName);
+            dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             dataTransformer.initializeTrainingConfiguration(trainingParameters.getDataTransformerTrainingParameters());
             dataTransformer.transform(trainingDataset, true);
             dataTransformer.normalize(trainingDataset);
@@ -146,7 +147,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = FeatureSelection.newInstance(fsClass, dbName);
+            featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
             FeatureSelection.TrainingParameters featureSelectionParameters = trainingParameters.getFeatureSelectionTrainingParameters();
             if(CategoricalFeatureSelection.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((CategoricalFeatureSelection.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
@@ -161,7 +162,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
         
         //initialize mlmodel
-        mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
+        mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         mlmodel.initializeTrainingConfiguration(trainingParameters.getMLmodelTrainingParameters());
         
         int k = trainingParameters.getkFolds();
@@ -257,6 +258,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         //ensure db loaded
         knowledgeBase.load();
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
@@ -271,7 +273,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.newInstance(dtClass, dbName);
+                dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             }        
             
             dataTransformer.transform(testDataset, false);
@@ -283,7 +285,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.newInstance(fsClass, dbName);
+                featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -293,7 +295,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
+            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
         
         //call predict of the mlmodel for the new dataset
@@ -321,6 +323,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         //ensure db loaded
         knowledgeBase.load();
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         //build the newDataset
         Dataset newData = new Dataset();
@@ -344,7 +347,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.newInstance(dtClass, dbName);
+                dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             }        
             dataTransformer.transform(newData, false);
             dataTransformer.normalize(newData);
@@ -355,7 +358,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.newInstance(fsClass, dbName);
+                featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -365,7 +368,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName); 
+            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
         
         //call predict of the mlmodel for the new dataset

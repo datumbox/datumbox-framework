@@ -17,6 +17,7 @@
 package com.datumbox.framework.machinelearning.datatransformation;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseMinMaxNormalizer;
 import java.util.Map;
 
@@ -31,8 +32,8 @@ public class XYMinMaxNormalizer extends BaseMinMaxNormalizer {
 
     public static final String SHORT_METHOD_NAME = "XYNrm";
     
-    public XYMinMaxNormalizer(String dbName) {
-        super(dbName);
+    public XYMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf);
     }
     
     @Override

@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.datumbox.common.persistentstorage;
+package com.datumbox.common.persistentstorage.interfaces;
 
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -29,19 +27,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public interface DatabaseFactory {
-    
-    
-    public static DatabaseFactory newInstance(String dbName) {
-        //get from General StorageConfiguration the class that handles permanent storage
-        try {
-            Class<? extends DatabaseFactory> selectedDBFClass = StorageConfiguration.getSelectedDBFClass();
-            return (DatabaseFactory) selectedDBFClass.getConstructor(String.class).newInstance(dbName);
-        } 
-        catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+public interface DatabaseConnector {
     
     public <KB extends KnowledgeBase> void save(KB holderObject);
     

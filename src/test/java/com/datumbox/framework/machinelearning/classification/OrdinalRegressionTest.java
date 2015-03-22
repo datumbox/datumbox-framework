@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
@@ -662,14 +663,14 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName);
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName);
+        OrdinalRegression instance = new OrdinalRegression(dbName, new InMemoryConfiguration());
         
         OrdinalRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(100);
@@ -678,7 +679,7 @@ public class OrdinalRegressionTest {
         
         
         instance = null;
-        instance = new OrdinalRegression(dbName);
+        instance = new OrdinalRegression(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
 
@@ -715,12 +716,12 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName);
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName);
+        OrdinalRegression instance = new OrdinalRegression(dbName, new InMemoryConfiguration());
         
         OrdinalRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(100);

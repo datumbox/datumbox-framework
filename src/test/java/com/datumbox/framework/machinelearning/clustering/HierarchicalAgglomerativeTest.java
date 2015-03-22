@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -54,14 +55,14 @@ public class HierarchicalAgglomerativeTest {
         String dbName = "JUnitClusterer";
         
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName);
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, new InMemoryConfiguration());
         
         HierarchicalAgglomerative.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
@@ -73,7 +74,7 @@ public class HierarchicalAgglomerativeTest {
         
         
         instance = null;
-        instance = new HierarchicalAgglomerative(dbName);
+        instance = new HierarchicalAgglomerative(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -116,7 +117,7 @@ public class HierarchicalAgglomerativeTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
@@ -124,7 +125,7 @@ public class HierarchicalAgglomerativeTest {
         
         
         
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName);
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, new InMemoryConfiguration());
         
         HierarchicalAgglomerative.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);

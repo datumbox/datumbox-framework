@@ -19,11 +19,12 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -57,8 +58,8 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
 
         
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         public Map<List<Object>, Double> getThitas() {
@@ -116,8 +117,8 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
     }
     
-    public SoftMaxRegression(String dbName) {
-        super(dbName, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidation());
+    public SoftMaxRegression(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidation());
     }
     
     @Override
@@ -150,7 +151,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     @Override
     @SuppressWarnings("unchecked")
     protected void estimateModelParameters(Dataset trainingData) {
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize()+1;//plus one for the constant
@@ -191,14 +192,14 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> newThitas = dbf.getBigMap(tmpPrefix+"newThitas");
+            Map<List<Object>, Double> newThitas = dbc.getBigMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             batchGradientDescent(trainingData, newThitas, learningRate);
@@ -219,7 +220,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             }
             
             //Drop the temporary Collection
-            dbf.dropBigMap(tmpPrefix+"newThitas", newThitas);
+            dbc.dropBigMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

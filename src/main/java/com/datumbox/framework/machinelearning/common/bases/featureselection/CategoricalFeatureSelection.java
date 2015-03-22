@@ -18,10 +18,11 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -48,8 +49,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         //Getters and Setters
@@ -105,8 +106,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     }
     
 
-    protected CategoricalFeatureSelection(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, mpClass, tpClass);
+    protected CategoricalFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, dbConf, mpClass, tpClass);
     }
     
     
@@ -123,12 +124,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         modelParameters.setN(data.size());
         
         
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         
-        String tmpPrefix=StorageConfiguration.getTmpPrefix(); 
-        Map<Object, Integer> classCounts = dbf.getBigMap(tmpPrefix+"classCounts"); //map which stores the counts of the classes
-        Map<List<Object>, Integer> featureClassCounts = dbf.getBigMap(tmpPrefix+"featureClassCounts"); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> featureCounts = dbf.getBigMap(tmpPrefix+"featureCounts"); //map which stores the counts of the features
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix(); 
+        Map<Object, Integer> classCounts = dbc.getBigMap(tmpPrefix+"classCounts"); //map which stores the counts of the classes
+        Map<List<Object>, Integer> featureClassCounts = dbc.getBigMap(tmpPrefix+"featureClassCounts"); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> featureCounts = dbc.getBigMap(tmpPrefix+"featureCounts"); //map which stores the counts of the features
 
         
         //build the maps with teh feature statistics and counts
@@ -143,9 +144,9 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
 
         //drop the unnecessary stastistics tables
-        dbf.dropBigMap("classCounts", classCounts);
-        dbf.dropBigMap("featureClassCounts", featureClassCounts);
-        dbf.dropBigMap("featureCounts", featureCounts);
+        dbc.dropBigMap("classCounts", classCounts);
+        dbc.dropBigMap("featureClassCounts", featureClassCounts);
+        dbc.dropBigMap("featureCounts", featureCounts);
     }
     
     @Override

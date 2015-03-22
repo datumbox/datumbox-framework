@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
@@ -36,8 +37,8 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
        
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     }
@@ -46,8 +47,8 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
 
     }
     
-    public MutualInformation(String dbName) {
-        super(dbName, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
+    public MutualInformation(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
     }
     
     @Override

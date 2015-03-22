@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.configuration.TestConfiguration;
@@ -90,14 +91,14 @@ public class MultinomialNaiveBayesTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName);
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, new InMemoryConfiguration());
         
         MultinomialNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMultiProbabilityWeighted(true);
@@ -106,7 +107,7 @@ public class MultinomialNaiveBayesTest {
         
         
         instance = null;
-        instance = new MultinomialNaiveBayes(dbName);
+        instance = new MultinomialNaiveBayes(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -195,7 +196,7 @@ public class MultinomialNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName);
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, new InMemoryConfiguration());
         
         MultinomialNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMultiProbabilityWeighted(true);

@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import java.lang.reflect.InvocationTargetException;
 
@@ -53,8 +54,8 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
         //constructor only used in serialization/deserialization
     }
     
-    public MLmodelKnowledgeBase(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, mpClass, tpClass);
+    public MLmodelKnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, dbConf, mpClass, tpClass);
         this.vmClass = vmClass;
     }
     
@@ -64,7 +65,7 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
     @Override
     public void load() {
         if(trainingParameters==null) {
-            MLmodelKnowledgeBase kbObject = dbf.load(MLmodelKnowledgeBase.class);
+            MLmodelKnowledgeBase kbObject = dbc.load(MLmodelKnowledgeBase.class);
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }

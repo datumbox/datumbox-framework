@@ -19,8 +19,9 @@ package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,8 +50,8 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         
         protected Map<Object, Object> referenceLevels;
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
 
         public Map<Object, Double> getMinColumnValues() {
@@ -84,8 +85,8 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         
     }
 
-    protected BaseMinMaxNormalizer(String dbName) {
-        super(dbName, BaseMinMaxNormalizer.ModelParameters.class, BaseMinMaxNormalizer.TrainingParameters.class);
+    protected BaseMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, BaseMinMaxNormalizer.ModelParameters.class, BaseMinMaxNormalizer.TrainingParameters.class);
     }
     
     protected static void transformDummy(Dataset data, Map<Object, Object> referenceLevels, boolean trainingMode) {

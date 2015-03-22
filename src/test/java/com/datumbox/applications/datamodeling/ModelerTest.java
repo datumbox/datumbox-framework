@@ -18,6 +18,7 @@ package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -109,7 +110,7 @@ public class ModelerTest {
         
         String dbName = "JUnit";
         
-        Modeler instance = new Modeler(dbName);
+        Modeler instance = new Modeler(dbName, new InMemoryConfiguration());
         Modeler.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
         trainingParameters.setkFolds(5);
         
@@ -159,7 +160,7 @@ public class ModelerTest {
         System.out.println("predict");
         
         
-        instance = new Modeler(dbName);
+        instance = new Modeler(dbName, new InMemoryConfiguration());
         
         instance.predict(newData);
         

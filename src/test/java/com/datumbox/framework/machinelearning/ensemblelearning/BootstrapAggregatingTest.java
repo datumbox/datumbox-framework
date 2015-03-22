@@ -16,9 +16,9 @@
  */
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
-import com.datumbox.framework.machinelearning.ensemblelearning.BootstrapAggregating;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -95,14 +95,14 @@ public class BootstrapAggregatingTest {
         
         
 
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName);
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        BootstrapAggregating instance = new BootstrapAggregating(dbName);
+        BootstrapAggregating instance = new BootstrapAggregating(dbName, new InMemoryConfiguration());
         
         BootstrapAggregating.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMaxWeakClassifiers(5);
@@ -120,7 +120,7 @@ public class BootstrapAggregatingTest {
         
         
         instance = null;
-        instance = new BootstrapAggregating(dbName);
+        instance = new BootstrapAggregating(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -207,7 +207,7 @@ public class BootstrapAggregatingTest {
         
         
         String dbName = "JUnitClassifier";
-        BootstrapAggregating instance = new BootstrapAggregating(dbName);
+        BootstrapAggregating instance = new BootstrapAggregating(dbName, new InMemoryConfiguration());
         
         BootstrapAggregating.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMaxWeakClassifiers(5);

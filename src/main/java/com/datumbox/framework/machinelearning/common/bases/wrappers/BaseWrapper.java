@@ -16,8 +16,8 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.wrappers;
 
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.configuration.StorageConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
@@ -50,8 +50,8 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
 
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     }
@@ -128,10 +128,10 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
     }
 
     
-    public static <W extends BaseWrapper> W newInstance(Class<W> aClass, String dbName) {
+    public static <W extends BaseWrapper> W newInstance(Class<W> aClass, String dbName, DatabaseConfiguration dbConfig) {
         W algorithm = null;
         try {
-            algorithm = (W) aClass.getConstructor(String.class).newInstance(dbName);
+            algorithm = (W) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);;
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -144,14 +144,14 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
     /*
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
-    protected BaseWrapper(String dbName, Class<MP> mpClass, Class<TP> tpClass) {
+    protected BaseWrapper(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         String methodName = shortMethodName(); //this.getClass().getSimpleName();
         if(!dbName.contains(methodName)) { //patch for loading the dbname directly
-            dbName += StorageConfiguration.getDBnameSeparator() + methodName;
+            dbName += dbConf.getDBnameSeparator() + methodName;
         }
         
         this.dbName = dbName;
-        knowledgeBase = new KnowledgeBase<>(dbName, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     }
       

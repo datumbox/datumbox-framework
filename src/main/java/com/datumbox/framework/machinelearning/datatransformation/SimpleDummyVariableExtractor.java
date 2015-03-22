@@ -19,7 +19,8 @@ package com.datumbox.framework.machinelearning.datatransformation;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,8 +41,8 @@ public class SimpleDummyVariableExtractor extends DataTransformer<SimpleDummyVar
         
     public static class ModelParameters extends DataTransformer.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
             
     }
@@ -50,8 +51,8 @@ public class SimpleDummyVariableExtractor extends DataTransformer<SimpleDummyVar
         
     }
 
-    public SimpleDummyVariableExtractor(String dbName) {
-        super(dbName, SimpleDummyVariableExtractor.ModelParameters.class, SimpleDummyVariableExtractor.TrainingParameters.class);
+    public SimpleDummyVariableExtractor(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, SimpleDummyVariableExtractor.ModelParameters.class, SimpleDummyVariableExtractor.TrainingParameters.class);
     }
 
 

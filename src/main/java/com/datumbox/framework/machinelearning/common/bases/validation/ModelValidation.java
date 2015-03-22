@@ -18,10 +18,10 @@ package com.datumbox.framework.machinelearning.common.bases.validation;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -42,7 +42,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         super();
     }
     
-    public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
+    public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds");
@@ -62,7 +62,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         
         BaseMLmodel<MP, TP, VM> mlmodel = null;
         
-        String foldDBname=dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR;
+        String foldDBname=dbName+dbConf.getDBnameSeparator()+DB_INDICATOR;
         
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
@@ -100,7 +100,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             
             //initialize mlmodel
-            mlmodel = BaseMLmodel.newInstance(aClass, foldDBname);
+            mlmodel = BaseMLmodel.newInstance(aClass, foldDBname, dbConf);
             
             //set the temporary flag on
             mlmodel.setTemporary(true);

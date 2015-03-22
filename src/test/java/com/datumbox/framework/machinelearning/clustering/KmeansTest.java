@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -243,14 +244,14 @@ public class KmeansTest {
         String dbName = "JUnitClusterer";
         
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        Kmeans instance = new Kmeans(dbName);
+        Kmeans instance = new Kmeans(dbName, new InMemoryConfiguration());
         
         Kmeans.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setK(2);
@@ -265,7 +266,7 @@ public class KmeansTest {
         
         
         instance = null;
-        instance = new Kmeans(dbName);
+        instance = new Kmeans(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -308,7 +309,7 @@ public class KmeansTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
@@ -316,7 +317,7 @@ public class KmeansTest {
         
         
         
-        Kmeans instance = new Kmeans(dbName);
+        Kmeans instance = new Kmeans(dbName, new InMemoryConfiguration());
         
         Kmeans.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setK(2);

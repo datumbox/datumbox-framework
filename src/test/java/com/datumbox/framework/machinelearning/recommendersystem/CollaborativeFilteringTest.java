@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,7 +154,7 @@ public class CollaborativeFilteringTest {
         
         
         String dbName = "JUnitRecommender";
-        CollaborativeFiltering instance = new CollaborativeFiltering(dbName);
+        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, new InMemoryConfiguration());
         
         CollaborativeFiltering.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
@@ -162,7 +163,7 @@ public class CollaborativeFilteringTest {
         
         
         instance = null;
-        instance = new CollaborativeFiltering(dbName);
+        instance = new CollaborativeFiltering(dbName, new InMemoryConfiguration());
         
         instance.predict(newData);
         

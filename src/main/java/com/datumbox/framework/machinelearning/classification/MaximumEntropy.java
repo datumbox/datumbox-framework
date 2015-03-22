@@ -19,11 +19,12 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,8 +64,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
 
         
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         public Map<List<Object>, Double> getLambdas() {
@@ -97,8 +98,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
 
     
-    public MaximumEntropy(String dbName) {
-        super(dbName, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class);
+    public MaximumEntropy(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class);
     }
     
     @Override
@@ -125,7 +126,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     @SuppressWarnings("unchecked")
     protected void estimateModelParameters(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
@@ -151,8 +152,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseFactory dbf = knowledgeBase.getDbf();
-        Map<List<Object>, Double> EpFj_observed = dbf.getBigMap(tmpPrefix+"EpFj_observed");
+        DatabaseConnector dbc = knowledgeBase.getDbc();
+        Map<List<Object>, Double> EpFj_observed = dbc.getBigMap(tmpPrefix+"EpFj_observed");
         
         double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
         double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
@@ -208,12 +209,12 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         
         //Drop the temporary Collection
-        dbf.dropBigMap(tmpPrefix+"EpFj_observed", EpFj_observed);
+        dbc.dropBigMap(tmpPrefix+"EpFj_observed", EpFj_observed);
     }
     
 
     private void IIS(Dataset trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
@@ -223,14 +224,14 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         int n = modelParameters.getN();
         
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> EpFj_model = dbf.getBigMap(tmpPrefix+"EpFj_model");
+            Map<List<Object>, Double> EpFj_model = dbc.getBigMap(tmpPrefix+"EpFj_model");
             Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();
             
             //initialize the model probabilities with 0. We will start estimating them piece by piece
@@ -379,8 +380,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             
             //Drop the temporary Collection
-            dbf.dropBigMap(tmpPrefix+"EpFj_model", EpFj_model);
-            infiniteLambdaWeights = null; //dbf.dropTable(tmpPrefix+"infiniteLambdaWeights", infiniteLambdaWeights);
+            dbc.dropBigMap(tmpPrefix+"EpFj_model", EpFj_model);
+            infiniteLambdaWeights = null; //dbc.dropTable(tmpPrefix+"infiniteLambdaWeights", infiniteLambdaWeights);
         }
         
     }

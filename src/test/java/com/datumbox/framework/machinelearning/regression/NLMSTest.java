@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.featureselection.continuous.PCA;
@@ -86,14 +87,14 @@ public class NLMSTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
 
-        NLMS instance = new NLMS(dbName);
+        NLMS instance = new NLMS(dbName, new InMemoryConfiguration());
         
         NLMS.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(1600);
@@ -103,7 +104,7 @@ public class NLMSTest {
         
         
         instance = null;
-        instance = new NLMS(dbName);
+        instance = new NLMS(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -168,14 +169,14 @@ public class NLMSTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
 
         
         
-        PCA featureSelection = new PCA(dbName);
+        PCA featureSelection = new PCA(dbName, new InMemoryConfiguration());
         PCA.TrainingParameters featureSelectionParameters = featureSelection.getEmptyTrainingParametersObject();
         featureSelectionParameters.setMaxDimensions(trainingData.getColumnSize()-1);
         featureSelectionParameters.setWhitened(false);
@@ -186,13 +187,13 @@ public class NLMSTest {
         featureSelection=null;
         
         
-        featureSelection = new PCA(dbName);
+        featureSelection = new PCA(dbName, new InMemoryConfiguration());
         */
         featureSelection.clearFeatures(trainingData);
         featureSelection.erase();
         
         
-        NLMS instance = new NLMS(dbName);
+        NLMS instance = new NLMS(dbName, new InMemoryConfiguration());
         
         NLMS.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(500);

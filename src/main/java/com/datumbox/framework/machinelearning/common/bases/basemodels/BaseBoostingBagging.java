@@ -21,10 +21,10 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.configuration.StorageConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.framework.machinelearning.ensemblelearning.FixedCombinationRules;
@@ -50,8 +50,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         private List<Double> weakClassifierWeights = new ArrayList<>(); //this is small. maximum as the total number of classifiers
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         public List<Double> getWeakClassifierWeights() {
@@ -110,8 +110,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     }
     
     
-    protected BaseBoostingBagging(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, mpClass, tpClass, vmClass);
+    protected BaseBoostingBagging(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass);
     } 
     
     @Override
@@ -131,7 +131,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
-            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR+String.valueOf(t));
+            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             mlclassifier.predict(newData);
             mlclassifier = null;
             
@@ -168,7 +168,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
         
@@ -190,10 +190,10 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> observationWeights = dbf.getBigMap(tmpPrefix+"observationWeights");
+        Map<Object, Object> observationWeights = dbc.getBigMap(tmpPrefix+"observationWeights");
         
         //calculate the training parameters of bagging
         for(Record r : trainingData) {
@@ -213,7 +213,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 sampledTrainingDataset.add(trainingData.get((Integer)id));
             }
             
-            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR+String.valueOf(t));
+            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             mlclassifier.initializeTrainingConfiguration(weakClassifierTrainingParameters);
             
             Dataset validationDataset = trainingData;
@@ -236,7 +236,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //Drop the temporary Collection
-        dbf.dropBigMap(tmpPrefix+"observationWeights", observationWeights);
+        dbc.dropBigMap(tmpPrefix+"observationWeights", observationWeights);
     }
 
     /**
@@ -263,7 +263,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
             int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
             for(int t=0;t<totalWeakClassifiers;++t) {
-                BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+StorageConfiguration.getDBnameSeparator()+DB_INDICATOR+String.valueOf(t));
+                BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
                 mlclassifier.erase();
             }
         }

@@ -16,6 +16,7 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,7 +68,7 @@ public class CETRTest {
         parameters.setSmoothingAverageRadius(2);
         CETR instance = new CETR();
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
-        String result = instance.extract(text, parameters);
+        String result = instance.extract(text, new InMemoryConfiguration(), parameters);
         instance=null;
         assertEquals(expResult, result);
     }

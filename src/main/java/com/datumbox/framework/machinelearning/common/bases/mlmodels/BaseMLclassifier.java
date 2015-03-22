@@ -20,7 +20,8 @@ import com.datumbox.framework.machinelearning.common.bases.validation.ModelValid
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.enums.SensitivityRates;
 import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
@@ -53,14 +54,14 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         /*
         @Override
-        public void mapInitializer(BigDataStructureFactory dbf) {
-            super.mapInitializer(dbf, memoryConfiguration);
+        public void mapInitializer(BigDataStructureFactory dbc) {
+            super.mapInitializer(dbc, memoryConfiguration);
         }
         */
         
@@ -188,12 +189,12 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         }
     }
     
-    protected BaseMLclassifier(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, mpClass, tpClass, vmClass, new ClassifierValidation<>());
+    protected BaseMLclassifier(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
     } 
     
-    protected BaseMLclassifier(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
-        super(dbName, mpClass, tpClass, vmClass, modelValidator);
+    protected BaseMLclassifier(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
     @Override

@@ -20,12 +20,13 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
-import com.datumbox.configuration.StorageConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
 import com.datumbox.framework.machinelearning.common.validation.LatentDirichletAllocationValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -131,8 +132,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
 
@@ -258,8 +259,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
 
     }
     
-    public LatentDirichletAllocation(String dbName) {
-        super(dbName, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidation()); 
+    public LatentDirichletAllocation(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidation()); 
     }
 
     @Override
@@ -501,7 +502,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         //create new validation metrics object
         ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
-        String tmpPrefix=StorageConfiguration.getTmpPrefix();
+        String tmpPrefix=knowledgeBase.getDbConf().getTmpPrefix();
         
         //get model parameters
         int n = modelParameters.getN();
@@ -513,13 +514,13 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        DatabaseFactory dbf = knowledgeBase.getDbf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbf.getBigMap(tmpPrefix+"topicAssignmentOfDocumentWord");
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbf.getBigMap(tmpPrefix+"documentTopicCounts");
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbf.getBigMap(tmpPrefix+"topicWordCounts");
-        Map<Integer, Integer> tmp_topicCounts = dbf.getBigMap(tmpPrefix+"topicCounts");
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap(tmpPrefix+"topicAssignmentOfDocumentWord");
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap(tmpPrefix+"documentTopicCounts");
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap(tmpPrefix+"topicWordCounts");
+        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap(tmpPrefix+"topicCounts");
         
         //initialize topic assignments of each word randomly and update the counters
         for(Record r : newData) {
@@ -659,10 +660,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         //Drop the temporary Collection
-        dbf.dropBigMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        dbf.dropBigMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
-        dbf.dropBigMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
-        dbf.dropBigMap(tmpPrefix+"topicCounts", tmp_topicCounts);
+        dbc.dropBigMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        dbc.dropBigMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
+        dbc.dropBigMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
+        dbc.dropBigMap(tmpPrefix+"topicCounts", tmp_topicCounts);
         
         
         validationMetrics.setPerplexity(perplexity);

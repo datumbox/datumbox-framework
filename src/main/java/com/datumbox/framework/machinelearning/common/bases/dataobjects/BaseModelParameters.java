@@ -17,8 +17,8 @@
 package com.datumbox.framework.machinelearning.common.bases.dataobjects;
 
 import com.datumbox.common.objecttypes.Learnable;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -32,12 +32,12 @@ import java.util.List;
  */
 public abstract class BaseModelParameters implements Learnable {
     
-    public BaseModelParameters(DatabaseFactory dbf) {
+    public BaseModelParameters(DatabaseConnector dbc) {
         //Initialize all the BigMap fields
-        bigMapInitializer(dbf);
+        bigMapInitializer(dbc);
     }
     
-    public final void bigMapInitializer(DatabaseFactory dbf) {
+    public final void bigMapInitializer(DatabaseConnector dbc) {
         //get all the fields from all the inherited classes
         for(Field field : getAllFields(new LinkedList<>(), this.getClass())){
             
@@ -47,7 +47,7 @@ public abstract class BaseModelParameters implements Learnable {
                 
                 try {
                     //call the getBigMap method to load it
-                    field.set(this, dbf.getBigMap(field.getName()));
+                    field.set(this, dbc.getBigMap(field.getName()));
                 } 
                 catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new RuntimeException(ex);

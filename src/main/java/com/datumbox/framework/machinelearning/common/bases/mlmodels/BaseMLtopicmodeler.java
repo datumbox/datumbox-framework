@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 
 /**
@@ -30,8 +31,8 @@ public abstract class BaseMLtopicmodeler<MP extends BaseMLtopicmodeler.ModelPara
     
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
     } 
@@ -44,8 +45,8 @@ public abstract class BaseMLtopicmodeler<MP extends BaseMLtopicmodeler.ModelPara
   
     }
     
-    protected BaseMLtopicmodeler(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
-        super(dbName, mpClass, tpClass, vmClass, modelValidator);
+    protected BaseMLtopicmodeler(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
 }

@@ -18,7 +18,8 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -40,8 +41,8 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     public static class ModelParameters extends BaseMLregressor.ModelParameters {
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         //EMPTY Model parameters. It relies on the mlregressor DB instead        
@@ -119,8 +120,8 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     
     
-    public StepwiseRegression(String dbName) {
-        super(dbName, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
+    public StepwiseRegression(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
     } 
      
     
@@ -205,7 +206,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         modelParameters.setN(copiedTrainingData.size());        
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName); 
+        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
         mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
         
         int k = trainingParameters.getkFolds();
@@ -249,7 +250,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     private void loadRegressor() {
         if(mlregressor==null) {
             //initialize algorithm
-            mlregressor = BaseMLmodel.newInstance(knowledgeBase.getTrainingParameters().getRegressionClass(), dbName); 
+            mlregressor = BaseMLmodel.newInstance(knowledgeBase.getTrainingParameters().getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
         }
     }
     
@@ -257,7 +258,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         //initialize algorithm
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName); 
+        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
         mlregressor.setTemporary(true); //avoid storing its db
 
         //configure the algorithm

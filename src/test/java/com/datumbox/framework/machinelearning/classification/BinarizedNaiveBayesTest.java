@@ -16,9 +16,9 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.framework.machinelearning.classification.BinarizedNaiveBayes;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class BinarizedNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName);
+        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, new InMemoryConfiguration());
         
         BinarizedNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         
@@ -82,7 +82,7 @@ public class BinarizedNaiveBayesTest {
         
         
         instance = null;
-        instance = new BinarizedNaiveBayes(dbName);
+        instance = new BinarizedNaiveBayes(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -165,7 +165,7 @@ public class BinarizedNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName);
+        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, new InMemoryConfiguration());
         
         BinarizedNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         instance.initializeTrainingConfiguration(param);

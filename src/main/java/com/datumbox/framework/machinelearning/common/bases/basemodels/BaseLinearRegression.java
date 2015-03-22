@@ -19,9 +19,10 @@ package com.datumbox.framework.machinelearning.common.bases.basemodels;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.validation.LinearRegressionValidation;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
@@ -48,8 +49,8 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         @BigMap
         private Map<Object, Double> thitas; //the thita parameters of the model
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
 
         
@@ -191,8 +192,8 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
     }
 
     
-    protected BaseLinearRegression(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, mpClass, tpClass, vmClass, new LinearRegressionValidation<>());
+    protected BaseLinearRegression(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, new LinearRegressionValidation<>());
     } 
     
 

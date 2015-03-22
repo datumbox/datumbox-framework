@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.configuration.TestConfiguration;
@@ -85,7 +86,7 @@ public class MatrixLinearRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
@@ -93,7 +94,7 @@ public class MatrixLinearRegressionTest {
         df.normalize(validationData);
         df = null;
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName);
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, new InMemoryConfiguration());
         
         MatrixLinearRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setCalculatePvalue(true);
@@ -102,11 +103,11 @@ public class MatrixLinearRegressionTest {
         
         
         instance = null;
-        instance = new MatrixLinearRegression(dbName);
+        instance = new MatrixLinearRegression(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
-        df = new DummyXYMinMaxNormalizer(dbName);
+        df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         
 	        
         df.denormalize(trainingData);
@@ -170,12 +171,12 @@ public class MatrixLinearRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName);
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, new InMemoryConfiguration());
         
         MatrixLinearRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setCalculatePvalue(true);

@@ -21,8 +21,9 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinear
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
@@ -63,8 +64,8 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
         
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         public Map<Object, Integer> getFeatureIds() {
@@ -105,8 +106,8 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     }
 
     
-    public MatrixLinearRegression(String dbName) {
-        super(dbName, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
+    public MatrixLinearRegression(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
     }
     
     @Override

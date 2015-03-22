@@ -19,8 +19,9 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
-import com.datumbox.common.persistentstorage.DatabaseFactory;
-import com.datumbox.common.persistentstorage.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
@@ -184,8 +185,8 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         @BigMap
         private Map<Integer, CL> clusterList; //the cluster objects of the model
 
-        public ModelParameters(DatabaseFactory dbf) {
-            super(dbf);
+        public ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
         
         
@@ -263,12 +264,12 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
     }
     
-    protected BaseMLclusterer(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, mpClass, tpClass, vmClass, new ClustererValidation<>());
+    protected BaseMLclusterer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClustererValidation<>());
     } 
     
-    protected BaseMLclusterer(String dbName, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
-        super(dbName, mpClass, tpClass, vmClass, modelValidator);
+    protected BaseMLclusterer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
     

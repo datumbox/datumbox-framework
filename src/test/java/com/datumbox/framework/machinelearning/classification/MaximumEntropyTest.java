@@ -16,9 +16,9 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.framework.machinelearning.classification.MaximumEntropy;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class MaximumEntropyTest {
         
         
         String dbName = "JUnitClassifier";
-        MaximumEntropy instance = new MaximumEntropy(dbName);
+        MaximumEntropy instance = new MaximumEntropy(dbName, new InMemoryConfiguration());
         
         MaximumEntropy.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(10);
@@ -84,7 +84,7 @@ public class MaximumEntropyTest {
         
         
         instance = null;
-        instance = new MaximumEntropy(dbName);
+        instance = new MaximumEntropy(dbName, new InMemoryConfiguration());
         
         instance.predict(validationData);
         
@@ -166,7 +166,7 @@ public class MaximumEntropyTest {
         
         
         String dbName = "JUnitClassifier";
-        MaximumEntropy instance = new MaximumEntropy(dbName);
+        MaximumEntropy instance = new MaximumEntropy(dbName, new InMemoryConfiguration());
         
         MaximumEntropy.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(10);
