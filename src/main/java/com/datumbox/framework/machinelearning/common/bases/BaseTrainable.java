@@ -34,7 +34,6 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     
     protected KB knowledgeBase;
     protected String dbName;
-    protected boolean temporary=false; //flag that indicates that the model is temporary and should store as little data as possible to the db to avoid wasting IO
     
     @Override
     public String getDBname() {
@@ -61,16 +60,6 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     @Override
     public void erase() {
         knowledgeBase.erase();
-    }
-    
-    @Override
-    public boolean isTemporary() {
-        return temporary;
-    }
-
-    @Override
-    public void setTemporary(boolean temporary) {
-        this.temporary = temporary;
     }
     
     @Override

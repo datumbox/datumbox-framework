@@ -55,8 +55,8 @@ public class MapDBConnector implements DatabaseConnector {
         //TODO: put LRU cache, see if we can add no-lock and no transactions
         db = DBMaker.newFileDB(filepath.toFile())
                 //.transactionDisable()
-                //.compressionEnable()
-                //.cacheSize(10) 
+                .compressionEnable()
+                .cacheSize(this.dbConf.getCacheSize()) 
                 .closeOnJvmShutdown()
                 .make();
     }

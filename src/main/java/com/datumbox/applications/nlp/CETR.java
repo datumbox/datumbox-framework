@@ -188,7 +188,6 @@ public class CETR {
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
         
-        instance.setTemporary(true); //enforce temporary/not saved training
         instance.initializeTrainingConfiguration(param);
         instance.train(dataset, dataset);
         

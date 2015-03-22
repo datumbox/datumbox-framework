@@ -99,13 +99,11 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         
         estimateModelParameters(trainingData);
         
-        //store database if not temporary model
-        if(isTemporary()==false) {
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Saving feature model");
-            }
-            knowledgeBase.save();
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("Saving model");
         }
+        knowledgeBase.save();
+        
         knowledgeBase.setTrained(true);
     }
     

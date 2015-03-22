@@ -101,10 +101,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             //initialize mlmodel
             mlmodel = BaseMLmodel.newInstance(aClass, foldDBname, dbConf);
-            
-            //set the temporary flag on
-            mlmodel.setTemporary(true);
-            
+                        
             //set training configuration
             mlmodel.initializeTrainingConfiguration(trainingParameters);
                         

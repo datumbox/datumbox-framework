@@ -170,17 +170,4 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         knowledgeBase.erase();
     }
 
-    @Override
-    public void setTemporary(boolean temporary) {
-        if(dataTransformer!=null) {
-            dataTransformer.setTemporary(temporary);
-        }
-        if(featureSelection!=null) {
-            featureSelection.setTemporary(temporary);
-        }
-        if(mlmodel!=null) {
-            mlmodel.setTemporary(temporary);
-        }
-        this.temporary = temporary;
-    }
 }

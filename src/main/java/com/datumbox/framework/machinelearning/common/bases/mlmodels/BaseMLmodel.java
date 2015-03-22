@@ -175,13 +175,11 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
         }
 
         
-        //store database if not temporary model
-        if(isTemporary()==false) {
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Saving model");
-            }
-            knowledgeBase.save();
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("Saving model");
         }
+        knowledgeBase.save();
+        
         knowledgeBase.setTrained(true);
     }
     
@@ -233,12 +231,11 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      */
     public void setValidationMetrics(VM validationMetrics) {
         knowledgeBase.setValidationMetrics(validationMetrics);
-        if(isTemporary()==false) {
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Updating model");
-            }
-            knowledgeBase.save();
+        
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("Updating model");
         }
+        knowledgeBase.save();
     }
     
     public VM getValidationMetrics() {

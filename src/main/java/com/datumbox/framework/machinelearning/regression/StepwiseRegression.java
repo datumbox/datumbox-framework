@@ -259,7 +259,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         
         //initialize algorithm
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
-        mlregressor.setTemporary(true); //avoid storing its db
 
         //configure the algorithm
         mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());

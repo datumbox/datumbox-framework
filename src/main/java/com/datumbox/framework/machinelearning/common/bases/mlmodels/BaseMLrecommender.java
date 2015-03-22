@@ -126,13 +126,11 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         //train the model to get the parameters
         estimateModelParameters(trainingData);        
         
-        //store database if not temporary model
-        if(isTemporary()==false) {
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Saving model");
-            }
-            knowledgeBase.save();
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("Saving model");
         }
+        knowledgeBase.save();
+        
         knowledgeBase.setTrained(true);
     }
     

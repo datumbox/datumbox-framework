@@ -30,6 +30,8 @@ public class MapDBConfiguration implements DatabaseConfiguration {
 
     //DB specific properties
     private String dbRootFolder = "";
+    
+    private int cacheSize = 100000;
 
     @Override
     public DatabaseConnector getConnector(String database) {
@@ -47,5 +49,13 @@ public class MapDBConfiguration implements DatabaseConfiguration {
 
     public void setDbRootFolder(String dbRootFolder) {
         this.dbRootFolder = dbRootFolder;
+    }
+
+    public int getCacheSize() {
+        return cacheSize;
+    }
+
+    public void setCacheSize(int cacheSize) {
+        this.cacheSize = cacheSize;
     }
 }

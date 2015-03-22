@@ -78,20 +78,4 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      */
     public void initializeTrainingConfiguration(TP trainingParameters);
     
-    /**
-     * Getter for temporary flag which indicates that the creation of the model
-     * is temporary. This flag is used to prevent the algorithm from saving its
-     * results to the db and wasting IO. The flag is turned on in cases such as
-     * the k-fold cross validation where we don't keep the produced algorithms.
-     * 
-     * @return 
-     */
-    public boolean isTemporary();
-    
-    /**
-     * Setter for the temporary flag.
-     * 
-     * @param temporary 
-     */
-    public void setTemporary(boolean temporary);
 }
