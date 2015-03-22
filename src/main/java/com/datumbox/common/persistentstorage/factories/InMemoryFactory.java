@@ -94,12 +94,12 @@ public class InMemoryFactory implements DatabaseFactory {
     }
     
     @Override
-    public <T extends Map> void dropMap(String collectionName, T map) {
+    public <T extends Map> void dropBigMap(String name, T map) {
         map.clear();
     }
     
     @Override
-    public <K,V> Map<K,V> getMap(String collectionName) {
+    public <K,V> Map<K,V> getBigMap(String name) {
         return new HashMap<>();
     }   
 

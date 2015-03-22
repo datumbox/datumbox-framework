@@ -516,10 +516,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         DatabaseFactory dbf = knowledgeBase.getDbf();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbf.getMap(tmpPrefix+"topicAssignmentOfDocumentWord");
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbf.getMap(tmpPrefix+"documentTopicCounts");
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbf.getMap(tmpPrefix+"topicWordCounts");
-        Map<Integer, Integer> tmp_topicCounts = dbf.getMap(tmpPrefix+"topicCounts");
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbf.getBigMap(tmpPrefix+"topicAssignmentOfDocumentWord");
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbf.getBigMap(tmpPrefix+"documentTopicCounts");
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbf.getBigMap(tmpPrefix+"topicWordCounts");
+        Map<Integer, Integer> tmp_topicCounts = dbf.getBigMap(tmpPrefix+"topicCounts");
         
         //initialize topic assignments of each word randomly and update the counters
         for(Record r : newData) {
@@ -659,10 +659,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         //Drop the temporary Collection
-        dbf.dropMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        dbf.dropMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
-        dbf.dropMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
-        dbf.dropMap(tmpPrefix+"topicCounts", tmp_topicCounts);
+        dbf.dropBigMap(tmpPrefix+"topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        dbf.dropBigMap(tmpPrefix+"documentTopicCounts", tmp_documentTopicCounts);
+        dbf.dropBigMap(tmpPrefix+"topicWordCounts", tmp_topicWordCounts);
+        dbf.dropBigMap(tmpPrefix+"topicCounts", tmp_topicCounts);
         
         
         validationMetrics.setPerplexity(perplexity);

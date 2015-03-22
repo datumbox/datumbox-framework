@@ -356,9 +356,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             DatabaseFactory dbf = knowledgeBase.getDbf();
             
-            Map<Object, Double> categoricalFrequencies = dbf.getMap(tmpPrefix+"categoricalFrequencies");
-            Map<Object, Double> varianceSumX = dbf.getMap(tmpPrefix+"varianceSumX");
-            Map<Object, Double> varianceSumXsquare = dbf.getMap(tmpPrefix+"varianceSumXsquare");
+            Map<Object, Double> categoricalFrequencies = dbf.getBigMap(tmpPrefix+"categoricalFrequencies");
+            Map<Object, Double> varianceSumX = dbf.getBigMap(tmpPrefix+"varianceSumX");
+            Map<Object, Double> varianceSumXsquare = dbf.getBigMap(tmpPrefix+"varianceSumXsquare");
         
             //calculate variance and frequencies
             for(Record r : trainingData) {
@@ -422,9 +422,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //Drop the temporary Collection
-            dbf.dropMap(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
-            dbf.dropMap(tmpPrefix+"varianceSumX", categoricalFrequencies);
-            dbf.dropMap(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
+            dbf.dropBigMap(tmpPrefix+"categoricalFrequencies", categoricalFrequencies);
+            dbf.dropBigMap(tmpPrefix+"varianceSumX", categoricalFrequencies);
+            dbf.dropBigMap(tmpPrefix+"varianceSumXsquare", categoricalFrequencies);
         }
     }
     

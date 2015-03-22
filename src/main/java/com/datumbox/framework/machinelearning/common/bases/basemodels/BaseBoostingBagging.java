@@ -193,7 +193,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         DatabaseFactory dbf = knowledgeBase.getDbf();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> observationWeights = dbf.getMap(tmpPrefix+"observationWeights");
+        Map<Object, Object> observationWeights = dbf.getBigMap(tmpPrefix+"observationWeights");
         
         //calculate the training parameters of bagging
         for(Record r : trainingData) {
@@ -236,7 +236,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //Drop the temporary Collection
-        dbf.dropMap(tmpPrefix+"observationWeights", observationWeights);
+        dbf.dropBigMap(tmpPrefix+"observationWeights", observationWeights);
     }
 
     /**

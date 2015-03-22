@@ -232,9 +232,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbf.getMap(tmpPrefix+"newThitas");
+            Map<Object, Double> newThitas = dbf.getBigMap(tmpPrefix+"newThitas");
             
-            Map<Object, Double> newWeights = dbf.getMap(tmpPrefix+"newWeights");
+            Map<Object, Double> newWeights = dbf.getBigMap(tmpPrefix+"newWeights");
             
             newThitas.putAll(thitas);
             newWeights.putAll(weights);
@@ -260,8 +260,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             }
             
             //Drop the temporary Collections
-            dbf.dropMap(tmpPrefix+"newWeights", newWeights);
-            dbf.dropMap(tmpPrefix+"newThitas", newThitas);
+            dbf.dropBigMap(tmpPrefix+"newWeights", newWeights);
+            dbf.dropBigMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

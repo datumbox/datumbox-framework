@@ -198,7 +198,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> newThitas = dbf.getMap(tmpPrefix+"newThitas");
+            Map<List<Object>, Double> newThitas = dbf.getBigMap(tmpPrefix+"newThitas");
             
             newThitas.putAll(thitas);
             batchGradientDescent(trainingData, newThitas, learningRate);
@@ -219,7 +219,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             }
             
             //Drop the temporary Collection
-            dbf.dropMap(tmpPrefix+"newThitas", newThitas);
+            dbf.dropBigMap(tmpPrefix+"newThitas", newThitas);
         }
     }
     

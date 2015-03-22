@@ -126,9 +126,9 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         DatabaseFactory dbf = knowledgeBase.getDbf();
         
         String tmpPrefix=StorageConfiguration.getTmpPrefix(); 
-        Map<Object, Integer> classCounts = dbf.getMap(tmpPrefix+"classCounts"); //map which stores the counts of the classes
-        Map<List<Object>, Integer> featureClassCounts = dbf.getMap(tmpPrefix+"featureClassCounts"); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> featureCounts = dbf.getMap(tmpPrefix+"featureCounts"); //map which stores the counts of the features
+        Map<Object, Integer> classCounts = dbf.getBigMap(tmpPrefix+"classCounts"); //map which stores the counts of the classes
+        Map<List<Object>, Integer> featureClassCounts = dbf.getBigMap(tmpPrefix+"featureClassCounts"); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> featureCounts = dbf.getBigMap(tmpPrefix+"featureCounts"); //map which stores the counts of the features
 
         
         //build the maps with teh feature statistics and counts
@@ -143,9 +143,9 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
 
         //drop the unnecessary stastistics tables
-        dbf.dropMap("classCounts", classCounts);
-        dbf.dropMap("featureClassCounts", featureClassCounts);
-        dbf.dropMap("featureCounts", featureCounts);
+        dbf.dropBigMap("classCounts", classCounts);
+        dbf.dropBigMap("featureClassCounts", featureClassCounts);
+        dbf.dropBigMap("featureCounts", featureCounts);
     }
     
     @Override

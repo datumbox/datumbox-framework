@@ -31,7 +31,7 @@ public abstract class BaseModelParameters implements Learnable {
                 field.setAccessible(true);
                 
                 try {
-                    field.set(this, dbf.getMap(field.getName()));
+                    field.set(this, dbf.getBigMap(field.getName()));
                 } 
                 catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new RuntimeException(ex);
