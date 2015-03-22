@@ -36,7 +36,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         VARIABLES
         =========
     */
-    protected transient String dbName; 
+    protected String dbName; 
     
     
     protected transient DatabaseFactory dbf;

@@ -45,8 +45,6 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
     
     /**
      * Deletes the particular algorithm and all the associated parameters. 
-     * 
-     * @param complete
      */
     public void erase();
     

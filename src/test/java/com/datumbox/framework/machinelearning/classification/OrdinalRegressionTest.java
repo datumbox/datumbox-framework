@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
-import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
