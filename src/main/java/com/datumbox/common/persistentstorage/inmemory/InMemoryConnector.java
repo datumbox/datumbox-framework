@@ -36,10 +36,6 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class InMemoryConnector implements DatabaseConnector {
-    
-    //Mandatory constants
-    public static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
-    public static final String TMP_PREFIX = "TMP_";
         
     private final Path filepath;
     private final InMemoryConfiguration dbConf;

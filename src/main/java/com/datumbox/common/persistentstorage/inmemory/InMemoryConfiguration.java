@@ -16,8 +16,6 @@
  */
 package com.datumbox.common.persistentstorage.inmemory;
 
-import static com.datumbox.common.persistentstorage.inmemory.InMemoryConnector.DBNAME_SEPARATOR;
-import static com.datumbox.common.persistentstorage.inmemory.InMemoryConnector.TMP_PREFIX;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
@@ -26,6 +24,10 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class InMemoryConfiguration implements DatabaseConfiguration {
+    
+    //Mandatory constants
+    private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
+    private static final String TMP_PREFIX = "TMP_";
 
     //DB specific constants
     private String dbRootFolder = "";
