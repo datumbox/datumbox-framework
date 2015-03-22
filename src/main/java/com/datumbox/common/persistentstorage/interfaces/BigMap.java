@@ -23,11 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * BigMap annotation is used to declare large Maps or Collections in the ModelParameters
- Objects, which at the same time are defined as Transient for Morphia. The 
- * reason why we mark them with this annotation is because if for example HashMaps are used
- * during training, their values will not be stored by Morphia. As a result
- * we must identify those fields and store them manually.
+ * BigMap annotation is used to declare large Maps in the ModelParameters.
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */

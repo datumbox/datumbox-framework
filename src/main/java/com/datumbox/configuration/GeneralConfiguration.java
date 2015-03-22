@@ -21,8 +21,8 @@ package com.datumbox.configuration;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class GeneralConfiguration {
-    public static final String VERSION = "0.5.1";
-    public static final Integer BUILD = 20141105; //YYYYMMDD format
+    public static final String VERSION = "0.6.0";
+    public static final Integer BUILD = 20150322; //YYYYMMDD format
     
     public static final boolean DEBUG = true; //if true it prints debug/info messages on console
 }
