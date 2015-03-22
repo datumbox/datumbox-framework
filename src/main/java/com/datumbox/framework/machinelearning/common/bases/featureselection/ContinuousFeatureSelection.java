@@ -16,6 +16,8 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
+
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.
  * 
@@ -26,6 +28,10 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSelection.ModelParameters, TP extends ContinuousFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
 
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     }
     

@@ -20,12 +20,12 @@ import com.datumbox.framework.machinelearning.common.bases.validation.ModelValid
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.enums.SensitivityRates;
 import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +52,10 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
 
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
         /*
         @Override

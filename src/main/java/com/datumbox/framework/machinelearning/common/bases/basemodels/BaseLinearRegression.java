@@ -46,16 +46,13 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
          * Thita weights
          */
         @BigMap
-        
         private Map<Object, Double> thitas; //the thita parameters of the model
 
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            thitas = dbf.getMap("thitas");
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
+
+        
         
         public Map<Object, Double> getThitas() {
             return thitas;

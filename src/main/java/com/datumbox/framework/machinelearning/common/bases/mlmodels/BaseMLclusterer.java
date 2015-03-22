@@ -183,13 +183,9 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         @BigMap
         private Map<Integer, CL> clusterList; //the cluster objects of the model
-        
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            clusterList = dbf.getMap("clusterList");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         

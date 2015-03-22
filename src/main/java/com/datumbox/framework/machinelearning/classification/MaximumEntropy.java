@@ -62,11 +62,9 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
 
         
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            lambdas = dbf.getMap("lambdas");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         public Map<List<Object>, Double> getLambdas() {

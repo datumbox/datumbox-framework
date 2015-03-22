@@ -73,12 +73,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         private Map<Object, Double> thitas; 
         
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf); 
-            
-            weights = dbf.getMap("weights");
-            thitas = dbf.getMap("thitas");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         public Map<Object, Double> getWeights() {

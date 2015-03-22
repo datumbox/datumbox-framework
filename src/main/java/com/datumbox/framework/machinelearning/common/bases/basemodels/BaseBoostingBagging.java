@@ -49,6 +49,10 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
         
         private List<Double> weakClassifierWeights = new ArrayList<>(); //this is small. maximum as the total number of classifiers
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
         public List<Double> getWeakClassifierWeights() {
             return weakClassifierWeights;

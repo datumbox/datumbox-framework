@@ -129,6 +129,9 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
           
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
     } 
     
     

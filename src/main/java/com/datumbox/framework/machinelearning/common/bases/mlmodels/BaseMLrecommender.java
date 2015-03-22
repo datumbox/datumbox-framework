@@ -17,13 +17,12 @@
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.configuration.StorageConfiguration;
+import com.datumbox.framework.machinelearning.common.bases.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.lang.reflect.InvocationTargetException;
 
@@ -39,11 +38,10 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     /**
      * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
      */
-    public static abstract class ModelParameters implements Learnable, BigMapContainer {
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            
+    public static abstract class ModelParameters extends BaseModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
             
         //here goes the parameters of the Machine Learning model

@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,10 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
     
     
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     } 
 

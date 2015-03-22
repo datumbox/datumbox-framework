@@ -62,11 +62,9 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
          */
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
         
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            featureIds = dbf.getMap("featureIds");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         public Map<Object, Integer> getFeatureIds() {

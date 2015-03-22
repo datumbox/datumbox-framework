@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 
 
@@ -34,6 +35,10 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
+        
     } 
 
     

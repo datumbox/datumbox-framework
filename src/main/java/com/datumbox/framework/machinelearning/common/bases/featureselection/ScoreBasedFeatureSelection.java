@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.google.common.collect.Ordering;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,6 +31,10 @@ import java.util.Map;
 public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSelection.ModelParameters, TP extends ScoreBasedFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
 
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     }
     

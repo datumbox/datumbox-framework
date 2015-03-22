@@ -19,6 +19,7 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
@@ -49,6 +50,10 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     public static final String SHORT_METHOD_NAME = "TxtCl";
     
     public static class ModelParameters extends BaseWrapper.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     }
     

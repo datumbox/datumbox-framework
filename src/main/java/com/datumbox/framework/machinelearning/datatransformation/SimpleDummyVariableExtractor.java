@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.datatransformation;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +39,10 @@ public class SimpleDummyVariableExtractor extends DataTransformer<SimpleDummyVar
     public static final String SHORT_METHOD_NAME = "SDExt";
         
     public static class ModelParameters extends DataTransformer.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
             
     }
     

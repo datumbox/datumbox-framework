@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -38,6 +39,11 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     
     public static class ModelParameters extends BaseMLregressor.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
+        
         //EMPTY Model parameters. It relies on the mlregressor DB instead        
     } 
 

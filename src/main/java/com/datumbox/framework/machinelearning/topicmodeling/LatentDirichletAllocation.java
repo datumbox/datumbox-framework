@@ -130,18 +130,11 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         @BigMap
         
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
-        
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            topicAssignmentOfDocumentWord = dbf.getMap("topicAssignmentOfDocumentWord");
-            documentTopicCounts = dbf.getMap("documentTopicCounts");
-            topicWordCounts = dbf.getMap("topicWordCounts");
-            documentWordCounts = dbf.getMap("documentWordCounts");
-            topicCounts = dbf.getMap("topicCounts");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
+        
 
         public int getTotalIterations() {
             return totalIterations;

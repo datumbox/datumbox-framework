@@ -119,15 +119,11 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         private int totalIterations;
         
         @BigMap
-        
         private Map<Object, Double> featureWeights; 
         
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            featureWeights = dbf.getMap("featureWeights");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         

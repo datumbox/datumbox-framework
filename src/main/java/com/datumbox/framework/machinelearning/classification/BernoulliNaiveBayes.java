@@ -46,15 +46,12 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
         @BigMap
-        
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf); 
-            
-            sumOfLog1minusProb = dbf.getMap("sumOfLog1minusProb");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
+        
         
         public Map<Object, Double> getSumOfLog1minusProb() {
             return sumOfLog1minusProb;

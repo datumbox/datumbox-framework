@@ -16,11 +16,10 @@
  */
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
-import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.persistentstorage.interfaces.BigMapContainer;
+import com.datumbox.framework.machinelearning.common.bases.BaseModelParameters;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
@@ -31,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class KnowledgeBase<MP extends Learnable & BigMapContainer, TP extends Parameterizable & KnowledgeBase.SelfConstructible> implements Serializable {
+public class KnowledgeBase<MP extends BaseModelParameters, TP extends Parameterizable & KnowledgeBase.SelfConstructible> implements Serializable {
 
     public interface SelfConstructible<O> {
         public O getEmptyObject();
@@ -153,8 +152,7 @@ public class KnowledgeBase<MP extends Learnable & BigMapContainer, TP extends Pa
         erase();
 
         try {
-            modelParameters = mpClass.getConstructor().newInstance();
-            modelParameters.mapInitializer(dbf);
+            modelParameters = mpClass.getConstructor(DatabaseFactory.class).newInstance(dbf);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

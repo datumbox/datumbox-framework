@@ -47,6 +47,10 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         @BigMap
         
         private Map<Object, Double> featureScores; //map which stores the scores of the features
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
         //Getters and Setters
         
@@ -63,13 +67,6 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
 
         public void setFeatureScores(Map<Object, Double> featureScores) {
             this.featureScores = featureScores;
-        }
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            featureScores = dbf.getMap("featureScores");
         }
         
     }

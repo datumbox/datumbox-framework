@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 
 /**
  *
@@ -34,6 +35,10 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
     public static final String SHORT_METHOD_NAME = "BinNB";
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
 
     } 
 

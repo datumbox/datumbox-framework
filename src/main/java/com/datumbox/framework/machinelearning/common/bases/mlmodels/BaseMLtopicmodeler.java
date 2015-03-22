@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 
 /**
@@ -28,6 +29,10 @@ import com.datumbox.framework.machinelearning.common.bases.validation.ModelValid
 public abstract class BaseMLtopicmodeler<MP extends BaseMLtopicmodeler.ModelParameters, TP extends BaseMLtopicmodeler.TrainingParameters, VM extends BaseMLtopicmodeler.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     } 
     

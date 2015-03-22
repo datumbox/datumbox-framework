@@ -47,6 +47,10 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
     } 
 
     

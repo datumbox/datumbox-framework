@@ -65,15 +65,12 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         private int N;
         
         @BigMap
-        
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
 
         
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            maxTFIDFfeatureScores = dbf.getMap("maxTFIDFfeatureScores");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         public int getN() {

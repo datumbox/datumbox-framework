@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Collection;
@@ -226,6 +227,10 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
     
     public static class ModelParameters extends BaseDPMM.ModelParameters<MultinomialDPMM.Cluster> {
         
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
 
         @Override
         public Map<Integer, Cluster> getClusterList() {

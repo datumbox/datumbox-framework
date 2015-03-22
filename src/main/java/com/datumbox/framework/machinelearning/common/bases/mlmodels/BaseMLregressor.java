@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 
 /**
@@ -33,6 +34,10 @@ public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters
         
         //number of features in data. IN DATA not in the algorithm. Typically the features of the algortihm is d*c
         private Integer d =0 ;
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         /*
         @Override
         public void mapInitializer(BigDataStructureFactory dbf) {

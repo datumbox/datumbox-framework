@@ -77,16 +77,13 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
          * Feature set
          */
         @BigMap
-        
         private Map<Object, Integer> featureIds; //list of all the supported features
 
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            featureIds = dbf.getMap("featureIds");
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
+
+        
         
         public int getTotalIterations() {
             return totalIterations;

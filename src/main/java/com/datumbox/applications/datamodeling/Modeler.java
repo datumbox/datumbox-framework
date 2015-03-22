@@ -17,6 +17,7 @@
 package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -32,6 +33,10 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     public static final String SHORT_METHOD_NAME = "Mdlr";
     
     public static class ModelParameters extends BaseWrapper.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     }
     

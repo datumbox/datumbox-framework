@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.configuration.GeneralConfiguration;
@@ -68,11 +67,9 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
         private svm_model svmModel; //the parameters of the svm model
         
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf); 
-            
-            featureIds = dbf.getMap("featureIds");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         public Map<Object, Integer> getFeatureIds() {

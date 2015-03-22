@@ -75,7 +75,6 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     
     public static class ModelParameters extends ContinuousFeatureSelection.ModelParameters {
         @BigMap
-        
         private Map<Object, Integer> feature2ColumnId;
         
         private int rows; //rows of the eigenvector matrix
@@ -88,13 +87,11 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         //make it a single 1d array and convert it back to 2d
         
         private double[][] components; //components weights 
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
 
-            feature2ColumnId = dbf.getMap("feature2ColumnId");
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
+        
 
         public Map<Object, Integer> getFeature2ColumnId() {
             return feature2ColumnId;

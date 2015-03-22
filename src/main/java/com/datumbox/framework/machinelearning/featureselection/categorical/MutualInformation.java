@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.persistentstorage.factories.DatabaseFactory;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
@@ -34,6 +35,10 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
     public static final String SHORT_METHOD_NAME = "MIFS";
        
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
+        }
         
     }
 

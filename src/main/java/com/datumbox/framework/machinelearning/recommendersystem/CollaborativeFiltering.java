@@ -63,12 +63,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         @BigMap
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
-        
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf);
-            
-            similarities = dbf.getMap("similarities");
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         

@@ -56,11 +56,9 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
 
         
-        @Override
-        public void mapInitializer(DatabaseFactory dbf) {
-            super.mapInitializer(dbf); 
-            
-            thitas = dbf.getMap("thitas");
+
+        public ModelParameters(DatabaseFactory dbf) {
+            super(dbf);
         }
         
         public Map<List<Object>, Double> getThitas() {
