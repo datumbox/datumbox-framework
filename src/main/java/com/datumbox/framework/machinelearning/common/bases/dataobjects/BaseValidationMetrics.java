@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.dataobjects;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -23,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 
-public abstract class BaseValidationMetrics {
+public abstract class BaseValidationMetrics implements Serializable {
 
     /**
      * This method allows us to build a new empty object of the current object
