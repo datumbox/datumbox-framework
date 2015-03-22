@@ -60,7 +60,7 @@ public class TextClassifierTest {
         dataset.put("objective", new URI("file:///home/bbriniotis/training.subjectivity.en.obj"));
         dataset.put("subjective", new URI("file:///home/bbriniotis/training.subjectivity.en.subj"));
         
-        TextClassifier instance = new TextClassifier(dbName, new InMemoryConfiguration());
+        TextClassifier instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
         TextClassifier.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
         
         trainingParameters.setkFolds(5);
@@ -128,7 +128,7 @@ public class TextClassifierTest {
         
         
         
-        instance = new TextClassifier(dbName, new InMemoryConfiguration());
+        instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
         
         URI datasetURI = new URI("file:///home/bbriniotis/testing.txt");
         List<Object> result = instance.predict(datasetURI);

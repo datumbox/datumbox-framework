@@ -17,8 +17,8 @@
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -50,14 +50,14 @@ public class MutualInformationTest {
         param.setIgnoringNumericalFeatures(false);
         
         Dataset trainingData = ChisquareSelectTest.generateDataset(1000);
-        MutualInformation instance = new MutualInformation(dbName, new InMemoryConfiguration());
+        MutualInformation instance = new MutualInformation(dbName, TestConfiguration.getDBConfig());
         instance.initializeTrainingConfiguration(param);
         
         instance.evaluateFeatures(trainingData);
         instance = null;
         
         
-        instance = new MutualInformation(dbName, new InMemoryConfiguration());
+        instance = new MutualInformation(dbName, TestConfiguration.getDBConfig());
         
         instance.clearFeatures(trainingData);
         

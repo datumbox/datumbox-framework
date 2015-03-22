@@ -51,7 +51,7 @@ public class PCATest {
         
         String dbName = "JUnitPCAdimred";
         
-        PCA instance = new PCA(dbName, new InMemoryConfiguration());
+        PCA instance = new PCA(dbName, TestConfiguration.getDBConfig());
         
         PCA.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMaxDimensions(null);
@@ -62,7 +62,7 @@ public class PCATest {
         
         Dataset newdata = originaldata;
         
-        instance = new PCA(dbName, new InMemoryConfiguration());
+        instance = new PCA(dbName, TestConfiguration.getDBConfig());
         
         
         Dataset expResult = new Dataset();

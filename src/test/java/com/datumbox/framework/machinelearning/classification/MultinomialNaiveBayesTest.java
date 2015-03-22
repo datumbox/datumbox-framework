@@ -91,14 +91,14 @@ public class MultinomialNaiveBayesTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, new InMemoryConfiguration());
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         MultinomialNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMultiProbabilityWeighted(true);
@@ -107,7 +107,7 @@ public class MultinomialNaiveBayesTest {
         
         
         instance = null;
-        instance = new MultinomialNaiveBayes(dbName, new InMemoryConfiguration());
+        instance = new MultinomialNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
         
@@ -196,7 +196,7 @@ public class MultinomialNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, new InMemoryConfiguration());
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         MultinomialNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setMultiProbabilityWeighted(true);

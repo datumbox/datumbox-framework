@@ -702,7 +702,7 @@ public class SoftMaxRegressionTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
@@ -710,7 +710,7 @@ public class SoftMaxRegressionTest {
         df.normalize(validationData);
 
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, new InMemoryConfiguration());
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(2000);
@@ -719,7 +719,7 @@ public class SoftMaxRegressionTest {
         
         
         instance = null;
-        instance = new SoftMaxRegression(dbName, new InMemoryConfiguration());
+        instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
         	        
@@ -807,12 +807,12 @@ public class SoftMaxRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, new InMemoryConfiguration());
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(30);

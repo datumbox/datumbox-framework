@@ -182,8 +182,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         
         
-        @BigMap
-        private Map<Integer, CL> clusterList; //the cluster objects of the model
+        private Map<Integer, CL> clusterList = new HashMap<>(); //the cluster objects of the model
 
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);

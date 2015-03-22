@@ -164,13 +164,11 @@
             <artifactId>lpsolve</artifactId>
             <version>${lpsolve-version}</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.mapdb</groupId>
             <artifactId>mapdb</artifactId>
             <version>${mapdb-version}</version>
         </dependency>
-        -->
     </dependencies>
     
     <profiles>

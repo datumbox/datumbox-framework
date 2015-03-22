@@ -663,14 +663,14 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, new InMemoryConfiguration());
+        OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
         OrdinalRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(100);
@@ -679,7 +679,7 @@ public class OrdinalRegressionTest {
         
         
         instance = null;
-        instance = new OrdinalRegression(dbName, new InMemoryConfiguration());
+        instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
 
@@ -716,12 +716,12 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, new InMemoryConfiguration());
+        OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
         OrdinalRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(100);

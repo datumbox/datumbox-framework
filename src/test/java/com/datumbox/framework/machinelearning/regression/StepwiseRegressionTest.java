@@ -18,8 +18,8 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Random;
@@ -89,14 +89,14 @@ public class StepwiseRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        StepwiseRegression instance = new StepwiseRegression(dbName, new InMemoryConfiguration());
+        StepwiseRegression instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
         
         StepwiseRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setAout(0.05);
@@ -112,7 +112,7 @@ public class StepwiseRegressionTest {
         
         
         instance = null;
-        instance = new StepwiseRegression(dbName, new InMemoryConfiguration());
+        instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
         
@@ -198,7 +198,7 @@ public class StepwiseRegressionTest {
         
         
         String dbName = "JUnitRegressor";
-        StepwiseRegression instance = new StepwiseRegression(dbName, new InMemoryConfiguration());
+        StepwiseRegression instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
         
         StepwiseRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setAout(0.05);

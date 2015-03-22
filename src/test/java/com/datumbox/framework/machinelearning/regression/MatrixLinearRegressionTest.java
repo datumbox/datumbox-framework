@@ -86,7 +86,7 @@ public class MatrixLinearRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
@@ -94,7 +94,7 @@ public class MatrixLinearRegressionTest {
         df.normalize(validationData);
         df = null;
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, new InMemoryConfiguration());
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
         MatrixLinearRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setCalculatePvalue(true);
@@ -103,11 +103,11 @@ public class MatrixLinearRegressionTest {
         
         
         instance = null;
-        instance = new MatrixLinearRegression(dbName, new InMemoryConfiguration());
+        instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
         
-        df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         
 	        
         df.denormalize(trainingData);
@@ -171,12 +171,12 @@ public class MatrixLinearRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, new InMemoryConfiguration());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, new InMemoryConfiguration());
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
         MatrixLinearRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setCalculatePvalue(true);

@@ -18,8 +18,8 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -77,14 +77,14 @@ public class TFIDFTest {
         r3.getX().put("stopword3", 4.0);
         trainingData.add(r3);
         
-        TFIDF instance = new TFIDF(dbName, new InMemoryConfiguration());
+        TFIDF instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
         instance.initializeTrainingConfiguration(param);
         
         instance.evaluateFeatures(trainingData);
         instance = null;
         
         
-        instance = new TFIDF(dbName, new InMemoryConfiguration());
+        instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
         
         instance.clearFeatures(trainingData);
         

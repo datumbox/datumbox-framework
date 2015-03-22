@@ -74,7 +74,7 @@ public class BernoulliNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, new InMemoryConfiguration());
+        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         BernoulliNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         
@@ -83,7 +83,7 @@ public class BernoulliNaiveBayesTest {
         
         
         instance = null;
-        instance = new BernoulliNaiveBayes(dbName, new InMemoryConfiguration());
+        instance = new BernoulliNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         
         instance.predict(validationData);
@@ -167,7 +167,7 @@ public class BernoulliNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, new InMemoryConfiguration());
+        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         BernoulliNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         instance.initializeTrainingConfiguration(param);

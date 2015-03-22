@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,14 +73,14 @@ public class BayesianEnsembleMethodTest {
         
         String dbName = "JUnitBayesianEnsembleMethod";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, new InMemoryConfiguration());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
         df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
         df.normalize(validationData);
         
-        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, new InMemoryConfiguration());
+        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, TestConfiguration.getDBConfig());
         
         BayesianEnsembleMethod.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         instance.initializeTrainingConfiguration(param);
@@ -88,7 +88,7 @@ public class BayesianEnsembleMethodTest {
         
         
         instance = null;
-        instance = new BayesianEnsembleMethod(dbName, new InMemoryConfiguration());
+        instance = new BayesianEnsembleMethod(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
         

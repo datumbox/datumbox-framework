@@ -75,7 +75,7 @@ public class MaximumEntropyTest {
         
         
         String dbName = "JUnitClassifier";
-        MaximumEntropy instance = new MaximumEntropy(dbName, new InMemoryConfiguration());
+        MaximumEntropy instance = new MaximumEntropy(dbName, TestConfiguration.getDBConfig());
         
         MaximumEntropy.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(10);
@@ -84,7 +84,7 @@ public class MaximumEntropyTest {
         
         
         instance = null;
-        instance = new MaximumEntropy(dbName, new InMemoryConfiguration());
+        instance = new MaximumEntropy(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(validationData);
         
@@ -166,7 +166,7 @@ public class MaximumEntropyTest {
         
         
         String dbName = "JUnitClassifier";
-        MaximumEntropy instance = new MaximumEntropy(dbName, new InMemoryConfiguration());
+        MaximumEntropy instance = new MaximumEntropy(dbName, TestConfiguration.getDBConfig());
         
         MaximumEntropy.TrainingParameters param = instance.getEmptyTrainingParametersObject();
         param.setTotalIterations(10);

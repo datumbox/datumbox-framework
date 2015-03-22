@@ -110,7 +110,7 @@ public class ModelerTest {
         
         String dbName = "JUnit";
         
-        Modeler instance = new Modeler(dbName, new InMemoryConfiguration());
+        Modeler instance = new Modeler(dbName, TestConfiguration.getDBConfig());
         Modeler.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
         trainingParameters.setkFolds(5);
         
@@ -160,7 +160,7 @@ public class ModelerTest {
         System.out.println("predict");
         
         
-        instance = new Modeler(dbName, new InMemoryConfiguration());
+        instance = new Modeler(dbName, TestConfiguration.getDBConfig());
         
         instance.predict(newData);
         

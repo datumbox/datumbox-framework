@@ -16,6 +16,11 @@
  */
 package com.datumbox.configuration;
 
+import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
@@ -24,4 +29,19 @@ public class TestConfiguration {
     public static double DOUBLE_ACCURACY_HIGH=0.000001;
     public static double DOUBLE_ACCURACY_MEDIUM=0.01;
     public static double DOUBLE_ACCURACY_LOW=0.5;
+    
+    public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; //InMemoryConfiguration.class; 
+    
+    
+    
+    public static DatabaseConfiguration getDBConfig() {
+        //get from General StorageConfiguration the class that handles permanent storage
+        try {
+            Class<? extends DatabaseConfiguration> selectedBDSFClass = PERMANENT_STORAGE;
+            return (DatabaseConfiguration) selectedBDSFClass.getConstructor().newInstance();
+        } 
+        catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }
