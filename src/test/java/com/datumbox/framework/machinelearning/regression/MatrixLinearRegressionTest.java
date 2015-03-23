@@ -87,7 +87,7 @@ public class MatrixLinearRegressionTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -96,7 +96,7 @@ public class MatrixLinearRegressionTest {
 
         MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
-        MatrixLinearRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         param.setCalculatePvalue(true);
         instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
@@ -172,13 +172,13 @@ public class MatrixLinearRegressionTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
         MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
-        MatrixLinearRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         param.setCalculatePvalue(true);
         instance.initializeTrainingConfiguration(param);
         MatrixLinearRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);

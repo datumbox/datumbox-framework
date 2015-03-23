@@ -162,7 +162,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
         estimateModelParameters(trainingData);        
         
         
-        if(!validationData.isEmpty()) {
+        if(validationData != null && !validationData.isEmpty()) {
         
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("validateModel()");

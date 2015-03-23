@@ -75,7 +75,7 @@ public class BinarizedNaiveBayesTest {
         String dbName = "JUnitClassifier";
         BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
-        BinarizedNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
         
         instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
@@ -167,7 +167,7 @@ public class BinarizedNaiveBayesTest {
         String dbName = "JUnitClassifier";
         BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
-        BinarizedNaiveBayes.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
         instance.initializeTrainingConfiguration(param);
         BinarizedNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
         

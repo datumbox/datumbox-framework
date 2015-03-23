@@ -26,18 +26,4 @@ import java.lang.reflect.InvocationTargetException;
 
 public abstract class BaseTrainingParameters implements Parameterizable {
 
-    /**
-     * This method allows us to build a new empty object of the current object
-     * directly from it. Casting to the appropriate type is required.
-     * 
-     * @return 
-     */
-    public BaseTrainingParameters getEmptyObject() {
-        try {
-            return this.getClass().getConstructor().newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-    }   
 }

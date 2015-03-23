@@ -664,7 +664,7 @@ public class OrdinalRegressionTest {
         
 
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -672,7 +672,7 @@ public class OrdinalRegressionTest {
         
         OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
-        OrdinalRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
@@ -717,13 +717,13 @@ public class OrdinalRegressionTest {
         
 
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         
         OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
-        OrdinalRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         instance.initializeTrainingConfiguration(param);
         OrdinalRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);

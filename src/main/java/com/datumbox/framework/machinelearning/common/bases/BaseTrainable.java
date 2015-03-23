@@ -46,11 +46,6 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     }
     
     @Override
-    public TP getEmptyTrainingParametersObject() {
-        return knowledgeBase.getEmptyTrainingParametersObject();
-    }
-    
-    @Override
     public void initializeTrainingConfiguration(TP trainingParameters) {
         //reset knowledge base
         knowledgeBase.reinitialize();

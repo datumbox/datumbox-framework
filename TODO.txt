@@ -8,9 +8,12 @@ NEW ALGORITHMS
 
 CODE IMPROVEMENT
 ================
-- Serialization improvements
 - Remove initializeTrainingConfiguration(), pass the parameters in train() method
-- getEmptyTrainingParametersObject() VS new ...?
+- transform train(trainingData, validationData) to train(trainingData)?
+- Make this a method DATA_SAFE_CALL_BY_REFERENCE?
+- Should VM be stored in the KB?
+
+- Serialization improvements
 - create the required exceptions
 - create a proper logger for the messages
 - document the code

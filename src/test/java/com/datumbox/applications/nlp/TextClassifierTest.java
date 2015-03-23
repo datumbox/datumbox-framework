@@ -50,7 +50,7 @@ public class TextClassifierTest {
     public void testTrainAndPredict() throws URISyntaxException {
         System.out.println("TrainAndPredict");
 	//TODO: change the test so that it does not require reading from local file
-	/*	
+	/*
         RandomValue.randomGenerator = new Random(42);
         
         
@@ -61,7 +61,7 @@ public class TextClassifierTest {
         dataset.put("subjective", new URI("file:///home/bbriniotis/training.subjectivity.en.subj"));
         
         TextClassifier instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
-        TextClassifier.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
+        TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         trainingParameters.setkFolds(5);
         

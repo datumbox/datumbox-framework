@@ -96,7 +96,7 @@ public class BootstrapAggregatingTest {
         
 
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new SimpleDummyVariableExtractor.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -104,7 +104,7 @@ public class BootstrapAggregatingTest {
         
         BootstrapAggregating instance = new BootstrapAggregating(dbName, TestConfiguration.getDBConfig());
         
-        BootstrapAggregating.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
         param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
@@ -209,7 +209,7 @@ public class BootstrapAggregatingTest {
         String dbName = "JUnitClassifier";
         BootstrapAggregating instance = new BootstrapAggregating(dbName, TestConfiguration.getDBConfig());
         
-        BootstrapAggregating.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
         param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         

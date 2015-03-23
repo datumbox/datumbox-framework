@@ -53,7 +53,7 @@ public class PCATest {
         
         PCA instance = new PCA(dbName, TestConfiguration.getDBConfig());
         
-        PCA.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
         instance.initializeTrainingConfiguration(param);
         

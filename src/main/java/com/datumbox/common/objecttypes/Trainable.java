@@ -61,20 +61,11 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * @return 
      */
     public TP getTrainingParametersObject();
-
-    /**
-     * It returns an empty object with the trainingParameters required by the 
-     * algorithm.
-     * 
-     * @return 
-     */
-    public TP getEmptyTrainingParametersObject();
     
     /**
      * Sets both TrainingParameters and MemoryConfiguration. MUST be called BEFORE 
      * calling the train(), kFoldCrossValidation() methods.
      * @param trainingParameters
-     * @param memoryConfiguration 
      */
     public void initializeTrainingConfiguration(TP trainingParameters);
     

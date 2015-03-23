@@ -69,7 +69,7 @@ public class LatentDirichletAllocationTest {
         
         LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, TestConfiguration.getDBConfig());
         
-        LatentDirichletAllocation.TrainingParameters trainingParameters = lda.getEmptyTrainingParametersObject();
+        LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
         trainingParameters.setAlpha(0.01);
         trainingParameters.setBeta(0.01);

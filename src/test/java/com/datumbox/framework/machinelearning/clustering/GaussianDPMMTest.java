@@ -88,7 +88,7 @@ public class GaussianDPMMTest {
         
         GaussianDPMM instance = new GaussianDPMM(dbName, TestConfiguration.getDBConfig());
         
-        GaussianDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
@@ -147,7 +147,7 @@ public class GaussianDPMMTest {
         
         GaussianDPMM instance = new GaussianDPMM(dbName, TestConfiguration.getDBConfig());
         
-        GaussianDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);

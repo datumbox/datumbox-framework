@@ -88,7 +88,7 @@ public class NLMSTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -96,7 +96,7 @@ public class NLMSTest {
 
         NLMS instance = new NLMS(dbName, TestConfiguration.getDBConfig());
         
-        NLMS.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
         
         instance.initializeTrainingConfiguration(param);
@@ -170,14 +170,14 @@ public class NLMSTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
 
         
         
         PCA featureSelection = new PCA(dbName, TestConfiguration.getDBConfig());
-        PCA.TrainingParameters featureSelectionParameters = featureSelection.getEmptyTrainingParametersObject();
+        PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
         featureSelectionParameters.setMaxDimensions(trainingData.getColumnSize()-1);
         featureSelectionParameters.setWhitened(false);
         featureSelectionParameters.setVarianceThreshold(0.99999995);
@@ -195,7 +195,7 @@ public class NLMSTest {
         
         NLMS instance = new NLMS(dbName, TestConfiguration.getDBConfig());
         
-        NLMS.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);
         instance.initializeTrainingConfiguration(param);
         NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);

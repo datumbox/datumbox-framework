@@ -74,7 +74,7 @@ public class BayesianEnsembleMethodTest {
         String dbName = "JUnitBayesianEnsembleMethod";
         
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new SimpleDummyVariableExtractor.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -82,7 +82,7 @@ public class BayesianEnsembleMethodTest {
         
         BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, TestConfiguration.getDBConfig());
         
-        BayesianEnsembleMethod.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        BayesianEnsembleMethod.TrainingParameters param = new BayesianEnsembleMethod.TrainingParameters();
         instance.initializeTrainingConfiguration(param);
         instance.train(trainingData, validationData);
         

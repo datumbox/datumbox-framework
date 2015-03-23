@@ -73,7 +73,7 @@ public class MultinomialDPMMTest {
         
         MultinomialDPMM instance = new MultinomialDPMM(dbName, TestConfiguration.getDBConfig());
         
-        MultinomialDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
@@ -129,7 +129,7 @@ public class MultinomialDPMMTest {
         
         MultinomialDPMM instance = new MultinomialDPMM(dbName, TestConfiguration.getDBConfig());
         
-        MultinomialDPMM.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);

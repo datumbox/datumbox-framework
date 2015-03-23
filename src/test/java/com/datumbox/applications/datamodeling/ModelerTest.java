@@ -111,7 +111,7 @@ public class ModelerTest {
         String dbName = "JUnit";
         
         Modeler instance = new Modeler(dbName, TestConfiguration.getDBConfig());
-        Modeler.TrainingParameters trainingParameters = instance.getEmptyTrainingParametersObject();
+        Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         trainingParameters.setkFolds(5);
         
         

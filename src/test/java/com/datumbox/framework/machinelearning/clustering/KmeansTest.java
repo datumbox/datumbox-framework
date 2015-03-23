@@ -245,7 +245,7 @@ public class KmeansTest {
         
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -253,7 +253,7 @@ public class KmeansTest {
         
         Kmeans instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
         
-        Kmeans.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
         param.setMaxIterations(200);
         param.setInitMethod(Kmeans.TrainingParameters.Initialization.FORGY);
@@ -310,7 +310,7 @@ public class KmeansTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
 
@@ -319,7 +319,7 @@ public class KmeansTest {
         
         Kmeans instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
         
-        Kmeans.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
         param.setMaxIterations(200);
         param.setInitMethod(Kmeans.TrainingParameters.Initialization.FORGY);

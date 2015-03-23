@@ -74,7 +74,6 @@ public class MapDBConnector implements DatabaseConnector {
 
     @Override
     public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
-        //TODO: Check the @BidMap fields are stored twice. If this is the case we can try setting the fields = null, serialize the object and then load the Maps again from MapDB.
         openDB();
         Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
         knowledgeBaseVar.set(knowledgeBaseObject);

@@ -179,7 +179,7 @@ public class CETR {
         String dbName = new BigInteger(130, RandomValue.randomGenerator).toString(32);
         Kmeans instance = new Kmeans(dbName, dbConf);
         
-        Kmeans.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(numberOfClusters);
         param.setMaxIterations(200);
         param.setInitMethod(Kmeans.TrainingParameters.Initialization.SET_FIRST_K); //using the first k

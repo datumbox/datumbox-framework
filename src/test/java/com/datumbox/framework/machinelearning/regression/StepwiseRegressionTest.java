@@ -90,7 +90,7 @@ public class StepwiseRegressionTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -98,7 +98,7 @@ public class StepwiseRegressionTest {
         
         StepwiseRegression instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
         
-        StepwiseRegression.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
         param.setRegressionClass(MatrixLinearRegression.class);
         param.setkFolds(5);

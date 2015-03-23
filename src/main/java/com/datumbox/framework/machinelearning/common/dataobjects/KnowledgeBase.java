@@ -156,37 +156,17 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         
         try {
             modelParameters = mpClass.getConstructor(DatabaseConnector.class).newInstance(dbc);
+            trainingParameters = tpClass.getConstructor().newInstance();
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
         
-        trainingParameters = getEmptyTrainingParametersObject();
     }
 
     
     
-    
-    /*
-        IMPORTANT PUBLIC METHODS
-        ========================
-    */
-    
-    public TP getEmptyTrainingParametersObject() {
-        //There is already an object set, call its getEmptyObjec() method to generate one
-        if(trainingParameters!=null) {
-            return (TP) trainingParameters.getEmptyObject();
-        }
         
-        try {
-            return tpClass.getConstructor().newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    
     
     
     /*

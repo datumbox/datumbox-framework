@@ -125,12 +125,6 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
      * @return 
      */
     public VM getEmptyValidationMetricsObject() {
-        //There is already an object set, call its getEmptyObjec() method to generate one
-        if(validationMetrics!=null) {
-            return (VM) validationMetrics.getEmptyObject();
-        }
-        
-        //else try using reflections
         try {
             return vmClass.getConstructor().newInstance();
         } 

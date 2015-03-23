@@ -56,7 +56,7 @@ public class HierarchicalAgglomerativeTest {
         
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
         df.transform(validationData, false);
@@ -64,7 +64,7 @@ public class HierarchicalAgglomerativeTest {
         
         HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
         
-        HierarchicalAgglomerative.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
@@ -118,7 +118,7 @@ public class HierarchicalAgglomerativeTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(df.getEmptyTrainingParametersObject());
+        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(trainingData, true);
         df.normalize(trainingData);
 
@@ -127,7 +127,7 @@ public class HierarchicalAgglomerativeTest {
         
         HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
         
-        HierarchicalAgglomerative.TrainingParameters param = instance.getEmptyTrainingParametersObject();
+        HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);

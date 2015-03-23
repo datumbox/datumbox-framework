@@ -38,10 +38,6 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
     
     public static final String DB_INDICATOR="Kfold";
     
-    public ModelValidation() {
-        super();
-    }
-    
     public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
