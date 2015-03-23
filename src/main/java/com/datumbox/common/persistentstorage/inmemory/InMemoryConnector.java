@@ -89,7 +89,7 @@ public class InMemoryConnector implements DatabaseConnector {
         }
         
         try {
-            Files.delete(filepath);
+            Files.deleteIfExists(filepath);
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);

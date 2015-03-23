@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
-import java.util.concurrent.ConcurrentNavigableMap;
+import org.mapdb.Atomic;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
@@ -38,7 +38,7 @@ import org.mapdb.DBMaker;
 public class MapDBConnector implements DatabaseConnector {
     
     private final Path filepath;
-    private final DB db;
+    private DB db;
     private final MapDBConfiguration dbConf;
     
     public MapDBConnector(String database, MapDBConfiguration dbConf) {  
@@ -52,38 +52,59 @@ public class MapDBConnector implements DatabaseConnector {
             filepath= Paths.get(rootDbFolder + File.separator + database);
         }
         
-        //TODO: put LRU cache, see if we can add no-lock and no transactions
-        db = DBMaker.newFileDB(filepath.toFile())
-                //.transactionDisable()
-                .compressionEnable()
-                .cacheSize(this.dbConf.getCacheSize()) 
-                .closeOnJvmShutdown()
-                .make();
+        openDB();
+    }
+    
+    private boolean isDBopen() {
+        return !(db == null || db.isClosed());
+    }
+    
+    private void openDB() {
+        if(!isDBopen()) {
+            db = DBMaker.newFileDB(filepath.toFile())
+                    .transactionDisable()
+                    .compressionEnable()
+                    .cacheLRUEnable()
+                    .cacheSize(this.dbConf.getCacheSize()) 
+                    .asyncWriteEnable()
+                    .closeOnJvmShutdown()
+                    .make();
+        }
     }
 
     @Override
     public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
         //TODO: do not store the @BigMaps here. Find a way to exclude them. Should we make the fields transient? This affects the InMemory too.
+        openDB();
+        Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
+        knowledgeBaseVar.set(knowledgeBaseObject);
         db.commit();
         db.compact();
-        ConcurrentNavigableMap<Integer, KB> map = db.getTreeMap("KnowledgeBase");
-        map.put(0, knowledgeBaseObject);
-        db.commit();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
-        ConcurrentNavigableMap<Integer, KB> map = db.getTreeMap("KnowledgeBase");
-        KB knowledgeBaseObject = map.get(0);
-        
-        return knowledgeBaseObject;
+        openDB();
+        Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
+        return knowledgeBaseVar.get();
     }
     
     @Override
     public boolean existsDatabase() {
-        //TODO: this does not work correctly, see if an OR can help us detect if the db is there
-        return Files.exists(filepath) && db.exists("KnowledgeBase");
+        if(Files.exists(filepath) || db == null) {
+            return true;
+        }
+        
+        if(db.isClosed()) {
+            return true; //assume that the db existed before closing it. This is done in order to delete any remaining files
+        }
+        
+        if(db.getCatalog().size()>0) {
+            return true;
+        }
+        
+        return false;
     }
     
     @Override
@@ -93,11 +114,12 @@ public class MapDBConnector implements DatabaseConnector {
         }
         
         try {
-            db.close();
-            //TODO: see how we can delete all the files
-            Files.delete(filepath);
-            Files.delete(Paths.get(filepath.toString()+".p"));
-            Files.delete(Paths.get(filepath.toString()+".t"));
+            if(isDBopen()) {
+                db.close();
+            }
+            Files.deleteIfExists(filepath);
+            Files.deleteIfExists(Paths.get(filepath.toString()+".p"));
+            //Files.deleteIfExists(Paths.get(filepath.toString()+".t"));
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -107,12 +129,17 @@ public class MapDBConnector implements DatabaseConnector {
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
         map.clear();
-        db.delete(name);
+        if(isDBopen()) {
+            db.delete(name);
+        }
     }
     
     @Override
     public <K,V> Map<K,V> getBigMap(String name) {
-        return db.getHashMap(name);
+        openDB();
+        return db.createHashMap(name)
+            .counterEnable()
+            .makeOrGet();
     }   
 
 }

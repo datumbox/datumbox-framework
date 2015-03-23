@@ -153,7 +153,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     
     public void reinitialize() {
         erase();
-
+        
         try {
             modelParameters = mpClass.getConstructor(DatabaseConnector.class).newInstance(dbc);
         } 
