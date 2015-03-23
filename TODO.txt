@@ -16,13 +16,6 @@ CODE IMPROVEMENT
 - document the code
 
 
-MODEL PERSISTANCE
-=================
-
-- create a MapDBStructureFactory: https://github.com/jankotek/MapDB/blob/master/src/test/java/examples/_HelloWorld.java 
-	- Building such factories is not a simple task. The library is heavily binded to Morphia and uses its functions (pre/post savers/loaders) and annotations to store data. Also transient fields are added to avoid in-memory serialization. The whole serialization should be redesigned to enable a custom and modular solution.
-
-
 DOCUMENTATION
 =============
 

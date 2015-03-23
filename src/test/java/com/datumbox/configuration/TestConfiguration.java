@@ -36,13 +36,13 @@ public class TestConfiguration {
     
     
     public static DatabaseConfiguration getDBConfig() {
-        //get from General StorageConfiguration the class that handles permanent storage
-        try {
-            Class<? extends DatabaseConfiguration> selectedBDSFClass = PERMANENT_STORAGE;
-            return (DatabaseConfiguration) selectedBDSFClass.getConstructor().newInstance();
-        } 
-        catch (NoSuchMethodException | SecurityException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
+        if (PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
+            return new InMemoryConfiguration();
         }
+        else if (PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
+            return new MapDBConfiguration();
+        }
+        
+        return null;
     }
 }
