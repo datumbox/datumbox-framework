@@ -9,8 +9,9 @@ NEW ALGORITHMS
 CODE IMPROVEMENT
 ================
 - Remove initializeTrainingConfiguration(), pass the parameters in train() method
-- transform train(trainingData, validationData) to train(trainingData)?
+- Remove .isTrained() .isConfigured()?
 - Make this a method DATA_SAFE_CALL_BY_REFERENCE?
+- transform train(trainingData, validationData) to train(trainingData)?
 - Should VM be stored in the KB?
 
 - Serialization improvements
