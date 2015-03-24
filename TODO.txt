@@ -8,6 +8,7 @@ NEW ALGORITHMS
 
 CODE IMPROVEMENT
 ================
+- use fit/predit/transform methods instead of traing, validate etc like Python? Separate kcrossfold validation out?
 - Remove initializeTrainingConfiguration(), pass the parameters in train() method
 - Remove .isTrained() .isConfigured()?
 - Make this a method DATA_SAFE_CALL_BY_REFERENCE?
