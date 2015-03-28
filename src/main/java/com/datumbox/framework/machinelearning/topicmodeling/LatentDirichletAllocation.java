@@ -263,7 +263,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     
 
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
         

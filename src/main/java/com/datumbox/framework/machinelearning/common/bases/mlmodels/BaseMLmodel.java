@@ -134,27 +134,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
         
         return modelValidator.kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getDbConf(), this.getClass(), knowledgeBase.getTrainingParameters());
     }
-     
-    /**
-     * Trains a model with the trainingData and validates it with the validationData.
-     * 
-     * @param trainingData
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void _fit(Dataset trainingData) {    
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("estimateModelParameters()");
-        }
-        
-        //train the model to get the parameters
-        estimateModelParameters(trainingData);        
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("Saving model");
-        }
-        knowledgeBase.save();
-    }
+    
     
     /**
      * Calculates the predictions for the newData and stores the predictions
@@ -236,8 +216,6 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     }
     
     protected abstract VM validateModel(Dataset validationData);
-    
-    protected abstract void estimateModelParameters(Dataset trainingData);
     
     protected abstract void predictDataset(Dataset newData);
 

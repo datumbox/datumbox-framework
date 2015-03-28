@@ -99,28 +99,6 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         knowledgeBase.setOwnerClass(this.getClass());
     } 
     
-    /**
-     * Trains a model with the trainingData and validates it with the validationData.
-     * 
-     * @param trainingData
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void _fit(Dataset trainingData) {   
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("estimateModelParameters()");
-        }
-        
-        //train the model to get the parameters
-        estimateModelParameters(trainingData);        
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("Saving model");
-        }
-        knowledgeBase.save();
-        
-    }
     
     /**
      * Calculates the predictions for the newData and stores the predictions
@@ -160,8 +138,6 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         
         return false;
     }
-    
-    protected abstract void estimateModelParameters(Dataset trainingData);
     
     protected abstract void predictDataset(Dataset newData);
 

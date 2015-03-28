@@ -107,11 +107,10 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     @Deprecated
     @Override
     public void fit(Dataset trainingData, TrainingParameters trainingParameters) {
-        super.fit(trainingData, trainingParameters);
+        throw new UnsupportedOperationException("This version of fit() is not supported."); 
     }
     
     public void fit(Map<Object, URI> dataset, TrainingParameters trainingParameters) { 
-        
         initializeTrainingConfiguration(trainingParameters);
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
@@ -121,6 +120,9 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         Dataset trainingDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor);
         
         _fit(trainingDataset);
+        
+        //store database
+        knowledgeBase.save();
     }
     
     @Override
@@ -170,9 +172,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         if(transformData) {
             dataTransformer.denormalize(trainingDataset); //optional denormalization
         }
-        
-        //store database
-        knowledgeBase.save();
     }
     
     public List<Object> predict(URI datasetURI) {

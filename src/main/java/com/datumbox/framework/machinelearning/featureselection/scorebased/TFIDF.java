@@ -97,7 +97,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     }
     
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         

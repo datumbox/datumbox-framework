@@ -140,12 +140,6 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     
     
     @Override
-    protected void _fit(Dataset trainingData) {
-        knowledgeBase.getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
-        super._fit(trainingData);
-    }
-    
-    @Override
     protected void predictDataset(Dataset newData) { 
         for(Record r : newData) {
             AssociativeArray predictionScores = calculateClassScores(r.getX());
@@ -161,7 +155,9 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
+        knowledgeBase.getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
+        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         int n = trainingData.size();

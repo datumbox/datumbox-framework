@@ -123,7 +123,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     
 
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
         

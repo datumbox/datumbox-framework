@@ -277,7 +277,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
         

@@ -168,7 +168,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         int n = trainingData.size();
         int d = trainingData.getColumnSize();
         

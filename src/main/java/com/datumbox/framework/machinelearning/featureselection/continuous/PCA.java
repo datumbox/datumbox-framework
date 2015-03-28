@@ -144,7 +144,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     }
 
     @Override
-    protected void estimateModelParameters(Dataset originaldata) {
+    protected void _fit(Dataset originaldata) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         int n = originaldata.size();

@@ -143,7 +143,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize()+1;//plus one for the constant

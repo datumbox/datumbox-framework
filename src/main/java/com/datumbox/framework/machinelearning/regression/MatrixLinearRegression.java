@@ -99,7 +99,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     }
 
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 

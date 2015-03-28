@@ -9,10 +9,10 @@ NEW ALGORITHMS
 CODE IMPROVEMENT
 ================
 
-- eliminate _fit() or estimateModelParameters() and pass the save() in fit()
 - newInstance(), constructors etc of inherited from BaseTrainable could perhaps pass to BaseTrainable and reduce the extra code.
 - Make this a method DATA_SAFE_CALL_BY_REFERENCE and IS_BINARIZED?
 - should we pass validator class in the constructors of all MLmodels?
+- Test a call directly on predict() and modify code to return the correct exception
 - DataTransformer: refactor the individual implementations of _process()
 
 

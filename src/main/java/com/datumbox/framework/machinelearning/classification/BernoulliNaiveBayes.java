@@ -78,12 +78,6 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
-        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
-        super._fit(trainingData);
-    }
-    
-    @Override
     protected void predictDataset(Dataset newData) { 
         if(newData.isEmpty()) {
             return;
@@ -163,7 +157,9 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     }
     
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
+        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<List<Object>, Double> likelihoods = modelParameters.getLogLikelihoods();

@@ -111,9 +111,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         if(transformData) {
             dataTransformer.denormalize(trainingData); //optional denormalization
         }
-        
-        //store database
-        knowledgeBase.save();
     }
     
     public void predict(Dataset newData) {

@@ -83,23 +83,6 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
         knowledgeBase.setOwnerClass(this.getClass());
     }
-
-    
-    @Override
-    protected void _fit(Dataset trainingData) { 
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("fit()");
-        }
-        
-        estimateModelParameters(trainingData);
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("Saving model");
-        }
-        knowledgeBase.save();
-        
-    }
     
     public void transform(Dataset newData) {
         if(GeneralConfiguration.DEBUG) {
@@ -110,8 +93,6 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         
         filterFeatures(newData);
     }
-    
-    protected abstract void estimateModelParameters(Dataset trainingData);
     
     protected abstract void filterFeatures(Dataset newdata);
 }

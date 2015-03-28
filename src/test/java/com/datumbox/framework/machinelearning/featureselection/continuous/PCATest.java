@@ -34,7 +34,7 @@ public class PCATest {
     }
 
     /**
-     * Test of estimateModelParameters method, of class PCA.
+     * Test of _fit123123123 method, of class PCA.
      */
     @Test
     public void testCalculateParameters() {

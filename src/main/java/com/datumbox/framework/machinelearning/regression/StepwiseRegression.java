@@ -126,7 +126,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     }
 
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         //get the training parameters
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         

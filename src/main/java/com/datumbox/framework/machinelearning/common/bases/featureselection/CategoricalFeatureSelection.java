@@ -112,11 +112,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     
     
     @Override
-    protected void estimateModelParameters(Dataset data) {
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("estimateModelParameters()");
-        }
+    protected void _fit(Dataset data) {
         
         //set the number of observations
         MP modelParameters = knowledgeBase.getModelParameters();

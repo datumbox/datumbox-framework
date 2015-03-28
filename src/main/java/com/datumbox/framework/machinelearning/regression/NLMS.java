@@ -86,7 +86,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     }
 
     @Override
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         int n = trainingData.size();
         int d = trainingData.getColumnSize()+1;//plus one for the constant
         

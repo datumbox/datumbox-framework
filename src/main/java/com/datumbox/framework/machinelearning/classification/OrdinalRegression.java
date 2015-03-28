@@ -168,7 +168,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         
         int n = trainingData.size();
         int d = trainingData.getColumnSize();//no constant, thresholds can be seen as constants

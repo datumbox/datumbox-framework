@@ -117,7 +117,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void estimateModelParameters(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         int n = trainingData.size();

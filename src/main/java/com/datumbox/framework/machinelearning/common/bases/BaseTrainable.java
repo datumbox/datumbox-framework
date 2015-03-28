@@ -62,6 +62,9 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         
         initializeTrainingConfiguration(trainingParameters);
         _fit(trainingData);
+        
+        //store database
+        knowledgeBase.save();
     }
     
     protected void initializeTrainingConfiguration(TP trainingParameters) {
