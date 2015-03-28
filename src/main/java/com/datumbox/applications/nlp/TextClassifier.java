@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.configuration.GeneralConfiguration;
+import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -133,7 +133,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
+            dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
             dataTransformer.fit_transform(trainingDataset, trainingParameters.getDataTransformerTrainingParameters());
         }
         
@@ -141,7 +141,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
+            featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
             FeatureSelection.TrainingParameters featureSelectionParameters = trainingParameters.getFeatureSelectionTrainingParameters();
             if(CategoricalFeatureSelection.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((CategoricalFeatureSelection.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
@@ -251,7 +251,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
+                dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
             }        
             
             dataTransformer.transform(testDataset);
@@ -262,7 +262,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
+                featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -324,7 +324,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
+                dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
             }        
             dataTransformer.transform(newData);
         }
@@ -334,7 +334,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
+                featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -344,7 +344,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+            Class mlClass = trainingParameters.getMLmodelClass();
+            mlmodel = BaseMLmodel.<BaseMLmodel>newInstance(mlClass, dbName, dbConf); 
         }
         
         //call predict of the mlmodel for the new dataset

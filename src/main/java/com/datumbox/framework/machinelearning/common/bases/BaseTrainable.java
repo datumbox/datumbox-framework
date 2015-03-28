@@ -23,6 +23,7 @@ import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -37,6 +38,19 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     
     protected KB knowledgeBase;
     protected String dbName;
+    
+    
+    public static <BT extends BaseTrainable> BT newInstance(Class<BT> aClass, String dbName, DatabaseConfiguration dbConfig) {
+        BT algorithm = null;
+        try {
+            algorithm = aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);;
+        } 
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+        
+        return algorithm;
+    }
 
     protected BaseTrainable(String dbName, DatabaseConfiguration dbConf) {
         String methodName = this.getClass().getSimpleName();

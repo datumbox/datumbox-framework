@@ -57,35 +57,6 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     
     
     
-    
-    
-    /**
-     * Generates a new instance of a BaseMLrecommender by providing the dbName and 
- the Class of the algorithm.
-     * 
-     * @param <M>
-     * @param dbName
-     * @param aClass
-     * @return 
-     */
-    public static <M extends BaseMLrecommender> M newInstance(Class<M> aClass, String dbName, DatabaseConfiguration dbConfig) {
-        M algorithm = null;
-        try {
-            algorithm = (M) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);;
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        return algorithm;
-    }
-
-    
-    
-    
-    
-    
-    
     /*
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */

@@ -24,7 +24,6 @@ import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -47,30 +46,6 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     public static abstract class TrainingParameters extends BaseTrainingParameters {
         //here goes public fields that are used as initial training parameters        
     }
-    
-    
-    /**
-     * Generates a new instance of a MLmodel by providing the dbName and 
- the Class of the algorithm.
-     * 
-     * @param <F>
-     * @param dbName
-     * @param aClass
-     * @param dbConfig
-     * @return 
-     */
-    public static <F extends FeatureSelection> F newInstance(Class<F> aClass, String dbName, DatabaseConfiguration dbConfig) {
-        F algorithm = null;
-        try {
-            algorithm = (F) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        return algorithm;
-    }
-    
     
     /*
         IMPORTANT METHODS FOR THE FUNCTIONALITY

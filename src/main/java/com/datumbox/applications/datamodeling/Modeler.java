@@ -19,6 +19,7 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
@@ -75,7 +76,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
+            dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
             dataTransformer.fit_transform(trainingData, trainingParameters.getDataTransformerTrainingParameters());
         }
         
@@ -85,7 +86,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
+            featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
             featureSelection.fit(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
             
             featureSelection.transform(trainingData);
@@ -95,7 +96,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         
         //initialize mlmodel
-        mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+        Class mlClass = trainingParameters.getMLmodelClass();
+        mlmodel = BaseMLmodel.<BaseMLmodel>newInstance(mlClass, dbName, dbConf); 
         int k = trainingParameters.getkFolds();
         
         //call k-fold cross validation and get the average accuracy
@@ -142,7 +144,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
+                dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
             }        
             dataTransformer.transform(data);
         }
@@ -152,7 +154,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
+                featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -162,7 +164,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+            Class mlClass = trainingParameters.getMLmodelClass();
+            mlmodel = BaseMLmodel.<BaseMLmodel>newInstance(mlClass, dbName, dbConf); 
         }
         
         //call predict of the mlmodel for the new dataset

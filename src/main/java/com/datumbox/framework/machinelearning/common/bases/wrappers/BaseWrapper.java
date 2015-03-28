@@ -25,7 +25,6 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * The BaseWrapper is a trainable object that uses composition instead of inheritance
@@ -127,18 +126,6 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         
     }
 
-    
-    public static <W extends BaseWrapper> W newInstance(Class<W> aClass, String dbName, DatabaseConfiguration dbConfig) {
-        W algorithm = null;
-        try {
-            algorithm = (W) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);;
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        return algorithm;
-    }
     
 
     /*

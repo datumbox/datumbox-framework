@@ -24,7 +24,6 @@ import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -49,28 +48,6 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         //here goes public fields that are used as initial training parameters        
     }
     
-    
-    /**
-     * Generates a new instance of a MLmodel by providing the dbName and 
- the Class of the algorithm.
-     * 
-     * @param <D>
-     * @param dbName
-     * @param aClass
-     * @param dbConfig
-     * @return 
-     */
-    public static <D extends DataTransformer> D newInstance(Class<D> aClass, String dbName, DatabaseConfiguration dbConfig) {
-        D algorithm = null;
-        try {
-            algorithm = (D) aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConfig);
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        return algorithm;
-    }
     
     
     /*
