@@ -89,13 +89,6 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     
     public void transform(Dataset data, boolean trainingMode) {
         if(trainingMode) {
-            //Check if training can be performed
-            if(!knowledgeBase.isConfigured()) {
-                throw new RuntimeException("The training configuration is not set.");
-            }
-            else if(knowledgeBase.isTrained()) {
-                throw new RuntimeException("The dimension reduction algorithm is already trainned. Reinitialize it or erase it.");
-            }
 
             if(GeneralConfiguration.DEBUG) {
                 System.out.println("transform()");
@@ -119,8 +112,6 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
                 System.out.println("Saving model");
             }
             knowledgeBase.save();
-
-            knowledgeBase.setTrained(true);
             
         }
     }

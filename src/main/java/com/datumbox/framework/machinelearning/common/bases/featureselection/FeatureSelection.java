@@ -84,14 +84,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     }
 
     
-    public void evaluateFeatures(Dataset trainingData) {   
-        //Check if training can be performed
-        if(!knowledgeBase.isConfigured()) {
-            throw new RuntimeException("The training configuration is not set.");
-        }
-        else if(knowledgeBase.isTrained()) {
-            throw new RuntimeException("The feature selection algorithm is already trainned. Reinitialize it or erase it.");
-        }
+    public void evaluateFeatures(Dataset trainingData) { 
         
         if(GeneralConfiguration.DEBUG) {
             System.out.println("evaluateFeatures()");
@@ -104,7 +97,6 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         }
         knowledgeBase.save();
         
-        knowledgeBase.setTrained(true);
     }
     
     public void clearFeatures(Dataset newData) {

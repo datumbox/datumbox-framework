@@ -78,22 +78,7 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
             trainingParameters = (TP) kbObject.trainingParameters;
             validationMetrics = (VM) kbObject.validationMetrics;
             
-            setTrained(true);
         }
-    }
-    
-    
-    @Override
-    public boolean isConfigured() {
-        if(super.isConfigured()==false) {
-            return false;
-        }
-        
-        if(validationMetrics == null) {
-            return false;
-        }
-        
-        return true;
     }
     
     @Override

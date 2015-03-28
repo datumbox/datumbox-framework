@@ -16,7 +16,6 @@ CODE IMPROVEMENT
 	- Add the new methods in the BaseTrainable and the Trainable interface 
 
 - Remove initializeTrainingConfiguration(), pass the parameters in train() method
-- Remove .isTrained() .isConfigured()?
 - Make this a method DATA_SAFE_CALL_BY_REFERENCE?
 
 - Serialization improvements

@@ -65,13 +65,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     
     
     public void train(Dataset trainingData) { 
-        //Check if training can be performed
-        if(!knowledgeBase.isConfigured()) {
-            throw new RuntimeException("The training configuration is not initialized.");
-        }
-        else if(knowledgeBase.isTrained()) {
-            throw new RuntimeException("The algorithm is already trainned. Reinitialize it or erase it.");
-        }
         
         //get the training parameters
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -136,7 +129,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         //store database
         knowledgeBase.save();
-        knowledgeBase.setTrained(true);
     }
     
     public void predict(Dataset newData) {

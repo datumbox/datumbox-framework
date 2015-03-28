@@ -141,13 +141,6 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      */
     @SuppressWarnings("unchecked")
     public void train(Dataset trainingData, Dataset validationData) {    
-        //Check if training can be performed
-        if(!knowledgeBase.isConfigured()) {
-            throw new RuntimeException("The training configuration is not set.");
-        }
-        else if(knowledgeBase.isTrained()) {
-            throw new RuntimeException("The algorithm is already trainned. Reinitialize it or erase it.");
-        }
         
         if(GeneralConfiguration.DEBUG) {
             System.out.println("train()");
@@ -179,8 +172,6 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
             System.out.println("Saving model");
         }
         knowledgeBase.save();
-        
-        knowledgeBase.setTrained(true);
     }
     
     /**

@@ -254,17 +254,15 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     }
     
     protected void eraseWeakClassifiers() {
-        if(knowledgeBase.isConfigured()) {
-            ModelParameters modelParameters = knowledgeBase.getModelParameters();
-            TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-            
-            Class<? extends BaseMLclassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();
-            //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
-            int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
-            for(int t=0;t<totalWeakClassifiers;++t) {
-                BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
-                mlclassifier.erase();
-            }
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+
+        Class<? extends BaseMLclassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();
+        //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
+        int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
+        for(int t=0;t<totalWeakClassifiers;++t) {
+            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
+            mlclassifier.erase();
         }
     }
 }

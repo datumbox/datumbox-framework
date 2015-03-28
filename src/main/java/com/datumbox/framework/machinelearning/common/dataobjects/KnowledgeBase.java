@@ -45,8 +45,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     
     
     protected Class<? extends Trainable> ownerClass; //the Class name of the algorithm
-    
-    protected boolean trained = false;
 
     
     
@@ -78,14 +76,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         
         this.mpClass = mpClass;
         this.tpClass = tpClass;
-    }
-    
-    public boolean isTrained() {
-        return trained;
-    }
-    
-    public void setTrained(boolean trained) {
-        this.trained = trained;
     }
 
     public DatabaseConnector getDbc() {
@@ -126,17 +116,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
             
             trainingParameters = (TP) kbObject.trainingParameters;
             modelParameters = (MP) kbObject.modelParameters;
-            
-            setTrained(true);
         }
-    }
-
-    public boolean isConfigured() {
-        if(modelParameters==null || trainingParameters==null) {
-            return false;
-        }
-        
-        return true;
     }
     
     public void erase() {
@@ -144,7 +124,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         
         modelParameters = null;
         trainingParameters = null;
-        setTrained(false);
     }
     
     public void reinitialize() {

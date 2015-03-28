@@ -106,14 +106,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
 
     
     
-    public void train(Map<Object, URI> dataset) {  
-        //Check if training can be performed
-        if(!knowledgeBase.isConfigured()) {
-            throw new RuntimeException("The training configuration is not initialized.");
-        }
-        else if(knowledgeBase.isTrained()) {
-            throw new RuntimeException("The algorithm is already trainned. Reinitialize it or erase it.");
-        }
+    public void train(Map<Object, URI> dataset) { 
         
         //get the training parameters
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -185,7 +178,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //store database
         knowledgeBase.save();
-        knowledgeBase.setTrained(true);
     }
     
     public List<Object> predict(URI datasetURI) {

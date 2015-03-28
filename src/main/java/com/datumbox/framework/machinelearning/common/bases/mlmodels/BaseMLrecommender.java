@@ -105,14 +105,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * @param trainingData
      */
     @SuppressWarnings("unchecked")
-    public void train(Dataset trainingData) {    
-        //Check if training can be performed
-        if(!knowledgeBase.isConfigured()) {
-            throw new RuntimeException("The training configuration is not set.");
-        }
-        else if(knowledgeBase.isTrained()) {
-            throw new RuntimeException("The algorithm is already trainned. Reinitialize it or erase it.");
-        }
+    public void train(Dataset trainingData) {   
         
         if(GeneralConfiguration.DEBUG) {
             System.out.println("train()");
@@ -131,7 +124,6 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         }
         knowledgeBase.save();
         
-        knowledgeBase.setTrained(true);
     }
     
     /**
