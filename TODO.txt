@@ -9,15 +9,12 @@ NEW ALGORITHMS
 CODE IMPROVEMENT
 ================
 
-- Test a call directly on predict() and modify code to return the correct exception
-
-
 - Serialization improvements
 - create the required exceptions
 - create a proper logger for the messages
-- document the code
+
 - CSV reader and converter to Dataset
-- Add MapDB maps in the Dataset
+- Add MapDB support in the Dataset
 
 
 DOCUMENTATION
