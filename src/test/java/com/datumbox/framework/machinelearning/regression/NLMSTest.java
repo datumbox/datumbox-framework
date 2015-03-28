@@ -41,8 +41,8 @@ public class NLMSTest {
      * Test of predict method, of class NLMS.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         /*
         Synthetic Data generated with:
@@ -105,7 +105,7 @@ public class NLMSTest {
         instance = null;
         instance = new NLMS(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);

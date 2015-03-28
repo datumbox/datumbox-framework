@@ -41,8 +41,8 @@ public class HierarchicalAgglomerativeTest {
      * Test of predict method, of class MaximumEntropy.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict"); 
+    public void testValidate() {
+        System.out.println("validate"); 
         
         Dataset trainingData = KmeansTest.generateDataset();
         Dataset validationData = new Dataset();

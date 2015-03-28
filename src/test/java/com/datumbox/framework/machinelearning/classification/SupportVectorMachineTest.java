@@ -42,8 +42,8 @@ public class SupportVectorMachineTest {
      * Test of predict method, of class SupportVectorMachine.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -108,7 +108,7 @@ public class SupportVectorMachineTest {
         instance = null;
         instance = new SupportVectorMachine(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         
         df.denormalize(trainingData);

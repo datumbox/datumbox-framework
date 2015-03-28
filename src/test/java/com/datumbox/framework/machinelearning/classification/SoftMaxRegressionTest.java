@@ -42,8 +42,8 @@ public class SoftMaxRegressionTest {
      * Test of predict method, of class SoftMaxRegression.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -718,7 +718,7 @@ public class SoftMaxRegressionTest {
         instance = null;
         instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         	        
         df.denormalize(trainingData);
         df.denormalize(validationData);

@@ -42,8 +42,8 @@ public class StepwiseRegressionTest {
      * Test of predict method, of class NLMS.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         RandomValue.randomGenerator = new Random(42);
         
         /*
@@ -109,7 +109,7 @@ public class StepwiseRegressionTest {
         instance = null;
         instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
 	        
         df.denormalize(trainingData);

@@ -42,8 +42,8 @@ public class ModelerTest {
      * Test of train and predict method, of class Modeler.
      */
     @Test
-    public void testTrainAndPredict() {
-        System.out.println("TrainAndPredict");
+    public void testTrainAndValidate() {
+        System.out.println("testTrainAndValidate");
         RandomValue.randomGenerator = new Random(42);
         
         
@@ -156,12 +156,12 @@ public class ModelerTest {
         
         
         
-        System.out.println("predict");
+        System.out.println("validate");
         
         
         instance = new Modeler(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(newData);
+        instance.validate(newData);
         
         
         

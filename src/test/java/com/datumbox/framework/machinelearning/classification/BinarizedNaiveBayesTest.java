@@ -39,8 +39,8 @@ public class BinarizedNaiveBayesTest {
      * Test of predict method, of class BinarizedNaiveBayes.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -83,7 +83,7 @@ public class BinarizedNaiveBayesTest {
         instance = null;
         instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();

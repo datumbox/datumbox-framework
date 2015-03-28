@@ -47,8 +47,8 @@ public class LatentDirichletAllocationTest {
      * Test of predict method, of class NLMS.
      */
     @Test
-    public void testPredict() throws URISyntaxException {
-        System.out.println("predict");
+    public void testValidate() throws URISyntaxException {
+        System.out.println("validate");
         //TODO: change the test so that it does not require reading from local file
         /*
         RandomValue.randomGenerator = new Random(42);
@@ -77,7 +77,7 @@ public class LatentDirichletAllocationTest {
         
         lda.fit(trainingData, trainingParameters);
         
-        lda.predict(trainingData);
+        lda.validate(trainingData);
         
         Dataset reducedTrainingData = new Dataset();
         for(Record r : trainingData) {
@@ -94,7 +94,7 @@ public class LatentDirichletAllocationTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
         
-        BaseMLclassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, 1);
+        BaseMLclassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
         
         double expResult = 0.6849291090495362;
         double result = vm.getMacroF1();

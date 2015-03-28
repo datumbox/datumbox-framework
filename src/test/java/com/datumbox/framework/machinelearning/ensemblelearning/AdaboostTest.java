@@ -42,8 +42,8 @@ public class AdaboostTest {
      * Test of predict method, of class Adaboost.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         RandomValue.randomGenerator = new Random(42);
         
         /*
@@ -120,7 +120,7 @@ public class AdaboostTest {
         instance = null;
         instance = new Adaboost(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         
         

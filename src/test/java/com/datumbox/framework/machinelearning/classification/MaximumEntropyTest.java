@@ -40,8 +40,8 @@ public class MaximumEntropyTest {
      * Test of predict method, of class MaximumEntropy.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -85,7 +85,7 @@ public class MaximumEntropyTest {
         instance = null;
         instance = new MaximumEntropy(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();

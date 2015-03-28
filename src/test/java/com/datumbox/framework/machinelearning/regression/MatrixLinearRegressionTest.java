@@ -40,8 +40,8 @@ public class MatrixLinearRegressionTest {
      * Test of predict method, of class MatrixLinearRegression.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         /*
         Synthetic Data generated with:
@@ -103,7 +103,7 @@ public class MatrixLinearRegressionTest {
         instance = null;
         instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
         

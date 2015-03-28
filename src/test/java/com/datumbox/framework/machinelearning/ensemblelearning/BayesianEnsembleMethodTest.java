@@ -39,8 +39,8 @@ public class BayesianEnsembleMethodTest {
      * Test of predict method, of class BayesianEnsembleMethod.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         
         Dataset trainingData = new Dataset();
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -89,7 +89,7 @@ public class BayesianEnsembleMethodTest {
         instance = null;
         instance = new BayesianEnsembleMethod(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);

@@ -229,8 +229,8 @@ public class KmeansTest {
      * Test of predict method, of class MaximumEntropy.
      */
     @Test
-    public void testPredict() {
-        System.out.println("predict");
+    public void testValidate() {
+        System.out.println("validate");
         RandomValue.randomGenerator = new Random(42); 
         
         Dataset trainingData = generateDataset();
