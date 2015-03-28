@@ -9,10 +9,7 @@ NEW ALGORITHMS
 CODE IMPROVEMENT
 ================
 
-- Make this a method DATA_SAFE_CALL_BY_REFERENCE and IS_BINARIZED?
-- should we pass validator class in the constructors of all MLmodels?
 - Test a call directly on predict() and modify code to return the correct exception
-- DataTransformer: refactor the individual implementations of _process()
 
 
 - Serialization improvements

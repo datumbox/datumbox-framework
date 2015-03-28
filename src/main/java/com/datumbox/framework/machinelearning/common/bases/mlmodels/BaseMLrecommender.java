@@ -81,28 +81,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         
         predictDataset(newData);
 
-    }
-    
-    
-    /**
-     * Returns whether the algorithm or the configuration modifies the data.
-     * @return 
-     */
-    public boolean modifiesData() {
-        //check if the algorithm itself modifies the data
-        try { 
-            Boolean dataSafe = (Boolean) this.getClass().getDeclaredField("DATA_SAFE_CALL_BY_REFERENCE").get(this);
-            //see if the data are safe mearning that algorithm does not modify the data internally.
-            //if the data are not safe, mark it for deep copy
-            if(dataSafe!=true) {
-                return true;
-            }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
-            return true; //if no information available play it safe and mark it as true
-        }
-        
-        return false;
-    }
+    } 
     
     protected abstract void predictDataset(Dataset newData);
 

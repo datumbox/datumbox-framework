@@ -30,11 +30,6 @@ import com.datumbox.common.dataobjects.Dataset;
  * @param <TP>
  */
 public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
-            
-    /**
-     * Deletes the particular algorithm and all the associated parameters. 
-     */
-    public void erase();
     
     /**
      * Returns the model parameters that were estimated after training.
@@ -58,4 +53,15 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      */
     public void fit(Dataset trainingData, TP trainingParameters);
     
+    /**
+     * Returns whether the algorithm modifies the data.
+     * 
+     * @return 
+     */
+    public boolean modifiesData();
+            
+    /**
+     * Deletes the particular algorithm and all the associated parameters. 
+     */
+    public void erase();
 }
