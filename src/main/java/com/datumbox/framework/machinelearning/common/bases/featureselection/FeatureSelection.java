@@ -56,6 +56,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
      * @param <F>
      * @param dbName
      * @param aClass
+     * @param dbConfig
      * @return 
      */
     public static <F extends FeatureSelection> F newInstance(Class<F> aClass, String dbName, DatabaseConfiguration dbConfig) {
@@ -84,10 +85,11 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     }
 
     
-    public void evaluateFeatures(Dataset trainingData) { 
+    @Override
+    protected void _fit(Dataset trainingData) { 
         
         if(GeneralConfiguration.DEBUG) {
-            System.out.println("evaluateFeatures()");
+            System.out.println("fit()");
         }
         
         estimateModelParameters(trainingData);
@@ -99,9 +101,9 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         
     }
     
-    public void clearFeatures(Dataset newData) {
+    public void transform(Dataset newData) {
         if(GeneralConfiguration.DEBUG) {
-            System.out.println("clearFeatures()");
+            System.out.println("transform()");
         }
         
         knowledgeBase.load();

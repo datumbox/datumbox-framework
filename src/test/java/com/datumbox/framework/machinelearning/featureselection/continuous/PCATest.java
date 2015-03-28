@@ -57,7 +57,7 @@ public class PCATest {
         param.setMaxDimensions(null);
         instance.initializeTrainingConfiguration(param);
         
-        instance.evaluateFeatures(originaldata);
+        instance.fit(originaldata);
         instance=null;
         
         Dataset newdata = originaldata;
@@ -72,7 +72,7 @@ public class PCATest {
         expResult.add(Record.<Double>newDataVector(new Double[]{-14.1401, -6.4677, 1.4920}, null));
         expResult.add(Record.<Double>newDataVector(new Double[]{-23.8837, 3.7408, -2.3614}, null));
         
-        instance.clearFeatures(newdata);
+        instance.transform(newdata);
         
         assertEquals(newdata.size(), expResult.size());
         

@@ -141,10 +141,10 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
 
             //find the most popular features
-            featureSelection.evaluateFeatures(trainingDataset);   
+            featureSelection.fit(trainingDataset);   
 
             //remove unnecessary features
-            featureSelection.clearFeatures(trainingDataset);
+            featureSelection.transform(trainingDataset);
         }
         
         //initialize mlmodel
@@ -274,7 +274,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             }
 
             //remove unnecessary features
-            featureSelection.clearFeatures(testDataset);
+            featureSelection.transform(testDataset);
         }
         
         
@@ -347,7 +347,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             }
 
             //remove unnecessary features
-            featureSelection.clearFeatures(newData);
+            featureSelection.transform(newData);
         }
         
         

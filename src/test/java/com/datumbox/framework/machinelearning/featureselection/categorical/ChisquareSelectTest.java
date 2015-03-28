@@ -95,13 +95,13 @@ public class ChisquareSelectTest {
         ChisquareSelect instance = new ChisquareSelect(dbName, TestConfiguration.getDBConfig());
         instance.initializeTrainingConfiguration(param);
         
-        instance.evaluateFeatures(trainingData);
+        instance.fit(trainingData);
         instance = null;
         
         
         instance = new ChisquareSelect(dbName, TestConfiguration.getDBConfig());
         
-        instance.clearFeatures(trainingData);
+        instance.transform(trainingData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));
         Set<Object> result = trainingData.getColumns().keySet();

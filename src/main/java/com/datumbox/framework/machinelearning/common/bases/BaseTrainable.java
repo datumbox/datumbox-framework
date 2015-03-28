@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.common.bases;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.objecttypes.Trainable;
+import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
@@ -50,24 +51,21 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
      public MP getModelParameters() {
        return knowledgeBase.getModelParameters();
 
-     }
-    
-    @Override
-    public void initializeTrainingConfiguration(TP trainingParameters) {
-        //reset knowledge base
-        knowledgeBase.reinitialize();
-        knowledgeBase.setTrainingParameters(trainingParameters);
     }
     
-    /*
+    
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("fit()");
+        }
+        
         //reset knowledge base
         knowledgeBase.reinitialize();
         knowledgeBase.setTrainingParameters(trainingParameters);
         _fit(trainingData);
     }
     
-    public abstract void _fit(Dataset trainingData);
-    */
+    protected abstract void _fit(Dataset trainingData);
+    
 }

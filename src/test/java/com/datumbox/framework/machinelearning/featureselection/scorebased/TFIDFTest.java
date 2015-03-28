@@ -80,13 +80,13 @@ public class TFIDFTest {
         TFIDF instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
         instance.initializeTrainingConfiguration(param);
         
-        instance.evaluateFeatures(trainingData);
+        instance.fit(trainingData);
         instance = null;
         
         
         instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
         
-        instance.clearFeatures(trainingData);
+        instance.transform(trainingData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
         Set<Object> result = trainingData.getColumns().keySet();

@@ -90,10 +90,10 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         if(selectFeatures) {
             featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
             featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
-            featureSelection.evaluateFeatures(trainingData); 
+            featureSelection.fit(trainingData); 
         
             //remove unnecessary features
-            featureSelection.clearFeatures(trainingData);  
+            featureSelection.transform(trainingData);  
         }
         
         
@@ -175,7 +175,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
             }
 
             //remove unnecessary features
-            featureSelection.clearFeatures(data);
+            featureSelection.transform(data);
         }
         
         

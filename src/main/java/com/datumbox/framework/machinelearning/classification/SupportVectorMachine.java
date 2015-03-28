@@ -138,10 +138,11 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     }
     
     
+    
     @Override
-    public void train(Dataset trainingData, Dataset validationData) {
+    protected void _fit(Dataset trainingData) {
         knowledgeBase.getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
-        super.train(trainingData, validationData);
+        super._fit(trainingData);
     }
     
     @Override

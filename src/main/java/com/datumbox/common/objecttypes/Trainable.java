@@ -56,8 +56,6 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * @param trainingData
      * @param trainingParameters
      */
-    //public void fit(Dataset trainingData,TP trainingParameters);
-    
-    public void initializeTrainingConfiguration(TP trainingParameters);
+    public void fit(Dataset trainingData, TP trainingParameters);
     
 }

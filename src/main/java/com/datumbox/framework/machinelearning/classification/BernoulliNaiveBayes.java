@@ -78,9 +78,9 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     }
     
     @Override
-    public void train(Dataset trainingData, Dataset validationData) {
+    protected void _fit(Dataset trainingData) {
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
-        super.train(trainingData, validationData);
+        super._fit(trainingData);
     }
     
     @Override

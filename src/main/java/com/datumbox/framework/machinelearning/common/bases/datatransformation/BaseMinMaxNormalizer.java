@@ -39,15 +39,12 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
     public static class ModelParameters extends DataTransformer.ModelParameters {
             
         @BigMap
-        
         protected Map<Object, Double> minColumnValues;
 
         @BigMap
-        
         protected Map<Object, Double> maxColumnValues;
     
         @BigMap
-        
         protected Map<Object, Object> referenceLevels;
 
         public ModelParameters(DatabaseConnector dbc) {

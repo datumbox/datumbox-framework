@@ -58,9 +58,9 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
     }
     
     @Override
-    public void train(Dataset trainingData, Dataset validationData) {
+    protected void _fit(Dataset trainingData) {
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
-        super.train(trainingData, validationData);
+        super._fit(trainingData);
     }
     
 }

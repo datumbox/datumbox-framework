@@ -137,36 +137,16 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * Trains a model with the trainingData and validates it with the validationData.
      * 
      * @param trainingData
-     * @param validationData
      */
     @SuppressWarnings("unchecked")
-    public void train(Dataset trainingData, Dataset validationData) {    
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("train()");
-        }
-        
-        
+    @Override
+    protected void _fit(Dataset trainingData) {    
         if(GeneralConfiguration.DEBUG) {
             System.out.println("estimateModelParameters()");
         }
         
         //train the model to get the parameters
         estimateModelParameters(trainingData);        
-        
-        
-        if(validationData != null && !validationData.isEmpty()) {
-        
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("validateModel()");
-            }
-
-            //validate the model with the validation data and update the validationMetrics
-            VM validationMetrics = validateModel(validationData);
-            knowledgeBase.setValidationMetrics(validationMetrics);
-
-        }
-
         
         if(GeneralConfiguration.DEBUG) {
             System.out.println("Saving model");

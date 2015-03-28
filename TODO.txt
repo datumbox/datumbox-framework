@@ -10,12 +10,13 @@ CODE IMPROVEMENT
 ================
 - use fit/predit/transform methods instead of training, validate etc like Python?
 	- DataTransformer: merge transform and normalize into a transform method, remove the trainingMode var and use a fit() instead
-	- FeatureSelection: change evaluateFeatures() to fit() and clearFeatures() to transform
-	- BaseMLrecommender: change train to fit()
-	- BaseMLmodel: change train(trainingData, validationData) to fit(trainingData) and a predict() method. Eliminate the test() and rename it to validate() which takes a dataset and returns its VMs
-	- Add the new methods in the BaseTrainable and the Trainable interface 
 
+
+	- BaseMLmodel: change train(trainingData, validationData) to fit(trainingData) and a predict() method. Eliminate the test() and rename it to validate() which takes a dataset and returns its VMs
+
+- eliminate _fit() or estimateModelParameters() and pass the save() in fit()
 - Remove initializeTrainingConfiguration(), pass the parameters in train() method
+- newInstance(), constructors etc of inherited from BaseTrainable could perhaps pass to BaseTrainable and reduce the extra code.
 - Make this a method DATA_SAFE_CALL_BY_REFERENCE?
 
 - Serialization improvements

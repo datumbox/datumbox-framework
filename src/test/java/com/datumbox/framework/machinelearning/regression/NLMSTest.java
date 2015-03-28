@@ -182,14 +182,14 @@ public class NLMSTest {
         featureSelectionParameters.setWhitened(false);
         featureSelectionParameters.setVarianceThreshold(0.99999995);
         featureSelection.initializeTrainingConfiguration(featureSelectionParameters);
-        featureSelection.evaluateFeatures(trainingData);
+        featureSelection.fit(trainingData);
         /*
         featureSelection=null;
         
         
         featureSelection = new PCA(dbName, TestConfiguration.getDBConfig());
         */
-        featureSelection.clearFeatures(trainingData);
+        featureSelection.transform(trainingData);
         featureSelection.erase();
         
         

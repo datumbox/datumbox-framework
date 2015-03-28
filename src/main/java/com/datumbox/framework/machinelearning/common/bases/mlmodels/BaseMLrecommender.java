@@ -105,12 +105,8 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * @param trainingData
      */
     @SuppressWarnings("unchecked")
-    public void train(Dataset trainingData) {   
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("train()");
-        }
-        
+    @Override
+    public void _fit(Dataset trainingData) {   
         
         if(GeneralConfiguration.DEBUG) {
             System.out.println("estimateModelParameters()");
