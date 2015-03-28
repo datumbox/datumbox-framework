@@ -22,16 +22,17 @@ import java.io.Serializable;
  * Common DataStructures used internally by the Framework.
  * 
  * The Abstract class used by the commonly used internalDatastructures of the framework.
- 
- Class Name                   Data Structure
- ----------                   --------------
- 
- FlatDataCollection	=>	Collection<Object>
- * FlatDataList		=>	List<Object>
- * AssociativeArray	=>	Map<Object, Object>
- * transposeDataCollection	=>	Map<Object, FlatDataCollection>
- * TransposeDataList	=>	Map<Object, FlatDataList>
- * AssociativeArray2D	=>	Map<Object, AssociativeArray>
+ *
+ * Class Name                   Data Structure
+ * ----------                   --------------
+ * FlatDataList			List<Object>
+ * FlatDataCollection		Collection<Object>
+ * AssociativeArray		Map<Object, Object>
+ * TransposeDataList		Map<Object, FlatDataList>
+ * TransposeDataCollection	Map<Object, FlatDataCollection>
+ * TransposeDataCollection2D    Map<Object, TransposeDataCollection>
+ * AssociativeArray2D		Map<Object, AssociativeArray>
+ * DataTable2D                  Map<Object, AssociativeArray>
  * 
  * @author bbriniotis
  * @param <T>

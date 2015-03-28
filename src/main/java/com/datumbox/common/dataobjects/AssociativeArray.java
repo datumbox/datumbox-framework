@@ -24,7 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * Data structure which stores internally a Map<Object, Object>.
+ * 
  * @author bbriniotis
  */
 public final class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
