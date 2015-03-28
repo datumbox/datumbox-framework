@@ -42,9 +42,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     
     protected transient DatabaseConnector dbc;
     protected transient DatabaseConfiguration dbConf;
-    
-    
-    protected Class<? extends Trainable> ownerClass; //the Class name of the algorithm
 
     
     
@@ -85,14 +82,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     public DatabaseConfiguration getDbConf() {
         return dbConf;
     }
-    
-    public Class<? extends Trainable> getOwnerClass() {
-        return ownerClass;
-    }
-
-    public void setOwnerClass(Class<? extends Trainable> ownerClass) {
-        this.ownerClass = ownerClass;
-    }       
 
     public void save() {
         if(modelParameters==null) {

@@ -90,13 +90,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
     protected BaseMLrecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        //the line below calls an overrided method in the constructor. This is not elegant but the only thing that this method does is to rename the short name of classifier
-        String methodName = this.getClass().getSimpleName();
-        dbName += dbConf.getDBnameSeparator() + methodName;
-        
-        this.dbName = dbName;
-        knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
-        knowledgeBase.setOwnerClass(this.getClass());
+        super(dbName, dbConf, mpClass, tpClass);
     } 
     
     

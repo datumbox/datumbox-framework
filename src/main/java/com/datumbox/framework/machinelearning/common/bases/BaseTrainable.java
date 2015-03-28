@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.common.bases;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.objecttypes.Trainable;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
@@ -37,6 +38,21 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     protected KB knowledgeBase;
     protected String dbName;
 
+    protected BaseTrainable(String dbName, DatabaseConfiguration dbConf) {
+        String methodName = this.getClass().getSimpleName();
+        if(!dbName.contains(methodName)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
+            dbName += dbConf.getDBnameSeparator() + methodName;
+        }
+        
+        this.dbName = dbName;
+    }
+    
+    protected BaseTrainable(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
+        this(dbName, dbConf);
+        
+        knowledgeBase = (KB) new KnowledgeBase(this.dbName, dbConf, mpClass, tpClass);
+    } 
+    
     @Override
     public TP getTrainingParameters() {
         return knowledgeBase.getTrainingParameters();

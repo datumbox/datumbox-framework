@@ -77,12 +77,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
     protected DataTransformer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        String methodName = this.getClass().getSimpleName();
-        dbName += dbConf.getDBnameSeparator() + methodName;
-        
-        this.dbName = dbName;
-        knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
-        knowledgeBase.setOwnerClass(this.getClass());
+        super(dbName, dbConf, mpClass, tpClass);
     }
     
     /*

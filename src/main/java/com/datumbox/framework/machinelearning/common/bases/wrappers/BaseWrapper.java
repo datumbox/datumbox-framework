@@ -145,14 +145,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
     protected BaseWrapper(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        String methodName = this.getClass().getSimpleName();
-        if(!dbName.contains(methodName)) { //patch for loading the dbname directly
-            dbName += dbConf.getDBnameSeparator() + methodName;
-        }
-        
-        this.dbName = dbName;
-        knowledgeBase = new KnowledgeBase<>(dbName, dbConf, mpClass, tpClass);
-        knowledgeBase.setOwnerClass(this.getClass());
+        super(dbName, dbConf, mpClass, tpClass);
     }
       
     
