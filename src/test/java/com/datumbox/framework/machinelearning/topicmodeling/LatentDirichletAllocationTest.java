@@ -98,7 +98,7 @@ public class LatentDirichletAllocationTest {
         
         BaseMLclassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
         
-        double expResult = 0.6849291090495362;
+        double expResult = 0.6859007513066202;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
 
