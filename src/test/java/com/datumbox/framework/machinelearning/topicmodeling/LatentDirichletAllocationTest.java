@@ -18,15 +18,17 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.framework.utilities.dataset.DatasetBuilder;
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
+import com.datumbox.tests.utilities.TestUtils;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -45,12 +47,13 @@ public class LatentDirichletAllocationTest {
 
     /**
      * Test of predict method, of class NLMS.
+     * @throws java.net.URISyntaxException
+     * @throws java.net.MalformedURLException
      */
     @Test
-    public void testValidate() throws URISyntaxException {
+    public void testValidate() throws URISyntaxException, MalformedURLException {
         System.out.println("validate");
-        //TODO: change the test so that it does not require reading from local file
-        /*
+        
         RandomValue.randomGenerator = new Random(42);
         
         
@@ -58,9 +61,8 @@ public class LatentDirichletAllocationTest {
 
         
         Map<Object, URI> dataset = new HashMap<>();
-
-        dataset.put("negative", new URI("file:///home/bbriniotis/test.neg"));
-        dataset.put("positive", new URI("file:///home/bbriniotis/test.pos"));
+        dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
+        dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
         wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
@@ -102,7 +104,7 @@ public class LatentDirichletAllocationTest {
 
         smr.erase();
         lda.erase();
-        */
+        
     }
 
     

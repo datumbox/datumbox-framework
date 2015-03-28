@@ -20,6 +20,11 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.configuration.TestConfiguration;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import org.apache.commons.io.FileUtils;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -47,6 +52,17 @@ public class TestUtils {
             double v2 = result.getDouble(key);
 
             assertEquals(v1, v2, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
+    }
+    
+    public static URI getRemoteFile(URL url) {
+        try {
+            File tmpFile = File.createTempFile("datumbox", ".tmp");
+            FileUtils.copyURLToFile(url, tmpFile);
+            return tmpFile.toURI();
+        } 
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

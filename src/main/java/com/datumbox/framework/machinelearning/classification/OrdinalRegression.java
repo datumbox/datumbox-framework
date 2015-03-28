@@ -270,7 +270,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
         
         double SSE = calculateError(validationData, previousThitaMapping, knowledgeBase.getModelParameters().getWeights(), knowledgeBase.getModelParameters().getThitas());
-        validationMetrics.setSSE(SSE); //TODO: rename SSE to cost
+        validationMetrics.setSSE(SSE);
         
         return validationMetrics;
     }

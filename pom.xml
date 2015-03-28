@@ -52,6 +52,7 @@
         <commons-collections-version>4.0</commons-collections-version>
         <commons-lang-version>3.3.2</commons-lang-version>
         <commons-math-version>3.3</commons-math-version>
+        <commons-io-version>2.4</commons-io-version>
         <guava-version>17.0</guava-version>
         <libsvm-version>3.17</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
@@ -148,6 +149,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>${commons-math-version}</version>
+        </dependency>
+        <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io-version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

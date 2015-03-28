@@ -22,8 +22,11 @@ import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBay
 
 import com.datumbox.framework.machinelearning.featureselection.categorical.ChisquareSelect;
 import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
+import com.datumbox.tests.utilities.TestUtils;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,18 +49,17 @@ public class TextClassifierTest {
      * @throws java.net.URISyntaxException
      */
     @Test
-    public void testTrainAndPredict() throws URISyntaxException {
+    public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
         System.out.println("TrainAndPredict");
-	//TODO: change the test so that it does not require reading from local file
-	/*
         RandomValue.randomGenerator = new Random(42);
         
         
         String dbName = "JUnit";
         
         Map<Object, URI> dataset = new HashMap<>();
-        dataset.put("objective", new URI("file:///home/bbriniotis/training.subjectivity.en.obj"));
-        dataset.put("subjective", new URI("file:///home/bbriniotis/training.subjectivity.en.subj"));
+        dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
+        dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
+        
         
         TextClassifier instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
@@ -119,7 +121,7 @@ public class TextClassifierTest {
         
         MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(dataset);
         
-        double expResult2 = 0.9278872439745867;
+        double expResult2 = 0.853460320496835;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         
         instance = null;
@@ -128,14 +130,12 @@ public class TextClassifierTest {
         
         instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
         
-        URI datasetURI = new URI("file:///home/bbriniotis/testing.txt");
-        List<Object> result = instance.predict(datasetURI);
+        List<Object> result = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         
-        List<Object> expResult = Arrays.asList("subjective","objective");
+        List<Object> expResult = Arrays.asList("negative","positive");
         assertEquals(expResult, result);
         
         instance.erase();
-        */
     }
 
 }
