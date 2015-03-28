@@ -8,17 +8,23 @@ NEW ALGORITHMS
 
 CODE IMPROVEMENT
 ================
-- use fit/predit/transform methods instead of traing, validate etc like Python? Separate kcrossfold validation out?
+- use fit/predit/transform methods instead of training, validate etc like Python?
+	- DataTransformer: merge transform and normalize into a transform method, remove the trainingMode var and use a fit() instead
+	- FeatureSelection: change evaluateFeatures() to fit() and clearFeatures() to transform
+	- BaseMLrecommender: change train to fit()
+	- BaseMLmodel: change train(trainingData, validationData) to fit(trainingData) and a predict() method. Eliminate the test() and rename it to validate() which takes a dataset and returns its VMs
+	- Add the new methods in the BaseTrainable and the Trainable interface 
+
 - Remove initializeTrainingConfiguration(), pass the parameters in train() method
 - Remove .isTrained() .isConfigured()?
 - Make this a method DATA_SAFE_CALL_BY_REFERENCE?
-- transform train(trainingData, validationData) to train(trainingData)?
-- Should VM be stored in the KB?
 
 - Serialization improvements
 - create the required exceptions
 - create a proper logger for the messages
 - document the code
+- CSV reader and converter to Dataset
+- Add MapDB maps in the Dataset
 
 
 DOCUMENTATION
