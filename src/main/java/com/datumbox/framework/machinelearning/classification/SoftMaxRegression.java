@@ -45,8 +45,6 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "SMReg";
-    
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
         /**
@@ -119,11 +117,6 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     
     public SoftMaxRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidation());
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

@@ -56,8 +56,6 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "OrReg";
-    
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
         /**
@@ -145,11 +143,6 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     
     public OrdinalRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidation());
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

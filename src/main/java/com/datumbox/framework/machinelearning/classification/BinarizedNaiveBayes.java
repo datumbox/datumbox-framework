@@ -33,8 +33,6 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "BinNB";
-    
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -57,11 +55,6 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
     
     public BinarizedNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class);
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

@@ -44,8 +44,6 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "NLMS";
-    
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
 
@@ -85,11 +83,6 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     
     public NLMS(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
 
     @Override

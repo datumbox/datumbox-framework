@@ -30,16 +30,9 @@ import java.util.Map;
  */
 public class DummyXYMinMaxNormalizer extends BaseMinMaxNormalizer {
 
-
-    public static final String SHORT_METHOD_NAME = "DXYNrm";
            
     public DummyXYMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf);
-    }
-    
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
 
     @Override

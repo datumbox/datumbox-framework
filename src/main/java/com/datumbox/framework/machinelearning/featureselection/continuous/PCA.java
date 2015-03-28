@@ -40,9 +40,6 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             Advanced statistical machine learning and patern recognition Lecure 2 & Tutorial 3
             Advanced statistical machine learning and patern recognition Coursework 1 Matlab code
     */
-    public static final String SHORT_METHOD_NAME = "PCA";
-    
-    
     public static class TrainingParameters extends ContinuousFeatureSelection.TrainingParameters {
         private boolean whitened = false;
         private Integer maxDimensions = null;
@@ -147,11 +144,6 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
 
     public PCA(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
-    }
-    
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
 
     @Override

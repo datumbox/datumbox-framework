@@ -48,8 +48,6 @@ import java.util.Map;
  */
 public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, TextClassifier.TrainingParameters>  {
     
-    public static final String SHORT_METHOD_NAME = "TxtCl";
-    
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -104,11 +102,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     public TextClassifier(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
 
     

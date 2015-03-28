@@ -105,7 +105,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     */
     protected BaseMLmodel(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         //the line below calls an overrided method in the constructor. This is not elegant but the only thing that this method does is to rename the short name of classifier
-        String methodName = shortMethodName(); //this.getClass().getSimpleName();
+        String methodName = this.getClass().getSimpleName();
         if(!dbName.contains(methodName)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
             dbName += dbConf.getDBnameSeparator() + methodName;
         }

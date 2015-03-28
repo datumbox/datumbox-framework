@@ -88,10 +88,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         this.trained = trained;
     }
 
-    public String getDbName() {
-        return dbName;
-    }
-
     public DatabaseConnector getDbc() {
         return dbc;
     }

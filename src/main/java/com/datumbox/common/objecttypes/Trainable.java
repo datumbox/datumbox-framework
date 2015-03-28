@@ -16,6 +16,8 @@
  */
 package com.datumbox.common.objecttypes;
 
+import com.datumbox.common.dataobjects.Dataset;
+
 /**
  * This interface is used to mark classes that can be trained and generate a
  * storable database. This interface is meant to be used for classes that
@@ -28,21 +30,7 @@ package com.datumbox.common.objecttypes;
  * @param <TP>
  */
 public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
-    
-    /**
-     * Get the name of the database.
-     * 
-     * @return 
-     */
-    public String getDBname();
-    
-    /**
-     * Short name of the method used for naming the database.
-     * 
-     * @return 
-     */
-    public String shortMethodName();
-    
+            
     /**
      * Deletes the particular algorithm and all the associated parameters. 
      */
@@ -60,13 +48,16 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * 
      * @return 
      */
-    public TP getTrainingParametersObject();
+    public TP getTrainingParameters();
     
     /**
-     * Sets both TrainingParameters and MemoryConfiguration. MUST be called BEFORE 
-     * calling the train(), kFoldCrossValidation() methods.
+     * Trains the model.
+     * 
+     * @param trainingData
      * @param trainingParameters
      */
+    //public void fit(Dataset trainingData,TP trainingParameters);
+    
     public void initializeTrainingConfiguration(TP trainingParameters);
     
 }

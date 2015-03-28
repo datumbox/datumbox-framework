@@ -48,13 +48,6 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "SVM";
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
-    
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
         /**

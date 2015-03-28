@@ -31,8 +31,6 @@ import com.datumbox.framework.machinelearning.common.bases.datatransformation.Da
  */
 public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.TrainingParameters>  {
     
-    public static final String SHORT_METHOD_NAME = "Mdlr";
-    
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -62,11 +60,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     
     public Modeler(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
 
     

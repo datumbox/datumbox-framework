@@ -75,7 +75,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         IMPORTANT METHODS FOR THE FUNCTIONALITY
     */
     protected FeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        String methodName = shortMethodName(); //this.getClass().getSimpleName();
+        String methodName = this.getClass().getSimpleName();
         dbName += dbConf.getDBnameSeparator() + methodName;
         
         this.dbName = dbName;

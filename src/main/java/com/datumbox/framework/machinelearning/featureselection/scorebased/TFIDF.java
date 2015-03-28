@@ -38,7 +38,6 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
             https://gist.github.com/AloneRoad/1605037
             http://www.tfidf.com/
     */
-    public static final String SHORT_METHOD_NAME = "TFIDF";
 
     public static class TrainingParameters extends ScoreBasedFeatureSelection.TrainingParameters {
         private boolean binarized = false;
@@ -95,11 +94,6 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     
     public TFIDF(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
-    }
-    
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

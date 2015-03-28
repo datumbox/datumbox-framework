@@ -47,8 +47,6 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "HiAgg";
-    
     
     public static class Cluster extends BaseMLclusterer.Cluster {
         
@@ -204,11 +202,6 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class);
     } 
-
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
     
     @Override
     protected void predictDataset(Dataset newData) { 

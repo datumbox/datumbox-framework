@@ -46,13 +46,6 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "MaxEn";
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
-    
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
         /**

@@ -53,8 +53,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "GDPMM";
-    
     public static class Cluster extends BaseDPMM.Cluster {
         //informational fields
         private int dimensions;
@@ -390,11 +388,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     
     public GaussianDPMM(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class, GaussianDPMM.ValidationMetrics.class);
-    }
-
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

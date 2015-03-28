@@ -64,8 +64,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "LDirA";
-    
     public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
         private int totalIterations;
         
@@ -261,11 +259,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     
     public LatentDirichletAllocation(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidation()); 
-    }
-
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
 

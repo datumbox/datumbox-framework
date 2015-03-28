@@ -33,8 +33,6 @@ import java.util.Map;
 public class MutualInformation extends CategoricalFeatureSelection<MutualInformation.ModelParameters, MutualInformation.TrainingParameters>{
     //References: http://nlp.stanford.edu/IR-book/html/htmledition/mutual-information-1.html
     
-    public static final String SHORT_METHOD_NAME = "MIFS";
-       
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -49,11 +47,6 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
     
     public MutualInformation(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
-    }
-    
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     

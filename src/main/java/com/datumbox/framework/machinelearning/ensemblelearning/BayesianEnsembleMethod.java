@@ -33,12 +33,6 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "BEnsM";
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 

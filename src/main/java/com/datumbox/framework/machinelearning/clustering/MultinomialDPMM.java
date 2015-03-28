@@ -48,8 +48,6 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "MDPMM";
-    
     public static class Cluster extends BaseDPMM.Cluster {
         //informational fields
         private int dimensions;
@@ -272,11 +270,6 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
     
     public MultinomialDPMM(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
-    }
-
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

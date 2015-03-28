@@ -48,8 +48,6 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
      * You can safely pass directly the internalDataCollection without worrying about having them modified.
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
-    
-    public static final String SHORT_METHOD_NAME = "CoFlt";
 
    
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
@@ -121,11 +119,6 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
     public CollaborativeFiltering(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
-    } 
-
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     } 
     
 

@@ -36,8 +36,6 @@ import java.util.Map;
  */
 public class SimpleDummyVariableExtractor extends DataTransformer<SimpleDummyVariableExtractor.ModelParameters, SimpleDummyVariableExtractor.TrainingParameters> {
 
-
-    public static final String SHORT_METHOD_NAME = "SDExt";
         
     public static class ModelParameters extends DataTransformer.ModelParameters {
 
@@ -56,11 +54,6 @@ public class SimpleDummyVariableExtractor extends DataTransformer<SimpleDummyVar
     }
 
 
-
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
     
     @Override
     protected void _transform(Dataset data, boolean trainingMode) {

@@ -49,8 +49,6 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "Kmean";
-    
     
     public static class Cluster extends BaseMLclusterer.Cluster {
         
@@ -251,11 +249,6 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     public Kmeans(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class);
     } 
-
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
     
     @Override
     protected void predictDataset(Dataset newData) { 

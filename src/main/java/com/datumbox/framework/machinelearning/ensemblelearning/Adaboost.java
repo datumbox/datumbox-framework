@@ -43,8 +43,6 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "AdaBo";
-    
     
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
@@ -68,11 +66,6 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     public Adaboost(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
     } 
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
 
 
     @Override

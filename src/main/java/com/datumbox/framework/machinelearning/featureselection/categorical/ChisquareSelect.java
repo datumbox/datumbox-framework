@@ -35,8 +35,6 @@ import java.util.List;
 public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters>{
     //References: http://nlp.stanford.edu/IR-book/html/htmledition/feature-selectionchi2-feature-selection-1.html
     
-    public static final String SHORT_METHOD_NAME = "ChiFS";
-       
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -62,11 +60,6 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
     
     public ChisquareSelect(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
-    }
-    
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

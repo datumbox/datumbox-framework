@@ -27,16 +27,9 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class XMinMaxNormalizer extends BaseMinMaxNormalizer {
-
-    public static final String SHORT_METHOD_NAME = "XNrm";
     
     public XMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf);
-    }
-    
-    @Override
-    public String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
     @Override

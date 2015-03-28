@@ -34,14 +34,9 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     
     protected KB knowledgeBase;
     protected String dbName;
-    
-    @Override
-    public String getDBname() {
-        return dbName;
-    }
 
     @Override
-    public TP getTrainingParametersObject() {
+    public TP getTrainingParameters() {
         return knowledgeBase.getTrainingParameters();
     }
     
@@ -62,7 +57,4 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
        return knowledgeBase.getModelParameters();
 
      }
-
-
-        
 }

@@ -32,8 +32,6 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "MulNB";
-    
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -54,11 +52,6 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
 
     public MultinomialNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class);
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
     
 }

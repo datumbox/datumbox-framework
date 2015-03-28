@@ -33,9 +33,6 @@ import java.util.Map;
  */
 public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters, BaseMLregressor.ValidationMetrics>  {
     
-    public static final String SHORT_METHOD_NAME = "SwReg";
-
-    
     private transient BaseMLregressor mlregressor = null;
     
     
@@ -123,12 +120,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     public StepwiseRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
     } 
-     
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
 
     
     @Override

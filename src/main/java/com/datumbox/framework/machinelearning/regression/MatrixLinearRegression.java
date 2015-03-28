@@ -45,8 +45,6 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
      * You can safely pass directly the internalDataCollection without worrying about having them modified.
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
-    
-    public static final String SHORT_METHOD_NAME = "MatLR";
 
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
@@ -108,11 +106,6 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     
     public MatrixLinearRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
-    }
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
     }
 
     @Override

@@ -44,8 +44,6 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    public static final String SHORT_METHOD_NAME = "BooAg";
-    
     
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
@@ -69,11 +67,6 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
     public BootstrapAggregating(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
     } 
-    
-    @Override
-    public final String shortMethodName() {
-        return SHORT_METHOD_NAME;
-    }
 
 
     @Override
