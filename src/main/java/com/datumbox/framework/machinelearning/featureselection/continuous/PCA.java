@@ -80,9 +80,6 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         private double[] mean; //mean values for each column
         private double[] eigenValues; //eigenvalues
-
-        //MORPHIA does not support storing 2d arrays. Thus to store it I have to
-        //make it a single 1d array and convert it back to 2d
         
         private double[][] components; //components weights 
 

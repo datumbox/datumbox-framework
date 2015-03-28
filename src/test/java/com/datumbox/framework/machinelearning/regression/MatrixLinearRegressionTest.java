@@ -87,19 +87,17 @@ public class MatrixLinearRegressionTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        
+        df.transform(validationData);
+        
         df = null;
 
         MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
-        param.setCalculatePvalue(true);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -172,16 +170,14 @@ public class MatrixLinearRegressionTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        
         
         MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
-        param.setCalculatePvalue(true);
-        instance.initializeTrainingConfiguration(param);
-        MatrixLinearRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        MatrixLinearRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         df.denormalize(trainingData);
         df.erase();

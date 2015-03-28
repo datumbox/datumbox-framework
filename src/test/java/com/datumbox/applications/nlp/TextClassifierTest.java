@@ -16,7 +16,6 @@
  */
 package com.datumbox.applications.nlp;
 
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -114,12 +113,11 @@ public class TextClassifierTest {
         trainingParameters.setTextExtractorClass(NgramsExtractor.class);
         trainingParameters.setTextExtractorTrainingParameters(new NgramsExtractor.Parameters());
         
-        instance.initializeTrainingConfiguration(trainingParameters);
-        instance.train(dataset);
+        instance.fit(dataset, trainingParameters);
         
         
         
-        MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.test(dataset);
+        MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(dataset);
         
         double expResult2 = 0.9278872439745867;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);

@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
@@ -703,19 +702,17 @@ public class SoftMaxRegressionTest {
         String dbName = "JUnitClassifier";
         
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new SimpleDummyVariableExtractor.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        
+        df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
+        df.transform(validationData);
 
         
         SoftMaxRegression instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -808,17 +805,15 @@ public class SoftMaxRegressionTest {
         
 
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
+        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         
         SoftMaxRegression instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);
         //param.setDataTransformerClass(XYMinMaxNormalizer.class);
-        instance.initializeTrainingConfiguration(param);
-        SoftMaxRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        SoftMaxRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         	        
         df.denormalize(trainingData);

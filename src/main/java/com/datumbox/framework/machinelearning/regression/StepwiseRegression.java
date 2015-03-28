@@ -49,8 +49,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     public static class TrainingParameters extends BaseMLregressor.TrainingParameters {
         
         //primitives/wrappers
-        private Integer kFolds = 5;
-        
         private Integer maxIterations = null;
         
         private Double aout = 0.05;
@@ -63,14 +61,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         private BaseMLregressor.TrainingParameters regressionTrainingParameters;
 
         //Field Getters/Setters
-        public Integer getkFolds() {
-            return kFolds;
-        }
-
-        public void setkFolds(Integer kFolds) {
-            this.kFolds = kFolds;
-        }
-        
         public Class<? extends BaseMLregressor> getRegressionClass() {
             return regressionClass;
         }
@@ -124,23 +114,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     @Override
     @SuppressWarnings("unchecked")
-    public BaseMLregressor.ValidationMetrics kFoldCrossValidation(Dataset trainingData, int k) {
-        /*
-        StepwiseRegression.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        //initialize algorithm
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName); 
-        mlregressor.setTemporary(true); //avoid storing its db
-
-        //configure the algorithm
-        mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
-        
-        BaseMLregressor.ValidationMetrics vm =(BaseMLregressor.ValidationMetrics) mlregressor.kFoldCrossValidation(trainingData,k);
-        mlregressor.erase();
-        
-        return vm;
-        */
-        //Do not follow the above approach. The kfold validation runs with the wrapped regressor which is not correct.
+    public BaseMLregressor.ValidationMetrics kFoldCrossValidation(Dataset trainingData, TrainingParameters trainingParameters, int k) {
         throw new UnsupportedOperationException("K-fold Cross Validation is not supported. Run it directly to the wrapped regressor."); 
     }
     
@@ -148,7 +122,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     protected BaseMLregressor.ValidationMetrics validateModel(Dataset validationData) {
         loadRegressor();
         
-        return (BaseMLregressor.ValidationMetrics) mlregressor.getValidationMetrics();
+        return (BaseMLregressor.ValidationMetrics) mlregressor.validate(validationData);
     }
 
     @Override
@@ -198,29 +172,9 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
-        mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
         
-        int k = trainingParameters.getkFolds();
-        if(k>1) {
-            //call k-fold cross validation and get the average validation metrics
-            BaseMLregressor.ValidationMetrics averageValidationMetrics = (BaseMLregressor.ValidationMetrics) mlregressor.kFoldCrossValidation(copiedTrainingData, k);
-
-            //train the algorithm on the whole dataset and pass as ValidationDataset the empty set
-            mlregressor.train(copiedTrainingData, new Dataset());
-
-            //set its ValidationMetrics to the average VP from k-fold cross validation
-            mlregressor.setValidationMetrics(averageValidationMetrics);
-        }
-        else { //k==1
-            Dataset validationDataset = copiedTrainingData;
-            
-            boolean algorithmModifiesDataset = mlregressor.modifiesData();
-            if(algorithmModifiesDataset) {
-                validationDataset = DeepCopy.<Dataset>cloneObject(validationDataset);
-            }
-            mlregressor.train(copiedTrainingData, validationDataset);
-        }
-
+        mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
+        copiedTrainingData = null;
     }
 
     @Override
@@ -234,6 +188,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     public void erase() {
         loadRegressor();
         mlregressor.erase();
+        mlregressor = null;
         
         super.erase();
     }
@@ -251,14 +206,8 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         //initialize algorithm
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
 
-        //configure the algorithm
-        mlregressor.initializeTrainingConfiguration(trainingParameters.getRegressionTrainingParameters());
-
-        //turn on the pvalue calcuation
-        ((StepwiseCompatible)mlregressor).setCalculateFeaturePvalues(true);
-        
-        //pass empty validationData and train the regressor
-        mlregressor.train(trainingData, new Dataset());
+        //train the regressor
+        mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());
 
         //get pvalues
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();

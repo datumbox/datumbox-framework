@@ -225,7 +225,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         } catch (IllegalArgumentException | SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
-        validationMetrics.setNormalResiduals( (normalResiduals)?0.0:1.0 ); //if the Lilliefors test rejects the H0 means that the normality hypothesis is rejected thus the residuals are not normal
+        validationMetrics.setNormalResiduals( (normalResiduals)?0.0:1.0 ); //if the Lilliefors validate rejects the H0 means that the normality hypothesis is rejected thus the residuals are not normal
         errorList = null;
         
         double SSR = 0.0;

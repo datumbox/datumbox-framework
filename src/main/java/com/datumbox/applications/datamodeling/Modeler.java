@@ -19,7 +19,6 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
@@ -40,7 +39,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     }
     
     public static class TrainingParameters extends BaseWrapper.TrainingParameters<DataTransformer, FeatureSelection, BaseMLmodel> {
-
         //primitives/wrappers
         private Integer kFolds = 5;
         
@@ -64,7 +62,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
 
     
     
-    public void train(Dataset trainingData) { 
+    @Override
+    public void _fit(Dataset trainingData) { 
         
         //get the training parameters
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -77,9 +76,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean transformData = (dtClass!=null);
         if(transformData) {
             dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
-            dataTransformer.initializeTrainingConfiguration(knowledgeBase.getTrainingParameters().getDataTransformerTrainingParameters());
-            dataTransformer.transform(trainingData, true);
-            dataTransformer.normalize(trainingData);
+            dataTransformer.fit_transform(trainingData, trainingParameters.getDataTransformerTrainingParameters());
         }
         
         
@@ -89,11 +86,9 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             featureSelection = FeatureSelection.newInstance(fsClass, dbName, dbConf);
-            featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
-            featureSelection.fit(trainingData); 
-        
-            //remove unnecessary features
-            featureSelection.transform(trainingData);  
+            featureSelection.fit(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
+            
+            featureSelection.transform(trainingData);
         }
         
         
@@ -101,28 +96,18 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         //initialize mlmodel
         mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
-        mlmodel.initializeTrainingConfiguration(trainingParameters.getMLmodelTrainingParameters());
-        
         int k = trainingParameters.getkFolds();
-        if(k>1) {
-            //call k-fold cross validation and get the average accuracy
-            BaseMLmodel.ValidationMetrics averageValidationMetrics = (BaseMLmodel.ValidationMetrics) mlmodel.kFoldCrossValidation(trainingData, k);
+        
+        //call k-fold cross validation and get the average accuracy
+        BaseMLmodel.ValidationMetrics averageValidationMetrics = (BaseMLmodel.ValidationMetrics) mlmodel.kFoldCrossValidation(trainingData, trainingParameters.getMLmodelTrainingParameters(), k);
 
-            //train the mlmodel on the whole dataset and pass as ValidationDataset the empty set
-            mlmodel.train(trainingData, new Dataset());
+        //train the mlmodel on the whole dataset
+        mlmodel.fit(trainingData, trainingParameters.getMLmodelTrainingParameters());
 
-            //set its ValidationMetrics to the average VP from k-fold cross validation
-            mlmodel.setValidationMetrics(averageValidationMetrics);
-        }
-        else { //k==1
-            Dataset validationDataset = trainingData;
-            
-            boolean algorithmModifiesDataset = mlmodel.modifiesData();
-            if(algorithmModifiesDataset) {
-                validationDataset = DeepCopy.<Dataset>cloneObject(validationDataset);
-            }
-            mlmodel.train(trainingData, validationDataset);
-        }
+        //set its ValidationMetrics to the average VP from k-fold cross validation
+        mlmodel.setValidationMetrics(averageValidationMetrics);
+        
+        
         if(transformData) {
             dataTransformer.denormalize(trainingData); //optional denormalization
         }
@@ -135,7 +120,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         evaluateData(newData, false);
     }
 
-    public BaseMLmodel.ValidationMetrics test(Dataset testData) {
+    public BaseMLmodel.ValidationMetrics validate(Dataset testData) {
         return evaluateData(testData, true);
     }
     
@@ -162,8 +147,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
             if(dataTransformer==null) {
                 dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             }        
-            dataTransformer.transform(data, false);
-            dataTransformer.normalize(data);
+            dataTransformer.transform(data);
         }
         
         Class fsClass = trainingParameters.getFeatureSelectionClass();
@@ -188,8 +172,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
         BaseMLmodel.ValidationMetrics vm = null;
         if(estimateValidationMetrics) {
-            //run test which calculates validation metrics. It is used by test() method
-            vm = mlmodel.test(data);
+            //run validate which calculates validation metrics. It is used by validate() method
+            vm = mlmodel.validate(data);
         }
         else {
             //run predict which does not calculate validation metrics. It is used in from predict() method

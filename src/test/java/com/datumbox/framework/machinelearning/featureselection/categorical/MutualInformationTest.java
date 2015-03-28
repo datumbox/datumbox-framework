@@ -51,9 +51,9 @@ public class MutualInformationTest {
         
         Dataset trainingData = ChisquareSelectTest.generateDataset(1000);
         MutualInformation instance = new MutualInformation(dbName, TestConfiguration.getDBConfig());
-        instance.initializeTrainingConfiguration(param);
         
-        instance.fit(trainingData);
+        
+        instance.fit(trainingData, param);
         instance = null;
         
         

@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
@@ -77,8 +76,8 @@ public class BinarizedNaiveBayesTest {
         
         BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
         
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -168,8 +167,8 @@ public class BinarizedNaiveBayesTest {
         BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
-        instance.initializeTrainingConfiguration(param);
-        BinarizedNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        BinarizedNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();

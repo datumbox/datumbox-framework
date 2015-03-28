@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.DeepCopy;
+import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -103,30 +103,36 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     public TextClassifier(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
     }
-
     
+    @Deprecated
+    @Override
+    public void fit(Dataset trainingData, TrainingParameters trainingParameters) {
+        super.fit(trainingData, trainingParameters);
+    }
     
-    public void train(Map<Object, URI> dataset) { 
+    public void fit(Map<Object, URI> dataset, TrainingParameters trainingParameters) { 
         
-        //get the training parameters
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
+        initializeTrainingConfiguration(trainingParameters);
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
         
         //build trainingDataset
         Dataset trainingDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor);
-        //Dataset trainingDataset = DatasetBuilder.parseFromTextLists(DatasetBuilder.stringListsFromTextFiles(dataset), textExtractor);
         
+        _fit(trainingDataset);
+    }
+    
+    @Override
+    protected void _fit(Dataset trainingDataset) {
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
             dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
-            dataTransformer.initializeTrainingConfiguration(trainingParameters.getDataTransformerTrainingParameters());
-            dataTransformer.transform(trainingDataset, true);
-            dataTransformer.normalize(trainingDataset);
+            dataTransformer.fit_transform(trainingDataset, trainingParameters.getDataTransformerTrainingParameters());
         }
         
         Class fsClass = trainingParameters.getFeatureSelectionClass();
@@ -138,10 +144,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(CategoricalFeatureSelection.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((CategoricalFeatureSelection.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
             }
-            featureSelection.initializeTrainingConfiguration(trainingParameters.getFeatureSelectionTrainingParameters());
-
             //find the most popular features
-            featureSelection.fit(trainingDataset);   
+            featureSelection.fit(trainingDataset, trainingParameters.getFeatureSelectionTrainingParameters());   
 
             //remove unnecessary features
             featureSelection.transform(trainingDataset);
@@ -149,28 +153,19 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //initialize mlmodel
         mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
-        mlmodel.initializeTrainingConfiguration(trainingParameters.getMLmodelTrainingParameters());
+        
         
         int k = trainingParameters.getkFolds();
-        if(k>1) {
-            //call k-fold cross validation and get the average accuracy
-            BaseMLmodel.ValidationMetrics averageValidationMetrics = (BaseMLmodel.ValidationMetrics) mlmodel.kFoldCrossValidation(trainingDataset, k);
+                
+        //call k-fold cross validation and get the average accuracy
+        BaseMLmodel.ValidationMetrics averageValidationMetrics = (BaseMLmodel.ValidationMetrics) mlmodel.kFoldCrossValidation(trainingDataset, trainingParameters.getMLmodelTrainingParameters(), k);
 
-            //train the mlmodel on the whole dataset and pass as ValidationDataset the empty set
-            mlmodel.train(trainingDataset, new Dataset());
+        //train the mlmodel on the whole dataset
+        mlmodel.fit(trainingDataset, trainingParameters.getMLmodelTrainingParameters());
 
-            //set its ValidationMetrics to the average VP from k-fold cross validation
-            mlmodel.setValidationMetrics(averageValidationMetrics);
-        }
-        else { //k==1
-            Dataset validationDataset = trainingDataset;
-            
-            boolean algorithmModifiesDataset = mlmodel.modifiesData();
-            if(algorithmModifiesDataset) {
-                validationDataset = DeepCopy.<Dataset>cloneObject(validationDataset);
-            }
-            mlmodel.train(trainingDataset, validationDataset);
-        }
+        //set its ValidationMetrics to the average VP from k-fold cross validation
+        mlmodel.setValidationMetrics(averageValidationMetrics);
+        
         
         if(transformData) {
             dataTransformer.denormalize(trainingDataset); //optional denormalization
@@ -238,7 +233,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         return predictedClassProbabilities;
     }
     
-    public BaseMLmodel.ValidationMetrics test(Map<Object, URI> dataset) {  
+    public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> dataset) {  
         
         //ensure db loaded
         knowledgeBase.load();
@@ -251,7 +246,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
 
         //build the testDataset
         Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor);
-        //Dataset testDataset = DatasetBuilder.parseFromTextLists(DatasetBuilder.stringListsFromTextFiles(dataset), textExtractor);
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         
@@ -261,8 +255,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
                 dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             }        
             
-            dataTransformer.transform(testDataset, false);
-            dataTransformer.normalize(testDataset);
+            dataTransformer.transform(testDataset);
         }
 
         Class fsClass = trainingParameters.getFeatureSelectionClass();
@@ -284,7 +277,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
         
         //call predict of the mlmodel for the new dataset
-        BaseMLmodel.ValidationMetrics vm = mlmodel.test(testDataset);
+        BaseMLmodel.ValidationMetrics vm = mlmodel.validate(testDataset);
         
         if(transformData) {
             dataTransformer.denormalize(testDataset); //optional denormization
@@ -295,7 +288,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     public BaseMLmodel.ValidationMetrics getValidationMetrics() {
         if(mlmodel==null) {
-            test(new HashMap<>()); //this forces the loading of the algorithm
+            validate(new HashMap<>()); //this forces the loading of the algorithm
         }
         BaseMLmodel.ValidationMetrics vm =  mlmodel.getValidationMetrics();
         
@@ -334,8 +327,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(dataTransformer==null) {
                 dataTransformer = DataTransformer.newInstance(dtClass, dbName, dbConf);
             }        
-            dataTransformer.transform(newData, false);
-            dataTransformer.normalize(newData);
+            dataTransformer.transform(newData);
         }
         
         Class fsClass = trainingParameters.getFeatureSelectionClass();

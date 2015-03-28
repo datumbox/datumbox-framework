@@ -57,6 +57,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * @param <D>
      * @param dbName
      * @param aClass
+     * @param dbConfig
      * @return 
      */
     public static <D extends DataTransformer> D newInstance(Class<D> aClass, String dbName, DatabaseConfiguration dbConfig) {
@@ -84,60 +85,63 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         knowledgeBase.setOwnerClass(this.getClass());
     }
     
-    
-    
-    
-    public void transform(Dataset data, boolean trainingMode) {
-        if(trainingMode) {
-
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("transform()");
-            }
-        }
-        else {
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("transform()");
-            }
-
-            knowledgeBase.load();
-        }
-        
-        
-        _transform(data, trainingMode);
-        
-        
-        if(trainingMode) {
-    
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Saving model");
-            }
-            knowledgeBase.save();
-            
-        }
+    /*
+     The DataTransformers perform transform() at the same time as fit(), concequently
+     the fit() method alone is not supported. Use instead the fit_transform() method.
+    */
+    @Override
+    public void fit(Dataset trainingData, TP trainingParameters) {  
+        throw new UnsupportedOperationException("fit() is not supported. Call fit_transform() instead."); 
     }
     
-    public void normalize(Dataset data) {
+    @Override
+    protected void _fit(Dataset trainingData) {
+        throw new UnsupportedOperationException("fit() is not supported. Call fit_transform() instead."); 
+    }
+    
+    
+    
+    public void fit_transform(Dataset trainingData, TP trainingParameters) {  
+        
+        initializeTrainingConfiguration(trainingParameters);
+        
         if(GeneralConfiguration.DEBUG) {
-            System.out.println("normalize()");
+            System.out.println("fit_transform()");
         }
         
+        _transform(trainingData, true);     
+        _normalize(trainingData);
+            
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("Saving model");
+        }
+        knowledgeBase.save();
+    }
+    
+    
+    public void transform(Dataset newData) {
         knowledgeBase.load();
         
-        _normalize(data);
+        if(GeneralConfiguration.DEBUG) {
+            System.out.println("transform()");
+        }
+        _transform(newData, false); 
+        _normalize(newData);
+        
     }
     
     public void denormalize(Dataset data) {
+        knowledgeBase.load();
+        
         if(GeneralConfiguration.DEBUG) {
             System.out.println("denormalize()");
         }
-        
-        knowledgeBase.load();
         
         _denormalize(data);
     }
     
     /**
-     * Transforms the data (adding/modifying/removing columns). The transformations 
+     * Converts the data (adding/modifying/removing columns). The transformations 
      * are not possible to be rolledback.
      * 
      * @param data 

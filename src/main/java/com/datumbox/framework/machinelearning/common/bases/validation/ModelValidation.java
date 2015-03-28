@@ -97,33 +97,25 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             //initialize mlmodel
             mlmodel = BaseMLmodel.newInstance(aClass, foldDBname, dbConf);
-                        
-            //set training configuration
-            mlmodel.initializeTrainingConfiguration(trainingParameters);
-                        
-            //shallow copy for the trainingData and the validaitonData. 
-            Dataset trainingData = dataset.generateNewSubset(foldTrainingIds);
-            Dataset validationData = dataset.generateNewSubset(foldValidationIds);
+            boolean copyData = mlmodel.modifiesData();
             
-            //if the data are modified produce a deep copy
-            boolean algorithmModifiesDataset = mlmodel.modifiesData();
-            if(algorithmModifiesDataset) {
+            
+            Dataset trainingData = dataset.generateNewSubset(foldTrainingIds);
+            if(copyData) {
                 trainingData = DeepCopy.<Dataset>cloneObject(trainingData);
+            }
+            mlmodel.fit(trainingData, trainingParameters); 
+            trainingData = null;
+                        
+            
+            Dataset validationData = dataset.generateNewSubset(foldValidationIds);
+            if(copyData) {
                 validationData = DeepCopy.<Dataset>cloneObject(validationData);
             }
-            
-            
-            //train it
-            mlmodel.train(trainingData, validationData);
-            
-            
-            
             //fetch validation metrics
-            VM entrySample = mlmodel.getValidationMetrics();
+            VM entrySample = mlmodel.validate(validationData);
+            validationData = null;
             
-            //perform complete erase ONLY if it is the last fold. 
-            //There is unnecessary code here which is written for clarification purposes.
-            boolean isLast=(fold==k-1);
             
             //delete algorithm
             mlmodel.erase();
@@ -131,18 +123,6 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             //add the validationMetrics in the list
             validationMetricsList.add(entrySample);
-            
-            /*
-            //if we used the original data then reset all predictions. this is unnecessary. we never use the predictions, we always overwrite them
-            if(!algorithmModifiesDataset) {
-                for(Record r : trainingData) {
-                    r.setYPredicted(null);
-                }
-                for(Record r : validationData) {
-                    r.setYPredicted(null);
-                }
-            }
-            */
         }
         
         

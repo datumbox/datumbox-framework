@@ -75,8 +75,7 @@ public class LatentDirichletAllocationTest {
         trainingParameters.setBeta(0.01);
         trainingParameters.setK(25);        
         
-        lda.initializeTrainingConfiguration(trainingParameters);
-        lda.train(trainingData, new Dataset());
+        lda.fit(trainingData, trainingParameters);
         
         lda.predict(trainingData);
         
@@ -95,7 +94,6 @@ public class LatentDirichletAllocationTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
         
-        smr.initializeTrainingConfiguration(tp);
         BaseMLclassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, 1);
         
         double expResult = 0.6849291090495362;

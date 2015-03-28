@@ -78,8 +78,8 @@ public class MaximumEntropyTest {
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -169,8 +169,8 @@ public class MaximumEntropyTest {
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
-        instance.initializeTrainingConfiguration(param);
-        MaximumEntropy.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        MaximumEntropy.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6051098901098901;
         double result = vm.getMacroF1();

@@ -88,19 +88,18 @@ public class NLMSTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        
+        df.transform(validationData);
+        
 
         NLMS instance = new NLMS(dbName, TestConfiguration.getDBConfig());
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
         
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -170,9 +169,8 @@ public class NLMSTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        
 
         
         
@@ -181,8 +179,7 @@ public class NLMSTest {
         featureSelectionParameters.setMaxDimensions(trainingData.getColumnSize()-1);
         featureSelectionParameters.setWhitened(false);
         featureSelectionParameters.setVarianceThreshold(0.99999995);
-        featureSelection.initializeTrainingConfiguration(featureSelectionParameters);
-        featureSelection.fit(trainingData);
+        featureSelection.fit(trainingData, featureSelectionParameters);
         /*
         featureSelection=null;
         
@@ -197,8 +194,8 @@ public class NLMSTest {
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);
-        instance.initializeTrainingConfiguration(param);
-        NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
         df.erase();

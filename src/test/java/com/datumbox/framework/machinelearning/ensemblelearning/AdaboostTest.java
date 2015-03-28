@@ -95,11 +95,10 @@ public class AdaboostTest {
         String dbName = "JUnitClassifier";
         
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new SimpleDummyVariableExtractor.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
+        
+        df.transform(validationData);
+        
         
         Adaboost instance = new Adaboost(dbName, TestConfiguration.getDBConfig());
         
@@ -114,8 +113,8 @@ public class AdaboostTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
         
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -221,8 +220,8 @@ public class AdaboostTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
-        instance.initializeTrainingConfiguration(param);
-        Adaboost.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        Adaboost.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();

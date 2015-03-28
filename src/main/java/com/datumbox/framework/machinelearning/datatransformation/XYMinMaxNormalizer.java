@@ -40,8 +40,8 @@ public class XYMinMaxNormalizer extends BaseMinMaxNormalizer {
             Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
             Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
-            BaseMinMaxNormalizer.transformX(data, minColumnValues, maxColumnValues);
-            BaseMinMaxNormalizer.transformY(data, minColumnValues, maxColumnValues);
+            BaseMinMaxNormalizer.fitX(data, minColumnValues, maxColumnValues);
+            BaseMinMaxNormalizer.fitY(data, minColumnValues, maxColumnValues);
         }
     }
     

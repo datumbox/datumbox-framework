@@ -96,14 +96,14 @@ public class GaussianDPMMTest {
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
         instance = new GaussianDPMM(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -155,8 +155,8 @@ public class GaussianDPMMTest {
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
-        instance.initializeTrainingConfiguration(param);
-        GaussianDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        GaussianDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         
         double expResult = 1.0;

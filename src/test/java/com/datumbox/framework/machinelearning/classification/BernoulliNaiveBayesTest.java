@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.HashMap;
@@ -78,8 +77,7 @@ public class BernoulliNaiveBayesTest {
         
         BernoulliNaiveBayes.TrainingParameters param = new BernoulliNaiveBayes.TrainingParameters();
         
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -170,8 +168,8 @@ public class BernoulliNaiveBayesTest {
         BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         BernoulliNaiveBayes.TrainingParameters param = new BernoulliNaiveBayes.TrainingParameters();
-        instance.initializeTrainingConfiguration(param);
-        BernoulliNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        BernoulliNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();

@@ -60,10 +60,14 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
             System.out.println("fit()");
         }
         
+        initializeTrainingConfiguration(trainingParameters);
+        _fit(trainingData);
+    }
+    
+    protected void initializeTrainingConfiguration(TP trainingParameters) {
         //reset knowledge base
         knowledgeBase.reinitialize();
         knowledgeBase.setTrainingParameters(trainingParameters);
-        _fit(trainingData);
     }
     
     protected abstract void _fit(Dataset trainingData);

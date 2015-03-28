@@ -24,7 +24,5 @@ import java.util.Map;
  */
 public interface StepwiseCompatible {
     
-    public void setCalculateFeaturePvalues(boolean calculateFeaturePvalues);
-    
     public Map<Object, Double> getFeaturePvalues();
 }

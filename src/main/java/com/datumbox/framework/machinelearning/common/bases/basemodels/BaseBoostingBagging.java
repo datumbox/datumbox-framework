@@ -213,20 +213,26 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             }
             
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
-            mlclassifier.initializeTrainingConfiguration(weakClassifierTrainingParameters);
+            boolean copyData = mlclassifier.modifiesData();
+            
+            
+            if(copyData) {
+                sampledTrainingDataset = DeepCopy.<Dataset>cloneObject(sampledTrainingDataset);
+            }
+            mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
+            sampledTrainingDataset = null;
+            
             
             Dataset validationDataset = trainingData;
-            if(mlclassifier.modifiesData()) {
-                sampledTrainingDataset = DeepCopy.<Dataset>cloneObject(sampledTrainingDataset);
+            if(copyData) {
                 validationDataset = DeepCopy.<Dataset>cloneObject(validationDataset);
             }
-            mlclassifier.train(sampledTrainingDataset, validationDataset); 
+            mlclassifier.predict(validationDataset);
+            mlclassifier = null;
             
             
             boolean stop = updateObservationAndClassifierWeights(validationDataset, observationWeights);
             
-            mlclassifier = null;
-            sampledTrainingDataset = null;
             validationDataset = null;
             
             if(stop==true) {

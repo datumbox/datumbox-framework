@@ -188,9 +188,8 @@ public class CETR {
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
         
-        instance.initializeTrainingConfiguration(param);
-        instance.train(dataset, dataset);
-        
+        instance.fit(dataset, param);
+        instance.predict(dataset);
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
         
         instance.erase(); //erase immediately the result

@@ -144,11 +144,10 @@ public class ModelerTest {
         trainingParameters.setFeatureSelectionClass(null);
         trainingParameters.setFeatureSelectionTrainingParameters(null);
         
-        instance.initializeTrainingConfiguration(trainingParameters);
-        instance.train(trainingData);
+        instance.fit(trainingData, trainingParameters);
         
         
-        MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.test(trainingData);
+        MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(trainingData);
         
         double expResult2 = 0.8;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);

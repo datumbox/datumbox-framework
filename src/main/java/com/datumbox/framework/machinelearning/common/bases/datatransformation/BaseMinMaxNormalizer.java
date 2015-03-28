@@ -86,7 +86,7 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         super(dbName, dbConf, BaseMinMaxNormalizer.ModelParameters.class, BaseMinMaxNormalizer.TrainingParameters.class);
     }
     
-    protected static void transformDummy(Dataset data, Map<Object, Object> referenceLevels, boolean trainingMode) {
+    protected static void extractDummies(Dataset data, Map<Object, Object> referenceLevels, boolean trainingMode) {
 
         Map<Object, Dataset.ColumnType> newColumns = new HashMap<>();
         
@@ -158,7 +158,7 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         }
     }
     
-    protected static void transformX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void fitX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         
         for(Map.Entry<Object, Dataset.ColumnType> entry : data.getColumns().entrySet()) {
             Object column = entry.getKey();
@@ -231,7 +231,7 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         }
     }
     
-    protected static void transformY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void fitY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         if(data.isEmpty()) {
             return;
         }

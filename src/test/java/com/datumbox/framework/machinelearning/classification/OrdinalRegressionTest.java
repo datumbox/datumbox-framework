@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
@@ -664,18 +663,16 @@ public class OrdinalRegressionTest {
         
 
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        
+        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
+        df.transform(validationData);
         
         OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -717,16 +714,15 @@ public class OrdinalRegressionTest {
         
 
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
+        
+        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         
         OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
-        instance.initializeTrainingConfiguration(param);
-        OrdinalRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        OrdinalRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         	        
         df.denormalize(trainingData);

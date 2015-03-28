@@ -121,14 +121,16 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * Object.
      * 
      * @param trainingData
+     * @param trainingParameters
      * @param k
      * @return  
      */
     @SuppressWarnings("unchecked")
-    public VM kFoldCrossValidation(Dataset trainingData, int k) {
+    public VM kFoldCrossValidation(Dataset trainingData, TP trainingParameters, int k) {
         if(GeneralConfiguration.DEBUG) {
             System.out.println("kFoldCrossValidation()");
         }
+        initializeTrainingConfiguration(trainingParameters);
         
         return modelValidator.kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getDbConf(), this.getClass(), knowledgeBase.getTrainingParameters());
     }
@@ -173,13 +175,13 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     }
     
     /**
-     * Tests the model against the testingData and returns the validationMetrics;
+     * Validate the model against the testingData and returns the validationMetrics;
      * It does not update the validationMetrics.
      * 
      * @param testingData
      * @return 
      */
-     public VM test(Dataset testingData) {  
+     public VM validate(Dataset testingData) {  
         
         if(GeneralConfiguration.DEBUG) {
             System.out.println("test()");
@@ -196,7 +198,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     
     /**
      * Updates the ValidationMetrics of the algorithm. Usually used to set the
-     * metrics after running a test() or when doing K-fold cross validation.
+ metrics after running a validate() or when doing K-fold cross validation.
      * 
      * @param validationMetrics 
      */

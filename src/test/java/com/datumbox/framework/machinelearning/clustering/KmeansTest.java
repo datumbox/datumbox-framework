@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -245,11 +244,10 @@ public class KmeansTest {
         
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        
+        df.transform(validationData);
+        
         
         Kmeans instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
         
@@ -261,14 +259,14 @@ public class KmeansTest {
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
         instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -310,9 +308,8 @@ public class KmeansTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        
 
         
         
@@ -327,8 +324,8 @@ public class KmeansTest {
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
-        instance.initializeTrainingConfiguration(param);
-        Kmeans.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        Kmeans.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
         df.erase();

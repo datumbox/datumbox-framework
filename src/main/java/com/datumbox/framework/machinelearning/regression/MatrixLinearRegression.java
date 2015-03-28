@@ -45,7 +45,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
      * You can safely pass directly the internalDataCollection without worrying about having them modified.
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
-
+    
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
         /**
@@ -86,16 +86,6 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     
     public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {    
 
-        private boolean calculatePvalue = false;
-
-        public boolean getCalculatePvalue() {
-            return calculatePvalue;
-        }
-
-        public void setCalculatePvalue(boolean calculatePvalue) {
-            this.calculatePvalue = calculatePvalue;
-        }
-        
     } 
     
     
@@ -147,43 +137,43 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             thitas.put(feature, coefficients.getEntry(featureId));
         }
         
-        if(knowledgeBase.getTrainingParameters().getCalculatePvalue()) { //calculate them only if 
-            //get the predictions and subtact the Y vector. Sum the squared differences to get the error
-            double SSE = 0.0;
-            for(double v : X.operate(coefficients).subtract(Y).toArray()) {
-                SSE += v*v;
-            }
-            Y = null;
-
-            //standard error matrix
-            double MSE = SSE/(n-d); //mean square error = SSE / dfResidual
-            RealMatrix SE = XtXinv.scalarMultiply(MSE);
-            XtXinv = null;
-
-            //creating a flipped map of ids to features
-            Map<Integer, Object> idsFeatures = PHPfunctions.array_flip(featureIds);
-            
-            
-            Map<Object, Double> pvalues = new HashMap<>(); //This is not small, but it does not make sense to store it in the db
-            for(int i =0;i<d;++i) {
-                double error = SE.getEntry(i, i);
-                Object feature = idsFeatures.get(i);
-                if(error<=0.0) {
-                    //double tstat = Double.MAX_VALUE;
-                    pvalues.put(feature, 0.0);
-                }
-                else {
-                    double tstat = coefficients.getEntry(i)/Math.sqrt(error);
-                    pvalues.put(feature, 1.0-ContinuousDistributions.StudentsCdf(tstat, n-d)); //n-d degrees of freedom
-                }
-            }
-            SE=null;
-            coefficients=null;
-            idsFeatures=null;
-            matrixDataset = null;
-            
-            modelParameters.setFeaturePvalues(pvalues);
+        
+        //get the predictions and subtact the Y vector. Sum the squared differences to get the error
+        double SSE = 0.0;
+        for(double v : X.operate(coefficients).subtract(Y).toArray()) {
+            SSE += v*v;
         }
+        Y = null;
+
+        //standard error matrix
+        double MSE = SSE/(n-d); //mean square error = SSE / dfResidual
+        RealMatrix SE = XtXinv.scalarMultiply(MSE);
+        XtXinv = null;
+
+        //creating a flipped map of ids to features
+        Map<Integer, Object> idsFeatures = PHPfunctions.array_flip(featureIds);
+
+
+        Map<Object, Double> pvalues = new HashMap<>(); //This is not small, but it does not make sense to store it in the db
+        for(int i =0;i<d;++i) {
+            double error = SE.getEntry(i, i);
+            Object feature = idsFeatures.get(i);
+            if(error<=0.0) {
+                //double tstat = Double.MAX_VALUE;
+                pvalues.put(feature, 0.0);
+            }
+            else {
+                double tstat = coefficients.getEntry(i)/Math.sqrt(error);
+                pvalues.put(feature, 1.0-ContinuousDistributions.StudentsCdf(tstat, n-d)); //n-d degrees of freedom
+            }
+        }
+        SE=null;
+        coefficients=null;
+        idsFeatures=null;
+        matrixDataset = null;
+
+        modelParameters.setFeaturePvalues(pvalues);
+
     }
 
     @Override
@@ -215,11 +205,6 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     }
 
     //Methods required by the StepwiseCompatible Intefrace
-    
-    @Override
-    public void setCalculateFeaturePvalues(boolean calculateFeaturePvalues) {
-        knowledgeBase.getTrainingParameters().setCalculatePvalue(calculateFeaturePvalues);
-    }
 
     @Override
     public Map<Object, Double> getFeaturePvalues() {

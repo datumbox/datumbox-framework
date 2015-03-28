@@ -92,18 +92,16 @@ public class MultinomialNaiveBayesTest {
         String dbName = "JUnitClassifier";
         
         SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new SimpleDummyVariableExtractor.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        
+        df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
+        df.transform(validationData);
         
         MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, TestConfiguration.getDBConfig());
         
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
@@ -200,8 +198,8 @@ public class MultinomialNaiveBayesTest {
         
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
-        instance.initializeTrainingConfiguration(param);
-        MultinomialNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        MultinomialNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();

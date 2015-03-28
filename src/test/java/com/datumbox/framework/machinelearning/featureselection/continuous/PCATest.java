@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,9 +54,8 @@ public class PCATest {
         
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
-        instance.initializeTrainingConfiguration(param);
         
-        instance.fit(originaldata);
+        instance.fit(originaldata, param);
         instance=null;
         
         Dataset newdata = originaldata;

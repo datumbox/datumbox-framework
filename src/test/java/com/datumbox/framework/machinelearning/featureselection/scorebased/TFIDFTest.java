@@ -78,9 +78,8 @@ public class TFIDFTest {
         trainingData.add(r3);
         
         TFIDF instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
-        instance.initializeTrainingConfiguration(param);
         
-        instance.fit(trainingData);
+        instance.fit(trainingData, param);
         instance = null;
         
         

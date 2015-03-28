@@ -158,8 +158,8 @@ public class CollaborativeFilteringTest {
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
-        instance.initializeTrainingConfiguration(param);
-        instance._fit(trainingData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;

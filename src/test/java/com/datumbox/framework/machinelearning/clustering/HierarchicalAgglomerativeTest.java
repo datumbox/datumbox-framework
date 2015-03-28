@@ -18,7 +18,6 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -56,11 +55,9 @@ public class HierarchicalAgglomerativeTest {
         
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
-        df.transform(validationData, false);
-        df.normalize(validationData);
+        
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.transform(validationData);
         
         HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
         
@@ -69,14 +66,14 @@ public class HierarchicalAgglomerativeTest {
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
         instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -118,9 +115,7 @@ public class HierarchicalAgglomerativeTest {
         String dbName = "JUnitRegressor";
 
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
-        df.initializeTrainingConfiguration(new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(trainingData, true);
-        df.normalize(trainingData);
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
 
         
         
@@ -132,8 +127,8 @@ public class HierarchicalAgglomerativeTest {
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        instance.initializeTrainingConfiguration(param);
-        HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
         df.erase();

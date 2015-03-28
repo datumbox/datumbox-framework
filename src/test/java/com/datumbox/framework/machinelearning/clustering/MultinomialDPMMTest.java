@@ -78,14 +78,14 @@ public class MultinomialDPMMTest {
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        instance.initializeTrainingConfiguration(param);
-        instance.train(trainingData, validationData);
+        
+        instance.fit(trainingData, param);
         
         
         instance = null;
         instance = new MultinomialDPMM(dbName, TestConfiguration.getDBConfig());
         
-        instance.predict(validationData);
+        instance.validate(validationData);
         
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -134,8 +134,8 @@ public class MultinomialDPMMTest {
         param.setMaxIterations(100);
         param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        instance.initializeTrainingConfiguration(param);
-        MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, k);
+        
+        MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         
         double expResult = 1.0;
