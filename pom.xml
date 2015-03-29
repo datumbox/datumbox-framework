@@ -93,7 +93,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surfire-plugin-version}</version>
                 <configuration>
-                    <argLine>-Xmx128M</argLine>
+                    <argLine>-Xmx512M</argLine>
                 </configuration>
             </plugin>
             <plugin>
