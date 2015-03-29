@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
  *
  * This program is free software: you can redistribute it and/or modify

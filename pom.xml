@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
@@ -44,6 +62,7 @@
     <properties>
         <java-version>1.8</java-version>
         <maven-plugin-version>2.3.2</maven-plugin-version>
+        <license-maven-plugin-version>2.8</license-maven-plugin-version>
         <maven-javadoc-plugin-version>2.10.1</maven-javadoc-plugin-version>
         <maven-source-plugin-version>2.4</maven-source-plugin-version>
         <gpg-plugin-version>1.5</gpg-plugin-version>
@@ -61,6 +80,10 @@
         
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
+        
+        <copyrightYears>2013-2015</copyrightYears>
+        <copyrightOwner>Vasilis Vryniotis</copyrightOwner>
+        <copyrightEmail>bbriniotis at datumbox.com</copyrightEmail>
     </properties>
     
     <scm>
@@ -125,6 +148,35 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${license-maven-plugin-version}</version>
+                <configuration>
+                    <header>src/main/resources/licenseheader.txt</header>
+                    <properties>
+                      <copyrightYears>${copyrightYears}</copyrightYears>
+                      <copyrightOwner>${copyrightOwner}</copyrightOwner>
+                      <copyrightEmail>${copyrightEmail}</copyrightEmail>
+                    </properties>
+                    <excludes>
+                        <exclude>**/README</exclude>
+                        <exclude>**/TODO**</exclude>
+                        <exclude>src/test/resources/**</exclude>
+                        <exclude>src/main/resources/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
     </build>
     
