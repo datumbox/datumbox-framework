@@ -17,7 +17,8 @@
 package com.datumbox.configuration;
 
 /**
- *
+ * Object that stores the basic configuration of the framework.
+ * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class GeneralConfiguration {

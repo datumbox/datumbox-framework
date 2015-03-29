@@ -19,8 +19,8 @@ package com.datumbox.common.objecttypes;
 import java.io.Serializable;
 
 /**
- * This interface is used for classes that are used as containers for parameters
- * that are learned during a training or analysis process.
+ * This interface is used to mark classes which store parameters that are learned 
+ * during training.
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */

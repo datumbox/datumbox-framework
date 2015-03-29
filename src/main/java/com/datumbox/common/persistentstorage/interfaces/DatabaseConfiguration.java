@@ -17,12 +17,26 @@
 package com.datumbox.common.persistentstorage.interfaces;
 
 /**
- *
+ * DB connectors can be configured by objects that implement this interface.
+ * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public interface DatabaseConfiguration {
     
+    /**
+     * Returns the separator that is used in the DB names. Usually the database
+     * names used by the algorithms are concatenations of various words separated
+     * by this character.
+     * 
+     * @return 
+     */
     public String getDBnameSeparator();
     
+    /**
+     * Initializes and returns a connection to the Database.
+     * 
+     * @param database
+     * @return 
+     */
     public DatabaseConnector getConnector(String database);
 }

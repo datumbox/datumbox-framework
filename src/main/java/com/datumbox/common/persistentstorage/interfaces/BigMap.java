@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * BigMap annotation is used to declare large Maps in the ModelParameters.
+ * BigMap annotation is used to declare large Maps in the ModelParameters classes.
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */

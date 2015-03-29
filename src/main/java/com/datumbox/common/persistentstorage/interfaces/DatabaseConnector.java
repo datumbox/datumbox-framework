@@ -20,25 +20,63 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import java.util.Map;
 
 /**
- * DB Drivers which can be used to permanently store/handle the parameters of the
- * models should implement this interface. This interface defines the methods which
- * are used to initialize db-backed collections and objects used for storing the
- * data. It is also responsible for connecting, clearing and managing the dbs.
+ * DB connectors that permanently store the parameters of the models should 
+ * implement this interface. This interface defines the methods which are 
+ * required to initialize db-backed collections. It is also responsible for 
+ * connecting, clearing and managing the databases.
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public interface DatabaseConnector {
     
+    /**
+     * This method is responsible for storing the data of each algorithm in the
+     * database.
+     * 
+     * @param <KB>
+     * @param knowledgeBaseObject 
+     */
     public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject);
     
+    /**
+     * Loads the data of an algorithm from the database.
+     * 
+     * @param <KB>
+     * @param klass
+     * @return 
+     */
     public <KB extends KnowledgeBase> KB load(Class<KB> klass);
     
+    /**
+     * Checks if a particular database exists.
+     * 
+     * @return 
+     */
     public boolean existsDatabase();
     
+    /**
+     * Drops the particular database.
+     */
     public void dropDatabase();
-        
-    public <T extends Map> void dropBigMap(String name, T map);
     
+    /**
+     * Creates or loads a database-backed Map. The BigMap maps are used to store
+     * a huge number of records.
+     * 
+     * @param <K>
+     * @param <V>
+     * @param name
+     * @return 
+     */
     public <K,V> Map<K,V> getBigMap(String name);
+    
+    /**
+     * Drops a particular database-backed Map.
+     * 
+     * @param <T>
+     * @param name
+     * @param map 
+     */
+    public <T extends Map> void dropBigMap(String name, T map);
     
 }

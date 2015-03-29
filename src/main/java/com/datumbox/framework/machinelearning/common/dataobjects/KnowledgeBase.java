@@ -16,7 +16,6 @@
  */
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
-import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;

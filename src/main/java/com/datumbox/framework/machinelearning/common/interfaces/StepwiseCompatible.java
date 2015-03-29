@@ -19,7 +19,9 @@ package com.datumbox.framework.machinelearning.common.interfaces;
 import java.util.Map;
 
 /**
- *
+ * Stepwise regression requires the estimation of p-values for each parameter. 
+ * The regression models that support this estimation is marked with this interface.
+ * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public interface StepwiseCompatible {

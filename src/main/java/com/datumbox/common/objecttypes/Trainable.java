@@ -19,11 +19,8 @@ package com.datumbox.common.objecttypes;
 import com.datumbox.common.dataobjects.Dataset;
 
 /**
- * This interface is used to mark classes that can be trained and generate a
- * storable database. This interface is meant to be used for classes that
- * perform training/analysis and learn parameters. It does not specify the 
- * training and prediction methods because their signatures heavily depend on
- * the algorithm.
+ * This interface is used to mark classes that can be trained. This interface 
+ * used for classes that perform training/analysis and learn parameters. 
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  * @param <MP>
@@ -39,14 +36,14 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
     public MP getModelParameters();
 
     /**
-     * It returns the trainingParameters.
+     * It returns the training parameters that configure the algorithm.
      * 
      * @return 
      */
     public TP getTrainingParameters();
     
     /**
-     * Trains the model.
+     * Trains a model using the provided training parameters and data.
      * 
      * @param trainingData
      * @param trainingParameters
@@ -54,14 +51,14 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
     public void fit(Dataset trainingData, TP trainingParameters);
     
     /**
-     * Returns whether the algorithm modifies the data.
+     * Returns whether the algorithm modifies the provided data.
      * 
      * @return 
      */
     public boolean modifiesData();
             
     /**
-     * Deletes the particular algorithm and all the associated parameters. 
+     * Deletes the database of the algorithm. 
      */
     public void erase();
 }

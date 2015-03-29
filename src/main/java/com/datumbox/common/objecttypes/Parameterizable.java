@@ -19,9 +19,8 @@ package com.datumbox.common.objecttypes;
 import java.io.Serializable;
 
 /**
- * This interface is used for classes that work as wrappers/containers of fields that
- * parameterize other algorithms, training processes etc. Such objects are the
- * configuration objects of every technique.
+ * This interface is used to mark classes that work as wrappers/containers of 
+ * fields that parameterize other algorithms. 
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */

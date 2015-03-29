@@ -17,7 +17,8 @@
 package com.datumbox.framework.machinelearning.common.enums;
 
 /**
- *
+ * Enum that stores the 4 possible Sensitivity Rates.
+ * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public enum SensitivityRates {
