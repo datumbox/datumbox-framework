@@ -14,6 +14,7 @@ CODE IMPROVEMENT
 - create a proper logger for the messages
 
 - Instead of passing DatabaseConfiguration dbConf in constructors, take the value from a singleton which stores the configuration.
+- Move the static methods of Dataset to a Utils class or something similar
 - CSV reader and converter to Dataset
 - Add MapDB support in the Dataset
 
