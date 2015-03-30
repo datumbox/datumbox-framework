@@ -97,7 +97,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             
             //initialize mlmodel
-            mlmodel = BaseMLmodel.newInstance(aClass, foldDBname, dbConf);
+            mlmodel = BaseMLmodel.newInstance(aClass, foldDBname+fold, dbConf);
             boolean copyData = mlmodel.modifiesData();
             
             
