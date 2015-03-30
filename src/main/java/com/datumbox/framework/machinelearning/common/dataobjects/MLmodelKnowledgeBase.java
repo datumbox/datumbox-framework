@@ -48,12 +48,6 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
         ==================
     */
     
-    
-    protected MLmodelKnowledgeBase() {
-        super();
-        //constructor only used in serialization/deserialization
-    }
-    
     public MLmodelKnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass);
         this.vmClass = vmClass;

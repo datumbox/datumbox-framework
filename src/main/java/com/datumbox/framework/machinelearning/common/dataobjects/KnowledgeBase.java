@@ -39,8 +39,8 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     protected String dbName; 
     
     
-    protected transient DatabaseConnector dbc;
-    protected transient DatabaseConfiguration dbConf;
+    protected final transient DatabaseConnector dbc;
+    protected final transient DatabaseConfiguration dbConf;
 
     
     
@@ -58,10 +58,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         EXTENDING INTERFACE
         ==================
     */
-
-    protected KnowledgeBase() {
-        //constructor only used in serialization/deserialization
-    }
 
     public KnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         this.dbName = dbName;
