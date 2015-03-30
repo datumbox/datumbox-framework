@@ -79,11 +79,11 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @param idsCollection
      * @return 
      */
-    public Dataset generateNewSubset(Collection<Integer> idsCollection) {
+    public Dataset generateNewSubset(FlatDataList idsCollection) {
         Dataset d = new Dataset();
         
-        for(Integer id : idsCollection) {
-            d.add(recordList.get(id)); 
+        for(Object id : idsCollection) {
+            d.add(recordList.get((Integer)id)); 
         }        
         return d;
     }

@@ -49,7 +49,7 @@ public class CETR {
      *  http://web.engr.illinois.edu/~weninge1/cetr/
      */
     private final static Pattern NUMBER_OF_TAGS_PATTERN = Pattern.compile("<[^>]+?>", Pattern.DOTALL);
-
+    
     public static class Parameters implements Parameterizable {
         private int numberOfClusters = 2;
         private int alphaWindowSizeFor2DModel = 3; //0 turns off the 2d Model. Suggested value from paper: 3
@@ -80,11 +80,17 @@ public class CETR {
         }
     }
     
-    public String extract(String text, DatabaseConfiguration dbConf, CETR.Parameters parameters) {
+    private final DatabaseConfiguration dbConf;
+    
+    public CETR(DatabaseConfiguration dbConf) {
+        this.dbConf = dbConf;
+    }
+    
+    public String extract(String text, CETR.Parameters parameters) {
         text = clearText(text); //preprocess the Document by removing irrelevant HTML tags and empty lines
         List<String> rows = extractRows(text); //break the document to its lines
         
-        List<Integer> selectedRowIds = selectRows(rows, dbConf, parameters);
+        List<Integer> selectedRowIds = selectRows(rows, parameters);
         
         StringBuilder sb = new StringBuilder();
         for(Integer rowId : selectedRowIds) {
@@ -102,8 +108,8 @@ public class CETR {
     }
     
     
-    private List<Integer> selectRows(List<String> rows, DatabaseConfiguration dbConf, Parameters parameters) {
-        List<Double> TTRlist = calculateTTRlist(rows, parameters);
+    private List<Integer> selectRows(List<String> rows, Parameters parameters) {
+        List<Double> TTRlist = calculateTTRlist(rows);
         gaussianSmoothing(TTRlist); //perform smoothing
         
         boolean use2Dmodel = (parameters.getAlphaWindowSizeFor2DModel()>0);
@@ -131,7 +137,7 @@ public class CETR {
         
         
         //perform clustering
-        performClustering(dataset, dbConf, parameters.getNumberOfClusters());
+        performClustering(dataset, parameters.getNumberOfClusters());
         
         Map<Object, Double> avgTTRscorePerCluster = new HashMap<>();
         Map<Object, Integer> clusterCounts = new HashMap<>();
@@ -175,7 +181,7 @@ public class CETR {
         return selectedRows;
     }
 
-    private void performClustering(Dataset dataset, DatabaseConfiguration dbConf, int numberOfClusters) {
+    private void performClustering(Dataset dataset, int numberOfClusters) {
         String dbName = new BigInteger(130, RandomValue.randomGenerator).toString(32);
         Kmeans instance = new Kmeans(dbName, dbConf);
         
@@ -195,7 +201,7 @@ public class CETR {
         instance.erase(); //erase immediately the result
     }
     
-    private List<Double> calculateTTRlist(List<String> rows, Parameters parameters) {
+    private List<Double> calculateTTRlist(List<String> rows) {
         List<Double> TTRlist = new ArrayList<>();
         
         for(String row : rows) {

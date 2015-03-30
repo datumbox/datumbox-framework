@@ -66,9 +66,9 @@ public class CETRTest {
         parameters.setNumberOfClusters(2);
         parameters.setAlphaWindowSizeFor2DModel(3);
         parameters.setSmoothingAverageRadius(2);
-        CETR instance = new CETR();
+        CETR instance = new CETR(TestConfiguration.getDBConfig());
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
-        String result = instance.extract(text, TestConfiguration.getDBConfig(), parameters);
+        String result = instance.extract(text, parameters);
         instance=null;
         assertEquals(expResult, result);
     }

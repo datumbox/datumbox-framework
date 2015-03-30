@@ -207,11 +207,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         for(int t=0;t<totalWeakClassifiers;++t) {
             FlatDataCollection sampledIDs = SRS.weightedProbabilitySampling(new AssociativeArray(observationWeights), n, true);
             
-            Dataset sampledTrainingDataset = new Dataset();
-            for(Object id : sampledIDs) {
-                sampledTrainingDataset.add(trainingData.get((Integer)id));
-            }
-            
+            Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs.toFlatDataList());
+
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             boolean copyData = mlclassifier.modifiesData();
             

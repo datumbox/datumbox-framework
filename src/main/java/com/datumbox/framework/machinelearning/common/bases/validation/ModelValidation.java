@@ -23,6 +23,7 @@ import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
+import com.datumbox.common.dataobjects.FlatDataList;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,8 +69,8 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             }
             
             //as fold window we consider the part of the ids that are used for validation
-            List<Integer> foldTrainingIds = new ArrayList<>(n-foldSize);
-            List<Integer> foldValidationIds = new ArrayList<>(foldSize);
+            FlatDataList foldTrainingIds = new FlatDataList(new ArrayList<>(n-foldSize));
+            FlatDataList foldValidationIds = new FlatDataList(new ArrayList<>(foldSize));
             
             for(int i=0;i<n;++i) {
                 boolean isInValidationFoldRange = false;
