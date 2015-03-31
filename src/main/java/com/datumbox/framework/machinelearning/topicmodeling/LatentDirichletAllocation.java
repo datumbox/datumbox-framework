@@ -508,10 +508,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("topicAssignmentOfDocumentWord");
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("documentTopicCounts");
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("topicWordCounts");
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("topicCounts");
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", true);
+        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Record r : newData) {
@@ -651,10 +651,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        dbc.dropBigMap("documentTopicCounts", tmp_documentTopicCounts);
-        dbc.dropBigMap("topicWordCounts", tmp_topicWordCounts);
-        dbc.dropBigMap("topicCounts", tmp_topicCounts);
+        dbc.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        dbc.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
+        dbc.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
+        dbc.dropBigMap("tmp_topicCounts", tmp_topicCounts);
         
         
         validationMetrics.setPerplexity(perplexity);

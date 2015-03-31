@@ -66,9 +66,10 @@ public interface DatabaseConnector {
      * @param <K>
      * @param <V>
      * @param name
+     * @param isTemporary
      * @return 
      */
-    public <K,V> Map<K,V> getBigMap(String name);
+    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary);
     
     /**
      * Drops a particular database-backed Map.

@@ -192,11 +192,11 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> observationWeights = dbc.getBigMap("observationWeights");
+        Map<Object, Object> tmp_observationWeights = dbc.getBigMap("tmp_observationWeights", true);
         
         //calculate the training parameters of bagging
         for(Record r : trainingData) {
-            observationWeights.put(r.getId(), 1.0/n); //initialize observation weights
+            tmp_observationWeights.put(r.getId(), 1.0/n); //initialize observation weights
         }
         
         Class<? extends BaseMLclassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();
@@ -205,7 +205,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //training the weak classifiers
         for(int t=0;t<totalWeakClassifiers;++t) {
-            FlatDataCollection sampledIDs = SRS.weightedProbabilitySampling(new AssociativeArray(observationWeights), n, true);
+            FlatDataCollection sampledIDs = SRS.weightedProbabilitySampling(new AssociativeArray(tmp_observationWeights), n, true);
             
             Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs.toFlatDataList());
 
@@ -228,7 +228,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             mlclassifier = null;
             
             
-            boolean stop = updateObservationAndClassifierWeights(validationDataset, observationWeights);
+            boolean stop = updateObservationAndClassifierWeights(validationDataset, tmp_observationWeights);
             
             validationDataset = null;
             
@@ -238,7 +238,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("observationWeights", observationWeights);
+        dbc.dropBigMap("tmp_observationWeights", tmp_observationWeights);
     }
 
     /**

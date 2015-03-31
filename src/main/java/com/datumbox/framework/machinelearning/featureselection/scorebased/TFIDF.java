@@ -108,7 +108,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         modelParameters.setN(n);
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Double> idfMap = dbc.getBigMap("idf");
+        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -122,21 +122,21 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
                     continue;
                 }
                 
-                Double previousIDFvalue = idfMap.get(keyword);
+                Double previousIDFvalue = tmp_idfMap.get(keyword);
                 if(previousIDFvalue==null) {
                     previousIDFvalue = 0.0;
                 }
                 
-                idfMap.put(keyword, ++previousIDFvalue);
+                tmp_idfMap.put(keyword, ++previousIDFvalue);
             }
         }
         
         //convert counts to idf scores
-        for(Map.Entry<Object, Double> entry : idfMap.entrySet()) {
+        for(Map.Entry<Object, Double> entry : tmp_idfMap.entrySet()) {
             Object keyword = entry.getKey();
             Double countsInDocument = entry.getValue();
             
-            idfMap.put(keyword, Math.log10(n/countsInDocument));
+            tmp_idfMap.put(keyword, Math.log10(n/countsInDocument));
         }
         
         
@@ -175,7 +175,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
                 
                 //double tf = counts/documentLength;
                 double tf = counts;
-                double idf = idfMap.get(keyword);
+                double idf = tmp_idfMap.get(keyword);
                 
                 double tfidf = tf*idf;
                 
@@ -192,7 +192,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("idf", idfMap);
+        dbc.dropBigMap("tmp_idf", tmp_idfMap);
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<maxTFIDFfeatureScores.size()) {

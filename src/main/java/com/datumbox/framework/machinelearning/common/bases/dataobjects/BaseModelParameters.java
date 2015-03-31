@@ -47,7 +47,7 @@ public abstract class BaseModelParameters implements Learnable {
                 
                 try {
                     //call the getBigMap method to load it
-                    field.set(this, dbc.getBigMap(field.getName()));
+                    field.set(this, dbc.getBigMap(field.getName(), false));
                 } 
                 catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new RuntimeException(ex);

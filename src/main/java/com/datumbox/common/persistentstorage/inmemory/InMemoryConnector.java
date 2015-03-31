@@ -102,7 +102,7 @@ public class InMemoryConnector implements DatabaseConnector {
     }
     
     @Override
-    public <K,V> Map<K,V> getBigMap(String name) {
+    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
         return new HashMap<>();
     }   
 

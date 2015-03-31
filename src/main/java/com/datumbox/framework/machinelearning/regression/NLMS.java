@@ -118,14 +118,14 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbc.getBigMap("newThitas");
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
             
-            newThitas.putAll(thitas);
+            tmp_newThitas.putAll(thitas);
             
-            batchGradientDescent(trainingData, newThitas, learningRate);
+            batchGradientDescent(trainingData, tmp_newThitas, learningRate);
             //stochasticGradientDescent(trainingData, newThitas, learningRate);
             
-            double newError = calculateError(trainingData,newThitas);
+            double newError = calculateError(trainingData,tmp_newThitas);
             
             //bold driver
             if(newError>minError) {
@@ -137,11 +137,11 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
                 
                 //keep the new thitas
                 thitas.clear();
-                thitas.putAll(newThitas);
+                thitas.putAll(tmp_newThitas);
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap("newThitas", newThitas);
+            dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
 

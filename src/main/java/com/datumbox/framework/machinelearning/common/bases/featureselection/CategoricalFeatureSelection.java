@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.GeneralConfiguration;
 
 
 import java.util.Arrays;
@@ -122,26 +121,26 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
-        Map<Object, Integer> classCounts = dbc.getBigMap("classCounts"); //map which stores the counts of the classes
-        Map<List<Object>, Integer> featureClassCounts = dbc.getBigMap("featureClassCounts"); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> featureCounts = dbc.getBigMap("featureCounts"); //map which stores the counts of the features
+        Map<Object, Integer> tmp_classCounts = dbc.getBigMap("tmp_classCounts", true); //map which stores the counts of the classes
+        Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", true); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", true); //map which stores the counts of the features
 
         
         //build the maps with teh feature statistics and counts
-        buildFeatureStatistics(data, classCounts, featureClassCounts, featureCounts);
+        buildFeatureStatistics(data, tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
         
         
         
         
         //call the overriden method to get the scores of the features.
         //WARNING: do not use feature scores for any weighting. Sometimes the features are selected based on a minimum and others on a maximum criterion.
-        estimateFeatureScores(classCounts, featureClassCounts, featureCounts);
+        estimateFeatureScores(tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
         
 
         //drop the unnecessary stastistics tables
-        dbc.dropBigMap("classCounts", classCounts);
-        dbc.dropBigMap("featureClassCounts", featureClassCounts);
-        dbc.dropBigMap("featureCounts", featureCounts);
+        dbc.dropBigMap("tmp_classCounts", tmp_classCounts);
+        dbc.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
+        dbc.dropBigMap("tmp_featureCounts", tmp_featureCounts);
     }
     
     @Override

@@ -145,7 +145,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<List<Object>, Double> EpFj_observed = dbc.getBigMap("EpFj_observed");
+        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", true);
         
         double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
         double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
@@ -169,17 +169,17 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
                 //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
                 for(Object theClass : classesSet) {
                     List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
-                    Double previousValue = EpFj_observed.get(featureClassTuple);
+                    Double previousValue = tmp_EpFj_observed.get(featureClassTuple);
                     if(previousValue==null) {
                         previousValue=0.0;
-                        EpFj_observed.put(featureClassTuple, 0.0);
+                        tmp_EpFj_observed.put(featureClassTuple, 0.0);
                         lambdas.put(featureClassTuple, 0.0); //initialize lambda
                     }
                     
                     //find the class of this particular example
                     if(theClass.equals(r.getY())) {
                         //update the statistics of the feature
-                        EpFj_observed.put(featureClassTuple, previousValue + increment);
+                        tmp_EpFj_observed.put(featureClassTuple, previousValue + increment);
                     }
                 } 
                 
@@ -197,11 +197,11 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         
         //IIS algorithm
-        IIS(trainingData, EpFj_observed, Cmax);
+        IIS(trainingData, tmp_EpFj_observed, Cmax);
         
         
         //Drop the temporary Collection
-        dbc.dropBigMap("EpFj_observed", EpFj_observed);
+        dbc.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
     }
     
 
@@ -222,13 +222,13 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<List<Object>, Double> EpFj_model = dbc.getBigMap("EpFj_model");
+            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", true);
             Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();
             
             //initialize the model probabilities with 0. We will start estimating them piece by piece
             for(Map.Entry<List<Object>, Double> featureClassCounts : EpFj_observed.entrySet()) {
                 List<Object> tp = featureClassCounts.getKey();
-                EpFj_model.put(tp, 0.0);
+                tmp_EpFj_model.put(tp, 0.0);
             }
             
             //calculate the model probabilities
@@ -259,7 +259,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
                         Object feature = entry2.getKey();
                         List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
                         
-                        EpFj_model.put(featureClassTuple, EpFj_model.get(featureClassTuple) + probabilityFraction);
+                        tmp_EpFj_model.put(featureClassTuple, tmp_EpFj_model.get(featureClassTuple) + probabilityFraction);
                     }
                 }
                 
@@ -269,7 +269,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             Double minimumNonInfiniteLambdaWeight = null;
             Double maximumNonInfiniteLambdaWeight = null;
             //Now we have the model probabilities. We will use it to estimate the Deltas and finally update the lamdas
-            for(Map.Entry<List<Object>, Double> featureClassCounts : EpFj_model.entrySet()) {
+            for(Map.Entry<List<Object>, Double> featureClassCounts : tmp_EpFj_model.entrySet()) {
                 List<Object> tp = featureClassCounts.getKey();
                 //Object feature = tp.getKey1();
                 //Object theClass = tp.getKey2();
@@ -371,7 +371,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             
             //Drop the temporary Collection
-            dbc.dropBigMap("EpFj_model", EpFj_model);
+            dbc.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
             infiniteLambdaWeights = null; //dbc.dropTable("infiniteLambdaWeights", infiniteLambdaWeights);
         }
         

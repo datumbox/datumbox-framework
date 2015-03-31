@@ -301,8 +301,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
 
-        Map<List<Object>, Double> distanceArray = dbc.getBigMap("distanceArray"); //it holds the distances between clusters
-        Map<Integer, Integer> minClusterDistanceId = dbc.getBigMap("minClusterDistanceId"); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -332,12 +332,12 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
                     distance = calculateDistance(c1.getCentroid(), c2.getCentroid());
                 }
                 
-                distanceArray.put(Arrays.<Object>asList(clusterId1, clusterId2), distance);
-                distanceArray.put(Arrays.<Object>asList(clusterId2, clusterId1), distance);
+                tmp_distanceArray.put(Arrays.<Object>asList(clusterId1, clusterId2), distance);
+                tmp_distanceArray.put(Arrays.<Object>asList(clusterId2, clusterId1), distance);
                 
-                Integer minDistanceId = minClusterDistanceId.get(clusterId1);
-                if(minDistanceId==null || distance < distanceArray.get(Arrays.<Object>asList(clusterId1, minDistanceId))) {
-                    minClusterDistanceId.put(clusterId1, clusterId2);
+                Integer minDistanceId = tmp_minClusterDistanceId.get(clusterId1);
+                if(minDistanceId==null || distance < tmp_distanceArray.get(Arrays.<Object>asList(clusterId1, minDistanceId))) {
+                    tmp_minClusterDistanceId.put(clusterId1, clusterId2);
                 }
             }
         }
@@ -345,7 +345,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         //merging process
         boolean continueMerging = true;
         while(continueMerging) {
-            continueMerging = mergeClosest(minClusterDistanceId, distanceArray);
+            continueMerging = mergeClosest(tmp_minClusterDistanceId, tmp_distanceArray);
             
             //count all the active clusters
             int activeClusters = 0;
@@ -374,8 +374,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("distanceArray", distanceArray);
-        dbc.dropBigMap("minClusterDistanceId", minClusterDistanceId);
+        dbc.dropBigMap("tmp_distanceArray", tmp_distanceArray);
+        dbc.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

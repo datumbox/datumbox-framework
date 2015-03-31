@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import java.util.HashMap;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -37,14 +38,82 @@ import org.mapdb.DBMaker;
  */
 public class MapDBConnector implements DatabaseConnector {
     
-    private final Path filepath;
-    private DB db;
+    private static final String DEFAULT_DB = "DEFAULT";
+    private static final String TEMP_DB = "TEMP";
+    
     private final MapDBConfiguration dbConf;
+    private final String database;
+    
+    /**
+     * This list stores all the DB objects which are used to persist the data. This
+     * library uses one default and one temporary db.
+     */
+    private final Map<String, DB> dbRegistry = new HashMap<>(); 
     
     public MapDBConnector(String database, MapDBConfiguration dbConf) {  
         this.dbConf = dbConf;
+        this.database = database;
+    }
+    
+    private boolean isOpenDB(DB db) {
+        return !(db == null || db.isClosed());
+    }
+    
+    private DB openDB(String dbName) {
+        DB db = dbRegistry.get(dbName);
+        if(!isOpenDB(db)) {
+            boolean isTemporary = dbName.equals(TEMP_DB);
+            if (isTemporary) {
+                //create a temporary DB
+                db = DBMaker.newTempFileDB()
+                            .deleteFilesAfterClose()
+                            .transactionDisable()
+                            .compressionEnable()
+                            .cacheLRUEnable()
+                            .cacheSize(this.dbConf.getCacheSize()) 
+                            .asyncWriteEnable()
+                            .closeOnJvmShutdown()
+                            .make();
+            }
+            else {
+                //create or open a permanent DB
+                db = DBMaker.newFileDB(getDefaultPath().toFile())
+                            .transactionDisable()
+                            .compressionEnable()
+                            .cacheLRUEnable()
+                            .cacheSize(this.dbConf.getCacheSize()) 
+                            .asyncWriteEnable()
+                            .closeOnJvmShutdown()
+                            .make();
+            }
+            dbRegistry.put(dbName, db);
+        }
+        return db;
+    }
+    
+    private boolean existsInDB(DB db, String name) {
+        return isOpenDB(db) && db.exists(name);
+    }
+    
+    private void validateName(String name, boolean isTemporary) {
+        DB db = dbRegistry.get(TEMP_DB);
+        if (existsInDB(db, name)) {
+            //try to find a map in temporary db with the same name
+            throw new RuntimeException("A temporary map already exists with the same name.");
+        }
+        
+        db = dbRegistry.get(DEFAULT_DB);
+        if (isTemporary && existsInDB(db, name)) {
+            //try to find if a permanent map exists and we want to declare a new temporary with the same name
+            throw new RuntimeException("A BigMap already exists with the same name.");
+        }
+    }
+    
+    private Path getDefaultPath() {
+        //get the default filepath of the permanet db file
         String rootDbFolder = this.dbConf.getDbRootFolder();
         
+        Path filepath = null;
         if(rootDbFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }
@@ -52,29 +121,13 @@ public class MapDBConnector implements DatabaseConnector {
             filepath= Paths.get(rootDbFolder + File.separator + database);
         }
         
-        openDB();
-    }
-    
-    private boolean isDBopen() {
-        return !(db == null || db.isClosed());
-    }
-    
-    private void openDB() {
-        if(!isDBopen()) {
-            db = DBMaker.newFileDB(filepath.toFile())
-                    .transactionDisable()
-                    .compressionEnable()
-                    .cacheLRUEnable()
-                    .cacheSize(this.dbConf.getCacheSize()) 
-                    .asyncWriteEnable()
-                    .closeOnJvmShutdown()
-                    .make();
-        }
+        return filepath;
     }
 
     @Override
     public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
-        openDB();
+        openDB(DEFAULT_DB);
+        DB db = dbRegistry.get(DEFAULT_DB);
         Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
         knowledgeBaseVar.set(knowledgeBaseObject);
         db.commit();
@@ -84,23 +137,28 @@ public class MapDBConnector implements DatabaseConnector {
     @Override
     @SuppressWarnings("unchecked")
     public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
-        openDB();
+        openDB(DEFAULT_DB);
+        DB db = dbRegistry.get(DEFAULT_DB);
         Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
         return knowledgeBaseVar.get();
     }
     
     @Override
     public boolean existsDatabase() {
-        if(Files.exists(filepath) || db == null) {
+        if(Files.exists(getDefaultPath())) {
             return true;
         }
         
-        if(db.isClosed()) {
-            return true; //assume that the db existed before closing it. This is done in order to delete any remaining files
-        }
-        
-        if(db.getCatalog().size()>0) {
-            return true;
+        for(DB db: dbRegistry.values()) {
+            if(db != null) {
+                if(db.isClosed()) {
+                    return true; //assume that the db existed before closing it. This is done in order to delete any remaining files
+                }
+
+                if(db.getCatalog().size()>0) {
+                    return true;
+                }
+            }
         }
         
         return false;
@@ -113,12 +171,16 @@ public class MapDBConnector implements DatabaseConnector {
         }
         
         try {
-            if(isDBopen()) {
-                db.close();
+            //close all dbs stored in dbRegistry
+            for(DB db : dbRegistry.values()) {
+                if(isOpenDB(db)) {
+                    db.close();
+                }
             }
-            Files.deleteIfExists(filepath);
-            Files.deleteIfExists(Paths.get(filepath.toString()+".p"));
-            //Files.deleteIfExists(Paths.get(filepath.toString()+".t"));
+            dbRegistry.clear();
+            Files.deleteIfExists(getDefaultPath());
+            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".p"));
+            //Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -127,16 +189,24 @@ public class MapDBConnector implements DatabaseConnector {
     
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
-        map.clear();
-        if(isDBopen()) {
+        boolean isTemporary = existsInDB(dbRegistry.get(TEMP_DB), name); 
+        
+        String dbName = isTemporary?TEMP_DB:DEFAULT_DB;
+        
+        DB db = dbRegistry.get(dbName);
+        if(isOpenDB(db)) {
             db.delete(name);
         }
     }
     
     @Override
-    public <K,V> Map<K,V> getBigMap(String name) {
-        openDB();
-        return db.createHashMap(name)
+    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
+        validateName(name, isTemporary);
+        
+        String dbName = isTemporary?TEMP_DB:DEFAULT_DB;
+
+        openDB(dbName);
+        return dbRegistry.get(dbName).createHashMap(name)
             .counterEnable()
             .makeOrGet();
     }   

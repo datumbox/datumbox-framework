@@ -225,15 +225,15 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
                 System.out.println("Iteration "+iteration);
             }
             
-            Map<Object, Double> newThitas = dbc.getBigMap("newThitas");
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
             
-            Map<Object, Double> newWeights = dbc.getBigMap("newWeights");
+            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", true);
             
-            newThitas.putAll(thitas);
-            newWeights.putAll(weights);
-            batchGradientDescent(trainingData, previousThitaMapping, newWeights, newThitas, learningRate);
+            tmp_newThitas.putAll(thitas);
+            tmp_newWeights.putAll(weights);
+            batchGradientDescent(trainingData, previousThitaMapping, tmp_newWeights, tmp_newThitas, learningRate);
             
-            double newError = calculateError(trainingData, previousThitaMapping, newWeights, newThitas);
+            double newError = calculateError(trainingData, previousThitaMapping, tmp_newWeights, tmp_newThitas);
             
             //bold driver
             if(newError>minError) {
@@ -245,16 +245,16 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
                 
                 //keep the new weights
                 weights.clear();
-                weights.putAll(newWeights);
+                weights.putAll(tmp_newWeights);
                 
                 //keep the new thitas
                 thitas.clear();
-                thitas.putAll(newThitas);
+                thitas.putAll(tmp_newThitas);
             }
             
             //Drop the temporary Collections
-            dbc.dropBigMap("newWeights", newWeights);
-            dbc.dropBigMap("newThitas", newThitas);
+            dbc.dropBigMap("tmp_newWeights", tmp_newWeights);
+            dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
     

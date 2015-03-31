@@ -349,9 +349,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             DatabaseConnector dbc = knowledgeBase.getDbc();
             
-            Map<Object, Double> categoricalFrequencies = dbc.getBigMap("categoricalFrequencies");
-            Map<Object, Double> varianceSumX = dbc.getBigMap("varianceSumX");
-            Map<Object, Double> varianceSumXsquare = dbc.getBigMap("varianceSumXsquare");
+            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", true);
+            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", true);
+            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) {
@@ -364,21 +364,21 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                     Object feature = entry.getKey();
                     
                     if(columnTypes.get(feature)!=Dataset.ColumnType.NUMERICAL) {
-                        Double previousValue = categoricalFrequencies.get(feature);
+                        Double previousValue = tmp_categoricalFrequencies.get(feature);
                         if(previousValue==null) {
                             previousValue = 0.0;
                         }
-                        categoricalFrequencies.put(feature, previousValue+1.0);
+                        tmp_categoricalFrequencies.put(feature, previousValue+1.0);
                     }
                     else {
-                        Double previousValueSumX = varianceSumX.get(feature);
-                        Double previousValueSumXsquare = varianceSumXsquare.get(feature);
+                        Double previousValueSumX = tmp_varianceSumX.get(feature);
+                        Double previousValueSumXsquare = tmp_varianceSumXsquare.get(feature);
                         if(previousValueSumX==null) {
                             previousValueSumX = 0.0;
                             previousValueSumXsquare = 0.0;
                         }
-                        varianceSumX.put(feature, previousValueSumX+value);
-                        varianceSumXsquare.put(feature, previousValueSumXsquare+value*value);
+                        tmp_varianceSumX.put(feature, previousValueSumX+value);
+                        tmp_varianceSumXsquare.put(feature, previousValueSumXsquare+value*value);
                     }
                     
                 }
@@ -393,12 +393,12 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 
                 double weight;
                 if(type!=Dataset.ColumnType.NUMERICAL) {
-                    double percentage = categoricalFrequencies.get(feature)/n;
+                    double percentage = tmp_categoricalFrequencies.get(feature)/n;
                     weight = 1.0 -percentage*percentage;
                 }
                 else {
-                    double mean = varianceSumX.get(feature)/n;
-                    weight = 2.0*((varianceSumXsquare.get(feature)/n)-mean*mean);
+                    double mean = tmp_varianceSumX.get(feature)/n;
+                    weight = 2.0*((tmp_varianceSumXsquare.get(feature)/n)-mean*mean);
                 }
                 
                 
@@ -415,9 +415,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap("categoricalFrequencies", categoricalFrequencies);
-            dbc.dropBigMap("varianceSumX", categoricalFrequencies);
-            dbc.dropBigMap("varianceSumXsquare", categoricalFrequencies);
+            dbc.dropBigMap("tmp_categoricalFrequencies", tmp_categoricalFrequencies);
+            dbc.dropBigMap("tmp_varianceSumX", tmp_categoricalFrequencies);
+            dbc.dropBigMap("tmp_varianceSumXsquare", tmp_categoricalFrequencies);
         }
     }
     
