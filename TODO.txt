@@ -1,30 +1,34 @@
-NEW ALGORITHMS
-==============
+CODE IMPROVEMENTS
+=================
 
-- include an anomaly detection algorithm
-- develop the FunkSVD: Also PLSI as probabilistic version of SVD
-- ability to search through the configuration space and find the best performing algorithmic configuration
+bbriniotis:
+- Move the static methods of Dataset to a Utils class or something similar
+- Add MapDB support in the Dataset
+- Rewrite the TestUtils.getRemoteFile() method to avoid using IO Commons. Remove the dependency from pom.
 
+lmpampaletakis:
+- Eliminate the GeneralConfiguration class. Use the new logger instead of the System.out.println.
+- Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
 
-CODE IMPROVEMENT
-================
-
+other:
 - Serialization improvements
 - create the required exceptions
-- create a proper logger for the messages
-
-- Instead of passing DatabaseConfiguration dbConf in constructors, take the value from a singleton which stores the configuration.
-- Move the static methods of Dataset to a Utils class or something similar
 - CSV reader and converter to Dataset
-- Add MapDB support in the Dataset
 
 
 DOCUMENTATION
 =============
 
 - Documenting the code
-- How-to blog post on the installation of the framework
 - How-to blog post on building a Text Classification model
+
+
+NEW ALGORITHMS
+==============
+
+- include an anomaly detection algorithm
+- develop the FunkSVD: Also PLSI as probabilistic version of SVD
+- ability to search through the configuration space and find the best performing algorithmic configuration
 
 
 CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE:
@@ -34,9 +38,6 @@ Java StoredMap + BerkeleyDB:
 http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
 http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
 
-Redis:
-http://redis.io/
-
 Cassandra Collections:
 https://github.com/otaviojava/Easy-Cassandra/wiki
 
@@ -45,16 +46,6 @@ https://code.google.com/p/vanilla-java/wiki/HugeCollections
 
 Fastutil:
 http://fastutil.di.unimi.it/#install
-http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22it.unimi.dsi%22
 
 Joafip:
 http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
-
-Hibernate:
-http://docs.jboss.org/hibernate/orm/3.6/reference/en-US/html/collections.html
-
-MapDB:
-https://github.com/jankotek/MapDB/blob/master/src/test/java/examples/_HelloWorld.java
-
-Lazy loading persistent objects
-https://today.java.net/pub/a/today/2006/07/13/lazy-loading-is-easy.html

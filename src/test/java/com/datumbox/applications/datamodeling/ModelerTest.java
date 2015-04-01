@@ -16,10 +16,8 @@
  */
 package com.datumbox.applications.datamodeling;
 
-import com.datumbox.Datumbox;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -51,7 +49,6 @@ public class ModelerTest {
      */
     @Test
     public void testTrainAndValidate() {
-        //System.out.println("testTrainAndValidate");
         logger.debug("{}", "testTrainAndValidate");
         RandomValue.randomGenerator = new Random(42);
         
@@ -164,8 +161,7 @@ public class ModelerTest {
         instance = null;
         
         
-        
-        System.out.println("validate");
+        logger.debug("{}", "validate");
         
         
         instance = new Modeler(dbName, TestConfiguration.getDBConfig());

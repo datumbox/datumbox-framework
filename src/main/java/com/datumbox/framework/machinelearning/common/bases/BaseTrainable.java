@@ -39,8 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends BaseTrainingParameters, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
-	private static final Logger logger = LoggerFactory.getLogger(BaseTrainable.class);
-    //Variables necessary for hanlding the BigDataStructureContainerHolder
+    private final Logger logger;
     
     protected KB knowledgeBase;
     protected String dbName;
@@ -65,6 +64,8 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         }
         
         this.dbName = dbName;
+        
+        logger = LoggerFactory.getLogger(this.getClass());
     }
     
     protected BaseTrainable(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
@@ -93,8 +94,7 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {
         if(GeneralConfiguration.DEBUG) {
-            //System.out.println("fit()");
-        	logger.debug("{}","fit()");
+            logger.debug("{}","fit()");
         }
         
         initializeTrainingConfiguration(trainingParameters);
