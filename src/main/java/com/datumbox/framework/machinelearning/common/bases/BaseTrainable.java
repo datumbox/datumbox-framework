@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends BaseTrainingParameters, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
-    private final Logger logger;
+    protected final Logger logger;
     
     protected KB knowledgeBase;
     protected String dbName;
