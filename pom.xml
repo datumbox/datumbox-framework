@@ -77,6 +77,8 @@
         <lpsolve-version>5.5.2.0</lpsolve-version>
         <mapdb-version>1.0.7</mapdb-version>
         <gpg.keyname>7083A486</gpg.keyname>
+        <logback.version>1.1.2</logback.version>
+        <slf4j-api.version>1.7.7</slf4j-api.version>
         
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
@@ -227,6 +229,24 @@
             <artifactId>mapdb</artifactId>
             <version>${mapdb-version}</version>
         </dependency>
+        <!-- logback -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+        <!-- SLF4J - API -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api.version}</version>
+		</dependency>
+        
     </dependencies>
     
     <profiles>

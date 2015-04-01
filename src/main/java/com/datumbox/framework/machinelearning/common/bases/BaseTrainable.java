@@ -23,7 +23,12 @@ import com.datumbox.configuration.GeneralConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+
+
 import java.lang.reflect.InvocationTargetException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -34,6 +39,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends BaseTrainingParameters, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
+	private static final Logger logger = LoggerFactory.getLogger(BaseTrainable.class);
     //Variables necessary for hanlding the BigDataStructureContainerHolder
     
     protected KB knowledgeBase;
@@ -87,7 +93,8 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {
         if(GeneralConfiguration.DEBUG) {
-            System.out.println("fit()");
+            //System.out.println("fit()");
+        	logger.debug("{}","fit()");
         }
         
         initializeTrainingConfiguration(trainingParameters);

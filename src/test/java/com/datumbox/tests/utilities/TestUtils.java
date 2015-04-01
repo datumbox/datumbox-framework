@@ -55,6 +55,7 @@ public class TestUtils {
         }
     }
     
+  //TODO: rewrite this method not to use IO commons
     public static URI getRemoteFile(URL url) {
         try {
             File tmpFile = File.createTempFile("datumbox", ".tmp");
