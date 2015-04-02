@@ -23,6 +23,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -129,7 +130,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
                 }
                 
                 
-                Double occurrences=Dataset.toDouble(entry.getValue());
+                Double occurrences=TypeConversions.toDouble(entry.getValue());
                 if(occurrences==null || occurrences==0.0) { 
                     continue;
                 }
@@ -139,7 +140,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
                 
                 for(Map.Entry<Object, Object> entry2 : classLogScoresForThisFeature.entrySet()) {
                     Object theClass = entry2.getKey();
-                    Double probability = Dataset.toDouble(entry2.getValue());
+                    Double probability = TypeConversions.toDouble(entry2.getValue());
                     Double previousValue = predictionScores.getDouble(theClass);
                     predictionScores.put(theClass, previousValue + Math.log(probability)-Math.log(1.0-probability));
                 }
@@ -199,7 +200,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
             //store the occurrances of the features
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Double occurrences=Dataset.toDouble(entry.getValue());
+                Double occurrences=TypeConversions.toDouble(entry.getValue());
                 
                 if(occurrences==0.0) {
                     continue;

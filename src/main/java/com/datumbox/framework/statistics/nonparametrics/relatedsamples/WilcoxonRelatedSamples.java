@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class WilcoxonRelatedSamples {
         double W=0;
         for(Map.Entry<Object, Object> entry : Di.entrySet()) {
             if(entry.getKey().toString().charAt(0)=='+') {
-                W+=Dataset.toDouble(entry.getValue());
+                W+=TypeConversions.toDouble(entry.getValue());
             }
         }
 

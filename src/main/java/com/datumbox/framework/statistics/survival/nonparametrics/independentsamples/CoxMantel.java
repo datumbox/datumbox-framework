@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
@@ -76,8 +77,8 @@ public class CoxMantel {
         Collections.sort(mergedUncensoredData,new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {
-                double v1 = Dataset.toDouble(o1);
-                double v2 = Dataset.toDouble(o2);
+                double v1 = TypeConversions.toDouble(o1);
+                double v2 = TypeConversions.toDouble(o2);
                 if(v1>v2) {
                     return 1;
                 }
@@ -90,7 +91,7 @@ public class CoxMantel {
 
         AssociativeArray2D testTable = new AssociativeArray2D();
         for(Object ti : mergedUncensoredData) {
-            Double tiValue = Dataset.toDouble(ti);
+            Double tiValue = TypeConversions.toDouble(ti);
             Object value = testTable.get2d(ti, "mi");
             if(value==null) {
                 testTable.put2d(ti, "mi", 1);
@@ -121,7 +122,7 @@ public class CoxMantel {
                     }
                     else {
                         //uncensored internalData
-                        v = Dataset.toDouble(value2); //convert it to double
+                        v = TypeConversions.toDouble(value2); //convert it to double
                     }
                     
                     if(v>=tiValue) {

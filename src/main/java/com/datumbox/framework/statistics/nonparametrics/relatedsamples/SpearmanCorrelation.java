@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
@@ -57,7 +58,7 @@ public class SpearmanCorrelation {
         //Estimate Rx_square
         double Sum_Rx_square=(n*n-1.0)*n;
         for(Object value : tiesCounter.values()) {
-            double Ti = Dataset.toDouble(value);
+            double Ti = TypeConversions.toDouble(value);
             Sum_Rx_square-=((Ti*Ti-1.0)*Ti); //faster than using pow()
         }
         Sum_Rx_square/=12.0;
@@ -71,7 +72,7 @@ public class SpearmanCorrelation {
         //Estimate Ry_square
         double Sum_Ry_square=(n*n-1.0)*n;
         for(Object value : tiesCounter.values()) {
-            double Ti = Dataset.toDouble(value);
+            double Ti = TypeConversions.toDouble(value);
             Sum_Ry_square-=((Ti*Ti-1.0)*Ti); //faster than using pow()
         }
         Sum_Ry_square/=12.0;

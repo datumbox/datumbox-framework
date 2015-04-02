@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.DeepCopy;
+import com.datumbox.common.utilities.TypeConversions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -63,7 +64,7 @@ public class CensoredDescriptives {
             }
             else {
                 //uncensored internalData
-                uncensoredData.add(Dataset.toDouble(value)); //convert it to double
+                uncensoredData.add(TypeConversions.toDouble(value)); //convert it to double
             }
         }
         if(n==0) {
@@ -184,8 +185,8 @@ public class CensoredDescriptives {
             return (ApointTi!=null)?ApointTi:BpointTi;
         }
         
-        double ApointTiValue = Dataset.toDouble(survivalFunction.get2d(ApointTi.toString(), "Sti"));
-        double BpointTiValue = Dataset.toDouble(survivalFunction.get2d(BpointTi.toString(), "Sti"));
+        double ApointTiValue = TypeConversions.toDouble(survivalFunction.get2d(ApointTi.toString(), "Sti"));
+        double BpointTiValue = TypeConversions.toDouble(survivalFunction.get2d(BpointTi.toString(), "Sti"));
         double median=BpointTi-(BpointTiValue-0.5)*(BpointTi-ApointTi)/(BpointTiValue-ApointTiValue);
 
         return median;

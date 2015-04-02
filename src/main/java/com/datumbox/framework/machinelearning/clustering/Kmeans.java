@@ -24,6 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.TypeConversions;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
@@ -356,7 +357,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             //calculate variance and frequencies
             for(Record r : trainingData) {
                 for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Double value = Dataset.toDouble(entry.getValue());
+                    Double value = TypeConversions.toDouble(entry.getValue());
                     if(value==null || value==0.0) {
                         continue;
                     }

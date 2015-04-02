@@ -41,7 +41,7 @@ public class DatasetTest {
         TestUtils.log(this.getClass(), "copyCollection2Array");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{1,2,3,4,5}));
         Object[] expResult = new Object[]{1,2,3,4,5};
-        Object[] result = Dataset.<Object>copyCollection2Array(Object.class, flatDataCollection);
+        Object[] result = flatDataCollection.<Object>copyCollection2Array(Object.class);
         assertArrayEquals(expResult, result);
     }
 

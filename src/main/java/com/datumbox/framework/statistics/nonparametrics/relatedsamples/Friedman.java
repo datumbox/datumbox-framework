@@ -19,6 +19,7 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class Friedman {
             for(Map.Entry<Object, Object> entry2 : row.entrySet()) {
                 Object j = entry2.getKey();
                 
-                double v = Dataset.toDouble(entry2.getValue());
+                double v = TypeConversions.toDouble(entry2.getValue());
                 if(columnSum.containsKey(j)==false) {
                     columnSum.put(j, v);
                 }

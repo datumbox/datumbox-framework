@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 
 
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -156,7 +157,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             //store the occurrances of the features
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Double occurrences=Dataset.toDouble(entry.getValue());
+                Double occurrences=TypeConversions.toDouble(entry.getValue());
                 
                 if(occurrences==null || occurrences==0.0) {
                     continue;
@@ -244,12 +245,12 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
                 //The below seems a bit strange but this is actually how the model probabilities are estimated. It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
                 for(Map.Entry<Object, Object> entry : classScores.entrySet()) {
                     Object theClass = entry.getKey();
-                    Double score = Dataset.toDouble(entry.getValue());
+                    Double score = TypeConversions.toDouble(entry.getValue());
                     
                     double probabilityFraction = score/n;
                     
                     for(Map.Entry<Object, Object> entry2 : r.getX().entrySet()) {
-                        Double occurrences=Dataset.toDouble(entry2.getValue());
+                        Double occurrences=TypeConversions.toDouble(entry2.getValue());
                         
                         if(occurrences==null || occurrences==0.0) {
                             continue;
@@ -382,7 +383,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         Map<List<Object>, Double> lambdas = knowledgeBase.getModelParameters().getLambdas();
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             if(value==null || value==0.0) {
                 continue; //ignore the feature if it has no value
             }

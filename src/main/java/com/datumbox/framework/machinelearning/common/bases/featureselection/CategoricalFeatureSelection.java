@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 
 
 import java.util.Arrays;
@@ -163,7 +164,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                     }
                 }
                 
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 
                 
                 if(!featureScores.containsKey(feature)) { //unselected feature
@@ -207,7 +208,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                     }
                 }
                 
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 if(value==null || value==0.0) {
                     continue;
                 }
@@ -273,7 +274,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                     }
                 }
                 
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 if(value==null || value==0.0) {
                     continue;
                 }

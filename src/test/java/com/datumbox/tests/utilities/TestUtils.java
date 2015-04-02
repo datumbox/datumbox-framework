@@ -19,6 +19,7 @@ package com.datumbox.tests.utilities;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -41,8 +42,8 @@ public class TestUtils {
         for (Object key1 : result.keySet()) {
             for (Object key2 : result.get(key1).keySet()) {
                 
-                double v1 = Dataset.toDouble(expResult.get2d(key1, key2));
-                double v2 = Dataset.toDouble(result.get2d(key1, key2));
+                double v1 = TypeConversions.toDouble(expResult.get2d(key1, key2));
+                double v2 = TypeConversions.toDouble(result.get2d(key1, key2));
                 
                 assertEquals(v1, v2, TestConfiguration.DOUBLE_ACCURACY_HIGH);
             }

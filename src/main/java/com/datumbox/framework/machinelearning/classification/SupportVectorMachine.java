@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
@@ -226,7 +227,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
                 int featureId = featureIds.get(feature);
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 if(value==null) {
                     value = 0.0;
                 }
@@ -283,7 +284,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
                 continue; //the feature does not exist
             }
             
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             if(value==null) {
                 value = 0.0;
             }

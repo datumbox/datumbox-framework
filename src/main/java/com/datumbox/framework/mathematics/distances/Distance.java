@@ -18,6 +18,7 @@ package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.utilities.TypeConversions;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -114,7 +115,7 @@ public class Distance {
                     }
                     else {
                         //set the value of the non-null object
-                        columnDistances.put(column, Dataset.toDouble(nonNullObject));
+                        columnDistances.put(column, TypeConversions.toDouble(nonNullObject));
                     }
                 } 
             }
@@ -137,7 +138,7 @@ public class Distance {
                 }
                 else {
                     //the values are numbers
-                    columnDistances.put(column, Dataset.toDouble(v1)-Dataset.toDouble(v2));
+                    columnDistances.put(column, TypeConversions.toDouble(v1)-TypeConversions.toDouble(v2));
                 }
             }
         }

@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.lang.reflect.InvocationTargetException;
@@ -70,7 +71,7 @@ public class Lilliefors {
             throw new IllegalArgumentException();
         }
 
-        Double[] numberList = Dataset.copyCollection2DoubleArray(flatDataCollection);
+        Double[] numberList = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(numberList);        
         
         //Calculation of expected Probabilities
@@ -92,7 +93,7 @@ public class Lilliefors {
             double observedProbabilityI=(double)rank/n;
 
             Object methodResult = method.invoke(null, x, params);
-            double expectedProbabilityI = Dataset.toDouble(methodResult);
+            double expectedProbabilityI = TypeConversions.toDouble(methodResult);
             
             double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
             if(delta>=maxDelta) {
@@ -155,7 +156,7 @@ public class Lilliefors {
         if(!CRITICAL_VALUES.containsKey(aLevelKey)) { //if the particular aLevel is not a default one take the closest one
             double significanceValue = 0.0;
             for(Map.Entry<Object, AssociativeArray> entry : CRITICAL_VALUES.entrySet()) {
-                significanceValue = Dataset.toDouble(entry.getKey());
+                significanceValue = TypeConversions.toDouble(entry.getKey());
                 //AssociativeArray scoreList = entry.getValue();
                 
                 if(significanceValue<=aLevel) { //add the closest one

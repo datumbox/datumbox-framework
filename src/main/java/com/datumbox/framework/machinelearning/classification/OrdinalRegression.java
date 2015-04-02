@@ -22,6 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -303,7 +304,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             //update weights                
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object column = entry.getKey();
-                Double xij = Dataset.toDouble(entry.getValue());
+                Double xij = TypeConversions.toDouble(entry.getValue());
                 
                 newWeights.put(column, newWeights.get(column)+multiplier*xij*(gOfCurrent-gOfPrevious));
             }
@@ -385,7 +386,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     private double xTw(AssociativeArray x, Map<Object, Double> weights) {
         double xTw = 0.0;
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             if(value==null || value==0.0) {
                 continue;
             }

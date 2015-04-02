@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -68,7 +69,7 @@ public class KolmogorovSmirnovOneSample {
             throw new IllegalArgumentException();
         }
 
-        Double[] doubleArray = Dataset.copyCollection2DoubleArray(flatDataCollection);
+        Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);        
         
         //Calculation of expected Probabilities
@@ -84,7 +85,7 @@ public class KolmogorovSmirnovOneSample {
             double observedProbabilityI=rank/(double)n;
 
             Object methodResult = method.invoke(null, x, params);
-            double expectedProbabilityI = Dataset.toDouble(methodResult);
+            double expectedProbabilityI = TypeConversions.toDouble(methodResult);
             
             double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
             if(delta>=maxDelta) {

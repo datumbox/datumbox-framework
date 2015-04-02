@@ -16,6 +16,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.utilities.TypeConversions;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -93,7 +94,7 @@ public class MatrixDataset {
             int row = r.getId();
             
             if(extractY) {
-                m.Y.setEntry(row, Dataset.toDouble(r.getY()));
+                m.Y.setEntry(row, TypeConversions.toDouble(r.getY()));
             }
             
             
@@ -106,7 +107,7 @@ public class MatrixDataset {
                     ++previousFeatureId;
                 }
                 
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 if(value != null) {
                     m.X.setEntry(row, featureId, value);
                 }
@@ -150,7 +151,7 @@ public class MatrixDataset {
             int row = r.getId();
             
             if(extractY) {
-                m.Y.setEntry(row, Dataset.toDouble(r.getY()));
+                m.Y.setEntry(row, TypeConversions.toDouble(r.getY()));
             }
             
             if(addConstantColumn) {
@@ -158,7 +159,7 @@ public class MatrixDataset {
             }
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 if(value!=null) {
                     Integer featureId = m.feature2ColumnId.get(feature);
                     if(featureId!=null) {//if the feature exists in our database
@@ -191,7 +192,7 @@ public class MatrixDataset {
         }
         for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
             Object feature = entry.getKey();
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             if(value!=null) {
                 Integer featureId = featureIdsReference.get(feature);
                 if(featureId!=null) {//if the feature exists in our database

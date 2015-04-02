@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
 import java.util.Iterator;
@@ -116,7 +117,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         for(Record r : trainingData) {
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
-                Double counts = Dataset.toDouble(entry.getValue());
+                Double counts = TypeConversions.toDouble(entry.getValue());
                 
                 if(counts==null || counts == 0.0) {
                     continue;
@@ -163,7 +164,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
-                Double counts = Dataset.toDouble(entry.getValue());
+                Double counts = TypeConversions.toDouble(entry.getValue());
                 
                 if(counts==null || counts == 0.0) {
                     continue;
@@ -211,7 +212,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
                 Map.Entry<Object, Object> entry = it.next();
                 Object feature = entry.getKey();
                 
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 
                 if(!maxTFIDFfeatureScores.containsKey(feature)) { //unselected feature
                     //remove it both from the columns and from the record

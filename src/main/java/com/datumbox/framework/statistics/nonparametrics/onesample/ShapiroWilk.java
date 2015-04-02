@@ -42,7 +42,7 @@ public class ShapiroWilk {
     public static boolean test(FlatDataCollection flatDataCollection, double aLevel) {
         boolean rejectH0=false;
 
-        double probability = ShapiroWilkW(Dataset.copyCollection2DoubleArray(flatDataCollection));
+        double probability = ShapiroWilkW(flatDataCollection.copyCollection2DoubleArray());
 
         double a=aLevel;
         if(probability<=a || probability>=(1.0-a)) {

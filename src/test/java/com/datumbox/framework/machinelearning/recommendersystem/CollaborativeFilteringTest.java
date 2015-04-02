@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
@@ -180,7 +181,7 @@ public class CollaborativeFilteringTest {
         
         AssociativeArray result = newData.iterator().next().getYPredictedProbabilities();
         for(Map.Entry<Object, Object> entry : result.entrySet()) {
-            assertEquals(expResult.get(entry.getKey()), Dataset.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(expResult.get(entry.getKey()), TypeConversions.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
         
         

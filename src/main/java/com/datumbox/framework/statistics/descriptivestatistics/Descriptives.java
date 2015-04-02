@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.common.utilities.TypeConversions;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -112,7 +113,7 @@ public class Descriptives {
         
         double median=0.0;
                 
-        Double[] doubleArray = Dataset.copyCollection2DoubleArray(flatDataCollection);
+        Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
         
         if(n%2==0) {
@@ -475,7 +476,7 @@ public class Descriptives {
         
         AssociativeArray percintiles = new AssociativeArray(new LinkedHashMap<>());
         
-        Double[] doubleArray = Dataset.copyCollection2DoubleArray(flatDataCollection);
+        Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
         
         /*
@@ -677,7 +678,7 @@ public class Descriptives {
         double sum = 0.0;
         //Prevents numeric underflow by subtracting the max. References: http://www.youtube.com/watch?v=-RVM21Voo7Q
         for(Map.Entry<Object, Object> entry : associativeArray.entrySet()) {
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             associativeArray.put(entry.getKey(), value);
 
             sum += value;
@@ -685,7 +686,7 @@ public class Descriptives {
         
         if(sum!=0.0) {
             for(Map.Entry<Object, Object> entry : associativeArray.entrySet()) {
-                associativeArray.put(entry.getKey(), Dataset.toDouble(entry.getValue())/sum);
+                associativeArray.put(entry.getKey(), TypeConversions.toDouble(entry.getValue())/sum);
             }
         }
     }
@@ -696,7 +697,7 @@ public class Descriptives {
         double sum = 0.0;
         //Prevents numeric underflow by subtracting the max. References: http://www.youtube.com/watch?v=-RVM21Voo7Q
         for(Map.Entry<Object, Object> entry : associativeArray.entrySet()) {
-            Double value = Math.exp(Dataset.toDouble(entry.getValue())-max);
+            Double value = Math.exp(TypeConversions.toDouble(entry.getValue())-max);
             associativeArray.put(entry.getKey(), value);
 
             sum += value;
@@ -704,7 +705,7 @@ public class Descriptives {
         
         if(sum!=0.0) {
             for(Map.Entry<Object, Object> entry : associativeArray.entrySet()) {
-                associativeArray.put(entry.getKey(), Dataset.toDouble(entry.getValue())/sum);
+                associativeArray.put(entry.getKey(), TypeConversions.toDouble(entry.getValue())/sum);
             }
         }
     }

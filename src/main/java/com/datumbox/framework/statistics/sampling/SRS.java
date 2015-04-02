@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class SRS {
         
         for(Map.Entry<Object, Object> entry : probabilityTable.entrySet()) {
             Object id = entry.getKey();
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             frequencyTable.put(id, value*n);
         }
         
@@ -81,7 +82,7 @@ public class SRS {
             double cumulativeFrequency=0;
             for(Map.Entry<Object, Object> entry : frequencyTable.entrySet()) {
                 Object pointID = entry.getKey();
-                cumulativeFrequency+= Dataset.toDouble(entry.getValue());
+                cumulativeFrequency+= TypeConversions.toDouble(entry.getValue());
                 if(cumulativeFrequency>=randomFrequency) {
                     if(withReplacement==false) {
                         /* if replacement is not allowed check if the point already exists */

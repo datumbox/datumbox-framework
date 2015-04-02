@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.regression;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -119,7 +120,7 @@ public class StepwiseRegressionTest {
         
         double std = Descriptives.std(trainingData.extractYValues().toFlatDataCollection(), true);
         for(Record r : validationData) {
-            assertEquals(Dataset.toDouble(r.getY()), Dataset.toDouble(r.getYPredicted()), std);
+            assertEquals(TypeConversions.toDouble(r.getY()), TypeConversions.toDouble(r.getYPredicted()), std);
         }
         
         instance.erase();

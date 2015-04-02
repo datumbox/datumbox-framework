@@ -19,6 +19,7 @@ package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class Chisquare {
                 Object j = entry2.getKey();
                 Object value = entry2.getValue();
                 
-                double v = Dataset.toDouble(value);
+                double v = TypeConversions.toDouble(value);
                 
                 //Summing the columns
                 if(XdotJ.containsKey(j)==false) {
@@ -94,7 +95,7 @@ public class Chisquare {
                     Object j = entry2.getKey();
                     Object value = entry2.getValue();
 
-                    double v = Dataset.toDouble(value);
+                    double v = TypeConversions.toDouble(value);
 
                     //expected value under null hypothesis
                     double eij = XIdot.get(i)*XdotJ.get(j)/Xdotdot;
@@ -114,7 +115,7 @@ public class Chisquare {
                     Object j = entry2.getKey();
                     Object value = entry2.getValue();
             
-                    double v = Dataset.toDouble(value);
+                    double v = TypeConversions.toDouble(value);
 
                     //expected value under null hypothesis
                     double eij = XIdot.get(i)*XdotJ.get(j)/Xdotdot;

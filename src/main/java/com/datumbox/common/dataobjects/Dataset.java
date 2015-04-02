@@ -18,8 +18,8 @@ package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.TypeConversions;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,97 +93,18 @@ public final class Dataset implements Serializable, Iterable<Record> {
         return recordList.get(id);
     }
     
-    
-    /**
-     * Converts safely any Number to Double.
-     * @param o
-     * @return 
-     */
-    public static Double toDouble(Object o) {
-        if(o==null) {
-            return null;
-        }
-        if(o instanceof Boolean) {
-            return ((Boolean)o)?1.0:0.0;
-        }
-        return ((Number)o).doubleValue();
-    }
-    
-    /**
-     * Converts safely any Number to Integer.
-     * @param o
-     * @return 
-     */
-    public static Integer toInteger(Object o) {
-        if(o==null) {
-            return null;
-        }
-        if(o instanceof Boolean) {
-            return ((Boolean)o)?1:0;
-        }
-        return ((Number)o).intValue();
-    }
-    
-    /**
-     * Converts to Double[] safely the original FlatDataCollection by using the
-     * iteratorDouble.
-     * 
-     * @param flatDataCollection
-     * @return 
-     */
-    public static Double[] copyCollection2DoubleArray(FlatDataCollection flatDataCollection) {
-        int n = flatDataCollection.size();
-        Double[] doubleArray = new Double[n];
-        int i=0;
-        
-        Iterator<Double> it = flatDataCollection.iteratorDouble();
-        while(it.hasNext()) {
-            doubleArray[i++] = it.next();
-        }
-        
-        return doubleArray;
-    }
-    
-    /**
-     * Converts to Object[] the original FlatDataCollection. The method is used to 
-     * generate a deep copy of the flatDataCollection and it is called in order to
-     * avoid modifying the original array.
-     * 
-     * @param <T>
-     * @param c
-     * @param flatDataCollection
-     * @return
-     * @throws IllegalArgumentException 
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] copyCollection2Array(Class<T> c, FlatDataCollection flatDataCollection) throws IllegalArgumentException {
-        int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException();
-        }
-        
-        T[] copy = (T[]) Array.newInstance(c, n);
-        
-        int i=0;
-        for (Object value : flatDataCollection) {
-            copy[i++]=c.cast(value);
-        }
-        
-        return copy;
-    }
-    
     /**
      * Replaces the actual values of the flatDataCollection with their ranks and
      * returns in the tieCounter the keys that occur more than once and the 
      * number of occurrences. The tieCounter does not store the list and ranks
-     * of the actual ties as in the PHP implementation because we never use them. 
+     * of the actual ties because we never use them. 
      * 
      * @param flatDataCollection
      * @return 
      */
     public static AssociativeArray getRanksFromValues(FlatDataList flatDataCollection) {
         
-        AssociativeArray tiesCounter = new AssociativeArray(new LinkedHashMap<>()); //ConcurrentSkipListMap
+        AssociativeArray tiesCounter = new AssociativeArray(new LinkedHashMap<>());
         Map<Object, Double> key2AvgRank = new LinkedHashMap<>();
         
         _buildRankArrays(flatDataCollection.internalData, tiesCounter, key2AvgRank); //tiesCounter and key2AvgRank are modified
@@ -200,7 +121,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * Replaces the actual values of the associativeArray with their ranks and
      * returns in the tieCounter the keys that occur more than once and the 
      * number of occurrences. The tieCounter does not store the list and ranks
-     * of the actual ties as in the PHP implementation because we never use them. 
+     * of the actual ties because we never use them. 
      * 
      * @param associativeArray
      * @return 
@@ -249,7 +170,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
         while(it.hasNext()) {
             Map.Entry<Object, Object> entry = it.next();
             Object key = entry.getKey();
-            double count = Dataset.toDouble(entry.getValue());
+            double count = TypeConversions.toDouble(entry.getValue());
             if(count<=1.0) {
                 //keep as ties only keys that occur more than once.
                 //tiesCounter.remove(key); 

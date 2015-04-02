@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class KruskalWallis {
         //Correct for ties
         if(!tiesCounter.isEmpty()) {
             for(Object value : tiesCounter.values()) {
-                double Ti = Dataset.toDouble(value);
+                double Ti = TypeConversions.toDouble(value);
                 C+=((Ti*Ti-1)*Ti); //faster than using pow()
             }
             C/=((n*n-1.0)*n); //faster than using pow()
@@ -82,7 +83,7 @@ public class KruskalWallis {
             Map.Entry<Object, Object> i_j = (Map.Entry<Object, Object>)entry.getKey();
             
             Object i = i_j.getKey(); //get i and j values
-            Double rank = Dataset.toDouble(entry.getValue());
+            Double rank = TypeConversions.toDouble(entry.getValue());
             
             if(Ridot.containsKey(i)==false) { //if this "i" value is found for first time then define 
                 Ridot.put(i, rank);

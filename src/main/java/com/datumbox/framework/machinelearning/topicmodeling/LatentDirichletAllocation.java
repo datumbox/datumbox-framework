@@ -25,6 +25,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.TypeConversions;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
@@ -378,7 +379,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     increase(documentTopicCounts, Arrays.asList(documentId, topic));
                     increase(topicWordCounts, Arrays.asList(topic, word));
                     
-                    topicAssignments.put(topic, Dataset.toDouble(topicAssignments.get(topic))+1.0/totalWords);
+                    topicAssignments.put(topic, TypeConversions.toDouble(topicAssignments.get(topic))+1.0/totalWords);
                 }
                 
                 Object mainTopic=MapFunctions.selectMaxKeyValue(topicAssignments).getKey();
@@ -621,7 +622,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     increase(tmp_documentTopicCounts, Arrays.asList(documentId, topic));
                     increase(tmp_topicWordCounts, Arrays.asList(topic, word));
                     
-                    topicAssignments.put(topic, Dataset.toDouble(topicAssignments.get(topic))+1.0/totalDocumentWords);
+                    topicAssignments.put(topic, TypeConversions.toDouble(topicAssignments.get(topic))+1.0/totalDocumentWords);
                 }
                 
                 Object mainTopic=MapFunctions.selectMaxKeyValue(topicAssignments).getKey();

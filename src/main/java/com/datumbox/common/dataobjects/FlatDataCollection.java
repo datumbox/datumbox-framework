@@ -17,6 +17,7 @@
 package com.datumbox.common.dataobjects;
 
 import com.google.common.collect.HashMultiset;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,6 +28,46 @@ import java.util.List;
  * @author bbriniotis
  */
 public final class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
+
+    /**
+     * Converts to Object[] the original FlatDataCollection. The method is used to
+     * generate a deep copy of the flatDataCollection and it is called in order to
+     * avoid modifying the original array.
+     *
+     * @param <T>
+     * @param c
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public <T> T[] copyCollection2Array(Class<T> c) throws IllegalArgumentException {
+        int n = internalData.size();
+        if (n == 0) {
+            throw new IllegalArgumentException();
+        }
+        T[] copy = (T[]) Array.newInstance(c, n);
+        int i = 0;
+        for (Object value : internalData) {
+            copy[i++] = c.cast(value);
+        }
+        return copy;
+    }
+
+    /**
+     * Converts to Double[] safely the original FlatDataCollection by using the
+     * iteratorDouble.
+     *
+     * @return
+     */
+    public Double[] copyCollection2DoubleArray() {
+        int n = internalData.size();
+        Double[] doubleArray = new Double[n];
+        int i = 0;
+        Iterator<Double> it = this.iteratorDouble();
+        while (it.hasNext()) {
+            doubleArray[i++] = it.next();
+        }
+        return doubleArray;
+    }
     
     public FlatDataCollection() throws IllegalArgumentException {
         throw new IllegalArgumentException();

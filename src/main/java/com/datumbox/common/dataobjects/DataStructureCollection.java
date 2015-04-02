@@ -16,6 +16,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.utilities.TypeConversions;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -64,7 +65,7 @@ public abstract class DataStructureCollection<T extends Collection<?>> extends D
 
             @Override
             public Double next() {
-                return Dataset.toDouble(objectIterator.next());
+                return TypeConversions.toDouble(objectIterator.next());
             }
 
             @Override

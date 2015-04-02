@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public class Logrank {
                 }
                 else {
                     //uncensored internalData
-                    uncensoredData.add(Dataset.toDouble(value)); //convert it to double
+                    uncensoredData.add(TypeConversions.toDouble(value)); //convert it to double
                 }
                 n.put(j, n.get(j)+1);
             }
@@ -138,7 +139,7 @@ public class Logrank {
                     }
                     else {
                         //uncensored internalData
-                        v = Dataset.toDouble(value2); //convert it to double
+                        v = TypeConversions.toDouble(value2); //convert it to double
                     }
                     
                     if(v>=ti) {
@@ -166,7 +167,7 @@ public class Logrank {
             
             Object tmp = testTable.get2d(previousUncencoredKey, "eti");
             if(tmp!=null) {
-                previousUncencoredValue = Dataset.toDouble(tmp);
+                previousUncencoredValue = TypeConversions.toDouble(tmp);
             }
             
             if(!ti.toString().endsWith(CensoredDescriptives.CENSORED_NUMBER_POSTFIX)) { //uncensored
@@ -198,10 +199,10 @@ public class Logrank {
             }
             else {
                 //uncensored internalData
-                Double v = Dataset.toDouble(value); //convert it to double
+                Double v = TypeConversions.toDouble(value); //convert it to double
                 key = v.toString();
             }
-            double wi = Dataset.toDouble(testTable.get2d(key, "wi"));
+            double wi = TypeConversions.toDouble(testTable.get2d(key, "wi"));
             S+= wi;
         }
         testTable = null;

@@ -22,6 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -261,7 +262,7 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         if(columnType==Dataset.ColumnType.NUMERICAL) {
             
             for(Record r : data) {
-                Double value = Dataset.toDouble(r.getY());
+                Double value = TypeConversions.toDouble(r.getY());
                 if(value==null) { //if we have a missing value don't perform any normalization
                     continue;
                 }
@@ -307,9 +308,9 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
                     }
                 }
                 else {
-                    r.setY(Dataset.toDouble(r.getY())*(max-min) + min);
+                    r.setY(TypeConversions.toDouble(r.getY())*(max-min) + min);
                     
-                    Double YPredicted = Dataset.toDouble(r.getYPredicted());
+                    Double YPredicted = TypeConversions.toDouble(r.getYPredicted());
                     if(YPredicted!=null) {
                         r.setYPredicted(YPredicted*(max-min) + min);
                     }

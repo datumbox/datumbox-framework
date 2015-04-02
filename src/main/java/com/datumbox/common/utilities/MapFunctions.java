@@ -42,7 +42,7 @@ public class MapFunctions {
         Object maxValueKey = null;
         
         for(Map.Entry<Object, Object> entry : keyValueMap.entrySet()) {
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             if(value!=null && value>maxValue) {
                 maxValue=value;
                 maxValueKey=entry.getKey();
@@ -78,7 +78,7 @@ public class MapFunctions {
         Object minValueKey = null;
         
         for(Map.Entry<Object, Object> entry : keyValueMap.entrySet()) {
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             if(value!=null && value<minValue) {
                 minValue=value;
                 minValueKey=entry.getKey();
@@ -116,8 +116,8 @@ public class MapFunctions {
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
           @Override
           public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = Dataset.toDouble(a.getKey());
-              Double vb = Dataset.toDouble(b.getKey());
+              Double va = TypeConversions.toDouble(a.getKey());
+              Double vb = TypeConversions.toDouble(b.getKey());
               return va.compareTo(vb);
           }
         });
@@ -143,8 +143,8 @@ public class MapFunctions {
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
           @Override
           public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = Dataset.toDouble(a.getKey());
-              Double vb = Dataset.toDouble(b.getKey());
+              Double va = TypeConversions.toDouble(a.getKey());
+              Double vb = TypeConversions.toDouble(b.getKey());
               return -va.compareTo(vb);
           }
         });
@@ -170,8 +170,8 @@ public class MapFunctions {
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
           @Override
           public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = Dataset.toDouble(a.getValue());
-              Double vb = Dataset.toDouble(b.getValue());
+              Double va = TypeConversions.toDouble(a.getValue());
+              Double vb = TypeConversions.toDouble(b.getValue());
               return va.compareTo(vb);
           }
         });
@@ -197,8 +197,8 @@ public class MapFunctions {
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
           @Override
           public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = Dataset.toDouble(a.getValue());
-              Double vb = Dataset.toDouble(b.getValue());
+              Double va = TypeConversions.toDouble(a.getValue());
+              Double vb = TypeConversions.toDouble(b.getValue());
               return -va.compareTo(vb);
           }
         });
@@ -222,8 +222,8 @@ public class MapFunctions {
         Collections.sort(entries, new Comparator<Map.Entry<Object,Object>>() {
           @Override
           public int compare(Map.Entry<Object, Object> a, Map.Entry<Object, Object> b){
-              Double va = Dataset.toDouble(a.getValue());
-              Double vb = Dataset.toDouble(b.getValue());
+              Double va = TypeConversions.toDouble(a.getValue());
+              Double vb = TypeConversions.toDouble(b.getValue());
               return va.compareTo(vb);
           }
         });
@@ -247,8 +247,8 @@ public class MapFunctions {
         Collections.sort(entries, new Comparator<Map.Entry<Object,Object>>() {
           @Override
           public int compare(Map.Entry<Object, Object> a, Map.Entry<Object, Object> b){
-              Double va = Dataset.toDouble(a.getValue());
-              Double vb = Dataset.toDouble(b.getValue());
+              Double va = TypeConversions.toDouble(a.getValue());
+              Double vb = TypeConversions.toDouble(b.getValue());
               return -va.compareTo(vb);
           }
         });

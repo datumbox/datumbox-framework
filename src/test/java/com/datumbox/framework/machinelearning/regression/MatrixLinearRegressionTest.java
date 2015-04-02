@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.regression;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
@@ -114,7 +115,7 @@ public class MatrixLinearRegressionTest {
 
 
         for(Record r : validationData) {
-            assertEquals(Dataset.toDouble(r.getY()), Dataset.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
+            assertEquals(TypeConversions.toDouble(r.getY()), TypeConversions.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
         instance.erase();

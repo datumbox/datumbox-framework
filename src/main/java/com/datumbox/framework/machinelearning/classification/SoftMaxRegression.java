@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 
 
 import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
@@ -261,7 +262,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
                 //update the rest of the weights
                 
                 for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Double value = Dataset.toDouble(entry.getValue());
+                    Double value = TypeConversions.toDouble(entry.getValue());
 
                     Object feature = entry.getKey();
                     featureClassTuple = Arrays.<Object>asList(feature, theClass);
@@ -281,7 +282,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         double score = thitas.get(Arrays.<Object>asList(Dataset.constantColumnName, theClass));
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
-            Double value = Dataset.toDouble(entry.getValue());
+            Double value = TypeConversions.toDouble(entry.getValue());
             
             Object feature = entry.getKey();
             List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);

@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.AbstractMap;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class MannWhitney {
             Object i = i_j.getKey(); //get i and j values
             
             if(i==keys[smallIndex]) { //if it belongs to the FIRST group (small group)
-                Double rank = Dataset.toDouble(entry.getValue());
+                Double rank = TypeConversions.toDouble(entry.getValue());
                 MWscore+=rank; //add the score
             }
         }

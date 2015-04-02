@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class PetoPetoWilcoxon {
                 }
                 else {
                     //uncensored internalData
-                    uncensoredData.add(Dataset.toDouble(value)); //convert it to double
+                    uncensoredData.add(TypeConversions.toDouble(value)); //convert it to double
                 }
                 singleSample.add(value);
                 n.put(j, n.get(j)+1);
@@ -117,7 +118,7 @@ public class PetoPetoWilcoxon {
             
             Object value = testTable.get2d(key, "mi");
             if(value==null) {
-                Double Sti = Dataset.toDouble(survivalFunction.get2d(key, "Sti"));
+                Double Sti = TypeConversions.toDouble(survivalFunction.get2d(key, "Sti"));
                 if(Sti==null) {
                     Sti = 0.0;
                 }
@@ -149,7 +150,7 @@ public class PetoPetoWilcoxon {
             
             Object tmp = testTable.get2d(previousUncencoredKey, "Sti");
             if(tmp!=null) {
-                previousUncencoredValue = Dataset.toDouble(tmp);
+                previousUncencoredValue = TypeConversions.toDouble(tmp);
             }
             
             if(!ti.toString().endsWith(CensoredDescriptives.CENSORED_NUMBER_POSTFIX)) { //uncensored
@@ -179,10 +180,10 @@ public class PetoPetoWilcoxon {
             }
             else {
                 //uncensored internalData
-                Double v = Dataset.toDouble(value); //convert it to double
+                Double v = TypeConversions.toDouble(value); //convert it to double
                 key = v.toString();
             }
-            double ui = Dataset.toDouble(testTable.get2d(key, "ui"));
+            double ui = TypeConversions.toDouble(testTable.get2d(key, "ui"));
             S+= ui;
         }
         testTable = null;

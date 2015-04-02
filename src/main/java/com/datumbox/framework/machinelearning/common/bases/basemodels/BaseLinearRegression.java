@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.machinelearning.common.validation.LinearRegressionValidation;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
@@ -210,8 +211,8 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         FlatDataList errorList = new FlatDataList();
         double Ybar = 0.0;
         for(Record r : validationData) {
-            Ybar += Dataset.toDouble(r.getY())/n;
-            errorList.add(Dataset.toDouble(r.getY())-Dataset.toDouble(r.getYPredicted()));
+            Ybar += TypeConversions.toDouble(r.getY())/n;
+            errorList.add(TypeConversions.toDouble(r.getY())-TypeConversions.toDouble(r.getYPredicted()));
         }
 
         validationMetrics.setDW(DurbinWatson.calculateScore(errorList)); //autocorrelation metric (around 2 no autocorrelation)
@@ -230,7 +231,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
         double SSR = 0.0;
         for(Record r : validationData) {
-            SSR += Math.pow(Dataset.toDouble(r.getY()) - Ybar, 2);
+            SSR += Math.pow(TypeConversions.toDouble(r.getY()) - Ybar, 2);
         }
         validationMetrics.setSSR(SSR);
         
@@ -275,7 +276,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
     protected double calculateSSE(Dataset validationData) {
         double SSE = 0.0;
         for(Record r : validationData) {
-            SSE += Math.pow(Dataset.toDouble(r.getY())-Dataset.toDouble(r.getYPredicted()), 2.0);
+            SSE += Math.pow(TypeConversions.toDouble(r.getY())-TypeConversions.toDouble(r.getYPredicted()), 2.0);
         }
         return SSE;
     }

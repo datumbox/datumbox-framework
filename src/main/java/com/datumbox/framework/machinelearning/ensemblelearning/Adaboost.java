@@ -22,6 +22,7 @@ import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
         double error = 0.0;
         for(Record r : validationDataset) {
             if(!r.getY().equals(r.getYPredicted())) {
-                error+= Dataset.toDouble(observationWeights.get(r.getId()));
+                error+= TypeConversions.toDouble(observationWeights.get(r.getId()));
             }
         }
         
@@ -101,8 +102,8 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
 
             //update the weights of observations
             for(Map.Entry<Object, Object> entry : observationWeights.entrySet()) {
-                Integer recordId = Dataset.toInteger(entry.getKey());
-                Double value = Dataset.toDouble(entry.getValue());
+                Integer recordId = TypeConversions.toInteger(entry.getKey());
+                Double value = TypeConversions.toDouble(entry.getValue());
 
                 Record r = validationDataset.get(recordId);
                 if(!r.getY().equals(r.getYPredicted())) {
@@ -114,7 +115,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             double normalizer = Descriptives.sum(new FlatDataCollection(observationWeights.values()));
             if(normalizer!=0.0) {
                 for(Map.Entry<Object, Object> entry : observationWeights.entrySet()) {
-                    Double value = Dataset.toDouble(entry.getValue());
+                    Double value = TypeConversions.toDouble(entry.getValue());
                     observationWeights.put(entry.getKey(), value/normalizer);
                 }
             }

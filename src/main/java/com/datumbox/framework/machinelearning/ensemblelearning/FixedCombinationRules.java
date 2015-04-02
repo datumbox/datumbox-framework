@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class FixedCombinationRules {
             AssociativeArray listOfClassProbabilities = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : listOfClassProbabilities.entrySet()) {
                 Object theClass = entry2.getKey();
-                Double probability = Dataset.toDouble(entry2.getValue());
+                Double probability = TypeConversions.toDouble(entry2.getValue());
                 
                 Double previousValue = combinedClassProbabilities.getDouble(theClass);
                 if(previousValue==null) { 
@@ -69,7 +70,7 @@ public class FixedCombinationRules {
             AssociativeArray listOfClassProbabilities = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : listOfClassProbabilities.entrySet()) {
                 Object theClass = entry2.getKey();
-                Double probability = Dataset.toDouble(entry2.getValue());
+                Double probability = TypeConversions.toDouble(entry2.getValue());
                 
                 Double previousValue = combinedClassProbabilities.getDouble(theClass);
                 if(previousValue==null) {
@@ -92,7 +93,7 @@ public class FixedCombinationRules {
             Double classifierWeight = classifierWeights.getDouble(classifier);
             for(Map.Entry<Object, Object> entry2 : listOfClassProbabilities.entrySet()) {
                 Object theClass = entry2.getKey();
-                Double probability = Dataset.toDouble(entry2.getValue());
+                Double probability = TypeConversions.toDouble(entry2.getValue());
                 
                 Double previousValue = combinedClassProbabilities.getDouble(theClass);
                 if(previousValue==null) {  
@@ -146,7 +147,7 @@ public class FixedCombinationRules {
             AssociativeArray listOfClassProbabilities = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : listOfClassProbabilities.entrySet()) {
                 Object theClass = entry2.getKey();
-                Double probability = Dataset.toDouble(entry2.getValue());
+                Double probability = TypeConversions.toDouble(entry2.getValue());
                 
                 Double previousValue = combinedClassProbabilities.getDouble(theClass);
                 if(previousValue==null || probability>previousValue) { 
@@ -167,7 +168,7 @@ public class FixedCombinationRules {
             AssociativeArray listOfClassProbabilities = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : listOfClassProbabilities.entrySet()) {
                 Object theClass = entry2.getKey();
-                Double probability = Dataset.toDouble(entry2.getValue());
+                Double probability = TypeConversions.toDouble(entry2.getValue());
                 
                 Double previousValue = combinedClassProbabilities.getDouble(theClass);
                 if(previousValue==null || probability<previousValue) { 
@@ -188,7 +189,7 @@ public class FixedCombinationRules {
             AssociativeArray listOfClassProbabilities = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : listOfClassProbabilities.entrySet()) {
                 Object theClass = entry2.getKey();
-                Double probability = Dataset.toDouble(entry2.getValue());
+                Double probability = TypeConversions.toDouble(entry2.getValue());
                 
                 Double previousValue = combinedClassProbabilities.getDouble(theClass);
                 if(previousValue==null) { 

@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.AbstractMap;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class DecisionCriteria {
             AssociativeArray optionList = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : optionList.entrySet()) {
                 Object option = entry2.getKey();
-                Double payoff = Dataset.toDouble(entry2.getValue());
+                Double payoff = TypeConversions.toDouble(entry2.getValue());
                 
                 Double currentMinPayoffOption = minPayoffs.getDouble(option);
                 if(currentMinPayoffOption==null || payoff<currentMinPayoffOption) {
@@ -85,7 +86,7 @@ public class DecisionCriteria {
             //Object event = entry.getKey();
             AssociativeArray optionList = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : optionList.entrySet()) {
-                Double payoff = Dataset.toDouble(entry2.getValue());
+                Double payoff = TypeConversions.toDouble(entry2.getValue());
                 //Object option = entry2.getKey();
                 
                 if(payoff>maxMaxPayoff) {
@@ -120,7 +121,7 @@ public class DecisionCriteria {
             
             for(Map.Entry<Object, Object> entry2 : optionList.entrySet()) {
                 Object option = entry2.getKey();
-                Double payoff = Dataset.toDouble(entry2.getValue());
+                Double payoff = TypeConversions.toDouble(entry2.getValue());
                 
                 //regretMatrix.internalData.get(event).internalData.put(option, payoff-maxI);
                 regretMatrix.put2d(event, option, payoff-maxI);
@@ -151,7 +152,7 @@ public class DecisionCriteria {
             AssociativeArray optionList = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : optionList.entrySet()) {
                 Object option = entry2.getKey();
-                Double payoff = Dataset.toDouble(entry2.getValue());
+                Double payoff = TypeConversions.toDouble(entry2.getValue());
                 
                 Double value = optionAverages.getDouble(option);
                 if(value==null) {
@@ -186,7 +187,7 @@ public class DecisionCriteria {
             AssociativeArray optionList = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : optionList.entrySet()) {
                 Object option = entry2.getKey();
-                Double payoff = Dataset.toDouble(entry2.getValue());
+                Double payoff = TypeConversions.toDouble(entry2.getValue());
                 
                 Double currentMinPayoffOption = minPayoffs.getDouble(option);
                 if(currentMinPayoffOption==null || payoff<currentMinPayoffOption) {
@@ -203,7 +204,7 @@ public class DecisionCriteria {
         AssociativeArray combinedPayoffs = new AssociativeArray();
         for(Map.Entry<Object, Object> entry : maxPayoffs.entrySet()) {
             Object option = entry.getKey();
-            combinedPayoffs.put(option, Dataset.toDouble(entry.getValue())*alpha + minPayoffs.getDouble(option)*(1.0-alpha));
+            combinedPayoffs.put(option, TypeConversions.toDouble(entry.getValue())*alpha + minPayoffs.getDouble(option)*(1.0-alpha));
         }
         
         Map.Entry<Object, Object> entry = MapFunctions.selectMaxKeyValue(combinedPayoffs);
@@ -251,7 +252,7 @@ public class DecisionCriteria {
             AssociativeArray optionList = entry.getValue();
             for(Map.Entry<Object, Object> entry2 : optionList.entrySet()) {
                 Object option = entry2.getKey();
-                Double payoff = Dataset.toDouble(entry2.getValue());
+                Double payoff = TypeConversions.toDouble(entry2.getValue());
                 
                 Double value = expectedPayoffs.getDouble(option);
                 if(value==null) {

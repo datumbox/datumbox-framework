@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Iterator;
@@ -85,9 +86,9 @@ public class PCATest {
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Double value = Dataset.toDouble(entry.getValue());
+                Double value = TypeConversions.toDouble(entry.getValue());
                 
-                assertEquals(Dataset.toDouble(r2.getX().get(feature)), value, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+                assertEquals(TypeConversions.toDouble(r2.getX().get(feature)), value, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
             }
         }
         

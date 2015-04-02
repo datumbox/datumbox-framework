@@ -19,6 +19,7 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class CochranQ {
             for(Map.Entry<Object, Object> entry2 : row.entrySet()) {
                 Object j = entry2.getKey();
                 
-                double v = Dataset.toDouble(entry2.getValue());
+                double v = TypeConversions.toDouble(entry2.getValue());
                 
                 //Summing the columns
                 if(XdotJ.containsKey(j)==false) {
