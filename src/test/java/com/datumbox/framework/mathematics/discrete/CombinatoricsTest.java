@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.mathematics.discrete;
 
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class CombinatoricsTest {
      */
     @Test
     public void testPermutations() {
-        TestConfiguration.getLogger().debug("permutations");
+        TestUtils.log(this.getClass(), "permutations");
         Collection<List<String>> expResult = new ArrayList<>();
         expResult.add(new ArrayList<>(Arrays.asList("a","b","c")));
         expResult.add(new ArrayList<>(Arrays.asList("a","c","b")));
@@ -55,7 +55,7 @@ public class CombinatoricsTest {
      */
     @Test
     public void testCombinations() {
-        TestConfiguration.getLogger().debug("combinations");
+        TestUtils.log(this.getClass(), "combinations");
         Collection<List<String>> expResult = new ArrayList<>();
         expResult.add(new ArrayList<>(Arrays.asList("a","b")));
         expResult.add(new ArrayList<>(Arrays.asList("a","c")));

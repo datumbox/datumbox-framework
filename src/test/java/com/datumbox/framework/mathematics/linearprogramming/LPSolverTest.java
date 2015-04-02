@@ -18,6 +18,7 @@ package com.datumbox.framework.mathematics.linearprogramming;
 
 import com.datumbox.framework.mathematics.linearprogramming.LPSolver;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import lpsolve.LpSolve;
@@ -38,7 +39,7 @@ public class LPSolverTest {
      */
     @Test
     public void testSolve() throws Exception {
-        TestConfiguration.getLogger().debug("solve");
+        TestUtils.log(this.getClass(), "solve");
         
         //Example from http://lpsolve.sourceforge.net/5.5/PHP.htm
         double[] linearObjectiveFunction = {143.0, 60.0, 195.0};

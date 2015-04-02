@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -37,7 +38,7 @@ public class KruskalWallisTest {
      */
     @Test
     public void testTest() {
-        TestConfiguration.getLogger().debug("test");
+        TestUtils.log(this.getClass(), "test");
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{82,93,86,87,99,95,93,89,96})));
         transposeDataCollection.put(1, new FlatDataCollection(Arrays.asList(new Object[]{81,85,93,91,84,88,84,92,81,92})));

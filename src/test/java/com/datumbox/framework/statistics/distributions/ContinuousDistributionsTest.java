@@ -16,7 +16,9 @@
  */
 package com.datumbox.framework.statistics.distributions;
 
+
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +36,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testChisquareCdf() {
-        TestConfiguration.getLogger().debug("ChisquareCdf");
+        TestUtils.log(this.getClass(), "ChisquareCdf");
         double x = 3.0;
         int df = 10;
         double expResult = 0.018575928421771;
@@ -47,7 +49,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testGaussCdf() {
-        TestConfiguration.getLogger().debug("GaussCdf");
+        TestUtils.log(this.getClass(), "GaussCdf");
         double z = 3.0;
         double expResult = 0.9986501025724;
         double result = ContinuousDistributions.GaussCdf(z);
@@ -59,7 +61,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testLogGamma() {
-        TestConfiguration.getLogger().debug("LogGamma");
+        TestUtils.log(this.getClass(), "LogGamma");
         double Z = 3.0;
         double expResult = 0.69314718044741;
         double result = ContinuousDistributions.LogGamma(Z);
@@ -71,7 +73,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testStudentsCdf() {
-        TestConfiguration.getLogger().debug("StudentsCdf");
+        TestUtils.log(this.getClass(), "StudentsCdf");
         double x = 3.0;
         int df = 10;
         double expResult = 0.99332817273466;
@@ -84,7 +86,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testExponentialCdf() {
-        TestConfiguration.getLogger().debug("ExponentialCdf");
+        TestUtils.log(this.getClass(), "ExponentialCdf");
         double x = 3.0;
         double lamda = 10.0;
         double expResult = 0.99999999999991;
@@ -97,7 +99,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testBetaCdf() {
-        TestConfiguration.getLogger().debug("BetaCdf");
+        TestUtils.log(this.getClass(), "BetaCdf");
         double x = 0.9;
         double a = 10.0;
         double b = 2.0;
@@ -111,7 +113,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testFCdf() {
-        TestConfiguration.getLogger().debug("FCdf");
+        TestUtils.log(this.getClass(), "FCdf");
         double x = 3.0;
         int f1 = 10;
         int f2 = 2;
@@ -125,7 +127,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testGammaCdf() {
-        TestConfiguration.getLogger().debug("GammaCdf");
+        TestUtils.log(this.getClass(), "GammaCdf");
         double x = 9.0;
         double a = 10.0;
         double b = 2.0;
@@ -139,7 +141,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testUniformCdf() {
-        TestConfiguration.getLogger().debug("UniformCdf");
+        TestUtils.log(this.getClass(), "UniformCdf");
         double x = 3.0;
         double a = 2.0;
         double b = 10.0;
@@ -153,7 +155,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testKolmogorov() {
-        TestConfiguration.getLogger().debug("Kolmogorov");
+        TestUtils.log(this.getClass(), "Kolmogorov");
         double z = 2.0;
         double expResult = 0.99932907474422;
         double result = ContinuousDistributions.Kolmogorov(z);
@@ -165,7 +167,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testGaussInverseCdf() {
-        TestConfiguration.getLogger().debug("GaussInverseCdf");
+        TestUtils.log(this.getClass(), "GaussInverseCdf");
         double p = 0.32;
         double expResult = -0.46769879942903;
         double result = ContinuousDistributions.GaussInverseCdf(p);
@@ -177,7 +179,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testChisquareInverseCdf() {
-        TestConfiguration.getLogger().debug("ChisquareInverseCdf");
+        TestUtils.log(this.getClass(), "ChisquareInverseCdf");
         double p = 0.32;
         int df = 10;
         double expResult = 11.498788492223;
@@ -190,7 +192,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testNormalQuantile() {
-        TestConfiguration.getLogger().debug("normalQuantile");
+        TestUtils.log(this.getClass(), "normalQuantile");
         double p = 0.32;
         double mu = 1.0;
         double sigma = 1.0;

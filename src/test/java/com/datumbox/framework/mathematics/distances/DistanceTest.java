@@ -18,6 +18,7 @@ package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -70,7 +71,7 @@ public class DistanceTest {
      */
     @Test
     public void testEuclidean() {
-        TestConfiguration.getLogger().debug("euclidean");
+        TestUtils.log(this.getClass(), "euclidean");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 2.6457513110645905905016157536393;
@@ -83,7 +84,7 @@ public class DistanceTest {
      */
     @Test
     public void testEuclideanWeighhted() {
-        TestConfiguration.getLogger().debug("euclideanWeighhted");
+        TestUtils.log(this.getClass(), "euclideanWeighhted");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         Map<Object, Double> columnWeights = getWeights();
@@ -97,7 +98,7 @@ public class DistanceTest {
      */
     @Test
     public void testManhattan() {
-        TestConfiguration.getLogger().debug("manhattan");
+        TestUtils.log(this.getClass(), "manhattan");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 5.0;
@@ -110,7 +111,7 @@ public class DistanceTest {
      */
     @Test
     public void testManhattanWeighhted() {
-        TestConfiguration.getLogger().debug("manhattanWeighhted");
+        TestUtils.log(this.getClass(), "manhattanWeighhted");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         Map<Object, Double> columnWeights = getWeights();
@@ -124,7 +125,7 @@ public class DistanceTest {
      */
     @Test
     public void testMaximum() {
-        TestConfiguration.getLogger().debug("maximum");
+        TestUtils.log(this.getClass(), "maximum");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 2.0;

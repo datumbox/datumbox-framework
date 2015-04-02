@@ -18,7 +18,6 @@ package com.datumbox.framework.algorithms.dea;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
-import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -39,7 +38,7 @@ public class DataEnvelopmentAnalysisTest {
      */
     @Test
     public void testEstimateEfficiency() throws Exception {
-        TestConfiguration.getLogger().debug("estimateEfficiency");
+        TestUtils.log(this.getClass(), "estimateEfficiency");
         Map<Object, DataEnvelopmentAnalysis.DeaRecord> id2DeaRecordMapDatabase = new LinkedHashMap<>();
         id2DeaRecordMapDatabase.put("Depot1", new DataEnvelopmentAnalysis.DeaRecord(new FlatDataList(Arrays.asList(40.0,55.0,30.0)), new FlatDataList(Arrays.asList(3.0,5.0))));
         id2DeaRecordMapDatabase.put("Depot2", new DataEnvelopmentAnalysis.DeaRecord(new FlatDataList(Arrays.asList(45.0,50.0,40.0)), new FlatDataList(Arrays.asList(2.5,4.5))));

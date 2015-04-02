@@ -19,8 +19,6 @@ package com.datumbox.configuration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -34,8 +32,6 @@ public class TestConfiguration {
     public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
     //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
     
-    private static final Logger logger = LoggerFactory.getLogger("Tests");
-    
     public static DatabaseConfiguration getDBConfig() {
         if (PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
             return new InMemoryConfiguration();
@@ -47,7 +43,4 @@ public class TestConfiguration {
         return null;
     }
     
-    public static final Logger getLogger() {
-        return logger;
-    }
 }

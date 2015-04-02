@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Iterator;
 import java.util.Map;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class PCATest {
      */
     @Test
     public void testCalculateParameters() {
-        TestConfiguration.getLogger().debug("calculateParameters");
+        TestUtils.log(this.getClass(), "calculateParameters");
         Dataset originaldata = new Dataset();
         originaldata.add(Record.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));

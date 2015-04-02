@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -42,7 +43,7 @@ public class HierarchicalAgglomerativeTest {
      */
     @Test
     public void testValidate() {
-        TestConfiguration.getLogger().debug("validate"); 
+        TestUtils.log(this.getClass(), "validate"); 
         
         Dataset trainingData = KmeansTest.generateDataset();
         Dataset validationData = new Dataset();
@@ -103,7 +104,7 @@ public class HierarchicalAgglomerativeTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        TestConfiguration.getLogger().debug("kFoldCrossValidation");
+        TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42); 
         int k = 5;
         

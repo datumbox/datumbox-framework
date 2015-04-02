@@ -17,7 +17,8 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +37,7 @@ public class WaldWolfowitzTest {
      */
     @Test
     public void testTest() {
-        TestConfiguration.getLogger().debug("test");
+        TestUtils.log(this.getClass(), "test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return True.
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{'Α', 'Β', 'Α', 'Β', 'Α', 'Β', 'Α', 'Β', 'Α', 'Β', 'Β', 'Α', 'Β', 'Α', 'Β', 'Α', 'Α', 'Β'}));
         double aLevel = 0.05;

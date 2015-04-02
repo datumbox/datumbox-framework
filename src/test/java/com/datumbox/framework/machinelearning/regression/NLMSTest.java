@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.featureselection.continuous.PCA;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -42,7 +42,7 @@ public class NLMSTest {
      */
     @Test
     public void testValidate() {
-        TestConfiguration.getLogger().debug("validate");
+        TestUtils.log(this.getClass(), "validate");
         
         /*
         Synthetic Data generated with:
@@ -125,7 +125,7 @@ public class NLMSTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        TestConfiguration.getLogger().debug("kFoldCrossValidation");
+        TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42);
         int k = 5;
         

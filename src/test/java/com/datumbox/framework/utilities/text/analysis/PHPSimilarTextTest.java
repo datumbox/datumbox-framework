@@ -18,6 +18,7 @@ package com.datumbox.framework.utilities.text.analysis;
 
 import com.datumbox.framework.utilities.text.analysis.PHPSimilarText;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +36,7 @@ public class PHPSimilarTextTest {
      */
     @Test
     public void testSimilarityChars() {
-        TestConfiguration.getLogger().debug("similarityChars");
+        TestUtils.log(this.getClass(), "similarityChars");
         String txt1 = "this is a fine text";
         String txt2 = "this is a great document";
         int expResult = 12;
@@ -48,7 +49,7 @@ public class PHPSimilarTextTest {
      */
     @Test
     public void testSimilarityPercentage() {
-        TestConfiguration.getLogger().debug("similarityPercentage");
+        TestUtils.log(this.getClass(), "similarityPercentage");
         String txt1 = "this is a fine text";
         String txt2 = "this is a great document";
         double expResult = 55.813953488372;

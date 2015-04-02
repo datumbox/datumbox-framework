@@ -55,7 +55,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     }
     
     public void transform(Dataset newData) {
-        logger.debug("transform()");
+        logger.info("transform()");
         
         knowledgeBase.load();
         

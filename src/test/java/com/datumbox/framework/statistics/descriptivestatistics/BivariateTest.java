@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.configuration.TestConfiguration;
+
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 
@@ -156,7 +156,7 @@ public class BivariateTest {
      */
     @Test
     public void testCovarianceMatrix() {
-        TestConfiguration.getLogger().debug("covarianceMatrix");
+        TestUtils.log(this.getClass(), "covarianceMatrix");
         Dataset dataSet = generateDataset();
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 4.5625);
@@ -185,7 +185,7 @@ public class BivariateTest {
      */
     @Test
     public void testPearsonMatrix() {
-        TestConfiguration.getLogger().debug("pearsonMatrix");
+        TestUtils.log(this.getClass(), "pearsonMatrix");
         Dataset dataSet = generateDataset();
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
@@ -214,7 +214,7 @@ public class BivariateTest {
      */
     @Test
     public void testSpearmanMatrix() {
-        TestConfiguration.getLogger().debug("spearmanMatrix");
+        TestUtils.log(this.getClass(), "spearmanMatrix");
         Dataset dataSet = generateDataset();
         DataTable2D expResult = new DataTable2D();
         expResult.put(0, new AssociativeArray());
@@ -244,7 +244,7 @@ public class BivariateTest {
      */
     @Test
     public void testKendalltauMatrix() {
-        TestConfiguration.getLogger().debug("kendalltauMatrix");
+        TestUtils.log(this.getClass(), "kendalltauMatrix");
         Dataset dataSet = generateDataset();
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);

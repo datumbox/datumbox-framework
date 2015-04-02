@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +35,7 @@ public class FIndependentSamplesTest {
      */
     @Test
     public void testTestVariances() {
-        TestConfiguration.getLogger().debug("testVariances");
+        TestUtils.log(this.getClass(), "testVariances");
         double stdbarx = 65.54909;
         double stdbary = 61.85425;
         int n = 100;

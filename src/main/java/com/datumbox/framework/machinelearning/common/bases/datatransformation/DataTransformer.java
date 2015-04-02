@@ -77,12 +77,12 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         
         initializeTrainingConfiguration(trainingParameters);
         
-        logger.debug("fit_transform()");
+        logger.info("fit_transform()");
         
         _transform(trainingData, true);     
         _normalize(trainingData);
             
-        logger.debug("Saving model");
+        logger.info("Saving model");
         knowledgeBase.save();
     }
     
@@ -90,7 +90,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void transform(Dataset newData) {
         knowledgeBase.load();
         
-        logger.debug("transform()");
+        logger.info("transform()");
         _transform(newData, false); 
         _normalize(newData);
         
@@ -99,7 +99,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void denormalize(Dataset data) {
         knowledgeBase.load();
         
-        logger.debug("denormalize()");
+        logger.info("denormalize()");
         
         _denormalize(data);
     }

@@ -17,7 +17,7 @@
 package com.datumbox.common.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.AbstractMap;
 import java.util.Map;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class MapFunctionsTest {
      */
     @Test
     public void testSelectMaxKeyValue() {
-        TestConfiguration.getLogger().debug("selectMaxKeyValue");
+        TestUtils.log(this.getClass(), "selectMaxKeyValue");
         AssociativeArray keyValueMap = new AssociativeArray();
         keyValueMap.put("1", 1.0);
         keyValueMap.put("2", 2.0);
@@ -55,7 +55,7 @@ public class MapFunctionsTest {
      */
     @Test
     public void testSelectMinKeyValue() {
-        TestConfiguration.getLogger().debug("selectMaxKeyValue");
+        TestUtils.log(this.getClass(), "selectMaxKeyValue");
         AssociativeArray keyValueMap = new AssociativeArray();
         keyValueMap.put("1", 1);
         keyValueMap.put("2", 2);

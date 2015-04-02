@@ -17,7 +17,8 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +37,7 @@ public class SignOneSampleTest {
      */
     @Test
     public void testTest() {
-        TestConfiguration.getLogger().debug("test");
+        TestUtils.log(this.getClass(), "test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return true.
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{0.16,0.12,0.19,0.16,0.17,0.18,0.15,0.20,0.16,0.18,0.13,0.17,0.18,0.21,0.18,0.17,0.19,0.11,0.16,0.16}));
         double median = 0.15;

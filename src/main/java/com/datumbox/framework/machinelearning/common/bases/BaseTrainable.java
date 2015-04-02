@@ -93,7 +93,7 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {
-        logger.debug("fit()");
+        logger.info("fit()");
         
         initializeTrainingConfiguration(trainingParameters);
         _fit(trainingData);

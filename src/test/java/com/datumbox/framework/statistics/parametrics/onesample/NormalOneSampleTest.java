@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.statistics.parametrics.onesample;
 
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +35,7 @@ public class NormalOneSampleTest {
      */
     @Test
     public void testTestMean() {
-        TestConfiguration.getLogger().debug("testMean");
+        TestUtils.log(this.getClass(), "testMean");
         double xbar = 215.0;
         int n = 60;
         double H0mean = 200.0;
@@ -51,7 +52,7 @@ public class NormalOneSampleTest {
      */
     @Test
     public void testTestSum() {
-        TestConfiguration.getLogger().debug("testSum");
+        TestUtils.log(this.getClass(), "testSum");
         double xsum = 65.3;
         int n = 100;
         double H0sum = 0.65;
@@ -68,7 +69,7 @@ public class NormalOneSampleTest {
      */
     @Test
     public void testTestPercentage() {
-        TestConfiguration.getLogger().debug("testPercentage");
+        TestUtils.log(this.getClass(), "testPercentage");
         double pbar = 0.60;
         int n = 100;
         double H0p = 0.65;

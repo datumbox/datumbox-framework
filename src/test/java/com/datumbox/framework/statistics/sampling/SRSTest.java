@@ -20,6 +20,8 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -44,7 +46,7 @@ public class SRSTest {
      */
     @Test
     public void testWeightedProbabilitySampling() {
-        TestConfiguration.getLogger().debug("weightedProbabilitySampling");
+        TestUtils.log(this.getClass(), "weightedProbabilitySampling");
         AssociativeArray frequencyTable = new AssociativeArray();
         frequencyTable.put(1, 0.20);
         frequencyTable.put(2, 0.30);
@@ -64,7 +66,7 @@ public class SRSTest {
      */
     @Test
     public void testWeightedSampling() {
-        TestConfiguration.getLogger().debug("weightedSampling");
+        TestUtils.log(this.getClass(), "weightedSampling");
         AssociativeArray frequencyTable = new AssociativeArray();
         frequencyTable.put(1, 10);
         frequencyTable.put(2, 20);
@@ -84,7 +86,7 @@ public class SRSTest {
      */
     @Test
     public void testRandomSampling() {
-        TestConfiguration.getLogger().debug("randomSampling");
+        TestUtils.log(this.getClass(), "randomSampling");
         FlatDataList idList = new FlatDataList();
         idList.add("a");
         idList.add("0");
@@ -105,7 +107,7 @@ public class SRSTest {
      */
     @Test
     public void testMean() {
-        TestConfiguration.getLogger().debug("mean");
+        TestUtils.log(this.getClass(), "mean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 14.595333333333;
         double result = SRS.mean(flatDataCollection);
@@ -117,7 +119,7 @@ public class SRSTest {
      */
     @Test
     public void testVariance() {
-        TestConfiguration.getLogger().debug("variance");
+        TestUtils.log(this.getClass(), "variance");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 52.621426666667;
         double result = SRS.variance(flatDataCollection);
@@ -129,7 +131,7 @@ public class SRSTest {
      */
     @Test
     public void testStd() {
-        TestConfiguration.getLogger().debug("std");
+        TestUtils.log(this.getClass(), "std");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 7.2540627696944;
         double result = SRS.std(flatDataCollection);
@@ -141,7 +143,7 @@ public class SRSTest {
      */
     @Test
     public void testXbarVariance_3args() {
-        TestConfiguration.getLogger().debug("xbarVariance");
+        TestUtils.log(this.getClass(), "xbarVariance");
         double variance = 52.621426666667;
         int sampleN = 15;
         int populationN = 2147483647;
@@ -155,7 +157,7 @@ public class SRSTest {
      */
     @Test
     public void testXbarStd_3args() {
-        TestConfiguration.getLogger().debug("xbarStd");
+        TestUtils.log(this.getClass(), "xbarStd");
         double std = 7.2540627696944;
         int sampleN = 15;
         int populationN = 2147483647;
@@ -169,7 +171,7 @@ public class SRSTest {
      */
     @Test
     public void testPbarVariance_3args() {
-        TestConfiguration.getLogger().debug("pbarVariance");
+        TestUtils.log(this.getClass(), "pbarVariance");
         double pbar = 0.19;
         int sampleN = 200;
         int populationN = 3042;
@@ -183,7 +185,7 @@ public class SRSTest {
      */
     @Test
     public void testPbarStd_3args() {
-        TestConfiguration.getLogger().debug("pbarStd");
+        TestUtils.log(this.getClass(), "pbarStd");
         double pbar = 0.19;
         int sampleN = 200;
         int populationN = 3042;
@@ -197,7 +199,7 @@ public class SRSTest {
      */
     @Test
     public void testMinimumSampleSizeForMaximumXbarStd_3args() {
-        TestConfiguration.getLogger().debug("minimumSampleSizeForMaximumXbarStd");
+        TestUtils.log(this.getClass(), "minimumSampleSizeForMaximumXbarStd");
         double maximumXbarStd = 1.2;
         double populationStd = 7.25;
         int populationN = 2147483647;
@@ -211,7 +213,7 @@ public class SRSTest {
      */
     @Test
     public void testMinimumSampleSizeForGivenDandMaximumRisk_4args() {
-        TestConfiguration.getLogger().debug("minimumSampleSizeForGivenDandMaximumRisk");
+        TestUtils.log(this.getClass(), "minimumSampleSizeForGivenDandMaximumRisk");
         double d = 0.323;
         double aLevel = 0.1;
         double populationStd = 1.7289303051309;

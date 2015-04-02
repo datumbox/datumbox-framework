@@ -21,6 +21,8 @@ import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -59,7 +61,7 @@ public class ClusterSamplingTest {
      */
     @Test
     public void testNbar() {
-        TestConfiguration.getLogger().debug("Nbar");
+        TestUtils.log(this.getClass(), "Nbar");
         TransposeDataList clusterIdList = generateClusterIdList();
         
         double expResult = 10.0;
@@ -72,7 +74,7 @@ public class ClusterSamplingTest {
      */
     @Test
     public void testRandomSampling() {
-        TestConfiguration.getLogger().debug("randomSampling");
+        TestUtils.log(this.getClass(), "randomSampling");
         TransposeDataList clusterIdList = generateClusterIdList();
         int sampleM = 2;
         double expResult = sampleM;
@@ -86,7 +88,7 @@ public class ClusterSamplingTest {
      */
     @Test
     public void testMean() {
-        TestConfiguration.getLogger().debug("mean");
+        TestUtils.log(this.getClass(), "mean");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         double expResult = 17.5;
         double result = ClusterSampling.mean(sampleDataCollection);
@@ -98,7 +100,7 @@ public class ClusterSamplingTest {
      */
     @Test
     public void testXbarVariance() {
-        TestConfiguration.getLogger().debug("xbarVariance");
+        TestUtils.log(this.getClass(), "xbarVariance");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         int populationM = 4;
         double Nbar = 10.0;
@@ -112,7 +114,7 @@ public class ClusterSamplingTest {
      */
     @Test
     public void testXbarStd() {
-        TestConfiguration.getLogger().debug("xbarStd");
+        TestUtils.log(this.getClass(), "xbarStd");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         int populationM = 4;
         double Nbar = 10.0;

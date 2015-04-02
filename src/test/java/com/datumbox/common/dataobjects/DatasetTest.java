@@ -16,7 +16,7 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class DatasetTest {
      */
     @Test
     public void testCopyCollection2Array() {
-        TestConfiguration.getLogger().debug("copyCollection2Array");
+        TestUtils.log(this.getClass(), "copyCollection2Array");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{1,2,3,4,5}));
         Object[] expResult = new Object[]{1,2,3,4,5};
         Object[] result = Dataset.<Object>copyCollection2Array(Object.class, flatDataCollection);
@@ -50,7 +50,7 @@ public class DatasetTest {
      */
     @Test
     public void testGetRanksFromValues() {
-        TestConfiguration.getLogger().debug("getRanksFromValues");
+        TestUtils.log(this.getClass(), "getRanksFromValues");
         FlatDataList flatDataCollection =  new FlatDataList(Arrays.asList(new Object[]{50,10,10,30,40}));
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{5.0,1.5,1.5,3.0,4.0}));
         AssociativeArray expResult2 = new AssociativeArray(new ConcurrentSkipListMap<>());
@@ -65,7 +65,7 @@ public class DatasetTest {
      */
     @Test
     public void testGetColumns() {
-        TestConfiguration.getLogger().debug("getColumns");
+        TestUtils.log(this.getClass(), "getColumns");
         Dataset instance = new Dataset();
         
         
@@ -99,7 +99,7 @@ public class DatasetTest {
      */
     @Test
     public void testConvert2Sparse() {
-        TestConfiguration.getLogger().debug("convert2Sparse");
+        TestUtils.log(this.getClass(), "convert2Sparse");
         Dataset instance = new Dataset();
         
         
@@ -135,7 +135,7 @@ public class DatasetTest {
      */
     @Test
     public void testExtractColumnValues() {
-        TestConfiguration.getLogger().debug("extractColumnValues");
+        TestUtils.log(this.getClass(), "extractColumnValues");
         Object column = "height";
         Dataset instance = new Dataset();
         
@@ -166,7 +166,7 @@ public class DatasetTest {
      */
     @Test
     public void testExtractColumnValuesByY() {
-        TestConfiguration.getLogger().debug("extractColumnValuesByY");
+        TestUtils.log(this.getClass(), "extractColumnValuesByY");
         Object column = "height";
         Dataset instance = new Dataset();
         

@@ -90,7 +90,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      */
     @SuppressWarnings("unchecked")
     public VM kFoldCrossValidation(Dataset trainingData, TP trainingParameters, int k) {
-        logger.debug("kFoldCrossValidation()");
+        logger.info("kFoldCrossValidation()");
         
         initializeTrainingConfiguration(trainingParameters);
         
@@ -105,7 +105,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param newData 
      */
     public void predict(Dataset newData) { 
-        logger.debug("predict()");
+        logger.info("predict()");
         
         knowledgeBase.load();
         
@@ -121,7 +121,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @return 
      */
      public VM validate(Dataset testingData) {  
-        logger.debug("test()");
+        logger.info("validate()");
         
         knowledgeBase.load();
 
@@ -141,7 +141,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     public void setValidationMetrics(VM validationMetrics) {
         knowledgeBase.setValidationMetrics(validationMetrics);
         
-        logger.debug("Updating model");
+        logger.info("Updating model");
         knowledgeBase.save();
     }
     

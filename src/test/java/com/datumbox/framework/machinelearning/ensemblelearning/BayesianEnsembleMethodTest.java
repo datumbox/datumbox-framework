@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class BayesianEnsembleMethodTest {
      */
     @Test
     public void testValidate() {
-        TestConfiguration.getLogger().debug("validate");
+        TestUtils.log(this.getClass(), "validate");
         
         Dataset trainingData = new Dataset();
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));

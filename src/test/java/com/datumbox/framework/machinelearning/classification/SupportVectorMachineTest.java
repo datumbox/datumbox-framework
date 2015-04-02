@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -43,7 +44,7 @@ public class SupportVectorMachineTest {
      */
     @Test
     public void testValidate() {
-        TestConfiguration.getLogger().debug("validate");
+        TestUtils.log(this.getClass(), "validate");
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -133,7 +134,7 @@ public class SupportVectorMachineTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        TestConfiguration.getLogger().debug("kFoldCrossValidation");
+        TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42);
         int k = 5;
         

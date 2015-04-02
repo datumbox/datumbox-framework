@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.decisiontheory;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.AbstractMap;
 import java.util.Map;
 import org.junit.Test;
@@ -71,7 +72,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testMaxMin() {
-        TestConfiguration.getLogger().debug("maxMin");
+        TestUtils.log(this.getClass(), "maxMin");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A1", 400.0);
         Map.Entry<Object, Object> result = DecisionCriteria.maxMin(payoffMatrix);
@@ -83,7 +84,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testMaxMax() {
-        TestConfiguration.getLogger().debug("maxMax");
+        TestUtils.log(this.getClass(), "maxMax");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A4", 1000.0);
         Map.Entry<Object, Object> result = DecisionCriteria.maxMax(payoffMatrix);
@@ -95,7 +96,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testSavage() {
-        TestConfiguration.getLogger().debug("savage");
+        TestUtils.log(this.getClass(), "savage");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A2", -400.0);
         Map.Entry<Object, Object> result = DecisionCriteria.savage(payoffMatrix);
@@ -107,7 +108,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testLaplace() {
-        TestConfiguration.getLogger().debug("laplace");
+        TestUtils.log(this.getClass(), "laplace");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A2", 475.0);
         Map.Entry<Object, Object> result = DecisionCriteria.laplace(payoffMatrix);
@@ -119,7 +120,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testHurwiczAlpha() {
-        TestConfiguration.getLogger().debug("hurwiczAlpha");
+        TestUtils.log(this.getClass(), "hurwiczAlpha");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         double alpha = 0.5;
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A1", 400.0);
@@ -132,7 +133,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testMaximumLikelihood() {
-        TestConfiguration.getLogger().debug("maximumLikelihood");
+        TestUtils.log(this.getClass(), "maximumLikelihood");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         AssociativeArray eventProbabilities = generateEventProbabilities();
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A2", 600.0);
@@ -145,7 +146,7 @@ public class DecisionCriteriaTest {
      */
     @Test
     public void testBayes() {
-        TestConfiguration.getLogger().debug("bayes");
+        TestUtils.log(this.getClass(), "bayes");
         DataTable2D payoffMatrix = generatePayoffMatrix();
         AssociativeArray eventProbabilities = generateEventProbabilities();
         Map.Entry<Object, Object> expResult = new AbstractMap.SimpleEntry<>("A2", 450.0);

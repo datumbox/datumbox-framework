@@ -16,7 +16,9 @@
  */
 package com.datumbox.framework.statistics.distributions;
 
+
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +36,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBernoulli() {
-        TestConfiguration.getLogger().debug("Bernoulli");
+        TestUtils.log(this.getClass(), "Bernoulli");
         boolean k = true;
         double p = 0.5;
         double expResult = 0.5;
@@ -47,7 +49,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBernoulliCdf() {
-        TestConfiguration.getLogger().debug("BernoulliCdf");
+        TestUtils.log(this.getClass(), "BernoulliCdf");
         int k = 1;
         double p = 0.5;
         double expResult = 1.0;
@@ -60,7 +62,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBinomial() {
-        TestConfiguration.getLogger().debug("Binomial");
+        TestUtils.log(this.getClass(), "Binomial");
         int k = 3;
         double p = 0.5;
         int n = 10;
@@ -74,7 +76,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBinomialCdf() {
-        TestConfiguration.getLogger().debug("BinomialCdf");
+        TestUtils.log(this.getClass(), "BinomialCdf");
         int k = 3;
         double p = 0.5;
         int n = 10;
@@ -88,7 +90,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testGeometric() {
-        TestConfiguration.getLogger().debug("Geometric");
+        TestUtils.log(this.getClass(), "Geometric");
         int k = 3;
         double p = 0.5;
         double expResult = 0.125;
@@ -101,7 +103,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testGeometricCdf() {
-        TestConfiguration.getLogger().debug("GeometricCdf");
+        TestUtils.log(this.getClass(), "GeometricCdf");
         int k = 3;
         double p = 0.5;
         double expResult = 0.875;
@@ -114,7 +116,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testNegativeBinomial() {
-        TestConfiguration.getLogger().debug("NegativeBinomial");
+        TestUtils.log(this.getClass(), "NegativeBinomial");
         int n = 10;
         int r = 4;
         double p = 0.5;
@@ -128,7 +130,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testNegativeBinomialCdf() {
-        TestConfiguration.getLogger().debug("NegativeBinomialCdf");
+        TestUtils.log(this.getClass(), "NegativeBinomialCdf");
         int n = 10;
         int r = 4;
         double p = 0.5;
@@ -142,7 +144,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testUniform() {
-        TestConfiguration.getLogger().debug("Uniform");
+        TestUtils.log(this.getClass(), "Uniform");
         int n = 10;
         double expResult = 0.1;
         double result = DiscreteDistributions.Uniform(n);
@@ -154,7 +156,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testUniformCdf() {
-        TestConfiguration.getLogger().debug("UniformCdf");
+        TestUtils.log(this.getClass(), "UniformCdf");
         int k = 3;
         int n = 10;
         double expResult = 0.3;
@@ -167,7 +169,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testHypergeometric() {
-        TestConfiguration.getLogger().debug("Hypergeometric");
+        TestUtils.log(this.getClass(), "Hypergeometric");
         int k = 3;
         int n = 10;
         int Kp = 30;
@@ -182,7 +184,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testHypergeometricCdf() {
-        TestConfiguration.getLogger().debug("HypergeometricCdf");
+        TestUtils.log(this.getClass(), "HypergeometricCdf");
         int k = 3;
         int n = 10;
         int Kp = 30;
@@ -197,7 +199,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testPoisson() {
-        TestConfiguration.getLogger().debug("Poisson");
+        TestUtils.log(this.getClass(), "Poisson");
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.14037389583692;
@@ -210,7 +212,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testPoissonCdf() {
-        TestConfiguration.getLogger().debug("PoissonCdf");
+        TestUtils.log(this.getClass(), "PoissonCdf");
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.26502591533403;

@@ -18,6 +18,7 @@ package com.datumbox.framework.utilities.text.analysis;
 
 import com.datumbox.framework.utilities.text.analysis.TextSimilarity;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +36,7 @@ public class TextSimilarityTest {
      */
     @Test
     public void testOliverSimilarity() {
-        TestConfiguration.getLogger().debug("oliverSimilarity");
+        TestUtils.log(this.getClass(), "oliverSimilarity");
         String text1 = "This book has been written against a background of both reckless optimism and reckless despair. It holds that Progress and Doom are two sides of the same medal; that both are articles of superstition, not of faith. It was written out of the conviction that it should be possible to discover the hidden mechanics by which all traditional elements of our political and spiritual world were dissolved into a conglomeration where everything seems to have lost specific value, and has become unrecognizable for human comprehension, unusable for human purpose. Hannah Arendt, The Origins of Totalitarianism (New York: Harcourt Brace Jovanovich, Inc., 1973 ed.), p.vii, Preface to the First Edition.";
         String text2 = "The first edition of The Origins of Totalitarianism was written in 1950. Soon after the Second World War, this was a time of both reckless optimism and reckless despair. During this time, Dr. Arendt argues, the traditional elements of the political and spiritual world were dissolved into a conglomeration where everything seems to have lost specific value. In particular, the separation between the State and Society seems to have been destroyed. In this book, she seeks to disclose the hidden mechanics by which this transformation occurred.";
         double expResult = 0.4064777327935223;
@@ -48,7 +49,7 @@ public class TextSimilarityTest {
      */
     @Test
     public void testShinglerSimilarity() {
-        TestConfiguration.getLogger().debug("shinglerSimilarity");
+        TestUtils.log(this.getClass(), "shinglerSimilarity");
         String text1 = "This book has been written against a background of both reckless optimism and reckless despair. It holds that Progress and Doom are two sides of the same medal; that both are articles of superstition, not of faith. It was written out of the conviction that it should be possible to discover the hidden mechanics by which all traditional elements of our political and spiritual world were dissolved into a conglomeration where everything seems to have lost specific value, and has become unrecognizable for human comprehension, unusable for human purpose. Hannah Arendt, The Origins of Totalitarianism (New York: Harcourt Brace Jovanovich, Inc., 1973 ed.), p.vii, Preface to the First Edition.";
         String text2 = "The first edition of The Origins of Totalitarianism was written in 1950. Soon after the Second World War, this was a time of both reckless optimism and reckless despair. During this time, Dr. Arendt argues, the traditional elements of the political and spiritual world were dissolved into a conglomeration where everything seems to have lost specific value. In particular, the separation between the State and Society seems to have been destroyed. In this book, she seeks to disclose the hidden mechanics by which this transformation occurred.";
         int w = 3;

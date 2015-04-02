@@ -18,6 +18,8 @@ package com.datumbox.framework.statistics.timeseries;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
@@ -46,7 +48,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleMovingAverage() {
-        TestConfiguration.getLogger().debug("simpleMovingAverage");
+        TestUtils.log(this.getClass(), "simpleMovingAverage");
         FlatDataList flatDataList = generateFlatDataList();
         int N = 3;
         double expResult = 23.0;
@@ -59,7 +61,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleMovingAverageQuick() {
-        TestConfiguration.getLogger().debug("simpleMovingAverageQuick");
+        TestUtils.log(this.getClass(), "simpleMovingAverageQuick");
         double Yt = 23.5;
         double YtminusN = 20.0;
         double Ft = 23.0;
@@ -74,7 +76,7 @@ public class SmoothingTest {
      */
     @Test
     public void testWeightedMovingAverage() {
-        TestConfiguration.getLogger().debug("weightedMovingAverage");
+        TestUtils.log(this.getClass(), "weightedMovingAverage");
         FlatDataList flatDataList = generateFlatDataList();
         int N = 3;
         double expResult =22.0;
@@ -87,7 +89,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleExponentialSmoothing() {
-        TestConfiguration.getLogger().debug("simpleExponentialSmoothing");
+        TestUtils.log(this.getClass(), "simpleExponentialSmoothing");
         FlatDataList flatDataList = generateFlatDataList();
         double a = 0.9;
         double expResult = 23.240433133179;
@@ -100,7 +102,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleExponentialSmoothingQuick() {
-        TestConfiguration.getLogger().debug("simpleExponentialSmoothingQuick");
+        TestUtils.log(this.getClass(), "simpleExponentialSmoothingQuick");
         double Ytminus1 = 23.5;
         double Stminus1 = 23.240433133179;
         double a = 0.9;
@@ -114,7 +116,7 @@ public class SmoothingTest {
      */
     @Test
     public void testHoltWintersSmoothing() {
-        TestConfiguration.getLogger().debug("holtWintersSmoothing");
+        TestUtils.log(this.getClass(), "holtWintersSmoothing");
         FlatDataList flatDataList = generateFlatDataList();
         int season_length = 3;
         double alpha = 0.2;

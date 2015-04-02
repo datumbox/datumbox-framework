@@ -22,6 +22,7 @@ import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
+import com.datumbox.tests.utilities.TestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,6 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -47,7 +46,7 @@ public class ModelerTest {
      */
     @Test
     public void testTrainAndValidate() {
-        TestConfiguration.getLogger().debug("testTrainAndValidate");
+        TestUtils.log(this.getClass(), "testTrainAndValidate");
         RandomValue.randomGenerator = new Random(42);
         
         
@@ -159,7 +158,7 @@ public class ModelerTest {
         instance = null;
         
         
-        TestConfiguration.getLogger().debug("validate");
+        TestUtils.log(this.getClass(), "validate");
         
         
         instance = new Modeler(dbName, TestConfiguration.getDBConfig());

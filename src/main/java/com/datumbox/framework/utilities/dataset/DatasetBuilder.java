@@ -71,7 +71,7 @@ public class DatasetBuilder {
             Object theClass = entry.getKey();
             List<String> textList = entry.getValue();
             
-            logger.debug("Dataset Parsing "+theClass);
+            logger.info("Dataset Parsing "+theClass);
             
             Dataset classDataset = new Dataset();
             for(String text : textList) {
@@ -103,7 +103,7 @@ public class DatasetBuilder {
             Object theClass = entry.getKey();
             URI datasetURI = entry.getValue();
             
-            logger.debug("Dataset Parsing "+theClass);
+            logger.info("Dataset Parsing "+theClass);
             
             //process the files line-by-line, assuming there is a single document/case per row
             Dataset classDataset = new Dataset();

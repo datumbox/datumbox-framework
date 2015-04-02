@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class AdaboostTest {
      */
     @Test
     public void testValidate() {
-        TestConfiguration.getLogger().debug("validate");
+        TestUtils.log(this.getClass(), "validate");
         RandomValue.randomGenerator = new Random(42);
         
         /*
@@ -146,7 +146,7 @@ public class AdaboostTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        TestConfiguration.getLogger().debug("kFoldCrossValidation");
+        TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42);
         int k = 5;
         

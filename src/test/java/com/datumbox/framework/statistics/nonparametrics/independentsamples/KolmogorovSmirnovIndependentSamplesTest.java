@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -37,7 +38,7 @@ public class KolmogorovSmirnovIndependentSamplesTest {
      */
     @Test
     public void testTest() {
-        TestConfiguration.getLogger().debug("test");
+        TestUtils.log(this.getClass(), "test");
         TransposeDataList transposeDataList = new TransposeDataList();
         
         //Synthetic internalData coming the first from normal and the second from logistic. It should reject the null hypothesis

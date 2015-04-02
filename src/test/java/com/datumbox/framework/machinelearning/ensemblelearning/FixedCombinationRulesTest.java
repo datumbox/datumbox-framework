@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -61,7 +61,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testSum() {
-        TestConfiguration.getLogger().debug("sum");
+        TestUtils.log(this.getClass(), "sum");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -78,7 +78,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testAverage() {
-        TestConfiguration.getLogger().debug("average");
+        TestUtils.log(this.getClass(), "average");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -95,7 +95,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testWeightedAverage() {
-        TestConfiguration.getLogger().debug("weightedAverage");
+        TestUtils.log(this.getClass(), "weightedAverage");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         AssociativeArray classifierWeights = new AssociativeArray();
         classifierWeights.put("Classifier1", 0.5);
@@ -117,7 +117,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testMedian() {
-        TestConfiguration.getLogger().debug("median");
+        TestUtils.log(this.getClass(), "median");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -134,7 +134,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testMaximum() {
-        TestConfiguration.getLogger().debug("maximum");
+        TestUtils.log(this.getClass(), "maximum");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -151,7 +151,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testMinimum() {
-        TestConfiguration.getLogger().debug("minimum");
+        TestUtils.log(this.getClass(), "minimum");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -168,7 +168,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testProduct() {
-        TestConfiguration.getLogger().debug("product");
+        TestUtils.log(this.getClass(), "product");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -185,7 +185,7 @@ public class FixedCombinationRulesTest {
      */
     @Test
     public void testMajorityVote() {
-        TestConfiguration.getLogger().debug("majorityVote");
+        TestUtils.log(this.getClass(), "majorityVote");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();

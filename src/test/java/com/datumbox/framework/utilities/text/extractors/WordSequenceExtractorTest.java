@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class WordSequenceExtractorTest {
      */
     @Test
     public void testExtract() {
-        TestConfiguration.getLogger().debug("extract");
+        TestUtils.log(this.getClass(), "extract");
         String text = "this is a text sequence that is amazing text sequence";
         WordSequenceExtractor instance = new WordSequenceExtractor();
         instance.setParameters(new WordSequenceExtractor.Parameters());

@@ -22,6 +22,7 @@ import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -43,7 +44,7 @@ public class StepwiseRegressionTest {
      */
     @Test
     public void testValidate() {
-        TestConfiguration.getLogger().debug("validate");
+        TestUtils.log(this.getClass(), "validate");
         RandomValue.randomGenerator = new Random(42);
         
         /*

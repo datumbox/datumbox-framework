@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.statistics.parametrics.relatedsamples;
 
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +35,7 @@ public class StudentsRelatedSamplesTest {
      */
     @Test
     public void testTestMean() {
-        TestConfiguration.getLogger().debug("testMean");
+        TestUtils.log(this.getClass(), "testMean");
         double dbar = 2.2;
         int n = 10;
         double dbarStd = 1.924;

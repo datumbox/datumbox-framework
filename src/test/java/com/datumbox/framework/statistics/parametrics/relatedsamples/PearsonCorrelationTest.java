@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.parametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -37,7 +38,7 @@ public class PearsonCorrelationTest {
      */
     @Test
     public void testTest() {
-        TestConfiguration.getLogger().debug("test");
+        TestUtils.log(this.getClass(), "test");
         TransposeDataList transposeDataList = new TransposeDataList();
         transposeDataList.put(0, new FlatDataList(Arrays.asList(new Object[]{64,61,84,70,88,92,72,77})));
         transposeDataList.put(1, new FlatDataList(Arrays.asList(new Object[]{20,16,34,23,27,32,18,22})));

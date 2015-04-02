@@ -19,6 +19,8 @@ package com.datumbox.framework.statistics.sampling;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -43,7 +45,7 @@ public class SystematicSamplingTest {
      */
     @Test
     public void testRandomSampling() {
-        TestConfiguration.getLogger().debug("randomSampling");
+        TestUtils.log(this.getClass(), "randomSampling");
         FlatDataList idList = new FlatDataList(Arrays.asList(new Object[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}));
         int n = 6;
         boolean randomizeRecords = false;
@@ -58,7 +60,7 @@ public class SystematicSamplingTest {
      */
     @Test
     public void testMean() {
-        TestConfiguration.getLogger().debug("mean");
+        TestUtils.log(this.getClass(), "mean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 103.41666666667;
         double result = SystematicSampling.mean(flatDataCollection);
@@ -70,7 +72,7 @@ public class SystematicSamplingTest {
      */
     @Test
     public void testXbarVariance() {
-        TestConfiguration.getLogger().debug("xbarVariance");
+        TestUtils.log(this.getClass(), "xbarVariance");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 405.75;
         double result = SystematicSampling.xbarVariance(flatDataCollection);
@@ -82,7 +84,7 @@ public class SystematicSamplingTest {
      */
     @Test
     public void testXbarStd() {
-        TestConfiguration.getLogger().debug("xbarStd");
+        TestUtils.log(this.getClass(), "xbarStd");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 20.143237078484;
         double result = SystematicSampling.xbarStd(flatDataCollection);

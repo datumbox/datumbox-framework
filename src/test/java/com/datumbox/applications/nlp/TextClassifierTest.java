@@ -50,7 +50,7 @@ public class TextClassifierTest {
      */
     @Test
     public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
-        TestConfiguration.getLogger().debug("TrainAndPredict");
+        TestUtils.log(this.getClass(), "TrainAndPredict");
         RandomValue.randomGenerator = new Random(42);
         
         

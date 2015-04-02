@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class LevenesIndependentSamplesTest {
      */
     @Test
     public void testTestVariances() {
-        TestConfiguration.getLogger().debug("testVariances");
+        TestUtils.log(this.getClass(), "testVariances");
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection(new LinkedHashMap<>());
         
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{60.8,57.0,65.0,58.6,61.7})));

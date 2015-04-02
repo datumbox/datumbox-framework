@@ -17,6 +17,7 @@
 package com.datumbox.applications.nlp;
 
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -60,7 +61,7 @@ public class CETRTest {
      */
     @Test
     public void testExtract() {
-        TestConfiguration.getLogger().debug("extract");
+        TestUtils.log(this.getClass(), "extract");
         String text = CETRTest.webRequest("http://www.example.org/");
         CETR.Parameters parameters = new CETR.Parameters();
         parameters.setNumberOfClusters(2);

@@ -16,7 +16,8 @@
  */
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +35,7 @@ public class NormalIndependentSamplesTest {
      */
     @Test
     public void testTestMeans() {
-        TestConfiguration.getLogger().debug("testMeans");
+        TestUtils.log(this.getClass(), "testMeans");
         double xbar = 215.0;
         double ybar = 200.0;
         int n = 60;
@@ -53,7 +54,7 @@ public class NormalIndependentSamplesTest {
      */
     @Test
     public void testTestPercentages() {
-        TestConfiguration.getLogger().debug("testPercentages");
+        TestUtils.log(this.getClass(), "testPercentages");
         double p1bar = 0.54;
         double p2bar = 0.61;
         int n1 = 1000;
@@ -70,7 +71,7 @@ public class NormalIndependentSamplesTest {
      */
     @Test
     public void testTestOddsRatio() {
-        TestConfiguration.getLogger().debug("testOddsRatio");
+        TestUtils.log(this.getClass(), "testOddsRatio");
         int n11 = 131;
         int n12 = 33;
         int n21 = 251;

@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -37,7 +38,7 @@ public class MutualInformationTest {
 
     @Test
     public void testSelectFeatures() {
-        TestConfiguration.getLogger().debug("selectFeatures");
+        TestUtils.log(this.getClass(), "selectFeatures");
         RandomValue.randomGenerator = new Random(42);
         
         String dbName = "JUnitMutualInformationFeatureSelection";

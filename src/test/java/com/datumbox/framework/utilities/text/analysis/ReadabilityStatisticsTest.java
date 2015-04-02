@@ -18,6 +18,7 @@ package com.datumbox.framework.utilities.text.analysis;
 
 import com.datumbox.framework.utilities.text.analysis.ReadabilityStatistics;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -37,7 +38,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testFlesch_kincaid_reading_ease() {
-        TestConfiguration.getLogger().debug("flesch_kincaid_reading_ease");
+        TestUtils.log(this.getClass(), "flesch_kincaid_reading_ease");
         String strText = TEST_STRING;
         double expResult = -188.4;
         double result = ReadabilityStatistics.flesch_kincaid_reading_ease(strText);
@@ -49,7 +50,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testFlesch_kincaid_grade_level() {
-        TestConfiguration.getLogger().debug("flesch_kincaid_grade_level");
+        TestUtils.log(this.getClass(), "flesch_kincaid_grade_level");
         String strText = TEST_STRING;
         double expResult = 112.3;
         double result = ReadabilityStatistics.flesch_kincaid_grade_level(strText);
@@ -61,7 +62,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testGunning_fog_score() {
-        TestConfiguration.getLogger().debug("gunning_fog_score");
+        TestUtils.log(this.getClass(), "gunning_fog_score");
         String strText = TEST_STRING;
         double expResult = 118.0;
         double result = ReadabilityStatistics.gunning_fog_score(strText);
@@ -73,7 +74,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testColeman_liau_index() {
-        TestConfiguration.getLogger().debug("coleman_liau_index");
+        TestUtils.log(this.getClass(), "coleman_liau_index");
         String strText = TEST_STRING;
         double expResult = 6.8;
         double result = ReadabilityStatistics.coleman_liau_index(strText);
@@ -85,7 +86,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testSmog_index() {
-        TestConfiguration.getLogger().debug("smog_index");
+        TestUtils.log(this.getClass(), "smog_index");
         String strText = TEST_STRING;
         double expResult = 14.1;
         double result = ReadabilityStatistics.smog_index(strText);
@@ -97,7 +98,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testAutomated_readability_index() {
-        TestConfiguration.getLogger().debug("automated_readability_index");
+        TestUtils.log(this.getClass(), "automated_readability_index");
         String strText = TEST_STRING;
         double expResult = 143.2;
         double result = ReadabilityStatistics.automated_readability_index(strText);
@@ -109,7 +110,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testDale_chall_score() {
-        TestConfiguration.getLogger().debug("dale_chall_score");
+        TestUtils.log(this.getClass(), "dale_chall_score");
         String strText = TEST_STRING;
         double expResult = 20.486603754266213;
         double result = ReadabilityStatistics.dale_chall_score(strText);
@@ -121,7 +122,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testDale_chall_grade() {
-        TestConfiguration.getLogger().debug("dale_chall_grade");
+        TestUtils.log(this.getClass(), "dale_chall_grade");
         String strText = TEST_STRING;
         double expResult = 16.0;
         double result = ReadabilityStatistics.dale_chall_grade(strText);
@@ -133,7 +134,7 @@ public class ReadabilityStatisticsTest {
      */
     @Test
     public void testSpache_score() {
-        TestConfiguration.getLogger().debug("spache_score");
+        TestUtils.log(this.getClass(), "spache_score");
         String strText = TEST_STRING;
         double expResult = 41.523999999999994;
         double result = ReadabilityStatistics.spache_score(strText);

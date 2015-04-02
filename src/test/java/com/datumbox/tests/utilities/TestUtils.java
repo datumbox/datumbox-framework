@@ -26,6 +26,7 @@ import java.net.URI;
 import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import static org.junit.Assert.assertEquals;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -65,5 +66,9 @@ public class TestUtils {
         catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static final synchronized void log(Class klass, String msg) {
+        LoggerFactory.getLogger(klass).info(msg);
     }
 }

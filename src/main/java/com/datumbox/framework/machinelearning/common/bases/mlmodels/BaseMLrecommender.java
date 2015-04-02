@@ -72,7 +72,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * @param newData 
      */
     public void predict(Dataset newData) { 
-        logger.debug("predict()");
+        logger.info("predict()");
         
         knowledgeBase.load();
         

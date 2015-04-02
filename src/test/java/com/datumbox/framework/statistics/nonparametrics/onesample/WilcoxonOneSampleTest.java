@@ -17,7 +17,8 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +37,7 @@ public class WilcoxonOneSampleTest {
      */
     @Test
     public void testTest() {
-        TestConfiguration.getLogger().debug("test");
+        TestUtils.log(this.getClass(), "test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return true.
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{19.5,19.8,18.9,20.4,20.2,21.5,19.9,20.9,18.1,20.5,18.3,19.5,18.3,19.0,18.2,23.9,17.0,19.7,21.7,19.5}));
         double median = 20.8;

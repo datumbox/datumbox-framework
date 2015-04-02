@@ -19,8 +19,8 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class CollaborativeFilteringTest {
      */
     @Test
     public void testPredict() {
-        TestConfiguration.getLogger().debug("predict");
+        TestUtils.log(this.getClass(), "predict");
         
         Dataset trainingData = new Dataset();
         Record r1 = new Record();

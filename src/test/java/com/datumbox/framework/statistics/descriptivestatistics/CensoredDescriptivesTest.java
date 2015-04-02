@@ -19,6 +19,8 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+
+import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -45,7 +47,7 @@ public class CensoredDescriptivesTest {
      */
     @Test
     public void testMedian() {
-        TestConfiguration.getLogger().debug("median");
+        TestUtils.log(this.getClass(), "median");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 9.6111111111111;
         double result = CensoredDescriptives.median(survivalFunction);
@@ -57,7 +59,7 @@ public class CensoredDescriptivesTest {
      */
     @Test
     public void testMean() {
-        TestConfiguration.getLogger().debug("mean");
+        TestUtils.log(this.getClass(), "mean");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 10.0875;
         double result = CensoredDescriptives.mean(survivalFunction);
@@ -69,7 +71,7 @@ public class CensoredDescriptivesTest {
      */
     @Test
     public void testMeanVariance() {
-        TestConfiguration.getLogger().debug("meanVariance");
+        TestUtils.log(this.getClass(), "meanVariance");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 2.7874113520408;
         double result = CensoredDescriptives.meanVariance(survivalFunction);
@@ -81,7 +83,7 @@ public class CensoredDescriptivesTest {
      */
     @Test
     public void testMeanStd() {
-        TestConfiguration.getLogger().debug("meanStd");
+        TestUtils.log(this.getClass(), "meanStd");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 1.6695542375259;
         double result = CensoredDescriptives.meanStd(survivalFunction);
