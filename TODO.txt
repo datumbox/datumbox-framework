@@ -4,7 +4,6 @@ CODE IMPROVEMENTS
 bbriniotis:
 - Move the static methods of Dataset to a Utils class or something similar
 - Add MapDB support in the Dataset
-- Rewrite the TestUtils.getRemoteFile() method to avoid using IO Commons. Remove the dependency from pom.
 
 lmpampaletakis:
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?

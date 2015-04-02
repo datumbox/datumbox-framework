@@ -20,11 +20,14 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.configuration.TestConfiguration;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import org.apache.commons.io.FileUtils;
 import static org.junit.Assert.assertEquals;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +60,22 @@ public class TestUtils {
     }
     
     public static URI getRemoteFile(URL url) {
-        //TODO: rewrite this method not to use IO commons
+        File tmpFile = null;
         try {
-            File tmpFile = File.createTempFile("datumbox", ".tmp");
-            FileUtils.copyURLToFile(url, tmpFile);
+            tmpFile = File.createTempFile("datumbox", ".tmp");
+        } 
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        try (DataInputStream in = new DataInputStream(new BufferedInputStream(url.openStream()));
+             DataOutputStream out = new DataOutputStream(new FileOutputStream(tmpFile))) {
+            
+            int n;
+            byte[] buffer = new byte[4096];
+            while ((n = in.read(buffer)) != -1) {
+                out.write(buffer, 0, n);
+            }
+            
             return tmpFile.toURI();
         } 
         catch (IOException ex) {
