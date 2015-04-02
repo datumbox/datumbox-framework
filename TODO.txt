@@ -2,13 +2,13 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
-- Add MapDB support in the Dataset
+- Add MapDB support in the Dataset.
 
 lmpampaletakis:
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
 
 other:
-- Serialization improvements
+- Serialization improvements: set serialVersionUID?
 - create the required exceptions
 - CSV reader and converter to Dataset
 
