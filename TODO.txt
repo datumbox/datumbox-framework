@@ -6,6 +6,7 @@ bbriniotis:
 
 lmpampaletakis:
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
+- Review the codebase and make suggestions for code improvements and changes in the architecture.
 
 other:
 - Serialization improvements: set serialVersionUID?
