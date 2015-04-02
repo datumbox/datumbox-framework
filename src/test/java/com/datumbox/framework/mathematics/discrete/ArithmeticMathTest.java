@@ -34,7 +34,7 @@ public class ArithmeticMathTest {
      */
     @Test
     public void testFactorial() {
-        System.out.println("factorial");
+        TestConfiguration.getLogger().debug("factorial");
         int k = 10;
         double expResult = 3628800.0;
         double result = ArithmeticMath.factorial(k);
@@ -46,7 +46,7 @@ public class ArithmeticMathTest {
      */
     @Test
     public void testCombination() {
-        System.out.println("combination");
+        TestConfiguration.getLogger().debug("combination");
         int n = 10;
         int k = 3;
         double expResult = 120.0;

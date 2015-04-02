@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseValidationMetrics;
@@ -90,9 +90,8 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      */
     @SuppressWarnings("unchecked")
     public VM kFoldCrossValidation(Dataset trainingData, TP trainingParameters, int k) {
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("kFoldCrossValidation()");
-        }
+        logger.debug("kFoldCrossValidation()");
+        
         initializeTrainingConfiguration(trainingParameters);
         
         return modelValidator.kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getDbConf(), this.getClass(), knowledgeBase.getTrainingParameters());
@@ -106,10 +105,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param newData 
      */
     public void predict(Dataset newData) { 
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("predict()");
-        }
+        logger.debug("predict()");
         
         knowledgeBase.load();
         
@@ -125,10 +121,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @return 
      */
      public VM validate(Dataset testingData) {  
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("test()");
-        }
+        logger.debug("test()");
         
         knowledgeBase.load();
 
@@ -148,9 +141,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     public void setValidationMetrics(VM validationMetrics) {
         knowledgeBase.setValidationMetrics(validationMetrics);
         
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("Updating model");
-        }
+        logger.debug("Updating model");
         knowledgeBase.save();
     }
     

@@ -7,7 +7,6 @@ bbriniotis:
 - Rewrite the TestUtils.getRemoteFile() method to avoid using IO Commons. Remove the dependency from pom.
 
 lmpampaletakis:
-- Eliminate the GeneralConfiguration class. Use the new logger instead of the System.out.println.
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
 
 other:

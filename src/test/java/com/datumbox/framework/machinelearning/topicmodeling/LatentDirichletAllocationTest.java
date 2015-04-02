@@ -52,7 +52,7 @@ public class LatentDirichletAllocationTest {
      */
     @Test
     public void testValidate() throws URISyntaxException, MalformedURLException {
-        System.out.println("validate");
+        TestConfiguration.getLogger().debug("validate");
         
         RandomValue.randomGenerator = new Random(42);
         

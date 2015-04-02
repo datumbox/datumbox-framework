@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.statistics.parametrics.onesample;
 
+import com.datumbox.configuration.TestConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class StudentsOneSampleTest {
      */
     @Test
     public void testTestMean() {
-        System.out.println("testMean");
+        TestConfiguration.getLogger().debug("testMean");
         double xbar = 7.4;
         int n = 28;
         double H0mean = 7.0;
@@ -50,7 +51,7 @@ public class StudentsOneSampleTest {
      */
     @Test
     public void testTestAutocorrelation() {
-        System.out.println("testAutocorrelation");
+        TestConfiguration.getLogger().debug("testAutocorrelation");
         double pk = 0.2;
         int n = 50;
         boolean is_twoTailed = false;

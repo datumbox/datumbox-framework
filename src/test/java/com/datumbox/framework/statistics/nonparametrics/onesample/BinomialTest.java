@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
+import com.datumbox.configuration.TestConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class BinomialTest {
      */
     @Test
     public void testTest() {
-        System.out.println("test");
+        TestConfiguration.getLogger().debug("test");
         int k = 10;
         int n = 40;
         double p = 0.35;

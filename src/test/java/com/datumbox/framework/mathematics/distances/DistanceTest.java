@@ -70,7 +70,7 @@ public class DistanceTest {
      */
     @Test
     public void testEuclidean() {
-        System.out.println("euclidean");
+        TestConfiguration.getLogger().debug("euclidean");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 2.6457513110645905905016157536393;
@@ -83,7 +83,7 @@ public class DistanceTest {
      */
     @Test
     public void testEuclideanWeighhted() {
-        System.out.println("euclideanWeighhted");
+        TestConfiguration.getLogger().debug("euclideanWeighhted");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         Map<Object, Double> columnWeights = getWeights();
@@ -97,7 +97,7 @@ public class DistanceTest {
      */
     @Test
     public void testManhattan() {
-        System.out.println("manhattan");
+        TestConfiguration.getLogger().debug("manhattan");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 5.0;
@@ -110,7 +110,7 @@ public class DistanceTest {
      */
     @Test
     public void testManhattanWeighhted() {
-        System.out.println("manhattanWeighhted");
+        TestConfiguration.getLogger().debug("manhattanWeighhted");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         Map<Object, Double> columnWeights = getWeights();
@@ -124,7 +124,7 @@ public class DistanceTest {
      */
     @Test
     public void testMaximum() {
-        System.out.println("maximum");
+        TestConfiguration.getLogger().debug("maximum");
         AssociativeArray a1 = new AssociativeArray(getMap1());
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 2.0;

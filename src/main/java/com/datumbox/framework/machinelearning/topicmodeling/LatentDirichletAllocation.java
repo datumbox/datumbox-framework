@@ -25,7 +25,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.configuration.GeneralConfiguration;
+
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
 import com.datumbox.framework.machinelearning.common.validation.LatentDirichletAllocationValidation;
@@ -310,9 +310,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         int iteration=0;
         while(iteration<maxIterations) {
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Iteration "+iteration);
-            }
+            logger.debug("Iteration "+iteration);
             
             int changedCounter = 0;
             //collapsed gibbs sampler
@@ -393,9 +391,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             }
             ++iteration;
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Reassigned Records "+ changedCounter);
-            }
+            logger.debug("Reassigned Records "+ changedCounter);
             
             if(changedCounter==0) {
                 break;
@@ -540,9 +536,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         double perplexity = Double.MAX_VALUE;
         for(int iteration=0;iteration<maxIterations;++iteration) {
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Iteration "+iteration);
-            }
+            logger.debug("Iteration "+iteration);
             
             
             //collapsed gibbs sampler
@@ -641,9 +635,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
 
             perplexity=Math.exp(-perplexity/totalDatasetWords);
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Reassigned Records "+ changedCounter +" - Perplexity: "+perplexity);
-            }
+            logger.debug("Reassigned Records "+ changedCounter +" - Perplexity: "+perplexity);
             
             if(changedCounter==0) {
                 break;

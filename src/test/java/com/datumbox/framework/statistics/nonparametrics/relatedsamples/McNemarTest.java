@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
+import com.datumbox.configuration.TestConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class McNemarTest {
      */
     @Test
     public void testTest() {
-        System.out.println("test");
+        TestConfiguration.getLogger().debug("test");
         //Example from Wikipedia: http://en.wikipedia.org/wiki/McNemar's_test 
         //It should reject the null hypothesis and return true.
         int n11 = 101;

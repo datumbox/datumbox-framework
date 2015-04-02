@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection2D;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -38,7 +39,7 @@ public class AnovaTest {
      */
     @Test
     public void testOneWayTestEqualVars() {
-        System.out.println("oneWayTestEqualVars");
+        TestConfiguration.getLogger().debug("oneWayTestEqualVars");
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{86,79,81,70,84})));
         transposeDataCollection.put(1, new FlatDataCollection(Arrays.asList(new Object[]{90,76,88,82,89})));
@@ -56,7 +57,7 @@ public class AnovaTest {
      */
     @Test
     public void testOneWayTestNotEqualVars() {
-        System.out.println("oneWayTestNotEqualVars");
+        TestConfiguration.getLogger().debug("oneWayTestNotEqualVars");
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{86,79,81,70,84})));
         transposeDataCollection.put(1, new FlatDataCollection(Arrays.asList(new Object[]{90,76,88,82,89})));
@@ -74,7 +75,7 @@ public class AnovaTest {
      */
     @Test
     public void testTwoWayTestEqualCellsEqualVars() {
-        System.out.println("twoWayTestEqualCellsEqualVars");
+        TestConfiguration.getLogger().debug("twoWayTestEqualCellsEqualVars");
         
         TransposeDataCollection transposeDataCollection1 = new TransposeDataCollection();
         transposeDataCollection1.put("StrainBright",  new FlatDataCollection(Arrays.asList(new Object[]{26,14,41,16,28,29,92,31})));

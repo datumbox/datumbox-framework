@@ -38,7 +38,7 @@ public class PCATest {
      */
     @Test
     public void testCalculateParameters() {
-        System.out.println("calculateParameters");
+        TestConfiguration.getLogger().debug("calculateParameters");
         Dataset originaldata = new Dataset();
         originaldata.add(Record.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));

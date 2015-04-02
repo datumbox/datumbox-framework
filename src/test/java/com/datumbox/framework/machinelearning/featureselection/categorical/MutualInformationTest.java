@@ -37,7 +37,7 @@ public class MutualInformationTest {
 
     @Test
     public void testSelectFeatures() {
-        System.out.println("selectFeatures");
+        TestConfiguration.getLogger().debug("selectFeatures");
         RandomValue.randomGenerator = new Random(42);
         
         String dbName = "JUnitMutualInformationFeatureSelection";

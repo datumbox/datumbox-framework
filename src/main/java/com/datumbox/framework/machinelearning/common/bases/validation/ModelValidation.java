@@ -21,12 +21,14 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.common.dataobjects.FlatDataList;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -37,7 +39,13 @@ import java.util.List;
  */
 public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> {
     
+    protected final Logger logger;
+    
     public static final String DB_INDICATOR="Kfold";
+    
+    public ModelValidation() {
+        logger = LoggerFactory.getLogger(this.getClass());
+    }
     
     public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.size();
@@ -64,9 +72,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Kfold "+(fold+1));
-            }
+            logger.debug("Kfold "+(fold+1));
             
             //as fold window we consider the part of the ids that are used for validation
             FlatDataList foldTrainingIds = new FlatDataList(new ArrayList<>(n-foldSize));

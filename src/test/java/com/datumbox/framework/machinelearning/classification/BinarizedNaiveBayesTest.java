@@ -40,7 +40,7 @@ public class BinarizedNaiveBayesTest {
      */
     @Test
     public void testValidate() {
-        System.out.println("validate");
+        TestConfiguration.getLogger().debug("validate");
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -102,7 +102,7 @@ public class BinarizedNaiveBayesTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        System.out.println("kFoldCrossValidation");
+        TestConfiguration.getLogger().debug("kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42);
         int k = 5;
         

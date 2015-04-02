@@ -23,7 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.GeneralConfiguration;
+
 
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
@@ -218,9 +218,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Iteration "+iteration);
-            }
+            logger.debug("Iteration "+iteration);
             
             Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", true);
             Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();

@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
+import com.datumbox.configuration.TestConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class FisherTest {
      */
     @Test
     public void testTest() {
-        System.out.println("test");
+        TestConfiguration.getLogger().debug("test");
         //Example from Mpesmpeas Notes, rejests null hypothesis
         int n11 = 1;
         int n12 = 5;

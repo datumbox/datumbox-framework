@@ -50,7 +50,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testSum() {
-        System.out.println("sum");
+        TestConfiguration.getLogger().debug("sum");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 214.71;
         double result = Descriptives.sum(flatDataCollection);
@@ -62,7 +62,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMean() {
-        System.out.println("mean");
+        TestConfiguration.getLogger().debug("mean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 5.36775;
         double result = Descriptives.mean(flatDataCollection);
@@ -74,7 +74,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMeanSE() {
-        System.out.println("meanSE");
+        TestConfiguration.getLogger().debug("meanSE");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 3.8698920757412;
         double result = Descriptives.meanSE(flatDataCollection);
@@ -86,7 +86,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMedian() {
-        System.out.println("median");
+        TestConfiguration.getLogger().debug("median");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 2.565;
         double result = Descriptives.median(flatDataCollection);
@@ -98,7 +98,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMin() {
-        System.out.println("min");
+        TestConfiguration.getLogger().debug("min");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = -36.4;
         double result = Descriptives.min(flatDataCollection);
@@ -110,7 +110,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMax() {
-        System.out.println("max");
+        TestConfiguration.getLogger().debug("max");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 50.85;
         double result = Descriptives.max(flatDataCollection);
@@ -122,7 +122,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testRange() {
-        System.out.println("range");
+        TestConfiguration.getLogger().debug("range");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 87.25;
         double result = Descriptives.range(flatDataCollection);
@@ -134,7 +134,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testGeometricMean() {
-        System.out.println("geometricMean");
+        TestConfiguration.getLogger().debug("geometricMean");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{56.0,75.0,45.0,71.0,61.0,64.0,58.0,80.0,76.0,61.0}));
         double expResult = 63.85415130126;
         double result = Descriptives.geometricMean(flatDataCollection);
@@ -146,7 +146,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testHarmonicMean() {
-        System.out.println("harmonicMean");
+        TestConfiguration.getLogger().debug("harmonicMean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 9.7666088743776;
         double result = Descriptives.harmonicMean(flatDataCollection);
@@ -158,7 +158,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testVariance() {
-        System.out.println("variance");
+        TestConfiguration.getLogger().debug("variance");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         boolean isSample = true;
         double expResult = 599.04258711538;
@@ -171,7 +171,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testStd() {
-        System.out.println("std");
+        TestConfiguration.getLogger().debug("std");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         boolean isSample = true;
         double expResult = 24.475346516758;
@@ -184,7 +184,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testCv() {
-        System.out.println("cv");
+        TestConfiguration.getLogger().debug("cv");
         double std = 24.475346516758;
         double mean = 5.36775;
         double expResult = 4.5597031375824;
@@ -197,7 +197,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMoment_Collection_int() {
-        System.out.println("moment");
+        TestConfiguration.getLogger().debug("moment");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         int r = 3;
         double expResult = 3484.6106601128;
@@ -210,7 +210,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMoment_3args() {
-        System.out.println("moment");
+        TestConfiguration.getLogger().debug("moment");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         int r = 3;
         double mean = 5.36775;
@@ -224,7 +224,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testKurtosis() {
-        System.out.println("kurtosis");
+        TestConfiguration.getLogger().debug("kurtosis");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = -0.74454696650836;
         double result = Descriptives.kurtosis(flatDataCollection);
@@ -236,7 +236,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testKurtosisSE() {
-        System.out.println("kurtosisSE");
+        TestConfiguration.getLogger().debug("kurtosisSE");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.77459666924148;
         double result = Descriptives.kurtosisSE(flatDataCollection);
@@ -248,7 +248,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testSkewness() {
-        System.out.println("skewness");
+        TestConfiguration.getLogger().debug("skewness");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.24686572127408;
         double result = Descriptives.skewness(flatDataCollection);
@@ -260,7 +260,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testSkewnessSE() {
-        System.out.println("skewnessSE");
+        TestConfiguration.getLogger().debug("skewnessSE");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.37378336538587;
         double result = Descriptives.skewnessSE(flatDataCollection);
@@ -272,7 +272,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testPercentiles() {
-        System.out.println("percentiles");
+        TestConfiguration.getLogger().debug("percentiles");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         int cutPoints = 4;
         AssociativeArray expResult = new AssociativeArray();
@@ -292,7 +292,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testQuartiles() {
-        System.out.println("quartiles");
+        TestConfiguration.getLogger().debug("quartiles");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{0,1,2,3}));
         AssociativeArray expResult = new AssociativeArray();
         expResult.put(25.0, 0.25);
@@ -307,7 +307,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testCovariance() {
-        System.out.println("covariance");
+        TestConfiguration.getLogger().debug("covariance");
         
         TransposeDataList transposeDataList = new TransposeDataList(new LinkedHashMap<>());
         
@@ -325,7 +325,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testAutocorrelation() {
-        System.out.println("autocorrelation");
+        TestConfiguration.getLogger().debug("autocorrelation");
         FlatDataList flatDataList = generateFlatDataCollection().toFlatDataList();
         int lags = 1;
         double expResult = -0.014242212135952;
@@ -338,7 +338,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testFrequencies() {
-        System.out.println("frequencies");
+        TestConfiguration.getLogger().debug("frequencies");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{1.0,1.0,1.0,2.0,3.0,4.3,2.0}));
         AssociativeArray expResult = new AssociativeArray();
         expResult.put(1.0, 3);
@@ -354,7 +354,7 @@ public class DescriptivesTest {
      */
     @Test
     public void testMode() {
-        System.out.println("mode");
+        TestConfiguration.getLogger().debug("mode");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         flatDataCollection.add(4.65);
         flatDataCollection.add(4.65);

@@ -37,7 +37,7 @@ public class NgramsExtractorTest {
      */
     @Test
     public void testExtract() throws Exception {
-        System.out.println("extract");
+        TestConfiguration.getLogger().debug("extract");
         String text = "In publishing and graphic design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1] In publishing and graphic design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1]";
         NgramsExtractor instance = new NgramsExtractor();
         instance.setParameters(new NgramsExtractor.Parameters());
@@ -242,7 +242,7 @@ public class NgramsExtractorTest {
      */
     @Test
     public void testNumberOfOccurrences() {
-        System.out.println("numberOfOccurrences");
+        TestConfiguration.getLogger().debug("numberOfOccurrences");
         String keyword = "lorem ipsum is";
         String text = "In publishing and graphic design, lorem ipsum is a placeholder text and used to demonstrate. In publishing and graphic design, lorem ipsum is a placeholder text and used to demonstrate.";
         NgramsExtractor instance = new NgramsExtractor();

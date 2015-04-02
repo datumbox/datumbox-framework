@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
@@ -55,9 +55,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     }
     
     public void transform(Dataset newData) {
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("transform()");
-        }
+        logger.debug("transform()");
         
         knowledgeBase.load();
         

@@ -18,7 +18,7 @@ package com.datumbox.framework.utilities.dataset;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
 import java.io.BufferedReader;
@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -62,15 +64,14 @@ public class DatasetBuilder {
     
     public static Dataset parseFromTextLists(Map<Object, List<String>> dataset, TextExtractor textExtractor) {
         Dataset data = new Dataset();
+        Logger logger = LoggerFactory.getLogger(DatasetBuilder.class);
         
         //loop throw the map and process each category file
         for(Map.Entry<Object, List<String>> entry : dataset.entrySet()) {
             Object theClass = entry.getKey();
             List<String> textList = entry.getValue();
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Dataset Parsing "+theClass);
-            }
+            logger.debug("Dataset Parsing "+theClass);
             
             Dataset classDataset = new Dataset();
             for(String text : textList) {
@@ -95,15 +96,14 @@ public class DatasetBuilder {
     
     public static Dataset parseFromTextFiles(Map<Object, URI> dataset, TextExtractor textExtractor) {
         Dataset data = new Dataset();
+        Logger logger = LoggerFactory.getLogger(DatasetBuilder.class);
         
         //loop throw the map and process each category file
         for(Map.Entry<Object, URI> entry : dataset.entrySet()) {
             Object theClass = entry.getKey();
             URI datasetURI = entry.getValue();
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Dataset Parsing "+theClass);
-            }
+            logger.debug("Dataset Parsing "+theClass);
             
             //process the files line-by-line, assuming there is a single document/case per row
             Dataset classDataset = new Dataset();

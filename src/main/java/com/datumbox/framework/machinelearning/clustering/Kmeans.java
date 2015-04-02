@@ -24,7 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.configuration.GeneralConfiguration;
+
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
 import com.datumbox.framework.mathematics.distances.Distance;
@@ -596,9 +596,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         AssociativeArray clusterDistances = new AssociativeArray();
         for(int iteration=0;iteration<maxIterations;++iteration) {
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Iteration "+iteration);
-            }
+            logger.debug("Iteration "+iteration);
             
             //reset cluster points
             for(Cluster c : clusterList.values()) {

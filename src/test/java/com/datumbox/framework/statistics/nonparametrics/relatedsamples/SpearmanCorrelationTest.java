@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +37,7 @@ public class SpearmanCorrelationTest {
      */
     @Test
     public void testTest() {
-        System.out.println("test");
+        TestConfiguration.getLogger().debug("test");
         TransposeDataList transposeDataList = new TransposeDataList();
         //Example from https://statistics.laerd.com/statistical-guides/spearmans-rank-order-correlation-statistical-guide.php. 
         //It should reject the null hypothesis and return true.

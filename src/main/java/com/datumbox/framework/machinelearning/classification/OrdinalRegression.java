@@ -22,7 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.GeneralConfiguration;
+
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.framework.machinelearning.common.validation.OrdinalRegressionValidation;
@@ -221,9 +221,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
-            if(GeneralConfiguration.DEBUG) {
-                System.out.println("Iteration "+iteration);
-            }
+            logger.debug("Iteration "+iteration);
             
             Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
             

@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.statistics.parametrics.onesample;
 
+import com.datumbox.configuration.TestConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class ChisquareOneSampleTest {
      */
     @Test
     public void testTestVariance() {
-        System.out.println("testVariance");
+        TestConfiguration.getLogger().debug("testVariance");
         double stdbar = 0.0063;
         int n = 100;
         double H0std = 0.01;

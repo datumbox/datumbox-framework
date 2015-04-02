@@ -42,7 +42,7 @@ public class HierarchicalAgglomerativeTest {
      */
     @Test
     public void testValidate() {
-        System.out.println("validate"); 
+        TestConfiguration.getLogger().debug("validate"); 
         
         Dataset trainingData = KmeansTest.generateDataset();
         Dataset validationData = new Dataset();
@@ -103,7 +103,7 @@ public class HierarchicalAgglomerativeTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        System.out.println("kFoldCrossValidation");
+        TestConfiguration.getLogger().debug("kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42); 
         int k = 5;
         

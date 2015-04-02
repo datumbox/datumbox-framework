@@ -23,7 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
 import java.util.Map;
@@ -253,11 +253,9 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         svm_parameter params = knowledgeBase.getTrainingParameters().getSvmParameter();
         
         //train the model
-        if(!GeneralConfiguration.DEBUG) {
-            svm.svm_set_print_string_function(new svm_print_interface() { 
-                    public void print(String s) { }
-            });
-        }
+        svm.svm_set_print_string_function(new svm_print_interface() { 
+            public void print(String s) { logger.debug(s); }
+        });
         svm_model model = svm.svm_train(prob, params);
         
         //store it in the Model Parameters

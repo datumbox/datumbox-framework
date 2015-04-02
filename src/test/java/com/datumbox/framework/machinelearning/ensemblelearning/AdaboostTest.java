@@ -43,7 +43,7 @@ public class AdaboostTest {
      */
     @Test
     public void testValidate() {
-        System.out.println("validate");
+        TestConfiguration.getLogger().debug("validate");
         RandomValue.randomGenerator = new Random(42);
         
         /*
@@ -146,7 +146,7 @@ public class AdaboostTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        System.out.println("kFoldCrossValidation");
+        TestConfiguration.getLogger().debug("kFoldCrossValidation");
         RandomValue.randomGenerator = new Random(42);
         int k = 5;
         

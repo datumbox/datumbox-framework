@@ -43,7 +43,7 @@ public class StepwiseRegressionTest {
      */
     @Test
     public void testValidate() {
-        System.out.println("validate");
+        TestConfiguration.getLogger().debug("validate");
         RandomValue.randomGenerator = new Random(42);
         
         /*

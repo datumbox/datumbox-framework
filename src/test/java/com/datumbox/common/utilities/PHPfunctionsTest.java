@@ -38,7 +38,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testAsort() {
-        System.out.println("asort");
+        TestConfiguration.getLogger().debug("asort");
         Double[] array = {1.1, 1.2, 1.3, 1.4, 1.0};
         Integer[] expResult = {4, 0, 1, 2, 3};
         Integer[] result = PHPfunctions.<Double>asort(array);
@@ -50,7 +50,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testArsort() {
-        System.out.println("arsort");
+        TestConfiguration.getLogger().debug("arsort");
         Double[] array = {1.1, 1.2, 1.3, 1.4, 1.0};
         Integer[] expResult = {3, 2, 1, 0, 4};
         Integer[] result = PHPfunctions.<Double>arsort(array);
@@ -62,7 +62,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testLtrim() {
-        System.out.println("ltrim");
+        TestConfiguration.getLogger().debug("ltrim");
         String s = "  test";
         String expResult = "test";
         String result = PHPfunctions.ltrim(s);
@@ -74,7 +74,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testRtrim() {
-        System.out.println("rtrim");
+        TestConfiguration.getLogger().debug("rtrim");
         String s = "test   ";
         String expResult = "test";
         String result = PHPfunctions.rtrim(s);
@@ -87,7 +87,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testSubstr_count_String_String() {
-        System.out.println("substr_count");
+        TestConfiguration.getLogger().debug("substr_count");
         String string = "test tester";
         String substring = "test";
         int expResult = 2;
@@ -100,7 +100,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testSubstr_count_String_char() {
-        System.out.println("substr_count");
+        TestConfiguration.getLogger().debug("substr_count");
         String string = "test test";
         char character = 't';
         int expResult = 4;
@@ -113,7 +113,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testRound() {
-        System.out.println("round");
+        TestConfiguration.getLogger().debug("round");
         double d = 3.1415;
         int i = 2;
         double expResult = 3.14;
@@ -126,7 +126,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testLog() {
-        System.out.println("log");
+        TestConfiguration.getLogger().debug("log");
         double d = 100.0;
         double base = 10.0;
         double expResult = 2.0;
@@ -139,7 +139,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testMt_rand_0args() {
-        System.out.println("mt_rand");
+        TestConfiguration.getLogger().debug("mt_rand");
         RandomValue.randomGenerator = new Random(42);
         int expResult = -1562431105;
         int result = PHPfunctions.mt_rand();
@@ -151,7 +151,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testMt_rand_int_int() {
-        System.out.println("mt_rand");
+        TestConfiguration.getLogger().debug("mt_rand");
         RandomValue.randomGenerator = new Random(42);
         int min = 0;
         int max = 10;
@@ -165,7 +165,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testArray_flip() {
-        System.out.println("array_flip");
+        TestConfiguration.getLogger().debug("array_flip");
         Map<String, Integer> original = new HashMap<>();
         original.put("1", 10);
         original.put("2", 11);
@@ -186,7 +186,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testShuffle() {
-        System.out.println("shuffle");
+        TestConfiguration.getLogger().debug("shuffle");
         RandomValue.randomGenerator = new Random(42);
         Integer[] result = {1,2,3,4,5};
         Integer[] expResult = {2,3,4,5,1};
@@ -199,7 +199,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testPreg_replace_3args_1() {
-        System.out.println("preg_replace");
+        TestConfiguration.getLogger().debug("preg_replace");
         String regex = "\\s+";
         String replacement = " ";
         String subject = "a   a";
@@ -213,7 +213,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testPreg_replace_3args_2() {
-        System.out.println("preg_replace");
+        TestConfiguration.getLogger().debug("preg_replace");
         Pattern pattern = Pattern.compile("\\s+");
         String replacement = " ";
         String subject = "a   a";
@@ -227,7 +227,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testPreg_match_String_String() {
-        System.out.println("preg_match");
+        TestConfiguration.getLogger().debug("preg_match");
         String regex = "\\s{2,}";
         String subject = "a   a  a";
         int expResult = 2;
@@ -240,7 +240,7 @@ public class PHPfunctionsTest {
      */
     @Test
     public void testPreg_match_Pattern_String() {
-        System.out.println("preg_match");
+        TestConfiguration.getLogger().debug("preg_match");
         Pattern pattern = Pattern.compile("\\s{2,}");
         String subject = "a   a  a";
         int expResult = 2;

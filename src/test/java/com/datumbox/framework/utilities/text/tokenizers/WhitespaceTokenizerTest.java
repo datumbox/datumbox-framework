@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.utilities.text.tokenizers;
 
-import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +37,7 @@ public class WhitespaceTokenizerTest {
      */
     @Test
     public void testTokenize() {
-        System.out.println("tokenize");
+        TestConfiguration.getLogger().debug("tokenize");
         String text = "In publishing and graphic    design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1]";
         WhitespaceTokenizer instance = new WhitespaceTokenizer();
         List<String> expResult = new ArrayList<>(Arrays.asList("In", "publishing", "and", "graphic", "design,", "lorem", "ipsum[1]", "is", "a", "placeholder", "text", "(filler", "text)", "commonly", "used", "to", "demonstrate", "the", "graphic", "elements", "of", "a", "document", "or", "visual", "presentation,", "such", "as", "font,", "typography,", "and", "layout,", "by", "removing", "the", "distraction", "of", "meaningful", "content.", "The", "lorem", "ipsum", "text", "is", "typically", "a", "section", "of", "a", "Latin", "text", "by", "Cicero", "with", "words", "altered,", "added,", "and", "removed", "that", "make", "it", "nonsensical", "and", "not", "proper", "Latin.[1]"));

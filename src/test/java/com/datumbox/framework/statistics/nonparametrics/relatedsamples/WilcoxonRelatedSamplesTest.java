@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +37,7 @@ public class WilcoxonRelatedSamplesTest {
      */
     @Test
     public void testTest() {
-        System.out.println("test");
+        TestConfiguration.getLogger().debug("test");
         TransposeDataList transposeDataList = new TransposeDataList();
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return true.
         transposeDataList.put(0, new FlatDataList(Arrays.asList(new Object[]{39.8,38.8,38.4,39.9,39.4,38.4,38.6,41.2,39.0,39.1})));

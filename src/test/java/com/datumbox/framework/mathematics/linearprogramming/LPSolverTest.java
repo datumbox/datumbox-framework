@@ -38,7 +38,7 @@ public class LPSolverTest {
      */
     @Test
     public void testSolve() throws Exception {
-        System.out.println("solve");
+        TestConfiguration.getLogger().debug("solve");
         
         //Example from http://lpsolve.sourceforge.net/5.5/PHP.htm
         double[] linearObjectiveFunction = {143.0, 60.0, 195.0};

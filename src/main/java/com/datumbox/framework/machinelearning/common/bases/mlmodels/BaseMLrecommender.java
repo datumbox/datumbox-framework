@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
@@ -72,10 +72,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * @param newData 
      */
     public void predict(Dataset newData) { 
-        
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("predict()");
-        }
+        logger.debug("predict()");
         
         knowledgeBase.load();
         

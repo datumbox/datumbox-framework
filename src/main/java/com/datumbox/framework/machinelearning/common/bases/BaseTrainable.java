@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.common.bases;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
@@ -93,9 +93,7 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {
-        if(GeneralConfiguration.DEBUG) {
-            logger.debug("{}","fit()");
-        }
+        logger.debug("fit()");
         
         initializeTrainingConfiguration(trainingParameters);
         _fit(trainingData);

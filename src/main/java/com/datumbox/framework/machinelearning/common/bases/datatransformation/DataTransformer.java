@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.configuration.GeneralConfiguration;
+
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
@@ -77,16 +77,12 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         
         initializeTrainingConfiguration(trainingParameters);
         
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("fit_transform()");
-        }
+        logger.debug("fit_transform()");
         
         _transform(trainingData, true);     
         _normalize(trainingData);
             
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("Saving model");
-        }
+        logger.debug("Saving model");
         knowledgeBase.save();
     }
     
@@ -94,9 +90,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void transform(Dataset newData) {
         knowledgeBase.load();
         
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("transform()");
-        }
+        logger.debug("transform()");
         _transform(newData, false); 
         _normalize(newData);
         
@@ -105,9 +99,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void denormalize(Dataset data) {
         knowledgeBase.load();
         
-        if(GeneralConfiguration.DEBUG) {
-            System.out.println("denormalize()");
-        }
+        logger.debug("denormalize()");
         
         _denormalize(data);
     }

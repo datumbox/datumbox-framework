@@ -16,7 +16,7 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class UniqueWordSequenceExtractorTest {
      */
     @Test
     public void testExtract() {
-        System.out.println("extract");
+        TestConfiguration.getLogger().debug("extract");
         String text = "this is a text sequence that is amazing text sequence";
         UniqueWordSequenceExtractor instance = new UniqueWordSequenceExtractor();
         instance.setParameters(new UniqueWordSequenceExtractor.Parameters());

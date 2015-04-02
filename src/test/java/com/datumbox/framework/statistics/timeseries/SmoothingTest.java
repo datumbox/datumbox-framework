@@ -46,7 +46,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleMovingAverage() {
-        System.out.println("simpleMovingAverage");
+        TestConfiguration.getLogger().debug("simpleMovingAverage");
         FlatDataList flatDataList = generateFlatDataList();
         int N = 3;
         double expResult = 23.0;
@@ -59,7 +59,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleMovingAverageQuick() {
-        System.out.println("simpleMovingAverageQuick");
+        TestConfiguration.getLogger().debug("simpleMovingAverageQuick");
         double Yt = 23.5;
         double YtminusN = 20.0;
         double Ft = 23.0;
@@ -74,7 +74,7 @@ public class SmoothingTest {
      */
     @Test
     public void testWeightedMovingAverage() {
-        System.out.println("weightedMovingAverage");
+        TestConfiguration.getLogger().debug("weightedMovingAverage");
         FlatDataList flatDataList = generateFlatDataList();
         int N = 3;
         double expResult =22.0;
@@ -87,7 +87,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleExponentialSmoothing() {
-        System.out.println("simpleExponentialSmoothing");
+        TestConfiguration.getLogger().debug("simpleExponentialSmoothing");
         FlatDataList flatDataList = generateFlatDataList();
         double a = 0.9;
         double expResult = 23.240433133179;
@@ -100,7 +100,7 @@ public class SmoothingTest {
      */
     @Test
     public void testSimpleExponentialSmoothingQuick() {
-        System.out.println("simpleExponentialSmoothingQuick");
+        TestConfiguration.getLogger().debug("simpleExponentialSmoothingQuick");
         double Ytminus1 = 23.5;
         double Stminus1 = 23.240433133179;
         double a = 0.9;
@@ -114,7 +114,7 @@ public class SmoothingTest {
      */
     @Test
     public void testHoltWintersSmoothing() {
-        System.out.println("holtWintersSmoothing");
+        TestConfiguration.getLogger().debug("holtWintersSmoothing");
         FlatDataList flatDataList = generateFlatDataList();
         int season_length = 3;
         double alpha = 0.2;

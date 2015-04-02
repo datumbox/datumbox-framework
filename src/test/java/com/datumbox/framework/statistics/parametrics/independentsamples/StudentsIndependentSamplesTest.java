@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
+import com.datumbox.configuration.TestConfiguration;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class StudentsIndependentSamplesTest {
      */
     @Test
     public void testTestMeansUnknownNotEqualVars() {
-        System.out.println("testMeansUnknownNotEqualVars");
+        TestConfiguration.getLogger().debug("testMeansUnknownNotEqualVars");
         double xbar = 215.0;
         double ybar = 200.0;
         int n = 60;
@@ -52,7 +53,7 @@ public class StudentsIndependentSamplesTest {
      */
     @Test
     public void testTestMeansUnknownEqualVars() {
-        System.out.println("testMeansUnknownEqualVars");
+        TestConfiguration.getLogger().debug("testMeansUnknownEqualVars");
         double xbar = 14.14;
         double ybar = 12.08;
         int n = 15;

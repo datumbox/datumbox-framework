@@ -34,7 +34,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testChisquareCdf() {
-        System.out.println("ChisquareCdf");
+        TestConfiguration.getLogger().debug("ChisquareCdf");
         double x = 3.0;
         int df = 10;
         double expResult = 0.018575928421771;
@@ -47,7 +47,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testGaussCdf() {
-        System.out.println("GaussCdf");
+        TestConfiguration.getLogger().debug("GaussCdf");
         double z = 3.0;
         double expResult = 0.9986501025724;
         double result = ContinuousDistributions.GaussCdf(z);
@@ -59,7 +59,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testLogGamma() {
-        System.out.println("LogGamma");
+        TestConfiguration.getLogger().debug("LogGamma");
         double Z = 3.0;
         double expResult = 0.69314718044741;
         double result = ContinuousDistributions.LogGamma(Z);
@@ -71,7 +71,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testStudentsCdf() {
-        System.out.println("StudentsCdf");
+        TestConfiguration.getLogger().debug("StudentsCdf");
         double x = 3.0;
         int df = 10;
         double expResult = 0.99332817273466;
@@ -84,7 +84,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testExponentialCdf() {
-        System.out.println("ExponentialCdf");
+        TestConfiguration.getLogger().debug("ExponentialCdf");
         double x = 3.0;
         double lamda = 10.0;
         double expResult = 0.99999999999991;
@@ -97,7 +97,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testBetaCdf() {
-        System.out.println("BetaCdf");
+        TestConfiguration.getLogger().debug("BetaCdf");
         double x = 0.9;
         double a = 10.0;
         double b = 2.0;
@@ -111,7 +111,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testFCdf() {
-        System.out.println("FCdf");
+        TestConfiguration.getLogger().debug("FCdf");
         double x = 3.0;
         int f1 = 10;
         int f2 = 2;
@@ -125,7 +125,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testGammaCdf() {
-        System.out.println("GammaCdf");
+        TestConfiguration.getLogger().debug("GammaCdf");
         double x = 9.0;
         double a = 10.0;
         double b = 2.0;
@@ -139,7 +139,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testUniformCdf() {
-        System.out.println("UniformCdf");
+        TestConfiguration.getLogger().debug("UniformCdf");
         double x = 3.0;
         double a = 2.0;
         double b = 10.0;
@@ -153,7 +153,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testKolmogorov() {
-        System.out.println("Kolmogorov");
+        TestConfiguration.getLogger().debug("Kolmogorov");
         double z = 2.0;
         double expResult = 0.99932907474422;
         double result = ContinuousDistributions.Kolmogorov(z);
@@ -165,7 +165,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testGaussInverseCdf() {
-        System.out.println("GaussInverseCdf");
+        TestConfiguration.getLogger().debug("GaussInverseCdf");
         double p = 0.32;
         double expResult = -0.46769879942903;
         double result = ContinuousDistributions.GaussInverseCdf(p);
@@ -177,7 +177,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testChisquareInverseCdf() {
-        System.out.println("ChisquareInverseCdf");
+        TestConfiguration.getLogger().debug("ChisquareInverseCdf");
         double p = 0.32;
         int df = 10;
         double expResult = 11.498788492223;
@@ -190,7 +190,7 @@ public class ContinuousDistributionsTest {
      */
     @Test
     public void testNormalQuantile() {
-        System.out.println("normalQuantile");
+        TestConfiguration.getLogger().debug("normalQuantile");
         double p = 0.32;
         double mu = 1.0;
         double sigma = 1.0;

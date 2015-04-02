@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.utilities.text.cleaners;
 
+import com.datumbox.configuration.TestConfiguration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testReplaceImgWithAlt() {
-        System.out.println("replaceImgWithAlt");
+        TestConfiguration.getLogger().debug("replaceImgWithAlt");
         String text = "some text <img src=\"s.jpg\" title=\"here\"> and <img src=\"s.jpg\" alt=\"there\"> and everywhere";
         String expResult = "some text  here  and  there  and everywhere";
         String result = HTMLCleaner.replaceImgWithAlt(text);
@@ -49,7 +50,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testRemoveComments() {
-        System.out.println("removeComments");
+        TestConfiguration.getLogger().debug("removeComments");
         String text = "some text and <!-- \n these \n are \n comments --> nothing else";
         String expResult = "some text and  nothing else";
         String result = HTMLCleaner.removeComments(text);
@@ -61,7 +62,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testUnsafeRemoveAllTags() {
-        System.out.println("unsafeRemoveAllTags");
+        TestConfiguration.getLogger().debug("unsafeRemoveAllTags");
         String text = "some <a href=\"asd\">hyperlink</a> and <br/> some <br> more<br><span>text</span> here";
         String expResult = "some  hyperlink  and   some   more  text  here";
         String result = HTMLCleaner.unsafeRemoveAllTags(text);
@@ -73,7 +74,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testSafeRemoveAllTags() {
-        System.out.println("safeRemoveAllTags");
+        TestConfiguration.getLogger().debug("safeRemoveAllTags");
         String text = "<script>hidden</script>some <a href=\"asd\">hyperlink</a> and <br/> some <br> more<br><span>text</span> here";
         String expResult = " some  hyperlink  and   some   more  text  here";
         String result = HTMLCleaner.safeRemoveAllTags(text);
@@ -85,7 +86,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testExtractText() {
-        System.out.println("extractText");
+        TestConfiguration.getLogger().debug("extractText");
         String text = "<html><head>INVISIBLE</head><body>"
                 + "<!-- INISIBLE -->"
                 + "<style>INVISIBLE</style>s"
@@ -114,7 +115,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testRemoveNonTextTagsAndAttributes() {
-        System.out.println("testRemoveNonTextTagsAndAttributes");
+        TestConfiguration.getLogger().debug("testRemoveNonTextTagsAndAttributes");
         String text = "<html><head>INVISIBLE</head><body>"
                 + "<!-- INISIBLE -->"
                 + "<style>INVISIBLE</style>"
@@ -142,7 +143,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testExtractTitle() {
-        System.out.println("extractTitle");
+        TestConfiguration.getLogger().debug("extractTitle");
         String text = "<html><head><title>Page&#39;s &amp; \nWebsite&#39;s   title</title></head></html>";
         String expResult = "Page's & Website's title";
         String result = HTMLCleaner.extractTitle(text);
@@ -154,7 +155,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testExtractHyperlinks() {
-        System.out.println("extractHyperlinks");
+        TestConfiguration.getLogger().debug("extractHyperlinks");
         String text = "some text <a href=\"url1\">text1</a> <a href=\"url2\"><img /></a> some other text";
         Map<HTMLCleaner.HyperlinkPart, List<String>> expResult = new HashMap<>();
         expResult.put(HTMLCleaner.HyperlinkPart.HTMLTAG, new ArrayList<>());
@@ -178,7 +179,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testExtractMetatags() {
-        System.out.println("extractMetatags");
+        TestConfiguration.getLogger().debug("extractMetatags");
         String text = "<html><head>   <meta name  =  \"description\" content  =   \"Some description.\" />\n" +
                       "    <   meta name  =  'keywords' content  =  'Some keywords.' >";
         Map<String, String> expResult = new HashMap<>();
@@ -193,7 +194,7 @@ public class HTMLCleanerTest {
      */
     @Test
     public void testExtractHTMLheaders() {
-        System.out.println("extractHTMLheaders");
+        TestConfiguration.getLogger().debug("extractHTMLheaders");
         String text = " <h1>a1</h1> <h1 class='s'>a2</h1> <h2>b1</h2>";
         Map<String, List<String>> expResult = new HashMap<>();
         for(Integer i=1;i<=6;++i) {

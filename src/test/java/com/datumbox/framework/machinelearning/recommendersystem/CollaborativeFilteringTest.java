@@ -40,7 +40,7 @@ public class CollaborativeFilteringTest {
      */
     @Test
     public void testPredict() {
-        System.out.println("predict");
+        TestConfiguration.getLogger().debug("predict");
         
         Dataset trainingData = new Dataset();
         Record r1 = new Record();

@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.survival.nonparametrics.independentsam
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +37,7 @@ public class CoxMantelTest {
      */
     @Test
     public void testTest() {
-        System.out.println("test");
+        TestConfiguration.getLogger().debug("test");
         //Example from Dimaki's Survival Non-parametrics notes. It should reject the null hypothesis and return true.
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{23,"16+","18+","20+","24+"})));

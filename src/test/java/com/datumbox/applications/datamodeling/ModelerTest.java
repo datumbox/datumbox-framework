@@ -39,8 +39,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ModelerTest {
     
-	private static final Logger logger = LoggerFactory.getLogger(ModelerTest.class);
-	
     public ModelerTest() {
     }
 
@@ -49,7 +47,7 @@ public class ModelerTest {
      */
     @Test
     public void testTrainAndValidate() {
-        logger.debug("{}", "testTrainAndValidate");
+        TestConfiguration.getLogger().debug("testTrainAndValidate");
         RandomValue.randomGenerator = new Random(42);
         
         
@@ -161,7 +159,7 @@ public class ModelerTest {
         instance = null;
         
         
-        logger.debug("{}", "validate");
+        TestConfiguration.getLogger().debug("validate");
         
         
         instance = new Modeler(dbName, TestConfiguration.getDBConfig());

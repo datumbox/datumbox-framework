@@ -60,7 +60,7 @@ public class CETRTest {
      */
     @Test
     public void testExtract() {
-        System.out.println("extract");
+        TestConfiguration.getLogger().debug("extract");
         String text = CETRTest.webRequest("http://www.example.org/");
         CETR.Parameters parameters = new CETR.Parameters();
         parameters.setNumberOfClusters(2);

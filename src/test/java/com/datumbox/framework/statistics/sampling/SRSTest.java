@@ -44,7 +44,7 @@ public class SRSTest {
      */
     @Test
     public void testWeightedProbabilitySampling() {
-        System.out.println("weightedProbabilitySampling");
+        TestConfiguration.getLogger().debug("weightedProbabilitySampling");
         AssociativeArray frequencyTable = new AssociativeArray();
         frequencyTable.put(1, 0.20);
         frequencyTable.put(2, 0.30);
@@ -64,7 +64,7 @@ public class SRSTest {
      */
     @Test
     public void testWeightedSampling() {
-        System.out.println("weightedSampling");
+        TestConfiguration.getLogger().debug("weightedSampling");
         AssociativeArray frequencyTable = new AssociativeArray();
         frequencyTable.put(1, 10);
         frequencyTable.put(2, 20);
@@ -84,7 +84,7 @@ public class SRSTest {
      */
     @Test
     public void testRandomSampling() {
-        System.out.println("randomSampling");
+        TestConfiguration.getLogger().debug("randomSampling");
         FlatDataList idList = new FlatDataList();
         idList.add("a");
         idList.add("0");
@@ -105,7 +105,7 @@ public class SRSTest {
      */
     @Test
     public void testMean() {
-        System.out.println("mean");
+        TestConfiguration.getLogger().debug("mean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 14.595333333333;
         double result = SRS.mean(flatDataCollection);
@@ -117,7 +117,7 @@ public class SRSTest {
      */
     @Test
     public void testVariance() {
-        System.out.println("variance");
+        TestConfiguration.getLogger().debug("variance");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 52.621426666667;
         double result = SRS.variance(flatDataCollection);
@@ -129,7 +129,7 @@ public class SRSTest {
      */
     @Test
     public void testStd() {
-        System.out.println("std");
+        TestConfiguration.getLogger().debug("std");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 7.2540627696944;
         double result = SRS.std(flatDataCollection);
@@ -141,7 +141,7 @@ public class SRSTest {
      */
     @Test
     public void testXbarVariance_3args() {
-        System.out.println("xbarVariance");
+        TestConfiguration.getLogger().debug("xbarVariance");
         double variance = 52.621426666667;
         int sampleN = 15;
         int populationN = 2147483647;
@@ -155,7 +155,7 @@ public class SRSTest {
      */
     @Test
     public void testXbarStd_3args() {
-        System.out.println("xbarStd");
+        TestConfiguration.getLogger().debug("xbarStd");
         double std = 7.2540627696944;
         int sampleN = 15;
         int populationN = 2147483647;
@@ -169,7 +169,7 @@ public class SRSTest {
      */
     @Test
     public void testPbarVariance_3args() {
-        System.out.println("pbarVariance");
+        TestConfiguration.getLogger().debug("pbarVariance");
         double pbar = 0.19;
         int sampleN = 200;
         int populationN = 3042;
@@ -183,7 +183,7 @@ public class SRSTest {
      */
     @Test
     public void testPbarStd_3args() {
-        System.out.println("pbarStd");
+        TestConfiguration.getLogger().debug("pbarStd");
         double pbar = 0.19;
         int sampleN = 200;
         int populationN = 3042;
@@ -197,7 +197,7 @@ public class SRSTest {
      */
     @Test
     public void testMinimumSampleSizeForMaximumXbarStd_3args() {
-        System.out.println("minimumSampleSizeForMaximumXbarStd");
+        TestConfiguration.getLogger().debug("minimumSampleSizeForMaximumXbarStd");
         double maximumXbarStd = 1.2;
         double populationStd = 7.25;
         int populationN = 2147483647;
@@ -211,7 +211,7 @@ public class SRSTest {
      */
     @Test
     public void testMinimumSampleSizeForGivenDandMaximumRisk_4args() {
-        System.out.println("minimumSampleSizeForGivenDandMaximumRisk");
+        TestConfiguration.getLogger().debug("minimumSampleSizeForGivenDandMaximumRisk");
         double d = 0.323;
         double aLevel = 0.1;
         double populationStd = 1.7289303051309;

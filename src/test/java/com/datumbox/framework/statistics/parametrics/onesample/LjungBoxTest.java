@@ -17,6 +17,7 @@
 package com.datumbox.framework.statistics.parametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.configuration.TestConfiguration;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -35,7 +36,7 @@ public class LjungBoxTest {
      */
     @Test
     public void testTestAutocorrelation() {
-        System.out.println("testAutocorrelation");
+        TestConfiguration.getLogger().debug("testAutocorrelation");
         FlatDataCollection pkList = new FlatDataCollection(Arrays.asList(new Object[]{0.810,0.631,0.469,0.349}));
         int n = 100;
         double aLevel = 0.05;

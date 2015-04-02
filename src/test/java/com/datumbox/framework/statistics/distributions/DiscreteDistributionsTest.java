@@ -34,7 +34,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBernoulli() {
-        System.out.println("Bernoulli");
+        TestConfiguration.getLogger().debug("Bernoulli");
         boolean k = true;
         double p = 0.5;
         double expResult = 0.5;
@@ -47,7 +47,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBernoulliCdf() {
-        System.out.println("BernoulliCdf");
+        TestConfiguration.getLogger().debug("BernoulliCdf");
         int k = 1;
         double p = 0.5;
         double expResult = 1.0;
@@ -60,7 +60,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBinomial() {
-        System.out.println("Binomial");
+        TestConfiguration.getLogger().debug("Binomial");
         int k = 3;
         double p = 0.5;
         int n = 10;
@@ -74,7 +74,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testBinomialCdf() {
-        System.out.println("BinomialCdf");
+        TestConfiguration.getLogger().debug("BinomialCdf");
         int k = 3;
         double p = 0.5;
         int n = 10;
@@ -88,7 +88,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testGeometric() {
-        System.out.println("Geometric");
+        TestConfiguration.getLogger().debug("Geometric");
         int k = 3;
         double p = 0.5;
         double expResult = 0.125;
@@ -101,7 +101,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testGeometricCdf() {
-        System.out.println("GeometricCdf");
+        TestConfiguration.getLogger().debug("GeometricCdf");
         int k = 3;
         double p = 0.5;
         double expResult = 0.875;
@@ -114,7 +114,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testNegativeBinomial() {
-        System.out.println("NegativeBinomial");
+        TestConfiguration.getLogger().debug("NegativeBinomial");
         int n = 10;
         int r = 4;
         double p = 0.5;
@@ -128,7 +128,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testNegativeBinomialCdf() {
-        System.out.println("NegativeBinomialCdf");
+        TestConfiguration.getLogger().debug("NegativeBinomialCdf");
         int n = 10;
         int r = 4;
         double p = 0.5;
@@ -142,7 +142,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testUniform() {
-        System.out.println("Uniform");
+        TestConfiguration.getLogger().debug("Uniform");
         int n = 10;
         double expResult = 0.1;
         double result = DiscreteDistributions.Uniform(n);
@@ -154,7 +154,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testUniformCdf() {
-        System.out.println("UniformCdf");
+        TestConfiguration.getLogger().debug("UniformCdf");
         int k = 3;
         int n = 10;
         double expResult = 0.3;
@@ -167,7 +167,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testHypergeometric() {
-        System.out.println("Hypergeometric");
+        TestConfiguration.getLogger().debug("Hypergeometric");
         int k = 3;
         int n = 10;
         int Kp = 30;
@@ -182,7 +182,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testHypergeometricCdf() {
-        System.out.println("HypergeometricCdf");
+        TestConfiguration.getLogger().debug("HypergeometricCdf");
         int k = 3;
         int n = 10;
         int Kp = 30;
@@ -197,7 +197,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testPoisson() {
-        System.out.println("Poisson");
+        TestConfiguration.getLogger().debug("Poisson");
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.14037389583692;
@@ -210,7 +210,7 @@ public class DiscreteDistributionsTest {
      */
     @Test
     public void testPoissonCdf() {
-        System.out.println("PoissonCdf");
+        TestConfiguration.getLogger().debug("PoissonCdf");
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.26502591533403;

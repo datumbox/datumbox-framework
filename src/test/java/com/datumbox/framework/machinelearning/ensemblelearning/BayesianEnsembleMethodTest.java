@@ -40,7 +40,7 @@ public class BayesianEnsembleMethodTest {
      */
     @Test
     public void testValidate() {
-        System.out.println("validate");
+        TestConfiguration.getLogger().debug("validate");
         
         Dataset trainingData = new Dataset();
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
