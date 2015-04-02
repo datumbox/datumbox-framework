@@ -69,7 +69,7 @@ public class LatentDirichletAllocationTest {
         Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor);
         
         
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, TestConfiguration.getDBConfig());
+        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, TestUtils.getDBConfig());
         
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
@@ -91,7 +91,7 @@ public class LatentDirichletAllocationTest {
             reducedTrainingData.add(newRecord);
         }
         
-        SoftMaxRegression smr = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
+        SoftMaxRegression smr = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);

@@ -663,12 +663,12 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
+        OrdinalRegression instance = new OrdinalRegression(dbName, TestUtils.getDBConfig());
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
@@ -677,7 +677,7 @@ public class OrdinalRegressionTest {
         
         
         instance = null;
-        instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
+        instance = new OrdinalRegression(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
 
@@ -714,11 +714,11 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, TestConfiguration.getDBConfig());
+        OrdinalRegression instance = new OrdinalRegression(dbName, TestUtils.getDBConfig());
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);

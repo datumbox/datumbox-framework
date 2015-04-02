@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
@@ -53,7 +54,7 @@ public class SpearmanCorrelation {
 
 
         //converts the values of the X table with its Ranks
-        AssociativeArray tiesCounter= Dataset.getRanksFromValues(flatDataListX);
+        AssociativeArray tiesCounter= Ranks.getRanksFromValues(flatDataListX);
 
         //Estimate Rx_square
         double Sum_Rx_square=(n*n-1.0)*n;
@@ -67,7 +68,7 @@ public class SpearmanCorrelation {
 
 
         //converts the values of the Y table with its Ranks
-        tiesCounter= Dataset.getRanksFromValues(flatDataListY);
+        tiesCounter= Ranks.getRanksFromValues(flatDataListY);
 
         //Estimate Ry_square
         double Sum_Ry_square=(n*n-1.0)*n;

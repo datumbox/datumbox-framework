@@ -702,13 +702,13 @@ public class SoftMaxRegressionTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestUtils.getDBConfig());
         
         df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
         df.transform(validationData);
 
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
@@ -717,7 +717,7 @@ public class SoftMaxRegressionTest {
         
         
         instance = null;
-        instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
+        instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         	        
@@ -805,10 +805,10 @@ public class SoftMaxRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestConfiguration.getDBConfig());
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);

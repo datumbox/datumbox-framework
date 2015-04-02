@@ -51,14 +51,14 @@ public class MutualInformationTest {
         param.setIgnoringNumericalFeatures(false);
         
         Dataset trainingData = ChisquareSelectTest.generateDataset(1000);
-        MutualInformation instance = new MutualInformation(dbName, TestConfiguration.getDBConfig());
+        MutualInformation instance = new MutualInformation(dbName, TestUtils.getDBConfig());
         
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new MutualInformation(dbName, TestConfiguration.getDBConfig());
+        instance = new MutualInformation(dbName, TestUtils.getDBConfig());
         
         instance.transform(trainingData);
         

@@ -95,12 +95,12 @@ public class BootstrapAggregatingTest {
         
         
 
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
         df.transform(validationData);
         
         
-        BootstrapAggregating instance = new BootstrapAggregating(dbName, TestConfiguration.getDBConfig());
+        BootstrapAggregating instance = new BootstrapAggregating(dbName, TestUtils.getDBConfig());
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -118,7 +118,7 @@ public class BootstrapAggregatingTest {
         
         
         instance = null;
-        instance = new BootstrapAggregating(dbName, TestConfiguration.getDBConfig());
+        instance = new BootstrapAggregating(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -205,7 +205,7 @@ public class BootstrapAggregatingTest {
         
         
         String dbName = "JUnitClassifier";
-        BootstrapAggregating instance = new BootstrapAggregating(dbName, TestConfiguration.getDBConfig());
+        BootstrapAggregating instance = new BootstrapAggregating(dbName, TestUtils.getDBConfig());
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);

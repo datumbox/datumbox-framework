@@ -55,12 +55,12 @@ public class HierarchicalAgglomerativeTest {
         String dbName = "JUnitClusterer";
         
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestUtils.getDBConfig());
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
@@ -72,7 +72,7 @@ public class HierarchicalAgglomerativeTest {
         
         
         instance = null;
-        instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
+        instance = new HierarchicalAgglomerative(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -115,13 +115,13 @@ public class HierarchicalAgglomerativeTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
 
         
         
         
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestConfiguration.getDBConfig());
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, TestUtils.getDBConfig());
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);

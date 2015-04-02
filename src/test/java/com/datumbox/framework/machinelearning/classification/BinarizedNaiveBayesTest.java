@@ -73,7 +73,7 @@ public class BinarizedNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
+        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestUtils.getDBConfig());
         
         BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
         
@@ -82,7 +82,7 @@ public class BinarizedNaiveBayesTest {
         
         
         instance = null;
-        instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
+        instance = new BinarizedNaiveBayes(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -165,7 +165,7 @@ public class BinarizedNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestConfiguration.getDBConfig());
+        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, TestUtils.getDBConfig());
         
         BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
         

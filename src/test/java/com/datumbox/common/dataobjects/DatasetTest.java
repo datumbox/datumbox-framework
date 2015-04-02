@@ -16,6 +16,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,21 +44,6 @@ public class DatasetTest {
         Object[] expResult = new Object[]{1,2,3,4,5};
         Object[] result = flatDataCollection.<Object>copyCollection2Array(Object.class);
         assertArrayEquals(expResult, result);
-    }
-
-    /**
-     * Test of getRanksFromValues method, of class Dataset.
-     */
-    @Test
-    public void testGetRanksFromValues() {
-        TestUtils.log(this.getClass(), "getRanksFromValues");
-        FlatDataList flatDataCollection =  new FlatDataList(Arrays.asList(new Object[]{50,10,10,30,40}));
-        FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{5.0,1.5,1.5,3.0,4.0}));
-        AssociativeArray expResult2 = new AssociativeArray(new ConcurrentSkipListMap<>());
-        expResult2.put(10, 2);
-        AssociativeArray tiesCounter = Dataset.getRanksFromValues(flatDataCollection);
-        assertEquals(expResult, flatDataCollection);
-        assertEquals(expResult2, tiesCounter);
     }
 
     /**
@@ -92,42 +78,6 @@ public class DatasetTest {
         expResult.put("4", Dataset.ColumnType.CATEGORICAL);
         Map<Object, Dataset.ColumnType> result = instance.getColumns();
         assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of convert2Sparse method, of class Dataset.
-     */
-    @Test
-    public void testConvert2Sparse() {
-        TestUtils.log(this.getClass(), "convert2Sparse");
-        Dataset instance = new Dataset();
-        
-        
-        Record rec1 = new Record();
-        rec1.getX().put("1", true);
-        instance.add(rec1);
-        
-        Record rec2 = new Record();
-        rec2.getX().put("2", 1.0);
-        instance.add(rec2);
-        
-        Record rec3 = new Record();
-        rec3.getX().put("3", 1);
-        instance.add(rec3);
-        
-        instance.convert2Sparse();
-        
-        boolean allRecordsHaveAllColumns = true;
-        int numberOfColumns = instance.getColumns().size();
-        
-        for(Record r : instance) {
-            if(r.getX().size()!=numberOfColumns) {
-                allRecordsHaveAllColumns=false;
-                break;
-            }
-        }
-        
-        assertTrue(allRecordsHaveAllColumns);
     }
 
     /**

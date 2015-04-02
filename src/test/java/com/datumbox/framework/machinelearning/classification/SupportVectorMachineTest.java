@@ -94,11 +94,11 @@ public class SupportVectorMachineTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
         df.transform(validationData);
         
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, TestConfiguration.getDBConfig());
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());
         
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
@@ -107,7 +107,7 @@ public class SupportVectorMachineTest {
         
         
         instance = null;
-        instance = new SupportVectorMachine(dbName, TestConfiguration.getDBConfig());
+        instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -194,7 +194,7 @@ public class SupportVectorMachineTest {
         
         
         String dbName = "JUnitClassifier";
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, TestConfiguration.getDBConfig());
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());
         
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.LINEAR;

@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class Friedman {
             AssociativeArray row = entry1.getValue(); 
             
             //find the number of tied values and convert values into ranks
-            AssociativeArray tiedValuesArray = Dataset.getRanksFromValues(row);
+            AssociativeArray tiedValuesArray = Ranks.getRanksFromValues(row);
             
             for(Object value : tiedValuesArray.values()) {
                 tiesCounter.add( ((Number)value).intValue() );

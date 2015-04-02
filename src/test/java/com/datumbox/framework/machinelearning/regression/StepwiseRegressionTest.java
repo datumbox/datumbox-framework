@@ -91,11 +91,11 @@ public class StepwiseRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        StepwiseRegression instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
+        StepwiseRegression instance = new StepwiseRegression(dbName, TestUtils.getDBConfig());
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
@@ -109,7 +109,7 @@ public class StepwiseRegressionTest {
         
         
         instance = null;
-        instance = new StepwiseRegression(dbName, TestConfiguration.getDBConfig());
+        instance = new StepwiseRegression(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         

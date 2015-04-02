@@ -2,7 +2,6 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
-- Move the static methods of Dataset to a Utils class or something similar
 - Add MapDB support in the Dataset
 
 lmpampaletakis:

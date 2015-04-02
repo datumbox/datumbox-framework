@@ -244,13 +244,13 @@ public class KmeansTest {
         String dbName = "JUnitClusterer";
         
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         
-        Kmeans instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
+        Kmeans instance = new Kmeans(dbName, TestUtils.getDBConfig());
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
@@ -265,7 +265,7 @@ public class KmeansTest {
         
         
         instance = null;
-        instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
+        instance = new Kmeans(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -308,14 +308,14 @@ public class KmeansTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
 
         
         
         
-        Kmeans instance = new Kmeans(dbName, TestConfiguration.getDBConfig());
+        Kmeans instance = new Kmeans(dbName, TestUtils.getDBConfig());
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);

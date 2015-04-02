@@ -88,13 +88,13 @@ public class NLMSTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
 
-        NLMS instance = new NLMS(dbName, TestConfiguration.getDBConfig());
+        NLMS instance = new NLMS(dbName, TestUtils.getDBConfig());
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
@@ -104,7 +104,7 @@ public class NLMSTest {
         
         
         instance = null;
-        instance = new NLMS(dbName, TestConfiguration.getDBConfig());
+        instance = new NLMS(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -169,13 +169,13 @@ public class NLMSTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
 
         
         
-        PCA featureSelection = new PCA(dbName, TestConfiguration.getDBConfig());
+        PCA featureSelection = new PCA(dbName, TestUtils.getDBConfig());
         PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
         featureSelectionParameters.setMaxDimensions(trainingData.getColumnSize()-1);
         featureSelectionParameters.setWhitened(false);
@@ -191,7 +191,7 @@ public class NLMSTest {
         featureSelection.erase();
         
         
-        NLMS instance = new NLMS(dbName, TestConfiguration.getDBConfig());
+        NLMS instance = new NLMS(dbName, TestUtils.getDBConfig());
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);

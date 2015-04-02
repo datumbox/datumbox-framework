@@ -71,7 +71,7 @@ public class MultinomialDPMMTest {
         
         String dbName = "JUnitClusterer";
         
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, TestConfiguration.getDBConfig());
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, TestUtils.getDBConfig());
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -83,7 +83,7 @@ public class MultinomialDPMMTest {
         
         
         instance = null;
-        instance = new MultinomialDPMM(dbName, TestConfiguration.getDBConfig());
+        instance = new MultinomialDPMM(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -127,7 +127,7 @@ public class MultinomialDPMMTest {
         
         
         
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, TestConfiguration.getDBConfig());
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, TestUtils.getDBConfig());
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);

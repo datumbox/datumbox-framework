@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class KruskalWallis {
         }
         
         //converts the values of the flatDataCollection with their Ranks
-        AssociativeArray tiesCounter = Dataset.getRanksFromValues(associativeArray);
+        AssociativeArray tiesCounter = Ranks.getRanksFromValues(associativeArray);
         int n = associativeArray.size();
         
         double C=0;

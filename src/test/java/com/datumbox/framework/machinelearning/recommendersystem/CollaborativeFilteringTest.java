@@ -155,7 +155,7 @@ public class CollaborativeFilteringTest {
         
         
         String dbName = "JUnitRecommender";
-        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, TestConfiguration.getDBConfig());
+        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, TestUtils.getDBConfig());
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
@@ -164,7 +164,7 @@ public class CollaborativeFilteringTest {
         
         
         instance = null;
-        instance = new CollaborativeFiltering(dbName, TestConfiguration.getDBConfig());
+        instance = new CollaborativeFiltering(dbName, TestUtils.getDBConfig());
         
         instance.predict(newData);
         

@@ -47,4 +47,8 @@ public abstract class DataStructure<T> implements Serializable {
     public DataStructure(T data) {
         this.internalData = data;
     }
+    
+    public final void overwrite(T data){
+        internalData = data;
+    }
 }

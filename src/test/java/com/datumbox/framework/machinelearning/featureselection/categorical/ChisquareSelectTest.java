@@ -93,14 +93,14 @@ public class ChisquareSelectTest {
         param.setALevel(0.05);
         
         Dataset trainingData = generateDataset(1000);
-        ChisquareSelect instance = new ChisquareSelect(dbName, TestConfiguration.getDBConfig());
+        ChisquareSelect instance = new ChisquareSelect(dbName, TestUtils.getDBConfig());
         
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new ChisquareSelect(dbName, TestConfiguration.getDBConfig());
+        instance = new ChisquareSelect(dbName, TestUtils.getDBConfig());
         
         instance.transform(trainingData);
         

@@ -18,7 +18,9 @@ package com.datumbox.tests.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import java.io.BufferedInputStream;
@@ -86,5 +88,14 @@ public class TestUtils {
 
     public static final synchronized void log(Class klass, String msg) {
         LoggerFactory.getLogger(klass).info(msg);
+    }
+
+    public static DatabaseConfiguration getDBConfig() {
+        if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
+            return new InMemoryConfiguration();
+        } else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
+            return new MapDBConfiguration();
+        }
+        return null;
     }
 }

@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -68,7 +69,7 @@ public class WilcoxonOneSample {
 
         //converts the values of the table with its Ranks
         Di.toFlatDataList();
-        Dataset.getRanksFromValues(Di);
+        Ranks.getRanksFromValues(Di);
         double W=0.0;
         for(Map.Entry<Object, Object> entry : Di.entrySet()) {
             String key = entry.getKey().toString();

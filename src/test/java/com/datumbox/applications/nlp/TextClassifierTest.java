@@ -61,7 +61,7 @@ public class TextClassifierTest {
         dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         
         
-        TextClassifier instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
+        TextClassifier instance = new TextClassifier(dbName, TestUtils.getDBConfig());
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         trainingParameters.setkFolds(5);
@@ -128,7 +128,7 @@ public class TextClassifierTest {
         
         
         
-        instance = new TextClassifier(dbName, TestConfiguration.getDBConfig());
+        instance = new TextClassifier(dbName, TestUtils.getDBConfig());
         
         List<Object> result = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         

@@ -16,12 +16,9 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.common.utilities.TypeConversions;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +30,6 @@ import java.util.Map;
  * @author bbriniotis
  */
 public final class Dataset implements Serializable, Iterable<Record> {
-    private boolean sparce = true;
     
     private final Map<Integer, Record> recordList;
     
@@ -71,121 +67,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
         }
     }
     
-    /**
-     * Returns a subset of the Dataset. It is used for k-fold cross validation
-     * and sampling and he Records in the new Dataset have DIFFERENT ids from the
-     * original.
-     * 
-     * @param idsCollection
-     * @return 
-     */
-    public Dataset generateNewSubset(FlatDataList idsCollection) {
-        Dataset d = new Dataset();
-        
-        for(Object id : idsCollection) {
-            d.add(recordList.get((Integer)id)); 
-        }        
-        return d;
-    }
     
-    //Retrieves from the Dataset a particular Record by its id.
-    public Record get(Integer id) {
-        return recordList.get(id);
-    }
-    
-    /**
-     * Replaces the actual values of the flatDataCollection with their ranks and
-     * returns in the tieCounter the keys that occur more than once and the 
-     * number of occurrences. The tieCounter does not store the list and ranks
-     * of the actual ties because we never use them. 
-     * 
-     * @param flatDataCollection
-     * @return 
-     */
-    public static AssociativeArray getRanksFromValues(FlatDataList flatDataCollection) {
-        
-        AssociativeArray tiesCounter = new AssociativeArray(new LinkedHashMap<>());
-        Map<Object, Double> key2AvgRank = new LinkedHashMap<>();
-        
-        _buildRankArrays(flatDataCollection.internalData, tiesCounter, key2AvgRank); //tiesCounter and key2AvgRank are modified
-        
-        int i = 0;
-        for (Object value : flatDataCollection) {
-            flatDataCollection.set(i++, key2AvgRank.get(value));
-        }
-        
-        return tiesCounter; 
-    }
-
-    /**
-     * Replaces the actual values of the associativeArray with their ranks and
-     * returns in the tieCounter the keys that occur more than once and the 
-     * number of occurrences. The tieCounter does not store the list and ranks
-     * of the actual ties because we never use them. 
-     * 
-     * @param associativeArray
-     * @return 
-     */
-    public static AssociativeArray getRanksFromValues(AssociativeArray associativeArray) {
-        
-        AssociativeArray tiesCounter = new AssociativeArray(new LinkedHashMap<>()); //ConcurrentSkipListMap
-        Map<Object, Double> key2AvgRank = new LinkedHashMap<>();
-        
-        _buildRankArrays(associativeArray.values(), tiesCounter, key2AvgRank); //tiesCounter and key2AvgRank are modified
-        
-        for (Map.Entry<Object, Object> entry : associativeArray.entrySet()) {
-            associativeArray.put(entry.getKey(), key2AvgRank.get(entry.getValue()));
-        }
-        
-        return tiesCounter; 
-    }
-    
-    /**
-     * Internal method used by getRanksFromValues() to produce the tiesCounter
-     * and key2AvgRank arrays.
-     * 
-     * @param dataCollection
-     * @param tiesCounter
-     * @param key2AvgRank 
-     */
-    private static void _buildRankArrays(Collection<Object> dataCollection, AssociativeArray tiesCounter, Map<Object, Double> key2AvgRank) {
-        //unnecessary already empty
-        //tiesCounter.clear();
-        //key2AvgRank.clear();
-        
-        for (Object value : dataCollection) {
-            Object count = tiesCounter.get(value);
-            if(count==null) {
-                count=0;
-            }
-            tiesCounter.put(value,((Number)count).intValue() + 1);
-        }
-        
-        tiesCounter.internalData = MapFunctions.<Object, Object>sortNumberMapByKeyAscending(tiesCounter.internalData);
-        
-        int itemCounter=0;
-        
-        //for(Map.Entry<Object, Object> entry : tiesCounter.entrySet()) {
-        Iterator<Map.Entry<Object, Object>> it = tiesCounter.entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<Object, Object> entry = it.next();
-            Object key = entry.getKey();
-            double count = TypeConversions.toDouble(entry.getValue());
-            if(count<=1.0) {
-                //keep as ties only keys that occur more than once.
-                //tiesCounter.remove(key); 
-                it.remove();
-            }
-            
-            //Arithmetic progression: http://en.wikipedia.org/wiki/Arithmetic_progression
-            //double sumOfRanks = (double)occurrences/2.0 * ((itemCounter+1) +  (itemCounter+occurrences)); 
-            //double avgRank= sumOfRanks/occurrences;
-            double avgRank = ((itemCounter+1) +  (itemCounter+count))/2.0; //same as above but faster
-            
-            key2AvgRank.put(key, avgRank); //now the tmpMap stores the value => avgRank
-            itemCounter+=count;
-        }
-    }
     
     public Dataset() {
         recordList = new LinkedHashMap<>();
@@ -193,13 +75,13 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Returns true if the internalDataset is sparce (all columns appear in the internalData) 
- and false if it is not sparce.
+     * Retrieves from the Dataset a particular Record by its id.
      * 
+     * @param id
      * @return 
      */
-    public boolean isSparce() {
-        return sparce;
+    public Record get(Integer id) {
+        return recordList.get(id);
     }
     
     /**
@@ -220,24 +102,6 @@ public final class Dataset implements Serializable, Iterable<Record> {
         return columns.size();
     }
     
-    /**
-     * Converts the Dataset to Sparse by adding the missing columns.
-     */
-    public void convert2Sparse() {
-        if(sparce==true) {
-            return;
-        }
-        
-        for(Record r : recordList.values()) {
-            for(Object column : columns.keySet()) {
-                if(r.getX().containsKey(column)==false) {
-                    r.getX().put(column, null);
-                }
-            }
-        }
-        
-        sparce=true;
-    }
     
     /**
      * Remove completely a column from the dataset.
@@ -291,8 +155,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * For each Response variable Y found in the internalDataset, it extracts the values
- of column and stores it in a list. This method is used usually when we 
+     * For each Response variable Y found in the internalDataset, it extracts the 
+     * values of column and stores it in a list. This method is used usually when we 
      * have categories in Y and we want the values of a particular column to be
      * extracted for each category. It basically extracts the "transposeDataList".
      * 
@@ -320,23 +184,13 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @param r 
      */
     private void updateMeta(Record r) {
-        boolean foundNewColumn = false;
         for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
             Object column = entry.getKey();
             Object value = entry.getValue();
             
             if(columns.get(column) == null) {
                 columns.put(column, value2ColumnType(value));
-                foundNewColumn=true;
             }
-        }
-        
-        /* 
-            If new columns are found and it is not the first record added
-            then the internalData are not sparse.
-        */
-        if(sparce == true && foundNewColumn==true && recordList.size()>1) {
-            sparce = false;
         }
     }
 
@@ -440,5 +294,22 @@ public final class Dataset implements Serializable, Iterable<Record> {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+    
+    /**
+     * Returns a subset of the Dataset. It is used for k-fold cross validation
+     * and sampling and he Records in the new Dataset have DIFFERENT ids from the
+     * original.
+     * 
+     * @param idsCollection
+     * @return 
+     */
+    public Dataset generateNewSubset(FlatDataList idsCollection) {
+        Dataset d = new Dataset();
+        
+        for(Object id : idsCollection) {
+            d.add(recordList.get((Integer)id)); 
+        }        
+        return d;
     }
 }

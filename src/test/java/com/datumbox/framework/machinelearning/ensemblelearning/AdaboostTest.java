@@ -94,13 +94,13 @@ public class AdaboostTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestConfiguration.getDBConfig());
+        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
         
         df.transform(validationData);
         
         
-        Adaboost instance = new Adaboost(dbName, TestConfiguration.getDBConfig());
+        Adaboost instance = new Adaboost(dbName, TestUtils.getDBConfig());
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -118,7 +118,7 @@ public class AdaboostTest {
         
         
         instance = null;
-        instance = new Adaboost(dbName, TestConfiguration.getDBConfig());
+        instance = new Adaboost(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -208,7 +208,7 @@ public class AdaboostTest {
         
         
         String dbName = "JUnitClassifier";
-        Adaboost instance = new Adaboost(dbName, TestConfiguration.getDBConfig());
+        Adaboost instance = new Adaboost(dbName, TestUtils.getDBConfig());
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);

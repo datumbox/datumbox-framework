@@ -87,14 +87,14 @@ public class MatrixLinearRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         df = null;
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestUtils.getDBConfig());
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
@@ -102,11 +102,11 @@ public class MatrixLinearRegressionTest {
         
         
         instance = null;
-        instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
+        instance = new MatrixLinearRegression(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
-        df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         
 	        
         df.denormalize(trainingData);
@@ -170,11 +170,11 @@ public class MatrixLinearRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestConfiguration.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestConfiguration.getDBConfig());
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, TestUtils.getDBConfig());
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         

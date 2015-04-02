@@ -78,13 +78,13 @@ public class TFIDFTest {
         r3.getX().put("stopword3", 4.0);
         trainingData.add(r3);
         
-        TFIDF instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
+        TFIDF instance = new TFIDF(dbName, TestUtils.getDBConfig());
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new TFIDF(dbName, TestConfiguration.getDBConfig());
+        instance = new TFIDF(dbName, TestUtils.getDBConfig());
         
         instance.transform(trainingData);
         

@@ -17,13 +17,13 @@
 package com.datumbox.common.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -112,7 +112,19 @@ public class MapFunctions {
      * @return 
      */
     public static <K, V> Map<K, V> sortNumberMapByKeyAscending(Map<K, V> map) {
-        ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(map.entrySet());
+        return sortNumberMapByKeyAscending(map.entrySet());
+    }
+    
+    /**
+     * Sorts by Key a Map in ascending order. 
+     * 
+     * @param <K>
+     * @param <V>
+     * @param entrySet
+     * @return 
+     */
+    public static <K, V> Map<K, V> sortNumberMapByKeyAscending(Set<Map.Entry<K, V>> entrySet) {
+        ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(entrySet);
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
           @Override
           public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
@@ -130,6 +142,8 @@ public class MapFunctions {
         return sortedMap;
     }
     
+    
+    
     /**
      * Sorts by Key a Map in descending order. 
      * 
@@ -139,7 +153,19 @@ public class MapFunctions {
      * @return 
      */
     public static <K, V> Map<K, V> sortNumberMapByKeyDescending(Map<K, V> map) {
-        ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(map.entrySet());
+        return sortNumberMapByKeyDescending(map.entrySet());
+    }
+    
+    /**
+     * Sorts by Key a Map in descending order. 
+     * 
+     * @param <K>
+     * @param <V>
+     * @param entrySet
+     * @return 
+     */
+    public static <K, V> Map<K, V> sortNumberMapByKeyDescending(Set<Map.Entry<K, V>> entrySet) {
+        ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(entrySet);
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
           @Override
           public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){

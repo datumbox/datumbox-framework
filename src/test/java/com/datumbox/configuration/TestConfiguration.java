@@ -32,15 +32,4 @@ public class TestConfiguration {
     public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
     //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
     
-    public static DatabaseConfiguration getDBConfig() {
-        if (PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
-            return new InMemoryConfiguration();
-        }
-        else if (PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
-            return new MapDBConfiguration();
-        }
-        
-        return null;
-    }
-    
 }

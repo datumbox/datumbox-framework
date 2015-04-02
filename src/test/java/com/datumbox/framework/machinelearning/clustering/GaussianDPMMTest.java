@@ -86,7 +86,7 @@ public class GaussianDPMMTest {
         
         String dbName = "JUnitClusterer";
         
-        GaussianDPMM instance = new GaussianDPMM(dbName, TestConfiguration.getDBConfig());
+        GaussianDPMM instance = new GaussianDPMM(dbName, TestUtils.getDBConfig());
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -101,7 +101,7 @@ public class GaussianDPMMTest {
         
         
         instance = null;
-        instance = new GaussianDPMM(dbName, TestConfiguration.getDBConfig());
+        instance = new GaussianDPMM(dbName, TestUtils.getDBConfig());
         
         instance.validate(validationData);
         
@@ -145,7 +145,7 @@ public class GaussianDPMMTest {
         
         
         
-        GaussianDPMM instance = new GaussianDPMM(dbName, TestConfiguration.getDBConfig());
+        GaussianDPMM instance = new GaussianDPMM(dbName, TestUtils.getDBConfig());
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);

@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.AbstractMap;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class MannWhitney {
         }
         
         //converts the values of the flatDataCollection with their Ranks
-        Dataset.getRanksFromValues(associativeArray);
+        Ranks.getRanksFromValues(associativeArray);
 
         //sum up the scores of the smallest sample
         double MWscore=0.0;

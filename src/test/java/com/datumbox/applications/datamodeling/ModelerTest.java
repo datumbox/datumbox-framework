@@ -113,7 +113,7 @@ public class ModelerTest {
         
         String dbName = "JUnit";
         
-        Modeler instance = new Modeler(dbName, TestConfiguration.getDBConfig());
+        Modeler instance = new Modeler(dbName, TestUtils.getDBConfig());
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         trainingParameters.setkFolds(5);
         
@@ -161,7 +161,7 @@ public class ModelerTest {
         TestUtils.log(this.getClass(), "validate");
         
         
-        instance = new Modeler(dbName, TestConfiguration.getDBConfig());
+        instance = new Modeler(dbName, TestUtils.getDBConfig());
         
         instance.validate(newData);
         
