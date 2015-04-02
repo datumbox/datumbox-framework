@@ -67,8 +67,8 @@
         <maven-source-plugin-version>2.4</maven-source-plugin-version>
         <gpg-plugin-version>1.5</gpg-plugin-version>
         <maven-surfire-plugin-version>2.17</maven-surfire-plugin-version>
+        
         <junit-version>4.11</junit-version>
-        <commons-collections-version>4.0</commons-collections-version>
         <commons-lang-version>3.3.2</commons-lang-version>
         <commons-math-version>3.3</commons-math-version>
         <guava-version>17.0</guava-version>
@@ -77,7 +77,6 @@
         <mapdb-version>1.0.7</mapdb-version>
         <gpg.keyname>7083A486</gpg.keyname>
         <logback.version>1.1.2</logback.version>
-        <slf4j-api.version>1.7.7</slf4j-api.version>
         
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
@@ -190,11 +189,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang-version}</version>
         </dependency>
@@ -224,19 +218,9 @@
             <version>${mapdb-version}</version>
         </dependency>
         <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j-api.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
     
