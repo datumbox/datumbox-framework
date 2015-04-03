@@ -52,13 +52,14 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         private final Record centroid;
         
-        private boolean active=true;
+        private boolean active = true;
         
-        private final transient AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
+        private transient AssociativeArray xi_sum;
         
         public Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record();
+            xi_sum = new AssociativeArray(new LinkedHashMap<>());
         }
         
         public Record getCentroid() {

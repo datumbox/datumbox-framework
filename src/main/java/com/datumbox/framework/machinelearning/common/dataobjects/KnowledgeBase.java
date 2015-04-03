@@ -39,8 +39,8 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     protected String dbName; 
     
     
-    protected final transient DatabaseConnector dbc;
-    protected final transient DatabaseConfiguration dbConf;
+    protected transient DatabaseConnector dbc;
+    protected transient DatabaseConfiguration dbConf;
 
     
     
