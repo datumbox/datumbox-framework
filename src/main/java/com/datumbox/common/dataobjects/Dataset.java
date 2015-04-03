@@ -75,21 +75,12 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Retrieves from the Dataset a particular Record by its id.
-     * 
-     * @param id
-     * @return 
-     */
-    public Record get(Integer id) {
-        return recordList.get(id);
-    }
-    
-    /**
      * Returns an Map with columns as keys and types are values.
      * 
      * @return 
      */
     public Map<Object, ColumnType> getColumns() {
+        //return Collections.unmodifiableMap(columns); //TODO: should we return an unmodifiable map here?
         return columns;
     }
     
@@ -102,23 +93,22 @@ public final class Dataset implements Serializable, Iterable<Record> {
         return columns.size();
     }
     
+    /**
+     * Returns the number of Records in the internalDataset.
+     * 
+     * @return 
+     */
+    public int size() {
+        return recordList.size();
+    }
     
     /**
-     * Remove completely a column from the dataset.
+     * Checks if the Dataset is empty.
      * 
-     * @param column 
-     * @return  
+     * @return 
      */
-    public boolean removeColumn(Object column) {        
-        if(columns.remove(column)!=null) { //try to remove it from the columns and it if it removed remove it from the list too
-            for(Record r : recordList.values()) {
-                r.getX().remove(column); //TODO: do we need to store the record again in the map?
-            }
-            
-            return true;
-        }
-        
-        return false;
+    public boolean isEmpty() {
+        return recordList.isEmpty();
     }
     
     /**
@@ -178,6 +168,51 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
+     * Returns a subset of the Dataset. It is used for k-fold cross validation
+     * and sampling and he Records in the new Dataset have DIFFERENT ids from the
+     * original.
+     * 
+     * @param idsCollection
+     * @return 
+     */
+    public Dataset generateNewSubset(FlatDataList idsCollection) {
+        Dataset d = new Dataset();
+        
+        for(Object id : idsCollection) {
+            d.add(recordList.get((Integer)id)); 
+        }        
+        return d;
+    }
+    
+    /**
+     * Retrieves from the Dataset a particular Record by its id.
+     * 
+     * @param id
+     * @return 
+     */
+    public Record get(Integer id) {
+        return recordList.get(id);
+    }
+    
+    /**
+     * Remove completely a column from the dataset.
+     * 
+     * @param column 
+     * @return  
+     */
+    public boolean removeColumn(Object column) {        
+        if(columns.remove(column)!=null) { //try to remove it from the columns and it if it removed remove it from the list too
+            for(Record r : recordList.values()) {
+                r.getX().remove(column); //TODO: do we need to store the record again in the map?
+            }
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * Updates the meta information of the Dataset such as whether it is sparce
      * and the supported columns.
      * 
@@ -206,7 +241,6 @@ public final class Dataset implements Serializable, Iterable<Record> {
         }
     } 
     
-    
     /**
      * Adds the record in the dataset. The original record is shallow copied 
      * and its id is updated (this does not affect the id of the original record).
@@ -224,24 +258,6 @@ public final class Dataset implements Serializable, Iterable<Record> {
         updateMeta(newRecord);
         
         return newRecord.getId();
-    }
-    
-    /**
-     * Returns the number of Records in the internalDataset.
-     * 
-     * @return 
-     */
-    public int size() {
-        return recordList.size();
-    }
-    
-    /**
-     * Checks if the Dataset is empty.
-     * 
-     * @return 
-     */
-    public boolean isEmpty() {
-        return recordList.isEmpty();
     }
     
     /**
@@ -277,22 +293,5 @@ public final class Dataset implements Serializable, Iterable<Record> {
                 throw new UnsupportedOperationException();
             }
         };
-    }
-    
-    /**
-     * Returns a subset of the Dataset. It is used for k-fold cross validation
-     * and sampling and he Records in the new Dataset have DIFFERENT ids from the
-     * original.
-     * 
-     * @param idsCollection
-     * @return 
-     */
-    public Dataset generateNewSubset(FlatDataList idsCollection) {
-        Dataset d = new Dataset();
-        
-        for(Object id : idsCollection) {
-            d.add(recordList.get((Integer)id)); 
-        }        
-        return d;
     }
 }
