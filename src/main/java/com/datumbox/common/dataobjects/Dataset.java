@@ -112,7 +112,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     public boolean removeColumn(Object column) {        
         if(columns.remove(column)!=null) { //try to remove it from the columns and it if it removed remove it from the list too
             for(Record r : recordList.values()) {
-                r.getX().remove(column);
+                r.getX().remove(column); //TODO: do we need to store the record again in the map?
             }
             
             return true;
@@ -248,26 +248,9 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * Clears the Dataset and removes the internal variables.
      */
     public void clear() {
+        //TODO: delete the bigdata appropriately
         recordList.clear();
         columns.clear();
-    }
-    
-    /**
-     * Randomizes the order of the records in the recordList. This method DOES NOT 
-     * change the ids of the records or the keys of the recordList. It just modifies
-     * the their order in the list.
-     */
-    public void shuffle() {
-        List<Integer> idList = new ArrayList<>(recordList.keySet());
-        Collections.shuffle(idList, RandomValue.randomGenerator);
-        
-        Map<Integer, Record> newRecordList = new LinkedHashMap<>();
-        for(Integer id : idList) {
-            newRecordList.put(id, recordList.get(id));
-        }
-        recordList.clear();
-        recordList.putAll(newRecordList);
-        //TODO: this method does not work appropriately because the iterator of dataset fetches records by their ID. I need to check when the shuffle is called and correct this logic
     }
     
     /**

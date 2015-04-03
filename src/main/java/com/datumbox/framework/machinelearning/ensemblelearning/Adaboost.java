@@ -107,7 +107,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
 
                 Record r = validationDataset.get(recordId);
                 if(!r.getY().equals(r.getYPredicted())) {
-                    observationWeights.put(entry.getKey(), value*Math.exp(weight)); //increase the weight for misclassified observations
+                    observationWeights.put(recordId, value*Math.exp(weight)); //increase the weight for misclassified observations
                 }
             }
             

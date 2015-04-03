@@ -455,24 +455,21 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         int k = trainingParameters.getK();
         TrainingParameters.Initialization initMethod = trainingParameters.getInitMethod();
         
-        boolean randomize = (initMethod==TrainingParameters.Initialization.FORGY || 
-                            initMethod==TrainingParameters.Initialization.RANDOM_PARTITION || 
-                            initMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST ||
-                            initMethod==TrainingParameters.Initialization.PLUS_PLUS);
-        
-        if(randomize) {
-            trainingData.shuffle();
-        }
-        
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         if(initMethod==TrainingParameters.Initialization.SET_FIRST_K || 
            initMethod==TrainingParameters.Initialization.FORGY) {
-            for(int i=0;i<k;++i) {
+            int i = 0;
+            for(Record r : trainingData) {
+                if(i>=k) {
+                    break;
+                } 
                 Integer clusterId= i;
                 Cluster c = new Cluster(clusterId);
-                c.add(trainingData.get(i));
+                c.add(r);
                 c.updateClusterParameters();
                 clusterList.put(clusterId, c);
+                
+                ++i;
             }
         }
         else if(initMethod==TrainingParameters.Initialization.RANDOM_PARTITION) {
