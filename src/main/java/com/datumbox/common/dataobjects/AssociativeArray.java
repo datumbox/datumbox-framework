@@ -43,7 +43,7 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
         addRemoveValues(array, +1);
     }
     
-    public final void removeValues(AssociativeArray array) {
+    public final void subtractValues(AssociativeArray array) {
         addRemoveValues(array, -1);
     }
     

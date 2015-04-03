@@ -113,7 +113,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         public boolean add(Record r) {
             size= recordSet.size();
             
-            if(recordSet.add(r)==false) {
+            if(recordSet.add(r.getId())==false) {
                 return false;
             }
             
@@ -133,21 +133,10 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             
             return true;
         }
-
-        @Override
-        public boolean addAll(Collection<Record> c) {
-            //created only for completion purposes and for implementing the abstract. 
-            //it is not used and thus it is not optimized.
-            boolean result = false;
-            for(Record r : c) {
-                result|=add(r);
-            }
-            return result;
-        }
         
         @Override
         public boolean remove(Record r) {
-            if(recordSet.remove(r)==false) {
+            if(recordSet.remove(r.getId())==false) {
                 return false;
             }
             

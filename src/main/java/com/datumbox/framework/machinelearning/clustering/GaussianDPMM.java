@@ -73,8 +73,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private int meanDf;
         
         //internal vars for calculation
-        private RealVector xi_sum;
-        private RealMatrix xi_square_sum; 
+        private transient RealVector xi_sum;
+        private transient RealMatrix xi_square_sum; 
         
         
         //Cache
@@ -169,7 +169,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         public boolean add(Record r) {
             size= recordSet.size();
             
-            if(recordSet.add(r)==false) {
+            if(recordSet.add(r.getId())==false) {
                 return false;
             }
             
@@ -191,21 +191,10 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             
             return true;
         }
-
-        @Override
-        public boolean addAll(Collection<Record> c) {
-            //created only for completion purposes and for implementing the abstract. 
-            //it is not used and thus it is not optimized.
-            boolean result = false;
-            for(Record r : c) {
-                result|=add(r);
-            }
-            return result;
-        }
         
         @Override
         public boolean remove(Record r) {
-            if(recordSet.remove(r)==false) {
+            if(recordSet.remove(r.getId())==false) {
                 return false;
             }
             
@@ -254,6 +243,13 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return Psi.scalarMultiply(1.0/(kappa*(nu-dimensions+1.0)));
         }
         
+                
+        @Override
+        public void clear() {
+            super.clear();
+            xi_sum = null;
+            xi_square_sum = null;
+        }
 
         @Override
         protected void updateClusterParameters() {

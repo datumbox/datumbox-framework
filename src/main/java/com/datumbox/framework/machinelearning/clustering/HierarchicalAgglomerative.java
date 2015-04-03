@@ -54,6 +54,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         private boolean active=true;
         
+        private transient final AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
+        
         public Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record();
@@ -73,33 +75,27 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
 
         @Override
         public boolean add(Record r) {
-            boolean result = recordSet.add(r);
+            boolean result = recordSet.add(r.getId());
             if(result) {
                 ++size;
-            }
-            return result;
-        }
-        
-        @Override
-        public boolean addAll(Collection<Record> c) {
-            boolean result = recordSet.addAll(c);
-            if(result) {
-                size+=c.size();
+                xi_sum.addValues(r.getX());
             }
             return result;
         }
         
         @Override
         public boolean remove(Record r) {
-            boolean result = recordSet.remove(r);
+            boolean result = recordSet.remove(r.getId());
             if(result) {
                 --size;
+                xi_sum.subtractValues(r.getX());
             }
             return result;
         }
         
         public boolean merge(Cluster c) {
             size += c.size();
+            xi_sum.addValues(c.xi_sum);
             return recordSet.addAll(c.recordSet);
         }
         
@@ -109,9 +105,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             size = recordSet.size();
             
             AssociativeArray centoidValues = new AssociativeArray(new LinkedHashMap<>());
-            for(Record r : recordSet) {
-                centoidValues.addValues(r.getX());
-            }
+            centoidValues.addValues(xi_sum);
             
             if(size>0) {
                 centoidValues.multiplyValues(1.0/size);
@@ -124,6 +118,11 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             return changed;
         }
                 
+        @Override
+        public void clear() {
+            super.clear();
+            xi_sum.clear();
+        }
     }
     
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
@@ -261,10 +260,6 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         //update the number of clusters
         modelParameters.setC(clusterList.size());
         
-        //clear dataclusters
-        for(Cluster c : clusterList.values()) {
-            c.clear();
-        }
     }
     
     private double calculateDistance(Record r1, Record r2) {        

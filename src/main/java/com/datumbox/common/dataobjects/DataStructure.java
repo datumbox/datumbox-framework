@@ -16,6 +16,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.utilities.DeepCopy;
 import java.io.Serializable;
 
 /**
@@ -51,4 +52,5 @@ public abstract class DataStructure<T> implements Serializable {
     public final void overwrite(T data){
         internalData = data;
     }
+    
 }

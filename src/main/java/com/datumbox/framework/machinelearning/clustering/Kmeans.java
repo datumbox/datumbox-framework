@@ -54,6 +54,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     public static class Cluster extends BaseMLclusterer.Cluster {
         
         private final Record centroid;
+        
+        private transient final AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
 
         public Cluster(int clusterId) {
             super(clusterId);
@@ -66,27 +68,20 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
 
         @Override
         public boolean add(Record r) {
-            boolean result = recordSet.add(r);
+            boolean result = recordSet.add(r.getId());
             if(result) {
                 ++size;
-            }
-            return result;
-        }
-        
-        @Override
-        public boolean addAll(Collection<Record> c) {
-            boolean result = recordSet.addAll(c);
-            if(result) {
-                size+=c.size();
+                xi_sum.addValues(r.getX());
             }
             return result;
         }
         
         @Override
         public boolean remove(Record r) {
-            boolean result = recordSet.remove(r);
+            boolean result = recordSet.remove(r.getId());
             if(result) {
                 --size;
+                xi_sum.subtractValues(r.getX());
             }
             return result;
         }
@@ -97,9 +92,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             size = recordSet.size();
             
             AssociativeArray centoidValues = new AssociativeArray(new LinkedHashMap<>());
-            for(Record r : recordSet) {
-                centoidValues.addValues(r.getX());
-            }
+            centoidValues.addValues(xi_sum);
             
             if(size>0) {
                 centoidValues.multiplyValues(1.0/size);
@@ -112,6 +105,11 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             return changed;
         }
                 
+        @Override
+        public void clear() {
+            super.clear();
+            xi_sum.clear();
+        }
     }
     
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<Kmeans.Cluster> {
@@ -312,10 +310,6 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         //update the number of clusters
         modelParameters.setC(clusterList.size());
         
-        //clear dataclusters
-        for(Cluster c : clusterList.values()) {
-            c.clear();
-        }
     }
     
     /**

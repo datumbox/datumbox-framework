@@ -46,14 +46,14 @@ import java.util.Set;
  */
 public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP extends BaseMLclusterer.ModelParameters, TP extends BaseMLclusterer.TrainingParameters, VM extends BaseMLclusterer.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
-    public static abstract class Cluster implements Learnable, Iterable<Record> {
+    public static abstract class Cluster implements Learnable, Iterable<Integer> {
         //variables
         protected Integer clusterId;
         
         protected int size; //we store this value because we want to know the number of elements in the cluster even when clear() was called
         
         
-        protected transient Set<Record> recordSet; //it is not stored in the DB and it is cleared after the end of training
+        protected transient Set<Integer> recordSet; //it is not stored in the DB and it is cleared after the end of training
         
         protected Object labelY = null;
         
@@ -87,7 +87,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         }
         
         public boolean contains(Record r) {
-            return recordSet.contains(r);
+            return recordSet.contains(r.getId());
         }
         
         /**
@@ -96,9 +96,9 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
          * @return 
          */
         @Override
-        public Iterator<Record> iterator() {
-            return new Iterator<Record>() {
-                private final Iterator<Record> it = recordSet.iterator();
+        public Iterator<Integer> iterator() {
+            return new Iterator<Integer>() {
+                private final Iterator<Integer> it = recordSet.iterator();
 
                 @Override
                 public boolean hasNext() {
@@ -106,7 +106,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
                 }
 
                 @Override
-                public Record next() {
+                public Integer next() {
                     return it.next();
                 }
 
@@ -150,8 +150,6 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         //abstract methods that modify the cluster set and should update its statistics in each implementation
         
         public abstract boolean add(Record r);
-        
-        public abstract boolean addAll(Collection<Record> c);
         
         public abstract boolean remove(Record r);
 

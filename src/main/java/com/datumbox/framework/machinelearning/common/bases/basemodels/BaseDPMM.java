@@ -198,10 +198,6 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         //update the number of clusters
         modelParameters.setC(clusterList.size());
         
-        //clear dataclusters
-        for(CL c : clusterList.values()) {
-            c.clear();
-        }
     }
     
     /**
