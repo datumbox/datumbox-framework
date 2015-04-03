@@ -91,8 +91,7 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
 
         Map<Object, Dataset.ColumnType> newColumns = new HashMap<>();
         
-        int n = data.size();
-        
+        //TODO: rewrite this to avoid accessing getColumns() directly
         Iterator<Map.Entry<Object, Dataset.ColumnType>> it = data.getColumns().entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<Object, Dataset.ColumnType> entry = it.next();

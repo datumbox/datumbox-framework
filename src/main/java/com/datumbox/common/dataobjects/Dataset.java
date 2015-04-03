@@ -16,15 +16,13 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.RandomValue;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 /**
  *
  * @author bbriniotis
@@ -70,7 +68,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     
     
     public Dataset() {
-        recordList = new LinkedHashMap<>();
+        recordList = new TreeMap<>();
         columns = new HashMap<>();
     }
     
@@ -275,17 +273,18 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @return 
      */
     @Override
-    public Iterator<Record> iterator() { 
+    public Iterator<Record> iterator() {
         return new Iterator<Record>() {
-            private int index=0;
+            private Iterator<Integer> it = recordList.keySet().iterator();
+            
             @Override
             public boolean hasNext() {
-                return index < recordList.size();
+                return it.hasNext();
             }
 
             @Override
             public Record next() {
-                return recordList.get(index++);
+                return recordList.get(it.next());
             }
 
             @Override
