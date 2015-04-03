@@ -54,7 +54,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         private boolean active=true;
         
-        private transient final AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
+        private final transient AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
         
         public Cluster(int clusterId) {
             super(clusterId);

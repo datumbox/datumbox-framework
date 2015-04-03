@@ -55,7 +55,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         private final Record centroid;
         
-        private transient final AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
+        private final transient AssociativeArray xi_sum = new AssociativeArray(new LinkedHashMap<>());
 
         public Cluster(int clusterId) {
             super(clusterId);
