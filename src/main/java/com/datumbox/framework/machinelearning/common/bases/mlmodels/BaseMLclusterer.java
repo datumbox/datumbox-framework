@@ -51,42 +51,56 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         protected Integer clusterId;
         
         
-        protected Set<Integer> recordIdsSet; 
+        protected Set<Integer> recordIdSet; 
         
         protected Object labelY = null;
         
-        public Cluster(Integer clusterId) {
+        protected Cluster(Integer clusterId) {
             this.clusterId = clusterId;
-            recordIdsSet = new HashSet<>(); //This is large but it should store only references of the Records not the actualy objects
+            recordIdSet = new HashSet<>(); //This is large but it should store only references of the Records not the actualy objects
         }
 
         
-        //Wrapper methods for the recordIdsSet
+        //Getters
+        
+        public Integer getClusterId() {
+            return clusterId;
+        }
+
+        public Set<Integer> getRecordIdSet() {
+            return recordIdSet;
+        }
+        
+        public Object getLabelY() {
+            return labelY;
+        }
+        
+        //Wrapper methods for the recordIdSet
         
         public boolean isEmpty() {
-            return recordIdsSet.isEmpty();
+            return recordIdSet.isEmpty();
         }
         
         public boolean contains(Record r) {
-            return recordIdsSet.contains(r.getId());
+            return recordIdSet.contains(r.getId());
         }
         
         public int size() {
-            if(recordIdsSet == null) {
+            if(recordIdSet == null) {
                 return 0;
             }
-            return recordIdsSet.size();
+            return recordIdSet.size();
         }
         
         /**
-         * Implementing a read-only iterator on clusterList to use it in loops.
+         * Implementing a read-only iterator on recordIdSet to use it in loops.
          * 
          * @return 
          */
         @Override
         public Iterator<Integer> iterator() {
             return new Iterator<Integer>() {
-                private final Iterator<Integer> it = recordIdsSet.iterator();
+                private final Iterator<Integer> it = recordIdSet.iterator();
 
                 @Override
                 public boolean hasNext() {
@@ -108,9 +122,13 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         //internal methods
         
         protected void clear() {
-            if(recordIdsSet!=null) {
-                recordIdsSet.clear();
+            if(recordIdSet!=null) {
+                recordIdSet.clear();
             }
+        }
+        
+        protected void setLabelY(Object labelY) {
+            this.labelY = labelY;
         }
         
         @Override
@@ -133,22 +151,6 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
                 return false;
             }
             return true;
-        }
-
-        //Getters
-        
-        public Integer getClusterId() {
-            return clusterId;
-        }
-        
-        public Object getLabelY() {
-            return labelY;
-        }
-
-        //Setters
-        
-        protected void setLabelY(Object labelY) {
-            this.labelY = labelY;
         }
         
         //abstract methods that modify the cluster set and should update its statistics in each implementation

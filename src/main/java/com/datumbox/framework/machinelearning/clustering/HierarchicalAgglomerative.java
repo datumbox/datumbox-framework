@@ -75,7 +75,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
 
         @Override
         protected boolean add(Record r) {
-            boolean result = recordIdsSet.add(r.getId());
+            boolean result = recordIdSet.add(r.getId());
             if(result) {
                 xi_sum.addValues(r.getX());
             }
@@ -84,7 +84,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         @Override
         protected boolean remove(Record r) {
-            boolean result = recordIdsSet.remove(r.getId());
+            boolean result = recordIdSet.remove(r.getId());
             if(result) {
                 xi_sum.subtractValues(r.getX());
             }
@@ -93,13 +93,13 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         public boolean merge(Cluster c) {
             xi_sum.addValues(c.xi_sum);
-            return recordIdsSet.addAll(c.recordIdsSet);
+            return recordIdSet.addAll(c.recordIdSet);
         }
         
         public boolean updateClusterParameters() {
             boolean changed=false;
             
-            int size = recordIdsSet.size();
+            int size = recordIdSet.size();
             
             AssociativeArray centoidValues = new AssociativeArray(new LinkedHashMap<>());
             centoidValues.addValues(xi_sum);

@@ -167,9 +167,9 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          */
         @Override
         protected boolean add(Record r) {
-            int size= recordIdsSet.size();
+            int size= recordIdSet.size();
             
-            if(recordIdsSet.add(r.getId())==false) {
+            if(recordIdSet.add(r.getId())==false) {
                 return false;
             }
             
@@ -192,7 +192,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         
         @Override
         protected boolean remove(Record r) {
-            if(recordIdsSet.remove(r.getId())==false) {
+            if(recordIdSet.remove(r.getId())==false) {
                 return false;
             }
             
@@ -251,7 +251,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
 
         @Override
         protected void updateClusterParameters() {
-            int n = recordIdsSet.size();
+            int n = recordIdSet.size();
 
             //fetch hyperparameters
 

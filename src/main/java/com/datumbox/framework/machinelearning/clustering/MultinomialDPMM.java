@@ -111,9 +111,9 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          */
         @Override
         protected boolean add(Record r) {
-            int size= recordIdsSet.size();
+            int size= recordIdSet.size();
             
-            if(recordIdsSet.add(r.getId())==false) {
+            if(recordIdSet.add(r.getId())==false) {
                 return false;
             }
             
@@ -134,7 +134,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         
         @Override
         protected boolean remove(Record r) {
-            if(recordIdsSet.remove(r.getId())==false) {
+            if(recordIdSet.remove(r.getId())==false) {
                 return false;
             }
             
