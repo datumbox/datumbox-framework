@@ -17,6 +17,7 @@
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataset.ColumnType;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -146,42 +147,40 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     
     @Override
     protected void filterFeatures(Dataset newdata) {
-        MP modelParameters = knowledgeBase.getModelParameters();
-        
         //now filter the data by removing all the features that are not selected
-        filterData(newdata, modelParameters.getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
+        filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
     }
     
-    private static void filterData(Dataset data, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
-        for(Record r : data) {
-            Iterator<Map.Entry<Object, Object>> it = r.getX().entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry<Object, Object> entry = it.next();
-                Object feature = entry.getKey();
-                if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(data.getColumns().get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
-                        continue; //skip any further analysis
-                    }
+    private static void filterData(Dataset data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
+        
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", true);
+        
+        for(Map.Entry<Object, ColumnType> entry: data.getColumns().entrySet()) {
+            Object feature = entry.getKey();
+            
+            if(ignoringNumericalFeatures) {
+                if(entry.getValue()==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
+                    continue; //skip any further analysis
                 }
-                
-                Double value = TypeConversions.toDouble(entry.getValue());
-                
-                
-                if(!featureScores.containsKey(feature)) { //unselected feature
-                    //remove it both from the columns and from the record
-                    data.getColumns().remove(feature);
-                    it.remove();
-                }
-                else if(value==null || value==0.0) { //inactive feature
-                    //remove it only from this record
-                    it.remove();
-                }
+            }
+            
+            if(!featureScores.containsKey(feature)) {
+                tmp_removedColumns.put(feature, true);
             }
         }
         
+        for(Object feature: tmp_removedColumns.keySet()) {
+            data.removeColumn(feature);
+        }
+        
+        //Drop the temporary Collection
+        dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+        
+        
+        
     }
     
-    public static void removeRareFeatures(Dataset data, Integer rareFeatureThreshold, Map<Object, Double> featureCounts, boolean ignoringNumericalFeatures) {
+    public static void removeRareFeatures(Dataset data, DatabaseConnector dbc, Integer rareFeatureThreshold, Map<Object, Double> featureCounts, boolean ignoringNumericalFeatures) {
         //This method contains part of the statistics collection of the object
         //but can also be called statically in order to aggressively remove rare
         //features especially in NLP applications. It was developed in such a way
@@ -237,7 +236,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
             }
             
             //then remove the features in dataset that does not appear in the list
-            filterData(data, featureCounts, ignoringNumericalFeatures);
+            filterData(data, dbc, featureCounts, ignoringNumericalFeatures);
         }
     }
     
@@ -246,12 +245,10 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
-        MP modelParameters = knowledgeBase.getModelParameters();
-        
         //the method below does not only removes the rare features but also
         //first and formost calculates the contents of featureCounts map. 
         //The map must be empty or else you get a RuntimeException
-        removeRareFeatures(data, rareFeatureThreshold, featureCounts, ignoringNumericalFeatures);
+        removeRareFeatures(data, knowledgeBase.getDbc(), rareFeatureThreshold, featureCounts, ignoringNumericalFeatures);
         
         //now find the classCounts and the featureClassCounts
         for(Record r : data) {

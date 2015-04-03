@@ -203,28 +203,24 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
 
     @Override
     protected void filterFeatures(Dataset newData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Double> maxTFIDFfeatureScores = modelParameters.getMaxTFIDFfeatureScores();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
+        Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
         
-        for(Record r : newData) {
-            Iterator<Map.Entry<Object, Object>> it = r.getX().entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry<Object, Object> entry = it.next();
-                Object feature = entry.getKey();
-                
-                Double value = TypeConversions.toDouble(entry.getValue());
-                
-                if(!maxTFIDFfeatureScores.containsKey(feature)) { //unselected feature
-                    //remove it both from the columns and from the record
-                    newData.getColumns().remove(feature);
-                    it.remove();
-                }
-                else if(value==null || value==0.0) { //inactive feature
-                    //remove it only from this record
-                    it.remove();
-                }
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", true);
+        
+        for(Object feature: newData.getColumns().keySet()) {
+            if(!maxTFIDFfeatureScores.containsKey(feature)) {
+                tmp_removedColumns.put(feature, true);
             }
         }
+        
+        for(Object feature: tmp_removedColumns.keySet()) {
+            newData.removeColumn(feature);
+        }
+        
+        //Drop the temporary Collection
+        dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+        
     }
     
 }

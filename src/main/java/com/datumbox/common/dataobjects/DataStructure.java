@@ -16,7 +16,6 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.DeepCopy;
 import java.io.Serializable;
 
 /**
