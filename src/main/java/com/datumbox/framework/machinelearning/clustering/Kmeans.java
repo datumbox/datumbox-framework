@@ -67,20 +67,18 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         }
 
         @Override
-        public boolean add(Record r) {
-            boolean result = recordSet.add(r.getId());
+        protected boolean add(Record r) {
+            boolean result = recordIdsSet.add(r.getId());
             if(result) {
-                ++size;
                 xi_sum.addValues(r.getX());
             }
             return result;
         }
         
         @Override
-        public boolean remove(Record r) {
-            boolean result = recordSet.remove(r.getId());
+        protected boolean remove(Record r) {
+            boolean result = recordIdsSet.remove(r.getId());
             if(result) {
-                --size;
                 xi_sum.subtractValues(r.getX());
             }
             return result;
@@ -89,7 +87,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         public boolean updateClusterParameters() {
             boolean changed=false;
             
-            size = recordSet.size();
+            int size = recordIdsSet.size();
             
             AssociativeArray centoidValues = new AssociativeArray(new LinkedHashMap<>());
             centoidValues.addValues(xi_sum);
@@ -106,7 +104,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         }
                 
         @Override
-        public void clear() {
+        protected void clear() {
             super.clear();
             xi_sum.clear();
         }

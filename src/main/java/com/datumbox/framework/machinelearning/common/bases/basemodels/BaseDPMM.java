@@ -30,6 +30,7 @@ import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -68,6 +69,12 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
          * @return      The log posterior PDF
          */
         public abstract double posteriorLogPdf(Record r);
+        
+        @Override
+        protected abstract boolean add(Record r);
+        
+        @Override
+        protected abstract boolean remove(Record r);
     }
     
     public static abstract class ModelParameters<CL extends BaseDPMM.Cluster> extends BaseMLclusterer.ModelParameters<CL> {
@@ -319,7 +326,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                     r.setYPredicted(sampledClusterId);
                     
                     tempClusterMap.get(sampledClusterId).add(r);
-                    if(noChangeMade && pointClusterId!=sampledClusterId) {
+                    if(noChangeMade && !Objects.equals(pointClusterId, sampledClusterId)) {
                         noChangeMade=false;
                     }
                 }
