@@ -84,6 +84,12 @@ public final class Record implements Serializable {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
+        if (!Objects.equals(this.y, other.y)) {
+            return false;
+        }
+        if (this.x.equals(other.x)) {
+            return false;
+        }
         return true;
     }
     
