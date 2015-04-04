@@ -19,8 +19,8 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.datatransformation.XMinMaxNormalizer;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
@@ -702,9 +702,9 @@ public class SoftMaxRegressionTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
         
-        df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
 
         

@@ -24,6 +24,10 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -31,21 +35,29 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public abstract class BaseMinMaxNormalizer extends BaseDummyExtractor<BaseMinMaxNormalizer.ModelParameters, BaseMinMaxNormalizer.TrainingParameters> {
+public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDummyMinMaxTransformer.ModelParameters, BaseDummyMinMaxTransformer.TrainingParameters> {
     
-    public static class ModelParameters extends BaseDummyExtractor.ModelParameters {
+    public static class ModelParameters extends DataTransformer.ModelParameters {
             
+        @BigMap
+        protected Map<Object, Object> referenceLevels;
+        
         @BigMap
         protected Map<Object, Double> minColumnValues;
 
         @BigMap
         protected Map<Object, Double> maxColumnValues;
-    
-        @BigMap
-        protected Map<Object, Object> referenceLevels;
 
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
+        }
+
+        public Map<Object, Object> getReferenceLevels() {
+            return referenceLevels;
+        }
+
+        public void setReferenceLevels(Map<Object, Object> referenceLevels) {
+            this.referenceLevels = referenceLevels;
         }
 
         public Map<Object, Double> getMinColumnValues() {
@@ -63,24 +75,16 @@ public abstract class BaseMinMaxNormalizer extends BaseDummyExtractor<BaseMinMax
         public void setMaxColumnValues(Map<Object, Double> maxColumnValues) {
             this.maxColumnValues = maxColumnValues;
         }
-
-        public Map<Object, Object> getReferenceLevels() {
-            return referenceLevels;
-        }
-
-        public void setReferenceLevels(Map<Object, Object> referenceLevels) {
-            this.referenceLevels = referenceLevels;
-        }
         
         
     }
     
-    public static class TrainingParameters extends BaseDummyExtractor.TrainingParameters {
+    public static class TrainingParameters extends DataTransformer.TrainingParameters {
         
     }
 
-    protected BaseMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BaseMinMaxNormalizer.ModelParameters.class, BaseMinMaxNormalizer.TrainingParameters.class);
+    protected BaseDummyMinMaxTransformer(String dbName, DatabaseConfiguration dbConf) {
+        super(dbName, dbConf, BaseDummyMinMaxTransformer.ModelParameters.class, BaseDummyMinMaxTransformer.TrainingParameters.class);
     }
     
     protected static void fitX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
@@ -242,4 +246,93 @@ public abstract class BaseMinMaxNormalizer extends BaseDummyExtractor<BaseMinMax
             }
         }
     }
+    
+    protected static void extractDummies(Dataset data, Map<Object, Object> referenceLevels) {
+
+        Map<Object, Dataset.ColumnType> newColumns = new HashMap<>();
+        
+        boolean trainingMode = referenceLevels.isEmpty();
+        
+        //TODO: rewrite this to avoid accessing getColumns() directly
+        /*
+            1   loop through getColumns
+            1.1 extract categoricals
+        
+            2   Loop through dataset and categoricals
+            2.1 Replace with simple dummy var the value
+            2.2 Update record on dataset
+        
+            3.1 Remove original variables
+            3.2 Remove reference variables
+            
+        */
+        
+        
+        
+        Iterator<Map.Entry<Object, Dataset.ColumnType>> it = data.getColumns().entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<Object, Dataset.ColumnType> entry = it.next();
+            Object column = entry.getKey();
+            Dataset.ColumnType columnType = entry.getValue();
+
+            if(columnType==Dataset.ColumnType.CATEGORICAL ||
+               columnType==Dataset.ColumnType.ORDINAL) { //ordinal and categorical are converted into dummyvars
+                //WARNING: Afterwards we must reduce the number of levels to level-1 to avoid multicollinearity issues
+                
+                //Remove the old column from the column map
+                it.remove();
+                
+                
+                //create dummy variables for all the levels
+                for(Record r : data) {
+                    if(!r.getX().containsKey(column)) {
+                        continue; //does not contain column
+                    }
+                    
+                    Object value = r.getX().get(column);
+                    
+                    //remove the column from data
+                    r.getX().remove(column); 
+                    
+                    
+                    List<Object> newColumn = null;
+                    Object referenceLevelValue = referenceLevels.get(column);
+                    if(trainingMode) {
+                        if(referenceLevelValue==null) { //if we don't have a reference point add it
+                            referenceLevels.put(column, value); //column/value dummy variables that are added as refernce points are ignored from the data to avoid overparametrization
+                        }
+                        else if(referenceLevelValue==value) { //if this is reference point ignore it
+                            //do nothing
+                        }
+                        else {
+                            //create a new column
+                            newColumn = Arrays.<Object>asList(column,value);
+                        }
+                    }
+                    else {
+                        //include it in the data ONLY if it was spotted on the traning database and has value other than the reference
+                        if(referenceLevelValue!=null && referenceLevelValue!=value) { 
+                            newColumn = Arrays.<Object>asList(column,value);
+                        }
+                    }
+
+
+                    if(newColumn!=null) {
+                        //add a new dummy variable for this column-value combination
+                        r.getX().put(newColumn, true); 
+                        
+                        //add the new column in the list for insertion
+                        newColumns.put(newColumn, Dataset.ColumnType.DUMMYVAR);
+                    }
+                    
+                }
+            }
+        }
+        
+        //add the new columns in the dataset column map
+        if(!newColumns.isEmpty()) {
+            data.getColumns().putAll(newColumns);
+        }
+    }
+    
 }

@@ -79,7 +79,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         
         logger.info("fit_transform()");
         
-        _transform(trainingData, true);     
+        _transform(trainingData);     
         _normalize(trainingData);
             
         logger.info("Saving model");
@@ -91,7 +91,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         knowledgeBase.load();
         
         logger.info("transform()");
-        _transform(newData, false); 
+        _transform(newData); 
         _normalize(newData);
         
     }
@@ -111,7 +111,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * @param data 
      * @param trainingMode 
      */
-    protected abstract void _transform(Dataset data, boolean trainingMode);
+    protected abstract void _transform(Dataset data);
     
     /**
      * Normalizes the data by modifying the columns. The changes should be 

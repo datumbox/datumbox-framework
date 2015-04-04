@@ -19,8 +19,7 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
+import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,8 +93,8 @@ public class SupportVectorMachineTest {
         
         String dbName = "JUnitClassifier";
         
-        SimpleDummyVariableExtractor df = new SimpleDummyVariableExtractor(dbName, TestUtils.getDBConfig());
-        df.fit_transform(trainingData, new SimpleDummyVariableExtractor.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
         SupportVectorMachine instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());

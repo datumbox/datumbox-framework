@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.datatransformation;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseMinMaxNormalizer;
+import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseDummyMinMaxTransformer;
 import java.util.Map;
 
 /**
@@ -28,20 +28,21 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public class XYMinMaxNormalizer extends BaseMinMaxNormalizer {
+public class XYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     
     public XYMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf);
     }
     
     @Override
-    protected void _transform(Dataset data, boolean trainingMode) {       
-        if(trainingMode) {
-            Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
-            Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
-
-            BaseMinMaxNormalizer.fitX(data, minColumnValues, maxColumnValues);
-            BaseMinMaxNormalizer.fitY(data, minColumnValues, maxColumnValues);
+    protected void _transform(Dataset data) {       
+        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
+        
+        if(minColumnValues.isEmpty() || maxColumnValues.isEmpty()) {
+            //Training Mode
+            BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
+            BaseDummyMinMaxTransformer.fitY(data, minColumnValues, maxColumnValues);
         }
     }
     
@@ -50,8 +51,8 @@ public class XYMinMaxNormalizer extends BaseMinMaxNormalizer {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
-        BaseMinMaxNormalizer.normalizeX(data, minColumnValues, maxColumnValues);
-        BaseMinMaxNormalizer.normalizeY(data, minColumnValues, maxColumnValues);
+        BaseDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
+        BaseDummyMinMaxTransformer.normalizeY(data, minColumnValues, maxColumnValues);
     }
     
     @Override
@@ -59,8 +60,8 @@ public class XYMinMaxNormalizer extends BaseMinMaxNormalizer {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
-        BaseMinMaxNormalizer.denormalizeX(data, minColumnValues, maxColumnValues);
-        BaseMinMaxNormalizer.denormalizeY(data, minColumnValues, maxColumnValues);
+        BaseDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
+        BaseDummyMinMaxTransformer.denormalizeY(data, minColumnValues, maxColumnValues);
     }
 
 }
