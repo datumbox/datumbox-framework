@@ -2,7 +2,7 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
-- Make Record immutable?
+- Make Record immutable
 - Add MapDB support in the Dataset.
 
 lmpampaletakis:
