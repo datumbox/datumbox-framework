@@ -53,7 +53,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     
     public static class Cluster extends BaseMLclusterer.Cluster {
         
-        private final Record centroid;
+        private Record centroid;
         
         private transient AssociativeArray xi_sum;
 

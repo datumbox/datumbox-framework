@@ -300,6 +300,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             }
             newR.setY(r.getY());
             
+            //TODO: instead of creating a transformed dataset, call update() instead and then resetMeta() instead of merge
             transformedDataset.add(newR);
         }
         

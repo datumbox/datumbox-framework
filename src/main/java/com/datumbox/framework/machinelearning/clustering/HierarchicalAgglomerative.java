@@ -50,7 +50,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     
     public static class Cluster extends BaseMLclusterer.Cluster {
         
-        private final Record centroid;
+        private Record centroid;
         
         private boolean active = true;
         
