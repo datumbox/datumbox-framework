@@ -211,8 +211,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Updates the meta information of the Dataset such as whether it is sparce
-     * and the supported columns.
+     * Updates the meta information of the Dataset such as the supported columns.
      * 
      * @param r 
      */
@@ -263,6 +262,24 @@ public final class Dataset implements Serializable, Iterable<Record> {
         updateMeta(newRecord);
         
         return newRecord.getId();
+    }
+    
+    /**
+     * Updates the record in the dataset. The add method returns the id of the 
+     * updated record.
+     * 
+     * @param original
+     * @return 
+     */
+    public Integer update(Record r) {
+        Integer id = r.getId();
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
+        recordList.put(id, r);
+        updateMeta(r);
+        
+        return id;
     }
     
     /**

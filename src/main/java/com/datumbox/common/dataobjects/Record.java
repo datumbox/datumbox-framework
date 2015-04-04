@@ -43,28 +43,8 @@ public final class Record implements Serializable {
     public Record() {
         x = new AssociativeArray(new LinkedHashMap<>());
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Record other = (Record) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.y, other.y)) {
-            return false;
-        }
-        if (this.x.equals(other.x)) {
-            return false;
-        }
-        return true;
-    }
     
+    // new record methods
     public static <T> Record newDataVector(T[] xArray, Object y) {
         Record r = new Record();
         r.y=y;
@@ -85,14 +65,9 @@ public final class Record implements Serializable {
         
         return r;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
     
+    
+    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -132,4 +107,35 @@ public final class Record implements Serializable {
     public void setYPredictedProbabilities(AssociativeArray yPredictedProbabilities) {
         this.yPredictedProbabilities = yPredictedProbabilities;
     }
+    
+    
+    // Internal methods
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Record other = (Record) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.y, other.y)) {
+            return false;
+        }
+        if (this.x.equals(other.x)) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+    
 }
