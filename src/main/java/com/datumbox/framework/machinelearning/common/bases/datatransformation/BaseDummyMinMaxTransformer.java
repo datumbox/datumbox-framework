@@ -25,10 +25,10 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -247,92 +247,59 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    private static boolean covert2dummy(Dataset.ColumnType columnType) {
+        return columnType==Dataset.ColumnType.CATEGORICAL || columnType==Dataset.ColumnType.ORDINAL;
+    }
+    
     protected static void extractDummies(Dataset data, Map<Object, Object> referenceLevels) {
 
-        Map<Object, Dataset.ColumnType> newColumns = new HashMap<>();
-        
-        boolean trainingMode = referenceLevels.isEmpty();
-        
-        //TODO: rewrite this to avoid accessing getColumns() directly
-        /*
-            1   loop through getColumns
-            1.1 extract categoricals
-        
-            2   Loop through dataset and categoricals
-            2.1 Replace with simple dummy var the value
-            2.2 Update record on dataset
-        
-            3.1 Remove original variables
-            3.2 Remove reference variables
+        Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
+        if(referenceLevels.isEmpty()) {
+            //Training Mode
             
-        */
-        
-        
-        
-        Iterator<Map.Entry<Object, Dataset.ColumnType>> it = data.getColumns().entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<Object, Dataset.ColumnType> entry = it.next();
-            Object column = entry.getKey();
-            Dataset.ColumnType columnType = entry.getValue();
-
-            if(columnType==Dataset.ColumnType.CATEGORICAL ||
-               columnType==Dataset.ColumnType.ORDINAL) { //ordinal and categorical are converted into dummyvars
-                //WARNING: Afterwards we must reduce the number of levels to level-1 to avoid multicollinearity issues
-                
-                //Remove the old column from the column map
-                it.remove();
-                
-                
-                //create dummy variables for all the levels
-                for(Record r : data) {
-                    if(!r.getX().containsKey(column)) {
-                        continue; //does not contain column
-                    }
-                    
-                    Object value = r.getX().get(column);
-                    
-                    //remove the column from data
-                    r.getX().remove(column); 
-                    
-                    
-                    List<Object> newColumn = null;
-                    Object referenceLevelValue = referenceLevels.get(column);
-                    if(trainingMode) {
-                        if(referenceLevelValue==null) { //if we don't have a reference point add it
-                            referenceLevels.put(column, value); //column/value dummy variables that are added as refernce points are ignored from the data to avoid overparametrization
+            //find the referenceLevels for each categorical variable
+            for(Record r: data) {
+                for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
+                    Object column = entry.getKey();
+                    if(referenceLevels.containsKey(column)==false) { //already set?
+                        if(covert2dummy(columnTypes.get(column))==false) { 
+                            continue; //only ordinal and categorical are converted into dummyvars
                         }
-                        else if(referenceLevelValue==value) { //if this is reference point ignore it
-                            //do nothing
-                        }
-                        else {
-                            //create a new column
-                            newColumn = Arrays.<Object>asList(column,value);
-                        }
+                        Object value = entry.getValue();
+                        referenceLevels.put(column, value);
                     }
-                    else {
-                        //include it in the data ONLY if it was spotted on the traning database and has value other than the reference
-                        if(referenceLevelValue!=null && referenceLevelValue!=value) { 
-                            newColumn = Arrays.<Object>asList(column,value);
-                        }
-                    }
-
-
-                    if(newColumn!=null) {
-                        //add a new dummy variable for this column-value combination
-                        r.getX().put(newColumn, true); 
-                        
-                        //add the new column in the list for insertion
-                        newColumns.put(newColumn, Dataset.ColumnType.DUMMYVAR);
-                    }
-                    
                 }
             }
         }
         
-        //add the new columns in the dataset column map
-        if(!newColumns.isEmpty()) {
-            data.getColumns().putAll(newColumns);
+        //Replace variables with dummy versions
+        for(Record r: data) {
+            Set<Object> columns = new HashSet<>(r.getX().keySet()); //TODO: remove this once we make Record immutable
+            for(Object column : columns) {
+                if(covert2dummy(columnTypes.get(column))==false) { 
+                    continue;
+                }
+                Object value = r.getX().get(column);
+                
+                r.getX().remove(column); //remove the original column
+                
+                
+                Object referenceLevel= referenceLevels.get(column);
+                
+                if(referenceLevel != null && //not unknown variable
+                   !referenceLevel.equals(value)) { //not equal to reference level
+                    
+                    //create a new column
+                    List<Object> newColumn = Arrays.<Object>asList(column,value);
+                    
+                    //add a new dummy variable for this column-value combination
+                    r.getX().put(newColumn, true); 
+                }
+            }
         }
+        
+        //Reset Meta info
+        data.resetMeta();
     }
     
 }

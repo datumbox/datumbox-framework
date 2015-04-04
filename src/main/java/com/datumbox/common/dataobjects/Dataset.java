@@ -18,6 +18,7 @@ package com.datumbox.common.dataobjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -78,8 +79,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @return 
      */
     public Map<Object, ColumnType> getColumns() {
-        //return Collections.unmodifiableMap(columns); //TODO: should we return an unmodifiable map here?
-        return columns;
+        return Collections.unmodifiableMap(columns);
     }
     
     /**
@@ -224,6 +224,13 @@ public final class Dataset implements Serializable, Iterable<Record> {
             if(columns.get(column) == null) {
                 columns.put(column, value2ColumnType(value));
             }
+        }
+    }
+    
+    public void resetMeta() {
+        columns.clear();
+        for(Record r: this) {
+            updateMeta(r);
         }
     }
 

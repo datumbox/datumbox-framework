@@ -40,36 +40,8 @@ public final class Record implements Serializable {
     /* The probabilities of yPredicted values (applicable only in classifiers and some clustering algorithms) */
     private AssociativeArray yPredictedProbabilities;
     
-    public Record quickCopy() {
-        //shallow copy of Record. It is used in order to avoid modifying the ids of the records when assigned to different datasets
-        Record r = new Record();
-        //r.id = id;
-        r.x = x; //shallow copies
-        r.y = y; 
-        r.yPredicted = yPredicted; 
-        r.yPredictedProbabilities = yPredictedProbabilities; //shallow copies
-        
-        return r;
-    }
-    
     public Record() {
         x = new AssociativeArray(new LinkedHashMap<>());
-    }
-    
-    public static <T> Record newDataVector(T[] xArray, Object y) {
-        Record r = new Record();
-        r.y=y;
-        for(int i=0;i<xArray.length;++i) {
-            r.x.internalData.put(i, xArray[i]);
-        }
-        return r;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id);
-        return hash;
     }
 
     @Override
@@ -91,6 +63,34 @@ public final class Record implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    public static <T> Record newDataVector(T[] xArray, Object y) {
+        Record r = new Record();
+        r.y=y;
+        for(int i=0;i<xArray.length;++i) {
+            r.x.internalData.put(i, xArray[i]);
+        }
+        return r;
+    }
+    
+    public Record quickCopy() {
+        //shallow copy of Record. It is used in order to avoid modifying the ids of the records when assigned to different datasets
+        Record r = new Record();
+        //r.id = id;
+        r.x = x; //shallow copies
+        r.y = y; 
+        r.yPredicted = yPredicted; 
+        r.yPredictedProbabilities = yPredictedProbabilities; //shallow copies
+        
+        return r;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        return hash;
     }
     
     public Integer getId() {
