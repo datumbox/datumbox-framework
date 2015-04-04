@@ -334,7 +334,7 @@ public class KmeansTest {
         
         double expResult = 0.7888888888888889;
         double result = vm.getPurity();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
     }
 

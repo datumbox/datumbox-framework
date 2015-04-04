@@ -100,7 +100,7 @@ public class LatentDirichletAllocationTest {
         
         double expResult = 0.6859007513066202;
         double result = vm.getMacroF1();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
 
         smr.erase();
         lda.erase();

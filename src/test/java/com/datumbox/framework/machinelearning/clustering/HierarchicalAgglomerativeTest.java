@@ -135,9 +135,9 @@ public class HierarchicalAgglomerativeTest {
         df.erase();
 
         
-        double expResult = 0.76111111111111;
+        double expResult = 0.7666666666666667;
         double result = vm.getPurity();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
     }
 

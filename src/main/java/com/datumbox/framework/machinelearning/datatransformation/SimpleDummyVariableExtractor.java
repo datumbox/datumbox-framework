@@ -16,16 +16,10 @@
  */
 package com.datumbox.framework.machinelearning.datatransformation;
 
-import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseDummyExtractor;
 
 /**
  * Simple Dummy Variable Extractor: Removes the categorical and ordinal features 
@@ -34,77 +28,19 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public class SimpleDummyVariableExtractor extends DataTransformer<SimpleDummyVariableExtractor.ModelParameters, SimpleDummyVariableExtractor.TrainingParameters> {
+public class SimpleDummyVariableExtractor extends BaseDummyExtractor<BaseDummyExtractor.ModelParameters, BaseDummyExtractor.TrainingParameters> {
 
-        
-    public static class ModelParameters extends DataTransformer.ModelParameters {
-
-        public ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-            
-    }
-    
-    public static class TrainingParameters extends DataTransformer.TrainingParameters {
-        
-    }
 
     public SimpleDummyVariableExtractor(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, SimpleDummyVariableExtractor.ModelParameters.class, SimpleDummyVariableExtractor.TrainingParameters.class);
+        super(dbName, dbConf, BaseDummyExtractor.ModelParameters.class, BaseDummyExtractor.TrainingParameters.class);
     }
-
 
     
     @Override
     protected void _transform(Dataset data, boolean trainingMode) {
         //handle non-numeric types, extract columns to dummy variables
         
-        Map<Object, Dataset.ColumnType> newColumns = new HashMap<>();
-        
-        //TODO: rewrite this to avoid accessing getColumns() directly
-        Iterator<Map.Entry<Object, Dataset.ColumnType>> it = data.getColumns().entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<Object, Dataset.ColumnType> entry = it.next();
-            Object column = entry.getKey();
-            Dataset.ColumnType columnType = entry.getValue();
-            
-            if(columnType==Dataset.ColumnType.CATEGORICAL ||
-               columnType==Dataset.ColumnType.ORDINAL) { //ordinal and categorical are converted into dummyvars
-                
-                
-                //Remove the old column from the column map
-                it.remove();
-                
-                
-                //create dummy variables for all the levels
-                for(Record r : data) {
-                    
-                    if(!r.getX().containsKey(column)) {
-                        continue; //does not contain column
-                    }
-                    
-                    Object value = r.getX().get(column);
-                    
-                    //remove the column from data
-                    r.getX().remove(column); 
-                    
-
-                    
-                    List<Object> newColumn = Arrays.<Object>asList(column,value);
-                    
-                    //add a new boolean feature with combination of column and value
-                    r.getX().put(newColumn, true);
-                    
-                    //add the new column in the list for insertion
-                    newColumns.put(newColumn, Dataset.ColumnType.DUMMYVAR);
-                }
-            }
-        }
-        
-        //add the new columns in the dataset column map
-        if(!newColumns.isEmpty()) {
-            data.getColumns().putAll(newColumns);
-        }
+        BaseDummyExtractor.extractDummies(data, null, trainingMode);
     }
 
     @Override

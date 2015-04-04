@@ -161,7 +161,7 @@ public class GaussianDPMMTest {
         
         double expResult = 1.0;
         double result = vm.getPurity();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
     }
 

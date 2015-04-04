@@ -19,9 +19,9 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.utilities.RandomValue;
-import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.datatransformation.SimpleDummyVariableExtractor;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.framework.machinelearning.datatransformation.XMinMaxNormalizer;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -805,14 +805,13 @@ public class SoftMaxRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestUtils.getDBConfig());
-        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
+        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        df.fit_transform(trainingData, new XMinMaxNormalizer.TrainingParameters());
         
         SoftMaxRegression instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);
-        //param.setDataTransformerClass(XYMinMaxNormalizer.class);
         
         SoftMaxRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 

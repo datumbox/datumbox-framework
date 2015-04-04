@@ -24,10 +24,6 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 
@@ -35,9 +31,9 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNormalizer.ModelParameters, BaseMinMaxNormalizer.TrainingParameters> {
+public abstract class BaseMinMaxNormalizer extends BaseDummyExtractor<BaseMinMaxNormalizer.ModelParameters, BaseMinMaxNormalizer.TrainingParameters> {
     
-    public static class ModelParameters extends DataTransformer.ModelParameters {
+    public static class ModelParameters extends BaseDummyExtractor.ModelParameters {
             
         @BigMap
         protected Map<Object, Double> minColumnValues;
@@ -79,83 +75,12 @@ public abstract class BaseMinMaxNormalizer extends DataTransformer<BaseMinMaxNor
         
     }
     
-    public static class TrainingParameters extends DataTransformer.TrainingParameters {
+    public static class TrainingParameters extends BaseDummyExtractor.TrainingParameters {
         
     }
 
     protected BaseMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BaseMinMaxNormalizer.ModelParameters.class, BaseMinMaxNormalizer.TrainingParameters.class);
-    }
-    
-    protected static void extractDummies(Dataset data, Map<Object, Object> referenceLevels, boolean trainingMode) {
-
-        Map<Object, Dataset.ColumnType> newColumns = new HashMap<>();
-        
-        //TODO: rewrite this to avoid accessing getColumns() directly
-        Iterator<Map.Entry<Object, Dataset.ColumnType>> it = data.getColumns().entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<Object, Dataset.ColumnType> entry = it.next();
-            Object column = entry.getKey();
-            Dataset.ColumnType columnType = entry.getValue();
-
-            if(columnType==Dataset.ColumnType.CATEGORICAL ||
-               columnType==Dataset.ColumnType.ORDINAL) { //ordinal and categorical are converted into dummyvars
-                //WARNING: Afterwards we must reduce the number of levels to level-1 to avoid multicollinearity issues
-                
-                //Remove the old column from the column map
-                it.remove();
-                
-                
-                //create dummy variables for all the levels
-                for(Record r : data) {
-                    if(!r.getX().containsKey(column)) {
-                        continue; //does not contain column
-                    }
-                    
-                    Object value = r.getX().get(column);
-                    
-                    //remove the column from data
-                    r.getX().remove(column); 
-                    
-                    
-                    Object referenceLevelValue = referenceLevels.get(column);
-                    
-                    List<Object> newColumn = null;
-                    if(trainingMode) {
-                        if(referenceLevelValue==null) { //if we don't have a reference point add it
-                            referenceLevels.put(column, value); //column/value dummy variables that are added as refernce points are ignored from the data to avoid overparametrization
-                        }
-                        else if(referenceLevelValue==value) { //if this is reference point ignore it
-                            //do nothing
-                        }
-                        else {
-                            //create a new column
-                            newColumn = Arrays.<Object>asList(column,value);
-                        }
-                    }
-                    else {
-                        //include it in the data ONLY if it was spotted on the traning database and has value other than the reference
-                        if(referenceLevelValue!=null && referenceLevelValue!=value) { 
-                            newColumn = Arrays.<Object>asList(column,value);
-                        }
-                    }
-                    
-                    if(newColumn!=null) {
-                        //add a new dummy variable for this column-value combination
-                        r.getX().put(newColumn, true); 
-                        
-                        //add the new column in the list for insertion
-                        newColumns.put(newColumn, Dataset.ColumnType.DUMMYVAR);
-                    }
-                    
-                }
-            }
-        }
-        
-        //add the new columns in the dataset column map
-        if(!newColumns.isEmpty()) {
-            data.getColumns().putAll(newColumns);
-        }
     }
     
     protected static void fitX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {

@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.datatransformation;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseDummyExtractor;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseMinMaxNormalizer;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class DummyXMinMaxNormalizer extends BaseMinMaxNormalizer {
             BaseMinMaxNormalizer.fitX(data, minColumnValues, maxColumnValues);
         }
         
-        BaseMinMaxNormalizer.extractDummies(data, knowledgeBase.getModelParameters().getReferenceLevels(), trainingMode);
+        BaseDummyExtractor.extractDummies(data, knowledgeBase.getModelParameters().getReferenceLevels(), trainingMode);
     }
     
     @Override

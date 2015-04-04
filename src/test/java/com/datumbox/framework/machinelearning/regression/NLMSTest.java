@@ -202,9 +202,9 @@ public class NLMSTest {
         df.erase();
 
         
-        double expResult = 1.0;
+        double expResult = 0.999727499761345;
         double result = vm.getRSquare();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
     }
 
