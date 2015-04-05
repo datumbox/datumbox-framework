@@ -287,8 +287,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         for(Integer rId: data) {
             Record r = data.get(rId);
             
-            AssociativeArray xData = new AssociativeArray();
-            xData.putAll(r.getX());
+            AssociativeArray xData = new AssociativeArray(r.getX());
             
             boolean modified = false;
             for(Object column : r.getX().keySet()) {

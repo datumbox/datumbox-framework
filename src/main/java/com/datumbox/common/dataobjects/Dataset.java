@@ -205,8 +205,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
             for(Integer rId : this) {
                 Record r = recordList.get(rId);
                 if(r.getX().containsKey(column)) {
-                    AssociativeArray xData = new AssociativeArray();
-                    xData.putAll(r.getX());
+                    AssociativeArray xData = new AssociativeArray(r.getX());
                     xData.remove(column);
                     r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                     recordList.put(rId, r);

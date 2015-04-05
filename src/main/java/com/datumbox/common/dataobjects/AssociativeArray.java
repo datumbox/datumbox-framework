@@ -39,6 +39,13 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
         super(internalData);
     }
     
+    public AssociativeArray(AssociativeArray aArray) {
+        this();
+        if(aArray != null) {
+            internalData.putAll(aArray.internalData);
+        }
+    }
+    
     public final void addValues(AssociativeArray array) {
         addRemoveValues(array, +1);
     }
@@ -90,10 +97,6 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
     
     public void putAll(Map<? extends Object,? extends Object> m) {
         internalData.putAll(m);
-    }
-    
-    public void putAll(AssociativeArray m) {
-        internalData.putAll(m.internalData);
     }
     
     public final Set<Map.Entry<Object, Object>> entrySet() {

@@ -45,11 +45,11 @@ public final class Record implements Serializable {
     }
     
     public Record(AssociativeArray x, Object y, Object yPredicted, AssociativeArray yPredictedProbabilities) {
-        this.x = new AssociativeArray(x.internalData);
+        this.x = new AssociativeArray(x);
         this.y = y;
         this.yPredicted = yPredicted;
         if (yPredictedProbabilities != null) {
-            this.yPredictedProbabilities = new AssociativeArray(yPredictedProbabilities.internalData);
+            this.yPredictedProbabilities = new AssociativeArray(yPredictedProbabilities);
         }
         else {
             this.yPredictedProbabilities = null;
