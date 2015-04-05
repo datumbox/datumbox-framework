@@ -199,11 +199,11 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         modelParameters.setC(c);
         
         //we initialize the weights and thitas to zero
+        for(Object feature: trainingData.getColumns().keySet()) {
+            weights.put(feature, 0.0);
+        }
         for(Integer rId : trainingData) { 
             Record r = trainingData.get(rId);
-            for(Object feature : r.getX().keySet()) {
-                weights.put(feature, 0.0);
-            }
             thitas.put(r.getY(), 0.0);
         }
         

@@ -113,8 +113,10 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     protected static void normalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data) {
             Record r = data.get(rId);
+            AssociativeArray xData = new AssociativeArray(r.getX());
+            
             for(Object column : minColumnValues.keySet()) {
-                Double value = r.getX().getDouble(column);
+                Double value = xData.getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any normalization
                     continue;
                 }
@@ -132,18 +134,21 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                     normalizedValue = (value-min)/(max-min);
                 }
                 
-                r.getX().put(column, normalizedValue);
+                xData.put(column, normalizedValue);
             }
             
-            //do nothing for the response variable Y
+            r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+            data.set(rId, r);
         }
     }
     
     protected static void denormalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data) {
             Record r = data.get(rId);
+            AssociativeArray xData = new AssociativeArray(r.getX());
+            
             for(Object column : minColumnValues.keySet()) {
-                Double value = r.getX().getDouble(column);
+                Double value = xData.getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any denormalization
                     continue;
                 }
@@ -152,14 +157,15 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 Double max = maxColumnValues.get(column);
                 
                 if(min.equals(max)) {
-                    r.getX().put(column, min);
+                    xData.put(column, min);
                 }
                 else {
-                    r.getX().put(column, value*(max-min) + min);
+                    xData.put(column, value*(max-min) + min);
                 }
             }
             
-            //do nothing for the response variable Y
+            r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+            data.set(rId, r);
         }
     }
     

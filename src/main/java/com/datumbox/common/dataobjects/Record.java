@@ -70,9 +70,7 @@ public final class Record implements Serializable {
         if(x == null) {
             return null;
         }
-        //TODO: make it readonly
-        //return new AssociativeArray(Collections.unmodifiableMap(x.internalData));
-        return x;
+        return new AssociativeArray(Collections.unmodifiableMap(x.internalData));
     }
 
     public Object getY() {

@@ -246,7 +246,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             }
             else if(status==Status.IGNORE) {
                 logger.debug("Ignoring last weak learner due to high error");
-                continue;
+                continue; //TODO: put a counter on the max number of retries
             }
             
             ++t; //increase counter here. This is because some times we might want to redo the 
