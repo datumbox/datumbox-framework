@@ -197,7 +197,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         }
         
         //find the featureCounts
-        for(Record r : data) {
+        for(Integer rId : data) {
+            Record r = data.get(rId);
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
                 
@@ -251,7 +252,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         removeRareFeatures(data, knowledgeBase.getDbc(), rareFeatureThreshold, featureCounts, ignoringNumericalFeatures);
         
         //now find the classCounts and the featureClassCounts
-        for(Record r : data) {
+        for(Integer rId : data) {
+            Record r = data.get(rId);
             Object theClass = r.getY();
 
             //class counts

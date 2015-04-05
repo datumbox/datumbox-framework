@@ -24,8 +24,6 @@ import java.util.Objects;
  * @author bbriniotis
  */
 public final class Record implements Serializable {
-    /* The numeric id of the Record. Used for identification perposes. */ 
-    private Integer id;
     
     /* The X vector of the Record */
     private AssociativeArray x;
@@ -53,27 +51,6 @@ public final class Record implements Serializable {
         return r;
     }
     
-    public Record quickCopy() {
-        //shallow copy of Record. It is used in order to avoid modifying the ids of the records when assigned to different datasets
-        Record r = new Record();
-        //r.id = id;
-        r.x = x; //shallow copies
-        r.y = y; 
-        r.yPredicted = yPredicted; 
-        r.yPredictedProbabilities = yPredictedProbabilities; //shallow copies
-        
-        return r;
-    }
-    
-    
-    // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
-    
-    protected void setId(Integer id) {
-        this.id = id;
-    }
 
     public AssociativeArray getX() {
         return x;
@@ -106,9 +83,15 @@ public final class Record implements Serializable {
     public void setYPredictedProbabilities(AssociativeArray yPredictedProbabilities) {
         this.yPredictedProbabilities = yPredictedProbabilities;
     }
-    
-    
-    // Internal methods
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.x);
+        hash = 23 * hash + Objects.hashCode(this.y);
+        return hash;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -118,23 +101,14 @@ public final class Record implements Serializable {
             return false;
         }
         final Record other = (Record) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        if (!Objects.equals(this.x, other.x)) {
             return false;
         }
         if (!Objects.equals(this.y, other.y)) {
             return false;
         }
-        if (this.x.equals(other.x)) {
-            return false;
-        }
         return true;
     }
     
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
     
 }

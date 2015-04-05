@@ -141,7 +141,8 @@ public class CETR {
         
         Map<Object, Double> avgTTRscorePerCluster = new HashMap<>();
         Map<Object, Integer> clusterCounts = new HashMap<>();
-        for(Record r : dataset) {
+        for(Integer rId : dataset) {
+            Record r = dataset.get(rId);
             Integer clusterId = (Integer)r.getYPredicted();
             Double ttr = r.getX().getDouble(0); //the first value is always set the TTR as you can see above
             
@@ -170,11 +171,12 @@ public class CETR {
         Integer nonContentClusterId = (Integer)entry.getKey();
         
         List<Integer> selectedRows = new ArrayList<>();
-        for(Record r : dataset) {
+        for(Integer rId : dataset) {
+            Record r = dataset.get(rId);
             Integer clusterId = (Integer)r.getYPredicted();
             //if the point is not classified as non-content add it in the selected list
             if(!Objects.equals(clusterId, nonContentClusterId)) { 
-                selectedRows.add(r.getId());
+                selectedRows.add(rId);
             }
         }
         

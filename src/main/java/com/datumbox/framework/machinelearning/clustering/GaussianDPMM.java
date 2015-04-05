@@ -162,14 +162,15 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         /**
          * Internal method that adds the record in cluster and updates clusterParams
          * 
+         * @param rId
          * @param r    The point that we wish to add in the cluster.
          * @return 
          */
         @Override
-        protected boolean add(Record r) {
+        protected boolean add(Integer rId, Record r) {
             int size= recordIdSet.size();
             
-            if(recordIdSet.add(r.getId())==false) {
+            if(recordIdSet.add(rId)==false) {
                 return false;
             }
             
@@ -191,8 +192,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         }
         
         @Override
-        protected boolean remove(Record r) {
-            if(recordIdSet.remove(r.getId())==false) {
+        protected boolean remove(Integer rId, Record r) {
+            if(recordIdSet.remove(rId)==false) {
                 return false;
             }
             

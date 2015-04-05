@@ -71,10 +71,10 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         public abstract double posteriorLogPdf(Record r);
         
         @Override
-        protected abstract boolean add(Record r);
+        protected abstract boolean add(Integer rId, Record r);
         
         @Override
-        protected abstract boolean remove(Record r);
+        protected abstract boolean remove(Integer rId, Record r);
     }
     
     public static abstract class ModelParameters<CL extends BaseDPMM.Cluster> extends BaseMLclusterer.ModelParameters<CL> {
@@ -182,7 +182,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
         //check if there are any gold standard classes and buld the featureIds maps
         int previousFeatureId = 0;
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             Object theClass=r.getY();
             if(theClass!=null) {
                 goldStandardClasses.add(theClass); 
@@ -224,13 +225,14 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         Integer newClusterId = tempClusterMap.size(); //start counting the Ids based on clusters in the list
 
         if(trainingParameters.getInitializationMethod()==TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD) {
-            for(Record r : dataset) {
+            for(Integer rId : dataset) {
+                Record r = dataset.get(rId);
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
 
                 //add the record in the new cluster
                 r.setYPredicted(newClusterId);
-                cluster.add(r);
+                cluster.add(rId, r);
 
                 //add the cluster in clusterList
                 tempClusterMap.put(newClusterId, cluster);
@@ -256,12 +258,13 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             }
             
             int clusterMapSize = newClusterId;
-            for(Record r : dataset) {
+            for(Integer rId : dataset) {
+                Record r = dataset.get(rId);
                 
                 int assignedClusterId = PHPfunctions.mt_rand(0, clusterMapSize-1);
                 
                 r.setYPredicted(assignedClusterId);
-                tempClusterMap.get((Integer)assignedClusterId).add(r);
+                tempClusterMap.get((Integer)assignedClusterId).add(rId, r);
             }
         }
 
@@ -277,12 +280,14 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             logger.debug("Iteration "+iteration);
             
             noChangeMade=true;
-            for(Record r : dataset) {
+            for(Integer rId : dataset) {
+                Record r = dataset.get(rId);
+                
                 Integer pointClusterId = (Integer) r.getYPredicted();
                 CL ci = tempClusterMap.get(pointClusterId);
                 
                 //remove the point from the cluster
-                ci.remove(r);
+                ci.remove(rId, r);
                 
                 //if empty cluster remove it
                 if(ci.size()==0) {
@@ -310,10 +315,10 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 condProbCiGivenXiAndOtherCi=null;
                 
                 //Add Xi back to the sampled Cluster
-                if(sampledClusterId==newClusterId) { //if new cluster
+                if(Objects.equals(sampledClusterId, newClusterId)) { //if new cluster
                     //add the record in the new cluster
                     r.setYPredicted(newClusterId);
-                    cNew.add(r);
+                    cNew.add(rId, r);
                     
                     //add the cluster in clusterList
                     tempClusterMap.put(newClusterId, cNew);
@@ -325,7 +330,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 else {
                     r.setYPredicted(sampledClusterId);
                     
-                    tempClusterMap.get(sampledClusterId).add(r);
+                    tempClusterMap.get(sampledClusterId).add(rId, r);
                     if(noChangeMade && !Objects.equals(pointClusterId, sampledClusterId)) {
                         noChangeMade=false;
                     }
@@ -379,7 +384,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
         
-        for(Record r : newData) {
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             
             AssociativeArray clusterScores = new AssociativeArray();
             for(Cluster c : clusterList.values()) {

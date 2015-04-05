@@ -27,7 +27,7 @@ import java.util.TreeMap;
  *
  * @author bbriniotis
  */
-public final class Dataset implements Serializable, Iterable<Record> {
+public final class Dataset implements Serializable, Iterable<Integer> {
     
     private final Map<Integer, Record> recordList;
     
@@ -118,7 +118,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
     public FlatDataList extractColumnValues(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Record r : recordList.values()) {
+        for(Integer rId : this) {
+            Record r = recordList.get(rId);
             flatDataList.add(r.getX().get(column));
         }
         
@@ -134,7 +135,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
     public FlatDataList extractYValues() {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Record r : recordList.values()) {
+        for(Integer rId : this) {
+            Record r = recordList.get(rId);
             flatDataList.add(r.getY());
         }
         
@@ -153,7 +155,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
     public TransposeDataList extractColumnValuesByY(Object column) {
         TransposeDataList transposeDataList = new TransposeDataList();
         
-        for(Record r : recordList.values()) {    
+        for(Integer rId : this) {
+            Record r = recordList.get(rId);   
             if(!transposeDataList.containsKey(r.getY())) {
                 transposeDataList.put(r.getY(), new FlatDataList(new ArrayList<>()) );
             }
@@ -199,7 +202,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
      */
     public boolean removeColumn(Object column) {        
         if(columns.remove(column)!=null) { //try to remove it from the columns and it if it removed remove it from the list too
-            for(Record r : recordList.values()) {
+            for(Integer rId : this) {
+                Record r = recordList.get(rId);
                 r.getX().remove(column); //TODO: do we need to store the record again in the map?
             }
             
@@ -227,8 +231,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
     
     public void resetMeta() {
         columns.clear();
-        for(Record r: this) {
-            updateMeta(r);
+        for(Integer id: this) {
+            updateMeta(recordList.get(id));
         }
     }
 
@@ -238,30 +242,23 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @param d 
      */
     public void merge(Dataset d) {
-        //does not modify the ids of the records of the Dataset d
-        for(Record r : d) {
-            this.add(r);
+        for(Integer id : d) {
+            this.add(d.get(id));
         }
-        //TODO: do we still need merge after changing the PCA algorithm and the Dataset?
     } 
     
     /**
-     * Adds the record in the dataset. The original record is shallow copied 
-     * and its id is updated (this does not affect the id of the original record).
-     * The add method returns the id of the new record.
+     * Adds the record in the dataset. The add method returns the id of the new record.
      * 
-     * @param original
+     * @param r
      * @return 
      */
-    public Integer add(Record original) {
-        Record newRecord = original.quickCopy();
-        
+    public Integer add(Record r) {
         Integer newId=(Integer) recordList.size();
-        newRecord.setId(newId);
-        recordList.put(newId, newRecord);
-        updateMeta(newRecord);
+        recordList.put(newId, r);
+        updateMeta(r);
         
-        return newRecord.getId();
+        return newId;
     }
     
     /**
@@ -279,8 +276,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @return 
      */
     @Override
-    public Iterator<Record> iterator() {
-        return new Iterator<Record>() {
+    public Iterator<Integer> iterator() {
+        return new Iterator<Integer>() {
             private Iterator<Integer> it = recordList.keySet().iterator();
             
             @Override
@@ -289,8 +286,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
             }
 
             @Override
-            public Record next() {
-                return recordList.get(it.next());
+            public Integer next() {
+                return it.next();
             }
 
             @Override

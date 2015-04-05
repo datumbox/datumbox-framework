@@ -219,7 +219,8 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         int c = classesSet.size();
         
         int correctCount=0;
-        for(Record r : validationData) {
+        for(Integer rId : validationData) {
+            Record r = validationData.get(rId);
             if(r.getYPredicted().equals(r.getY())) {
                 ++correctCount;
                 

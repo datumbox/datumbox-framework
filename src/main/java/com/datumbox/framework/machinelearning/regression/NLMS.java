@@ -148,7 +148,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     protected void predictDataset(Dataset newData) {
         Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
         
-        for(Record r : newData) {
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             r.setYPredicted(yPredicted);
         }
@@ -163,7 +164,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         double multiplier = learningRate/modelParameters.getN();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             double error = TypeConversions.toDouble(r.getY()) - hypothesisFunction(r.getX(), thitas);
             
@@ -189,7 +191,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     private void stochasticGradientDescent(Dataset trainingData, Map<Object, Double> newThitas, double learningRate) {
         double multiplier = learningRate/knowledgeBase.getModelParameters().getN();
         
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             //mind the fact that we use the new thitas to estimate the cost! 
             double error = TypeConversions.toDouble(r.getY()) - hypothesisFunction(r.getX(), newThitas);
             
@@ -217,7 +220,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         //It is optimized for speed to reduce the amount of loops
         double error=0.0;
         
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             r.setYPredicted(yPredicted);
             error+=Math.pow(TypeConversions.toDouble(r.getY()) -yPredicted, 2);

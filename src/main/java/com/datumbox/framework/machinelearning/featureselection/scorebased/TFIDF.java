@@ -114,7 +114,8 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
         //using two different maps
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
                 Double counts = TypeConversions.toDouble(entry.getValue());
@@ -143,23 +144,8 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         
         Map<Object, Double> maxTFIDFfeatureScores = modelParameters.getMaxTFIDFfeatureScores();
         //calculate the maximum tfidf scores
-        for(Record r : trainingData) {
-            /*
-            //calculate the length of the document
-            double documentLength = 0.0;
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Double counts = Dataset.toDouble(entry.getValue());
-                
-                if(counts==null || counts == 0.0) {
-                    continue;
-                }
-                if(binarized) {
-                    counts = 1.0;
-                }
-                
-                documentLength += counts;
-            }
-            */
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {

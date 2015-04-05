@@ -79,7 +79,7 @@ public class MatrixDataset {
             return m;
         }
         
-        boolean extractY=(Dataset.value2ColumnType(dataset.iterator().next().getY())==Dataset.ColumnType.NUMERICAL);
+        boolean extractY=(Dataset.value2ColumnType(dataset.get(dataset.iterator().next()).getY())==Dataset.ColumnType.NUMERICAL);
         
         int previousFeatureId=0; 
         if(addConstantColumn) {
@@ -90,8 +90,9 @@ public class MatrixDataset {
             ++previousFeatureId; 
         }
 
-        for(Record r : dataset) {
-            int row = r.getId();
+        for(Integer id : dataset) {
+            Record r = dataset.get(id);
+            int row = id;
             
             if(extractY) {
                 m.Y.setEntry(row, TypeConversions.toDouble(r.getY()));
@@ -143,12 +144,13 @@ public class MatrixDataset {
             return m;
         }
         
-        boolean extractY=(Dataset.value2ColumnType(newDataset.iterator().next().getY())==Dataset.ColumnType.NUMERICAL);
+        boolean extractY=(Dataset.value2ColumnType(newDataset.get(newDataset.iterator().next()).getY())==Dataset.ColumnType.NUMERICAL);
         
         boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataset.constantColumnName);
         
-        for(Record r : newDataset) {
-            int row = r.getId();
+        for(Integer id : newDataset) {
+            Record r = newDataset.get(id);
+            int row = id;
             
             if(extractY) {
                 m.Y.setEntry(row, TypeConversions.toDouble(r.getY()));

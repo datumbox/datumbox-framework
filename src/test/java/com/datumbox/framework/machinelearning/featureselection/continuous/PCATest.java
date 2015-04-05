@@ -76,13 +76,13 @@ public class PCATest {
         
         assertEquals(newdata.size(), expResult.size());
         
-        Iterator<Record> itResult = newdata.iterator();
-        Iterator<Record> itExpectedResult = expResult.iterator();
+        Iterator<Integer> itResult = newdata.iterator();
+        Iterator<Integer> itExpectedResult = expResult.iterator();
         
         
         while(itResult.hasNext()) {
-            Record r=itResult.next();
-            Record r2 = itExpectedResult.next();
+            Record r= newdata.get(itResult.next());
+            Record r2 = expResult.get(itExpectedResult.next());
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();

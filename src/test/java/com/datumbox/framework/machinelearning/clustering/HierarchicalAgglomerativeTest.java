@@ -84,14 +84,15 @@ public class HierarchicalAgglomerativeTest {
         Map<Integer, Object> result = new HashMap<>();
         
         Map<Integer, HierarchicalAgglomerative.Cluster> clusters = instance.getClusters();
-        for(Record r : validationData) {
-            expResult.put(r.getId(), r.getY());
+        for(Integer rId : validationData) {
+            Record r = validationData.get(rId);
+            expResult.put(rId, r.getY());
             Integer clusterId = (Integer) r.getYPredicted();
             Object label = clusters.get(clusterId).getLabelY();
             if(label==null) {
                 label = clusterId;
             }
-            result.put(r.getId(), label);
+            result.put(rId, label);
         }
         assertEquals(expResult, result);
         

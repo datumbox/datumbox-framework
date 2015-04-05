@@ -136,8 +136,10 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         
         //calculate similarity matrix
         Map<List<Object>, Double> similarities = modelParameters.getSimilarities();
-        for(Record r1 : trainingData) {
-            for(Record r2: trainingData) {
+        for(Integer rId1 : trainingData) {
+            Record r1 = trainingData.get(rId1);
+            for(Integer rId2: trainingData) {
+                Record r2 = trainingData.get(rId2);
                 Object y1 = r1.getY();
                 Object y2 = r2.getY();
                 
@@ -164,7 +166,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list
-        for(Record r : newData) {
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             Map<Object, Object> recommendations = new HashMap<>();
             
             Map<Object, Double> simSums = new HashMap<>();

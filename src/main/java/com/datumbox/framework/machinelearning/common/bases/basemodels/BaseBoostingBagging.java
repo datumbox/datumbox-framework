@@ -123,8 +123,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //initialize array of recordDecisions
         DataTable2D[] recordDecisionsArray = new DataTable2D[n];
-        for(Record r : newData) {
-            recordDecisionsArray[r.getId()]= new DataTable2D();
+        for(Integer rId : newData) {
+            recordDecisionsArray[rId]= new DataTable2D();
         }
         
         //using the weak classifiers
@@ -137,18 +137,20 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             
             classifierWeightsArray.put(t, weakClassifierWeights.get(t));
             
-            for(Record r : newData) {
+            for(Integer rId : newData) {
+                Record r = newData.get(rId);
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
-                DataTable2D currentRecordDecisions = recordDecisionsArray[r.getId()];
+                DataTable2D currentRecordDecisions = recordDecisionsArray[rId];
                 
                 currentRecordDecisions.put(t, classProbabilities);
             }
         }
         
         //for each record find the combined classification by majority vote
-        for(Record r : newData) {
-            DataTable2D currentRecordDecisions = recordDecisionsArray[r.getId()];
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
+            DataTable2D currentRecordDecisions = recordDecisionsArray[rId];
             
             //AssociativeArray combinedClassVotes = FixedCombinationRules.majorityVote(currentRecordDecisions);
             AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(currentRecordDecisions, classifierWeightsArray);
@@ -178,7 +180,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         Set<Object> classesSet = modelParameters.getClasses();
         
         //first we need to find all the classes
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             Object theClass=r.getY();
             
             classesSet.add(theClass); 
@@ -195,8 +198,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         Map<Object, Object> tmp_observationWeights = dbc.getBigMap("tmp_observationWeights", true);
         
         //calculate the training parameters of bagging
-        for(Record r : trainingData) {
-            tmp_observationWeights.put(r.getId(), 1.0/n); //initialize observation weights
+        for(Integer rId : trainingData) { 
+            tmp_observationWeights.put(rId, 1.0/n); //initialize observation weights
         }
         
         Class<? extends BaseMLclassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();

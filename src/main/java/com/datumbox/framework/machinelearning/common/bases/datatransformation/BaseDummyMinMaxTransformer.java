@@ -110,7 +110,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     }
     
     protected static void normalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Record r : data) {
+        for(Integer rId : data) {
+            Record r = data.get(rId);
             for(Object column : minColumnValues.keySet()) {
                 Double value = r.getX().getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any normalization
@@ -138,7 +139,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     }
     
     protected static void denormalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Record r : data) {
+        for(Integer rId : data) {
+            Record r = data.get(rId);
             for(Object column : minColumnValues.keySet()) {
                 Double value = r.getX().getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any denormalization
@@ -166,7 +168,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
         
         //check if the first record has numeric value on response variable Y
-        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.iterator().next().getY());
+        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.get(data.iterator().next()).getY());
 
         if(columnType==Dataset.ColumnType.NUMERICAL) {
             //if this is numeric normalize it
@@ -185,11 +187,12 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return;
         }
         
-        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.iterator().next().getY());
+        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.get(data.iterator().next()).getY());
         
         if(columnType==Dataset.ColumnType.NUMERICAL) {
             
-            for(Record r : data) {
+            for(Integer rId : data) {
+                Record r = data.get(rId);
                 Double value = TypeConversions.toDouble(r.getY());
                 if(value==null) { //if we have a missing value don't perform any normalization
                     continue;
@@ -220,11 +223,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return;
         }
         
-        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.iterator().next().getY());
+        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.get(data.iterator().next()).getY());
         
         if(columnType==Dataset.ColumnType.NUMERICAL) {
             
-            for(Record r : data) {
+            for(Integer rId : data) {
+                Record r = data.get(rId);
+                
                 //do the same for the response variable Y
                 Double min = minColumnValues.get(Dataset.YColumnName);
                 Double max = maxColumnValues.get(Dataset.YColumnName);
@@ -258,7 +263,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             //Training Mode
             
             //find the referenceLevels for each categorical variable
-            for(Record r: data) {
+            for(Integer rId: data) {
+                Record r = data.get(rId);
                 for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                     Object column = entry.getKey();
                     if(referenceLevels.containsKey(column)==false) { //already set?
@@ -273,7 +279,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
         
         //Replace variables with dummy versions
-        for(Record r: data) {
+        for(Integer rId: data) {
+            Record r = data.get(rId);
             Set<Object> columns = new HashSet<>(r.getX().keySet()); //TODO: remove this once we make Record immutable
             for(Object column : columns) {
                 if(covert2dummy(columnTypes.get(column))==false) { 

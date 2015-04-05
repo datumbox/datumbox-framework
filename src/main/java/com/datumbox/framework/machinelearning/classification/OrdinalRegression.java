@@ -157,7 +157,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         //mapping between the thita and the exact previous thita value
         Map<Object, Object> previousThitaMapping = getPreviousThitaMappings();
         
-        for(Record r : newData) {
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             AssociativeArray predictionProbabilities = hypothesisFunction(r.getX(), previousThitaMapping, weights, thitas);
             
             Object theClass=getSelectedClassFromClassScores(predictionProbabilities);
@@ -186,7 +187,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         //add classes in a sorted way (ordinal ascending order)
         Set<Object> sortedClasses = new TreeSet<>();
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             Object theClass=r.getY();
             
             sortedClasses.add(theClass); 
@@ -198,7 +200,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         modelParameters.setC(c);
         
         //we initialize the weights and thitas to zero
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             for(Object feature : r.getX().keySet()) {
                 weights.put(feature, 0.0);
             }
@@ -284,7 +287,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             Object rClass = r.getY();
             Object rPreviousClass = previousThitaMapping.get(rClass);
             
@@ -346,7 +350,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     private double calculateError(Dataset trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
         double error=0.0;
         
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             double xTw = xTw(r.getX(), weights);
             
             Object theClass = r.getY();

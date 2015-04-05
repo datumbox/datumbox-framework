@@ -96,7 +96,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         
         Map<Object, Double> cachedLogPriors = new HashMap<>(logPriors); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
         
-        for(Record r : newData) {
+        for(Integer id : newData) {
+            Record r = newData.get(id);
             //Build new map here! reinitialize the prediction scores with the scores of the classes
             AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(cachedLogPriors)); 
             
@@ -178,7 +179,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         
         //calculate first statistics about the classes
         AssociativeArray totalFeatureOccurrencesForEachClass = new AssociativeArray(); 
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) {
+            Record r = trainingData.get(rId);
             Object theClass=r.getY();
             
             Double classCount = logPriors.get(theClass);
@@ -195,7 +197,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         }
         
         //now calculate the statistics of features
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) {
+            Record r = trainingData.get(rId);
             
             //store the occurrances of the features
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {

@@ -59,8 +59,8 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         //shuffle the ids of the records
         Integer[] ids = new Integer[n];
         int j =0;
-        for(Record r : dataset) {
-            ids[j]=r.getId();
+        for(Integer rId : dataset) {
+            ids[j]=rId;
             ++j;
         }
         PHPfunctions.shuffle(ids);

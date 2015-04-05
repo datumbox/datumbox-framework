@@ -283,8 +283,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         //initialize topic assignments of each word randomly and update the counters
-        for(Record r : trainingData) {
-            Integer documentId = r.getId();
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
+            Integer documentId = rId;
             
             documentWordCounts.put(documentId, r.getX().size());
             
@@ -315,8 +316,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             
             int changedCounter = 0;
             //collapsed gibbs sampler
-            for(Record r : trainingData) {
-                Integer documentId = r.getId();
+            for(Integer rId : trainingData) { 
+                Record r = trainingData.get(rId);
+                Integer documentId = rId;
                 
                 AssociativeArray topicAssignments = new AssociativeArray();
                 for(int j=0;j<k;++j) {
@@ -511,8 +513,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", true);
         
         //initialize topic assignments of each word randomly and update the counters
-        for(Record r : newData) {
-            Integer documentId = r.getId();
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
+            Integer documentId = rId;
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object wordPosition = entry.getKey();
@@ -544,8 +547,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             int changedCounter = 0;
             perplexity = 0.0;
             double totalDatasetWords = 0.0;
-            for(Record r : newData) {
-                Integer documentId = r.getId();
+            for(Integer rId : newData) {
+                Record r = newData.get(rId);
+                Integer documentId = rId;
                 
                 
                 AssociativeArray topicAssignments = new AssociativeArray();

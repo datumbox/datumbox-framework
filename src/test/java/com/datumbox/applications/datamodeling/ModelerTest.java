@@ -169,9 +169,10 @@ public class ModelerTest {
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
-        for(Record r : newData) {
-            expResult.put(r.getId(), r.getY());
-            result.put(r.getId(), r.getYPredicted());
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
+            expResult.put(rId, r.getY());
+            result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
         

@@ -73,8 +73,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
 
         @Override
-        protected boolean add(Record r) {
-            boolean result = recordIdSet.add(r.getId());
+        protected boolean add(Integer rId, Record r) {
+            boolean result = recordIdSet.add(rId);
             if(result) {
                 xi_sum.addValues(r.getX());
             }
@@ -82,7 +82,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
         
         @Override
-        protected boolean remove(Record r) {
+        protected boolean remove(Integer rId, Record r) {
             //No need to implement this method in this algorithm
             throw new UnsupportedOperationException();
         }
@@ -205,7 +205,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        for(Record r : newData) {
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             
             AssociativeArray clusterDistances = new AssociativeArray();
             for(Cluster c : clusterList.values()) {
@@ -236,7 +237,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
         //check if there are any gold standard classes
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             Object theClass=r.getY();
             if(theClass!=null) {
                 goldStandardClasses.add(theClass); 
@@ -295,10 +297,11 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         //initialize clusters, foreach point create a cluster
         Integer clusterId = 0;
-        for(Record r : trainingData) {
+        for(Integer rId : trainingData) { 
+            Record r = trainingData.get(rId);
             Cluster c = new Cluster(clusterId);
             
-            c.add(r);
+            c.add(rId, r);
             c.setActive(true);
             c.updateClusterParameters();
             clusterList.put(clusterId, c);

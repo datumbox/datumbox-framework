@@ -263,12 +263,12 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     }
 
     @Override
-    protected void filterFeatures(Dataset newdata) {
+    protected void filterFeatures(Dataset newData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //convert data into matrix
         Map<Object, Integer> feature2ColumnId= modelParameters.getFeature2ColumnId();
-        MatrixDataset matrixDataset = MatrixDataset.parseDataset(newdata, feature2ColumnId);
+        MatrixDataset matrixDataset = MatrixDataset.parseDataset(newData, feature2ColumnId);
         RealMatrix X = matrixDataset.getX();
         /*
         //subtracting means
@@ -289,12 +289,12 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         Dataset transformedDataset = new Dataset();
         
-        for(Record r : newdata) {
-            Integer recordId = r.getId();
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             
             Record newR = new Record();
             int componentId=0;
-            for(double value : X.getRow(recordId)) {
+            for(double value : X.getRow(rId)) {
                 newR.getX().put(componentId, value);
                 ++componentId;
             }
@@ -304,8 +304,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             transformedDataset.add(newR);
         }
         
-        newdata.clear();
-        newdata.merge(transformedDataset);
+        newData.clear();
+        newData.merge(transformedDataset);
     }
     
     

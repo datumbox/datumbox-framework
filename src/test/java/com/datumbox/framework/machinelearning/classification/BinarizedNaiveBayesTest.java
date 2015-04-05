@@ -88,9 +88,10 @@ public class BinarizedNaiveBayesTest {
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
-        for(Record r : validationData) {
-            expResult.put(r.getId(), r.getY());
-            result.put(r.getId(), r.getYPredicted());
+        for(Integer rId : validationData) {
+            Record r = validationData.get(rId);
+            expResult.put(rId, r.getY());
+            result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
         

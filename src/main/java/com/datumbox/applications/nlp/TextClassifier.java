@@ -195,7 +195,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //extract responses
         List<Object> predictedClasses = new LinkedList<>();
-        for(Record r : predictedDataset) {
+        for(Integer rId : predictedDataset) {
+            Record r = predictedDataset.get(rId);
             predictedClasses.add(r.getYPredicted());
         }
         predictedDataset = null;
@@ -224,7 +225,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //extract responses
         List<AssociativeArray> predictedClassProbabilities = new LinkedList<>();
-        for(Record r : predictedDataset) {
+        for(Integer rId : predictedDataset) {
+            Record r = predictedDataset.get(rId);
             predictedClassProbabilities.add(r.getYPredictedProbabilities());
         }
         predictedDataset = null;

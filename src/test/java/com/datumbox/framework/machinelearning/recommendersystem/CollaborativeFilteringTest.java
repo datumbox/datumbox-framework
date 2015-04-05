@@ -179,7 +179,7 @@ public class CollaborativeFilteringTest {
         expResult.put("tea", 0.5);
         
         
-        AssociativeArray result = newData.iterator().next().getYPredictedProbabilities();
+        AssociativeArray result = newData.get(newData.iterator().next()).getYPredictedProbabilities();
         for(Map.Entry<Object, Object> entry : result.entrySet()) {
             assertEquals(expResult.get(entry.getKey()), TypeConversions.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }

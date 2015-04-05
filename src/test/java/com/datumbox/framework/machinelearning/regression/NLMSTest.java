@@ -113,7 +113,8 @@ public class NLMSTest {
         df.erase();
 
 
-        for(Record r : validationData) {
+        for(Integer rId : validationData) {
+            Record r = validationData.get(rId);
             assertEquals(TypeConversions.toDouble(r.getY()), TypeConversions.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
