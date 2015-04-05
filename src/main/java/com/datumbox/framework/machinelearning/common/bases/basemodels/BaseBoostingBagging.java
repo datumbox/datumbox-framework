@@ -45,6 +45,7 @@ import java.util.Set;
 public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelParameters, TP extends BaseBoostingBagging.TrainingParameters, VM extends BaseBoostingBagging.ValidationMetrics> extends BaseMLclassifier<MP, TP, VM> {
 
     public static final String DB_INDICATOR="Cmp";
+    private static final int maxNumberOfRetries = 2;
     
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
         
@@ -205,6 +206,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //training the weak classifiers
         int t=0;
+        int retryCounter = 0;
         while(t<totalWeakClassifiers) {
             logger.debug("Training Weak learner "+t);
             //We sample a list of Ids based on their weights
@@ -245,8 +247,18 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 break;
             }
             else if(status==Status.IGNORE) {
-                logger.debug("Ignoring last weak learner due to high error");
-                continue; //TODO: put a counter on the max number of retries
+                if(retryCounter<maxNumberOfRetries) {
+                    logger.debug("Ignoring last weak learner due to high error");
+                    ++retryCounter;
+                    continue; 
+                }
+                else {
+                    logger.debug("Too many retries, skipping further training");
+                    break;
+                }
+            }
+            else if(status==Status.NEXT) {
+                retryCounter = 0; //reset the retry counter
             }
             
             ++t; //increase counter here. This is because some times we might want to redo the 

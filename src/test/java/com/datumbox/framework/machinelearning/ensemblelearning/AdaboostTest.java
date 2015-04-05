@@ -224,7 +224,7 @@ public class AdaboostTest {
         
         Adaboost.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
-        double expResult = 0.6737878787878787;
+        double expResult = 0.6245038295038294;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
