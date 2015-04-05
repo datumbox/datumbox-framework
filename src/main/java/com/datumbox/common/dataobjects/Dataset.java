@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 /**
  *
  * @author bbriniotis
@@ -68,7 +67,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     
     
     public Dataset() {
-        recordList = new TreeMap<>();
+        recordList = new HashMap<>();
         columns = new HashMap<>();
     }
     
@@ -279,6 +278,9 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @param r 
      */
     public void _set(Integer rId, Record r) {
+        if(recordList.containsKey(rId)==false) {
+            throw new IndexOutOfBoundsException(); //ensure that the record has already be set with add()
+        }
         recordList.put(rId, r);
     }
     
@@ -299,16 +301,20 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     @Override
     public Iterator<Integer> iterator() {
         return new Iterator<Integer>() {
-            private Iterator<Integer> it = recordList.keySet().iterator();
+            //private Iterator<Integer> it = recordList.keySet().iterator();
+            private Integer counter = 0;
+            private final int n = recordList.size();
             
             @Override
             public boolean hasNext() {
-                return it.hasNext();
+                //return it.hasNext();
+                return counter<n;
             }
 
             @Override
             public Integer next() {
-                return it.next();
+                //return it.next();
+                return counter++;
             }
 
             @Override
