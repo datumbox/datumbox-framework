@@ -53,7 +53,7 @@ public class TFIDFTest {
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("important1", 2.0);

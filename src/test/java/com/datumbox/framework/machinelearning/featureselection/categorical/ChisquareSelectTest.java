@@ -40,7 +40,7 @@ public class ChisquareSelectTest {
     }
 
     public static Dataset generateDataset(int n) {
-        Dataset data = new Dataset();
+        Dataset data = new Dataset(TestUtils.getDBConfig());
         for(int i=0;i<n;++i) {
             AssociativeArray xData = new AssociativeArray();
             //important fields

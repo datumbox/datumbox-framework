@@ -50,7 +50,7 @@ public class ModelerTest {
         RandomValue.setRandomGenerator(new Random(42));
         
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -102,7 +102,7 @@ public class ModelerTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset newData = new Dataset();
+        Dataset newData = new Dataset(TestUtils.getDBConfig());
         newData.add(Record.newDataVector(new Double[] {0.0, 1.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         

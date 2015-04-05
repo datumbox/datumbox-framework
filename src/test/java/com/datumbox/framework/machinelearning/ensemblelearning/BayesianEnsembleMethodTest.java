@@ -42,7 +42,7 @@ public class BayesianEnsembleMethodTest {
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -63,7 +63,7 @@ public class BayesianEnsembleMethodTest {
         trainingData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
         
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
         validationData.add(Record.newDataVector(new String[] {"pos","neg"}, "pos"));
         validationData.add(Record.newDataVector(new String[] {"neg","pos"}, "neg"));

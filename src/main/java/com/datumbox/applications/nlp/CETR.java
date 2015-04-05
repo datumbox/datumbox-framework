@@ -116,7 +116,7 @@ public class CETR {
         
         boolean use2Dmodel = (parameters.getAlphaWindowSizeFor2DModel()>0);
         
-        Dataset dataset = new Dataset();
+        Dataset dataset = new Dataset(dbConf);
         if(use2Dmodel) {
             List<Double> G = computeDerivatives(TTRlist, parameters.getAlphaWindowSizeFor2DModel());
             gaussianSmoothing(G);

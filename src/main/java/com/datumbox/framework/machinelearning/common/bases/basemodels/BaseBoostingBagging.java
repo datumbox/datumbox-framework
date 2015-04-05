@@ -23,7 +23,6 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -225,7 +224,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             
             
             if(copyData) {
-                sampledTrainingDataset = DeepCopy.<Dataset>cloneObject(sampledTrainingDataset);
+                sampledTrainingDataset = sampledTrainingDataset.copy();
             }
             mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
             sampledTrainingDataset = null;
@@ -233,7 +232,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             
             Dataset validationDataset = trainingData;
             if(copyData) {
-                validationDataset = DeepCopy.<Dataset>cloneObject(validationDataset);
+                validationDataset = validationDataset.copy();
             }
             mlclassifier.predict(validationDataset);
             mlclassifier = null;

@@ -16,7 +16,12 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.utilities.RandomValue;
 import java.io.Serializable;
+import static java.lang.Math.random;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +37,10 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     
     /* Stores columnName=> Class (ie Type) */
     private final Map<Object, ColumnType> columns;
+    
+    private transient String dbName;
+    private transient DatabaseConnector dbc;
+    private transient DatabaseConfiguration dbConf;
     
     public static final Object constantColumnName = "~constant";
     public static final Object YColumnName = "~Y";
@@ -66,9 +75,15 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     
     
     
-    public Dataset() {
-        recordList = new HashMap<>();
-        columns = new HashMap<>();
+    public Dataset(DatabaseConfiguration dbConf) {
+        //we dont need to have a unique name, because it is not used by the connector on the current implementations
+        //dbName = "dts_"+new BigInteger(130, RandomValue.getRandomGenerator()).toString(32);
+        dbName = "dts";
+        
+        this.dbConf = dbConf;
+        dbc = this.dbConf.getConnector(dbName);
+        recordList = dbc.getBigMap("tmp_recordList", true);
+        columns = dbc.getBigMap("tmp_columns", true);
     }
     
     /**
@@ -175,10 +190,24 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @return 
      */
     public Dataset generateNewSubset(FlatDataList idsCollection) {
-        Dataset d = new Dataset();
+        Dataset d = new Dataset(dbConf);
         
         for(Object id : idsCollection) {
             d.add(recordList.get((Integer)id)); 
+        }        
+        return d;
+    }
+    
+    /**
+     * Returns a copy of the Dataset. 
+     * 
+     * @return 
+     */
+    public Dataset copy() {
+        Dataset d = new Dataset(dbConf);
+        
+        for(Integer id : this) {
+            d.add(recordList.get(id)); 
         }        
         return d;
     }
@@ -288,9 +317,9 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * Clears the Dataset and removes the internal variables.
      */
     public void clear() {
-        //TODO: delete the bigdata appropriately
-        recordList.clear();
-        columns.clear();
+        dbc.dropBigMap("tmp_recordList", recordList);
+        dbc.dropBigMap("tmp_columns", columns);
+        dbc.dropDatabase();
     }
     
     /**

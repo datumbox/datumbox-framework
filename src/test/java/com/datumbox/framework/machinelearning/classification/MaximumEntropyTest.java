@@ -56,7 +56,7 @@ public class MaximumEntropyTest {
             - c1: yes
             - c2: no
         */
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -68,7 +68,7 @@ public class MaximumEntropyTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         
@@ -110,7 +110,7 @@ public class MaximumEntropyTest {
         RandomValue.setRandomGenerator(new Random(42));
         int k = 5;
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));

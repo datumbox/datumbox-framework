@@ -19,7 +19,6 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;

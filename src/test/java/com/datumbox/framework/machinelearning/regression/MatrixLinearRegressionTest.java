@@ -54,7 +54,7 @@ public class MatrixLinearRegressionTest {
         $y=2+0.002*$x1+30*$x2;
         $dataTable[]=array(array($x1,$x2),null);
         */
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
         trainingData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
         trainingData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
@@ -66,7 +66,7 @@ public class MatrixLinearRegressionTest {
         trainingData.add(Record.newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
         trainingData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
         validationData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
         validationData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
@@ -131,7 +131,7 @@ public class MatrixLinearRegressionTest {
         RandomValue.setRandomGenerator(new Random(42));
         int k = 5;
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
         trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
         trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));

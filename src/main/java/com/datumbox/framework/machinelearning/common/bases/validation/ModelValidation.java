@@ -17,9 +17,7 @@
 package com.datumbox.framework.machinelearning.common.bases.validation;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.PHPfunctions;
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -109,7 +107,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             Dataset trainingData = dataset.generateNewSubset(foldTrainingIds);
             if(copyData) {
-                trainingData = DeepCopy.<Dataset>cloneObject(trainingData);
+                trainingData = trainingData.copy();
             }
             mlmodel.fit(trainingData, trainingParameters); 
             trainingData = null;
@@ -117,7 +115,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             Dataset validationData = dataset.generateNewSubset(foldValidationIds);
             if(copyData) {
-                validationData = DeepCopy.<Dataset>cloneObject(validationData);
+                validationData = validationData.copy();
             }
             //fetch validation metrics
             VM entrySample = mlmodel.validate(validationData);

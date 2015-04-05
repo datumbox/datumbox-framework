@@ -19,6 +19,7 @@ package com.datumbox.framework.utilities.dataset;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
@@ -63,8 +64,8 @@ public class DatasetBuilder {
         return listsMap;
     }
     
-    public static Dataset parseFromTextLists(Map<Object, List<String>> dataset, TextExtractor textExtractor) {
-        Dataset data = new Dataset();
+    public static Dataset parseFromTextLists(Map<Object, List<String>> dataset, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
+        Dataset data = new Dataset(dbConf);
         Logger logger = LoggerFactory.getLogger(DatasetBuilder.class);
         
         //loop throw the map and process each category file
@@ -83,8 +84,8 @@ public class DatasetBuilder {
         return data;
     }
     
-    public static Dataset parseFromTextFiles(Map<Object, URI> dataset, TextExtractor textExtractor) {
-        Dataset data = new Dataset();
+    public static Dataset parseFromTextFiles(Map<Object, URI> dataset, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
+        Dataset data = new Dataset(dbConf);
         Logger logger = LoggerFactory.getLogger(DatasetBuilder.class);
         
         //loop throw the map and process each category file

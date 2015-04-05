@@ -20,7 +20,6 @@ import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatib
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
@@ -137,7 +136,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         double aOut = trainingParameters.getAout();
         
         //copy data before starting
-        Dataset copiedTrainingData = DeepCopy.<Dataset>cloneObject(trainingData);
+        Dataset copiedTrainingData = trainingData.copy();
         
         //backword elimination algorithm
         for(int iteration = 0; iteration<maxIterations ; ++iteration) {

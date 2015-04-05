@@ -34,7 +34,7 @@ public class BivariateTest {
     }
 
     private Dataset generateDataset() {
-        Dataset dataset = new Dataset();
+        Dataset dataset = new Dataset(TestUtils.getDBConfig());
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put(0, 6);

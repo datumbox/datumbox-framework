@@ -41,7 +41,7 @@ public class PCATest {
     @Test
     public void testCalculateParameters() {
         TestUtils.log(this.getClass(), "calculateParameters");
-        Dataset originaldata = new Dataset();
+        Dataset originaldata = new Dataset(TestUtils.getDBConfig());
         originaldata.add(Record.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{7.0, 8.0, 0.0}, null));
@@ -65,7 +65,7 @@ public class PCATest {
         instance = new PCA(dbName, TestUtils.getDBConfig());
         
         
-        Dataset expResult = new Dataset();
+        Dataset expResult = new Dataset(TestUtils.getDBConfig());
         expResult.add(Record.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));
         expResult.add(Record.<Double>newDataVector(new Double[]{-6.0641, 1.0143, -4.8165}, null));
         expResult.add(Record.<Double>newDataVector(new Double[]{-7.7270, 6.7253, 2.8399}, null));

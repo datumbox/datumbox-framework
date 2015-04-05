@@ -50,7 +50,7 @@ public class DatasetTest {
     @Test
     public void testGetColumns() {
         TestUtils.log(this.getClass(), "getColumns");
-        Dataset instance = new Dataset();
+        Dataset instance = new Dataset(TestUtils.getDBConfig());
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -85,7 +85,7 @@ public class DatasetTest {
     public void testExtractColumnValues() {
         TestUtils.log(this.getClass(), "extractColumnValues");
         Object column = "height";
-        Dataset instance = new Dataset();
+        Dataset instance = new Dataset(TestUtils.getDBConfig());
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -116,7 +116,7 @@ public class DatasetTest {
     public void testExtractColumnValuesByY() {
         TestUtils.log(this.getClass(), "extractColumnValuesByY");
         Object column = "height";
-        Dataset instance = new Dataset();
+        Dataset instance = new Dataset(TestUtils.getDBConfig());
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);

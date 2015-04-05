@@ -43,7 +43,7 @@ public class CollaborativeFilteringTest {
     public void testPredict() {
         TestUtils.log(this.getClass(), "predict");
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("ml1", 5.0);
@@ -144,7 +144,7 @@ public class CollaborativeFilteringTest {
         xData11.put("vg3", 0.5);
         trainingData.add(new Record(xData11, "pitta"));
         
-        Dataset newData = new Dataset();
+        Dataset newData = new Dataset(TestUtils.getDBConfig());
         
         AssociativeArray profileData = new AssociativeArray();
         profileData.put("pizza", 4.5);

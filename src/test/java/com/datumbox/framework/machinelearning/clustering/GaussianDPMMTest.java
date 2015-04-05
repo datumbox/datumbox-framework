@@ -39,7 +39,7 @@ public class GaussianDPMMTest {
 
     private Dataset generateDataset() {
         Random rnd = RandomValue.getRandomGenerator();
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         /*
         //cluster 1
         trainingData.add(Record.newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));

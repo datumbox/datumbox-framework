@@ -59,7 +59,7 @@ public class SoftMaxRegressionTest {
             - c2: no
         */
         /*
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -71,11 +71,11 @@ public class SoftMaxRegressionTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         */
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
@@ -87,11 +87,11 @@ public class SoftMaxRegressionTest {
         trainingData.add(Record.newDataVector(new String[] {"red", "suv", "imported"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
         /*        
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Double[] {6.1828706420186,5.7573756868964,3.7194701511967}, 1));
         trainingData.add(Record.newDataVector(new Double[] {6.0681823226512,5.4994335920427,7.598260774876}, 1));
         trainingData.add(Record.newDataVector(new Double[] {5.9347712436828,5.4589863647794,4.6587268913845}, 1));
@@ -690,7 +690,7 @@ public class SoftMaxRegressionTest {
         trainingData.add(Record.newDataVector(new Double[] {8.6214685846329,8.0218759456459,9.2140622324487}, 3));
         trainingData.add(Record.newDataVector(new Double[] {7.8872168038128,6.9977919468999,8.1205596528281}, 3));
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new Double[] {6.34569812276338,6.76262401884614,6.08305530880784}, 1));
         validationData.add(Record.newDataVector(new Double[] {5.92085126899850,6.01037072456601,4.66307928268761}, 1));
         validationData.add(Record.newDataVector(new Double[] {7.18606367787857,6.64194264491917,4.41233885708698}, 2));
@@ -748,7 +748,7 @@ public class SoftMaxRegressionTest {
         RandomValue.setRandomGenerator(new Random(42));
         int k = 5;
         
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));

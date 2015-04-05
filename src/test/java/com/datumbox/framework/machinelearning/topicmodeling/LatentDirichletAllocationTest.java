@@ -66,7 +66,7 @@ public class LatentDirichletAllocationTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
         wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
-        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor);
+        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor, TestUtils.getDBConfig());
         
         
         LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, TestUtils.getDBConfig());
@@ -81,7 +81,7 @@ public class LatentDirichletAllocationTest {
         
         lda.validate(trainingData);
         
-        Dataset reducedTrainingData = new Dataset();
+        Dataset reducedTrainingData = new Dataset(TestUtils.getDBConfig());
         for(Integer rId : trainingData) {
             Record r = trainingData.get(rId);
             //take the topic assignments and convert them into a new Record

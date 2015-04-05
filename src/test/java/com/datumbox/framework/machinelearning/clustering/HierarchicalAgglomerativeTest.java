@@ -46,7 +46,7 @@ public class HierarchicalAgglomerativeTest {
         TestUtils.log(this.getClass(), "validate"); 
         
         Dataset trainingData = KmeansTest.generateDataset();
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new Object[] {51,"M","3",100,222,"no","0",143,"yes", 1.2,2,0,"3"}, "healthy"));
         validationData.add(Record.newDataVector(new Object[] {67,"M","4",120,229,"no","2",129,"yes", 2.6,2,2,"7"}, "problem"));
         

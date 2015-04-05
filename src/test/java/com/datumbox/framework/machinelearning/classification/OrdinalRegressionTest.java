@@ -40,7 +40,7 @@ public class OrdinalRegressionTest {
     
 
     private Dataset generateTrainingData() {    
-        Dataset trainingData = new Dataset();
+        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         trainingData.add(Record.newDataVector(new Double[] {6.1828706420186,5.7573756868964,3.7194701511967}, 1));
         trainingData.add(Record.newDataVector(new Double[] {6.0681823226512,5.4994335920427,7.598260774876}, 1));
@@ -653,7 +653,7 @@ public class OrdinalRegressionTest {
         
         Dataset trainingData = generateTrainingData();
         
-        Dataset validationData = new Dataset();
+        Dataset validationData = new Dataset(TestUtils.getDBConfig());
         validationData.add(Record.newDataVector(new Double[] {5.92085126899850,6.01037072456601,4.66307928268761}, 1));
         validationData.add(Record.newDataVector(new Double[] {7.18606367787857,6.64194264491917,4.41233885708698}, 2));
         validationData.add(Record.newDataVector(new Double[] {7.83232073356316,8.76007761528955,7.05235518409310}, 3));

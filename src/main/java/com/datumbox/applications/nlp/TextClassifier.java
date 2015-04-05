@@ -116,7 +116,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
         
         //build trainingDataset
-        Dataset trainingDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor);
+        Dataset trainingDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
         
         _fit(trainingDataset);
         
@@ -245,7 +245,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
 
         //build the testDataset
-        Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor);
+        Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, dbConf);
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         
@@ -304,7 +304,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         //build the newDataset
-        Dataset newData = new Dataset();
+        Dataset newData = new Dataset(dbConf);
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());

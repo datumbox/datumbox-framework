@@ -21,11 +21,9 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -362,7 +360,6 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             return null;
         }
         
-        //clone object ot avoid modifications
-        return DeepCopy.cloneObject(knowledgeBase.getModelParameters().getClusterList());
+        return knowledgeBase.getModelParameters().getClusterList();
     }
 }

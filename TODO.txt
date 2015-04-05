@@ -1,10 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-bbriniotis:
-- Fix all the recorded TODOs
-- Add MapDB support in the Dataset. In that case the DeepCopy.<Dataset>cloneObject() will not work. A clone() must be build on Dataset that copies that Object instead.
-
 lmpampaletakis:
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
 - Review the codebase and make suggestions for code improvements and changes in the architecture.
