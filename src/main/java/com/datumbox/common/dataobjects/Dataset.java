@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 /**
  *
  * @author bbriniotis
@@ -68,7 +68,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     
     
     public Dataset() {
-        recordList = new TreeMap<>();
+        recordList = new LinkedHashMap<>();
         columns = new HashMap<>();
     }
     
@@ -204,7 +204,13 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         if(columns.remove(column)!=null) { //try to remove it from the columns and it if it removed remove it from the list too
             for(Integer rId : this) {
                 Record r = recordList.get(rId);
-                r.getX().remove(column); //TODO: do we need to store the record again in the map?
+                if(r.getX().containsKey(column)) {
+                    AssociativeArray xData = new AssociativeArray();
+                    xData.putAll(r.getX());
+                    xData.remove(column);
+                    r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                    recordList.put(rId, r);
+                }
             }
             
             return true;
@@ -235,17 +241,6 @@ public final class Dataset implements Serializable, Iterable<Integer> {
             updateMeta(recordList.get(id));
         }
     }
-
-    /**
-     * Merge the d dataset to the current one.
-     * 
-     * @param d 
-     */
-    public void merge(Dataset d) {
-        for(Integer id : d) {
-            this.add(d.get(id));
-        }
-    } 
     
     /**
      * Adds the record in the dataset. The add method returns the id of the new record.
@@ -269,10 +264,23 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @return 
      */
     public Integer set(Integer rId, Record r) {
-        recordList.put(rId, r);
+        _set(rId, r);
         updateMeta(r);
         
         return rId;
+    }
+    
+    /**
+     * Sets the record in a particular position in the dataset, WITHOUT updating
+     * the internal meta-info. This method allows quick updates on the dataset 
+     * but it is essential to call the resetMeta() immediately afterwards to
+     * rebuild the meta info.
+     * 
+     * @param rId
+     * @param r 
+     */
+    public void _set(Integer rId, Record r) {
+        recordList.put(rId, r);
     }
     
     /**

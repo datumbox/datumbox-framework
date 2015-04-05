@@ -92,6 +92,10 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
         internalData.putAll(m);
     }
     
+    public void putAll(AssociativeArray m) {
+        internalData.putAll(m.internalData);
+    }
+    
     public final Set<Map.Entry<Object, Object>> entrySet() {
         return internalData.entrySet();
     }

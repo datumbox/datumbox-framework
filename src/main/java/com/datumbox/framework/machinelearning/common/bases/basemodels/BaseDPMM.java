@@ -231,7 +231,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 CL cluster = createNewCluster(newClusterId);
 
                 //add the record in the new cluster
-                r = new Record(r.getX(), r.getY(), newClusterId, null);
+                r = new Record(r.getX(), r.getY(), newClusterId, r.getYPredictedProbabilities());
                 dataset.set(rId, r);
                 
                 cluster.add(rId, r);
@@ -265,7 +265,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 
                 int assignedClusterId = PHPfunctions.mt_rand(0, clusterMapSize-1);
                 
-                r = new Record(r.getX(), r.getY(), assignedClusterId, null);
+                r = new Record(r.getX(), r.getY(), assignedClusterId, r.getYPredictedProbabilities());
                 dataset.set(rId, r);
                 
                 tempClusterMap.get((Integer)assignedClusterId).add(rId, r);
@@ -321,7 +321,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 //Add Xi back to the sampled Cluster
                 if(Objects.equals(sampledClusterId, newClusterId)) { //if new cluster
                     //add the record in the new cluster
-                    r = new Record(r.getX(), r.getY(), newClusterId, null);
+                    r = new Record(r.getX(), r.getY(), newClusterId, r.getYPredictedProbabilities());
                     dataset.set(rId, r);
                     
                     cNew.add(rId, r);
@@ -334,7 +334,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                     ++newClusterId;
                 }
                 else {
-                    r = new Record(r.getX(), r.getY(), sampledClusterId, null);
+                    r = new Record(r.getX(), r.getY(), sampledClusterId, r.getYPredictedProbabilities());
                     dataset.set(rId, r);
                     
                     tempClusterMap.get(sampledClusterId).add(rId, r);

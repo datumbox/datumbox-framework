@@ -19,6 +19,8 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.List;
@@ -70,7 +72,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
 
 
     @Override
-    protected boolean updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights) {
+    protected Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) {
         //no update on the observationWeights, all observations have equal probability 1/n
         
         //update classifier weights with equal weights
@@ -85,7 +87,6 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
             weakClassifierWeights.set(t, weight); //equal weight to all classifiers
         }
         
-        boolean stop = false; //always continue
-        return stop; 
+        return Status.NEXT; //always go to next 
     }
 }

@@ -19,7 +19,7 @@ package com.datumbox.framework.machinelearning.common.bases.basemodels;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -45,7 +45,7 @@ import java.util.Set;
 public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelParameters, TP extends BaseBoostingBagging.TrainingParameters, VM extends BaseBoostingBagging.ValidationMetrics> extends BaseMLclassifier<MP, TP, VM> {
 
     public static final String DB_INDICATOR="Cmp";
-
+    
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
         
         private List<Double> weakClassifierWeights = new ArrayList<>(); //this is small. maximum as the total number of classifiers
@@ -192,7 +192,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         
         
-        //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
         AssociativeArray observationWeights = new AssociativeArray();
         
         //calculate the training parameters of bagging
@@ -205,10 +204,19 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         int totalWeakClassifiers = trainingParameters.getMaxWeakClassifiers();
         
         //training the weak classifiers
-        for(int t=0;t<totalWeakClassifiers;++t) {
-            FlatDataCollection sampledIDs = SRS.weightedSampling(observationWeights, n, true);
+        int t=0;
+        while(t<totalWeakClassifiers) {
+            logger.debug("Training Weak learner "+t);
+            //We sample a list of Ids based on their weights
+            FlatDataList sampledIDs = SRS.weightedSampling(observationWeights, n, true).toFlatDataList();
             
-            Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs.toFlatDataList());
+            //We construct a new Dataset from the sampledIDs
+            Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs);
+            
+            //WARNING: The ids of the new sampledTrainingDataset are not the same
+            //as the ones on the original dataset.
+            //To link back the new ids to the old ones we must use the mapping
+            //as stored in the sampledIDs list.
             
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             boolean copyData = mlclassifier.modifiesData();
@@ -228,26 +236,41 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             mlclassifier.predict(validationDataset);
             mlclassifier = null;
             
-            //TODO: This is wrong!!! The validationDataset no longer has the same IDs as in the tmp_observationWeights. We need to create a mapping between the Ids.
-            boolean stop = updateObservationAndClassifierWeights(validationDataset, observationWeights);
+            Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights, sampledIDs);
             
             validationDataset = null;
             
-            if(stop==true) {
+            if(status==Status.STOP) {
+                logger.debug("Skipping further training due to low error");
                 break;
             }
+            else if(status==Status.IGNORE) {
+                logger.debug("Ignoring last weak learner due to high error");
+                continue;
+            }
+            
+            ++t; //increase counter here. This is because some times we might want to redo the 
         }
         
     }
 
+    
+    
+    protected enum Status {
+        NEXT,
+        STOP,
+        IGNORE;
+    }
+    
     /**
      * Updates the weights of observations and the weights of the classifiers.
      * 
      * @param validationDataset
      * @param observationWeights
+     * @param idMapping
      * @return 
      */
-    protected abstract boolean updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights);
+    protected abstract Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping);
     
     @Override
     public void erase() {

@@ -3,7 +3,6 @@ CODE IMPROVEMENTS
 
 bbriniotis:
 - Make Record immutable.
-- Fix the bug on Adaboost
 - Fix all the recorded TODOs
 - Add MapDB support in the Dataset. In that case the DeepCopy.<Dataset>cloneObject() will not work. A clone() must be build on Dataset that copies that Object instead.
 

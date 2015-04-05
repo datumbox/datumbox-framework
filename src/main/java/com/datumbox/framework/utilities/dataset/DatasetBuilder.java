@@ -74,16 +74,10 @@ public class DatasetBuilder {
             
             logger.info("Dataset Parsing "+theClass);
             
-            Dataset classDataset = new Dataset();
             for(String text : textList) {
                 //extract features of the string and add every keyword combination in X map
-                classDataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(text))), theClass)); 
+                data.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(text))), theClass)); 
             }
-            
-            
-            //merge it with the training dataset
-            data.merge(classDataset);
-            classDataset = null;
         }    
 
         return data;
@@ -101,21 +95,16 @@ public class DatasetBuilder {
             logger.info("Dataset Parsing "+theClass);
             
             //process the files line-by-line, assuming there is a single document/case per row
-            Dataset classDataset = new Dataset();
             try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
                 //read strings one by one
                 for(String line; (line = br.readLine()) != null; ) {
                     //extract features of the string and add every keyword combination in X map
-                    classDataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass)); 
+                    data.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass)); 
                 }
             } 
             catch (IOException ex) {
                 throw new RuntimeException(ex);
             } 
-            
-            //merge it with the training dataset
-            data.merge(classDataset);
-            classDataset = null;
         }    
 
         return data;

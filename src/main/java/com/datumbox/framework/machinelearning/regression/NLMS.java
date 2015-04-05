@@ -151,7 +151,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         for(Integer rId : newData) {
             Record r = newData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
-            newData.set(rId, new Record(r.getX(), r.getY(), yPredicted, null));
+            newData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
         }
     }
     
@@ -223,7 +223,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         for(Integer rId : trainingData) { 
             Record r = trainingData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
-            trainingData.set(rId, new Record(r.getX(), r.getY(), yPredicted, null));
+            trainingData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
             error+=Math.pow(TypeConversions.toDouble(r.getY()) -yPredicted, 2);
         }
         

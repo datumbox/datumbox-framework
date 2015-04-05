@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 
+import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
@@ -285,15 +286,19 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         //Replace variables with dummy versions
         for(Integer rId: data) {
             Record r = data.get(rId);
-            Set<Object> columns = new HashSet<>(r.getX().keySet()); //TODO: remove this once we make Record immutable
-            for(Object column : columns) {
+            
+            AssociativeArray xData = new AssociativeArray();
+            xData.putAll(r.getX());
+            
+            boolean modified = false;
+            for(Object column : r.getX().keySet()) {
                 if(covert2dummy(columnTypes.get(column))==false) { 
                     continue;
                 }
-                Object value = r.getX().get(column);
+                Object value = xData.get(column);
                 
-                r.getX().remove(column); //remove the original column
-                
+                xData.remove(column); //remove the original column
+                modified = true;
                 
                 Object referenceLevel= referenceLevels.get(column);
                 
@@ -304,8 +309,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                     List<Object> newColumn = Arrays.<Object>asList(column,value);
                     
                     //add a new dummy variable for this column-value combination
-                    r.getX().put(newColumn, true); 
+                    xData.put(newColumn, true); 
                 }
+            }
+            
+            if(modified) {
+                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                data.set(rId, r);
             }
         }
         

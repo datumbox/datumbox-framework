@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -71,28 +72,29 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
 
 
     @Override
-    protected boolean updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights) { 
+    protected Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) { 
         //calculate prediction error for this classifier
         double error = 0.0;
         for(Integer rId : validationDataset) {
             Record r = validationDataset.get(rId);
             if(!r.getY().equals(r.getYPredicted())) {
-                error+= TypeConversions.toDouble(observationWeights.get(rId));
+                Integer original_rId = (Integer) idMapping.get(rId);
+                error+= TypeConversions.toDouble(observationWeights.get(original_rId));
             }
         }
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        boolean stop;
+        Status status;
         int c = modelParameters.getC();
         if((1.0-error)<=1.0/c) { //if accuracy is less than random
-            stop = false; //do not include the classifier in our list
+            status = Status.IGNORE; //do not include the classifier in our list
         }
         else {
-            stop = false; //continue training
+            status = Status.NEXT; //continue training
             
             if(error==0.0) { //if the error is 0.0 stop, you can't make it bettter
-                stop = true;
+                status = Status.STOP;
                 error=1e-8;
             }
             
@@ -106,8 +108,9 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             for(Integer rId : validationDataset) {
                 Record r = validationDataset.get(rId);
                 if(!r.getY().equals(r.getYPredicted())) {
-                    Double value = TypeConversions.toDouble(observationWeights.get(rId));
-                    observationWeights.put(rId, value*Math.exp(weight)); //increase the weight for misclassified observations
+                    Integer original_rId = (Integer) idMapping.get(rId);
+                    Double value = TypeConversions.toDouble(observationWeights.get(original_rId));
+                    observationWeights.put(original_rId, value*Math.exp(weight)); //increase the weight for misclassified observations
                 }
             }
             
@@ -122,6 +125,6 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             
         }
         
-        return stop; 
+        return status; 
     }
 }

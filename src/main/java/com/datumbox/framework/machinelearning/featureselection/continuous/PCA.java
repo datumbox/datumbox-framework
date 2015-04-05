@@ -288,8 +288,6 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         //multiplying the data with components
         X = X.multiply(components);
         
-        Dataset transformedDataset = new Dataset();
-        
         for(Integer rId : newData) {
             Record r = newData.get(rId);
             
@@ -300,12 +298,10 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
                 ++componentId;
             }
             
-            //TODO: instead of creating a transformed dataset, call update() instead and then resetMeta() instead of merge
-            transformedDataset.add(new Record(xData, r.getY()));
+            newData._set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
         }
         
-        newData.clear();
-        newData.merge(transformedDataset);
+        newData.resetMeta();
     }
     
     
