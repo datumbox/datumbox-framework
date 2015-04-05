@@ -37,39 +37,21 @@ public class SRS {
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    /**
-     * Samples n ids based on their Probability Table
-     * 
-     * @param probabilityTable
-     * @param n
-     * @param withReplacement
-     * @return 
-     */
-    public static FlatDataCollection weightedProbabilitySampling(AssociativeArray probabilityTable, int n, boolean withReplacement) {
-        AssociativeArray frequencyTable = new AssociativeArray();
-        
-        for(Map.Entry<Object, Object> entry : probabilityTable.entrySet()) {
-            Object id = entry.getKey();
-            Double value = TypeConversions.toDouble(entry.getValue());
-            frequencyTable.put(id, value*n);
-        }
-        
-        return weightedSampling(frequencyTable, n, withReplacement);
-    }
     
     /**
-     * Samples n ids based on their Frequency Table
+     * Samples n ids based on their a Table which contains weights, probabilities 
+     * or frequencies. 
      * 
-     * @param frequencyTable
+     * @param weightedTable
      * @param n
      * @param withReplacement
      * @return 
      */
-    public static FlatDataCollection weightedSampling(AssociativeArray frequencyTable, int n, boolean withReplacement) {
+    public static FlatDataCollection weightedSampling(AssociativeArray weightedTable, int n, boolean withReplacement) {
         FlatDataList sampledIds = new FlatDataList();
         
-        double sumOfFrequencies = Descriptives.sum(frequencyTable.toFlatDataCollection());
-        int populationN = frequencyTable.size();
+        double sumOfFrequencies = Descriptives.sum(weightedTable.toFlatDataCollection());
+        int populationN = weightedTable.size();
         
         for(int i=0;i<n;++i) {
             if(withReplacement==false && populationN<=n) {
@@ -80,7 +62,7 @@ public class SRS {
             double randomFrequency = RandomValue.doubleRand(0.0, sumOfFrequencies);
             
             double cumulativeFrequency=0;
-            for(Map.Entry<Object, Object> entry : frequencyTable.entrySet()) {
+            for(Map.Entry<Object, Object> entry : weightedTable.entrySet()) {
                 Object pointID = entry.getKey();
                 cumulativeFrequency+= TypeConversions.toDouble(entry.getValue());
                 if(cumulativeFrequency>=randomFrequency) {

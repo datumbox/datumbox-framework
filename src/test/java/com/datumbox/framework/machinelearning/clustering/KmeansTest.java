@@ -232,7 +232,7 @@ public class KmeansTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomValue.randomGenerator = new Random(42); 
+        RandomValue.setRandomGenerator(new Random(42)); 
         
         Dataset trainingData = generateDataset();
         Dataset validationData = new Dataset();
@@ -299,7 +299,7 @@ public class KmeansTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.randomGenerator = new Random(42); 
+        RandomValue.setRandomGenerator(new Random(42)); 
         int k = 5;
         
         Dataset trainingData = generateDataset();

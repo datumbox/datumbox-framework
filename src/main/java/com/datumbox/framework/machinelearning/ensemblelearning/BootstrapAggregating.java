@@ -16,12 +16,12 @@
  */
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
+import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -70,7 +70,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
 
 
     @Override
-    protected boolean updateObservationAndClassifierWeights(Dataset validationDataset, Map<Object, Object> observationWeights) {
+    protected boolean updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights) {
         //no update on the observationWeights, all observations have equal probability 1/n
         
         //update classifier weights with equal weights

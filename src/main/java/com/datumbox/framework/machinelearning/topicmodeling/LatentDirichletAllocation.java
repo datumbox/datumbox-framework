@@ -371,7 +371,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     Descriptives.normalize(topicProbabilities);
                     
                     //sample from these probabilieis
-                    Integer newTopic = (Integer)SRS.weightedProbabilitySampling(topicProbabilities, 1, true).iterator().next();
+                    Integer newTopic = (Integer)SRS.weightedSampling(topicProbabilities, 1, true).iterator().next();
                     topic = newTopic; //new topic assigment
                     
                     //add back the word in the dataset
@@ -615,7 +615,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     Descriptives.normalize(topicProbabilities);
                     
                     //sample from these probabilieis
-                    Integer newTopic = (Integer)SRS.weightedProbabilitySampling(topicProbabilities, 1, true).iterator().next();
+                    Integer newTopic = (Integer)SRS.weightedSampling(topicProbabilities, 1, true).iterator().next();
                     topic = newTopic; //new topic assignment
                     
                     

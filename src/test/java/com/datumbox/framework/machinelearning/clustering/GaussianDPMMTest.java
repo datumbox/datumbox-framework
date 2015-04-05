@@ -38,7 +38,7 @@ public class GaussianDPMMTest {
     }
 
     private Dataset generateDataset() {
-        Random rnd = RandomValue.randomGenerator;
+        Random rnd = RandomValue.getRandomGenerator();
         Dataset trainingData = new Dataset();
         /*
         //cluster 1
@@ -76,7 +76,7 @@ public class GaussianDPMMTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate"); 
-        RandomValue.randomGenerator = new Random(42); 
+        RandomValue.setRandomGenerator(new Random(42)); 
         
         Dataset trainingData = generateDataset();
         Dataset validationData = trainingData;
@@ -132,7 +132,7 @@ public class GaussianDPMMTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.randomGenerator = new Random(42); 
+        RandomValue.setRandomGenerator(new Random(42)); 
         int k = 5;
         
         Dataset trainingData = generateDataset();

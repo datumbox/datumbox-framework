@@ -47,7 +47,7 @@ public class ModelerTest {
     @Test
     public void testTrainAndValidate() {
         TestUtils.log(this.getClass(), "testTrainAndValidate");
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         
         
         Dataset trainingData = new Dataset();

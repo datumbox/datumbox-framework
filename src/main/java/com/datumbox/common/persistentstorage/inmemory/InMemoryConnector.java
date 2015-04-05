@@ -24,11 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import java.util.HashMap;
 
 
 /**

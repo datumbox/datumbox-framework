@@ -80,9 +80,11 @@ public class CETR {
         }
     }
     
+    private final String dbName;
     private final DatabaseConfiguration dbConf;
     
-    public CETR(DatabaseConfiguration dbConf) {
+    public CETR(String dbName, DatabaseConfiguration dbConf) {
+        this.dbName = dbName;
         this.dbConf = dbConf;
     }
     
@@ -184,7 +186,6 @@ public class CETR {
     }
 
     private void performClustering(Dataset dataset, int numberOfClusters) {
-        String dbName = new BigInteger(130, RandomValue.randomGenerator).toString(32);
         Kmeans instance = new Kmeans(dbName, dbConf);
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();

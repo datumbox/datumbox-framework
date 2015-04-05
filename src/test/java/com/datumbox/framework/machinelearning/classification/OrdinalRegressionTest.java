@@ -649,7 +649,7 @@ public class OrdinalRegressionTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         
         Dataset trainingData = generateTrainingData();
         
@@ -705,7 +705,7 @@ public class OrdinalRegressionTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         int k = 5;
         
         Dataset trainingData = generateTrainingData();

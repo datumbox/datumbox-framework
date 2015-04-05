@@ -745,7 +745,7 @@ public class SoftMaxRegressionTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         int k = 5;
         
         Dataset trainingData = new Dataset();

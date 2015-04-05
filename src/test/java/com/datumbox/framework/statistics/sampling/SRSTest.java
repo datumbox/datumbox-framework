@@ -42,7 +42,7 @@ public class SRSTest {
     }
     
     /**
-     * Test of weightedProbabilitySampling method, of class SRS.
+     * Test of weightedSampling method, of class SRS.
      */
     @Test
     public void testWeightedProbabilitySampling() {
@@ -56,7 +56,7 @@ public class SRSTest {
         int n = 100;
         boolean withReplacement = true;
         double expResult = n;
-        FlatDataCollection sampledIds = SRS.weightedProbabilitySampling(frequencyTable, n, withReplacement);
+        FlatDataCollection sampledIds = SRS.weightedSampling(frequencyTable, n, withReplacement);
         double result = sampledIds.size();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }

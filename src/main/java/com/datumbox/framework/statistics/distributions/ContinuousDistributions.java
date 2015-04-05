@@ -653,7 +653,7 @@ public class ContinuousDistributions {
     public static double[] multinomialGaussianSample(double[] mean, double[][] covariance) {
         MultivariateNormalDistribution gaussian = new 
             MultivariateNormalDistribution(mean, covariance);
-        gaussian.reseedRandomGenerator(RandomValue.randomGenerator.nextLong());
+        gaussian.reseedRandomGenerator(RandomValue.getRandomGenerator().nextLong());
         return gaussian.sample();
     }
     

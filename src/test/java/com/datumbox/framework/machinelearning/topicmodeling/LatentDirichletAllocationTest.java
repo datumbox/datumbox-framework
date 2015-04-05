@@ -54,7 +54,7 @@ public class LatentDirichletAllocationTest {
     public void testValidate() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "validate");
         
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         
         
         String dbName = "JUnitTopicSelection";

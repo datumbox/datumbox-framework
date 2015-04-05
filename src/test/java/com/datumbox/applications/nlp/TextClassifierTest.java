@@ -51,7 +51,7 @@ public class TextClassifierTest {
     @Test
     public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "TrainAndPredict");
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         
         
         String dbName = "JUnit";

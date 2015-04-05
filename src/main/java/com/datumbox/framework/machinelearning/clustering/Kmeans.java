@@ -565,7 +565,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 }
                 
                 Descriptives.normalize(minClusterDistanceArray);
-                Integer selectedRecordId = (Integer)SRS.weightedProbabilitySampling(minClusterDistanceArray, 1, true).iterator().next();
+                Integer selectedRecordId = (Integer)SRS.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
                 
                 dbc.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
                 minClusterDistanceArray = null;

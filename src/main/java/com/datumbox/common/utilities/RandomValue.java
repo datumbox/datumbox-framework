@@ -23,7 +23,15 @@ import java.util.Random;
  * @author bbriniotis
  */
 public class RandomValue {
-    public static Random randomGenerator = new Random();
+    private static Random randomGenerator = new Random();
+    
+    public static Random getRandomGenerator() {
+        return randomGenerator;
+    }
+
+    public static void setRandomGenerator(Random randomGenerator) {
+        RandomValue.randomGenerator = randomGenerator;
+    }
     
     public static double doubleRand(double min, double max) {
         return min + (randomGenerator.nextDouble() * (max - min));

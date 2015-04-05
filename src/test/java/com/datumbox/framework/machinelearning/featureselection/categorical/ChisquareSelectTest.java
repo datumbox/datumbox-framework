@@ -78,7 +78,7 @@ public class ChisquareSelectTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomValue.randomGenerator = new Random(42);
+        RandomValue.setRandomGenerator(new Random(42));
         
         String dbName = "JUnitChisquareFeatureSelection";
         

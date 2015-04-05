@@ -315,7 +315,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 //normalize probabilities P(z[i])
                 Descriptives.normalizeExp(condProbCiGivenXiAndOtherCi);
                 
-                Integer sampledClusterId = (Integer)SRS.weightedProbabilitySampling(condProbCiGivenXiAndOtherCi, 1, true).iterator().next();
+                Integer sampledClusterId = (Integer)SRS.weightedSampling(condProbCiGivenXiAndOtherCi, 1, true).iterator().next();
                 condProbCiGivenXiAndOtherCi=null;
                 
                 //Add Xi back to the sampled Cluster

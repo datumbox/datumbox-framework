@@ -192,11 +192,11 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
-        Map<Object, Object> tmp_observationWeights = dbc.getBigMap("tmp_observationWeights", true);
+        AssociativeArray observationWeights = new AssociativeArray();
         
         //calculate the training parameters of bagging
         for(Integer rId : trainingData) { 
-            tmp_observationWeights.put(rId, 1.0/n); //initialize observation weights
+            observationWeights.put(rId, 1.0/n); //initialize observation weights
         }
         
         Class<? extends BaseMLclassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();
@@ -205,7 +205,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //training the weak classifiers
         for(int t=0;t<totalWeakClassifiers;++t) {
-            FlatDataCollection sampledIDs = SRS.weightedProbabilitySampling(new AssociativeArray(tmp_observationWeights), n, true);
+            FlatDataCollection sampledIDs = SRS.weightedSampling(observationWeights, n, true);
             
             Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs.toFlatDataList());
             
@@ -228,7 +228,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             mlclassifier = null;
             
             //TODO: This is wrong!!! The validationDataset no longer has the same IDs as in the tmp_observationWeights. We need to create a mapping between the Ids.
-            boolean stop = updateObservationAndClassifierWeights(validationDataset, tmp_observationWeights);
+            boolean stop = updateObservationAndClassifierWeights(validationDataset, observationWeights);
             
             validationDataset = null;
             
@@ -237,8 +237,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             }
         }
         
-        //Drop the temporary Collection
-        dbc.dropBigMap("tmp_observationWeights", tmp_observationWeights);
     }
 
     /**
@@ -248,7 +246,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      * @param observationWeights
      * @return 
      */
-    protected abstract boolean updateObservationAndClassifierWeights(Dataset validationDataset, Map<Object, Object> observationWeights);
+    protected abstract boolean updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights);
     
     @Override
     public void erase() {

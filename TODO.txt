@@ -2,7 +2,7 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
-- Fix failing tests on Adaboost and BoostrapAggregating when MapDB is used.
+- BaseBoostingBagging - Replace this with a BigMap: DataTable2D[] recordDecisionsArray = new DataTable2D[n]; 
 - Make Record immutable.
 - Fix the bug on Adaboost
 - Fix all the recorded TODOs

@@ -16,6 +16,7 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -62,12 +64,16 @@ public class CETRTest {
     @Test
     public void testExtract() {
         TestUtils.log(this.getClass(), "extract");
+        RandomValue.setRandomGenerator(new Random(42)); 
+        
+        String dbName = "JUnitClusterer";
+        
         String text = CETRTest.webRequest("http://www.example.org/");
         CETR.Parameters parameters = new CETR.Parameters();
         parameters.setNumberOfClusters(2);
         parameters.setAlphaWindowSizeFor2DModel(3);
         parameters.setSmoothingAverageRadius(2);
-        CETR instance = new CETR(TestUtils.getDBConfig());
+        CETR instance = new CETR(dbName, TestUtils.getDBConfig());
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
         String result = instance.extract(text, parameters);
         instance=null;
