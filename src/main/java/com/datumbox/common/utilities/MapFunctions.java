@@ -254,7 +254,7 @@ public class MapFunctions {
           }
         });
         
-        AssociativeArray sortedAssociativeArray = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray sortedAssociativeArray = new AssociativeArray();
         for (Map.Entry<Object, Object> entry : entries) {
           sortedAssociativeArray.put(entry.getKey(), entry.getValue());
         }
@@ -279,7 +279,7 @@ public class MapFunctions {
           }
         });
         
-        AssociativeArray sortedAssociativeArray = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray sortedAssociativeArray = new AssociativeArray();
         for (Map.Entry<Object, Object> entry : entries) {
           sortedAssociativeArray.put(entry.getKey(), entry.getValue());
         }

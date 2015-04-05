@@ -40,7 +40,7 @@ public class Ranks {
      * @return
      */
     public static AssociativeArray getRanksFromValues(FlatDataList flatDataCollection) {
-        AssociativeArray tiesCounter = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray tiesCounter = new AssociativeArray();
         Map<Object, Double> key2AvgRank = new LinkedHashMap<>();
         _buildRankArrays(flatDataCollection, tiesCounter, key2AvgRank);
         int i = 0;
@@ -60,7 +60,7 @@ public class Ranks {
      * @return
      */
     public static AssociativeArray getRanksFromValues(AssociativeArray associativeArray) {
-        AssociativeArray tiesCounter = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray tiesCounter = new AssociativeArray();
         Map<Object, Double> key2AvgRank = new LinkedHashMap<>();
         _buildRankArrays(associativeArray.toFlatDataList(), tiesCounter, key2AvgRank);
         for (Map.Entry<Object, Object> entry : associativeArray.entrySet()) {

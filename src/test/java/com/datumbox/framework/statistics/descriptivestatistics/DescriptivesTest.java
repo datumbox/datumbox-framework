@@ -26,7 +26,6 @@ import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -311,7 +310,7 @@ public class DescriptivesTest {
     public void testCovariance() {
         TestUtils.log(this.getClass(), "covariance");
         
-        TransposeDataList transposeDataList = new TransposeDataList(new LinkedHashMap<>());
+        TransposeDataList transposeDataList = new TransposeDataList();
         
         transposeDataList.put(0, new FlatDataList(Arrays.asList(new Object[]{56,75,45,71,61,64,58,80,76,61})));
         transposeDataList.put(1, new FlatDataList(Arrays.asList(new Object[]{66,70,40,60,65,56,59,77,67,63})));

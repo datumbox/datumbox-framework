@@ -17,7 +17,7 @@
 package com.datumbox.common.dataobjects;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +29,7 @@ import java.util.Set;
 public class AssociativeArray2D extends DataStructureMap<Map<Object, AssociativeArray>> {
     
     public AssociativeArray2D() {
-        internalData = new HashMap<>();
+        internalData = new LinkedHashMap<>();
     }
     
     public AssociativeArray2D(Map<Object, AssociativeArray> internalData) {
@@ -77,9 +77,7 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
     }
     
     /**
-     * Convenience function used to put a value in a particular key positions; 
-     * it should be used only when the internal AssociativeArray is declared
-     * as HashMap.
+     * Convenience function used to put a value in a particular key positions.
      * 
      * @param key1
      * @param key2

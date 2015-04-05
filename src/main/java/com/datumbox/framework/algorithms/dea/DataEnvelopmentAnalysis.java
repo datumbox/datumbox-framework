@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.framework.mathematics.linearprogramming.LPSolver;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lpsolve.LpSolve;
@@ -129,7 +128,7 @@ public class DataEnvelopmentAnalysis {
      * @return          Map with the scores of the records 
      */
     public AssociativeArray estimateEfficiency(Map<Object, DeaRecord> id2DeaRecordMapDatabase, Map<Object, DeaRecord> id2DeaRecordMapEvaluation) {        
-        AssociativeArray evaluatedResults = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray evaluatedResults = new AssociativeArray();
         
         List<LPSolver.LPConstraint> constraints = new ArrayList<>();
         

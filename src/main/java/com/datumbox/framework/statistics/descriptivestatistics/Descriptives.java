@@ -17,14 +17,12 @@
 package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.utilities.TypeConversions;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -474,7 +472,7 @@ public class Descriptives {
             throw new IllegalArgumentException();
         }
         
-        AssociativeArray percintiles = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray percintiles = new AssociativeArray();
         
         Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
@@ -624,7 +622,7 @@ public class Descriptives {
             throw new IllegalArgumentException();
         }
         
-        AssociativeArray frequencies = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray frequencies = new AssociativeArray();
         
         for (Object value : flatDataCollection) {
             Object counter = frequencies.get(value);

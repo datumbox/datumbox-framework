@@ -77,14 +77,6 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         //Wrapper methods for the recordIdSet
         
-        public boolean isEmpty() {
-            return recordIdSet.isEmpty();
-        }
-        
-        public boolean contains(Record r) {
-            return recordIdSet.contains(r.getId());
-        }
-        
         public int size() {
             if(recordIdSet == null) {
                 return 0;

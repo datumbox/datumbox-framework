@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 /**
@@ -152,7 +151,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @return 
      */
     public TransposeDataList extractColumnValuesByY(Object column) {
-        TransposeDataList transposeDataList = new TransposeDataList(new LinkedHashMap<>());
+        TransposeDataList transposeDataList = new TransposeDataList();
         
         for(Record r : recordList.values()) {    
             if(!transposeDataList.containsKey(r.getY())) {

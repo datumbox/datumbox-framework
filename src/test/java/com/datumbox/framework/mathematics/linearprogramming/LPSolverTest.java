@@ -16,7 +16,6 @@
  */
 package com.datumbox.framework.mathematics.linearprogramming;
 
-import com.datumbox.framework.mathematics.linearprogramming.LPSolver;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;

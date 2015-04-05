@@ -18,6 +18,8 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
+import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -65,12 +67,14 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
-        expResult.put("class2", 1.8330000000000002);
-        expResult.put("class3", 1.233);
         expResult.put("class1", 0.933);
+        expResult.put("class2", 1.833);
+        expResult.put("class3", 1.233);
         
         AssociativeArray result = FixedCombinationRules.sum(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
 
     /**
@@ -82,12 +86,15 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
-        expResult.put("class2", 0.45825000000000005);
-        expResult.put("class3", 0.30825);
         expResult.put("class1", 0.23325);
+        expResult.put("class2", 0.45825);
+        expResult.put("class3", 0.30825);
         
         AssociativeArray result = FixedCombinationRules.average(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
+        
     }
 
     /**
@@ -104,12 +111,14 @@ public class FixedCombinationRulesTest {
         classifierWeights.put("Classifier4", 0.1);
 
         AssociativeArray expResult = new AssociativeArray();
-        expResult.put("class2", 0.5033);
-        expResult.put("class3", 0.32330000000000003);
         expResult.put("class1", 0.1733);
+        expResult.put("class2", 0.5033);
+        expResult.put("class3", 0.3233);
         
         AssociativeArray result = FixedCombinationRules.weightedAverage(classifierClassProbabilityMatrix, classifierWeights);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
 
     /**
@@ -121,12 +130,14 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
+        expResult.put("class1", 0.2665);
         expResult.put("class2", 0.45);
         expResult.put("class3", 0.3165);
-        expResult.put("class1", 0.2665);
         
         AssociativeArray result = FixedCombinationRules.median(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
 
     /**
@@ -138,12 +149,14 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
+        expResult.put("class1", 0.4);
         expResult.put("class2", 0.6);
         expResult.put("class3", 0.4);
-        expResult.put("class1", 0.4);
         
         AssociativeArray result = FixedCombinationRules.maximum(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
 
     /**
@@ -155,12 +168,14 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
+        expResult.put("class1", 0.0);
         expResult.put("class2", 0.333);
         expResult.put("class3", 0.2);
-        expResult.put("class1", 0.0);
         
         AssociativeArray result = FixedCombinationRules.minimum(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
 
     /**
@@ -172,12 +187,14 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
+        expResult.put("class1", 0.0);
         expResult.put("class2", 0.03996);
         expResult.put("class3", 0.007992);
-        expResult.put("class1", 0.0);
         
         AssociativeArray result = FixedCombinationRules.product(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
 
     /**
@@ -189,12 +206,14 @@ public class FixedCombinationRulesTest {
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
-        expResult.put("class2", 3.0);
-        expResult.put("class3", 1.0);
-        expResult.put("class1", 0.0);
+        expResult.put("class1", 2.0);
+        expResult.put("class2", 2.0);
+        expResult.put("class3", 0.0);
         
         AssociativeArray result = FixedCombinationRules.majorityVote(classifierClassProbabilityMatrix);
-        assertEquals(expResult, result);
+        for(Object k: expResult.keySet()) {
+            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        }
     }
     
 }

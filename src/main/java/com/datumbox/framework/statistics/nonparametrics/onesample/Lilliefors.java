@@ -18,7 +18,6 @@ package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -26,7 +25,6 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -40,7 +38,7 @@ public class Lilliefors {
      */
     public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
-    protected static final DataTable2D CRITICAL_VALUES = new DataTable2D(new LinkedHashMap<>()); //maintain the order to the first keys
+    protected static final DataTable2D CRITICAL_VALUES = new DataTable2D(); //maintain the order to the first keys
     static {
         //The first key stores the aLevel (statistical significance).
         //The second one stores the number of observations in sample. The values are from 0-30.

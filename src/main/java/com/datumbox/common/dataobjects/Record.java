@@ -17,7 +17,6 @@
 package com.datumbox.common.dataobjects;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.Objects;
 
 /**
@@ -41,7 +40,7 @@ public final class Record implements Serializable {
     private AssociativeArray yPredictedProbabilities;
     
     public Record() {
-        x = new AssociativeArray(new LinkedHashMap<>());
+        x = new AssociativeArray();
     }
     
     // new record methods

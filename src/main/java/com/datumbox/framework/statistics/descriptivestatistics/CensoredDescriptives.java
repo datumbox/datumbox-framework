@@ -18,11 +18,9 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.utilities.TypeConversions;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -50,7 +48,7 @@ public class CensoredDescriptives {
      * @throws IllegalArgumentException 
      */
     public static AssociativeArray2D survivalFunction(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
-        AssociativeArray2D survivalFunction = new AssociativeArray2D(new LinkedHashMap<>()); //LinkedHashMap is important to maintain the order of the first key of the AssociativeArray2D
+        AssociativeArray2D survivalFunction = new AssociativeArray2D(); //AssociativeArray2D is important to maintain the order of the first keys
         
         Queue<Double> censoredData = new PriorityQueue<>();
         Queue<Double> uncensoredData = new PriorityQueue<>();

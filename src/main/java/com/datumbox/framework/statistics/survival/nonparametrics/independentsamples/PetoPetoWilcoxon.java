@@ -18,7 +18,6 @@ package com.datumbox.framework.statistics.survival.nonparametrics.independentsam
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.utilities.TypeConversions;
@@ -26,7 +25,6 @@ import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescripti
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -88,7 +86,7 @@ public class PetoPetoWilcoxon {
         
         Double currentCensored = null;
         Double currentUncensored = null;
-        AssociativeArray2D testTable = new AssociativeArray2D(new LinkedHashMap<>());
+        AssociativeArray2D testTable = new AssociativeArray2D();
         
         do {
             if(currentCensored==null) {

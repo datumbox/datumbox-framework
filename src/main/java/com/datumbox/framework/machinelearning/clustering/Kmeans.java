@@ -31,9 +31,7 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLcluste
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,7 +58,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         public Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record();
-            xi_sum = new AssociativeArray(new LinkedHashMap<>());
+            xi_sum = new AssociativeArray();
         }
     
         public Record getCentroid() {
@@ -78,11 +76,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         @Override
         protected boolean remove(Record r) {
-            boolean result = recordIdSet.remove(r.getId());
-            if(result) {
-                xi_sum.subtractValues(r.getX());
-            }
-            return result;
+            //No need to implement this method in this algorithm
+            throw new UnsupportedOperationException();
         }
         
         public boolean updateClusterParameters() {
@@ -90,7 +85,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             int size = recordIdSet.size();
             
-            AssociativeArray centoidValues = new AssociativeArray(new LinkedHashMap<>());
+            AssociativeArray centoidValues = new AssociativeArray();
             centoidValues.addValues(xi_sum);
             
             if(size>0) {

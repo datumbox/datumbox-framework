@@ -2,8 +2,8 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
-- Make Record immutable
-- Add MapDB support in the Dataset.
+- Make Record immutable.
+- Add MapDB support in the Dataset. In that case the DeepCopy.<Dataset>cloneObject() will not work. A clone() must be build on Dataset that copies that Object instead.
 
 lmpampaletakis:
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?

@@ -17,13 +17,11 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -47,7 +45,7 @@ public class WilcoxonOneSample {
      */
     public static double getPvalue(FlatDataCollection flatDataCollection, double median) throws IllegalArgumentException {
         int n=0;
-        AssociativeArray Di = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray Di = new AssociativeArray();
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             double delta=it.next()-median;

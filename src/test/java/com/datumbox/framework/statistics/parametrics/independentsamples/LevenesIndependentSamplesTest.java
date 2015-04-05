@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.TransposeDataCollection;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -40,7 +39,7 @@ public class LevenesIndependentSamplesTest {
     @Test
     public void testTestVariances() {
         TestUtils.log(this.getClass(), "testVariances");
-        TransposeDataCollection transposeDataCollection = new TransposeDataCollection(new LinkedHashMap<>());
+        TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{60.8,57.0,65.0,58.6,61.7})));
         transposeDataCollection.put(1, new FlatDataCollection(Arrays.asList(new Object[]{68.7,67.7,74.0,66.3,69.8})));

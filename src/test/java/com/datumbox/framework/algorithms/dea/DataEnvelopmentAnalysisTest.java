@@ -65,7 +65,7 @@ public class DataEnvelopmentAnalysisTest {
         Map<Object, DataEnvelopmentAnalysis.DeaRecord> id2DeaRecordMapEvaluation = new LinkedHashMap<>(id2DeaRecordMapDatabase);
         
         DataEnvelopmentAnalysis instance = new DataEnvelopmentAnalysis();
-        AssociativeArray expResult = new AssociativeArray(new LinkedHashMap<>());
+        AssociativeArray expResult = new AssociativeArray();
         
         expResult.put("Depot1", 0.82038345105954);
         expResult.put("Depot2", 0.94174174174174);

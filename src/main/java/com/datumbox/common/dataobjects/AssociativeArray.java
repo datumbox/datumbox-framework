@@ -19,7 +19,7 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.utilities.TypeConversions;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +32,7 @@ import java.util.Set;
 public final class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
     
     public AssociativeArray() {
-        internalData = new HashMap<>();
+        internalData = new LinkedHashMap<>();
     }
     
     public AssociativeArray(Map<Object, Object> internalData) {

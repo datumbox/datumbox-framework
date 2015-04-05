@@ -17,7 +17,7 @@
 package com.datumbox.common.dataobjects;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +28,7 @@ import java.util.Set;
 public final class TransposeDataCollection extends DataStructureMap<Map<Object, FlatDataCollection>> {
     
     public TransposeDataCollection() {
-        internalData = new HashMap<>();
+        internalData = new LinkedHashMap<>();
     }
     
     public TransposeDataCollection(Map<Object, FlatDataCollection> internalData) {
