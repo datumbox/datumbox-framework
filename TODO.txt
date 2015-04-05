@@ -2,7 +2,6 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
-- BaseBoostingBagging - Replace this with a BigMap: DataTable2D[] recordDecisionsArray = new DataTable2D[n]; 
 - Make Record immutable.
 - Fix the bug on Adaboost
 - Fix all the recorded TODOs

@@ -119,12 +119,14 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         Class<? extends BaseMLclassifier> weakClassifierClass = knowledgeBase.getTrainingParameters().getWeakClassifierClass();
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
         
-        int n = newData.size();
+        //create a temporary map for the observed probabilities in training set
+        DatabaseConnector dbc = knowledgeBase.getDbc();
+        Map<Object, Object> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", true);
         
         //initialize array of recordDecisions
-        DataTable2D[] recordDecisionsArray = new DataTable2D[n];
+        AssociativeArray recordDecisionsArray = new AssociativeArray(tmp_recordDecisions);
         for(Integer rId : newData) {
-            recordDecisionsArray[rId]= new DataTable2D();
+            recordDecisionsArray.put(rId, new DataTable2D());
         }
         
         //using the weak classifiers
@@ -141,7 +143,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 Record r = newData.get(rId);
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
-                DataTable2D currentRecordDecisions = recordDecisionsArray[rId];
+                DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
                 
                 currentRecordDecisions.put(t, classProbabilities);
             }
@@ -150,7 +152,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         //for each record find the combined classification by majority vote
         for(Integer rId : newData) {
             Record r = newData.get(rId);
-            DataTable2D currentRecordDecisions = recordDecisionsArray[rId];
+            DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
             
             AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(currentRecordDecisions, classifierWeightsArray);
             Descriptives.normalize(combinedClassVotes);
@@ -158,7 +160,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             newData.set(rId, new Record(r.getX(), r.getY(), MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey(), combinedClassVotes));
         }
         
-        recordDecisionsArray = null;
+        //Drop the temporary Collection
+        dbc.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
     }
     
     @Override
@@ -188,8 +191,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         modelParameters.setC(c);
         
         
-        //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //Define it as Object,Object instead of Interger,Double to be able to wrap it in an AssociativeArray and use the Statistics Layer
         AssociativeArray observationWeights = new AssociativeArray();

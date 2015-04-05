@@ -25,11 +25,11 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class TestConfiguration {
-    public static double DOUBLE_ACCURACY_HIGH=0.000001;
-    public static double DOUBLE_ACCURACY_MEDIUM=0.01;
-    public static double DOUBLE_ACCURACY_LOW=0.5;
+    public static final double DOUBLE_ACCURACY_HIGH=0.000001;
+    public static final double DOUBLE_ACCURACY_MEDIUM=0.01;
+    public static final double DOUBLE_ACCURACY_LOW=0.5;
     
-    //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
-    public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
+    public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
+    //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
     
 }
