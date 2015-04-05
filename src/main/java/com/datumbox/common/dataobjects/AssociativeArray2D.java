@@ -36,6 +36,14 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
         super(internalData);
     }
     
+    public AssociativeArray2D copy() {
+        AssociativeArray2D aArray2D = new AssociativeArray2D();
+        for(Map.Entry<Object, AssociativeArray> entry: internalData.entrySet()) {
+            aArray2D.internalData.put(entry.getKey(), new AssociativeArray(entry.getValue()));
+        }
+        return aArray2D;
+    }
+    
     public final AssociativeArray remove(Object key) {
         return internalData.remove(key);
     }

@@ -21,7 +21,10 @@ import java.util.Collections;
 import java.util.Objects;
 
 /**
- *
+ * The Record is the object that stores all the entries of the Dataset and it contains
+ * information about the x, y, predicted class and predicted probabilities of the
+ * observation. The record is immutable.
+ * 
  * @author bbriniotis
  */
 public final class Record implements Serializable {

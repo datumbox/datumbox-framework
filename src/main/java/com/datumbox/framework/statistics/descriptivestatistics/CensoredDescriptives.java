@@ -228,7 +228,7 @@ public class CensoredDescriptives {
         
         AssociativeArray lastRow = lastRowEntry.getValue();
         if(lastRow.get("Sti")==null) { //if the last record is censored we must close the line
-            survivalFunctionCopy = DeepCopy.<AssociativeArray2D>cloneObject(survivalFunction); //copy internalData to avoid modifying the internalData
+            survivalFunctionCopy = survivalFunction.copy(); //copy internalData to avoid modifying the internalData
             
             Object lastRowKey = lastRowEntry.getKey();
             AssociativeArray lastRowValue = survivalFunctionCopy.remove(lastRowKey);
