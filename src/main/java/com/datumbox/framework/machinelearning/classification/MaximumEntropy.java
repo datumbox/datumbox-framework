@@ -112,8 +112,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             Descriptives.normalizeExp(predictionScores);
             
-            r.setYPredicted(theClass);
-            r.setYPredictedProbabilities(predictionScores);
+            newData.set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
         }
     }
     

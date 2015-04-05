@@ -85,11 +85,7 @@ public class LatentDirichletAllocationTest {
         for(Integer rId : trainingData) {
             Record r = trainingData.get(rId);
             //take the topic assignments and convert them into a new Record
-            Record newRecord = new Record();
-            newRecord.setX(r.getYPredictedProbabilities());
-            newRecord.setY(r.getY());
-            
-            reducedTrainingData.add(newRecord);
+            reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }
         
         SoftMaxRegression smr = new SoftMaxRegression(dbName, TestUtils.getDBConfig());

@@ -2,6 +2,7 @@ CODE IMPROVEMENTS
 =================
 
 bbriniotis:
+- Fix failing tests on Adaboost and BoostrapAggregating when MapDB is used.
 - Make Record immutable.
 - Fix the bug on Adaboost
 - Fix all the recorded TODOs

@@ -42,36 +42,34 @@ public class ChisquareSelectTest {
     public static Dataset generateDataset(int n) {
         Dataset data = new Dataset();
         for(int i=0;i<n;++i) {
-            Record r = new Record();
-            r.setX(new AssociativeArray());
+            AssociativeArray xData = new AssociativeArray();
             //important fields
-            r.getX().put("high_paid", (PHPfunctions.mt_rand(0, 4)>3)?1:0);
-            r.getX().put("has_boat", PHPfunctions.mt_rand(0, 1));
-            r.getX().put("has_luxury_car", PHPfunctions.mt_rand(0, 1));
-            r.getX().put("has_butler", PHPfunctions.mt_rand(0, 1));
-            //r.getX().put("has_butler", (PHPfunctions.mt_rand(0, 1)==1)?"yes":"no");
-            r.getX().put("has_pool", PHPfunctions.mt_rand(0, 1));
+            xData.put("high_paid", (PHPfunctions.mt_rand(0, 4)>3)?1:0);
+            xData.put("has_boat", PHPfunctions.mt_rand(0, 1));
+            xData.put("has_luxury_car", PHPfunctions.mt_rand(0, 1));
+            xData.put("has_butler", PHPfunctions.mt_rand(0, 1));
+            //xData.put("has_butler", (PHPfunctions.mt_rand(0, 1)==1)?"yes":"no");
+            xData.put("has_pool", PHPfunctions.mt_rand(0, 1));
             
             //not important fields
-            r.getX().put("has_tv", PHPfunctions.mt_rand(0, 1));
-            r.getX().put("has_dog", PHPfunctions.mt_rand(0, 1));
-            r.getX().put("has_cat", PHPfunctions.mt_rand(0, 1));
-            r.getX().put("has_fish", PHPfunctions.mt_rand(0, 1));
-            r.getX().put("random_field", (double)PHPfunctions.mt_rand(0, 1000));
+            xData.put("has_tv", PHPfunctions.mt_rand(0, 1));
+            xData.put("has_dog", PHPfunctions.mt_rand(0, 1));
+            xData.put("has_cat", PHPfunctions.mt_rand(0, 1));
+            xData.put("has_fish", PHPfunctions.mt_rand(0, 1));
+            xData.put("random_field", (double)PHPfunctions.mt_rand(0, 1000));
             
-            double richScore = r.getX().getDouble("has_boat")
-                             + r.getX().getDouble("has_luxury_car")
-                             //+ ((r.getX().get("has_butler").equals("yes"))?1.0:0.0)
-                             + r.getX().getDouble("has_butler")
-                             + r.getX().getDouble("has_pool");
+            double richScore = xData.getDouble("has_boat")
+                             + xData.getDouble("has_luxury_car")
+                             //+ ((xData.get("has_butler").equals("yes"))?1.0:0.0)
+                             + xData.getDouble("has_butler")
+                             + xData.getDouble("has_pool");
             
             Boolean isRich=false;
-            if(richScore>=2 || r.getX().getDouble("high_paid")==1.0) {
+            if(richScore>=2 || xData.getDouble("high_paid")==1.0) {
                 isRich = true;
             }
             
-            r.setY(isRich);
-            data.add(r);
+            data.add(new Record(xData, isRich));
         }
         
         return data;

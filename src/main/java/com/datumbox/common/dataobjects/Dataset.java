@@ -262,6 +262,20 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
+     * Sets the record in a particular id in dataset.
+     * 
+     * @param rId
+     * @param r
+     * @return 
+     */
+    public Integer set(Integer rId, Record r) {
+        recordList.put(rId, r);
+        updateMeta(r);
+        
+        return rId;
+    }
+    
+    /**
      * Clears the Dataset and removes the internal variables.
      */
     public void clear() {

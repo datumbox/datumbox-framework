@@ -199,7 +199,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         RealVector Y = X.operate(coefficients);
         for(Integer rId : newData) {
             Record r = newData.get(rId);
-            r.setYPredicted(Y.getEntry(rId));
+            newData.set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rId), null));
         }
         
         matrixDataset = null;

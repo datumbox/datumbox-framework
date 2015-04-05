@@ -231,7 +231,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 CL cluster = createNewCluster(newClusterId);
 
                 //add the record in the new cluster
-                r.setYPredicted(newClusterId);
+                r = new Record(r.getX(), r.getY(), newClusterId, null);
+                dataset.set(rId, r);
+                
                 cluster.add(rId, r);
 
                 //add the cluster in clusterList
@@ -263,7 +265,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 
                 int assignedClusterId = PHPfunctions.mt_rand(0, clusterMapSize-1);
                 
-                r.setYPredicted(assignedClusterId);
+                r = new Record(r.getX(), r.getY(), assignedClusterId, null);
+                dataset.set(rId, r);
+                
                 tempClusterMap.get((Integer)assignedClusterId).add(rId, r);
             }
         }
@@ -317,7 +321,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 //Add Xi back to the sampled Cluster
                 if(Objects.equals(sampledClusterId, newClusterId)) { //if new cluster
                     //add the record in the new cluster
-                    r.setYPredicted(newClusterId);
+                    r = new Record(r.getX(), r.getY(), newClusterId, null);
+                    dataset.set(rId, r);
+                    
                     cNew.add(rId, r);
                     
                     //add the cluster in clusterList
@@ -328,7 +334,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                     ++newClusterId;
                 }
                 else {
-                    r.setYPredicted(sampledClusterId);
+                    r = new Record(r.getX(), r.getY(), sampledClusterId, null);
+                    dataset.set(rId, r);
                     
                     tempClusterMap.get(sampledClusterId).add(rId, r);
                     if(noChangeMade && !Objects.equals(pointClusterId, sampledClusterId)) {
@@ -392,12 +399,12 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 double probability = c.posteriorLogPdf(r);
                 clusterScores.put(c.getClusterId(), probability);
             }
-            
-            r.setYPredicted(getSelectedClusterFromScores(clusterScores));
+           
             
             Descriptives.normalizeExp(clusterScores);
             
-            r.setYPredictedProbabilities(clusterScores);
+            r = new Record(r.getX(), r.getY(), getSelectedClusterFromScores(clusterScores), clusterScores);
+            newData.set(rId, r);
         }
         
     }

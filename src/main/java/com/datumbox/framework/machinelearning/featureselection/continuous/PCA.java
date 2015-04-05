@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.continuous;
 
+import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ContinuousFeatureSelection;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.MatrixDataset;
@@ -292,16 +293,15 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         for(Integer rId : newData) {
             Record r = newData.get(rId);
             
-            Record newR = new Record();
+            AssociativeArray xData = new AssociativeArray();
             int componentId=0;
             for(double value : X.getRow(rId)) {
-                newR.getX().put(componentId, value);
+                xData.put(componentId, value);
                 ++componentId;
             }
-            newR.setY(r.getY());
             
             //TODO: instead of creating a transformed dataset, call update() instead and then resetMeta() instead of merge
-            transformedDataset.add(newR);
+            transformedDataset.add(new Record(xData, r.getY()));
         }
         
         newData.clear();

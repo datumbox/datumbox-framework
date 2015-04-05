@@ -96,8 +96,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         
         Map<Object, Double> cachedLogPriors = new HashMap<>(logPriors); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
         
-        for(Integer id : newData) {
-            Record r = newData.get(id);
+        for(Integer rId : newData) {
+            Record r = newData.get(rId);
             //Build new map here! reinitialize the prediction scores with the scores of the classes
             AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(cachedLogPriors)); 
             
@@ -152,8 +152,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
             
             Descriptives.normalizeExp(predictionScores);
             
-            r.setYPredicted(theClass);
-            r.setYPredictedProbabilities(predictionScores);
+            newData.set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
         }
         
     }

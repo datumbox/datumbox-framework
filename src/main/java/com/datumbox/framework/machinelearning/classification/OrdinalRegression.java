@@ -163,8 +163,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             
             Object theClass=getSelectedClassFromClassScores(predictionProbabilities);
             
-            r.setYPredicted(theClass);
-            r.setYPredictedProbabilities(predictionProbabilities);
+            newData.set(rId, new Record(r.getX(), r.getY(), theClass, predictionProbabilities));
         }
     }
     

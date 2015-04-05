@@ -17,6 +17,7 @@
 package com.datumbox.common.dataobjects;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -26,62 +27,67 @@ import java.util.Objects;
 public final class Record implements Serializable {
     
     /* The X vector of the Record */
-    private AssociativeArray x;
+    private final AssociativeArray x;
     
     /* The Y response variable of the Record */
-    private Object y;
+    private final Object y;
     
     /* The Y predicted response variable of the Record */
-    private Object yPredicted;
+    private final Object yPredicted;
     
     /* The probabilities of yPredicted values (applicable only in classifiers and some clustering algorithms) */
-    private AssociativeArray yPredictedProbabilities;
+    private final AssociativeArray yPredictedProbabilities;
     
-    public Record() {
-        x = new AssociativeArray();
+    
+    // Constructors
+    public Record(AssociativeArray x, Object y) {
+        this(x, y, null, null);
+    }
+    
+    public Record(AssociativeArray x, Object y, Object yPredicted, AssociativeArray yPredictedProbabilities) {
+        this.x = new AssociativeArray(x.internalData);
+        this.y = y;
+        this.yPredicted = yPredicted;
+        if (yPredictedProbabilities != null) {
+            this.yPredictedProbabilities = new AssociativeArray(yPredictedProbabilities.internalData);
+        }
+        else {
+            this.yPredictedProbabilities = null;
+        }
     }
     
     // new record methods
     public static <T> Record newDataVector(T[] xArray, Object y) {
-        Record r = new Record();
-        r.y=y;
+        AssociativeArray x = new AssociativeArray();
         for(int i=0;i<xArray.length;++i) {
-            r.x.internalData.put(i, xArray[i]);
+            x.internalData.put(i, xArray[i]);
         }
-        return r;
+        return new Record(x, y);
     }
     
 
     public AssociativeArray getX() {
+        if(x == null) {
+            return null;
+        }
+        //TODO: make it readonly
+        //return new AssociativeArray(Collections.unmodifiableMap(x.internalData));
         return x;
-    }
-
-    public void setX(AssociativeArray x) {
-        this.x = x;
     }
 
     public Object getY() {
         return y;
     }
 
-    public void setY(Object y) {
-        this.y = y;
-    }
-
     public Object getYPredicted() {
         return yPredicted;
     }
 
-    public void setYPredicted(Object yPredicted) {
-        this.yPredicted = yPredicted;
-    }
-
     public AssociativeArray getYPredictedProbabilities() {
-        return yPredictedProbabilities;
-    }
-
-    public void setYPredictedProbabilities(AssociativeArray yPredictedProbabilities) {
-        this.yPredictedProbabilities = yPredictedProbabilities;
+        if(yPredictedProbabilities == null) {
+            return null;
+        }
+        return new AssociativeArray(Collections.unmodifiableMap(yPredictedProbabilities.internalData));
     }
 
     @Override

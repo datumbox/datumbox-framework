@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
@@ -312,11 +311,9 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //loop through every line of the text array
         for(String line : text) {
-            Record r = new Record();
-                        
             //extract features of the string and add every keyword combination in X map
-            r.getX().putAll(textExtractor.extract(StringCleaner.clear(line)));
-
+            Record r = new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), null);
+            
             //add each example in the newData
             newData.add(r); 
         }

@@ -16,6 +16,7 @@
  */
 package com.datumbox.framework.utilities.dataset;
 
+import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 
@@ -75,14 +76,8 @@ public class DatasetBuilder {
             
             Dataset classDataset = new Dataset();
             for(String text : textList) {
-                Record r = new Record();
-                r.setY(theClass);
-
                 //extract features of the string and add every keyword combination in X map
-                r.getX().putAll(textExtractor.extract(StringCleaner.clear(text)));
-                
-                //add each example in the classDataset
-                classDataset.add(r); 
+                classDataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(text))), theClass)); 
             }
             
             
@@ -110,14 +105,8 @@ public class DatasetBuilder {
             try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
                 //read strings one by one
                 for(String line; (line = br.readLine()) != null; ) {
-                    Record r = new Record();
-                    r.setY(theClass);
-                    
                     //extract features of the string and add every keyword combination in X map
-                    r.getX().putAll(textExtractor.extract(StringCleaner.clear(line)));
-                    
-                    //add each example in the classDataset
-                    classDataset.add(r); 
+                    classDataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass)); 
                 }
             } 
             catch (IOException ex) {

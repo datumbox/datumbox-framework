@@ -212,7 +212,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                     normalizedValue = (value-min)/(max-min);
                 }
                 
-                r.setY(normalizedValue);
+                data.set(rId, new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities()));
             }
         }
     }
@@ -233,21 +233,25 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 //do the same for the response variable Y
                 Double min = minColumnValues.get(Dataset.YColumnName);
                 Double max = maxColumnValues.get(Dataset.YColumnName);
-
+                
+                Object denormalizedY = null;
+                Object denormalizedYPredicted = null;
                 if(min.equals(max)) {
-                    r.setY(min);
+                    denormalizedY = min;
                     if(r.getYPredicted()!=null) {
-                        r.setYPredicted(min);
+                        denormalizedYPredicted = min;
                     }
                 }
                 else {
-                    r.setY(TypeConversions.toDouble(r.getY())*(max-min) + min);
+                    denormalizedY = TypeConversions.toDouble(r.getY())*(max-min) + min;
                     
                     Double YPredicted = TypeConversions.toDouble(r.getYPredicted());
                     if(YPredicted!=null) {
-                        r.setYPredicted(YPredicted*(max-min) + min);
+                        denormalizedYPredicted = YPredicted*(max-min) + min;
                     }
                 }
+                
+                data.set(rId, new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities()));
             }
         }
     }

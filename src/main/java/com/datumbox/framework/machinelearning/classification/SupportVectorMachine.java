@@ -150,8 +150,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
             
             Descriptives.normalize(predictionScores);
             
-            r.setYPredicted(theClass);
-            r.setYPredictedProbabilities(predictionScores);
+            newData.set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
         }
     }
     

@@ -16,12 +16,10 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -55,23 +53,23 @@ public class DatasetTest {
         Dataset instance = new Dataset();
         
         
-        Record rec1 = new Record();
-        rec1.getX().put("1", true);
-        instance.add(rec1);
+        AssociativeArray xData1 = new AssociativeArray();
+        xData1.put("1", true);
+        instance.add(new Record(xData1, null));
         
-        Record rec2 = new Record();
-        rec2.getX().put("2", 1.0);
-        instance.add(rec2);
+        AssociativeArray xData2 = new AssociativeArray();
+        xData2.put("2", 1.0);
+        instance.add(new Record(xData2, null));
         
-        Record rec3 = new Record();
-        rec3.getX().put("3", (short)1);
-        instance.add(rec3);
+        AssociativeArray xData3 = new AssociativeArray();
+        xData3.put("3", (short)1);
+        instance.add(new Record(xData3, null));
         
-        Record rec4 = new Record();
-        rec4.getX().put("4", "s");
-        instance.add(rec4);
+        AssociativeArray xData4 = new AssociativeArray();
+        xData4.put("4", "s");
+        instance.add(new Record(xData4, null));
         
-        Map<Object, Dataset.ColumnType> expResult = new HashMap<>();
+        Map<Object, Dataset.ColumnType> expResult = new LinkedHashMap<>();
         expResult.put("1", Dataset.ColumnType.DUMMYVAR);
         expResult.put("2", Dataset.ColumnType.NUMERICAL);
         expResult.put("3", Dataset.ColumnType.ORDINAL);
@@ -90,20 +88,20 @@ public class DatasetTest {
         Dataset instance = new Dataset();
         
         
-        Record rec1 = new Record();
-        rec1.getX().put("height", 188.0);
-        rec1.getX().put("weight", 88.0);
-        instance.add(rec1);
+        AssociativeArray xData1 = new AssociativeArray();
+        xData1.put("height", 188.0);
+        xData1.put("weight", 88.0);
+        instance.add(new Record(xData1, null));
         
-        Record rec2 = new Record();
-        rec2.getX().put("height", 189.0);
-        rec2.getX().put("weight", 89.0);
-        instance.add(rec2);
+        AssociativeArray xData2 = new AssociativeArray();
+        xData2.put("height", 189.0);
+        xData2.put("weight", 89.0);
+        instance.add(new Record(xData2, null));
         
-        Record rec3 = new Record();
-        rec3.getX().put("height", 190.0);
-        rec3.getX().put("weight", null);
-        instance.add(rec3);
+        AssociativeArray xData3 = new AssociativeArray();
+        xData3.put("height", 190.0);
+        xData3.put("weight", null);
+        instance.add(new Record(xData3, null));
         
         
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{188.0,189.0,190.0}));
@@ -120,23 +118,21 @@ public class DatasetTest {
         Object column = "height";
         Dataset instance = new Dataset();
         
-        Record rec1 = new Record();
-        rec1.getX().put("height", 188.0);
-        rec1.getX().put("weight", 88.0);
-        rec1.setY("Class1");
-        instance.add(rec1);
+        AssociativeArray xData1 = new AssociativeArray();
+        xData1.put("height", 188.0);
+        xData1.put("weight", 88.0);
+        instance.add(new Record(xData1, "Class1"));
         
-        Record rec2 = new Record();
-        rec2.getX().put("height", 189.0);
-        rec2.getX().put("weight", 89.0);
-        rec2.setY("Class1");
-        instance.add(rec2);
+        AssociativeArray xData2 = new AssociativeArray();
+        xData2.put("height", 189.0);
+        xData2.put("weight", 89.0);
+        instance.add(new Record(xData2, "Class1"));
         
-        Record rec3 = new Record();
-        rec3.getX().put("height", 190.0);
-        rec3.getX().put("weight", null);
-        rec3.setY("Class2");
-        instance.add(rec3);
+        AssociativeArray xData3 = new AssociativeArray();
+        xData3.put("height", 190.0);
+        xData3.put("weight", null);
+        instance.add(new Record(xData3, "Class2"));
+        
         
         TransposeDataList expResult = new TransposeDataList();
         expResult.put("Class1", new FlatDataList(Arrays.asList(new Object[]{188.0,189.0})));

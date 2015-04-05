@@ -152,13 +152,10 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             Record r = newData.get(rId);
             DataTable2D currentRecordDecisions = recordDecisionsArray[rId];
             
-            //AssociativeArray combinedClassVotes = FixedCombinationRules.majorityVote(currentRecordDecisions);
             AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(currentRecordDecisions, classifierWeightsArray);
             Descriptives.normalize(combinedClassVotes);
             
-            r.setYPredictedProbabilities(combinedClassVotes);
-            
-            r.setYPredicted(MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey());
+            newData.set(rId, new Record(r.getX(), r.getY(), MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey(), combinedClassVotes));
         }
         
         recordDecisionsArray = null;

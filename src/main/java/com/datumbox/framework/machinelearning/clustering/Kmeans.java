@@ -57,7 +57,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
 
         public Cluster(int clusterId) {
             super(clusterId);
-            centroid = new Record();
+            centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
         }
     
@@ -93,7 +93,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             if(!centroid.getX().equals(centoidValues)) {
                 changed=true;
-                centroid.setX(centoidValues);
+                centroid = new Record(centoidValues, centroid.getY());
             }
             
             return changed;
@@ -261,10 +261,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 clusterDistances.put(c.getClusterId(), distance);
             }
             
-            r.setYPredicted(getSelectedClusterFromDistances(clusterDistances));
-            
             Descriptives.normalize(clusterDistances);
-            r.setYPredictedProbabilities(clusterDistances);
+            
+            newData.set(rId, new Record(r.getX(), r.getY(), getSelectedClusterFromDistances(clusterDistances), clusterDistances));
         }
         
     }
