@@ -101,12 +101,10 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             weakClassifierWeights.add(weight);
 
             //update the weights of observations
-            for(Map.Entry<Object, Object> entry : observationWeights.entrySet()) {
-                Integer recordId = TypeConversions.toInteger(entry.getKey());
-                Double value = TypeConversions.toDouble(entry.getValue());
-
-                Record r = validationDataset.get(recordId);
+            for(Record r : validationDataset) {
                 if(!r.getY().equals(r.getYPredicted())) {
+                    Integer recordId = r.getId();
+                    Double value = TypeConversions.toDouble(observationWeights.get(recordId));
                     observationWeights.put(recordId, value*Math.exp(weight)); //increase the weight for misclassified observations
                 }
             }

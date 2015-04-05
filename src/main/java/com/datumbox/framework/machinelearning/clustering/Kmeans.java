@@ -531,10 +531,11 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             alreadyAddedPoints = null;
         }
         else if(initMethod==TrainingParameters.Initialization.PLUS_PLUS) {
-
+            DatabaseConnector dbc = knowledgeBase.getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                AssociativeArray minClusterDistanceArray = new AssociativeArray();
+                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", true);
+                AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
                 
                 for(Record r : trainingData) {
                     if(alreadyAddedPoints.contains(r.getId())) {
@@ -558,6 +559,10 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 
                 Descriptives.normalize(minClusterDistanceArray);
                 Integer selectedRecordId = (Integer)SRS.weightedProbabilitySampling(minClusterDistanceArray, 1, true).iterator().next();
+                
+                dbc.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
+                minClusterDistanceArray = null;
+                
                 
                 alreadyAddedPoints.add(selectedRecordId);
                 

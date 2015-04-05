@@ -242,6 +242,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
         for(Record r : d) {
             this.add(r);
         }
+        //TODO: do we still need merge after changing the PCA algorithm and the Dataset?
     } 
     
     /**
@@ -261,24 +262,6 @@ public final class Dataset implements Serializable, Iterable<Record> {
         updateMeta(newRecord);
         
         return newRecord.getId();
-    }
-    
-    /**
-     * Updates the record in the dataset. The add method returns the id of the 
-     * updated record.
-     * 
-     * @param original
-     * @return 
-     */
-    public Integer update(Record r) {
-        Integer id = r.getId();
-        if (id == null) {
-            throw new IllegalArgumentException();
-        }
-        recordList.put(id, r);
-        updateMeta(r);
-        
-        return id;
     }
     
     /**
