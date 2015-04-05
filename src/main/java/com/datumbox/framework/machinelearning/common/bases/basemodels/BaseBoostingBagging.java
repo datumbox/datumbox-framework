@@ -211,7 +211,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             FlatDataCollection sampledIDs = SRS.weightedProbabilitySampling(new AssociativeArray(tmp_observationWeights), n, true);
             
             Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs.toFlatDataList());
-
+            
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             boolean copyData = mlclassifier.modifiesData();
             
@@ -230,7 +230,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             mlclassifier.predict(validationDataset);
             mlclassifier = null;
             
-            
+            //TODO: This is wrong!!! The validationDataset no longer has the same IDs as in the tmp_observationWeights. We need to create a mapping between the Ids.
             boolean stop = updateObservationAndClassifierWeights(validationDataset, tmp_observationWeights);
             
             validationDataset = null;

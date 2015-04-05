@@ -128,7 +128,7 @@ public class PetoPetoWilcoxon {
                 continue; //continue in order not to count twice the r*ti below
             }
             
-            //TODO: place here the probablities    
+            //place here the probablities    
         } 
         while(currentCensored!=null || currentUncensored!=null || 
               !censoredData.isEmpty() || !uncensoredData.isEmpty());

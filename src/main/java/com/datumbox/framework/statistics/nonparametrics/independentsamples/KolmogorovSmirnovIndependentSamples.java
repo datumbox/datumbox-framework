@@ -45,7 +45,8 @@ public class KolmogorovSmirnovIndependentSamples {
      */
     public static boolean test(TransposeDataList transposeDataList, boolean is_twoTailed, double aLevel) throws IllegalArgumentException { 
         //Note! Despite the fact that this test seems very very easy, in fact it is SUPER HARD to calcuate.
-        //TODO: validate the results of the test with the theory because the PHP to JAVA implementation changed a lot the logic!
+        
+        //validate the results of the test with the theory because the PHP to JAVA implementation changed a lot the logic!
         int k=transposeDataList.size();
         if(k!=2) {
             throw new IllegalArgumentException();
