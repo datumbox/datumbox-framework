@@ -19,11 +19,14 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -42,8 +45,10 @@ public class CollaborativeFilteringTest {
     @Test
     public void testPredict() {
         TestUtils.log(this.getClass(), "predict");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("ml1", 5.0);
@@ -144,7 +149,7 @@ public class CollaborativeFilteringTest {
         xData11.put("vg3", 0.5);
         trainingData.add(new Record(xData11, "pitta"));
         
-        Dataset newData = new Dataset(TestUtils.getDBConfig());
+        Dataset newData = new Dataset(dbConfig);
         
         AssociativeArray profileData = new AssociativeArray();
         profileData.put("pizza", 4.5);
@@ -156,7 +161,7 @@ public class CollaborativeFilteringTest {
         
         
         String dbName = "JUnitRecommender";
-        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, TestUtils.getDBConfig());
+        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, dbConfig);
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
@@ -165,7 +170,7 @@ public class CollaborativeFilteringTest {
         
         
         instance = null;
-        instance = new CollaborativeFiltering(dbName, TestUtils.getDBConfig());
+        instance = new CollaborativeFiltering(dbName, dbConfig);
         
         instance.predict(newData);
         

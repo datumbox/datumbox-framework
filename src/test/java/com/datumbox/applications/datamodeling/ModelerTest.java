@@ -18,6 +18,7 @@ package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -47,10 +48,11 @@ public class ModelerTest {
     @Test
     public void testTrainAndValidate() {
         TestUtils.log(this.getClass(), "testTrainAndValidate");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -102,7 +104,7 @@ public class ModelerTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset newData = new Dataset(TestUtils.getDBConfig());
+        Dataset newData = new Dataset(dbConfig);
         newData.add(Record.newDataVector(new Double[] {0.0, 1.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         
@@ -113,7 +115,7 @@ public class ModelerTest {
         
         String dbName = "JUnit";
         
-        Modeler instance = new Modeler(dbName, TestUtils.getDBConfig());
+        Modeler instance = new Modeler(dbName, dbConfig);
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         trainingParameters.setkFolds(5);
         
@@ -161,7 +163,7 @@ public class ModelerTest {
         TestUtils.log(this.getClass(), "validate");
         
         
-        instance = new Modeler(dbName, TestUtils.getDBConfig());
+        instance = new Modeler(dbName, dbConfig);
         
         instance.validate(newData);
         

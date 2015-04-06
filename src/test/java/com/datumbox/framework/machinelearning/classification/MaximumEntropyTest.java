@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
@@ -43,6 +44,8 @@ public class MaximumEntropyTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -56,7 +59,7 @@ public class MaximumEntropyTest {
             - c1: yes
             - c2: no
         */
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -68,14 +71,14 @@ public class MaximumEntropyTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         
         
         
         String dbName = "JUnitClassifier";
-        MaximumEntropy instance = new MaximumEntropy(dbName, TestUtils.getDBConfig());
+        MaximumEntropy instance = new MaximumEntropy(dbName, dbConfig);
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
@@ -84,7 +87,7 @@ public class MaximumEntropyTest {
         
         
         instance = null;
-        instance = new MaximumEntropy(dbName, TestUtils.getDBConfig());
+        instance = new MaximumEntropy(dbName, dbConfig);
         
         instance.validate(validationData);
         
@@ -107,10 +110,12 @@ public class MaximumEntropyTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -167,7 +172,7 @@ public class MaximumEntropyTest {
         
         
         String dbName = "JUnitClassifier";
-        MaximumEntropy instance = new MaximumEntropy(dbName, TestUtils.getDBConfig());
+        MaximumEntropy instance = new MaximumEntropy(dbName, dbConfig);
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);

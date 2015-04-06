@@ -141,7 +141,7 @@ public class PHPfunctionsTest {
     @Test
     public void testMt_rand_0args() {
         TestUtils.log(this.getClass(), "mt_rand");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
         int expResult = -1562431105;
         int result = PHPfunctions.mt_rand();
         assertEquals(expResult, result);
@@ -153,7 +153,7 @@ public class PHPfunctionsTest {
     @Test
     public void testMt_rand_int_int() {
         TestUtils.log(this.getClass(), "mt_rand");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
         int min = 0;
         int max = 10;
         int expResult = 8;
@@ -188,7 +188,7 @@ public class PHPfunctionsTest {
     @Test
     public void testShuffle() {
         TestUtils.log(this.getClass(), "shuffle");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
         Integer[] result = {1,2,3,4,5};
         Integer[] expResult = {2,3,4,5,1};
         PHPfunctions.shuffle(result);

@@ -17,6 +17,7 @@
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
@@ -39,7 +40,8 @@ public class MutualInformationTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         String dbName = "JUnitMutualInformationFeatureSelection";
         
@@ -50,15 +52,15 @@ public class MutualInformationTest {
         param.setMaxFeatures(5);
         param.setIgnoringNumericalFeatures(false);
         
-        Dataset trainingData = ChisquareSelectTest.generateDataset(1000);
-        MutualInformation instance = new MutualInformation(dbName, TestUtils.getDBConfig());
+        Dataset trainingData = ChisquareSelectTest.generateDataset(dbConfig, 1000);
+        MutualInformation instance = new MutualInformation(dbName, dbConfig);
         
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new MutualInformation(dbName, TestUtils.getDBConfig());
+        instance = new MutualInformation(dbName, dbConfig);
         
         instance.transform(trainingData);
         

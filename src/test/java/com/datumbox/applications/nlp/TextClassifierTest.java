@@ -16,6 +16,7 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -47,11 +48,13 @@ public class TextClassifierTest {
     /**
      * Test of train method, of class TextClassifier.
      * @throws java.net.URISyntaxException
+     * @throws java.net.MalformedURLException
      */
     @Test
     public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "TrainAndPredict");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         
         String dbName = "JUnit";
@@ -61,7 +64,7 @@ public class TextClassifierTest {
         dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         
         
-        TextClassifier instance = new TextClassifier(dbName, TestUtils.getDBConfig());
+        TextClassifier instance = new TextClassifier(dbName, dbConfig);
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         trainingParameters.setkFolds(5);
@@ -128,7 +131,7 @@ public class TextClassifierTest {
         
         
         
-        instance = new TextClassifier(dbName, TestUtils.getDBConfig());
+        instance = new TextClassifier(dbName, dbConfig);
         
         List<Object> result = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         

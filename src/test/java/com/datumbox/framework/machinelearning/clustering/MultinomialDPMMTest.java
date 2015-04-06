@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
@@ -37,8 +38,8 @@ public class MultinomialDPMMTest {
     public MultinomialDPMMTest() {
     }
 
-    private Dataset generateDataset() {
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+    private Dataset generateDataset(DatabaseConfiguration dbConfig) {
+        Dataset trainingData = new Dataset(dbConfig);
         //cluster 1
         trainingData.add(Record.newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
         trainingData.add(Record.newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
@@ -61,9 +62,10 @@ public class MultinomialDPMMTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate"); 
-        RandomValue.setRandomGenerator(new Random(42)); 
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
-        Dataset trainingData = generateDataset();
+        Dataset trainingData = generateDataset(dbConfig);
         Dataset validationData = trainingData;
 
         
@@ -71,7 +73,7 @@ public class MultinomialDPMMTest {
         
         String dbName = "JUnitClusterer";
         
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, TestUtils.getDBConfig());
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, dbConfig);
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -83,7 +85,7 @@ public class MultinomialDPMMTest {
         
         
         instance = null;
-        instance = new MultinomialDPMM(dbName, TestUtils.getDBConfig());
+        instance = new MultinomialDPMM(dbName, dbConfig);
         
         instance.validate(validationData);
         
@@ -114,10 +116,12 @@ public class MultinomialDPMMTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42)); 
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = generateDataset();
+        Dataset trainingData = generateDataset(dbConfig);
         
         
         
@@ -128,7 +132,7 @@ public class MultinomialDPMMTest {
         
         
         
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, TestUtils.getDBConfig());
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, dbConfig);
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);

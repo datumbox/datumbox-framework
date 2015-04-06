@@ -19,7 +19,9 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,7 +45,8 @@ public class TFIDFTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         String dbName = "JUnitChisquareFeatureSelection";
         
@@ -53,7 +56,7 @@ public class TFIDFTest {
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("important1", 2.0);
@@ -79,13 +82,13 @@ public class TFIDFTest {
         xData3.put("stopword3", 4.0);
         trainingData.add(new Record(xData3, null));
         
-        TFIDF instance = new TFIDF(dbName, TestUtils.getDBConfig());
+        TFIDF instance = new TFIDF(dbName, dbConfig);
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new TFIDF(dbName, TestUtils.getDBConfig());
+        instance = new TFIDF(dbName, dbConfig);
         
         instance.transform(trainingData);
         

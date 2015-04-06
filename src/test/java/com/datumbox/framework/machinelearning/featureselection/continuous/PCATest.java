@@ -18,11 +18,14 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -41,7 +44,10 @@ public class PCATest {
     @Test
     public void testCalculateParameters() {
         TestUtils.log(this.getClass(), "calculateParameters");
-        Dataset originaldata = new Dataset(TestUtils.getDBConfig());
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
+        Dataset originaldata = new Dataset(dbConfig);
         originaldata.add(Record.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
         originaldata.add(Record.<Double>newDataVector(new Double[]{7.0, 8.0, 0.0}, null));
@@ -52,7 +58,7 @@ public class PCATest {
         
         String dbName = "JUnitPCAdimred";
         
-        PCA instance = new PCA(dbName, TestUtils.getDBConfig());
+        PCA instance = new PCA(dbName, dbConfig);
         
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
@@ -62,10 +68,10 @@ public class PCATest {
         
         Dataset newdata = originaldata;
         
-        instance = new PCA(dbName, TestUtils.getDBConfig());
+        instance = new PCA(dbName, dbConfig);
         
         
-        Dataset expResult = new Dataset(TestUtils.getDBConfig());
+        Dataset expResult = new Dataset(dbConfig);
         expResult.add(Record.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));
         expResult.add(Record.<Double>newDataVector(new Double[]{-6.0641, 1.0143, -4.8165}, null));
         expResult.add(Record.<Double>newDataVector(new Double[]{-7.7270, 6.7253, 2.8399}, null));

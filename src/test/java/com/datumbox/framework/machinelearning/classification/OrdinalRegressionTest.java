@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
@@ -39,8 +40,8 @@ public class OrdinalRegressionTest {
 
     
 
-    private Dataset generateTrainingData() {    
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+    private Dataset generateTrainingData(DatabaseConfiguration dbConfig) {    
+        Dataset trainingData = new Dataset(dbConfig);
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         trainingData.add(Record.newDataVector(new Double[] {6.1828706420186,5.7573756868964,3.7194701511967}, 1));
         trainingData.add(Record.newDataVector(new Double[] {6.0681823226512,5.4994335920427,7.598260774876}, 1));
@@ -649,11 +650,12 @@ public class OrdinalRegressionTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
-        Dataset trainingData = generateTrainingData();
+        Dataset trainingData = generateTrainingData(dbConfig);
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {5.92085126899850,6.01037072456601,4.66307928268761}, 1));
         validationData.add(Record.newDataVector(new Double[] {7.18606367787857,6.64194264491917,4.41233885708698}, 2));
         validationData.add(Record.newDataVector(new Double[] {7.83232073356316,8.76007761528955,7.05235518409310}, 3));
@@ -663,12 +665,12 @@ public class OrdinalRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, dbConfig);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, TestUtils.getDBConfig());
+        OrdinalRegression instance = new OrdinalRegression(dbName, dbConfig);
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
@@ -677,7 +679,7 @@ public class OrdinalRegressionTest {
         
         
         instance = null;
-        instance = new OrdinalRegression(dbName, TestUtils.getDBConfig());
+        instance = new OrdinalRegression(dbName, dbConfig);
         
         instance.validate(validationData);
 
@@ -705,21 +707,23 @@ public class OrdinalRegressionTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = generateTrainingData();
+        Dataset trainingData = generateTrainingData(dbConfig);
         
         
         
         String dbName = "JUnitClassifier";
         
 
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, dbConfig);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, TestUtils.getDBConfig());
+        OrdinalRegression instance = new OrdinalRegression(dbName, dbConfig);
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);

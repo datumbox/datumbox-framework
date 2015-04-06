@@ -19,6 +19,7 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
@@ -39,8 +40,8 @@ public class ChisquareSelectTest {
     public ChisquareSelectTest() {
     }
 
-    public static Dataset generateDataset(int n) {
-        Dataset data = new Dataset(TestUtils.getDBConfig());
+    public static Dataset generateDataset(DatabaseConfiguration dbConfig, int n) {
+        Dataset data = new Dataset(dbConfig);
         for(int i=0;i<n;++i) {
             AssociativeArray xData = new AssociativeArray();
             //important fields
@@ -78,7 +79,8 @@ public class ChisquareSelectTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         String dbName = "JUnitChisquareFeatureSelection";
         
@@ -90,15 +92,15 @@ public class ChisquareSelectTest {
         param.setIgnoringNumericalFeatures(false);
         param.setALevel(0.05);
         
-        Dataset trainingData = generateDataset(1000);
-        ChisquareSelect instance = new ChisquareSelect(dbName, TestUtils.getDBConfig());
+        Dataset trainingData = generateDataset(dbConfig, 1000);
+        ChisquareSelect instance = new ChisquareSelect(dbName, dbConfig);
         
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new ChisquareSelect(dbName, TestUtils.getDBConfig());
+        instance = new ChisquareSelect(dbName, dbConfig);
         
         instance.transform(trainingData);
         

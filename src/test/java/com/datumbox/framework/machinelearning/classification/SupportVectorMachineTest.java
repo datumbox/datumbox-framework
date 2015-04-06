@@ -18,7 +18,9 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
@@ -44,6 +46,8 @@ public class SupportVectorMachineTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -58,7 +62,7 @@ public class SupportVectorMachineTest {
             - c2: no
         */
         /*
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -70,11 +74,11 @@ public class SupportVectorMachineTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         */
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
@@ -86,18 +90,18 @@ public class SupportVectorMachineTest {
         trainingData.add(Record.newDataVector(new String[] {"red", "suv", "imported"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
         
         
         String dbName = "JUnitClassifier";
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, dbConfig);
         
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
@@ -106,7 +110,7 @@ public class SupportVectorMachineTest {
         
         
         instance = null;
-        instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());
+        instance = new SupportVectorMachine(dbName, dbConfig);
         
         instance.validate(validationData);
         
@@ -135,10 +139,12 @@ public class SupportVectorMachineTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -194,7 +200,7 @@ public class SupportVectorMachineTest {
         
         
         String dbName = "JUnitClassifier";
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, TestUtils.getDBConfig());
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, dbConfig);
         
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.LINEAR;

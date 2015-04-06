@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
@@ -44,7 +45,8 @@ public class AdaboostTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -59,7 +61,7 @@ public class AdaboostTest {
             - c2: no
         */
         /*
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -70,10 +72,10 @@ public class AdaboostTest {
         trainingData.add(Record.newDataVector(new Double[] {0.0, 1.0, 0.0, 1.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         */
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
@@ -85,7 +87,7 @@ public class AdaboostTest {
         trainingData.add(Record.newDataVector(new String[] {"red", "suv", "imported"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
         
@@ -94,13 +96,13 @@ public class AdaboostTest {
         
         String dbName = "JUnitClassifier";
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         
-        Adaboost instance = new Adaboost(dbName, TestUtils.getDBConfig());
+        Adaboost instance = new Adaboost(dbName, dbConfig);
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -118,7 +120,7 @@ public class AdaboostTest {
         
         
         instance = null;
-        instance = new Adaboost(dbName, TestUtils.getDBConfig());
+        instance = new Adaboost(dbName, dbConfig);
         
         instance.validate(validationData);
         
@@ -148,10 +150,12 @@ public class AdaboostTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -209,7 +213,7 @@ public class AdaboostTest {
         
         
         String dbName = "JUnitClassifier";
-        Adaboost instance = new Adaboost(dbName, TestUtils.getDBConfig());
+        Adaboost instance = new Adaboost(dbName, dbConfig);
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);

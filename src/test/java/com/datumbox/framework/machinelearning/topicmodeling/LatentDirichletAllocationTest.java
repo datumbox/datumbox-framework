@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
@@ -53,8 +54,8 @@ public class LatentDirichletAllocationTest {
     @Test
     public void testValidate() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "validate");
-        
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         
         String dbName = "JUnitTopicSelection";
@@ -66,10 +67,10 @@ public class LatentDirichletAllocationTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
         wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
-        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor, TestUtils.getDBConfig());
+        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor, dbConfig);
         
         
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, TestUtils.getDBConfig());
+        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, dbConfig);
         
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
@@ -81,14 +82,14 @@ public class LatentDirichletAllocationTest {
         
         lda.validate(trainingData);
         
-        Dataset reducedTrainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset reducedTrainingData = new Dataset(dbConfig);
         for(Integer rId : trainingData) {
             Record r = trainingData.get(rId);
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }
         
-        SoftMaxRegression smr = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
+        SoftMaxRegression smr = new SoftMaxRegression(dbName, dbConfig);
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);

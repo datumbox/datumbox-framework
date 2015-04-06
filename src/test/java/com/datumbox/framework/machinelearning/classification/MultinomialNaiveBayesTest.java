@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -43,6 +44,8 @@ public class MultinomialNaiveBayesTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -57,7 +60,7 @@ public class MultinomialNaiveBayesTest {
             - c2: no
         */
         /*
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -68,10 +71,10 @@ public class MultinomialNaiveBayesTest {
         trainingData.add(Record.newDataVector(new Double[] {0.0, 1.0, 0.0, 1.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         */
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
@@ -83,7 +86,7 @@ public class MultinomialNaiveBayesTest {
         trainingData.add(Record.newDataVector(new String[] {"red", "suv", "imported"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
         
@@ -91,12 +94,12 @@ public class MultinomialNaiveBayesTest {
         
         String dbName = "JUnitClassifier";
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
         
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, TestUtils.getDBConfig());
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, dbConfig);
         
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
@@ -105,7 +108,7 @@ public class MultinomialNaiveBayesTest {
         
         
         instance = null;
-        instance = new MultinomialNaiveBayes(dbName, TestUtils.getDBConfig());
+        instance = new MultinomialNaiveBayes(dbName, dbConfig);
         
         instance.validate(validationData);
         
@@ -134,10 +137,12 @@ public class MultinomialNaiveBayesTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -195,7 +200,7 @@ public class MultinomialNaiveBayesTest {
         
         
         String dbName = "JUnitClassifier";
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, TestUtils.getDBConfig());
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, dbConfig);
         
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);

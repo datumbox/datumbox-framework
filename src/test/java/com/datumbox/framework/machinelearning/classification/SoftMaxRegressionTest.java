@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -45,6 +46,8 @@ public class SoftMaxRegressionTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -59,7 +62,7 @@ public class SoftMaxRegressionTest {
             - c2: no
         */
         /*
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -71,11 +74,11 @@ public class SoftMaxRegressionTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         */
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
@@ -87,11 +90,11 @@ public class SoftMaxRegressionTest {
         trainingData.add(Record.newDataVector(new String[] {"red", "suv", "imported"}, "no"));
         trainingData.add(Record.newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
         /*        
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {6.1828706420186,5.7573756868964,3.7194701511967}, 1));
         trainingData.add(Record.newDataVector(new Double[] {6.0681823226512,5.4994335920427,7.598260774876}, 1));
         trainingData.add(Record.newDataVector(new Double[] {5.9347712436828,5.4589863647794,4.6587268913845}, 1));
@@ -690,7 +693,7 @@ public class SoftMaxRegressionTest {
         trainingData.add(Record.newDataVector(new Double[] {8.6214685846329,8.0218759456459,9.2140622324487}, 3));
         trainingData.add(Record.newDataVector(new Double[] {7.8872168038128,6.9977919468999,8.1205596528281}, 3));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Double[] {6.34569812276338,6.76262401884614,6.08305530880784}, 1));
         validationData.add(Record.newDataVector(new Double[] {5.92085126899850,6.01037072456601,4.66307928268761}, 1));
         validationData.add(Record.newDataVector(new Double[] {7.18606367787857,6.64194264491917,4.41233885708698}, 2));
@@ -702,13 +705,13 @@ public class SoftMaxRegressionTest {
         
         String dbName = "JUnitClassifier";
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
         
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
 
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, dbConfig);
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
@@ -717,7 +720,7 @@ public class SoftMaxRegressionTest {
         
         
         instance = null;
-        instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
+        instance = new SoftMaxRegression(dbName, dbConfig);
         
         instance.validate(validationData);
         	        
@@ -745,10 +748,12 @@ public class SoftMaxRegressionTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -806,10 +811,10 @@ public class SoftMaxRegressionTest {
         String dbName = "JUnitClassifier";
         
 
-        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, dbConfig);
         df.fit_transform(trainingData, new XMinMaxNormalizer.TrainingParameters());
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, TestUtils.getDBConfig());
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, dbConfig);
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);

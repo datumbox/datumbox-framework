@@ -16,10 +16,14 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -50,8 +54,10 @@ public class DatasetTest {
     @Test
     public void testGetColumns() {
         TestUtils.log(this.getClass(), "getColumns");
-        Dataset instance = new Dataset(TestUtils.getDBConfig());
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
+        Dataset instance = new Dataset(dbConfig);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
@@ -84,8 +90,11 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValues() {
         TestUtils.log(this.getClass(), "extractColumnValues");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         Object column = "height";
-        Dataset instance = new Dataset(TestUtils.getDBConfig());
+        Dataset instance = new Dataset(dbConfig);
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -115,8 +124,11 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValuesByY() {
         TestUtils.log(this.getClass(), "extractColumnValuesByY");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         Object column = "height";
-        Dataset instance = new Dataset(TestUtils.getDBConfig());
+        Dataset instance = new Dataset(dbConfig);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);

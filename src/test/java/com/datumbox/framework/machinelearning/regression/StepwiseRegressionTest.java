@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
@@ -46,7 +47,8 @@ public class StepwiseRegressionTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomValue.setRandomGenerator(new Random(42));
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
         /*
         Synthetic Data generated with:
@@ -59,7 +61,7 @@ public class StepwiseRegressionTest {
         $y=2+10*$x1+0.002*$x2+30*$x3+10*$x4;
         $dataTable[]=array(array((string)$x1,$x2,$x3,(string)$x4),null);
         */
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
         trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
         trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
@@ -71,7 +73,7 @@ public class StepwiseRegressionTest {
         trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
         trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
         validationData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
         validationData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
@@ -91,11 +93,11 @@ public class StepwiseRegressionTest {
         
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        StepwiseRegression instance = new StepwiseRegression(dbName, TestUtils.getDBConfig());
+        StepwiseRegression instance = new StepwiseRegression(dbName, dbConfig);
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
@@ -109,7 +111,7 @@ public class StepwiseRegressionTest {
         
         
         instance = null;
-        instance = new StepwiseRegression(dbName, TestUtils.getDBConfig());
+        instance = new StepwiseRegression(dbName, dbConfig);
         
         instance.validate(validationData);
         

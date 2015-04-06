@@ -18,10 +18,14 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -41,8 +45,10 @@ public class BayesianEnsembleMethodTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        Dataset trainingData = new Dataset(dbConfig);
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -63,7 +69,7 @@ public class BayesianEnsembleMethodTest {
         trainingData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
         
         
-        Dataset validationData = new Dataset(TestUtils.getDBConfig());
+        Dataset validationData = new Dataset(dbConfig);
         validationData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
         validationData.add(Record.newDataVector(new String[] {"pos","neg"}, "pos"));
         validationData.add(Record.newDataVector(new String[] {"neg","pos"}, "neg"));
@@ -73,13 +79,13 @@ public class BayesianEnsembleMethodTest {
         
         String dbName = "JUnitBayesianEnsembleMethod";
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, TestUtils.getDBConfig());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         
-        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, TestUtils.getDBConfig());
+        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, dbConfig);
         
         BayesianEnsembleMethod.TrainingParameters param = new BayesianEnsembleMethod.TrainingParameters();
         
@@ -87,7 +93,7 @@ public class BayesianEnsembleMethodTest {
         
         
         instance = null;
-        instance = new BayesianEnsembleMethod(dbName, TestUtils.getDBConfig());
+        instance = new BayesianEnsembleMethod(dbName, dbConfig);
         
         instance.validate(validationData);
         

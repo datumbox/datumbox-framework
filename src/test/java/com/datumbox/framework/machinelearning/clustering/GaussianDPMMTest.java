@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
@@ -37,9 +38,10 @@ public class GaussianDPMMTest {
     public GaussianDPMMTest() {
     }
 
-    private Dataset generateDataset() {
+    private Dataset generateDataset(DatabaseConfiguration dbConfig) {
         Random rnd = RandomValue.getRandomGenerator();
-        Dataset trainingData = new Dataset(TestUtils.getDBConfig());
+        
+        Dataset trainingData = new Dataset(dbConfig);
         /*
         //cluster 1
         trainingData.add(Record.newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
@@ -76,9 +78,10 @@ public class GaussianDPMMTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate"); 
-        RandomValue.setRandomGenerator(new Random(42)); 
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
         
-        Dataset trainingData = generateDataset();
+        Dataset trainingData = generateDataset(dbConfig);
         Dataset validationData = trainingData;
 
         
@@ -86,7 +89,7 @@ public class GaussianDPMMTest {
         
         String dbName = "JUnitClusterer";
         
-        GaussianDPMM instance = new GaussianDPMM(dbName, TestUtils.getDBConfig());
+        GaussianDPMM instance = new GaussianDPMM(dbName, dbConfig);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -101,7 +104,7 @@ public class GaussianDPMMTest {
         
         
         instance = null;
-        instance = new GaussianDPMM(dbName, TestUtils.getDBConfig());
+        instance = new GaussianDPMM(dbName, dbConfig);
         
         instance.validate(validationData);
         
@@ -132,10 +135,13 @@ public class GaussianDPMMTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomValue.setRandomGenerator(new Random(42)); 
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED)); 
+        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        
         int k = 5;
         
-        Dataset trainingData = generateDataset();
+        Dataset trainingData = generateDataset(dbConfig);
         
         
         
@@ -146,7 +152,7 @@ public class GaussianDPMMTest {
         
         
         
-        GaussianDPMM instance = new GaussianDPMM(dbName, TestUtils.getDBConfig());
+        GaussianDPMM instance = new GaussianDPMM(dbName, dbConfig);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
