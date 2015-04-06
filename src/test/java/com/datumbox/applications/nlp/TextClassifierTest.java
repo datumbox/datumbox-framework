@@ -74,27 +74,6 @@ public class TextClassifierTest {
         MultinomialNaiveBayes.TrainingParameters classifierTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
         trainingParameters.setMLmodelTrainingParameters(classifierTrainingParameters);
         
-        //trainingParameters.setClassifierClass(SoftMaxRegression.class);
-        //SoftMaxRegression.Parameters classifierTrainingParameters = new SoftMaxRegression.Parameters();
-        //classifierTrainingParameters.setTotalIterations(100);
-        //trainingParameters.setClassifierTrainingParameters(classifierTrainingParameters);
-        
-        //trainingParameters.setClassifierClass(SupportVectorMachine.class);
-        //SupportVectorMachine.Parameters classifierTrainingParameters = new SupportVectorMachine.Parameters();
-        //classifierTrainingParameters.getSvmParameter().kernel_type = svm_parameter.LINEAR;
-        //trainingParameters.setClassifierTrainingParameters(classifierTrainingParameters);
-
-        //trainingParameters.setMLmodelClass(Kmeans.class);
-        //Kmeans.TrainingParameters modelTrainingParameters = new Kmeans.TrainingParameters();
-        //modelTrainingParameters.setK(2);
-        //modelTrainingParameters.setMaxIterations(200);
-        //modelTrainingParameters.setInitMethod(Kmeans.TrainingParameters.Initialization.FORGY);
-        //modelTrainingParameters.setDistanceMethod(Kmeans.TrainingParameters.Distance.EUCLIDIAN);
-        //modelTrainingParameters.setWeighted(false);
-        //modelTrainingParameters.setCategoricalGamaMultiplier(1.0);
-        //modelTrainingParameters.setSubsetFurthestFirstcValue(2.0);
-        //trainingParameters.setMLmodelTrainingParameters(modelTrainingParameters);
-        
         //data transfomation configuration
         trainingParameters.setDataTransformerClass(null);
         trainingParameters.setDataTransformerTrainingParameters(null);
@@ -107,12 +86,6 @@ public class TextClassifierTest {
         fsParams.setMaxFeatures(10000);
         fsParams.setRareFeatureThreshold(3);
         trainingParameters.setFeatureSelectionTrainingParameters(fsParams);
-        
-        //trainingParameters.setFeatureSelectionClass(TFIDF.class);
-        //TFIDF.TrainingParameters fsParams = new TFIDF.TrainingParameters();
-        //fsParams.setBinarized(false);
-        //fsParams.setMaxFeatures(10000);
-        //trainingParameters.setFeatureSelectionTrainingParameters(fsParams);
         
         //text extraction configuration
         trainingParameters.setTextExtractorClass(NgramsExtractor.class);

@@ -21,7 +21,8 @@ import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
 /**
- *
+ * Configuration constants for the Tests.
+ * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class TestConfiguration {

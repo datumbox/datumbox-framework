@@ -63,31 +63,30 @@ public class MapDBConnector implements DatabaseConnector {
         DB db = dbRegistry.get(dbName);
         if(!isOpenDB(db)) {
             boolean isTemporary = dbName.equals(TEMP_DB);
-            if (isTemporary) {
-                //create a temporary DB
-                db = DBMaker.newTempFileDB()
-                            .deleteFilesAfterClose()
-                            .transactionDisable()
-                            .compressionEnable()
-                            //.cacheDisable()
-                            .cacheLRUEnable()
-                            .cacheSize(this.dbConf.getCacheSize()) 
-                            .asyncWriteEnable()
-                            .closeOnJvmShutdown()
-                            .make();
+            DBMaker m = (isTemporary==true)?DBMaker.newTempFileDB().deleteFilesAfterClose():DBMaker.newFileDB(getDefaultPath().toFile());
+            
+            if(dbConf.getTransactions()==false) {
+                m = m.transactionDisable();
+            }
+            
+            if(dbConf.getCompression()) {
+                m = m.compressionEnable();
+            }
+            
+            if(dbConf.getCacheSize()>0) {
+                m = m.cacheLRUEnable().cacheSize(dbConf.getCacheSize()) ;
             }
             else {
-                //create or open a permanent DB
-                db = DBMaker.newFileDB(getDefaultPath().toFile())
-                            .transactionDisable()
-                            .compressionEnable()
-                            //.cacheDisable()
-                            .cacheLRUEnable()
-                            .cacheSize(this.dbConf.getCacheSize()) 
-                            .asyncWriteEnable()
-                            .closeOnJvmShutdown()
-                            .make();
+                m = m.cacheDisable();
             }
+            
+            if(dbConf.getAsyncWrites()) {
+                m = m.asyncWriteEnable();
+            }
+            
+            m = m.closeOnJvmShutdown();
+            
+            db = m.make();
             dbRegistry.put(dbName, db);
         }
         return db;

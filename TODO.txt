@@ -1,17 +1,14 @@
 CODE IMPROVEMENTS
 =================
 
-bbriniotis:
-- Better memory configuration for MapDB.
-
 lmpampaletakis:
 - Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
-- Review the codebase and make suggestions for code improvements and changes in the architecture.
 
 other:
+- CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() to detect the types?
+
 - Serialization improvements: set serialVersionUID?
 - create the required exceptions
-- CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() to detect the types?
 
 
 DOCUMENTATION

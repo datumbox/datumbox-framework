@@ -32,6 +32,12 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     private String dbRootFolder = "";
     
     private int cacheSize = 100000;
+    
+    private boolean compression = true;
+    
+    private boolean transactions = false;
+    
+    private boolean asyncWrites = true;
 
     @Override
     public DatabaseConnector getConnector(String database) {
@@ -58,4 +64,30 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     public void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
     }
+
+    public boolean getCompression() {
+        return compression;
+    }
+
+    public void setCompression(boolean compression) {
+        this.compression = compression;
+    }
+
+    public boolean getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(boolean transactions) {
+        this.transactions = transactions;
+    }
+
+    public boolean getAsyncWrites() {
+        return asyncWrites;
+    }
+
+    public void setAsyncWrites(boolean asyncWrites) {
+        this.asyncWrites = asyncWrites;
+    }
+    
+    
 }

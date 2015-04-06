@@ -92,9 +92,32 @@ public class TestUtils {
 
     public static DatabaseConfiguration getDBConfig() {
         if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
-            return new InMemoryConfiguration();
-        } else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
-            return new MapDBConfiguration();
+            InMemoryConfiguration c = new InMemoryConfiguration();
+            
+            //Output folder path
+            c.setDbRootFolder("./");
+            
+            return c;
+        } 
+        else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
+            MapDBConfiguration c = new MapDBConfiguration();
+            
+            //Output folder path
+            c.setDbRootFolder("./");
+            
+            //Size of LRU cache. Zero turns off caching
+            c.setCacheSize(100000);
+            
+            //Turns on/off the compression
+            c.setCompression(true);
+            
+            //Turns on/off transactions
+            c.setTransactions(false);
+            
+            //Turns on/off asynchronous writes
+            c.setAsyncWrites(true);
+            
+            return c;
         }
         return null;
     }
