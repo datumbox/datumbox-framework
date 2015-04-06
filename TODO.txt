@@ -2,7 +2,11 @@ CODE IMPROVEMENTS
 =================
 
 lmpampaletakis:
-- Can we avoid passing DatabaseConfiguration dbConf in constructors? Is it possible to inject automatically the object or store it and request it from within the algorithms?
+- Be able to store and save the DatabaseConfiguration dbConf in properties file:
+	public static DatabaseConfiguration load(String filepath);
+	public boolean export(String filepath);
+
+The config file should store also which Config object was selected by the user (InMemory vs MapDB). The object is then passed normally though constructors as is right now, UNLESS there is a better alternative.
 
 other:
 - CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() to detect the types?
