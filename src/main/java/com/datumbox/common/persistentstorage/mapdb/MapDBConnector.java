@@ -112,7 +112,7 @@ public class MapDBConnector implements DatabaseConnector {
     
     private Path getDefaultPath() {
         //get the default filepath of the permanet db file
-        String rootDbFolder = this.dbConf.getDbRootFolder();
+        String rootDbFolder = this.dbConf.getOutputFolder();
         
         Path filepath = null;
         if(rootDbFolder.isEmpty()) {

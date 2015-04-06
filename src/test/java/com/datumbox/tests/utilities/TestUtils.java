@@ -94,19 +94,19 @@ public class TestUtils {
         if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
             InMemoryConfiguration c = new InMemoryConfiguration();
             
-            //Output folder path
-            c.setDbRootFolder("./");
+            //Path of Output folder
+            c.setOutputFolder("./");
             
             return c;
         } 
         else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
             MapDBConfiguration c = new MapDBConfiguration();
             
-            //Output folder path
-            c.setDbRootFolder("./");
+            //Path of Output folder
+            c.setOutputFolder("./");
             
             //Size of LRU cache. Zero turns off caching
-            c.setCacheSize(100000);
+            c.setCacheSize(10000);
             
             //Turns on/off the compression
             c.setCompression(true);

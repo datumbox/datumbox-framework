@@ -29,7 +29,7 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
 
     //DB specific properties
-    private String dbRootFolder = "";
+    private String outputFolder = "./";
 
     @Override
     public DatabaseConnector getConnector(String database) {
@@ -41,11 +41,11 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
         return DBNAME_SEPARATOR;
     }
 
-    public String getDbRootFolder() {
-        return dbRootFolder;
+    public String getOutputFolder() {
+        return outputFolder;
     }
 
-    public void setDbRootFolder(String dbRootFolder) {
-        this.dbRootFolder = dbRootFolder;
+    public void setOutputFolder(String outputFolder) {
+        this.outputFolder = outputFolder;
     }
 }

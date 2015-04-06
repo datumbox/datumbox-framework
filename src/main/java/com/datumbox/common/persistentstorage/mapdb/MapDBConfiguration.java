@@ -29,9 +29,9 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
 
     //DB specific properties
-    private String dbRootFolder = "";
+    private String outputFolder = "./";
     
-    private int cacheSize = 100000;
+    private int cacheSize = 10000;
     
     private boolean compression = true;
     
@@ -49,12 +49,12 @@ public class MapDBConfiguration implements DatabaseConfiguration {
         return DBNAME_SEPARATOR;
     }
 
-    public String getDbRootFolder() {
-        return dbRootFolder;
+    public String getOutputFolder() {
+        return outputFolder;
     }
 
-    public void setDbRootFolder(String dbRootFolder) {
-        this.dbRootFolder = dbRootFolder;
+    public void setOutputFolder(String outputFolder) {
+        this.outputFolder = outputFolder;
     }
 
     public int getCacheSize() {
