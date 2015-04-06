@@ -7,9 +7,9 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 
 Author: [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/)
 
-Version: 0.5.1 alpha
+Version: 0.6.0 alpha
 
-Build: 20141105
+Build: 20150406
 
 Installation
 ------------
@@ -21,7 +21,7 @@ Maven:
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework</artifactId>
-        <version>0.5.1</version>
+        <version>0.6.0</version>
     </dependency>
 ```
 
@@ -30,7 +30,7 @@ Note: A couple of classes which use Linear Programming require installing an ext
 Technical Details
 -----------------
 
-The core part of the project is about 30000 lines of code, uses Java 8 features and uses Maven Project Structure. The code is licensed under the GNU General Public License v3.0 so feel free to clone the repository and experiment with it. If you find a bug or decide to document particular parts of the code, please consider contributing your changes by sending a pull request.
+The core part of the project is about 30000 lines of code, uses Java 8 features and uses Maven Project Structure. The code is licensed under the Apache License, Version 2.0 so feel free to clone the repository and experiment with it. If you find a bug or decide to document particular parts of the code, please consider contributing your changes by sending a pull request.
 
 What methods/algorithms are supported?
 --------------------------------------

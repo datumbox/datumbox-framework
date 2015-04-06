@@ -1,0 +1,46 @@
+Datumbox Machine Learning Framework
+Copyright (C) 2013 Vasilis Vryniotis <bbriniotis at datumbox.com>
+
+
+The following libraries are included in packaged versions of this project:
+
+* JUnit
+ * COPYRIGHT: Copyright 2002 JUnit
+ * LICENSE: http://www.opensource.org/licenses/cpl.php (Common Public License Version 1.0)
+ * HOMEPAGE: http://www.junit.org/
+
+* Apache Commons Lang
+ * COPYRIGHT: Copyright 2001 The Apache Software Foundation
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: https://commons.apache.org/proper/commons-lang/
+
+* Apache Commons Math
+ * COPYRIGHT: Copyright 2003 The Apache Software Foundation
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: https://commons.apache.org/proper/commons-math/
+
+* Guava
+ * COPYRIGHT: Copyright 2007 Google Inc.
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: http://code.google.com/p/guava-libraries/
+
+* LIBSVM
+ * COPYRIGHT: Copyright 2000 Chih-Chung Chang and Chih-Jen Lin
+ * LICENSE: http://www.csie.ntu.edu.tw/~cjlin/libsvm/COPYRIGHT (BSD 3-Clause License)
+ * HOMEPAGE: http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+
+* lp_solve Java wrapper
+ * COPYRIGHT: Copyright 2004 Juergen Ebert
+ * LICENSE: https://www.gnu.org/licenses/lgpl-2.1.html (GNU Lesser General Public License, version 2.1)
+ * HOMEPAGE: http://lpsolve.sourceforge.net/5.5/
+
+* MapDB
+ * COPYRIGHT: Copyright 2012 Jan Kotek
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: http://www.mapdb.org/
+
+* Logback
+ * COPYRIGHT: Copyright 1999 QOS.ch
+ * LICENSE: http://logback.qos.ch/license.html (Eclipse Public License v1.0 / GNU Lesser General Public License version 2.1)
+ * HOMEPAGE: http://logback.qos.ch/
+

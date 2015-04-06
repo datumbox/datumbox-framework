@@ -6,7 +6,7 @@ lmpampaletakis:
 	public static DatabaseConfiguration load(String filepath);
 	public boolean export(String filepath);
 
-The config file should store also which Config object was selected by the user (InMemory vs MapDB). The object is then passed normally though constructors as is right now, UNLESS there is a better alternative.
+The config file should store also which Config class was selected by the user (InMemory vs MapDB). The object is then passed normally though constructors as is right now, UNLESS there is a better alternative.
 
 other:
 - CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() to detect the types?

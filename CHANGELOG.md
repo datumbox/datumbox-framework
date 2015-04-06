@@ -1,14 +1,15 @@
 CHANGELOG
 =========
 
-Version 0.6.0 - Build 20150328
+Version 0.6.0 - Build 20150406
 ------------------------------
 
 - Add support of [MapDB](http://www.mapdb.org/) database engine.
 - Remove MongoDB support due to performance issues.
 - Reduce the level of abstraction and simplify framework's architecture.
 - Rewrite the persistance mechanisms, remove unnecessary data structures and features that increased the complexity.
-- Change the public methods of the Machine Learning models to resemble Python's Scikit-Learn interfaces.
+- Change the public methods of the Machine Learning models to resemble Python's Scikit-Learn APIs.
+- Change the software License from "GNU General Public License v3.0" to "Apache License, Version 2.0".
 
 Version 0.5.1 - Build 20141105
 ------------------------------
