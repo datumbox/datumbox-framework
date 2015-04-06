@@ -114,9 +114,6 @@ public class TestUtils {
             //Turns on/off transactions
             c.setTransactions(false);
             
-            //Turns on/off asynchronous writes
-            c.setAsyncWrites(true);
-            
             return c;
         }
         return null;

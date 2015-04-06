@@ -80,10 +80,7 @@ public class MapDBConnector implements DatabaseConnector {
                 m = m.cacheDisable();
             }
             
-            if(dbConf.getAsyncWrites()) {
-                m = m.asyncWriteEnable();
-            }
-            
+            m = m.asyncWriteEnable();
             m = m.closeOnJvmShutdown();
             
             db = m.make();
@@ -181,7 +178,7 @@ public class MapDBConnector implements DatabaseConnector {
             dbRegistry.clear();
             Files.deleteIfExists(getDefaultPath());
             Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".p"));
-            //Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
+            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);

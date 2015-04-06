@@ -36,8 +36,6 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     private boolean compression = true;
     
     private boolean transactions = false;
-    
-    private boolean asyncWrites = true;
 
     @Override
     public DatabaseConnector getConnector(String database) {
@@ -79,14 +77,6 @@ public class MapDBConfiguration implements DatabaseConfiguration {
 
     public void setTransactions(boolean transactions) {
         this.transactions = transactions;
-    }
-
-    public boolean getAsyncWrites() {
-        return asyncWrites;
-    }
-
-    public void setAsyncWrites(boolean asyncWrites) {
-        this.asyncWrites = asyncWrites;
     }
     
     
