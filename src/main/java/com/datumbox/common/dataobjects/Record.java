@@ -57,16 +57,6 @@ public final class Record implements Serializable {
             this.yPredictedProbabilities = null;
         }
     }
-    
-    // new record methods
-    public static <T> Record newDataVector(T[] xArray, Object y) {
-        AssociativeArray x = new AssociativeArray();
-        for(int i=0;i<xArray.length;++i) {
-            x.internalData.put(i, xArray[i]);
-        }
-        return new Record(x, y);
-    }
-    
 
     public AssociativeArray getX() {
         if(x == null) {

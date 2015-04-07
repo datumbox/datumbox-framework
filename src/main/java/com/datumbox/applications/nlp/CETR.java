@@ -15,6 +15,7 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
@@ -123,7 +124,10 @@ public class CETR {
             //build dataset for Cluster Analysis by including the information from G
             int n = TTRlist.size();
             for(int i=0;i<n;++i) {
-                dataset.add(Record.newDataVector(new Double[] {TTRlist.get(i), G.get(i)}, null));
+                AssociativeArray xData = new AssociativeArray();
+                xData.put(0, TTRlist.get(i));
+                xData.put(1, G.get(i));
+                dataset.add(new Record(xData, null));
             }
             
             G = null;
@@ -132,7 +136,9 @@ public class CETR {
             //build dataset for Cluster Analysis by using only TTRlist info
             int n = TTRlist.size();
             for(int i=0;i<n;++i) {
-                dataset.add(Record.newDataVector(new Double[] {TTRlist.get(i)}, null));
+                AssociativeArray xData = new AssociativeArray();
+                xData.put(0, TTRlist.get(i));
+                dataset.add(new Record(xData, null));
             }
         }
         

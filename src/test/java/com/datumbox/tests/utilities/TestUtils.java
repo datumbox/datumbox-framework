@@ -17,6 +17,7 @@ package com.datumbox.tests.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
+import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
@@ -117,4 +118,14 @@ public class TestUtils {
         }
         return null;
     }
+    
+    // new record methods
+    public static <T> Record newDataVector(T[] xArray, Object y) {
+        AssociativeArray x = new AssociativeArray();
+        for(int i=0;i<xArray.length;++i) {
+            x.put(i, xArray[i]);
+        }
+        return new Record(x, y);
+    }
+    
 }
