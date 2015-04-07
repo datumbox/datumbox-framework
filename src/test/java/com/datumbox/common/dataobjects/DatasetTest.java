@@ -54,9 +54,9 @@ public class DatasetTest {
     public void testGetColumns() {
         TestUtils.log(this.getClass(), "getColumns");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset instance = new Dataset(dbConfig);
+        Dataset instance = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
@@ -90,10 +90,10 @@ public class DatasetTest {
     public void testExtractColumnValues() {
         TestUtils.log(this.getClass(), "extractColumnValues");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
-        Dataset instance = new Dataset(dbConfig);
+        Dataset instance = new Dataset(dbConf);
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -124,10 +124,10 @@ public class DatasetTest {
     public void testExtractColumnValuesByY() {
         TestUtils.log(this.getClass(), "extractColumnValuesByY");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
-        Dataset instance = new Dataset(dbConfig);
+        Dataset instance = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);

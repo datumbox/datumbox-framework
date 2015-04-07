@@ -23,6 +23,7 @@ import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.XYMinMaxNormalizer;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Random;
 import org.junit.Test;
@@ -45,57 +46,22 @@ public class MatrixLinearRegressionTest {
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        /*
-        Synthetic Data generated with:
+        Dataset[] data = Datasets.regressionNumeric(dbConf);
         
-        $x1=rand(40,50);
-        $x2=rand(1,60)/10;
-
-        $y=2+0.002*$x1+30*$x2;
-        $dataTable[]=array(array($x1,$x2),null);
-        */
-        Dataset trainingData = new Dataset(dbConfig);
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)40,(Double)1.7}, (Double)53.08));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)45,(Double)2.1}, (Double)65.09));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)41,(Double)3.8}, (Double)116.082));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)47,(Double)5.0}, (Double)152.094));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)41,(Double)2.0}, (Double)62.082));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
-        trainingData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
-        
-        Dataset validationData = new Dataset(dbConfig);
-        validationData.add(Record.newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)40,(Double)1.7}, (Double)53.08));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)45,(Double)2.1}, (Double)65.09));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)41,(Double)3.8}, (Double)116.082));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)47,(Double)5.0}, (Double)152.094));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)41,(Double)2.0}, (Double)62.082));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
-        validationData.add(Record.newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
-        
-        
-        
-        
-        //the analysis is VERY slow if not performed in memory training, so we force it anyway.
-        //memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP);
+        Dataset trainingData = data[0];
+        Dataset validationData = data[1];
         
         String dbName = "JUnitRegressor";
-
-        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, dbConfig);
+        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, dbConf);
         df.fit_transform(trainingData, new XYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         df = null;
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConfig);
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConf);
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
@@ -103,11 +69,11 @@ public class MatrixLinearRegressionTest {
         
         
         instance = null;
-        instance = new MatrixLinearRegression(dbName, dbConfig);
+        instance = new MatrixLinearRegression(dbName, dbConf);
         
         instance.validate(validationData);
         
-        df = new XYMinMaxNormalizer(dbName, dbConfig);
+        df = new XYMinMaxNormalizer(dbName, dbConf);
         
 	        
         df.denormalize(trainingData);
@@ -131,54 +97,19 @@ public class MatrixLinearRegressionTest {
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
         
-        Dataset trainingData = new Dataset(dbConfig);
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        trainingData.add(Record.newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
-        
-        
-        //the analysis is VERY slow if not performed in memory training, so we force it anyway.
-        //memoryConfiguration.setMapType(InMemoryStructureFactory.MapType.HASH_MAP);
-        
-        
+        Dataset trainingData = Datasets.regressionMixed(dbConf)[0];
+                
         String dbName = "JUnitRegressor";
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConfig);
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConf);
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         

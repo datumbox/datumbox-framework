@@ -38,12 +38,7 @@ public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-        /*
-        @Override
-        public void mapInitializer(BigDataStructureFactory dbc) {
-            super.mapInitializer(dbc, memoryConfiguration);
-        }
-        */
+        
         public Integer getN() {
             return n;
         }

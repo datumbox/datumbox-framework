@@ -15,13 +15,11 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
-import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,68 +36,29 @@ public class ChisquareSelectTest {
     
     public ChisquareSelectTest() {
     }
-
-    public static Dataset generateDataset(DatabaseConfiguration dbConfig, int n) {
-        Dataset data = new Dataset(dbConfig);
-        for(int i=0;i<n;++i) {
-            AssociativeArray xData = new AssociativeArray();
-            //important fields
-            xData.put("high_paid", (PHPfunctions.mt_rand(0, 4)>3)?1:0);
-            xData.put("has_boat", PHPfunctions.mt_rand(0, 1));
-            xData.put("has_luxury_car", PHPfunctions.mt_rand(0, 1));
-            xData.put("has_butler", PHPfunctions.mt_rand(0, 1));
-            //xData.put("has_butler", (PHPfunctions.mt_rand(0, 1)==1)?"yes":"no");
-            xData.put("has_pool", PHPfunctions.mt_rand(0, 1));
-            
-            //not important fields
-            xData.put("has_tv", PHPfunctions.mt_rand(0, 1));
-            xData.put("has_dog", PHPfunctions.mt_rand(0, 1));
-            xData.put("has_cat", PHPfunctions.mt_rand(0, 1));
-            xData.put("has_fish", PHPfunctions.mt_rand(0, 1));
-            xData.put("random_field", (double)PHPfunctions.mt_rand(0, 1000));
-            
-            double richScore = xData.getDouble("has_boat")
-                             + xData.getDouble("has_luxury_car")
-                             //+ ((xData.get("has_butler").equals("yes"))?1.0:0.0)
-                             + xData.getDouble("has_butler")
-                             + xData.getDouble("has_pool");
-            
-            Boolean isRich=false;
-            if(richScore>=2 || xData.getDouble("high_paid")==1.0) {
-                isRich = true;
-            }
-            
-            data.add(new Record(xData, isRich));
-        }
-        
-        return data;
-    }
-    
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        String dbName = "JUnitChisquareFeatureSelection";
+        Dataset trainingData = Datasets.featureSelectionCategorical(dbConf, 1000)[0];
         
-        
-        
+        String dbName = "JUnitFeatureSelection";
         ChisquareSelect.TrainingParameters param = new ChisquareSelect.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
         param.setIgnoringNumericalFeatures(false);
         param.setALevel(0.05);
         
-        Dataset trainingData = generateDataset(dbConfig, 1000);
-        ChisquareSelect instance = new ChisquareSelect(dbName, dbConfig);
+        ChisquareSelect instance = new ChisquareSelect(dbName, dbConf);
         
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new ChisquareSelect(dbName, dbConfig);
+        instance = new ChisquareSelect(dbName, dbConf);
         
         instance.transform(trainingData);
         

@@ -48,10 +48,10 @@ public class ModelerTest {
     public void testTrainAndValidate() {
         TestUtils.log(this.getClass(), "testTrainAndValidate");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
-        Dataset trainingData = new Dataset(dbConfig);
+        Dataset trainingData = new Dataset(dbConf);
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -103,7 +103,7 @@ public class ModelerTest {
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(Record.newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset newData = new Dataset(dbConfig);
+        Dataset newData = new Dataset(dbConf);
         newData.add(Record.newDataVector(new Double[] {0.0, 1.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
         
@@ -114,7 +114,7 @@ public class ModelerTest {
         
         String dbName = "JUnit";
         
-        Modeler instance = new Modeler(dbName, dbConfig);
+        Modeler instance = new Modeler(dbName, dbConf);
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         trainingParameters.setkFolds(5);
         
@@ -162,7 +162,7 @@ public class ModelerTest {
         TestUtils.log(this.getClass(), "validate");
         
         
-        instance = new Modeler(dbName, dbConfig);
+        instance = new Modeler(dbName, dbConf);
         
         instance.validate(newData);
         

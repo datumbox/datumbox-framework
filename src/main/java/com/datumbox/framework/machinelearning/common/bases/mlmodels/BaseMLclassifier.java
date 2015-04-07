@@ -57,13 +57,6 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
             super(dbc);
         }
         
-        /*
-        @Override
-        public void mapInitializer(BigDataStructureFactory dbc) {
-            super.mapInitializer(dbc, memoryConfiguration);
-        }
-        */
-        
         public Integer getN() {
             return n;
         }

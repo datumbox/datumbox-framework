@@ -36,8 +36,8 @@ public class BivariateTest {
     public BivariateTest() {
     }
 
-    private Dataset generateDataset(DatabaseConfiguration dbConfig) {
-        Dataset dataset = new Dataset(dbConfig);
+    private Dataset generateDataset(DatabaseConfiguration dbConf) {
+        Dataset dataset = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put(0, 6);
@@ -161,9 +161,9 @@ public class BivariateTest {
     public void testCovarianceMatrix() {
         TestUtils.log(this.getClass(), "covarianceMatrix");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConfig);
+        Dataset dataSet = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 4.5625);
         expResult.put2d(0, 1, 0.5875);
@@ -193,9 +193,9 @@ public class BivariateTest {
     public void testPearsonMatrix() {
         TestUtils.log(this.getClass(), "pearsonMatrix");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConfig);
+        Dataset dataSet = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.18561229707779);
@@ -225,9 +225,9 @@ public class BivariateTest {
     public void testSpearmanMatrix() {
         TestUtils.log(this.getClass(), "spearmanMatrix");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConfig);
+        Dataset dataSet = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put(0, new AssociativeArray());
         expResult.put2d(0, 0, 1.0);
@@ -258,9 +258,9 @@ public class BivariateTest {
     public void testKendalltauMatrix() {
         TestUtils.log(this.getClass(), "kendalltauMatrix");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConfig);
+        Dataset dataSet = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.066666666666667);

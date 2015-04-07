@@ -54,22 +54,28 @@ public class LatentDirichletAllocationTest {
     public void testValidate() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "validate");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
         String dbName = "JUnitTopicSelection";
 
         
         Map<Object, URI> dataset = new HashMap<>();
-        dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
-        dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
+        try {
+            dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
+            dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
+        }
+        catch(Exception ex) {
+            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+            return;
+        }
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
         wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
-        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor, dbConfig);
+        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor, dbConf);
         
         
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, dbConfig);
+        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, dbConf);
         
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
@@ -81,14 +87,14 @@ public class LatentDirichletAllocationTest {
         
         lda.validate(trainingData);
         
-        Dataset reducedTrainingData = new Dataset(dbConfig);
+        Dataset reducedTrainingData = new Dataset(dbConf);
         for(Integer rId : trainingData) {
             Record r = trainingData.get(rId);
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }
         
-        SoftMaxRegression smr = new SoftMaxRegression(dbName, dbConfig);
+        SoftMaxRegression smr = new SoftMaxRegression(dbName, dbConf);
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);

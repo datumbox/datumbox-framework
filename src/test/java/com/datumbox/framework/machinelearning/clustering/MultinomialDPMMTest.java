@@ -21,6 +21,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,24 +37,6 @@ public class MultinomialDPMMTest {
     
     public MultinomialDPMMTest() {
     }
-
-    private Dataset generateDataset(DatabaseConfiguration dbConfig) {
-        Dataset trainingData = new Dataset(dbConfig);
-        //cluster 1
-        trainingData.add(Record.newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
-        trainingData.add(Record.newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
-        trainingData.add(Record.newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 0.0,0.0,0.0,2.0}, "c1"));
-        //cluster 2
-        trainingData.add(Record.newDataVector(new Object[] {10.0,13.0, 0.0,0.0,0.0,0.0, 5.0,6.0,5.0,4.0}, "c2"));
-        trainingData.add(Record.newDataVector(new Object[] {11.0,11.0, 0.0,0.0,1.0,0.0, 6.0,7.0,7.0,3.0}, "c2"));
-        trainingData.add(Record.newDataVector(new Object[] {12.0,12.0, 0.0,0.0,0.0,2.0, 10.0,16.0,4.0,6.0}, "c2"));
-        //cluster 3
-        trainingData.add(Record.newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 5.0,6.0,5.0,4.0}, "c3"));
-        trainingData.add(Record.newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 6.0,7.0,7.0,3.0}, "c3"));
-        trainingData.add(Record.newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 10.0,16.0,4.0,6.0}, "c3"));
-        
-        return trainingData;
-    }
     
     /**
      * Test of predict method, of class MultinomialDPMM.
@@ -62,17 +45,16 @@ public class MultinomialDPMMTest {
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate"); 
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset trainingData = generateDataset(dbConfig);
-        Dataset validationData = trainingData;
+        Dataset[] data = Datasets.multinomialClusters(dbConf);
+        
+        Dataset trainingData = data[0];
+        Dataset validationData = data[1];
 
         
-        
-        
         String dbName = "JUnitClusterer";
-        
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, dbConfig);
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, dbConf);
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -84,7 +66,7 @@ public class MultinomialDPMMTest {
         
         
         instance = null;
-        instance = new MultinomialDPMM(dbName, dbConfig);
+        instance = new MultinomialDPMM(dbName, dbConf);
         
         instance.validate(validationData);
         
@@ -116,22 +98,15 @@ public class MultinomialDPMMTest {
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
         
-        Dataset trainingData = generateDataset(dbConfig);
+        Dataset trainingData = Datasets.multinomialClusters(dbConf)[0];
         
         
-        
-        
-        String dbName = "JUnitRegressor";
-
-
-        
-        
-        
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, dbConfig);
+        String dbName = "JUnitClusterer";
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, dbConf);
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);

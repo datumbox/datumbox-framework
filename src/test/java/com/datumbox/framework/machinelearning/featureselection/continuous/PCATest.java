@@ -21,6 +21,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Iterator;
 import java.util.Map;
@@ -44,49 +45,35 @@ public class PCATest {
     public void testCalculateParameters() {
         TestUtils.log(this.getClass(), "calculateParameters");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset originaldata = new Dataset(dbConfig);
-        originaldata.add(Record.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
-        originaldata.add(Record.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
-        originaldata.add(Record.<Double>newDataVector(new Double[]{7.0, 8.0, 0.0}, null));
-        originaldata.add(Record.<Double>newDataVector(new Double[]{10.0, 0.0, 12.0}, null));
-        originaldata.add(Record.<Double>newDataVector(new Double[]{13.0, 14.0, 15.0}, null));
+        Dataset[] data = Datasets.featureTransformationCPA(dbConf);
         
+        Dataset originalData = data[0];
+        Dataset validationdata = data[0].copy();
+        Dataset expResult = data[1];
         
-        
-        String dbName = "JUnitPCAdimred";
-        
-        PCA instance = new PCA(dbName, dbConfig);
+        String dbName = "JUnitFeatureSelection";
+        PCA instance = new PCA(dbName, dbConf);
         
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
         
-        instance.fit(originaldata, param);
+        instance.fit(originalData, param);
         instance=null;
         
-        Dataset newdata = originaldata;
+        instance = new PCA(dbName, dbConf);
         
-        instance = new PCA(dbName, dbConfig);
+        instance.transform(validationdata);
         
+        assertEquals(validationdata.size(), expResult.size());
         
-        Dataset expResult = new Dataset(dbConfig);
-        expResult.add(Record.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));
-        expResult.add(Record.<Double>newDataVector(new Double[]{-6.0641, 1.0143, -4.8165}, null));
-        expResult.add(Record.<Double>newDataVector(new Double[]{-7.7270, 6.7253, 2.8399}, null));
-        expResult.add(Record.<Double>newDataVector(new Double[]{-14.1401, -6.4677, 1.4920}, null));
-        expResult.add(Record.<Double>newDataVector(new Double[]{-23.8837, 3.7408, -2.3614}, null));
-        
-        instance.transform(newdata);
-        
-        assertEquals(newdata.size(), expResult.size());
-        
-        Iterator<Integer> itResult = newdata.iterator();
+        Iterator<Integer> itResult = validationdata.iterator();
         Iterator<Integer> itExpectedResult = expResult.iterator();
         
         
         while(itResult.hasNext()) {
-            Record r= newdata.get(itResult.next());
+            Record r= validationdata.get(itResult.next());
             Record r2 = expResult.get(itExpectedResult.next());
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {

@@ -19,6 +19,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,26 +41,24 @@ public class MutualInformationTest {
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        String dbName = "JUnitMutualInformationFeatureSelection";
+        Dataset trainingData = Datasets.featureSelectionCategorical(dbConf, 1000)[0];
         
-        
-        
+        String dbName = "JUnitFeatureSelection";
         MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
         param.setIgnoringNumericalFeatures(false);
         
-        Dataset trainingData = ChisquareSelectTest.generateDataset(dbConfig, 1000);
-        MutualInformation instance = new MutualInformation(dbName, dbConfig);
+        MutualInformation instance = new MutualInformation(dbName, dbConf);
         
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new MutualInformation(dbName, dbConfig);
+        instance = new MutualInformation(dbName, dbConf);
         
         instance.transform(trainingData);
         

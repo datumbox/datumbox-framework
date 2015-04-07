@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,54 +46,30 @@ public class TFIDFTest {
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        String dbName = "JUnitChisquareFeatureSelection";
+        Dataset[] data = Datasets.featureSelectionTFIDF(dbConf);
         
+        Dataset trainingData = data[0];
+        Dataset validationData = data[1];
         
-        
+        String dbName = "JUnitFeatureSelection";
         TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        Dataset trainingData = new Dataset(dbConfig);
-        
-        AssociativeArray xData1 = new AssociativeArray();
-        xData1.put("important1", 2.0);
-        xData1.put("important2", 3.0);
-        xData1.put("stopword1", 10.0);
-        xData1.put("stopword2", 4.0);
-        xData1.put("stopword3", 8.0);
-        trainingData.add(new Record(xData1, null));
-        
-        AssociativeArray xData2 = new AssociativeArray();
-        xData2.put("important1", 2.0);
-        xData2.put("important3", 5.0);
-        xData2.put("stopword1", 10.0);
-        xData2.put("stopword2", 2.0);
-        xData2.put("stopword3", 4.0);
-        trainingData.add(new Record(xData2, null));
-        
-        AssociativeArray xData3 = new AssociativeArray();
-        xData3.put("important2", 2.0);
-        xData3.put("important3", 5.0);
-        xData3.put("stopword1", 10.0);
-        xData3.put("stopword2", 2.0);
-        xData3.put("stopword3", 4.0);
-        trainingData.add(new Record(xData3, null));
-        
-        TFIDF instance = new TFIDF(dbName, dbConfig);
+        TFIDF instance = new TFIDF(dbName, dbConf);
         
         instance.fit(trainingData, param);
         instance = null;
         
         
-        instance = new TFIDF(dbName, dbConfig);
+        instance = new TFIDF(dbName, dbConf);
         
-        instance.transform(trainingData);
+        instance.transform(validationData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
-        Set<Object> result = trainingData.getColumns().keySet();
+        Set<Object> result = validationData.getColumns().keySet();
         assertEquals(expResult, result);
         instance.erase();
     }

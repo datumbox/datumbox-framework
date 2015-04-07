@@ -21,6 +21,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,46 +46,21 @@ public class BayesianEnsembleMethodTest {
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset trainingData = new Dataset(dbConfig);
-        trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
-
-        trainingData.add(Record.newDataVector(new String[] {"pos","neg"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","neg"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","neg"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","pos"}, "pos"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","pos"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","pos"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","neg"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"pos","neg"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
-        trainingData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
+        Dataset[] data = Datasets.ensembleLearningResponses(dbConf);
         
-        
-        Dataset validationData = new Dataset(dbConfig);
-        validationData.add(Record.newDataVector(new String[] {"pos","pos"}, "pos"));
-        validationData.add(Record.newDataVector(new String[] {"pos","neg"}, "pos"));
-        validationData.add(Record.newDataVector(new String[] {"neg","pos"}, "neg"));
-        validationData.add(Record.newDataVector(new String[] {"neg","neg"}, "neg"));
-        
-        
+        Dataset trainingData = data[0];
+        Dataset validationData = data[1];
         
         String dbName = "JUnitBayesianEnsembleMethod";
-        
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConfig);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         
-        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, dbConfig);
+        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, dbConf);
         
         BayesianEnsembleMethod.TrainingParameters param = new BayesianEnsembleMethod.TrainingParameters();
         
@@ -92,7 +68,7 @@ public class BayesianEnsembleMethodTest {
         
         
         instance = null;
-        instance = new BayesianEnsembleMethod(dbName, dbConfig);
+        instance = new BayesianEnsembleMethod(dbName, dbConf);
         
         instance.validate(validationData);
         

@@ -65,16 +65,24 @@ public class CETRTest {
     public void testExtract() {
         TestUtils.log(this.getClass(), "extract");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED)); 
-        DatabaseConfiguration dbConfig = TestUtils.getDBConfig();
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         String dbName = "JUnitClusterer";
         
-        String text = CETRTest.webRequest("http://www.example.org/");
+        String text = null;
+        try {
+            text = CETRTest.webRequest("http://www.example.org/");
+        }
+        catch(Exception ex) {
+            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+            return;
+        }
+        
         CETR.Parameters parameters = new CETR.Parameters();
         parameters.setNumberOfClusters(2);
         parameters.setAlphaWindowSizeFor2DModel(3);
         parameters.setSmoothingAverageRadius(2);
-        CETR instance = new CETR(dbName, dbConfig);
+        CETR instance = new CETR(dbName, dbConf);
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
         String result = instance.extract(text, parameters);
         instance=null;
