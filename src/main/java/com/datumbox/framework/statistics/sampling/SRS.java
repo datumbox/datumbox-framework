@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Simple Random Sampling
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class SRS {
     /**

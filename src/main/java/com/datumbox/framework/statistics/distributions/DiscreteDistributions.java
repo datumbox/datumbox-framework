@@ -19,7 +19,7 @@ import com.datumbox.framework.mathematics.discrete.ArithmeticMath;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class DiscreteDistributions {
     /**

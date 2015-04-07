@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class Lilliefors {
     /**

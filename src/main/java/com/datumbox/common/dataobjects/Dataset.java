@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public final class Dataset implements Serializable, Iterable<Integer> {
     

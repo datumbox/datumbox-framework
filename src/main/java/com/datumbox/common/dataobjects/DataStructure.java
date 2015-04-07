@@ -33,7 +33,7 @@ import java.io.Serializable;
  * AssociativeArray2D		Map<Object, AssociativeArray>
  * DataTable2D                  Map<Object, AssociativeArray>
  * 
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  * @param <T>
  */
 public abstract class DataStructure<T> implements Serializable {

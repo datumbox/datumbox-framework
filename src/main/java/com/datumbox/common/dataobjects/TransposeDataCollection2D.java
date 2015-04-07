@@ -22,7 +22,7 @@ import java.util.Set;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public final class TransposeDataCollection2D extends DataStructureMap<Map<Object, TransposeDataCollection>> {
     

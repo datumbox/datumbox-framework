@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public final class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object> {
     

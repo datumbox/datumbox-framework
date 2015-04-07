@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class ShapiroWilk {
     /**

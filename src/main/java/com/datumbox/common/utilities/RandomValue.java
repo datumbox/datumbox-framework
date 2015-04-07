@@ -19,7 +19,7 @@ import java.util.Random;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class RandomValue {
     private static Random randomGenerator = new Random();

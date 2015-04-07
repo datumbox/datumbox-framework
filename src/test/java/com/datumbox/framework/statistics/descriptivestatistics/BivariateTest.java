@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class BivariateTest {
     

@@ -27,7 +27,7 @@ import java.util.List;
  * Base class for every ModelParameter class in the framework. It automatically
  * initializes all the BidMap fields by using reflection.
  * 
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public abstract class BaseModelParameters implements Learnable {
     

@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class ClusterSamplingTest {
     

@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public final class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
 

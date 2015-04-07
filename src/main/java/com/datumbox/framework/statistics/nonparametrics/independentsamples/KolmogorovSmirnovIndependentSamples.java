@@ -24,7 +24,7 @@ import java.util.TreeSet;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class KolmogorovSmirnovIndependentSamples {
     /**

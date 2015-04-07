@@ -17,7 +17,7 @@ package com.datumbox.common.utilities;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  * @param <T>
  */
 public class ArrayIndexReverseComparator<T extends Comparable<T>> extends ArrayIndexComparator<T> {

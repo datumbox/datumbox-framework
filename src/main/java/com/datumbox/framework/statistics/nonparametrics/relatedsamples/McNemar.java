@@ -19,7 +19,7 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class McNemar {
     /**

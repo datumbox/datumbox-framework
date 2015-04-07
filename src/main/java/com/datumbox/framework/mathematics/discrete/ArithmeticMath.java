@@ -17,7 +17,7 @@ package com.datumbox.framework.mathematics.discrete;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class ArithmeticMath {
     /**

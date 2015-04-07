@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 /**
  * Systematic Sampling
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class SystematicSampling {
     /**

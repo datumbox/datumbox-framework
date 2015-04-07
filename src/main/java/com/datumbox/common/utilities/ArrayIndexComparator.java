@@ -21,7 +21,7 @@ import java.util.Comparator;
  * Modified code found at:
  * http://stackoverflow.com/questions/4859261/get-the-indices-of-an-array-after-sorting
  * 
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  * @param <T>
  */
 public class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Integer> {

@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class Smoothing {
     /**

@@ -25,7 +25,7 @@ import java.util.Random;
 
 /**
  *
- * @author vasilis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class Datasets {
     

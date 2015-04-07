@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Class that simulates PHP array functions
  * 
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class PHPfunctions {
     

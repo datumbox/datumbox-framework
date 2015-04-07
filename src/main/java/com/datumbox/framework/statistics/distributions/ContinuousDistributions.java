@@ -20,7 +20,7 @@ import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class ContinuousDistributions {
     

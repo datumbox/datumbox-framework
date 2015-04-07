@@ -17,7 +17,7 @@ package com.datumbox;
 
 /**
  *
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class Datumbox {
 

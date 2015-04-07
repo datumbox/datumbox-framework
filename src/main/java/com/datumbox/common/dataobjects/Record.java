@@ -24,7 +24,7 @@ import java.util.Objects;
  * information about the x, y, predicted class and predicted probabilities of the
  * observation. The record is immutable.
  * 
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public final class Record implements Serializable {
     
