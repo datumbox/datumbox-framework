@@ -39,11 +39,11 @@ public class PCATest {
     }
 
     /**
-     * Test of _fit123123123 method, of class PCA.
+     * Test of selectFeatures method, of class PCA.
      */
     @Test
-    public void testCalculateParameters() {
-        TestUtils.log(this.getClass(), "calculateParameters");
+    public void testSelectFeatures() {
+        TestUtils.log(this.getClass(), "selectFeatures");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

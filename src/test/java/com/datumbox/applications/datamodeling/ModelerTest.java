@@ -57,11 +57,6 @@ public class ModelerTest {
         Dataset newData = data[1];
         
         
-        
-        
-        
-        
-        
         String dbName = "JUnit";
         
         Modeler instance = new Modeler(dbName, dbConf);

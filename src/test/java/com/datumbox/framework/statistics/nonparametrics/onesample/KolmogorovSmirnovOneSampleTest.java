@@ -33,6 +33,8 @@ public class KolmogorovSmirnovOneSampleTest {
     }
     /**
      * Test of test method, of class KolmogorovSmirnovOneSample.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testTest() throws Exception {

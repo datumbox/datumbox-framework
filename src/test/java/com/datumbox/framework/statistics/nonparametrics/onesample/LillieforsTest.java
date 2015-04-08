@@ -33,6 +33,8 @@ public class LillieforsTest {
 
     /**
      * Test of test method, of class Lilliefors.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testTest() throws Exception {

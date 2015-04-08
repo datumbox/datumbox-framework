@@ -119,11 +119,8 @@ public class SoftMaxRegressionTest {
         
         SoftMaxRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
-        	        
         df.denormalize(trainingData);
         df.erase();
-
-
         
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();

@@ -26,6 +26,7 @@ import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import libsvm.svm;
 import libsvm.svm_parameter;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -47,6 +48,7 @@ public class SupportVectorMachineTest {
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
@@ -100,6 +102,7 @@ public class SupportVectorMachineTest {
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
         RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
@@ -115,11 +118,9 @@ public class SupportVectorMachineTest {
         
         SupportVectorMachine.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
-        //double expResult = 0.5861704961704961;
-        double expResult = 0.50;
+        double expResult = 0.5861704961704961;
         double result = vm.getMacroF1();
-        assertTrue(result>expResult); //The SVM implementation uses Math.Rand() internally, thus the accuraccy depends on the seed and can only roughly validated
-        //assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
     }
 
