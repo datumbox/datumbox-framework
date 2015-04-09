@@ -41,12 +41,12 @@ public class InMemoryConnector implements DatabaseConnector {
     
     public InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         this.dbConf = dbConf;
-        String rootDbFolder = this.dbConf.getOutputFolder();
-        if(rootDbFolder.isEmpty()) {
+        String outputFolder = this.dbConf.getOutputFolder();
+        if(outputFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }
         else {
-            filepath= Paths.get(rootDbFolder + File.separator + database);
+            filepath= Paths.get(outputFolder + File.separator + database);
         }
     }
 
