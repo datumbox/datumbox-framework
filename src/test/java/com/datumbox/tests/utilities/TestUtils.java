@@ -18,6 +18,7 @@ package com.datumbox.tests.utilities;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.ConfigurationFactory;
 import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
@@ -92,29 +93,10 @@ public class TestUtils {
 
     public static DatabaseConfiguration getDBConfig() {
         if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
-            InMemoryConfiguration c = new InMemoryConfiguration();
-            
-            //Path of Output folder
-            c.setOutputFolder("./");
-            
-            return c;
+            return ConfigurationFactory.INMEMORY.getConfiguration();
         } 
         else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
-            MapDBConfiguration c = new MapDBConfiguration();
-            
-            //Path of Output folder
-            c.setOutputFolder("./");
-            
-            //Size of LRU cache. Zero turns off caching
-            c.setCacheSize(10000);
-            
-            //Turns on/off the compression
-            c.setCompression(true);
-            
-            //Turns on/off transactions
-            c.setTransactions(false);
-            
-            return c;
+            return ConfigurationFactory.MAPDB.getConfiguration();
         }
         return null;
     }

@@ -15,6 +15,8 @@
  */
 package com.datumbox.common.persistentstorage.interfaces;
 
+import java.util.Properties;
+
 /**
  * DB connectors can be configured by objects that implement this interface.
  * 
@@ -38,4 +40,11 @@ public interface DatabaseConfiguration {
      * @return 
      */
     public DatabaseConnector getConnector(String database);
+    
+    /**
+     * Initializes the DatabaseConfiguration object by using a property file.
+     * 
+     * @param properties 
+     */
+    public void load(Properties properties);
 }

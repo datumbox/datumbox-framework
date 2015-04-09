@@ -17,6 +17,7 @@ package com.datumbox.common.persistentstorage.inmemory;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import java.util.Properties;
 
 /**
  *
@@ -38,6 +39,11 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     @Override
     public String getDBnameSeparator() {
         return DBNAME_SEPARATOR;
+    }
+
+    @Override
+    public void load(Properties properties) {
+        outputFolder = properties.getProperty("dbConfig.InMemoryConfiguration.outputFolder");
     }
 
     public String getOutputFolder() {

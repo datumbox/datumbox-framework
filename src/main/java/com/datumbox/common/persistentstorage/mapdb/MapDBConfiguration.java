@@ -17,6 +17,7 @@ package com.datumbox.common.persistentstorage.mapdb;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import java.util.Properties;
 
 /**
  *
@@ -44,6 +45,14 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     @Override
     public String getDBnameSeparator() {
         return DBNAME_SEPARATOR;
+    }
+
+    @Override
+    public void load(Properties properties) {
+        outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
+        cacheSize = Integer.valueOf(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
+        compression = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.compression").toLowerCase());
+        transactions = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.transactions").toLowerCase());
     }
 
     public String getOutputFolder() {
