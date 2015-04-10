@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.io.Serializable;
  * This interface is used to mark classes which store parameters that are learned 
  * during training.
  * 
- * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public interface Learnable extends Serializable {
     

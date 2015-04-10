@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.apache.commons.math3.linear.RealVector;
 /**
  * Multivariate Normal with Normal-Inverse-Wishart prior.
  * 
- * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.ModelParameters, GaussianDPMM.TrainingParameters, GaussianDPMM.ValidationMetrics> {
     /*

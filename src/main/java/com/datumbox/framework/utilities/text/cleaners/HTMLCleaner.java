@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
- * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class HTMLCleaner {
     private final static Pattern IMG_ALT_TITLE_PATTERN = Pattern.compile("<[\\s]*img[^>]*[alt|title]=[\\s]*[\\\"']?([^>\\\"']+)[\\\"']?[^>]*>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);

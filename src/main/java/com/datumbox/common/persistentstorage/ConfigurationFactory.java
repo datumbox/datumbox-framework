@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.Properties;
  * Factory that initializes and returns the DatabaseConfiguration based on the
  * configuration file.
  * 
- * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public enum ConfigurationFactory {
     INMEMORY(InMemoryConfiguration.class),
@@ -59,7 +59,7 @@ public enum ConfigurationFactory {
         ClassLoader cl = ConfigurationFactory.class.getClassLoader();
         
         //Load default properties from jar
-        try (InputStream in = cl.getResourceAsStream("dbconf-default.properties")) {
+        try (InputStream in = cl.getResourceAsStream("datumbox.config.default.properties")) {
             properties.load(in);
         }
         catch(IOException ex) {
@@ -67,9 +67,9 @@ public enum ConfigurationFactory {
         }
         
         //Look for user defined properties
-        if(cl.getResource("dbconf.properties")!=null) {
-            //Override them if they exist
-            try (InputStream in = cl.getResourceAsStream("dbconf.properties")) {
+        if(cl.getResource("datumbox.config.properties")!=null) {
+            //Override the default if they exist
+            try (InputStream in = cl.getResourceAsStream("datumbox.config.properties")) {
                 properties.load(in);
             }
             catch(IOException ex) {

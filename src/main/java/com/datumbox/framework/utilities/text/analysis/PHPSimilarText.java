@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package com.datumbox.framework.utilities.text.analysis;
  * original code can be found on:
  * http://stackoverflow.com/questions/14136349/how-does-similar-text-work
  * 
- * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class PHPSimilarText {
     

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import lpsolve.LpSolveException;
  * lpsolve 5.5.2.0. http://lpsolve.sourceforge.net/5.5/
  * References: http://en.wikipedia.org/wiki/Data_envelopment_analysis and http://deazone.com/en/resources/tutorial/weights-to-determine-relative-efficiency
  * 
- * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class DataEnvelopmentAnalysis {
     /**
@@ -44,7 +44,7 @@ public class DataEnvelopmentAnalysis {
     * The DeaRecord is a wrapper Object which stores the input and output parts of our
     * data points.
     * 
-    * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
+    * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
     */
     public static class DeaRecord {
         /**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis at datumbox.com>
+    Copyright (C) 2013-2015 Vasilis Vryniotis <bbriniotis@datumbox.com>
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
     <version>0.6.0</version>
-    <packaging>jar</packaging>
     
     <name>Datumbox Machine Learning Framework</name>
-    <description>Datumbox is an open-source Machine Learning framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
+    <description>Datumbox is an open-source Machine Learning Framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
     <url>https://github.com/datumbox/datumbox-framework/</url>
     <organization>
     	<name>Datumbox</name>
     	<url>http://www.datumbox.com/</url>
     </organization>
+    <inceptionYear>2013</inceptionYear>
     
     <developers>
         <developer>
@@ -72,11 +72,13 @@
     <properties>
         <java-version>1.8</java-version>
         <maven-plugin-version>2.3.2</maven-plugin-version>
-        <license-maven-plugin-version>2.8</license-maven-plugin-version>
         <maven-javadoc-plugin-version>2.10.1</maven-javadoc-plugin-version>
         <maven-source-plugin-version>2.4</maven-source-plugin-version>
-        <gpg-plugin-version>1.5</gpg-plugin-version>
         <maven-surfire-plugin-version>2.17</maven-surfire-plugin-version>
+        <maven-jar-plugin-version>2.6</maven-jar-plugin-version>
+        <gmaven-plugin-version>1.0</gmaven-plugin-version>
+        <license-maven-plugin-version>2.8</license-maven-plugin-version>
+        <gpg-plugin-version>1.5</gpg-plugin-version>
         
         <junit-version>4.11</junit-version>
         <commons-lang-version>3.3.2</commons-lang-version>
@@ -85,15 +87,11 @@
         <libsvm-version>3.17</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
         <mapdb-version>1.0.7</mapdb-version>
-        <gpg.keyname>7083A486</gpg.keyname>
         <logback.version>1.1.2</logback.version>
         
+        <gpg.keyname>7083A486</gpg.keyname>
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
-        
-        <copyrightYears>2013-2015</copyrightYears>
-        <copyrightOwner>Vasilis Vryniotis</copyrightOwner>
-        <copyrightEmail>bbriniotis at datumbox.com</copyrightEmail>
     </properties>
     
     <scm>
@@ -105,8 +103,11 @@
     <build>
         <resources>
            <resource>
-              <directory>src/main/resources</directory>
-              <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>license.txt</exclude>
+                </excludes>  
            </resource>
         </resources>
         <plugins>
@@ -119,14 +120,6 @@
                     <target>${java-version}</target>
                     <showDeprecation>true</showDeprecation>
                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surfire-plugin-version}</version>
-                <configuration>
-                    <argLine>-Xmx512M</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -159,22 +152,80 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surfire-plugin-version}</version>
+                <configuration>
+                    <argLine>-Xmx512M</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>                   
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.datumbox.Datumbox</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Author>${project.developers[0].name}</Implementation-Author>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Website>${organization.url}</Implementation-Website>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>${gmaven-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                import java.util.Date
+                                import java.text.MessageFormat
+                                def vartimestamp = MessageFormat.format("{0,date,yyyy}", new Date())
+                                project.properties['currentYear'] = vartimestamp
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <version>${license-maven-plugin-version}</version>
                 <configuration>
-                    <header>src/main/resources/licenseheader.txt</header>
+                    <header>src/main/resources/license.txt</header>
                     <properties>
-                        <copyrightYears>${copyrightYears}</copyrightYears>
-                        <copyrightOwner>${copyrightOwner}</copyrightOwner>
-                        <copyrightEmail>${copyrightEmail}</copyrightEmail>
+                        <copyrightYears>${inceptionYear}-${currentYear}</copyrightYears>
+                        <copyrightOwner>${project.developers[0].name}</copyrightOwner>
+                        <copyrightEmail>${project.developers[0].email}</copyrightEmail>
                     </properties>
                     <excludes>
                         <exclude>README.md</exclude>
                         <exclude>LICENSE</exclude>
                         <exclude>TODO.txt</exclude>
                         <exclude>CHANGELOG.md</exclude>
-                        <exclude>src/main/resources/licenseheader.txt</exclude>
+                        <exclude>src/main/resources/license.txt</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -262,5 +313,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

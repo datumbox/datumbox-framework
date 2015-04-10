@@ -1,40 +1,42 @@
 CODE IMPROVEMENTS
 =================
 
-other:
-- CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() to detect the types?
+- CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() method and set types instead?
 
 - Serialization improvements: set serialVersionUID?
-- create the required exceptions
+- Create the required Exceptions
+- Add Threads support
 
 
 DOCUMENTATION
 =============
 
-- Documenting the code
-- How-to blog post on building a Text Classification model
+- Improve the code documentation
+- Write How-to blog post on building a Text Classification model
 
 
 NEW ALGORITHMS
 ==============
 
-- include an anomaly detection algorithm
-- develop the FunkSVD: Also PLSI as probabilistic version of SVD
-- ability to search through the configuration space and find the best performing algorithmic configuration
+- Include an anomaly detection algorithm
+- Develop the FunkSVD and PLSI as probabilistic version of SVD
+- Add the ability to search through the configuration space and find the best performing algorithmic configuration
 
 
 CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE:
 ================================================
 
-Java StoredMap + BerkeleyDB:
-http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
-http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
+- Java StoredMap + BerkeleyDB:
+	http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
+	http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
 
-Vanilla-java - HugeCollections:
-https://code.google.com/p/vanilla-java/wiki/HugeCollections
+- Vanilla-java - HugeCollections:
+	https://code.google.com/p/vanilla-java/wiki/HugeCollections
 
-Fastutil:
-http://fastutil.di.unimi.it/#install
+- Fastutil:
+	http://fastutil.di.unimi.it/#install
 
-Joafip:
-http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
+- Joafip:
+	http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
+
+
