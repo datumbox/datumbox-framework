@@ -112,6 +112,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             Record r = data.get(rId);
             AssociativeArray xData = new AssociativeArray(r.getX());
             
+            boolean modified = false;
             for(Object column : minColumnValues.keySet()) {
                 Double value = xData.getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any normalization
@@ -132,10 +133,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 }
                 
                 xData.put(column, normalizedValue);
+                modified = true;
             }
             
-            r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-            data.set(rId, r);
+            if(modified) {
+                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                data.set(rId, r);
+            }
         }
     }
     
@@ -144,6 +148,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             Record r = data.get(rId);
             AssociativeArray xData = new AssociativeArray(r.getX());
             
+            boolean modified = false;
             for(Object column : minColumnValues.keySet()) {
                 Double value = xData.getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any denormalization
@@ -159,10 +164,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 else {
                     xData.put(column, value*(max-min) + min);
                 }
+                modified = true;
             }
             
-            r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-            data.set(rId, r);
+            if(modified) {
+                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                data.set(rId, r);
+            }
         }
     }
     

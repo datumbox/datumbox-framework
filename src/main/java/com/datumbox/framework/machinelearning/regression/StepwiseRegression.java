@@ -22,7 +22,9 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -155,7 +157,11 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
                 break; //nothing to remove, the highest pvalue is less than the aOut
             }
             
-            copiedTrainingData.removeColumn(maxPvalueEntry.getKey());
+            
+            Set<Object> removedFeatures = new HashSet<>();
+            removedFeatures.add(maxPvalueEntry.getKey());
+            copiedTrainingData.removeColumns(removedFeatures);
+            removedFeatures = null;
             
             if(copiedTrainingData.getColumnSize()==0) {
                 break; //if no more features exit

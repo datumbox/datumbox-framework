@@ -117,12 +117,10 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         Object someClass = classesSet.iterator().next();
         
         
-        Map<Object, Object> cachedLogPriors = new HashMap<>(logPriors); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
-        
         for(Integer rId : newData) {
             Record r = newData.get(rId);
             //Build new map here! reinitialize the prediction scores with the scores of the classes
-            AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(cachedLogPriors)); 
+            AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(logPriors)); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();

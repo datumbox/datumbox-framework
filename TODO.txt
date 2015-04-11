@@ -1,9 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Remove static RandomValue.randomGenerator? 
-- Profile Chisquare feature selector?
-
 - CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() method and set types instead?
 
 - Serialization improvements: set serialVersionUID?

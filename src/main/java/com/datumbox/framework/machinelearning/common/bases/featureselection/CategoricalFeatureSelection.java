@@ -168,9 +168,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
             }
         }
         
-        for(Object feature: tmp_removedColumns.keySet()) {
-            data.removeColumn(feature);
-        }
+        
+        data.removeColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
         dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
@@ -195,6 +194,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
             throw new RuntimeException("The featureCounts map should be empty.");
         }
         
+        Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
+        
         //find the featureCounts
         for(Integer rId : data) {
             Record r = data.get(rId);
@@ -202,7 +203,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                 Object feature = entry.getKey();
                 
                 if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(data.getColumns().get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
+                    if(columnTypes.get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
                         continue; //skip any further analysis
                     }
                 }

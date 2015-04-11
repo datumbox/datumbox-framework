@@ -199,9 +199,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
             }
         }
         
-        for(Object feature: tmp_removedColumns.keySet()) {
-            newData.removeColumn(feature);
-        }
+        newData.removeColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
         dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);

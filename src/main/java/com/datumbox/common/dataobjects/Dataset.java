@@ -17,11 +17,13 @@ package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 /**
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
@@ -218,27 +220,38 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Remove completely a column from the dataset.
+     * Remove completely a list of columns from the dataset.
      * 
-     * @param column 
+     * @param columnSet
      * @return  
      */
-    public boolean removeColumn(Object column) {        
-        if(columns.remove(column)!=null) { //try to remove it from the columns and it if it removed remove it from the list too
-            for(Integer rId : this) {
-                Record r = recordList.get(rId);
-                if(r.getX().containsKey(column)) {
-                    AssociativeArray xData = new AssociativeArray(r.getX());
-                    xData.remove(column);
-                    r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                    recordList.put(rId, r);
-                }
-            }
-            
-            return true;
+    public void removeColumns(Set<Object> columnSet) {  
+        columnSet.retainAll(columns.keySet()); //keep only those columns that are already known to the Meta data of the Dataset
+        
+        if(columnSet.isEmpty()) {
+            return;
         }
         
-        return false;
+        //remove all the columns from the Meta data
+        for(Object column : columnSet) {
+            columns.remove(column);
+        }
+
+        for(Integer rId : this) {
+            Record r = recordList.get(rId);
+            
+            boolean modified = false;
+            AssociativeArray xData = new AssociativeArray(r.getX());
+            for(Object column: columnSet) {
+                modified |= xData.remove(column)!=null;
+            }
+            
+            if(modified) {
+                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                recordList.put(rId, r);
+            }
+        }
+        
     }
     
     /**
