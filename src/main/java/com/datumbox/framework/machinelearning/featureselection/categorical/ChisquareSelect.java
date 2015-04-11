@@ -63,7 +63,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
     
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
-        
+        logger.debug("estimateFeatureScores()");
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         

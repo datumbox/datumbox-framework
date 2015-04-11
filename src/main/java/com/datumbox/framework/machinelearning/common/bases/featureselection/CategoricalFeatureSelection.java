@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -127,7 +129,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", true); //map which stores the counts of the features
 
         
-        //build the maps with teh feature statistics and counts
+        //build the maps with the feature statistics and counts
         buildFeatureStatistics(data, tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
         
         
@@ -151,6 +153,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     }
     
     private static void filterData(Dataset data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
+        Logger logger = LoggerFactory.getLogger(CategoricalFeatureSelection.class);
+        logger.debug("filterData()");
         
         Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", true);
         
@@ -168,7 +172,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
             }
         }
         
-        
+        logger.debug("Removing Columns");
         data.removeColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
@@ -189,6 +193,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         //feature selection. If called statically, the map should be instatiated
         //just before the call to this method and dropped immediately after 
         //since it has no use.
+        Logger logger = LoggerFactory.getLogger(CategoricalFeatureSelection.class);
+        logger.debug("removeRareFeatures()");
         
         if(!featureCounts.isEmpty()) {
             throw new RuntimeException("The featureCounts map should be empty.");
@@ -197,6 +203,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
         
         //find the featureCounts
+        
+        logger.debug("Estimating featureCounts");
         for(Integer rId : data) {
             Record r = data.get(rId);
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -227,6 +235,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
 
         //remove rare features
         if(rareFeatureThreshold != null && rareFeatureThreshold>0) {
+            logger.debug("Removing rare features");
             //remove features from the featureCounts list
             Iterator<Map.Entry<Object, Double>> it = featureCounts.entrySet().iterator();
             while(it.hasNext()) {
@@ -236,12 +245,13 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                 }
             }
             
-            //then remove the features in dataset that does not appear in the list
+            //then remove the features in dataset that do not appear in the list
             filterData(data, dbc, featureCounts, ignoringNumericalFeatures);
         }
     }
     
     private void buildFeatureStatistics(Dataset data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
+        logger.debug("buildFeatureStatistics()");
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
@@ -251,7 +261,9 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         //The map must be empty or else you get a RuntimeException
         removeRareFeatures(data, knowledgeBase.getDbc(), rareFeatureThreshold, featureCounts, ignoringNumericalFeatures);
         
+        Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
         //now find the classCounts and the featureClassCounts
+        logger.debug("Estimating classCounts and featureClassCounts");
         for(Integer rId : data) {
             Record r = data.get(rId);
             Object theClass = r.getY();
@@ -268,7 +280,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                 Object feature = entry.getKey();
                 
                 if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(data.getColumns().get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
+                    if(columnTypes.get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
                         continue; //skip any further analysis
                     }
                 }

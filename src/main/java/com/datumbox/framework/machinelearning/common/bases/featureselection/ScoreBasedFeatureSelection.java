@@ -20,6 +20,8 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.google.common.collect.Ordering;
 import java.util.Iterator;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.
@@ -50,10 +52,14 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
     
     
     public static void selectHighScoreFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
+        Logger logger = LoggerFactory.getLogger(ScoreBasedFeatureSelection.class);
+        logger.debug("selectHighScoreFeatures()");
         
+        logger.debug("Estimating the minPermittedScore");
         Double minPermittedScore=Ordering.<Double>natural().greatestOf(featureScores.values().iterator(), maxFeatures).get(maxFeatures-1);
 
         //remove any entry with score less than the minimum permitted one
+        logger.debug("Removing features with scores less than threshold");
         Iterator<Map.Entry<Object, Double>> it = featureScores.entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<Object, Double> entry = it.next();
@@ -65,6 +71,7 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
         //if some extra features still exist (due to ties on the scores) remove some of those extra features
         int numOfExtraFeatures = featureScores.size()-maxFeatures;
         if(numOfExtraFeatures>0) {
+            logger.debug("Removing extra features caused by ties");
             it = featureScores.entrySet().iterator();
             while(it.hasNext() && numOfExtraFeatures>0) {
                 Map.Entry<Object, Double> entry = it.next();
