@@ -48,7 +48,7 @@ public class CETR {
      *  http://www.cs.uiuc.edu/~hanj/pdf/www10_tweninger.pdf 
      *  http://web.engr.illinois.edu/~weninge1/cetr/
      */
-    private final static Pattern NUMBER_OF_TAGS_PATTERN = Pattern.compile("<[^>]+?>", Pattern.DOTALL);
+    private static final Pattern NUMBER_OF_TAGS_PATTERN = Pattern.compile("<[^>]+?>", Pattern.DOTALL);
     
     public static class Parameters implements Parameterizable {
         private int numberOfClusters = 2;

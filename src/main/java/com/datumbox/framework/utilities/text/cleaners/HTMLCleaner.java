@@ -28,13 +28,13 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class HTMLCleaner {
-    private final static Pattern IMG_ALT_TITLE_PATTERN = Pattern.compile("<[\\s]*img[^>]*[alt|title]=[\\s]*[\\\"']?([^>\\\"']+)[\\\"']?[^>]*>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
-    private final static Pattern NON_TEXT_TAGS_PATTERN = Pattern.compile("<[\\s]*(head|style|script|object|embed|applet|noframes|noscript|noembed|option)[^>]*?>.*?</\\1>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
-    private final static Pattern REMOVE_ATTRIBUTES_PATTERN = Pattern.compile("<([a-z!][a-z0-9]*)[^>]*?(/?)>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
-    private final static Pattern TITLE_PATTERN = Pattern.compile("<title[^>]*>(.*?)</title>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
-    private final static Pattern HYPERLINK_PATTERN = Pattern.compile("<[\\s]*a[^>]*href[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*>(.*?)</a>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
-    private final static Pattern METATAG_PATTERN = Pattern.compile("<[\\s]*meta[^>]*name[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*content[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
-    private final static Pattern HX_PATTERN = Pattern.compile("<[\\s]*(H[1-6])[^>]*?>(.*?)</\\1>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);    
+    private static final Pattern IMG_ALT_TITLE_PATTERN = Pattern.compile("<[\\s]*img[^>]*[alt|title]=[\\s]*[\\\"']?([^>\\\"']+)[\\\"']?[^>]*>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+    private static final Pattern NON_TEXT_TAGS_PATTERN = Pattern.compile("<[\\s]*(head|style|script|object|embed|applet|noframes|noscript|noembed|option)[^>]*?>.*?</\\1>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+    private static final Pattern REMOVE_ATTRIBUTES_PATTERN = Pattern.compile("<([a-z!][a-z0-9]*)[^>]*?(/?)>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
+    private static final Pattern TITLE_PATTERN = Pattern.compile("<title[^>]*>(.*?)</title>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
+    private static final Pattern HYPERLINK_PATTERN = Pattern.compile("<[\\s]*a[^>]*href[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*>(.*?)</a>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
+    private static final Pattern METATAG_PATTERN = Pattern.compile("<[\\s]*meta[^>]*name[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*content[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
+    private static final Pattern HX_PATTERN = Pattern.compile("<[\\s]*(H[1-6])[^>]*?>(.*?)</\\1>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);    
     
     public static String replaceImgWithAlt(String text) {
         Matcher m = IMG_ALT_TITLE_PATTERN.matcher(text);

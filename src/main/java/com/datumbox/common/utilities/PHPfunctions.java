@@ -31,8 +31,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class PHPfunctions {
     
-    private final static Pattern LTRIM = Pattern.compile("^\\s+");
-    private final static Pattern RTRIM = Pattern.compile("\\s+$");
+    private static final Pattern LTRIM = Pattern.compile("^\\s+");
+    private static final Pattern RTRIM = Pattern.compile("\\s+$");
     
     /**
      * Trims spaces on the left.

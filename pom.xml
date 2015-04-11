@@ -92,6 +92,8 @@
         <gpg.keyname>7083A486</gpg.keyname>
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     
     <scm>
@@ -221,10 +223,11 @@
                         <copyrightEmail>${project.developers[0].email}</copyrightEmail>
                     </properties>
                     <excludes>
-                        <exclude>README.md</exclude>
-                        <exclude>LICENSE</exclude>
-                        <exclude>TODO.txt</exclude>
                         <exclude>CHANGELOG.md</exclude>
+                        <exclude>LICENSE</exclude>
+                        <exclude>NOTICE</exclude>
+                        <exclude>README.md</exclude>
+                        <exclude>TODO.txt</exclude>
                         <exclude>src/main/resources/license.txt</exclude>
                     </excludes>
                 </configuration>
