@@ -18,7 +18,6 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
@@ -39,18 +38,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     }
     
     public static class TrainingParameters extends BaseWrapper.TrainingParameters<DataTransformer, FeatureSelection, BaseMLmodel> {
-        //primitives/wrappers
-        private Integer kFolds = 5;
-        
-        //Field Getters/Setters
-
-        public Integer getkFolds() {
-            return kFolds;
-        }
-
-        public void setkFolds(Integer kFolds) {
-            this.kFolds = kFolds;
-        }
 
     }
 
@@ -97,17 +84,9 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         //initialize mlmodel
         Class mlClass = trainingParameters.getMLmodelClass();
         mlmodel = BaseMLmodel.<BaseMLmodel>newInstance(mlClass, dbName, dbConf); 
-        int k = trainingParameters.getkFolds();
         
-        //call k-fold cross validation and get the average accuracy
-        BaseMLmodel.ValidationMetrics averageValidationMetrics = (BaseMLmodel.ValidationMetrics) mlmodel.kFoldCrossValidation(trainingData, trainingParameters.getMLmodelTrainingParameters(), k);
-
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingData, trainingParameters.getMLmodelTrainingParameters());
-
-        //set its ValidationMetrics to the average VP from k-fold cross validation
-        mlmodel.setValidationMetrics(averageValidationMetrics);
-        
         
         if(transformData) {
             dataTransformer.denormalize(trainingData); //optional denormalization
@@ -115,20 +94,15 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     }
     
     public void predict(Dataset newData) {
+        logger.info("predict()");
+        
         evaluateData(newData, false);
     }
 
     public BaseMLmodel.ValidationMetrics validate(Dataset testData) {
-        return evaluateData(testData, true);
-    }
-    
-    public BaseMLmodel.ValidationMetrics getValidationMetrics() {
-        BaseMLmodel.ValidationMetrics vm = null;
-        if(mlmodel!=null) {
-            vm =  mlmodel.getValidationMetrics();
-        }
+        logger.info("validate()");
         
-        return vm;
+        return evaluateData(testData, true);
     }
             
     private BaseMLmodel.ValidationMetrics evaluateData(Dataset data, boolean estimateValidationMetrics) {

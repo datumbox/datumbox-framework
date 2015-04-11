@@ -97,16 +97,6 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
                 contingencyTable.get(1).put(0, N10);
                 contingencyTable.get(1).put(1, N11);
                 
-                /*
-                //REMEMBER! smaller pvalue means more important keyword. We reject the H0 of being not important.
-                double pvalue = Chisquare.getPvalue(contingencyTable); 
-                if(pvalue<=parameters.getALevel()) { //if the pvalue is smaller than the significance that we requested, then select the feature
-                    Double previousPvalue = featureScores.get(feature);
-                    if(previousPvalue==null || previousPvalue>pvalue) { //add or update score
-                        featureScores.put(feature, pvalue);
-                    }
-                }
-                */
                 double scorevalue = Chisquare.getScoreValue(contingencyTable); 
                 if(scorevalue>=criticalValue) { //if the score is larger than the critical value, then select the feature
                     Double previousCriticalValue = featureScores.get(feature);

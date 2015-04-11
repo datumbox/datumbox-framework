@@ -55,9 +55,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     }
     
     public static class TrainingParameters extends BaseWrapper.TrainingParameters<DataTransformer, FeatureSelection, BaseMLmodel> {
-
-        //primitives/wrappers
-        private Integer kFolds = 5;
         
         //Classes
 
@@ -68,14 +65,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         private TextExtractor.Parameters textExtractorTrainingParameters;
 
         //Field Getters/Setters
-
-        public Integer getkFolds() {
-            return kFolds;
-        }
-
-        public void setkFolds(Integer kFolds) {
-            this.kFolds = kFolds;
-        }
 
         public Class<? extends TextExtractor> getTextExtractorClass() {
             return textExtractorClass;
@@ -109,6 +98,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     }
     
     public void fit(Map<Object, URI> dataset, TrainingParameters trainingParameters) { 
+        logger.info("fit()");
+        
         initializeTrainingConfiguration(trainingParameters);
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
@@ -154,85 +145,39 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         //initialize mlmodel
         mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         
-        
-        int k = trainingParameters.getkFolds();
-                
-        //call k-fold cross validation and get the average accuracy
-        BaseMLmodel.ValidationMetrics averageValidationMetrics = (BaseMLmodel.ValidationMetrics) mlmodel.kFoldCrossValidation(trainingDataset, trainingParameters.getMLmodelTrainingParameters(), k);
-
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingDataset, trainingParameters.getMLmodelTrainingParameters());
-
-        //set its ValidationMetrics to the average VP from k-fold cross validation
-        mlmodel.setValidationMetrics(averageValidationMetrics);
-        
         
         if(transformData) {
             dataTransformer.denormalize(trainingDataset); //optional denormalization
         }
     }
     
-    public List<Object> predict(URI datasetURI) {
-        List<String> text = new LinkedList<>();
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
-            //read strings one by one
-            for(String line; (line = br.readLine()) != null; ) {
-                text.add(line);
-            }
-        }
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } 
+    public Dataset predict(URI datasetURI) {
+        logger.info("predict()");
         
-        return predict(text);
-    }
-    
-    public List<Object> predict(List<String> text) {
+        //create a dummy dataset map
+        Map<Object, URI> dataset = new HashMap<>();
+        dataset.put(null, datasetURI);
         
-        Dataset predictedDataset = getPredictions(text);
+        //ensure db loaded
+        knowledgeBase.load();
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
-        //extract responses
-        List<Object> predictedClasses = new LinkedList<>();
-        for(Integer rId : predictedDataset) {
-            Record r = predictedDataset.get(rId);
-            predictedClasses.add(r.getYPredicted());
-        }
-        predictedDataset = null;
+        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
+        textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
         
-        return predictedClasses;
-    }
-    
-    public List<AssociativeArray> predictProbabilities(URI datasetURI) {
-        List<String> text = new LinkedList<>();
-        try(BufferedReader br = new BufferedReader(new FileReader(new File(datasetURI)))) {
-            //read strings one by one
-            for(String line; (line = br.readLine()) != null; ) {
-                text.add(line);
-            }
-        }
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } 
+        //build the testDataset
+        Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, dbConf);
         
-        return predictProbabilities(text);
-    }
-    
-    public List<AssociativeArray> predictProbabilities(List<String> text) {
+        getPredictions(testDataset);
         
-        Dataset predictedDataset = getPredictions(text);
-        
-        //extract responses
-        List<AssociativeArray> predictedClassProbabilities = new LinkedList<>();
-        for(Integer rId : predictedDataset) {
-            Record r = predictedDataset.get(rId);
-            predictedClassProbabilities.add(r.getYPredictedProbabilities());
-        }
-        predictedDataset = null;
-        
-        return predictedClassProbabilities;
+        return testDataset;
     }
     
     public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> dataset) {  
+        logger.info("validate()");
         
         //ensure db loaded
         knowledgeBase.load();
@@ -245,6 +190,14 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
 
         //build the testDataset
         Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, dbConf);
+        
+        
+        return getPredictions(testDataset);
+    }
+    
+    protected BaseMLmodel.ValidationMetrics getPredictions(Dataset testDataset) {
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         
@@ -284,79 +237,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         return vm;
     }
-    
-    public BaseMLmodel.ValidationMetrics getValidationMetrics() {
-        if(mlmodel==null) {
-            validate(new HashMap<>()); //this forces the loading of the algorithm
-        }
-        BaseMLmodel.ValidationMetrics vm =  mlmodel.getValidationMetrics();
-        
-        return vm;
-    }
-    
-    
-    private Dataset getPredictions(List<String> text) {
-        
-        //ensure db loaded
-        knowledgeBase.load();
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
-        
-        //build the newDataset
-        Dataset newData = new Dataset(dbConf);
-        
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
-        textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
-        
-        //loop through every line of the text array
-        for(String line : text) {
-            //extract features of the string and add every keyword combination in X map
-            Record r = new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), null);
-            
-            //add each example in the newData
-            newData.add(r); 
-        }
-        
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
-        if(transformData) {
-            if(dataTransformer==null) {
-                dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
-            }        
-            dataTransformer.transform(newData);
-        }
-        
-        Class fsClass = trainingParameters.getFeatureSelectionClass();
-        
-        boolean selectFeatures = (fsClass!=null);
-        if(selectFeatures) {
-            if(featureSelection==null) {
-                featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
-            }
-
-            //remove unnecessary features
-            featureSelection.transform(newData);
-        }
-        
-        
-        //initialize mlmodel
-        if(mlmodel==null) {
-            Class mlClass = trainingParameters.getMLmodelClass();
-            mlmodel = BaseMLmodel.<BaseMLmodel>newInstance(mlClass, dbName, dbConf); 
-        }
-        
-        //call predict of the mlmodel for the new dataset
-        mlmodel.predict(newData);
-        
-        if(transformData) {
-            dataTransformer.denormalize(newData); //optional denormization
-        }
-        
-        return newData;
-    }
-    
-
     
     
 }

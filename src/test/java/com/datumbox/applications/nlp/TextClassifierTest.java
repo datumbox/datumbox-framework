@@ -15,6 +15,8 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomValue;
 import com.datumbox.configuration.TestConfiguration;
@@ -71,8 +73,6 @@ public class TextClassifierTest {
         TextClassifier instance = new TextClassifier(dbName, dbConf);
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
-        trainingParameters.setkFolds(5);
-        
         //Classifier configuration
         trainingParameters.setMLmodelClass(MultinomialNaiveBayes.class);
         MultinomialNaiveBayes.TrainingParameters classifierTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
@@ -101,6 +101,8 @@ public class TextClassifierTest {
         
         MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(dataset);
         
+        instance.setValidationMetrics(vm);
+        
         double expResult2 = 0.853460320496835;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         
@@ -109,9 +111,9 @@ public class TextClassifierTest {
         
         
         instance = new TextClassifier(dbName, dbConf);
-        List<Object> result = null;
+        Dataset testDataset = null;
         try {
-            result = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
+            testDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         }
         catch(Exception ex) {
             TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
@@ -119,7 +121,10 @@ public class TextClassifierTest {
         }
         
         List<Object> expResult = Arrays.asList("negative","positive");
-        assertEquals(expResult, result);
+        for(Integer rId : testDataset) {
+            Record r = testDataset.get(rId);
+            assertEquals(expResult.get(rId), r.getYPredicted());
+        }
         
         instance.erase();
     }

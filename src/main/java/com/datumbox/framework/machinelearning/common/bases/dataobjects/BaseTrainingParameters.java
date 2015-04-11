@@ -16,7 +16,6 @@
 package com.datumbox.framework.machinelearning.common.bases.dataobjects;
 
 import com.datumbox.common.objecttypes.Parameterizable;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  *

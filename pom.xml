@@ -183,7 +183,7 @@
                         <manifestEntries>
                             <Implementation-Author>${project.developers[0].name}</Implementation-Author>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <Implementation-Website>${organization.url}</Implementation-Website>
+                            <Implementation-Website>${project.organization.url}</Implementation-Website>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -216,7 +216,7 @@
                 <configuration>
                     <header>src/main/resources/license.txt</header>
                     <properties>
-                        <copyrightYears>${inceptionYear}-${currentYear}</copyrightYears>
+                        <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
                         <copyrightOwner>${project.developers[0].name}</copyrightOwner>
                         <copyrightEmail>${project.developers[0].email}</copyrightEmail>
                     </properties>

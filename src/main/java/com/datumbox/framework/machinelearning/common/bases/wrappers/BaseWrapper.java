@@ -20,6 +20,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseValidationMetrics;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
@@ -149,4 +150,19 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         knowledgeBase.erase();
     }
 
+    
+    public <VM extends BaseMLmodel.ValidationMetrics> VM getValidationMetrics() {
+        if(mlmodel!=null) {
+            return (VM) mlmodel.getValidationMetrics();
+        }
+        else {
+            return null;
+        }
+    }
+    
+    public <VM extends BaseMLmodel.ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
+        if(mlmodel!=null) {
+            mlmodel.setValidationMetrics(validationMetrics);
+        }
+    }
 }

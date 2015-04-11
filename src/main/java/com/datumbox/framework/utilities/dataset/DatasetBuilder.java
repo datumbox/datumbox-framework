@@ -72,7 +72,7 @@ public class DatasetBuilder {
             Object theClass = entry.getKey();
             List<String> textList = entry.getValue();
             
-            logger.info("Dataset Parsing "+theClass);
+            logger.info("Dataset Parsing " + theClass + " class");
             
             for(String text : textList) {
                 //extract features of the string and add every keyword combination in X map

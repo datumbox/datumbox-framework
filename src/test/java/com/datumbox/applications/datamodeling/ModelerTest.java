@@ -61,7 +61,6 @@ public class ModelerTest {
         
         Modeler instance = new Modeler(dbName, dbConf);
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
-        trainingParameters.setkFolds(5);
         
         
         //Model Configuration
@@ -84,6 +83,8 @@ public class ModelerTest {
         
         
         MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(trainingData);
+        
+        instance.setValidationMetrics(vm);
         
         double expResult2 = 0.8;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);

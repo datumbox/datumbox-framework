@@ -42,13 +42,13 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
     
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
         //number of observations used for training
-        private Integer n =0;
+        private Integer n = 0;
         
         //number of features in data. IN DATA not in the algorithm. Typically the features of the algortihm is d*c
-        private Integer d =0;
+        private Integer d = 0;
         
         //number of classes in data
-        private Integer c =0;
+        private Integer c = 0;
 
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
@@ -102,11 +102,11 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
     public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
         
         //validation metrics
-        private double accuracy=0.0;
+        private double accuracy = 0.0;
 
-        private double macroPrecision=0.0;
-        private double macroRecall=0.0;
-        private double macroF1=0.0;
+        private double macroPrecision = 0.0;
+        private double macroRecall = 0.0;
+        private double macroF1 = 0.0;
         
         private Map<Object, Double> microPrecision = new HashMap<>(); //this is small. Size equal to 4*class numbers
         
