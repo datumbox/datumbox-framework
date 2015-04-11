@@ -16,10 +16,10 @@
 package com.datumbox.framework.statistics.sampling;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.common.utilities.TypeConversions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
@@ -58,7 +58,7 @@ public class SRS {
                 break;
             }
             
-            double randomFrequency = RandomValue.doubleRand(0.0, sumOfFrequencies);
+            double randomFrequency = PHPfunctions.mt_rand(0.0, sumOfFrequencies);
             
             double cumulativeFrequency=0;
             for(Map.Entry<Object, Object> entry : weightedTable.entrySet()) {
@@ -100,7 +100,7 @@ public class SRS {
                 break;
             }
             
-            int randomPosition = RandomValue.intRand(0, populationN-1);
+            int randomPosition = PHPfunctions.mt_rand(0, populationN-1);
             
             Object pointID = idList.get(randomPosition);
             

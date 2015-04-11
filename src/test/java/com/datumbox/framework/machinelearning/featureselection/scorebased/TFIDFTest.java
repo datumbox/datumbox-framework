@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -43,7 +43,7 @@ public class TFIDFTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.featureSelectionTFIDF(dbConf);

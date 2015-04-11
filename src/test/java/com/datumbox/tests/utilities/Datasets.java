@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.RandomSingleton;
 import java.util.Random;
 
 /**
@@ -742,9 +742,8 @@ public class Datasets {
     }
     
     public static Dataset[] gaussianClusters(DatabaseConfiguration dbConf) {
-        Random rnd = RandomValue.getRandomGenerator();
-        
         Dataset trainingData = new Dataset(dbConf);
+        RandomSingleton rnd = RandomSingleton.getInstance();
         int observationsPerCluster = 5;
         for(int i=0;i<observationsPerCluster;++i) {
             trainingData.add(TestUtils.<Object>newDataVector(new Object[] {rnd.nextGaussian(),rnd.nextGaussian()}, "c1"));

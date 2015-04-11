@@ -16,7 +16,7 @@
 package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -53,7 +53,7 @@ public class DatasetTest {
     @Test
     public void testGetColumns() {
         TestUtils.log(this.getClass(), "getColumns");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset instance = new Dataset(dbConf);
@@ -89,7 +89,7 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValues() {
         TestUtils.log(this.getClass(), "extractColumnValues");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
@@ -123,7 +123,7 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValuesByY() {
         TestUtils.log(this.getClass(), "extractColumnValuesByY");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";

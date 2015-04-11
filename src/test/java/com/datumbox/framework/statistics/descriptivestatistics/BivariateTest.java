@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomValue;
+import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.configuration.TestConfiguration;
 
 import com.datumbox.tests.utilities.TestUtils;
@@ -160,7 +160,7 @@ public class BivariateTest {
     @Test
     public void testCovarianceMatrix() {
         TestUtils.log(this.getClass(), "covarianceMatrix");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataSet = generateDataset(dbConf);
@@ -192,7 +192,7 @@ public class BivariateTest {
     @Test
     public void testPearsonMatrix() {
         TestUtils.log(this.getClass(), "pearsonMatrix");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataSet = generateDataset(dbConf);
@@ -224,7 +224,7 @@ public class BivariateTest {
     @Test
     public void testSpearmanMatrix() {
         TestUtils.log(this.getClass(), "spearmanMatrix");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataSet = generateDataset(dbConf);
@@ -257,7 +257,7 @@ public class BivariateTest {
     @Test
     public void testKendalltauMatrix() {
         TestUtils.log(this.getClass(), "kendalltauMatrix");
-        RandomValue.setRandomGenerator(new Random(TestConfiguration.RANDOM_SEED));
+        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataSet = generateDataset(dbConf);

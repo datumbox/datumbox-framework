@@ -136,18 +136,30 @@ public class PHPfunctions {
      * @return 
      */
     public static int mt_rand() {
-        return mt_rand(0,Integer.MAX_VALUE);
+        return PHPfunctions.mt_rand(0,Integer.MAX_VALUE);
     }
     
     /**
-     * Returns a random integers between min and max
+     * Returns a random integer between min and max
      * 
      * @param min
      * @param max
      * @return 
      */
     public static int mt_rand(int min, int max) {
-        return RandomValue.intRand(min, max);
+        return min + (int)(RandomSingleton.getInstance().nextDouble() * ((max - min) + 1));
+    }
+    
+    
+    /**
+     * Returns a random double between min and max
+     * 
+     * @param min
+     * @param max
+     * @return 
+     */
+    public static double mt_rand(double min, double max) {
+        return min + (RandomSingleton.getInstance().nextDouble() * (max - min));
     }
     
     /**
@@ -173,13 +185,12 @@ public class PHPfunctions {
      * @param array 
      */
     public static <T> void shuffle(T[] array) {
-        //Implementing Fisher–Yates shuffle
-        Random rnd = RandomValue.getRandomGenerator();
+        //Implementing Fisher-Yates shuffle
+        RandomSingleton rnd = RandomSingleton.getInstance();
         T tmp;
         for (int i = array.length - 1; i > 0; --i) {
             int index = rnd.nextInt(i + 1);
             
-            // Simple swap
             tmp = array[index];
             array[index] = array[i];
             array[i] = tmp;
