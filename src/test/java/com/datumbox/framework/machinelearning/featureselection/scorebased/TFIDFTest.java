@@ -23,7 +23,7 @@ import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
+
 import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;

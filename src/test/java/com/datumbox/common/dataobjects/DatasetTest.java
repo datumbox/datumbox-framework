@@ -22,7 +22,7 @@ import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 

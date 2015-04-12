@@ -26,7 +26,7 @@ import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 

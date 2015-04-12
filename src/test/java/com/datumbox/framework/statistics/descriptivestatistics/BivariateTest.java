@@ -24,7 +24,7 @@ import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.configuration.TestConfiguration;
 
 import com.datumbox.tests.utilities.TestUtils;
-import java.util.Random;
+
 import org.junit.Test;
 
 /**
