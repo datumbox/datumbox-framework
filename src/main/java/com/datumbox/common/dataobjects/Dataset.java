@@ -233,20 +233,16 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         }
         
         //remove all the columns from the Meta data
-        for(Object column : columnSet) {
-            columns.remove(column);
-        }
+        columns.keySet().removeAll(columnSet);
 
         for(Integer rId : this) {
             Record r = recordList.get(rId);
             
-            boolean modified = false;
             AssociativeArray xData = new AssociativeArray(r.getX());
-            for(Object column: columnSet) {
-                modified |= xData.remove(column)!=null;
-            }
+            int d = xData.size();
+            xData.keySet().removeAll(columnSet);
             
-            if(modified) {
+            if(xData.size()!=d) {
                 r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 recordList.put(rId, r);
             }
