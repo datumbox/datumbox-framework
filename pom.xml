@@ -80,14 +80,14 @@
         <license-maven-plugin-version>2.8</license-maven-plugin-version>
         <gpg-plugin-version>1.5</gpg-plugin-version>
         
-        <junit-version>4.11</junit-version>
+        <junit-version>4.12</junit-version>
         <commons-lang-version>3.3.2</commons-lang-version>
-        <commons-math-version>3.3</commons-math-version>
-        <guava-version>17.0</guava-version>
+        <commons-math-version>3.4.1</commons-math-version>
+        <guava-version>18.0</guava-version>
         <libsvm-version>3.17</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
         <mapdb-version>1.0.7</mapdb-version>
-        <logback.version>1.1.2</logback.version>
+        <logback-version>1.1.3</logback-version>
         
         <gpg.keyname>7083A486</gpg.keyname>
         <buildNumber>${maven.build.timestamp}</buildNumber>
@@ -283,7 +283,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <version>${logback-version}</version>
         </dependency>
     </dependencies>
     

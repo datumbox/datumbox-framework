@@ -92,7 +92,7 @@ public class DatasetBuilder {
             Object theClass = entry.getKey();
             URI datasetURI = entry.getValue();
             
-            logger.info("Dataset Parsing "+theClass);
+            logger.info("Dataset Parsing " + theClass + " class");
             
             //process the files line-by-line, assuming there is a single document/case per row
             try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
