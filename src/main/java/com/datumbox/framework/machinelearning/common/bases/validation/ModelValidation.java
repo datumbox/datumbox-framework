@@ -69,7 +69,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
             
-            logger.info("Kfold "+(fold+1));
+            logger.info("Kfold "+fold);
             
             //as fold window we consider the part of the ids that are used for validation
             FlatDataList foldTrainingIds = new FlatDataList(new ArrayList<>(n-foldSize));
