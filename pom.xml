@@ -81,6 +81,7 @@
         <gpg-plugin-version>1.5</gpg-plugin-version>
         
         <junit-version>4.12</junit-version>
+        <cpsuite-version>1.2.7</cpsuite-version>
         <commons-lang-version>3.3.2</commons-lang-version>
         <commons-math-version>3.4.1</commons-math-version>
         <guava-version>18.0</guava-version>
@@ -248,6 +249,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.takari.junit</groupId>
+            <artifactId>takari-cpsuite</artifactId>
+            <version>${cpsuite-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
