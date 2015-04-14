@@ -36,20 +36,21 @@ public class Datumbox {
     }
     
     private static String[] getVersionBuild() {
-        String version;
-        String build;
+        String version = null;
+        String build = null;
         
         URLClassLoader cl = (URLClassLoader) Datumbox.class.getClassLoader();
         URL url = cl.findResource("META-INF/MANIFEST.MF");
-        try (InputStream in = url.openStream()) {
-            Manifest manifest = new Manifest(in);
-            version = manifest.getMainAttributes().getValue("Implementation-Version");
-            build = manifest.getMainAttributes().getValue("Implementation-Build");
-        } 
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
+        if (url!=null) {
+            try (InputStream in = url.openStream()) {
+                Manifest manifest = new Manifest(in);
+                version = manifest.getMainAttributes().getValue("Implementation-Version");
+                build = manifest.getMainAttributes().getValue("Implementation-Build");
+            } 
+            catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
-        
         return new String[]{version, build};
     }
 }
