@@ -367,7 +367,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     }
 
                     //normalize probabilities
-                    Descriptives.normalize(topicProbabilities);
+                    //Descriptives.normalize(topicProbabilities);
                     
                     //sample from these probabilieis
                     Integer newTopic = (Integer)SRS.weightedSampling(topicProbabilities, 1, true).iterator().next();
@@ -611,7 +611,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     perplexity += Math.log(Descriptives.sum(topicProbabilities.toFlatDataCollection()));
                     
                     //normalize probabilities
-                    Descriptives.normalize(topicProbabilities);
+                    //Descriptives.normalize(topicProbabilities);
                     
                     //sample from these probabilieis
                     Integer newTopic = (Integer)SRS.weightedSampling(topicProbabilities, 1, true).iterator().next();
