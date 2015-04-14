@@ -7,9 +7,9 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 
 Author: [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/)
 
-Version: 0.6.0 alpha
+Version: 1.0.0
 
-Build: 20150412
+Build: 20150414
 
 Installation
 ------------
@@ -21,7 +21,7 @@ Maven:
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework</artifactId>
-        <version>0.6.0</version>
+        <version>1.0.0</version>
     </dependency>
 ```
 
@@ -51,6 +51,11 @@ Contributing
 ------------
 
 By far the most important part missing from the Framework is the Documentation and proper commenting of the code. Other important enhancements include the refactoring of the code, improvement of the way that the models are persisted, adding Thread support (where possible) or adding more Models. Please consider contributing if you want to keep this project alive. 
+
+Acknowledgements
+----------------
+
+Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Thanks to ej-technologies GmbH for providing a license for their [Java Profiler](https://www.ej-technologies.com/buy/jprofiler/openSource).
 
 Useful Links
 ------------
