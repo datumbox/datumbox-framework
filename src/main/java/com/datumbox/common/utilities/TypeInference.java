@@ -63,7 +63,8 @@ public class TypeInference {
             }
         }
         
-        //it will never reach this because the last enum value in the loop is Categorical which uses the Object class.
+        //We will reach this point ONLY if the value is null. 
+        //This is because the last enum value in the loop is Categorical which uses the Object class.
         return null; 
     }
     
