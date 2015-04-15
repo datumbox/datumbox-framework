@@ -3,25 +3,27 @@ CODE IMPROVEMENTS
 
 - CSV reader and converter to Dataset.
 
-- Check out the Sparse Apache Matrices/Vectors.
 - Serialization improvements: set serialVersionUID?
-- Create the required Exceptions
-- Add Threads support
+- Create better Exceptions and Exception messages.
+- Add multithreading support.
+- Check out the Sparse Matrices/Vectors in Apache Math3 library. Use them in GaussianDPMM, MultinomialDPMM and MatrixLinearRegression.
 
 
 DOCUMENTATION
 =============
 
-- Improve the code documentation
-- Write How-to blog post on building a Text Classification model
+- Improve the code documentation.
+- Write How-to blog post on building a Text Classification model.
 
 
 NEW ALGORITHMS
 ==============
 
-- Include an anomaly detection algorithm
-- Develop the FunkSVD and PLSI as probabilistic version of SVD
-- Add the ability to search through the configuration space and find the best performing algorithmic configuration
+- Rewrite PCA to avoid using RealMatrix.
+- Write a Mixture of Gaussians clustering method.
+- Develop the FunkSVD and PLSI as probabilistic version of SVD.
+- Include an anomaly detection algorithm.
+- Add the ability to search through the configuration space and find the best performing algorithmic configuration.
 
 
 CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE:
