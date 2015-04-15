@@ -32,7 +32,14 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.StatUtils;
 
 
-
+/**
+ * Performs PCA on the dataset.
+ * 
+ * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
+ * data to be loaded in memory.
+ * 
+ * @author bbriniotis
+ */
 public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.TrainingParameters> {
     /*
         References: 
@@ -300,7 +307,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             newData._set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
         }
         
-        newData.resetMeta();
+        newData.recalculateMeta();
     }
     
     

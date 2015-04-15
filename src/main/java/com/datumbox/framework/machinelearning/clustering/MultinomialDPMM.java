@@ -21,14 +21,16 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
-import java.util.Collection;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
 
 /**
- * Multinomial with Dirichlet priors.
+ * Multinomial with Dirichlet priors. 
+ * 
+ * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
+ * data to be loaded in memory.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

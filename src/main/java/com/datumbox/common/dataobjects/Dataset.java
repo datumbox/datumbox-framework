@@ -180,8 +180,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public Dataset copy() {
         Dataset d = new Dataset(dbConf);
         
-        for(Integer id : this) {
-            d.add(recordList.get(id)); 
+        for(Integer rId : this) {
+            d.add(recordList.get(rId)); 
         }        
         return d;
     }
@@ -246,11 +246,11 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         }
     }
     
-    public void resetMeta() {
+    public void recalculateMeta() {
         yDataType = null;
         xDataTypes.clear();
-        for(Integer id: this) {
-            updateMeta(recordList.get(id));
+        for(Integer rId: this) {
+            updateMeta(recordList.get(rId));
         }
     }
     

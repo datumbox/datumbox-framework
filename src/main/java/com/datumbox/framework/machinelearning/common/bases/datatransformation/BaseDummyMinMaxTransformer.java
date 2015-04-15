@@ -323,7 +323,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
         
         //Reset Meta info
-        data.resetMeta();
+        data.recalculateMeta();
     }
     
 }

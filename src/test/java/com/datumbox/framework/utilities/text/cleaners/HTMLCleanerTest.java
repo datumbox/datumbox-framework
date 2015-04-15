@@ -196,8 +196,8 @@ public class HTMLCleanerTest {
         TestUtils.log(this.getClass(), "extractHTMLheaders");
         String text = " <h1>a1</h1> <h1 class='s'>a2</h1> <h2>b1</h2>";
         Map<String, List<String>> expResult = new HashMap<>();
-        for(Integer i=1;i<=6;++i) {
-            expResult.put("H"+i.toString(), new ArrayList<>());
+        for(int i=1;i<=6;++i) {
+            expResult.put("H"+i, new ArrayList<>());
         }
         expResult.get("H1").add("a1");
         expResult.get("H1").add("a2");

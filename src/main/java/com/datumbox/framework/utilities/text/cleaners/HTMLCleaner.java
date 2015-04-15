@@ -145,8 +145,8 @@ public class HTMLCleaner {
     
     public static Map<String, List<String>> extractHTMLheaders(String text) {
         Map<String, List<String>> hxtagsMap = new HashMap<>();
-        for(Integer i=1;i<=6;++i) {
-            hxtagsMap.put("H"+i.toString(), new ArrayList<>());
+        for(int i=1;i<=6;++i) {
+            hxtagsMap.put("H"+i, new ArrayList<>());
         }
                 
         Matcher m = HX_PATTERN.matcher(text);

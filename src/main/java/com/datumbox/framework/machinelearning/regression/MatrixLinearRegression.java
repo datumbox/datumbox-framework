@@ -24,7 +24,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,11 @@ import org.apache.commons.math3.linear.RealVector;
 
 
 /**
- *
+ * Performs Linear Regression using Matrices.
+ * 
+ * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
+ * data to be loaded in memory.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {

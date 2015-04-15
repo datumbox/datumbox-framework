@@ -89,12 +89,11 @@ public class MatrixDataset {
             ++previousFeatureId; 
         }
 
-        for(Integer id : dataset) {
-            Record r = dataset.get(id);
-            int row = id;
+        for(Integer rId : dataset) {
+            Record r = dataset.get(rId);
             
             if(extractY) {
-                m.Y.setEntry(row, TypeInference.toDouble(r.getY()));
+                m.Y.setEntry(rId, TypeInference.toDouble(r.getY()));
             }
             
             
@@ -109,7 +108,7 @@ public class MatrixDataset {
                 
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value != null) {
-                    m.X.setEntry(row, featureId, value);
+                    m.X.setEntry(rId, featureId, value);
                 }
                 else {
                     //else the X matrix maintains the 0.0 default value
@@ -147,16 +146,16 @@ public class MatrixDataset {
         
         boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataset.constantColumnName);
         
-        for(Integer id : newDataset) {
-            Record r = newDataset.get(id);
-            int row = id;
+        //Assummes that the ids start from 0 and go up to n
+        for(Integer rId : newDataset) {
+            Record r = newDataset.get(rId);
             
             if(extractY) {
-                m.Y.setEntry(row, TypeInference.toDouble(r.getY()));
+                m.Y.setEntry(rId, TypeInference.toDouble(r.getY()));
             }
             
             if(addConstantColumn) {
-                m.X.setEntry(row, 0, 1.0); //add the constant column
+                m.X.setEntry(rId, 0, 1.0); //add the constant column
             }
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
@@ -164,7 +163,7 @@ public class MatrixDataset {
                 if(value!=null) {
                     Integer featureId = m.feature2ColumnId.get(feature);
                     if(featureId!=null) {//if the feature exists in our database
-                        m.X.setEntry(row, featureId, value);
+                        m.X.setEntry(rId, featureId, value);
                     }
                 }
                 else {

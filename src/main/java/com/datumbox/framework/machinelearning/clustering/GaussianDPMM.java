@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
-import java.util.Collection;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -32,7 +31,10 @@ import org.apache.commons.math3.linear.RealVector;
 
 
 /**
- * Multivariate Normal with Normal-Inverse-Wishart prior.
+ * Multivariate Normal with Normal-Inverse-Wishart prior. 
+ * 
+ * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
+ * data to be loaded in memory.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

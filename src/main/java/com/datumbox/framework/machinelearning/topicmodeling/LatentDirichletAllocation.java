@@ -421,7 +421,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         //initialize a probability list for every topic
         int k = trainingParameters.getK();
-        for(Integer topicId=0;topicId<k;++topicId) {
+        for(int topicId=0;topicId<k;++topicId) {
             ptw.put(topicId, new AssociativeArray());
         }
         
@@ -443,7 +443,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             ptw.get(topicId).put(word, probability);
         }
         
-        for(Integer topicId=0;topicId<k;++topicId) {
+        for(int topicId=0;topicId<k;++topicId) {
             ptw.put(topicId, MapFunctions.sortAssociativeArrayByValueDescending(ptw.get(topicId)));
         }
         
