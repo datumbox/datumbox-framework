@@ -3,6 +3,7 @@ CODE IMPROVEMENTS
 
 - CSV reader and converter to Dataset. Eliminate Dataset.value2ColumnType() method and set types instead?
 
+- Check out the Sparse Apache Matrices/Vectors.
 - Serialization improvements: set serialVersionUID?
 - Create the required Exceptions
 - Add Threads support
