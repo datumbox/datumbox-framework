@@ -101,39 +101,39 @@ public class Distance {
             Object v1 = a1.get(column);
             Object v2 = a2.get(column);
             
-            if(Objects.equals(v1,v2)) { //this handles non numeric values too
+            if(Objects.equals(v1,v2)) { //equal or both null
                 columnDistances.put(column, 0.0);
             }
-            else if(v1==null || v2==null) {
+            else if(v1==null || v2==null) { //one of them is null
                 Object nonNullObject = (v1!=null)?v1:v2;
 
                 TypeInference.DataType type = TypeInference.getDataType(nonNullObject);
-                if(type!=TypeInference.DataType.NUMERICAL && type!=TypeInference.DataType.BOOLEAN) {
+                if(type==TypeInference.DataType.NUMERICAL || type==TypeInference.DataType.BOOLEAN) {
+                    //if numeric then set its value. if boolean then set equal to
+                    //1.0 only if the boolean feature is true.
+                    columnDistances.put(column, TypeInference.toDouble(nonNullObject));
+                }
+                else {
                     //max distance is set to 1.0
                     columnDistances.put(column, 1.0);
                 }
-                else {
-                    //set the value of the non-null object
-                    columnDistances.put(column, TypeInference.toDouble(nonNullObject));
-                }
             }
-            else {
-                //The type check is performed as a safe-check in case the dataset
-                //is not passed through a DataTransfomer to convert data to numeric
-                //types. If they are already converted then we will correctly
-                //use only their numeric values.
+            else { //none of them is null and they are not equal
                 TypeInference.DataType type = TypeInference.getDataType(v1);
                 
-                if(type!=TypeInference.DataType.NUMERICAL && type!=TypeInference.DataType.BOOLEAN) {
-                    //if the type is not numerical we set as maximym distance the 1
+                if(type==TypeInference.DataType.NUMERICAL || type==TypeInference.DataType.BOOLEAN) {
+                    //if numerics then subtract their values. if booleans do the same. Sometimes we
+                    //deal with mixed data (in clustering: centroids vs points) and thus in this case 
+                    //numeric estimation is required to estimate the distance between a probability and 
+                    //a boolean value.
+                    columnDistances.put(column, TypeInference.toDouble(v1)-TypeInference.toDouble(v2));
+                }
+                else {
+                    //if the type is not numerical we set as maximum distance the 1
                     //we are certain that those two are not equal due to the first if.
                     //it does not matter if it is boolean, ordinal or categorical
                     //since they don't match their distance is 1.0
                     columnDistances.put(column, 1.0);
-                }
-                else {
-                    //the values are numbers
-                    columnDistances.put(column, TypeInference.toDouble(v1)-TypeInference.toDouble(v2));
                 }
             }
         }
