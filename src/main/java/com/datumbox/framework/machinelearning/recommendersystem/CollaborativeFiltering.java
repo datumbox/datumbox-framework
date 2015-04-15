@@ -24,7 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLrecommender;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.parametrics.relatedsamples.PearsonCorrelation;
@@ -124,8 +124,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
     @Override
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
@@ -172,7 +172,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             Map<Object, Double> simSums = new HashMap<>();
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object row = entry.getKey();
-                Double score = TypeConversions.toDouble(entry.getValue());
+                Double score = TypeInference.toDouble(entry.getValue());
                 
                 //Since we can't use 2D Maps due to mongo, we are forced to loop
                 //the whole similarities map which is very inefficient.
@@ -187,7 +187,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
                         continue; // they already rated this
                     }
                     
-                    Double previousRecValue = TypeConversions.toDouble(recommendations.get(column));
+                    Double previousRecValue = TypeInference.toDouble(recommendations.get(column));
                     Double previousSimsumValue = simSums.get(column);
                     if(previousRecValue==null) {
                         previousRecValue=0.0;
@@ -203,7 +203,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             
             for(Map.Entry<Object, Object> entry : recommendations.entrySet()) {
                 Object column = entry.getKey();
-                Double score = TypeConversions.toDouble(entry.getValue());
+                Double score = TypeInference.toDouble(entry.getValue());
                 
                 recommendations.put(column, score/simSums.get(column));
             }
@@ -243,8 +243,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             FlatDataList flatDataList1 = new FlatDataList();
             FlatDataList flatDataList2 = new FlatDataList();
             for(Object column : commonColumns) {
-                flatDataList1.add(TypeConversions.toDouble(r1.getX().get(column)));
-                flatDataList2.add(TypeConversions.toDouble(r2.getX().get(column)));
+                flatDataList1.add(TypeInference.toDouble(r1.getX().get(column)));
+                flatDataList2.add(TypeInference.toDouble(r2.getX().get(column)));
             }
             
             TransposeDataList transposeDataList = new TransposeDataList();

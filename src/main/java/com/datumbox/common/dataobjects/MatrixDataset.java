@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -64,8 +64,8 @@ public class MatrixDataset {
         }
         
         
-        int n = dataset.size();
-        int d = dataset.getColumnSize();
+        int n = dataset.getRecordNumber();
+        int d = dataset.getVariableNumber();
         
         if(addConstantColumn) {
             ++d;
@@ -78,7 +78,7 @@ public class MatrixDataset {
             return m;
         }
         
-        boolean extractY=(Dataset.value2ColumnType(dataset.get(dataset.iterator().next()).getY())==Dataset.ColumnType.NUMERICAL);
+        boolean extractY=(dataset.getYDataType()==TypeInference.DataType.NUMERICAL);
         
         int previousFeatureId=0; 
         if(addConstantColumn) {
@@ -94,7 +94,7 @@ public class MatrixDataset {
             int row = id;
             
             if(extractY) {
-                m.Y.setEntry(row, TypeConversions.toDouble(r.getY()));
+                m.Y.setEntry(row, TypeInference.toDouble(r.getY()));
             }
             
             
@@ -107,7 +107,7 @@ public class MatrixDataset {
                     ++previousFeatureId;
                 }
                 
-                Double value = TypeConversions.toDouble(entry.getValue());
+                Double value = TypeInference.toDouble(entry.getValue());
                 if(value != null) {
                     m.X.setEntry(row, featureId, value);
                 }
@@ -134,7 +134,7 @@ public class MatrixDataset {
             throw new RuntimeException("The featureIdsReference map should not be empty.");
         }
         
-        int n = newDataset.size();
+        int n = newDataset.getRecordNumber();
         int d = featureIdsReference.size();
         
         MatrixDataset m = new MatrixDataset(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
@@ -143,7 +143,7 @@ public class MatrixDataset {
             return m;
         }
         
-        boolean extractY=(Dataset.value2ColumnType(newDataset.get(newDataset.iterator().next()).getY())==Dataset.ColumnType.NUMERICAL);
+        boolean extractY=(newDataset.getYDataType()==TypeInference.DataType.NUMERICAL);
         
         boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataset.constantColumnName);
         
@@ -152,7 +152,7 @@ public class MatrixDataset {
             int row = id;
             
             if(extractY) {
-                m.Y.setEntry(row, TypeConversions.toDouble(r.getY()));
+                m.Y.setEntry(row, TypeInference.toDouble(r.getY()));
             }
             
             if(addConstantColumn) {
@@ -160,7 +160,7 @@ public class MatrixDataset {
             }
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Double value = TypeConversions.toDouble(entry.getValue());
+                Double value = TypeInference.toDouble(entry.getValue());
                 if(value!=null) {
                     Integer featureId = m.feature2ColumnId.get(feature);
                     if(featureId!=null) {//if the feature exists in our database
@@ -193,7 +193,7 @@ public class MatrixDataset {
         }
         for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
             Object feature = entry.getKey();
-            Double value = TypeConversions.toDouble(entry.getValue());
+            Double value = TypeInference.toDouble(entry.getValue());
             if(value!=null) {
                 Integer featureId = featureIdsReference.get(feature);
                 if(featureId!=null) {//if the feature exists in our database

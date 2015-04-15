@@ -17,7 +17,7 @@ package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.google.common.collect.Sets;
+import com.datumbox.common.utilities.TypeInference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,47 +30,18 @@ import java.util.Set;
  */
 public final class Dataset implements Serializable, Iterable<Integer> {
     
+    public static final String yColumnName = "~Y";
+    public static final String constantColumnName = "~CONSTANT";
+    
     private final Map<Integer, Record> recordList;
     
-    /* Stores columnName=> Class (ie Type) */
-    private final Map<Object, ColumnType> columns;
+    private TypeInference.DataType yDataType; 
+    /* Stores columnName=> DataType */
+    private final Map<Object, TypeInference.DataType> xDataTypes;
     
     private transient String dbName;
     private transient DatabaseConnector dbc;
     private transient DatabaseConfiguration dbConf;
-    
-    public static final Object constantColumnName = "~constant";
-    public static final Object YColumnName = "~Y";
-    
-    public enum ColumnType {
-        ORDINAL, //ordinal - the key is a String, Integer or List<Object> and the value is short
-        NUMERICAL, //number field - the key is a String, Integer or List<Object> and the value is double
-        DUMMYVAR, //dummy variable - the key is a List<Object> and the value is true false
-        CATEGORICAL; //variable with multiple levels
-    }
-    
-    public static ColumnType value2ColumnType(Object o) {
-        if(o instanceof Double || 
-           o instanceof Integer ||
-           o instanceof Long ||
-           o instanceof Float) {
-            return ColumnType.NUMERICAL;
-        }
-        else if(o instanceof Boolean) {
-            return ColumnType.DUMMYVAR;
-        }
-        else if(o instanceof Short) {
-            return ColumnType.ORDINAL;
-        }
-        else if(o instanceof Number) {
-            return ColumnType.NUMERICAL;
-        }
-        else { //string
-            return ColumnType.CATEGORICAL;
-        }
-    }
-    
-    
     
     public Dataset(DatabaseConfiguration dbConf) {
         //we dont need to have a unique name, because it is not used by the connector on the current implementations
@@ -80,7 +51,13 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         this.dbConf = dbConf;
         dbc = this.dbConf.getConnector(dbName);
         recordList = dbc.getBigMap("tmp_recordList", true);
-        columns = dbc.getBigMap("tmp_columns", true);
+        
+        yDataType = null;
+        xDataTypes = dbc.getBigMap("tmp_xColumnTypes", true);
+    }
+    
+    public TypeInference.DataType getYDataType() {
+        return yDataType;
     }
     
     /**
@@ -88,8 +65,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * 
      * @return 
      */
-    public Map<Object, ColumnType> getColumns() {
-        return Collections.unmodifiableMap(columns);
+    public Map<Object, TypeInference.DataType> getXDataTypes() {
+        return Collections.unmodifiableMap(xDataTypes);
     }
     
     /**
@@ -97,8 +74,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * 
      * @return 
      */
-    public int getColumnSize() {
-        return columns.size();
+    public int getVariableNumber() {
+        return xDataTypes.size();
     }
     
     /**
@@ -106,7 +83,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * 
      * @return 
      */
-    public int size() {
+    public int getRecordNumber() {
         return recordList.size();
     }
     
@@ -126,7 +103,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @param column
      * @return 
      */
-    public FlatDataList extractColumnValues(Object column) {
+    public FlatDataList extractXColumnValues(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
         for(Integer rId : this) {
@@ -163,7 +140,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @param column
      * @return 
      */
-    public TransposeDataList extractColumnValuesByY(Object column) {
+    public TransposeDataList extractXColumnValuesByY(Object column) {
         TransposeDataList transposeDataList = new TransposeDataList();
         
         for(Integer rId : this) {
@@ -223,17 +200,16 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * Remove completely a list of columns from the dataset.
      * 
      * @param columnSet
-     * @return  
      */
     public void removeColumns(Set<Object> columnSet) {  
-        columnSet.retainAll(columns.keySet()); //keep only those columns that are already known to the Meta data of the Dataset
+        columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataset
         
         if(columnSet.isEmpty()) {
             return;
         }
         
         //remove all the columns from the Meta data
-        columns.keySet().removeAll(columnSet);
+        xDataTypes.keySet().removeAll(columnSet);
 
         for(Integer rId : this) {
             Record r = recordList.get(rId);
@@ -260,14 +236,19 @@ public final class Dataset implements Serializable, Iterable<Integer> {
             Object column = entry.getKey();
             Object value = entry.getValue();
             
-            if(columns.get(column) == null) {
-                columns.put(column, value2ColumnType(value));
+            if(xDataTypes.containsKey(column) == false) {
+                xDataTypes.put(column, TypeInference.getDataType(value));
             }
+        }
+        
+        if(yDataType == null) {
+            yDataType = TypeInference.getDataType(r.getY());
         }
     }
     
     public void resetMeta() {
-        columns.clear();
+        yDataType = null;
+        xDataTypes.clear();
         for(Integer id: this) {
             updateMeta(recordList.get(id));
         }
@@ -321,8 +302,9 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * Clears the Dataset and removes the internal variables.
      */
     public void clear() {
+        yDataType = null;
+        dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
         dbc.dropBigMap("tmp_recordList", recordList);
-        dbc.dropBigMap("tmp_columns", columns);
         dbc.dropDatabase();
     }
     

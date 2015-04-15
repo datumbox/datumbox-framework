@@ -22,7 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.List;
@@ -87,12 +87,12 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     
     protected static void fitX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         
-        for(Map.Entry<Object, Dataset.ColumnType> entry : data.getColumns().entrySet()) {
+        for(Map.Entry<Object, TypeInference.DataType> entry : data.getXDataTypes().entrySet()) {
             Object column = entry.getKey();
-            Dataset.ColumnType columnType = entry.getValue();
+            TypeInference.DataType columnType = entry.getValue();
 
-            if(columnType==Dataset.ColumnType.NUMERICAL) {
-                FlatDataList columnValues = data.extractColumnValues(column);
+            if(columnType==TypeInference.DataType.NUMERICAL) {
+                FlatDataList columnValues = data.extractXColumnValues(column);
                 Double max = Descriptives.max(columnValues.toFlatDataCollection());
                 Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
@@ -179,18 +179,15 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return;
         }
         
-        //check if the first record has numeric value on response variable Y
-        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.get(data.iterator().next()).getY());
-
-        if(columnType==Dataset.ColumnType.NUMERICAL) {
+        if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             //if this is numeric normalize it
 
             FlatDataList columnValues = data.extractYValues();
             Double max = Descriptives.max(columnValues.toFlatDataCollection());
             Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
-            minColumnValues.put(Dataset.YColumnName, min);
-            maxColumnValues.put(Dataset.YColumnName, max);
+            minColumnValues.put(Dataset.yColumnName, min);
+            maxColumnValues.put(Dataset.yColumnName, max);
         }
     }
     
@@ -199,20 +196,18 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return;
         }
         
-        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.get(data.iterator().next()).getY());
-        
-        if(columnType==Dataset.ColumnType.NUMERICAL) {
+        if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
             for(Integer rId : data) {
                 Record r = data.get(rId);
-                Double value = TypeConversions.toDouble(r.getY());
+                Double value = TypeInference.toDouble(r.getY());
                 if(value==null) { //if we have a missing value don't perform any normalization
                     continue;
                 }
                 
                 //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataset.YColumnName);
-                Double max = maxColumnValues.get(Dataset.YColumnName);
+                Double min = minColumnValues.get(Dataset.yColumnName);
+                Double max = maxColumnValues.get(Dataset.yColumnName);
                 
                 //it is important how we will handle 0 normalized values because
                 //0-valued features are considered inactive.
@@ -235,16 +230,14 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return;
         }
         
-        Dataset.ColumnType columnType = Dataset.value2ColumnType(data.get(data.iterator().next()).getY());
-        
-        if(columnType==Dataset.ColumnType.NUMERICAL) {
+        if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
             for(Integer rId : data) {
                 Record r = data.get(rId);
                 
                 //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataset.YColumnName);
-                Double max = maxColumnValues.get(Dataset.YColumnName);
+                Double min = minColumnValues.get(Dataset.yColumnName);
+                Double max = maxColumnValues.get(Dataset.yColumnName);
                 
                 Object denormalizedY = null;
                 Object denormalizedYPredicted = null;
@@ -255,9 +248,9 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                     }
                 }
                 else {
-                    denormalizedY = TypeConversions.toDouble(r.getY())*(max-min) + min;
+                    denormalizedY = TypeInference.toDouble(r.getY())*(max-min) + min;
                     
-                    Double YPredicted = TypeConversions.toDouble(r.getYPredicted());
+                    Double YPredicted = TypeInference.toDouble(r.getYPredicted());
                     if(YPredicted!=null) {
                         denormalizedYPredicted = YPredicted*(max-min) + min;
                     }
@@ -268,13 +261,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
-    private static boolean covert2dummy(Dataset.ColumnType columnType) {
-        return columnType==Dataset.ColumnType.CATEGORICAL || columnType==Dataset.ColumnType.ORDINAL;
+    private static boolean covert2dummy(TypeInference.DataType columnType) {
+        return columnType==TypeInference.DataType.CATEGORICAL || columnType==TypeInference.DataType.ORDINAL;
     }
     
     protected static void extractDummies(Dataset data, Map<Object, Object> referenceLevels) {
 
-        Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
+        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         if(referenceLevels.isEmpty()) {
             //Training Mode
             

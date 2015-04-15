@@ -67,7 +67,7 @@ public class TFIDFTest {
         instance.transform(validationData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
-        Set<Object> result = validationData.getColumns().keySet();
+        Set<Object> result = validationData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.erase();
     }

@@ -22,7 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -143,14 +143,14 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
                 }
                 
                 
-                Double occurrences=TypeConversions.toDouble(entry.getValue());
+                Double occurrences=TypeInference.toDouble(entry.getValue());
                 if((!knowledgeBase.getTrainingParameters().isMultiProbabilityWeighted() || IS_BINARIZED) && occurrences>0) {
                     occurrences=1.0;
                 }
                 
                 for(Map.Entry<Object, Object> entry2 : classLogScoresForThisFeature.entrySet()) {
                     Object theClass = entry2.getKey();
-                    Double logScore = TypeConversions.toDouble(entry2.getValue());
+                    Double logScore = TypeInference.toDouble(entry2.getValue());
                     Double previousValue = predictionScores.getDouble(theClass);
                     predictionScores.put(theClass, previousValue+occurrences*logScore);
                 }
@@ -167,8 +167,8 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
@@ -206,7 +206,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             //store the occurrances of the features
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Double occurrences=TypeConversions.toDouble(entry.getValue());
+                Double occurrences=TypeInference.toDouble(entry.getValue());
                 
                 if(IS_BINARIZED && occurrences>0) {
                     occurrences=1.0;

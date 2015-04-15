@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
 import java.util.Iterator;
@@ -104,7 +104,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         boolean binarized = trainingParameters.isBinarized();
         
         
-        int n = trainingData.size();
+        int n = trainingData.getRecordNumber();
         modelParameters.setN(n);
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
@@ -117,7 +117,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
             Record r = trainingData.get(rId);
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
-                Double counts = TypeConversions.toDouble(entry.getValue());
+                Double counts = TypeInference.toDouble(entry.getValue());
                 
                 if(counts==null || counts == 0.0) {
                     continue;
@@ -149,7 +149,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
-                Double counts = TypeConversions.toDouble(entry.getValue());
+                Double counts = TypeInference.toDouble(entry.getValue());
                 
                 if(counts==null || counts == 0.0) {
                     continue;
@@ -193,7 +193,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         
         Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", true);
         
-        for(Object feature: newData.getColumns().keySet()) {
+        for(Object feature: newData.getXDataTypes().keySet()) {
             if(!maxTFIDFfeatureScores.containsKey(feature)) {
                 tmp_removedColumns.put(feature, true);
             }

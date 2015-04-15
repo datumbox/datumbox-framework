@@ -16,12 +16,12 @@
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.Dataset.ColumnType;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.utilities.TypeInference.DataType;
 
 
 import java.util.Arrays;
@@ -119,7 +119,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         //set the number of observations
         MP modelParameters = knowledgeBase.getModelParameters();
         
-        modelParameters.setN(data.size());
+        modelParameters.setN(data.getRecordNumber());
         
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
@@ -158,11 +158,11 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
         Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", true);
         
-        for(Map.Entry<Object, ColumnType> entry: data.getColumns().entrySet()) {
+        for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();
             
             if(ignoringNumericalFeatures) {
-                if(entry.getValue()==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
+                if(entry.getValue()==TypeInference.DataType.NUMERICAL) { //is it numerical? 
                     continue; //skip any further analysis
                 }
             }
@@ -200,7 +200,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
             throw new RuntimeException("The featureCounts map should be empty.");
         }
         
-        Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
+        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
         //find the featureCounts
         
@@ -211,12 +211,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                 Object feature = entry.getKey();
                 
                 if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(columnTypes.get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
+                    if(columnTypes.get(feature)==TypeInference.DataType.NUMERICAL) { //is it numerical? 
                         continue; //skip any further analysis
                     }
                 }
                 
-                Double value = TypeConversions.toDouble(entry.getValue());
+                Double value = TypeInference.toDouble(entry.getValue());
                 if(value==null || value==0.0) {
                     continue;
                 }
@@ -261,7 +261,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         //The map must be empty or else you get a RuntimeException
         removeRareFeatures(data, knowledgeBase.getDbc(), rareFeatureThreshold, featureCounts, ignoringNumericalFeatures);
         
-        Map<Object, Dataset.ColumnType> columnTypes = data.getColumns();
+        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         //now find the classCounts and the featureClassCounts
         logger.debug("Estimating classCounts and featureClassCounts");
         for(Integer rId : data) {
@@ -280,12 +280,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
                 Object feature = entry.getKey();
                 
                 if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(columnTypes.get(feature)==Dataset.ColumnType.NUMERICAL) { //is it numerical? 
+                    if(columnTypes.get(feature)==TypeInference.DataType.NUMERICAL) { //is it numerical? 
                         continue; //skip any further analysis
                     }
                 }
                 
-                Double value = TypeConversions.toDouble(entry.getValue());
+                Double value = TypeInference.toDouble(entry.getValue());
                 if(value==null || value==0.0) {
                     continue;
                 }

@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomSingleton;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.featureselection.continuous.PCA;
 import com.datumbox.configuration.TestConfiguration;
@@ -81,7 +81,7 @@ public class NLMSTest {
 
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
-            assertEquals(TypeConversions.toDouble(r.getY()), TypeConversions.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
+            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
         instance.erase();
@@ -110,7 +110,7 @@ public class NLMSTest {
         
         PCA featureSelection = new PCA(dbName, dbConf);
         PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
-        featureSelectionParameters.setMaxDimensions(trainingData.getColumnSize()-1);
+        featureSelectionParameters.setMaxDimensions(trainingData.getVariableNumber()-1);
         featureSelectionParameters.setWhitened(false);
         featureSelectionParameters.setVarianceThreshold(0.99999995);
         featureSelection.fit(trainingData, featureSelectionParameters);

@@ -22,7 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
@@ -160,8 +160,8 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         
         //initialization
@@ -207,7 +207,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();
         
-        int n = trainingData.size();
+        int n = trainingData.getRecordNumber();
         int sparseD = featureIds.size();
         
         //creating a new SVM problem
@@ -228,7 +228,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
                 int featureId = featureIds.get(feature);
-                Double value = TypeConversions.toDouble(entry.getValue());
+                Double value = TypeInference.toDouble(entry.getValue());
                 if(value==null) {
                     value = 0.0;
                 }
@@ -285,7 +285,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
                 continue; //the feature does not exist
             }
             
-            Double value = TypeConversions.toDouble(entry.getValue());
+            Double value = TypeInference.toDouble(entry.getValue());
             if(value==null) {
                 value = 0.0;
             }

@@ -17,6 +17,7 @@ package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -74,12 +75,12 @@ public class DatasetTest {
         xData4.put("4", "s");
         instance.add(new Record(xData4, null));
         
-        Map<Object, Dataset.ColumnType> expResult = new LinkedHashMap<>();
-        expResult.put("1", Dataset.ColumnType.DUMMYVAR);
-        expResult.put("2", Dataset.ColumnType.NUMERICAL);
-        expResult.put("3", Dataset.ColumnType.ORDINAL);
-        expResult.put("4", Dataset.ColumnType.CATEGORICAL);
-        Map<Object, Dataset.ColumnType> result = instance.getColumns();
+        Map<Object, TypeInference.DataType> expResult = new LinkedHashMap<>();
+        expResult.put("1", TypeInference.DataType.BOOLEAN);
+        expResult.put("2", TypeInference.DataType.NUMERICAL);
+        expResult.put("3", TypeInference.DataType.ORDINAL);
+        expResult.put("4", TypeInference.DataType.CATEGORICAL);
+        Map<Object, TypeInference.DataType> result = instance.getXDataTypes();
         assertEquals(expResult, result);
     }
 
@@ -113,7 +114,7 @@ public class DatasetTest {
         
         
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{188.0,189.0,190.0}));
-        FlatDataList result = instance.extractColumnValues(column);
+        FlatDataList result = instance.extractXColumnValues(column);
         assertEquals(expResult, result);
     }
 
@@ -148,7 +149,7 @@ public class DatasetTest {
         TransposeDataList expResult = new TransposeDataList();
         expResult.put("Class1", new FlatDataList(Arrays.asList(new Object[]{188.0,189.0})));
         expResult.put("Class2", new FlatDataList(Arrays.asList(new Object[]{190.0})));
-        TransposeDataList result = instance.extractColumnValuesByY(column);
+        TransposeDataList result = instance.extractXColumnValuesByY(column);
         assertEquals(expResult, result);
     }
 

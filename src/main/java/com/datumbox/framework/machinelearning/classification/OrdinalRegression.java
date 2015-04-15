@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -170,8 +170,8 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
         
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();//no constant, thresholds can be seen as constants
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -198,7 +198,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         modelParameters.setC(c);
         
         //we initialize the weights and thitas to zero
-        for(Object feature: trainingData.getColumns().keySet()) {
+        for(Object feature: trainingData.getXDataTypes().keySet()) {
             weights.put(feature, 0.0);
         }
         for(Integer rId : trainingData) { 
@@ -306,7 +306,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             //update weights                
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object column = entry.getKey();
-                Double xij = TypeConversions.toDouble(entry.getValue());
+                Double xij = TypeInference.toDouble(entry.getValue());
                 
                 newWeights.put(column, newWeights.get(column)+multiplier*xij*(gOfCurrent-gOfPrevious));
             }
@@ -389,7 +389,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     private double xTw(AssociativeArray x, Map<Object, Double> weights) {
         double xTw = 0.0;
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
-            Double value = TypeConversions.toDouble(entry.getValue());
+            Double value = TypeInference.toDouble(entry.getValue());
             if(value==null || value==0.0) {
                 continue;
             }

@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.nonparametrics.relatedsamples.KendallTauCorrelation;
 import com.datumbox.framework.statistics.nonparametrics.relatedsamples.SpearmanCorrelation;
 import com.datumbox.framework.statistics.parametrics.relatedsamples.PearsonCorrelation;
@@ -49,31 +50,29 @@ public class Bivariate {
         DataTable2D bivariateMatrix = new DataTable2D();
         
         //extract values of first variable
-        Map<Object, Dataset.ColumnType> variable2Type = dataSet.getColumns();
-        Object[] allVariables = variable2Type.keySet().toArray();
+        Map<Object, TypeInference.DataType> columnTypes = dataSet.getXDataTypes();
+        Object[] allVariables = columnTypes.keySet().toArray();
         int numberOfVariables = allVariables.length;
         
         TransposeDataList transposeDataList = null;
         for(int i=0;i<numberOfVariables;++i) {
             Object variable0 = allVariables[i];
-            if(variable2Type.get(variable0)!=Dataset.ColumnType.NUMERICAL &&
-               variable2Type.get(variable0)!=Dataset.ColumnType.ORDINAL) {
+            if(columnTypes.get(variable0)==TypeInference.DataType.CATEGORICAL) {
                 continue;
             }
             
             transposeDataList = new TransposeDataList();
             
             //extract values of first variable
-            transposeDataList.put(0, dataSet.extractColumnValues(variable0));
+            transposeDataList.put(0, dataSet.extractXColumnValues(variable0));
             
             for(int j=i;j<numberOfVariables;++j) {
                 Object variable1 = allVariables[j];
-                if(variable2Type.get(variable1)!=Dataset.ColumnType.NUMERICAL &&
-                   variable2Type.get(variable1)!=Dataset.ColumnType.ORDINAL) {
+                if(columnTypes.get(variable1)==TypeInference.DataType.CATEGORICAL) {
                     continue;
                 }
             
-                transposeDataList.put(1, dataSet.extractColumnValues(variable1));
+                transposeDataList.put(1, dataSet.extractXColumnValues(variable1));
                 
                 double value = 0.0;
                 if(type==BivariateType.COVARIANCE) {

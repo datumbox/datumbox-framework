@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
 import java.util.HashSet;
@@ -163,7 +164,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             copiedTrainingData.removeColumns(removedFeatures);
             removedFeatures = null;
             
-            if(copiedTrainingData.getColumnSize()==0) {
+            if(copiedTrainingData.getVariableNumber()==0) {
                 break; //if no more features exit
             }
         }
@@ -171,8 +172,8 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //set the only parameters that are inherited by the BaseMLregressor.MP abstract
-        modelParameters.setD(copiedTrainingData.getColumnSize());
-        modelParameters.setN(copiedTrainingData.size());        
+        modelParameters.setD(copiedTrainingData.getVariableNumber());
+        modelParameters.setN(copiedTrainingData.getRecordNumber());        
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 

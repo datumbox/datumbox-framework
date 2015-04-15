@@ -22,7 +22,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Map;
 
@@ -250,7 +250,7 @@ public class StratifiedSampling {
         
         for(Map.Entry<Object, Object> entry : nh.entrySet()) {
             Object strata = entry.getKey();
-            nh.put(strata, TypeConversions.toDouble(entry.getValue())/sumNhSh);
+            nh.put(strata, TypeInference.toDouble(entry.getValue())/sumNhSh);
         }
         
         return nh;

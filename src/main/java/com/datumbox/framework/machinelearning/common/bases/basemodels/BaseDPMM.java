@@ -166,8 +166,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, CL> clusterList = modelParameters.getClusterList();
@@ -242,7 +242,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             }            
         }
         else {
-            int numberOfNewClusters = (int)(Math.max(alpha, 1)*Math.log(dataset.size())); //a*log(n) clusters on average
+            int numberOfNewClusters = (int)(Math.max(alpha, 1)*Math.log(dataset.getRecordNumber())); //a*log(n) clusters on average
             if(numberOfNewClusters<=0) {
                 numberOfNewClusters=1;
             }

@@ -63,7 +63,7 @@ public class ChisquareSelectTest {
         instance.transform(trainingData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));
-        Set<Object> result = trainingData.getColumns().keySet();
+        Set<Object> result = trainingData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.erase();
     }

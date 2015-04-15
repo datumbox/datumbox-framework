@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 
 
 import java.util.Map;
@@ -87,8 +87,8 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
 
     @Override
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize()+1;//plus one for the constant
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
@@ -101,7 +101,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         
         //we initialize the thitas to zero for all features
         thitas.put(Dataset.constantColumnName, 0.0);
-        for(Object feature : trainingData.getColumns().keySet()) {
+        for(Object feature : trainingData.getXDataTypes().keySet()) {
             thitas.put(feature, 0.0);
         }
         
@@ -166,7 +166,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         for(Integer rId : trainingData) { 
             Record r = trainingData.get(rId);
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
-            double error = TypeConversions.toDouble(r.getY()) - hypothesisFunction(r.getX(), thitas);
+            double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), thitas);
             
             double errorMultiplier = multiplier*error;
             
@@ -180,7 +180,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
                 
                 Double thitaWeight = newThitas.get(feature);
                 if(thitaWeight!=null) {//ensure that the feature is in the supported features
-                    Double value = TypeConversions.toDouble(entry.getValue());
+                    Double value = TypeInference.toDouble(entry.getValue());
                     newThitas.put(feature, thitaWeight+errorMultiplier*value);
                 }
             }
@@ -193,7 +193,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         for(Integer rId : trainingData) { 
             Record r = trainingData.get(rId);
             //mind the fact that we use the new thitas to estimate the cost! 
-            double error = TypeConversions.toDouble(r.getY()) - hypothesisFunction(r.getX(), newThitas);
+            double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), newThitas);
             
             double errorMultiplier = multiplier*error;
             
@@ -207,7 +207,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
                 
                 Double thitaWeight = newThitas.get(feature);
                 if(thitaWeight!=null) {//ensure that the feature is in the supported features
-                    Double value = TypeConversions.toDouble(entry.getValue());
+                    Double value = TypeInference.toDouble(entry.getValue());
                     newThitas.put(feature, thitaWeight+errorMultiplier*value);
                 }
             }
@@ -223,7 +223,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             Record r = trainingData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             trainingData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
-            error+=Math.pow(TypeConversions.toDouble(r.getY()) -yPredicted, 2);
+            error+=Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }
         
         return error;
@@ -237,7 +237,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             Double thitaWeight = thitas.get(feature);
             if(thitaWeight!=null) {//ensure that the feature is in the supported features
-                Double xj = TypeConversions.toDouble(entry.getValue());
+                Double xj = TypeInference.toDouble(entry.getValue());
                 sum+=thitaWeight*xj;
             }
         }

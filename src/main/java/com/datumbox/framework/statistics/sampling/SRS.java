@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomSingleton;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class SRS {
             double cumulativeFrequency=0;
             for(Map.Entry<Object, Object> entry : weightedTable.entrySet()) {
                 Object pointID = entry.getKey();
-                cumulativeFrequency+= TypeConversions.toDouble(entry.getValue());
+                cumulativeFrequency+= TypeInference.toDouble(entry.getValue());
                 if(cumulativeFrequency>=randomFrequency) {
                     if(withReplacement==false) {
                         /* if replacement is not allowed check if the point already exists */

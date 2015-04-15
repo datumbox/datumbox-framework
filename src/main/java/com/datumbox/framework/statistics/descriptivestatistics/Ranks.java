@@ -18,7 +18,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -90,7 +90,7 @@ public class Ranks {
         while (it.hasNext()) {
             Map.Entry<Object, Object> entry = it.next();
             Object key = entry.getKey();
-            double count = TypeConversions.toDouble(entry.getValue());
+            double count = TypeInference.toDouble(entry.getValue());
             if (count <= 1.0) {
                 it.remove();
             }

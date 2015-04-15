@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomSingleton;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -80,7 +80,7 @@ public class CollaborativeFilteringTest {
         
         AssociativeArray result = validationData.get(validationData.iterator().next()).getYPredictedProbabilities();
         for(Map.Entry<Object, Object> entry : result.entrySet()) {
-            assertEquals(expResult.get(entry.getKey()), TypeConversions.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(expResult.get(entry.getKey()), TypeInference.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
         
         

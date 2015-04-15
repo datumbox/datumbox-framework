@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.DeepCopy;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -61,7 +61,7 @@ public class CensoredDescriptives {
             }
             else {
                 //uncensored internalData
-                uncensoredData.add(TypeConversions.toDouble(value)); //convert it to double
+                uncensoredData.add(TypeInference.toDouble(value)); //convert it to double
             }
         }
         if(n==0) {
@@ -182,8 +182,8 @@ public class CensoredDescriptives {
             return (ApointTi!=null)?ApointTi:BpointTi;
         }
         
-        double ApointTiValue = TypeConversions.toDouble(survivalFunction.get2d(ApointTi.toString(), "Sti"));
-        double BpointTiValue = TypeConversions.toDouble(survivalFunction.get2d(BpointTi.toString(), "Sti"));
+        double ApointTiValue = TypeInference.toDouble(survivalFunction.get2d(ApointTi.toString(), "Sti"));
+        double BpointTiValue = TypeInference.toDouble(survivalFunction.get2d(BpointTi.toString(), "Sti"));
         double median=BpointTi-(BpointTiValue-0.5)*(BpointTi-ApointTi)/(BpointTiValue-ApointTiValue);
 
         return median;

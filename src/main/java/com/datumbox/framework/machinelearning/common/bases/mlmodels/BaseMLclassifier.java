@@ -207,7 +207,7 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
             ctMap.put(Arrays.<Object>asList(theClass, SensitivityRates.FN), 0.0); //false negative
         }
         
-        int n = validationData.size();
+        int n = validationData.getRecordNumber();
         int c = classesSet.size();
         
         int correctCount=0;

@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -84,7 +84,7 @@ public class KolmogorovSmirnovOneSample {
             double observedProbabilityI=rank/(double)n;
 
             Object methodResult = method.invoke(null, x, params);
-            double expectedProbabilityI = TypeConversions.toDouble(methodResult);
+            double expectedProbabilityI = TypeInference.toDouble(methodResult);
             
             double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
             if(delta>=maxDelta) {

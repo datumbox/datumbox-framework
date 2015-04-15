@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Iterator;
@@ -70,7 +70,7 @@ public class WilcoxonOneSample {
         double W=0.0;
         for(Map.Entry<Object, Object> entry : Di.entrySet()) {
             String key = entry.getKey().toString();
-            Double rank = TypeConversions.toDouble(entry.getValue());
+            Double rank = TypeInference.toDouble(entry.getValue());
         
             if(key.charAt(0)=='+') {
                 W+=rank;

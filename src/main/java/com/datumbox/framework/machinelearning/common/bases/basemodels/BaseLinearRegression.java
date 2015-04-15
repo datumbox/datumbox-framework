@@ -22,7 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.machinelearning.common.validation.LinearRegressionValidation;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
@@ -205,14 +205,14 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         //create new validation metrics object
         VM validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
-        int n = validationData.size();
+        int n = validationData.getRecordNumber();
         
         FlatDataList errorList = new FlatDataList();
         double Ybar = 0.0;
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
-            Ybar += TypeConversions.toDouble(r.getY())/n;
-            errorList.add(TypeConversions.toDouble(r.getY())-TypeConversions.toDouble(r.getYPredicted()));
+            Ybar += TypeInference.toDouble(r.getY())/n;
+            errorList.add(TypeInference.toDouble(r.getY())-TypeInference.toDouble(r.getYPredicted()));
         }
 
         validationMetrics.setDW(DurbinWatson.calculateScore(errorList)); //autocorrelation metric (around 2 no autocorrelation)
@@ -232,7 +232,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         double SSR = 0.0;
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
-            SSR += Math.pow(TypeConversions.toDouble(r.getY()) - Ybar, 2);
+            SSR += Math.pow(TypeInference.toDouble(r.getY()) - Ybar, 2);
         }
         validationMetrics.setSSR(SSR);
         
@@ -242,7 +242,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         double RSquare = SSR/SST;
         validationMetrics.setRSquare(RSquare);
         
-        int d = knowledgeBase.getModelParameters().getD();
+        int d = knowledgeBase.getModelParameters().getD()+1;//add one for the constant
         int p = d - 1; //exclude constant
         
         double RSquareAdjusted = 1.0 - ((n-1.0)/(n-p-1.0))*(1.0-RSquare);
@@ -278,7 +278,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         double SSE = 0.0;
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
-            SSE += Math.pow(TypeConversions.toDouble(r.getY())-TypeConversions.toDouble(r.getYPredicted()), 2.0);
+            SSE += Math.pow(TypeInference.toDouble(r.getY())-TypeInference.toDouble(r.getYPredicted()), 2.0);
         }
         return SSE;
     }

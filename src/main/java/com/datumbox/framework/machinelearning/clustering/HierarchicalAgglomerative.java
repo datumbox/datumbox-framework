@@ -223,8 +223,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         

@@ -17,10 +17,11 @@ package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -100,35 +101,30 @@ public class Distance {
             Object v1 = a1.get(column);
             Object v2 = a2.get(column);
             
-            if(v1==null || v2==null) {
-                if(v1==v2) {
-                    columnDistances.put(column, 0.0);
+            if(Objects.equals(v1,v2)) { //this handles non numeric values too
+                columnDistances.put(column, 0.0);
+            }
+            else if(v1==null || v2==null) {
+                Object nonNullObject = (v1!=null)?v1:v2;
+
+                TypeInference.DataType type = TypeInference.getDataType(nonNullObject);
+                if(type!=TypeInference.DataType.NUMERICAL && type!=TypeInference.DataType.BOOLEAN) {
+                    //max distance is set to 1.0
+                    columnDistances.put(column, 1.0);
                 }
                 else {
-                    Object nonNullObject = (v1!=null)?v1:v2;
-                    
-                    Dataset.ColumnType type = Dataset.value2ColumnType(nonNullObject);
-                    if(type!=Dataset.ColumnType.NUMERICAL && type!=Dataset.ColumnType.DUMMYVAR) {
-                        //max distance is set to 1.0
-                        columnDistances.put(column, 1.0);
-                    }
-                    else {
-                        //set the value of the non-null object
-                        columnDistances.put(column, TypeConversions.toDouble(nonNullObject));
-                    }
-                } 
-            }
-            else if(v1.equals(v2)) { //this handles non numeric values too
-                columnDistances.put(column, 0.0);
+                    //set the value of the non-null object
+                    columnDistances.put(column, TypeInference.toDouble(nonNullObject));
+                }
             }
             else {
                 //The type check is performed as a safe-check in case the dataset
                 //is not passed through a DataTransfomer to convert data to numeric
                 //types. If they are already converted then we will correctly
                 //use only their numeric values.
-                Dataset.ColumnType type = Dataset.value2ColumnType(v1);
+                TypeInference.DataType type = TypeInference.getDataType(v1);
                 
-                if(type!=Dataset.ColumnType.NUMERICAL && type!=Dataset.ColumnType.DUMMYVAR) {
+                if(type!=TypeInference.DataType.NUMERICAL && type!=TypeInference.DataType.BOOLEAN) {
                     //if the type is not numerical we set as maximym distance the 1
                     //we are certain that those two are not equal due to the first if.
                     //it does not matter if it is boolean, ordinal or categorical
@@ -137,7 +133,7 @@ public class Distance {
                 }
                 else {
                     //the values are numbers
-                    columnDistances.put(column, TypeConversions.toDouble(v1)-TypeConversions.toDouble(v2));
+                    columnDistances.put(column, TypeInference.toDouble(v1)-TypeInference.toDouble(v2));
                 }
             }
         }

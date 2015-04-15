@@ -23,7 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
@@ -270,8 +270,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
@@ -314,7 +314,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     private void calculateFeatureWeights(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Map<Object, Dataset.ColumnType> columnTypes = trainingData.getColumns();
+        Map<Object, TypeInference.DataType> columnTypes = trainingData.getXDataTypes();
         
         Map<Object, Double> featureWeights = modelParameters.getFeatureWeights();
         
@@ -326,7 +326,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 for(Object feature : r.getX().keySet()) {
                     //standard kmeans has equal weights in all numeric features
                     //for categorical, dummy or ordinal feature, use the Gamma Multiplier of Kprototypes
-                    double weight = (columnTypes.get(feature)!=Dataset.ColumnType.NUMERICAL)?gammaWeight:1.0;
+                    double weight = (columnTypes.get(feature)!=TypeInference.DataType.NUMERICAL)?gammaWeight:1.0;
                     
                     featureWeights.put(feature, weight); 
                 }
@@ -347,14 +347,14 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             for(Integer rId : trainingData) { 
                 Record r = trainingData.get(rId);
                 for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Double value = TypeConversions.toDouble(entry.getValue());
+                    Double value = TypeInference.toDouble(entry.getValue());
                     if(value==null || value==0.0) {
                         continue;
                     }
                     
                     Object feature = entry.getKey();
                     
-                    if(columnTypes.get(feature)!=Dataset.ColumnType.NUMERICAL) {
+                    if(columnTypes.get(feature)!=TypeInference.DataType.NUMERICAL) {
                         Double previousValue = tmp_categoricalFrequencies.get(feature);
                         if(previousValue==null) {
                             previousValue = 0.0;
@@ -378,12 +378,12 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             double gammaWeight = trainingParameters.getCategoricalGamaMultiplier();
             
             //estimate weights
-            for(Map.Entry<Object, Dataset.ColumnType> entry : columnTypes.entrySet()) {
+            for(Map.Entry<Object, TypeInference.DataType> entry : columnTypes.entrySet()) {
                 Object feature = entry.getKey();
-                Dataset.ColumnType type = entry.getValue();
+                TypeInference.DataType type = entry.getValue();
                 
                 double weight;
-                if(type!=Dataset.ColumnType.NUMERICAL) {
+                if(type!=TypeInference.DataType.NUMERICAL) {
                     double percentage = tmp_categoricalFrequencies.get(feature)/n;
                     weight = 1.0 -percentage*percentage;
                 }
@@ -398,7 +398,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 }
                 
                 //apply muliplier if categorical
-                if(type!=Dataset.ColumnType.NUMERICAL) {
+                if(type!=TypeInference.DataType.NUMERICAL) {
                     weight *= gammaWeight;
                 }
                 

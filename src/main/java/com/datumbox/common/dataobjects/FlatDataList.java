@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -48,7 +48,7 @@ public final class FlatDataList extends DataStructureList<List<Object>> implemen
     }
     
     public final Double getDouble(int index) {
-        return TypeConversions.toDouble(internalData.get(index));
+        return TypeInference.toDouble(internalData.get(index));
     }
     
     public final boolean add(Object e) {

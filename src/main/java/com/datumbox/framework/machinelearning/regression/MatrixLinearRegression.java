@@ -24,6 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,8 +103,8 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize()+1;//plus one for the constant
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         //initialization
         modelParameters.setN(n);
@@ -145,7 +146,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         Y = null;
 
         //standard error matrix
-        double MSE = SSE/(n-d); //mean square error = SSE / dfResidual
+        double MSE = SSE/(n-(d+1)); //mean square error = SSE / dfResidual
         RealMatrix SE = XtXinv.scalarMultiply(MSE);
         XtXinv = null;
 
@@ -154,7 +155,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
 
 
         Map<Object, Double> pvalues = new HashMap<>(); //This is not small, but it does not make sense to store it in the db
-        for(int i =0;i<d;++i) {
+        for(int i =0;i<(d+1);++i) {
             double error = SE.getEntry(i, i);
             Object feature = idsFeatures.get(i);
             if(error<=0.0) {
@@ -163,7 +164,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             }
             else {
                 double tstat = coefficients.getEntry(i)/Math.sqrt(error);
-                pvalues.put(feature, 1.0-ContinuousDistributions.StudentsCdf(tstat, n-d)); //n-d degrees of freedom
+                pvalues.put(feature, 1.0-ContinuousDistributions.StudentsCdf(tstat, n-(d+1))); //n-d degrees of freedom
             }
         }
         SE=null;
@@ -180,7 +181,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         //read model params
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        int d = modelParameters.getD();
+        int d = modelParameters.getD()+1; //plus one for the constant
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();

@@ -22,7 +22,7 @@ import com.datumbox.common.persistentstorage.ConfigurationFactory;
 import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -48,8 +48,8 @@ public class TestUtils {
         for (Object key1 : result.keySet()) {
             for (Object key2 : result.get(key1).keySet()) {
                 
-                double v1 = TypeConversions.toDouble(expResult.get2d(key1, key2));
-                double v2 = TypeConversions.toDouble(result.get2d(key1, key2));
+                double v1 = TypeInference.toDouble(expResult.get2d(key1, key2));
+                double v2 = TypeInference.toDouble(result.get2d(key1, key2));
                 
                 assertEquals(v1, v2, TestConfiguration.DOUBLE_ACCURACY_HIGH);
             }

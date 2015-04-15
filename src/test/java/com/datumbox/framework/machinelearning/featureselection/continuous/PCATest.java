@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomSingleton;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -66,7 +66,7 @@ public class PCATest {
         
         instance.transform(validationdata);
         
-        assertEquals(validationdata.size(), expResult.size());
+        assertEquals(validationdata.getRecordNumber(), expResult.getRecordNumber());
         
         Iterator<Integer> itResult = validationdata.iterator();
         Iterator<Integer> itExpectedResult = expResult.iterator();
@@ -78,9 +78,9 @@ public class PCATest {
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Double value = TypeConversions.toDouble(entry.getValue());
+                Double value = TypeInference.toDouble(entry.getValue());
                 
-                assertEquals(TypeConversions.toDouble(r2.getX().get(feature)), value, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+                assertEquals(TypeInference.toDouble(r2.getX().get(feature)), value, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
             }
         }
         

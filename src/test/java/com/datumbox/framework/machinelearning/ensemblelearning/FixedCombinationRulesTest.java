@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
@@ -72,7 +72,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.sum(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
 
@@ -91,7 +91,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.average(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
         
     }
@@ -116,7 +116,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.weightedAverage(classifierClassProbabilityMatrix, classifierWeights);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
 
@@ -135,7 +135,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.median(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
 
@@ -154,7 +154,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.maximum(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
 
@@ -173,7 +173,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.minimum(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
 
@@ -192,7 +192,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.product(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
 
@@ -211,7 +211,7 @@ public class FixedCombinationRulesTest {
         
         AssociativeArray result = FixedCombinationRules.majorityVote(classifierClassProbabilityMatrix);
         for(Object k: expResult.keySet()) {
-            assertEquals(TypeConversions.toDouble(expResult.get(k)), TypeConversions.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(expResult.get(k)), TypeInference.toDouble(result.get(k)), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
     }
     

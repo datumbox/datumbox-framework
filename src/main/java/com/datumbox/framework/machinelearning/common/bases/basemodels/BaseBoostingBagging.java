@@ -169,8 +169,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize();
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         //initialization
         modelParameters.setN(n);

@@ -23,7 +23,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             Record r = validationDataset.get(rId);
             if(!r.getY().equals(r.getYPredicted())) {
                 Integer original_rId = (Integer) idMapping.get(rId);
-                error+= TypeConversions.toDouble(observationWeights.get(original_rId));
+                error+= TypeInference.toDouble(observationWeights.get(original_rId));
             }
         }
         
@@ -108,7 +108,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
                 Record r = validationDataset.get(rId);
                 if(!r.getY().equals(r.getYPredicted())) {
                     Integer original_rId = (Integer) idMapping.get(rId);
-                    Double value = TypeConversions.toDouble(observationWeights.get(original_rId));
+                    Double value = TypeInference.toDouble(observationWeights.get(original_rId));
                     observationWeights.put(original_rId, value*Math.exp(weight)); //increase the weight for misclassified observations
                 }
             }
@@ -117,7 +117,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             double normalizer = Descriptives.sum(new FlatDataCollection(observationWeights.values()));
             if(normalizer!=0.0) {
                 for(Map.Entry<Object, Object> entry : observationWeights.entrySet()) {
-                    Double value = TypeConversions.toDouble(entry.getValue());
+                    Double value = TypeInference.toDouble(entry.getValue());
                     observationWeights.put(entry.getKey(), value/normalizer);
                 }
             }

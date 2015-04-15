@@ -18,7 +18,7 @@ package com.datumbox.framework.statistics.nonparametrics.onesample;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.lang.reflect.InvocationTargetException;
@@ -90,7 +90,7 @@ public class Lilliefors {
             double observedProbabilityI=(double)rank/n;
 
             Object methodResult = method.invoke(null, x, params);
-            double expectedProbabilityI = TypeConversions.toDouble(methodResult);
+            double expectedProbabilityI = TypeInference.toDouble(methodResult);
             
             double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
             if(delta>=maxDelta) {
@@ -153,7 +153,7 @@ public class Lilliefors {
         if(!CRITICAL_VALUES.containsKey(aLevelKey)) { //if the particular aLevel is not a default one take the closest one
             double significanceValue = 0.0;
             for(Map.Entry<Object, AssociativeArray> entry : CRITICAL_VALUES.entrySet()) {
-                significanceValue = TypeConversions.toDouble(entry.getKey());
+                significanceValue = TypeInference.toDouble(entry.getKey());
                 //AssociativeArray scoreList = entry.getValue();
                 
                 if(significanceValue<=aLevel) { //add the closest one

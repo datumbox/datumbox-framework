@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public class Logrank {
                 }
                 else {
                     //uncensored internalData
-                    uncensoredData.add(TypeConversions.toDouble(value)); //convert it to double
+                    uncensoredData.add(TypeInference.toDouble(value)); //convert it to double
                 }
                 n.put(j, n.get(j)+1);
             }
@@ -136,7 +136,7 @@ public class Logrank {
                     }
                     else {
                         //uncensored internalData
-                        v = TypeConversions.toDouble(value2); //convert it to double
+                        v = TypeInference.toDouble(value2); //convert it to double
                     }
                     
                     if(v>=ti) {
@@ -164,7 +164,7 @@ public class Logrank {
             
             Object tmp = testTable.get2d(previousUncencoredKey, "eti");
             if(tmp!=null) {
-                previousUncencoredValue = TypeConversions.toDouble(tmp);
+                previousUncencoredValue = TypeInference.toDouble(tmp);
             }
             
             if(!ti.toString().endsWith(CensoredDescriptives.CENSORED_NUMBER_POSTFIX)) { //uncensored
@@ -196,10 +196,10 @@ public class Logrank {
             }
             else {
                 //uncensored internalData
-                Double v = TypeConversions.toDouble(value); //convert it to double
+                Double v = TypeInference.toDouble(value); //convert it to double
                 key = v.toString();
             }
-            double wi = TypeConversions.toDouble(testTable.get2d(key, "wi"));
+            double wi = TypeInference.toDouble(testTable.get2d(key, "wi"));
             S+= wi;
         }
         testTable = null;

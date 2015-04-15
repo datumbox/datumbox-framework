@@ -22,7 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 
 
 import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
@@ -145,8 +145,8 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
         
-        int n = trainingData.size();
-        int d = trainingData.getColumnSize()+1;//plus one for the constant
+        int n = trainingData.getRecordNumber();
+        int d = trainingData.getVariableNumber();
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -264,7 +264,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
                 //update the rest of the weights
                 
                 for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Double value = TypeConversions.toDouble(entry.getValue());
+                    Double value = TypeInference.toDouble(entry.getValue());
 
                     Object feature = entry.getKey();
                     featureClassTuple = Arrays.<Object>asList(feature, theClass);
@@ -284,7 +284,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         double score = thitas.get(Arrays.<Object>asList(Dataset.constantColumnName, theClass));
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
-            Double value = TypeConversions.toDouble(entry.getValue());
+            Double value = TypeInference.toDouble(entry.getValue());
             
             Object feature = entry.getKey();
             List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);

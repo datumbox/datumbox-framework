@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomSingleton;
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -86,7 +86,7 @@ public class StepwiseRegressionTest {
         double std = Descriptives.std(trainingData.extractYValues().toFlatDataCollection(), true);
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
-            assertEquals(TypeConversions.toDouble(r.getY()), TypeConversions.toDouble(r.getYPredicted()), std);
+            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), std);
         }
         
         instance.erase();

@@ -147,8 +147,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     protected void _fit(Dataset originaldata) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        int n = originaldata.size();
-        int d = originaldata.getColumnSize();
+        int n = originaldata.getRecordNumber();
+        int d = originaldata.getVariableNumber();
         
         //convert data into matrix
         Map<Object, Integer> feature2ColumnId= modelParameters.getFeature2ColumnId();
@@ -161,7 +161,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             Object feature = entry.getKey();
             Integer columnId = entry.getValue();
             
-            meanValues[columnId] = Descriptives.mean(originaldata.extractColumnValues(feature).toFlatDataCollection());
+            meanValues[columnId] = Descriptives.mean(originaldata.extractXColumnValues(feature).toFlatDataCollection());
             
             for(int row=0;row<n;++row) {
                 X.addToEntry(row, columnId, -meanValues[columnId]); //inplace subtraction!!!

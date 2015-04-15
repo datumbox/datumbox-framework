@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.TypeConversions;
+import com.datumbox.common.utilities.TypeInference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -60,17 +60,17 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
         //sign should be -1 or 1
         for(Map.Entry<Object, Object> entry : array.entrySet()) {
             Object column = entry.getKey();
-            Double previousValue = TypeConversions.toDouble(internalData.get(column));
+            Double previousValue = TypeInference.toDouble(internalData.get(column));
             if(previousValue==null) {
                 previousValue=0.0;
             }
-            internalData.put(column, previousValue+ sign*TypeConversions.toDouble(entry.getValue()));
+            internalData.put(column, previousValue+ sign*TypeInference.toDouble(entry.getValue()));
         }
     }
     
     public final void multiplyValues(double multiplier) {
         for(Map.Entry<Object, Object> entry : internalData.entrySet()) {
-            Double previousValue = TypeConversions.toDouble(entry.getValue());
+            Double previousValue = TypeInference.toDouble(entry.getValue());
             if(previousValue==null) {
                 continue;
             }
@@ -87,7 +87,7 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
     }
     
     public final Double getDouble(Object key) {
-        return TypeConversions.toDouble(internalData.get(key));
+        return TypeInference.toDouble(internalData.get(key));
     }
     
     public final Object put(Object key, Object value) {

@@ -260,7 +260,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
     protected VM validateModel(Dataset validationData) {
         predictDataset(validationData);
         
-        int n = validationData.size();
+        int n = validationData.getRecordNumber();
         
         MP modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, CL> clusterList = modelParameters.getClusterList();
