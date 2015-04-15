@@ -82,6 +82,8 @@ public class DatasetTest {
         expResult.put("4", TypeInference.DataType.CATEGORICAL);
         Map<Object, TypeInference.DataType> result = instance.getXDataTypes();
         assertEquals(expResult, result);
+        
+        assertEquals(instance.getYDataType(), null);
     }
 
     /**
