@@ -19,11 +19,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -35,27 +30,6 @@ import static org.junit.Assert.*;
 public class CETRTest {
     
     public CETRTest() {
-    }
-
-    public static String webRequest(String url) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            URL yahoo = new URL(url);
-            URLConnection yc = yahoo.openConnection();
-            try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            yc.getInputStream()))) {
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    sb.append(inputLine);
-                }
-            }
-        } 
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } 
-        
-        return sb.toString();
     }
     
     /**
@@ -71,7 +45,7 @@ public class CETRTest {
         
         String text = null;
         try {
-            text = CETRTest.webRequest("http://www.example.org/");
+            text = TestUtils.webRequest("http://www.example.org/");
         }
         catch(Exception ex) {
             TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
