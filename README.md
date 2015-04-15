@@ -40,7 +40,7 @@ The Framework currently supports performing multiple Parametric & non-parametric
 License
 -------
 
-The code is licensed under the Apache License, Version 2.0.
+The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
 
 Documentation
 -------------
