@@ -78,6 +78,8 @@ public class BernoulliNaiveBayesTest {
         
         instance.erase();
         
+        trainingData.erase();
+        validationData.erase();
     }
 
     /**
@@ -91,7 +93,9 @@ public class BernoulliNaiveBayesTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.carsNumeric(dbConf)[0];
+        Dataset[] data = Datasets.carsNumeric(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClassifier";
@@ -105,6 +109,8 @@ public class BernoulliNaiveBayesTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
+        
+        trainingData.erase();
     }
     
 }

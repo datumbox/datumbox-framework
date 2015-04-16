@@ -85,6 +85,10 @@ public class PCATest {
         }
         
         instance.erase();
+        
+        originalData.erase();
+        validationdata.erase();
+        expResult.erase();
     }
     
 }

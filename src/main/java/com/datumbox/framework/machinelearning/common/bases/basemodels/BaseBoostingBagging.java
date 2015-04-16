@@ -226,6 +226,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 sampledTrainingDataset = sampledTrainingDataset.copy();
             }
             mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
+            sampledTrainingDataset.erase();
             sampledTrainingDataset = null;
             
             
@@ -237,7 +238,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             mlclassifier = null;
             
             Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights, sampledIDs);
-            
+            if(copyData) {
+                validationDataset.erase();
+            }
             validationDataset = null;
             
             if(status==Status.STOP) {

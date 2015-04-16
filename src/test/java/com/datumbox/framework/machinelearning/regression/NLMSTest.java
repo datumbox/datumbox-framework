@@ -70,21 +70,26 @@ public class NLMSTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new NLMS(dbName, dbConf);
         
         instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
-
-
+        
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 
@@ -99,7 +104,9 @@ public class NLMSTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.regressionMixed(dbConf)[0];
+        Dataset[] data = Datasets.regressionMixed(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         String dbName = "JUnitRegressor";
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
@@ -126,13 +133,16 @@ public class NLMSTest {
         NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
-        df.erase();
 
         
         double expResult = 0.9995921505698557;
         double result = vm.getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
     }
 
     

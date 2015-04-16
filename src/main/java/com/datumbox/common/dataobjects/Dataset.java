@@ -33,11 +33,11 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public static final String yColumnName = "~Y";
     public static final String constantColumnName = "~CONSTANT";
     
-    private final Map<Integer, Record> recordList;
+    private Map<Integer, Record> recordList;
     
     private TypeInference.DataType yDataType; 
     /* Stores columnName=> DataType */
-    private final Map<Object, TypeInference.DataType> xDataTypes;
+    private Map<Object, TypeInference.DataType> xDataTypes;
     
     private transient String dbName;
     private transient DatabaseConnector dbc;
@@ -299,13 +299,21 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Clears the Dataset and removes the internal variables.
+     * Erases the Dataset and removes all internal variables.
      */
-    public void clear() {
-        yDataType = null;
+    public void erase() {
         dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
         dbc.dropBigMap("tmp_recordList", recordList);
         dbc.dropDatabase();
+        
+        dbName = null;
+        dbc = null;
+        dbConf = null;
+        
+        //Ensures that the Dataset can't be used after erase() is called.
+        yDataType = null;
+        xDataTypes = null;
+        recordList = null;
     }
     
     /**

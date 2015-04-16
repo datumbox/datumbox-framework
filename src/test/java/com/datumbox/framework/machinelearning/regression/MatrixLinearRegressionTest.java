@@ -58,8 +58,6 @@ public class MatrixLinearRegressionTest {
         df.fit_transform(trainingData, new XYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
-        
-        df = null;
 
         MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConf);
         
@@ -69,16 +67,17 @@ public class MatrixLinearRegressionTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new XYMinMaxNormalizer(dbName, dbConf);
         instance = new MatrixLinearRegression(dbName, dbConf);
         
         instance.validate(validationData);
         
-        df = new XYMinMaxNormalizer(dbName, dbConf);
         
 	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
 
 
         for(Integer rId : validationData) {
@@ -86,7 +85,11 @@ public class MatrixLinearRegressionTest {
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 
@@ -101,7 +104,9 @@ public class MatrixLinearRegressionTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.regressionMixed(dbConf)[0];
+        Dataset[] data = Datasets.regressionMixed(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
                 
         String dbName = "JUnitRegressor";
 
@@ -116,12 +121,15 @@ public class MatrixLinearRegressionTest {
         MatrixLinearRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         df.denormalize(trainingData);
-        df.erase();
 
         double expResult = 1;
         double result = vm.getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
     }
 
 

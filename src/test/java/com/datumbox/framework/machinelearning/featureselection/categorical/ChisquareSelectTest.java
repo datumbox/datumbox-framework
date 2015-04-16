@@ -66,6 +66,8 @@ public class ChisquareSelectTest {
         Set<Object> result = trainingData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.erase();
+        
+        trainingData.erase();
     }
     
 }

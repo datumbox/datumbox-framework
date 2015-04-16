@@ -68,13 +68,15 @@ public class BayesianEnsembleMethodTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new BayesianEnsembleMethod(dbName, dbConf);
         
         instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -85,7 +87,11 @@ public class BayesianEnsembleMethodTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 }

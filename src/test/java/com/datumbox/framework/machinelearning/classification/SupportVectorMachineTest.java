@@ -72,6 +72,9 @@ public class SupportVectorMachineTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new SupportVectorMachine(dbName, dbConf);
         
         instance.validate(validationData);
@@ -79,7 +82,6 @@ public class SupportVectorMachineTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
 
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -91,7 +93,11 @@ public class SupportVectorMachineTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 
@@ -107,7 +113,9 @@ public class SupportVectorMachineTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.carsNumeric(dbConf)[0];
+        Dataset[] data = Datasets.carsNumeric(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClassifier";
@@ -122,6 +130,8 @@ public class SupportVectorMachineTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
+        
+        trainingData.erase();
     }
 
 

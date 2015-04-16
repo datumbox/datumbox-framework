@@ -107,7 +107,9 @@ public class LatentDirichletAllocationTest {
 
         smr.erase();
         lda.erase();
+        reducedTrainingData.erase();
         
+        trainingData.erase();
     }
 
     

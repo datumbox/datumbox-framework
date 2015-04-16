@@ -85,6 +85,9 @@ public class CollaborativeFilteringTest {
         
         
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
     

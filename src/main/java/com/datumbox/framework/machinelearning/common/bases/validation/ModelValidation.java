@@ -109,6 +109,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
                 trainingData = trainingData.copy();
             }
             mlmodel.fit(trainingData, trainingParameters); 
+            trainingData.erase();
             trainingData = null;
                         
             
@@ -118,6 +119,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             }
             //fetch validation metrics
             VM entrySample = mlmodel.validate(validationData);
+            validationData.erase();
             validationData = null;
             
             

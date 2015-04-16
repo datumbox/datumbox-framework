@@ -15,9 +15,7 @@
  */
 package com.datumbox.applications.nlp;
 
-import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
@@ -27,17 +25,8 @@ import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.framework.utilities.dataset.DatasetBuilder;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
-import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -109,6 +98,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         Dataset trainingDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
         
         _fit(trainingDataset);
+        
+        trainingDataset.erase();
         
         //store database
         knowledgeBase.save();
@@ -191,8 +182,11 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         //build the testDataset
         Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, dbConf);
         
+        BaseMLmodel.ValidationMetrics vm = getPredictions(testDataset);
         
-        return getPredictions(testDataset);
+        testDataset.erase();
+        
+        return vm;
     }
     
     protected BaseMLmodel.ValidationMetrics getPredictions(Dataset testDataset) {

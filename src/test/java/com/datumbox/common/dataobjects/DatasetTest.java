@@ -57,33 +57,35 @@ public class DatasetTest {
         RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset instance = new Dataset(dbConf);
+        Dataset dataset = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
-        instance.add(new Record(xData1, null));
+        dataset.add(new Record(xData1, null));
         
         AssociativeArray xData2 = new AssociativeArray();
         xData2.put("2", 1.0);
-        instance.add(new Record(xData2, null));
+        dataset.add(new Record(xData2, null));
         
         AssociativeArray xData3 = new AssociativeArray();
         xData3.put("3", (short)1);
-        instance.add(new Record(xData3, null));
+        dataset.add(new Record(xData3, null));
         
         AssociativeArray xData4 = new AssociativeArray();
         xData4.put("4", "s");
-        instance.add(new Record(xData4, null));
+        dataset.add(new Record(xData4, null));
         
         Map<Object, TypeInference.DataType> expResult = new LinkedHashMap<>();
         expResult.put("1", TypeInference.DataType.BOOLEAN);
         expResult.put("2", TypeInference.DataType.NUMERICAL);
         expResult.put("3", TypeInference.DataType.ORDINAL);
         expResult.put("4", TypeInference.DataType.CATEGORICAL);
-        Map<Object, TypeInference.DataType> result = instance.getXDataTypes();
+        Map<Object, TypeInference.DataType> result = dataset.getXDataTypes();
         assertEquals(expResult, result);
         
-        assertEquals(instance.getYDataType(), null);
+        assertEquals(dataset.getYDataType(), null);
+        
+        dataset.erase();
     }
 
     /**
@@ -96,28 +98,30 @@ public class DatasetTest {
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
-        Dataset instance = new Dataset(dbConf);
+        Dataset dataset = new Dataset(dbConf);
         
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);
         xData1.put("weight", 88.0);
-        instance.add(new Record(xData1, null));
+        dataset.add(new Record(xData1, null));
         
         AssociativeArray xData2 = new AssociativeArray();
         xData2.put("height", 189.0);
         xData2.put("weight", 89.0);
-        instance.add(new Record(xData2, null));
+        dataset.add(new Record(xData2, null));
         
         AssociativeArray xData3 = new AssociativeArray();
         xData3.put("height", 190.0);
         xData3.put("weight", null);
-        instance.add(new Record(xData3, null));
+        dataset.add(new Record(xData3, null));
         
         
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{188.0,189.0,190.0}));
-        FlatDataList result = instance.extractXColumnValues(column);
+        FlatDataList result = dataset.extractXColumnValues(column);
         assertEquals(expResult, result);
+        
+        dataset.erase();
     }
 
     /**
@@ -130,29 +134,31 @@ public class DatasetTest {
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
-        Dataset instance = new Dataset(dbConf);
+        Dataset dataset = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);
         xData1.put("weight", 88.0);
-        instance.add(new Record(xData1, "Class1"));
+        dataset.add(new Record(xData1, "Class1"));
         
         AssociativeArray xData2 = new AssociativeArray();
         xData2.put("height", 189.0);
         xData2.put("weight", 89.0);
-        instance.add(new Record(xData2, "Class1"));
+        dataset.add(new Record(xData2, "Class1"));
         
         AssociativeArray xData3 = new AssociativeArray();
         xData3.put("height", 190.0);
         xData3.put("weight", null);
-        instance.add(new Record(xData3, "Class2"));
+        dataset.add(new Record(xData3, "Class2"));
         
         
         TransposeDataList expResult = new TransposeDataList();
         expResult.put("Class1", new FlatDataList(Arrays.asList(new Object[]{188.0,189.0})));
         expResult.put("Class2", new FlatDataList(Arrays.asList(new Object[]{190.0})));
-        TransposeDataList result = instance.extractXColumnValuesByY(column);
+        TransposeDataList result = dataset.extractXColumnValuesByY(column);
         assertEquals(expResult, result);
+        
+        dataset.erase();
     }
 
 }

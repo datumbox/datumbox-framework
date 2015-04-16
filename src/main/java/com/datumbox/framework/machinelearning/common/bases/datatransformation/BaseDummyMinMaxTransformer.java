@@ -230,7 +230,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return;
         }
         
-        if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
+        TypeInference.DataType dataType = data.getYDataType();
+        if(dataType==TypeInference.DataType.NUMERICAL || dataType==null) {
             
             for(Integer rId : data) {
                 Record r = data.get(rId);
@@ -242,13 +243,17 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 Object denormalizedY = null;
                 Object denormalizedYPredicted = null;
                 if(min.equals(max)) {
-                    denormalizedY = min;
+                    if(r.getY()!=null) {
+                        denormalizedY = min;
+                    }
                     if(r.getYPredicted()!=null) {
                         denormalizedYPredicted = min;
                     }
                 }
                 else {
-                    denormalizedY = TypeInference.toDouble(r.getY())*(max-min) + min;
+                    if(r.getY()!=null) {
+                        denormalizedY = TypeInference.toDouble(r.getY())*(max-min) + min;
+                    }
                     
                     Double YPredicted = TypeInference.toDouble(r.getYPredicted());
                     if(YPredicted!=null) {

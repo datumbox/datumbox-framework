@@ -80,6 +80,9 @@ public class AdaboostTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new Adaboost(dbName, dbConf);
         
         instance.validate(validationData);
@@ -89,7 +92,6 @@ public class AdaboostTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -100,7 +102,11 @@ public class AdaboostTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
     
 
@@ -115,7 +121,9 @@ public class AdaboostTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.carsNumeric(dbConf)[0];
+        Dataset[] data = Datasets.carsNumeric(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClassifier";
@@ -138,6 +146,8 @@ public class AdaboostTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
+        
+        trainingData.erase();
     }
     
 }

@@ -73,13 +73,15 @@ public class HierarchicalAgglomerativeTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new HierarchicalAgglomerative(dbName, dbConf);
         
         instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -97,7 +99,11 @@ public class HierarchicalAgglomerativeTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
     
@@ -112,7 +118,9 @@ public class HierarchicalAgglomerativeTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.heartDiseaseClusters(dbConf)[0];
+        Dataset[] data = Datasets.heartDiseaseClusters(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClusterer";
@@ -133,13 +141,16 @@ public class HierarchicalAgglomerativeTest {
         HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
-        df.erase();
 
         
         double expResult = 0.7666666666666667;
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
     }
 
 }

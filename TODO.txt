@@ -3,7 +3,7 @@ CODE IMPROVEMENTS
 
 - CSV reader and converter to Dataset.
 
-- Serialization improvements: set serialVersionUID?
+- Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
 - Add multithreading support.
 - Check out the Sparse Matrices/Vectors in Apache Math3 library. Use them in GaussianDPMM, MultinomialDPMM and MatrixLinearRegression.

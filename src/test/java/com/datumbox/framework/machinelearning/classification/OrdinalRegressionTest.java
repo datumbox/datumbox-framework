@@ -69,6 +69,9 @@ public class OrdinalRegressionTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXMinMaxNormalizer(dbName, dbConf);
         instance = new OrdinalRegression(dbName, dbConf);
         
         instance.validate(validationData);
@@ -76,7 +79,6 @@ public class OrdinalRegressionTest {
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
 
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -87,7 +89,11 @@ public class OrdinalRegressionTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 
@@ -102,7 +108,9 @@ public class OrdinalRegressionTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.winesOrdinal(dbConf)[0];
+        Dataset[] data = Datasets.winesOrdinal(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClassifier";
@@ -119,14 +127,17 @@ public class OrdinalRegressionTest {
 
         	        
         df.denormalize(trainingData);
-        df.erase();
 
 
         
         double expResult = 0.9823403146614675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
     }
 
 }

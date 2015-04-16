@@ -88,6 +88,9 @@ public class MultinomialDPMMTest {
         assertEquals(expResult, result);
         
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
     
@@ -102,7 +105,9 @@ public class MultinomialDPMMTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.multinomialClusters(dbConf)[0];
+        Dataset[] data = Datasets.multinomialClusters(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClusterer";
@@ -121,6 +126,8 @@ public class MultinomialDPMMTest {
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
+        
+        trainingData.erase();
     }
 
     

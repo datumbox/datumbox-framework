@@ -91,6 +91,9 @@ public class GaussianDPMMTest {
         assertEquals(expResult, result);
         
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
     
@@ -105,7 +108,9 @@ public class GaussianDPMMTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.gaussianClusters(dbConf)[0];
+        Dataset[] data = Datasets.gaussianClusters(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClusterer";
@@ -127,6 +132,8 @@ public class GaussianDPMMTest {
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
+        
+        trainingData.erase();
     }
 
     

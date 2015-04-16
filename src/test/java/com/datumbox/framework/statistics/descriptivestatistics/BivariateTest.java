@@ -163,7 +163,7 @@ public class BivariateTest {
         RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConf);
+        Dataset dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 4.5625);
         expResult.put2d(0, 1, 0.5875);
@@ -182,8 +182,10 @@ public class BivariateTest {
         expResult.put2d(3, 2, 3.0333333333333);
         expResult.put2d(3, 3, 3.1625);
         
-        DataTable2D result = Bivariate.covarianceMatrix(dataSet);
+        DataTable2D result = Bivariate.covarianceMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
+        
+        dataset.erase();
     }
 
     /**
@@ -195,7 +197,7 @@ public class BivariateTest {
         RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConf);
+        Dataset dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.18561229707779);
@@ -214,8 +216,10 @@ public class BivariateTest {
         expResult.put2d(3, 2, 0.85285436162523);
         expResult.put2d(3, 3, 1.0);
         
-        DataTable2D result = Bivariate.pearsonMatrix(dataSet);
+        DataTable2D result = Bivariate.pearsonMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
+        
+        dataset.erase();
     }
 
     /**
@@ -227,7 +231,7 @@ public class BivariateTest {
         RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConf);
+        Dataset dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put(0, new AssociativeArray());
         expResult.put2d(0, 0, 1.0);
@@ -247,8 +251,10 @@ public class BivariateTest {
         expResult.put2d(3, 2, 0.8472888999181);
         expResult.put2d(3, 3, 1.0);
         
-        DataTable2D result = Bivariate.spearmanMatrix(dataSet);
+        DataTable2D result = Bivariate.spearmanMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
+        
+        dataset.erase();
     }
 
     /**
@@ -260,7 +266,7 @@ public class BivariateTest {
         RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataSet = generateDataset(dbConf);
+        Dataset dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.066666666666667);
@@ -279,8 +285,10 @@ public class BivariateTest {
         expResult.put2d(3, 2, 0.64166666666667);
         expResult.put2d(3, 3, 1.0);
         
-        DataTable2D result = Bivariate.kendalltauMatrix(dataSet);
+        DataTable2D result = Bivariate.kendalltauMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
+        
+        dataset.erase();
     }
     
 }

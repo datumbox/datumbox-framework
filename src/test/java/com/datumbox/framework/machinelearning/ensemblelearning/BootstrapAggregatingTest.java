@@ -79,13 +79,15 @@ public class BootstrapAggregatingTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new BootstrapAggregating(dbName, dbConf);
         
         instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -96,7 +98,11 @@ public class BootstrapAggregatingTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
     
 
@@ -111,7 +117,9 @@ public class BootstrapAggregatingTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.carsNumeric(dbConf)[0];
+        Dataset[] data = Datasets.carsNumeric(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClassifier";
@@ -134,6 +142,8 @@ public class BootstrapAggregatingTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();
+        
+        trainingData.erase();
     }
     
 }

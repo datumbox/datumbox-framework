@@ -72,13 +72,15 @@ public class SoftMaxRegressionTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new SoftMaxRegression(dbName, dbConf);
         
         instance.validate(validationData);
         	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
 
 
         Map<Integer, Object> expResult = new HashMap<>();
@@ -90,7 +92,11 @@ public class SoftMaxRegressionTest {
         }
         assertEquals(expResult, result);
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 
@@ -105,7 +111,9 @@ public class SoftMaxRegressionTest {
         
         int k = 5;
         
-        Dataset trainingData = Datasets.carsNumeric(dbConf)[0];
+        Dataset[] data = Datasets.carsNumeric(dbConf);
+        Dataset trainingData = data[0];
+        data[1].erase();
         
         
         String dbName = "JUnitClassifier";
@@ -120,12 +128,14 @@ public class SoftMaxRegressionTest {
         SoftMaxRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
-        df.erase();
         
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
     }
 
     

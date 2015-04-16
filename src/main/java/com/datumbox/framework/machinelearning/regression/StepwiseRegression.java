@@ -179,6 +179,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
         
         mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
+        copiedTrainingData.erase();
         copiedTrainingData = null;
     }
 

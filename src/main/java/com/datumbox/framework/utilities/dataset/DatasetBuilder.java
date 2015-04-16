@@ -63,32 +63,12 @@ public class DatasetBuilder {
         return listsMap;
     }
     
-    public static Dataset parseFromTextLists(Map<Object, List<String>> dataset, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
-        Dataset data = new Dataset(dbConf);
+    public static Dataset parseFromTextFiles(Map<Object, URI> dataFiles, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
+        Dataset dataset = new Dataset(dbConf);
         Logger logger = LoggerFactory.getLogger(DatasetBuilder.class);
         
         //loop throw the map and process each category file
-        for(Map.Entry<Object, List<String>> entry : dataset.entrySet()) {
-            Object theClass = entry.getKey();
-            List<String> textList = entry.getValue();
-            
-            logger.info("Dataset Parsing " + theClass + " class");
-            
-            for(String text : textList) {
-                //extract features of the string and add every keyword combination in X map
-                data.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(text))), theClass)); 
-            }
-        }    
-
-        return data;
-    }
-    
-    public static Dataset parseFromTextFiles(Map<Object, URI> dataset, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
-        Dataset data = new Dataset(dbConf);
-        Logger logger = LoggerFactory.getLogger(DatasetBuilder.class);
-        
-        //loop throw the map and process each category file
-        for(Map.Entry<Object, URI> entry : dataset.entrySet()) {
+        for(Map.Entry<Object, URI> entry : dataFiles.entrySet()) {
             Object theClass = entry.getKey();
             URI datasetURI = entry.getValue();
             
@@ -99,7 +79,7 @@ public class DatasetBuilder {
                 //read strings one by one
                 for(String line; (line = br.readLine()) != null; ) {
                     //extract features of the string and add every keyword combination in X map
-                    data.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass)); 
+                    dataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass)); 
                 }
             } 
             catch (IOException ex) {
@@ -107,7 +87,7 @@ public class DatasetBuilder {
             } 
         }    
 
-        return data;
+        return dataset;
     }
     
 }

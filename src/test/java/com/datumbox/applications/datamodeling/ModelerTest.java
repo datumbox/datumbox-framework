@@ -54,7 +54,7 @@ public class ModelerTest {
         Dataset[] data = Datasets.carsNumeric(dbConf);
         Dataset trainingData = data[0];
         
-        Dataset newData = data[1];
+        Dataset validationData = data[1];
         
         
         String dbName = "JUnit";
@@ -97,20 +97,23 @@ public class ModelerTest {
         
         instance = new Modeler(dbName, dbConf);
         
-        instance.validate(newData);
+        instance.validate(validationData);
         
         
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
-        for(Integer rId : newData) {
-            Record r = newData.get(rId);
+        for(Integer rId : validationData) {
+            Record r = validationData.get(rId);
             expResult.put(rId, r.getY());
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
         
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
     
 }

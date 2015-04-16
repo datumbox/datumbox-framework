@@ -23,12 +23,10 @@ import com.datumbox.common.objecttypes.Parameterizable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.framework.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.utilities.text.cleaners.HTMLCleaner;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -186,6 +184,8 @@ public class CETR {
                 selectedRows.add(rId);
             }
         }
+        
+        dataset.erase();
         
         return selectedRows;
     }

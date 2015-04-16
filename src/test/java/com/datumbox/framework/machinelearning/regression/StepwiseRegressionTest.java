@@ -74,6 +74,9 @@ public class StepwiseRegressionTest {
         
         
         instance = null;
+        df = null;
+        
+        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new StepwiseRegression(dbName, dbConf);
         
         instance.validate(validationData);
@@ -81,7 +84,6 @@ public class StepwiseRegressionTest {
 	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        df.erase();
         
         double std = Descriptives.std(trainingData.extractYValues().toFlatDataCollection(), true);
         for(Integer rId : validationData) {
@@ -89,7 +91,11 @@ public class StepwiseRegressionTest {
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), std);
         }
         
+        df.erase();
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
 
 

@@ -70,6 +70,9 @@ public class TFIDFTest {
         Set<Object> result = validationData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.erase();
+        
+        trainingData.erase();
+        validationData.erase();
     }
     
 }

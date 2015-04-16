@@ -111,9 +111,9 @@ public class TextClassifierTest {
         
         
         instance = new TextClassifier(dbName, dbConf);
-        Dataset testDataset = null;
+        Dataset validationDataset = null;
         try {
-            testDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
+            validationDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         }
         catch(Exception ex) {
             TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
@@ -121,12 +121,13 @@ public class TextClassifierTest {
         }
         
         List<Object> expResult = Arrays.asList("negative","positive");
-        for(Integer rId : testDataset) {
-            Record r = testDataset.get(rId);
+        for(Integer rId : validationDataset) {
+            Record r = validationDataset.get(rId);
             assertEquals(expResult.get(rId), r.getYPredicted());
         }
         
         instance.erase();
+        validationDataset.erase();
     }
 
 }
