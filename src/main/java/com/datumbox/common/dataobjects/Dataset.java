@@ -141,7 +141,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      */
     public Dataset(DatabaseConfiguration dbConf) {
         //we dont need to have a unique name, because it is not used by the connector on the current implementations
-        //dbName = "dts_"+new BigInteger(130, RandomValue.getRandomGenerator()).toString(32);
+        //dbName = "dts_"+new BigInteger(130, RandomGenerator.getThreadLocalRandom()).toString(32);
         dbName = "dts";
         
         this.dbConf = dbConf;
