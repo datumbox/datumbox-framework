@@ -36,7 +36,7 @@ public class RandomGenerator {
      * 
      * @return 
      */
-    public static Long getGlobalSeed() {
+    public static synchronized Long getGlobalSeed() {
         return globalSeed;
     }
     
@@ -49,7 +49,7 @@ public class RandomGenerator {
      * 
      * @param globalSeed 
      */
-    public static void setGlobalSeed(Long globalSeed) {
+    public static synchronized void setGlobalSeed(Long globalSeed) {
         RandomGenerator.globalSeed = globalSeed;
     }
  
@@ -61,7 +61,7 @@ public class RandomGenerator {
      * 
      * @return 
      */
-    public synchronized static Random getThreadLocalRandom() {
+    public static synchronized Random getThreadLocalRandom() {
         if(threadLocalRandom == null) {
             threadLocalRandom = new ThreadLocal<Random>() {
                 @Override
