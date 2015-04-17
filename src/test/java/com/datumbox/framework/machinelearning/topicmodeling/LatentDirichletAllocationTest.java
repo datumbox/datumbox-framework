@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -52,11 +52,11 @@ public class LatentDirichletAllocationTest {
     @Test
     public void testValidate() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "validate");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
-        String dbName = "JUnitTopicSelection";
+        String dbName = this.getClass().getSimpleName();
 
         
         Map<Object, URI> dataset = new HashMap<>();

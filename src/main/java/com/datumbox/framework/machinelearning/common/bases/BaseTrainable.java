@@ -58,8 +58,9 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
 
     protected BaseTrainable(String dbName, DatabaseConfiguration dbConf) {
         String methodName = this.getClass().getSimpleName();
-        if(!dbName.contains(methodName)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
-            dbName += dbConf.getDBnameSeparator() + methodName;
+        String dbNameSeparator = dbConf.getDBnameSeparator();
+        if(!dbName.contains(methodName+dbNameSeparator)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
+            dbName += dbNameSeparator + methodName;
         }
         
         this.dbName = dbName;

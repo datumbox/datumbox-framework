@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.Datasets;
@@ -44,7 +44,7 @@ public class CollaborativeFilteringTest {
     @Test
     public void testPredict() {
         TestUtils.log(this.getClass(), "predict");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.recommenderSystemFood(dbConf);
@@ -53,7 +53,7 @@ public class CollaborativeFilteringTest {
         Dataset validationData = data[1];
         
         
-        String dbName = "JUnitRecommender";
+        String dbName = this.getClass().getSimpleName();
         CollaborativeFiltering instance = new CollaborativeFiltering(dbName, dbConf);
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();

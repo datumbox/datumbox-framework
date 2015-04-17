@@ -147,7 +147,7 @@ public class PHPfunctions {
      * @return 
      */
     public static int mt_rand(int min, int max) {
-        return min + (int)(RandomSingleton.getInstance().nextDouble() * ((max - min) + 1));
+        return min + (int)(RandomGenerator.nextDouble() * ((max - min) + 1));
     }
     
     
@@ -159,7 +159,7 @@ public class PHPfunctions {
      * @return 
      */
     public static double mt_rand(double min, double max) {
-        return min + (RandomSingleton.getInstance().nextDouble() * (max - min));
+        return min + (RandomGenerator.nextDouble() * (max - min));
     }
     
     /**
@@ -186,10 +186,9 @@ public class PHPfunctions {
      */
     public static <T> void shuffle(T[] array) {
         //Implementing Fisher-Yates shuffle
-        RandomSingleton rnd = RandomSingleton.getInstance();
         T tmp;
         for (int i = array.length - 1; i > 0; --i) {
-            int index = rnd.nextInt(i + 1);
+            int index = RandomGenerator.nextInt(i + 1);
             
             tmp = array[index];
             array[index] = array[i];

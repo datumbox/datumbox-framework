@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -40,12 +40,12 @@ public class MutualInformationTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset trainingData = Datasets.featureSelectionCategorical(dbConf, 1000)[0];
         
-        String dbName = "JUnitFeatureSelection";
+        String dbName = this.getClass().getSimpleName();
         MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);

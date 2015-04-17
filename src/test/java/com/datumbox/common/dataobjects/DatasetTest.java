@@ -16,7 +16,7 @@
 package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.FileReader;
@@ -46,7 +46,7 @@ public class DatasetTest {
     @Test
     public void testParseCSVFile() {
         TestUtils.log(this.getClass(), "parseCSVFile");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Reader fileReader;
@@ -139,7 +139,7 @@ public class DatasetTest {
     @Test
     public void testGetColumns() {
         TestUtils.log(this.getClass(), "getColumns");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataset = new Dataset(dbConf);
@@ -179,7 +179,7 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValues() {
         TestUtils.log(this.getClass(), "extractColumnValues");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
@@ -215,7 +215,7 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValuesByY() {
         TestUtils.log(this.getClass(), "extractColumnValuesByY");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";

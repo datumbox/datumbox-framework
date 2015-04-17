@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -43,7 +43,7 @@ public class TFIDFTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.featureSelectionTFIDF(dbConf);
@@ -51,7 +51,7 @@ public class TFIDFTest {
         Dataset trainingData = data[0];
         Dataset validationData = data[1];
         
-        String dbName = "JUnitFeatureSelection";
+        String dbName = this.getClass().getSimpleName();
         TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();
         param.setBinarized(false);
         param.setMaxFeatures(3);

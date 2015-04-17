@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 
 import com.datumbox.tests.utilities.TestUtils;
@@ -160,7 +160,7 @@ public class BivariateTest {
     @Test
     public void testCovarianceMatrix() {
         TestUtils.log(this.getClass(), "covarianceMatrix");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataset = generateDataset(dbConf);
@@ -194,7 +194,7 @@ public class BivariateTest {
     @Test
     public void testPearsonMatrix() {
         TestUtils.log(this.getClass(), "pearsonMatrix");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataset = generateDataset(dbConf);
@@ -228,7 +228,7 @@ public class BivariateTest {
     @Test
     public void testSpearmanMatrix() {
         TestUtils.log(this.getClass(), "spearmanMatrix");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataset = generateDataset(dbConf);
@@ -263,7 +263,7 @@ public class BivariateTest {
     @Test
     public void testKendalltauMatrix() {
         TestUtils.log(this.getClass(), "kendalltauMatrix");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataset = generateDataset(dbConf);

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.statistics.distributions;
 
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 
 /**
@@ -652,7 +652,7 @@ public class ContinuousDistributions {
     public static double[] multinomialGaussianSample(double[] mean, double[][] covariance) {
         MultivariateNormalDistribution gaussian = new 
             MultivariateNormalDistribution(mean, covariance);
-        gaussian.reseedRandomGenerator(RandomSingleton.getInstance().nextLong());
+        gaussian.reseedRandomGenerator(RandomGenerator.nextLong());
         return gaussian.sample();
     }
     

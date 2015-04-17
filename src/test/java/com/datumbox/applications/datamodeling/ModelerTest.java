@@ -18,7 +18,7 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
@@ -48,7 +48,7 @@ public class ModelerTest {
     @Test
     public void testTrainAndValidate() {
         TestUtils.log(this.getClass(), "testTrainAndValidate");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.carsNumeric(dbConf);
@@ -57,7 +57,7 @@ public class ModelerTest {
         Dataset validationData = data[1];
         
         
-        String dbName = "JUnit";
+        String dbName = this.getClass().getSimpleName();
         
         Modeler instance = new Modeler(dbName, dbConf);
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();

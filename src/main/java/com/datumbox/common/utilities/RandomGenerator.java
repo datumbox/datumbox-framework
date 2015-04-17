@@ -21,39 +21,35 @@ import java.util.Random;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class RandomSingleton {
-    private static final RandomSingleton instance = new RandomSingleton();
-    private final Random randomGenerator = new Random();
+public class RandomGenerator {
+    private static final ThreadLocal<Random> randomGenerator = new ThreadLocal<Random>() {
+        @Override
+        protected Random initialValue() {
+            return new Random();
+        }
+    };
  
-    private RandomSingleton() {
-        
-    }
- 
-    public static RandomSingleton getInstance() {
-        return instance;
-    }
- 
-    public double nextDouble() {
-        return randomGenerator.nextDouble();
+    public static double nextDouble() {
+        return randomGenerator.get().nextDouble();
     }
     
-    public int nextInt() {
-        return randomGenerator.nextInt();
+    public static int nextInt() {
+        return randomGenerator.get().nextInt();
     }
     
-    public int nextInt(int bound) {
-        return randomGenerator.nextInt(bound);
+    public static int nextInt(int bound) {
+        return randomGenerator.get().nextInt(bound);
     }
     
-    public long nextLong() {
-        return randomGenerator.nextLong();
+    public static long nextLong() {
+        return randomGenerator.get().nextLong();
     }
     
-    public synchronized double nextGaussian() {
-        return randomGenerator.nextGaussian();
+    public static double nextGaussian() {
+        return randomGenerator.get().nextGaussian();
     }
     
-    public synchronized void setSeed(long seed) {
-        randomGenerator.setSeed(seed);
+    public static void setSeed(long seed) {
+        randomGenerator.get().setSeed(seed);
     } 
 }

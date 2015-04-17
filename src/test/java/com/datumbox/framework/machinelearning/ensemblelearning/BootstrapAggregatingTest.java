@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
@@ -45,7 +45,7 @@ public class BootstrapAggregatingTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
@@ -55,7 +55,7 @@ public class BootstrapAggregatingTest {
         Dataset validationData = data[1];
         
         
-        String dbName = "JUnitClassifier";
+        String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
@@ -112,7 +112,7 @@ public class BootstrapAggregatingTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
@@ -122,7 +122,7 @@ public class BootstrapAggregatingTest {
         data[1].erase();
         
         
-        String dbName = "JUnitClassifier";
+        String dbName = this.getClass().getSimpleName();
         BootstrapAggregating instance = new BootstrapAggregating(dbName, dbConf);
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();

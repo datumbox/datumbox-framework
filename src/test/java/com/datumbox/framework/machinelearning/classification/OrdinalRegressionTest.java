@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.tests.utilities.Datasets;
@@ -44,7 +44,7 @@ public class OrdinalRegressionTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
@@ -54,7 +54,7 @@ public class OrdinalRegressionTest {
         Dataset validationData = data[1];
         
         
-        String dbName = "JUnitClassifier";
+        String dbName = this.getClass().getSimpleName();
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, dbConf);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
@@ -103,7 +103,7 @@ public class OrdinalRegressionTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
@@ -113,7 +113,7 @@ public class OrdinalRegressionTest {
         data[1].erase();
         
         
-        String dbName = "JUnitClassifier";
+        String dbName = this.getClass().getSimpleName();
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, dbConf);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());

@@ -5,11 +5,15 @@ Datumbox Machine Learning Framework
 
 The Datumbox Machine Learning Framework is an open-source framework written in Java which allows the rapid development Machine Learning and Statistical applications. The main focus of the framework is to include a large number of machine learning algorithms & statistical tests and being able to handle medium-large sized datasets. 
 
-Author: [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/)
+License
+-------
 
-Version: 1.0.0
+Copyright (c) 2013-2015 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
 
-Build: 20150417
+Version
+-------
+
+The latest version is 0.6.0 (build 20150417). The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
 
 Installation
 ------------
@@ -21,7 +25,7 @@ Maven:
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework</artifactId>
-        <version>1.0.0</version>
+        <version>0.6.0</version>
     </dependency>
 ```
 
@@ -37,11 +41,6 @@ Which methods/algorithms are supported?
 
 The Framework currently supports performing multiple Parametric & non-parametric Statistical tests, calculating descriptive statistics on censored & uncensored data, performing ANOVA, Cluster Analysis, Dimension Reduction, Regression Analysis, Timeseries Analysis, Sampling and calculation of probabilities from the most common discrete and continues Distributions. In addition it provides several implemented algorithms including Max Entropy, Naive Bayes, SVM, Bootstrap Aggregating, Adaboost, Kmeans, Hierarchical Clustering, Dirichlet Process Mixture Models, Softmax Regression, Ordinal Regression, Linear Regression, Stepwise Regression, PCA and several other techniques that can be used for feature selection, ensemble learning, linear programming solving and recommender systems.
 
-License
--------
-
-The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
-
 Documentation
 -------------
 
@@ -50,7 +49,7 @@ At the moment the Framework has a very poor documentation. Fortunately for every
 Bug Reports
 -----------
 
-Despite the fact that parts of the Framework have been used in commercial applications, not all classes are equally used/tested. Currently the framework is in Beta version, so you should expect drastic changes on the future version. If you spot a bug please [submit it as an Issue](https://github.com/datumbox/datumbox-framework/issues) on the official Github repository. 
+Despite the fact that parts of the Framework have been used in commercial applications, not all classes are equally used/tested. Currently the framework is in Beta version, so you should expect some changes on the public APIs on future versions. If you spot a bug please [submit it as an Issue](https://github.com/datumbox/datumbox-framework/issues) on the official Github repository. 
 
 Contributing
 ------------

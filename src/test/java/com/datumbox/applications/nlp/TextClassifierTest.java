@@ -18,7 +18,7 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 
@@ -54,11 +54,11 @@ public class TextClassifierTest {
     @Test
     public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "TrainAndPredict");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
-        String dbName = "JUnit";
+        String dbName = this.getClass().getSimpleName();
         
         Map<Object, URI> dataset = new HashMap<>();
         try {

@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.utilities.Datasets;
@@ -47,7 +47,7 @@ public class SupportVectorMachineTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -58,7 +58,7 @@ public class SupportVectorMachineTest {
         Dataset validationData = data[1];
         
         
-        String dbName = "JUnitClassifier";
+        String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
@@ -107,7 +107,7 @@ public class SupportVectorMachineTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -118,7 +118,7 @@ public class SupportVectorMachineTest {
         data[1].erase();
         
         
-        String dbName = "JUnitClassifier";
+        String dbName = this.getClass().getSimpleName();
         SupportVectorMachine instance = new SupportVectorMachine(dbName, dbConf);
         
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();

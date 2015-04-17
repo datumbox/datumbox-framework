@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import com.datumbox.tests.utilities.Datasets;
@@ -44,7 +44,7 @@ public class GaussianDPMMTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate"); 
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.gaussianClusters(dbConf);
@@ -53,7 +53,7 @@ public class GaussianDPMMTest {
         Dataset validationData = data[1];
 
         
-        String dbName = "JUnitClusterer";
+        String dbName = this.getClass().getSimpleName();
         GaussianDPMM instance = new GaussianDPMM(dbName, dbConf);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
@@ -103,7 +103,7 @@ public class GaussianDPMMTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED); 
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED); 
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
@@ -113,7 +113,7 @@ public class GaussianDPMMTest {
         data[1].erase();
         
         
-        String dbName = "JUnitClusterer";
+        String dbName = this.getClass().getSimpleName();
         GaussianDPMM instance = new GaussianDPMM(dbName, dbConf);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();

@@ -16,7 +16,7 @@
 package com.datumbox.applications.nlp;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomSingleton;
+import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.utilities.TestUtils;
 
@@ -38,10 +38,10 @@ public class CETRTest {
     @Test
     public void testExtract() {
         TestUtils.log(this.getClass(), "extract");
-        RandomSingleton.getInstance().setSeed(TestConfiguration.RANDOM_SEED); 
+        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED); 
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        String dbName = "JUnitClusterer";
+        String dbName = this.getClass().getSimpleName();
         
         String text = null;
         try {

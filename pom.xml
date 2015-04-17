@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
-    <version>1.0.0</version>
+    <version>0.6.0</version>
     
     <name>Datumbox Machine Learning Framework</name>
     <description>Datumbox is an open-source Machine Learning Framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
@@ -73,7 +73,7 @@
         <maven-plugin-version>2.3.2</maven-plugin-version>
         <maven-javadoc-plugin-version>2.10.1</maven-javadoc-plugin-version>
         <maven-source-plugin-version>2.4</maven-source-plugin-version>
-        <maven-surfire-plugin-version>2.17</maven-surfire-plugin-version>
+        <maven-surfire-plugin-version>2.18.1</maven-surfire-plugin-version>
         <maven-jar-plugin-version>2.6</maven-jar-plugin-version>
         <gmaven-plugin-version>1.0</gmaven-plugin-version>
         <license-maven-plugin-version>2.8</license-maven-plugin-version>
@@ -159,6 +159,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surfire-plugin-version}</version>
                 <configuration>
+                    <threadCount>3</threadCount>
+                    <parallel>classes</parallel>
                     <argLine>-Xmx512M</argLine>
                 </configuration>
             </plugin>
