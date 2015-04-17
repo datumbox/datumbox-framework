@@ -37,8 +37,10 @@ import org.mapdb.DBMaker;
  */
 public class MapDBConnector implements DatabaseConnector {
     
-    private static final String DEFAULT_DB = "DEFAULT";
-    private static final String TEMP_DB = "TEMP";
+    private enum DatabaseType {
+        DEFAULT_DB,
+        TEMP_DB;
+    }
     
     private final MapDBConfiguration dbConf;
     private final String database;
@@ -47,7 +49,7 @@ public class MapDBConnector implements DatabaseConnector {
      * This list stores all the DB objects which are used to persist the data. This
      * library uses one default and one temporary db.
      */
-    private final Map<String, DB> dbRegistry = new HashMap<>(); 
+    private final Map<DatabaseType, DB> dbRegistry = new HashMap<>(); 
     
     public MapDBConnector(String database, MapDBConfiguration dbConf) {  
         this.dbConf = dbConf;
@@ -58,10 +60,10 @@ public class MapDBConnector implements DatabaseConnector {
         return !(db == null || db.isClosed());
     }
     
-    private DB openDB(String dbName) {
-        DB db = dbRegistry.get(dbName);
+    private DB openDB(DatabaseType dbType) {
+        DB db = dbRegistry.get(dbType);
         if(!isOpenDB(db)) {
-            boolean isTemporary = dbName.equals(TEMP_DB);
+            boolean isTemporary = dbType==DatabaseType.TEMP_DB;
             DBMaker m = (isTemporary==true)?DBMaker.newTempFileDB().deleteFilesAfterClose():DBMaker.newFileDB(getDefaultPath().toFile());
             
             if(dbConf.isTransacted()==false) {
@@ -83,7 +85,7 @@ public class MapDBConnector implements DatabaseConnector {
             m = m.closeOnJvmShutdown();
             
             db = m.make();
-            dbRegistry.put(dbName, db);
+            dbRegistry.put(dbType, db);
         }
         return db;
     }
@@ -93,13 +95,13 @@ public class MapDBConnector implements DatabaseConnector {
     }
     
     private void validateName(String name, boolean isTemporary) {
-        DB db = dbRegistry.get(TEMP_DB);
+        DB db = dbRegistry.get(DatabaseType.TEMP_DB);
         if (existsInDB(db, name)) {
             //try to find a map in temporary db with the same name
             throw new RuntimeException("A temporary map already exists with the same name.");
         }
         
-        db = dbRegistry.get(DEFAULT_DB);
+        db = dbRegistry.get(DatabaseType.DEFAULT_DB);
         if (isTemporary && existsInDB(db, name)) {
             //try to find if a permanent map exists and we want to declare a new temporary with the same name
             throw new RuntimeException("A BigMap already exists with the same name.");
@@ -123,8 +125,8 @@ public class MapDBConnector implements DatabaseConnector {
 
     @Override
     public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
-        openDB(DEFAULT_DB);
-        DB db = dbRegistry.get(DEFAULT_DB);
+        openDB(DatabaseType.DEFAULT_DB);
+        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
         Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
         knowledgeBaseVar.set(knowledgeBaseObject);
         db.commit();
@@ -134,8 +136,8 @@ public class MapDBConnector implements DatabaseConnector {
     @Override
     @SuppressWarnings("unchecked")
     public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
-        openDB(DEFAULT_DB);
-        DB db = dbRegistry.get(DEFAULT_DB);
+        openDB(DatabaseType.DEFAULT_DB);
+        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
         Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
         return knowledgeBaseVar.get();
     }
@@ -148,13 +150,7 @@ public class MapDBConnector implements DatabaseConnector {
         
         for(DB db: dbRegistry.values()) {
             if(db != null) {
-                if(db.isClosed()) {
-                    return true; //assume that the db existed before closing it. This is done in order to delete any remaining files
-                }
-
-                if(db.getCatalog().size()>0) {
-                    return true;
-                }
+                return true;
             }
         }
         
@@ -186,11 +182,11 @@ public class MapDBConnector implements DatabaseConnector {
     
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
-        boolean isTemporary = existsInDB(dbRegistry.get(TEMP_DB), name); 
+        boolean isTemporary = existsInDB(dbRegistry.get(DatabaseType.TEMP_DB), name); 
         
-        String dbName = isTemporary?TEMP_DB:DEFAULT_DB;
+        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
         
-        DB db = dbRegistry.get(dbName);
+        DB db = dbRegistry.get(dbType);
         if(isOpenDB(db)) {
             db.delete(name);
         }
@@ -200,10 +196,10 @@ public class MapDBConnector implements DatabaseConnector {
     public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
         validateName(name, isTemporary);
         
-        String dbName = isTemporary?TEMP_DB:DEFAULT_DB;
+        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
 
-        openDB(dbName);
-        return dbRegistry.get(dbName).createHashMap(name)
+        openDB(dbType);
+        return dbRegistry.get(dbType).createHashMap(name)
             .counterEnable()
             .makeOrGet();
     }   
