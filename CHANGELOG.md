@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 1.0.0 - Build 20150417
+Version 0.6.0 - Build 20150417
 ------------------------------
 
 - Added support of [MapDB](http://www.mapdb.org/) database engine.
