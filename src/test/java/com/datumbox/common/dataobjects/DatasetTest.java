@@ -113,6 +113,10 @@ public class DatasetTest {
             assertEquals(r1.equals(r2),true);
         }
         
+        assertEquals(expResult.getYDataType(),dataset.getYDataType());
+        
+        assertEquals(expResult.getXDataTypes().equals(dataset.getXDataTypes()),true);
+        
         expResult.erase();
         dataset.erase();
     }
