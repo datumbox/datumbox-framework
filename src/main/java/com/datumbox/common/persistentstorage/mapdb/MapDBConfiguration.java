@@ -33,9 +33,9 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     
     private int cacheSize = 10000;
     
-    private boolean compression = true;
+    private boolean compressed = true;
     
-    private boolean transactions = false;
+    private boolean transacted = false;
 
     @Override
     public DatabaseConnector getConnector(String database) {
@@ -51,8 +51,8 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     public void load(Properties properties) {
         outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
         cacheSize = Integer.valueOf(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
-        compression = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.compression").toLowerCase());
-        transactions = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.transactions").toLowerCase());
+        compressed = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.compressed").toLowerCase());
+        transacted = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.transacted").toLowerCase());
     }
 
     public String getOutputFolder() {
@@ -71,20 +71,20 @@ public class MapDBConfiguration implements DatabaseConfiguration {
         this.cacheSize = cacheSize;
     }
 
-    public boolean getCompression() {
-        return compression;
+    public boolean isCompressed() {
+        return compressed;
     }
 
-    public void setCompression(boolean compression) {
-        this.compression = compression;
+    public void setCompressed(boolean compressed) {
+        this.compressed = compressed;
     }
 
-    public boolean getTransactions() {
-        return transactions;
+    public boolean isTransacted() {
+        return transacted;
     }
 
-    public void setTransactions(boolean transactions) {
-        this.transactions = transactions;
+    public void setTransacted(boolean transacted) {
+        this.transacted = transacted;
     }
     
     

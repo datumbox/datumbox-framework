@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.DeepCopy;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;

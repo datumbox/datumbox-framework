@@ -17,7 +17,7 @@ package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

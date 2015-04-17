@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.common.utilities;
+package com.datumbox.common.dataobjects;
 
 /**
  * This class is responsible for inferring the internal DataType of the objects
@@ -47,6 +47,49 @@ public class TypeInference {
          */
         public boolean isInstance(Object v) {
             return klass.isInstance(v);
+        }
+        
+    }
+    
+    /**
+     * Takes a String and tries to translate it to the provided DataType.
+     * The result value is always casted to Object.
+     * 
+     * @param s
+     * @param dataType
+     * @return 
+     */
+    public static Object parse(String s, DataType dataType) {
+        if(s==null || s.isEmpty() || s.toLowerCase().equals("null")) {
+            return null;
+        }
+        
+        if(dataType == DataType.BOOLEAN) {
+            switch (s.toLowerCase()) {
+                case "1":
+                case "true":
+                case "yes":
+                    return Boolean.TRUE;
+                case "0":
+                case "false":
+                case "no":
+                    return Boolean.FALSE;
+                default:
+                    return null;
+            }
+        }
+        else if (dataType == DataType.ORDINAL) {
+            return Short.valueOf(s);
+        }
+        else if (dataType == DataType.NUMERICAL) {
+            return Double.valueOf(s);
+        }
+        else if (dataType == DataType.CATEGORICAL) {
+            return s;
+        }
+        else {
+            //can happen if null DataType is provided
+            throw new RuntimeException("Unknown Datatype");
         }
     }
     

@@ -24,6 +24,11 @@ The following libraries are included in packaged versions of this project:
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
  * HOMEPAGE: https://commons.apache.org/proper/commons-math/
 
+* Apache Commons CSV
+ * COPYRIGHT: Copyright 2014 The Apache Software Foundation
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: http://commons.apache.org/proper/commons-csv/
+
 * Guava
  * COPYRIGHT: Copyright 2007 Google Inc.
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)

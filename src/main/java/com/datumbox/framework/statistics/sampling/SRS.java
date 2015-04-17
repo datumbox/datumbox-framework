@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomSingleton;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;

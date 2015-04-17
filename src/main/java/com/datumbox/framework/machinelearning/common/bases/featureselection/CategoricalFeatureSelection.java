@@ -20,8 +20,8 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.TypeInference;
-import com.datumbox.common.utilities.TypeInference.DataType;
+import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference.DataType;
 
 
 import java.util.Arrays;

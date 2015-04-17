@@ -60,7 +60,7 @@ By far the most important part missing from the Framework is the Documentation a
 Acknowledgements
 ----------------
 
-Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Also many thanks to ej-technologies GmbH for providing us with a license for their [Java Profiler](http://www.ej-technologies.com/products/jprofiler/overview.html).
+Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Also many thanks to ej-technologies GmbH for providing a license for their [Java Profiler](http://www.ej-technologies.com/products/jprofiler/overview.html).
 
 Useful Links
 ------------

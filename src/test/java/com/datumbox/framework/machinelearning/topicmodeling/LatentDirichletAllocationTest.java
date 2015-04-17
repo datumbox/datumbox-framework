@@ -22,7 +22,6 @@ import com.datumbox.common.utilities.RandomSingleton;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.framework.utilities.dataset.DatasetBuilder;
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
 import com.datumbox.tests.utilities.TestUtils;
 import java.net.MalformedURLException;
@@ -72,7 +71,7 @@ public class LatentDirichletAllocationTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
         wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
-        Dataset trainingData =DatasetBuilder.parseFromTextFiles(dataset, wsExtractor, dbConf);
+        Dataset trainingData = Dataset.Builder.parseTextFiles(dataset, wsExtractor, dbConf);
         
         
         LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, dbConf);

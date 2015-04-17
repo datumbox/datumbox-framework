@@ -15,6 +15,7 @@
  */
 package com.datumbox.common.utilities;
 
+import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import java.util.AbstractMap;
 import java.util.ArrayList;

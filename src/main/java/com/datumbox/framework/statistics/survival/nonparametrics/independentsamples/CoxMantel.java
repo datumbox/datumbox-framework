@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public class CoxMantel {
                 Object j = entry.getKey();
                 FlatDataCollection flatDataCollection = entry.getValue();
                 
-                int jIndex = (j == keys[1])?1:0;
+                int jIndex = (j.equals(keys[1]))?1:0;
                 
                 //calculate the r*ti: the number of observations (both cencored and uncencored) which are larger than $ti
                 String rJtiKey="r"+String.valueOf(jIndex)+"ti";

@@ -64,11 +64,11 @@ public class MapDBConnector implements DatabaseConnector {
             boolean isTemporary = dbName.equals(TEMP_DB);
             DBMaker m = (isTemporary==true)?DBMaker.newTempFileDB().deleteFilesAfterClose():DBMaker.newFileDB(getDefaultPath().toFile());
             
-            if(dbConf.getTransactions()==false) {
+            if(dbConf.isTransacted()==false) {
                 m = m.transactionDisable();
             }
             
-            if(dbConf.getCompression()) {
+            if(dbConf.isCompressed()) {
                 m = m.compressionEnable();
             }
             

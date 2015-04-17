@@ -18,7 +18,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.TransposeDataList;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.nonparametrics.relatedsamples.KendallTauCorrelation;
 import com.datumbox.framework.statistics.nonparametrics.relatedsamples.SpearmanCorrelation;
 import com.datumbox.framework.statistics.parametrics.relatedsamples.PearsonCorrelation;

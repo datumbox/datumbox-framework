@@ -15,7 +15,6 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.TypeInference;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.BlockRealMatrix;

@@ -23,7 +23,6 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Feat
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
-import com.datumbox.framework.utilities.dataset.DatasetBuilder;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
 import java.net.URI;
 import java.util.HashMap;
@@ -95,7 +94,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
         
         //build trainingDataset
-        Dataset trainingDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
+        Dataset trainingDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
         
         _fit(trainingDataset);
         
@@ -160,7 +159,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
         
         //build the testDataset
-        Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, dbConf);
+        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, dbConf);
         
         getPredictions(testDataset);
         
@@ -180,7 +179,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
 
         //build the testDataset
-        Dataset testDataset = DatasetBuilder.parseFromTextFiles(dataset, textExtractor, dbConf);
+        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, dbConf);
         
         BaseMLmodel.ValidationMetrics vm = getPredictions(testDataset);
         

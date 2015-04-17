@@ -17,13 +17,26 @@ package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
+import com.datumbox.framework.utilities.text.extractors.TextExtractor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
@@ -32,6 +45,84 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     
     public static final String yColumnName = "~Y";
     public static final String constantColumnName = "~CONSTANT";
+
+    public static final class Builder {
+
+        public static Dataset parseTextFiles(Map<Object, URI> textFilesMap, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
+            Dataset dataset = new Dataset(dbConf);
+            Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
+            
+            for (Map.Entry<Object, URI> entry : textFilesMap.entrySet()) {
+                Object theClass = entry.getKey();
+                URI datasetURI = entry.getValue();
+                
+                logger.info("Dataset Parsing " + theClass + " class");
+                
+                try (final BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
+                    for (String line; (line = br.readLine()) != null;) {
+                        dataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass));
+                    }
+                } 
+                catch (IOException ex) {
+                    dataset.erase();
+                    throw new RuntimeException(ex);
+                }
+            }
+            
+            return dataset;
+        }
+
+        public static Dataset parseCSVFile(Reader reader, Map<String, TypeInference.DataType> headerDataTypes, char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
+            Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
+            
+            logger.info("Parsing CSV file");
+            
+            if (!headerDataTypes.containsKey(yColumnName)) {
+                logger.warn("WARNING: The file is missing the response variable column " + Dataset.yColumnName + ".");
+            }
+            
+            Dataset dataset = new Dataset(dbConf, headerDataTypes.get(yColumnName), headerDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
+            
+            CSVFormat format = CSVFormat
+                                .RFC4180
+                                .withHeader()
+                                .withDelimiter(delimiter)
+                                .withQuote(quote)
+                                .withRecordSeparator(recordSeparator);
+            
+            try (final CSVParser parser = new CSVParser(reader, format)) {                    
+                for (CSVRecord row : parser) {
+                    
+                    if (!row.isConsistent()) {
+                        logger.warn("WARNING: Skipping row " + row.getRecordNumber() + " because its size does not match the header size.");
+                        continue;
+                    }
+                    
+                    Object y = null;
+                    AssociativeArray xData = new AssociativeArray();
+                    for (Map.Entry<String, TypeInference.DataType> entry : headerDataTypes.entrySet()) {
+                        String column = entry.getKey();
+                        TypeInference.DataType dataType = entry.getValue();
+                        
+                        Object value = TypeInference.parse(row.get(column), dataType); //parse the string value according to the DataType
+                        if (yColumnName.equals(column)) {
+                            y = value;
+                        } 
+                        else {
+                            xData.put(column, value);
+                        }
+                    }
+                    dataset._add(new Record(xData, y)); //use the internal _add() to avoid the update of the Metas. The Metas are already set in the construction of the Dataset.
+                }
+            } 
+            catch (IOException ex) {
+                dataset.erase();
+                throw new RuntimeException(ex);
+            }
+            return dataset;
+        }
+
+    }    
     
     private Map<Integer, Record> recordList;
     
@@ -43,6 +134,11 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     private transient DatabaseConnector dbc;
     private transient DatabaseConfiguration dbConf;
     
+    /**
+     * Public constructor.
+     * 
+     * @param dbConf 
+     */
     public Dataset(DatabaseConfiguration dbConf) {
         //we dont need to have a unique name, because it is not used by the connector on the current implementations
         //dbName = "dts_"+new BigInteger(130, RandomValue.getRandomGenerator()).toString(32);
@@ -56,6 +152,25 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         xDataTypes = dbc.getBigMap("tmp_xColumnTypes", true);
     }
     
+    /**
+     * Private constructor used by the Builder inner static class.
+     * 
+     * @param dbConf
+     * @param yDataType
+     * @param xDataTypes 
+     */
+    private Dataset(DatabaseConfiguration dbConf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
+        this(dbConf);
+        this.yDataType = yDataType;
+        this.xDataTypes.putAll(xDataTypes);
+        this.xDataTypes.remove(yColumnName); //make sure to remove the response variable from the xDataTypes
+    }
+    
+    /**
+     * Returns the type of the response variable.
+     * 
+     * @return 
+     */
     public TypeInference.DataType getYDataType() {
         return yDataType;
     }
@@ -261,10 +376,21 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @return 
      */
     public Integer add(Record r) {
+        Integer newId=_add(r);
+        updateMeta(r);
+        return newId;
+    }
+    
+    /**
+     * Adds the record in the dataset without updating the Meta. The add method 
+     * returns the id of the new record.
+     * 
+     * @param r
+     * @return 
+     */
+    private Integer _add(Record r) {
         Integer newId=(Integer) recordList.size();
         recordList.put(newId, r);
-        updateMeta(r);
-        
         return newId;
     }
     
@@ -278,7 +404,6 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public Integer set(Integer rId, Record r) {
         _set(rId, r);
         updateMeta(r);
-        
         return rId;
     }
     

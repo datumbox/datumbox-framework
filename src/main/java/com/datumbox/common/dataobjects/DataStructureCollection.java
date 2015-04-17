@@ -15,7 +15,6 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.utilities.TypeInference;
 import java.util.Collection;
 import java.util.Iterator;
 

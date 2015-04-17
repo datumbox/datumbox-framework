@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.common.utilities.TypeInference;
+import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.AbstractMap;
@@ -90,7 +90,7 @@ public class MannWhitney {
             Map.Entry<Object, Object> i_j = (Map.Entry<Object, Object>)entry.getKey();
             Object i = i_j.getKey(); //get i and j values
             
-            if(i==keys[smallIndex]) { //if it belongs to the FIRST group (small group)
+            if(i.equals(keys[smallIndex])) { //if it belongs to the FIRST group (small group)
                 Double rank = TypeInference.toDouble(entry.getValue());
                 MWscore+=rank; //add the score
             }

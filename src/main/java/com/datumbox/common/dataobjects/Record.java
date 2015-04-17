@@ -97,10 +97,10 @@ public final class Record implements Serializable {
             return false;
         }
         final Record other = (Record) obj;
-        if (!Objects.equals(this.x, other.x)) {
+        if (!Objects.equals(this.y, other.y)) {
             return false;
         }
-        if (!Objects.equals(this.y, other.y)) {
+        if (!Objects.equals(this.x, other.x)) {
             return false;
         }
         return true;

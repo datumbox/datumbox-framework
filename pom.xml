@@ -50,7 +50,6 @@
             <url>http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551</url>
             <roles>
                 <role>Java Consultant</role>
-                <role>Developer</role>
             </roles>
         </contributor>
     </contributors>
@@ -84,6 +83,7 @@
         <cpsuite-version>1.2.7</cpsuite-version>
         <commons-lang-version>3.3.2</commons-lang-version>
         <commons-math-version>3.4.1</commons-math-version>
+        <commons-csv-version>1.1</commons-csv-version>
         <guava-version>18.0</guava-version>
         <libsvm-version>3.17</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
@@ -266,6 +266,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>${commons-math-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv-version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
