@@ -9,7 +9,7 @@ Author: [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/)
 
 Version: 1.0.0
 
-Build: 20150415
+Build: 20150417
 
 Installation
 ------------
