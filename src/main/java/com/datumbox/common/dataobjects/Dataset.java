@@ -104,7 +104,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                         String column = entry.getKey();
                         TypeInference.DataType dataType = entry.getValue();
                         
-                        Object value = TypeInference.parse(row.get(column), dataType); //parse the string value according to the DataType
+                        Object value = TypeInference.DataType.parse(row.get(column), dataType); //parse the string value according to the DataType
                         if (yColumnName.equals(column)) {
                             y = value;
                         } 

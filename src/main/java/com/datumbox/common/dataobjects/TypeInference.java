@@ -32,6 +32,49 @@ public class TypeInference {
         ORDINAL(Short.class), //ordinal variable => the value is short
         NUMERICAL(Number.class), //numberical variable => the value is any numeric except of short
         CATEGORICAL(Object.class); //categorical variable => the value is anything else
+
+        /**
+         * Takes a String and tries to translate it to the provided DataType.
+         * The result value is always casted to Object.
+         * 
+         * @param s
+         * @param dataType
+         * @return 
+         */
+        protected static Object parse(String s, DataType dataType) {
+            if(s==null || s.isEmpty() || s.toLowerCase().equals("null")) {
+                return null;
+            }
+
+            if(dataType == DataType.BOOLEAN) {
+                switch (s.toLowerCase()) {
+                    case "1":
+                    case "true":
+                    case "yes":
+                        return Boolean.TRUE;
+                    case "0":
+                    case "false":
+                    case "no":
+                        return Boolean.FALSE;
+                    default:
+                        return null;
+                }
+            }
+            else if (dataType == DataType.ORDINAL) {
+                return Short.valueOf(s);
+            }
+            else if (dataType == DataType.NUMERICAL) {
+                return Double.valueOf(s);
+            }
+            else if (dataType == DataType.CATEGORICAL) {
+                return s;
+            }
+            else {
+                //can happen if null DataType is provided
+                throw new RuntimeException("Unknown Datatype");
+            }
+        }
+
         
         private final Class klass;
 
@@ -45,53 +88,12 @@ public class TypeInference {
          * @param v
          * @return 
          */
-        public boolean isInstance(Object v) {
+        private boolean isInstance(Object v) {
             return klass.isInstance(v);
         }
         
     }
     
-    /**
-     * Takes a String and tries to translate it to the provided DataType.
-     * The result value is always casted to Object.
-     * 
-     * @param s
-     * @param dataType
-     * @return 
-     */
-    public static Object parse(String s, DataType dataType) {
-        if(s==null || s.isEmpty() || s.toLowerCase().equals("null")) {
-            return null;
-        }
-        
-        if(dataType == DataType.BOOLEAN) {
-            switch (s.toLowerCase()) {
-                case "1":
-                case "true":
-                case "yes":
-                    return Boolean.TRUE;
-                case "0":
-                case "false":
-                case "no":
-                    return Boolean.FALSE;
-                default:
-                    return null;
-            }
-        }
-        else if (dataType == DataType.ORDINAL) {
-            return Short.valueOf(s);
-        }
-        else if (dataType == DataType.NUMERICAL) {
-            return Double.valueOf(s);
-        }
-        else if (dataType == DataType.CATEGORICAL) {
-            return s;
-        }
-        else {
-            //can happen if null DataType is provided
-            throw new RuntimeException("Unknown Datatype");
-        }
-    }
     
     /**
      * Detects the DataType of a particular value.
