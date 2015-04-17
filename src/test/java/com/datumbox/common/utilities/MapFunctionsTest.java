@@ -16,6 +16,7 @@
 package com.datumbox.common.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.AbstractMap;
 import java.util.Map;
@@ -26,10 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapFunctionsTest {
-    
-    public MapFunctionsTest() {
-    }
+public class MapFunctionsTest extends BaseTest {
     
     /**
      * Test of selectMaxKeyValue method, of class MapFunctions.

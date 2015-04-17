@@ -22,7 +22,9 @@ import java.net.URLClassLoader;
 import java.util.jar.Manifest;
 
 /**
- *
+ * Main class of the Framework; it prints on stdout the Version and Build of the
+ * Framework.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Datumbox {
@@ -35,6 +37,11 @@ public class Datumbox {
         System.out.println("Datumbox Machine Learning Framework "+versionInfo[0]+" "+versionInfo[1]);
     }
     
+    /**
+     * Gets the Version and Build of the Framework from the manifest file.
+     * 
+     * @return 
+     */
     private static String[] getVersionBuild() {
         String version = null;
         String build = null;

@@ -18,11 +18,10 @@ package com.datumbox.framework.machinelearning.regression;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.common.dataobjects.TypeInference;
-import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 
@@ -33,13 +32,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StepwiseRegressionTest {
-    
-    public StepwiseRegressionTest() {
-    }
-
-    
-    
+public class StepwiseRegressionTest extends BaseTest {
 
     /**
      * Test of predict method, of class NLMS.
@@ -47,7 +40,7 @@ public class StepwiseRegressionTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.regressionNumeric(dbConf);

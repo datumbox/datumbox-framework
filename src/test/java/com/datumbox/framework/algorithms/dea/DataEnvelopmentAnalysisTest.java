@@ -17,6 +17,7 @@ package com.datumbox.framework.algorithms.dea;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -27,10 +28,7 @@ import org.junit.Test;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DataEnvelopmentAnalysisTest {
-    
-    public DataEnvelopmentAnalysisTest() {
-    }
+public class DataEnvelopmentAnalysisTest extends BaseTest {
 
     /**
      * Test of estimateEfficiency method, of class DataEnvelopmentAnalysis.

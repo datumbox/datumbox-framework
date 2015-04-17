@@ -16,6 +16,7 @@
 package com.datumbox.framework.utilities.text.extractors;
 
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,10 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NgramsExtractorTest {
-    
-    public NgramsExtractorTest() {
-    }
+public class NgramsExtractorTest extends BaseTest {
 
     /**
      * Test of extract method, of class NgramsExtractor.

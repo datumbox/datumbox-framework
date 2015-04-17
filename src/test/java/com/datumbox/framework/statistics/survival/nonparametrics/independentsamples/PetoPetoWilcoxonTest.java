@@ -17,6 +17,7 @@ package com.datumbox.framework.statistics.survival.nonparametrics.independentsam
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -27,10 +28,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PetoPetoWilcoxonTest {
-    
-    public PetoPetoWilcoxonTest() {
-    }
+public class PetoPetoWilcoxonTest extends BaseTest {
     
     /**
      * Test of test method, of class PetoPetoWilcoxon.

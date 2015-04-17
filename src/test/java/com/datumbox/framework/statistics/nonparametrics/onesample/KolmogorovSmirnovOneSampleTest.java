@@ -17,6 +17,7 @@ package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -27,10 +28,8 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class KolmogorovSmirnovOneSampleTest {
+public class KolmogorovSmirnovOneSampleTest extends BaseTest {
     
-    public KolmogorovSmirnovOneSampleTest() {
-    }
     /**
      * Test of test method, of class KolmogorovSmirnovOneSample.
      * 

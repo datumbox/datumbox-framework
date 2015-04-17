@@ -17,6 +17,7 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -27,10 +28,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WilcoxonRelatedSamplesTest {
-    
-    public WilcoxonRelatedSamplesTest() {
-    }
+public class WilcoxonRelatedSamplesTest extends BaseTest {
 
     /**
      * Test of test method, of class WilcoxonRelatedSamples.

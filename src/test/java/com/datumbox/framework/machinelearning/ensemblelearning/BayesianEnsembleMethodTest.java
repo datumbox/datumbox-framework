@@ -18,9 +18,8 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
-import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
@@ -33,10 +32,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BayesianEnsembleMethodTest {
-    
-    public BayesianEnsembleMethodTest() {
-    }
+public class BayesianEnsembleMethodTest extends BaseTest {
 
 
     /**
@@ -45,7 +41,7 @@ public class BayesianEnsembleMethodTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.ensembleLearningResponses(dbConf);

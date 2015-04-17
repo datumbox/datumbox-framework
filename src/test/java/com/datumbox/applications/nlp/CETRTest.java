@@ -16,8 +16,7 @@
 package com.datumbox.applications.nlp;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 
 import org.junit.Test;
@@ -27,10 +26,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CETRTest {
-    
-    public CETRTest() {
-    }
+public class CETRTest extends BaseTest {
     
     /**
      * Test of extract method, of class CETR.
@@ -38,7 +34,7 @@ public class CETRTest {
     @Test
     public void testExtract() {
         TestUtils.log(this.getClass(), "extract");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED); 
+         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         String dbName = this.getClass().getSimpleName();

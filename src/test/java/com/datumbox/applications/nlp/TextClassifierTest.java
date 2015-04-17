@@ -18,12 +18,12 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 
 import com.datumbox.framework.machinelearning.featureselection.categorical.ChisquareSelect;
 import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -41,10 +41,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TextClassifierTest {
-    
-    public TextClassifierTest() {
-    }
+public class TextClassifierTest extends BaseTest {
 
     /**
      * Test of train method, of class TextClassifier.
@@ -54,7 +51,7 @@ public class TextClassifierTest {
     @Test
     public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "TrainAndPredict");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         

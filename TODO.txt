@@ -1,6 +1,8 @@
 CODE IMPROVEMENTS
 =================
 
+- Revise the implementation of mapdb, the existsDatabase() method etc.
+
 - Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
 - Add multithreading support.

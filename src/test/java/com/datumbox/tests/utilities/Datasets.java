@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.utilities.RandomGenerator;
+import java.util.Random;
 
 
 /**
@@ -744,16 +745,17 @@ public class Datasets {
     public static Dataset[] gaussianClusters(DatabaseConfiguration dbConf) {
         Dataset trainingData = new Dataset(dbConf);
         int observationsPerCluster = 5;
+        Random rnd = RandomGenerator.getThreadLocalRandom();
         for(int i=0;i<observationsPerCluster;++i) {
-            trainingData.add(TestUtils.<Object>newDataVector(new Object[] {RandomGenerator.nextGaussian(),RandomGenerator.nextGaussian()}, "c1"));
+            trainingData.add(TestUtils.<Object>newDataVector(new Object[] {rnd.nextGaussian(),rnd.nextGaussian()}, "c1"));
         }
         
         for(int i=0;i<observationsPerCluster;++i) {
-            trainingData.add(TestUtils.<Object>newDataVector(new Object[] {100+RandomGenerator.nextGaussian(),50+RandomGenerator.nextGaussian()}, "c2"));
+            trainingData.add(TestUtils.<Object>newDataVector(new Object[] {100+rnd.nextGaussian(),50+rnd.nextGaussian()}, "c2"));
         }
         
         for(int i=0;i<observationsPerCluster;++i) {
-            trainingData.add(TestUtils.<Object>newDataVector(new Object[] {50+RandomGenerator.nextGaussian(),100+RandomGenerator.nextGaussian()}, "c3"));
+            trainingData.add(TestUtils.<Object>newDataVector(new Object[] {50+rnd.nextGaussian(),100+rnd.nextGaussian()}, "c3"));
         }
         
         Dataset validationData = trainingData.copy();

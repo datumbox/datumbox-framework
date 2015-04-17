@@ -21,6 +21,7 @@ import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;
@@ -32,10 +33,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DescriptivesTest {
-    
-    public DescriptivesTest() {
-    }
+public class DescriptivesTest extends BaseTest {
 
     private FlatDataCollection generateFlatDataCollection() {
         Object[] values = { -12.76, 9.07, 3.11, 0.99, -36.40, -34.18, 2.07, 50.85, 5.34, 2.08, 1.49, -19.01, 45.68, -11.80, -1.19, -34.63, -28.10, 35.33, 28.38, 24.60, 10.36, -12.01, 47.92, 3.34, 9.63, 44.09, 4.65, 2.04, 27.39, -14.52, 9.91, 36.45, -24.62, 2.99, -9.49, 2.14, -18.48, 38.69, 43.87, -20.56 };

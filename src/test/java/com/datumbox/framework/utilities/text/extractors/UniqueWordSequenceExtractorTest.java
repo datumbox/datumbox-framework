@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,10 +26,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class UniqueWordSequenceExtractorTest {
-    
-    public UniqueWordSequenceExtractorTest() {
-    }
+public class UniqueWordSequenceExtractorTest extends BaseTest {
 
     /**
      * Test of extract method, of class UniqueWordSequenceExtractor.

@@ -18,9 +18,9 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
@@ -33,10 +33,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CollaborativeFilteringTest {
-    
-    public CollaborativeFilteringTest() {
-    }
+public class CollaborativeFilteringTest extends BaseTest {
 
     /**
      * Test of predict method, of class MaximumEntropy.
@@ -44,7 +41,7 @@ public class CollaborativeFilteringTest {
     @Test
     public void testPredict() {
         TestUtils.log(this.getClass(), "predict");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.recommenderSystemFood(dbConf);

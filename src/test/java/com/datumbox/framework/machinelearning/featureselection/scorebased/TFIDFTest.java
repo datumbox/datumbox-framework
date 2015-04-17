@@ -17,8 +17,7 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -32,10 +31,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDFTest {
-    
-    public TFIDFTest() {
-    }
+public class TFIDFTest extends BaseTest {
 
     /**
      * Test of shortMethodName method, of class TFIDF.
@@ -43,7 +39,7 @@ public class TFIDFTest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.featureSelectionTFIDF(dbConf);

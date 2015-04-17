@@ -16,6 +16,7 @@
 package com.datumbox.common.utilities;
 
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,10 +29,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PHPfunctionsTest {
-    
-    public PHPfunctionsTest() {
-    }
+public class PHPfunctionsTest extends BaseTest {
     
     /**
      * Test of asort method, of class PHPfunctions.
@@ -140,7 +138,7 @@ public class PHPfunctionsTest {
     @Test
     public void testMt_rand_0args() {
         TestUtils.log(this.getClass(), "mt_rand");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         int expResult = -1562431105;
         int result = PHPfunctions.mt_rand();
         assertEquals(expResult, result);
@@ -152,7 +150,7 @@ public class PHPfunctionsTest {
     @Test
     public void testMt_rand_int_int() {
         TestUtils.log(this.getClass(), "mt_rand");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         int min = 0;
         int max = 10;
         int expResult = 8;
@@ -187,7 +185,7 @@ public class PHPfunctionsTest {
     @Test
     public void testShuffle() {
         TestUtils.log(this.getClass(), "shuffle");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         Integer[] result = {1,2,3,4,5};
         Integer[] expResult = {2,3,4,5,1};
         PHPfunctions.shuffle(result);

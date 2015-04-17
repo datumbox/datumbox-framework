@@ -18,10 +18,10 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 
@@ -37,10 +37,7 @@ import org.junit.Test;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ModelerTest {
-    
-    public ModelerTest() {
-    }
+public class ModelerTest extends BaseTest {
 
     /**
      * Test of train and predict method, of class Modeler.
@@ -48,7 +45,7 @@ public class ModelerTest {
     @Test
     public void testTrainAndValidate() {
         TestUtils.log(this.getClass(), "testTrainAndValidate");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.carsNumeric(dbConf);

@@ -19,6 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -27,10 +28,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FixedCombinationRulesTest {
-    
-    public FixedCombinationRulesTest() {
-    }
+public class FixedCombinationRulesTest extends BaseTest {
     
     private DataTable2D getClassifierClassProbabilityMatrix() {
         DataTable2D d = new DataTable2D();

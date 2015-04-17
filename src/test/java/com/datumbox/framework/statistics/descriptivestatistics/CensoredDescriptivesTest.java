@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -28,10 +29,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CensoredDescriptivesTest {
-    
-    public CensoredDescriptivesTest() {
-    }
+public class CensoredDescriptivesTest extends BaseTest {
 
     private FlatDataCollection generateFlatDataCollection() {
         Object[] values = { 3,"4+","5.7+",6.5,6.5,"8.4+",10,"10+",12,15 };

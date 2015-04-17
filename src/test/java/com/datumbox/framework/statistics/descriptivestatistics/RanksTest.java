@@ -17,6 +17,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -27,11 +28,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class RanksTest {
-    
-    public RanksTest() {
-    }
-
+public class RanksTest extends BaseTest {
 
     /**
      * Test of getRanksFromValues method, of class Dataset.

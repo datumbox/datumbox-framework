@@ -18,9 +18,9 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Iterator;
@@ -33,10 +33,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PCATest {
-    
-    public PCATest() {
-    }
+public class PCATest extends BaseTest {
 
     /**
      * Test of selectFeatures method, of class PCA.
@@ -44,7 +41,7 @@ public class PCATest {
     @Test
     public void testSelectFeatures() {
         TestUtils.log(this.getClass(), "selectFeatures");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.featureTransformationCPA(dbConf);

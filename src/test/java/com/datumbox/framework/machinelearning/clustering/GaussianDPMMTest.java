@@ -18,9 +18,9 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
@@ -33,10 +33,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class GaussianDPMMTest {
-    
-    public GaussianDPMMTest() {
-    }
+public class GaussianDPMMTest extends BaseTest {
 
     /**
      * Test of predict method, of class GaussianDPMM.
@@ -44,7 +41,7 @@ public class GaussianDPMMTest {
     @Test
     public void testValidate() {
         TestUtils.log(this.getClass(), "validate"); 
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset[] data = Datasets.gaussianClusters(dbConf);
@@ -103,7 +100,7 @@ public class GaussianDPMMTest {
     @Test
     public void testKFoldCrossValidation() {
         TestUtils.log(this.getClass(), "kFoldCrossValidation");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED); 
+         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;

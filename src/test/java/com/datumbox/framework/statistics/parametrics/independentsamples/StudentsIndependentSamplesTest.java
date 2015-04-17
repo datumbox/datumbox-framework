@@ -16,6 +16,7 @@
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,10 +25,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StudentsIndependentSamplesTest {
-    
-    public StudentsIndependentSamplesTest() {
-    }
+public class StudentsIndependentSamplesTest extends BaseTest {
 
     /**
      * Test of testMeansUnknownNotEqualVars method, of class StudentsIndependentSamples.

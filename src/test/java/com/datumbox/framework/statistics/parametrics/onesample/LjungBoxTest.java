@@ -16,6 +16,7 @@
 package com.datumbox.framework.statistics.parametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -26,10 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LjungBoxTest {
-    
-    public LjungBoxTest() {
-    }
+public class LjungBoxTest extends BaseTest {
     
     /**
      * Test of testAutocorrelation method, of class LjungBox.

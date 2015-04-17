@@ -23,6 +23,7 @@ import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -33,10 +34,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StratifiedSamplingTest {
-    
-    public StratifiedSamplingTest() {
-    }
+public class StratifiedSamplingTest extends BaseTest {
     
     protected AssociativeArray generateNh() {
         AssociativeArray nh = new AssociativeArray();

@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -38,12 +38,8 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LatentDirichletAllocationTest {
+public class LatentDirichletAllocationTest extends BaseTest {
     
-    public LatentDirichletAllocationTest() {
-    }
-
-
     /**
      * Test of predict method, of class NLMS.
      * @throws java.net.URISyntaxException
@@ -52,7 +48,7 @@ public class LatentDirichletAllocationTest {
     @Test
     public void testValidate() throws URISyntaxException, MalformedURLException {
         TestUtils.log(this.getClass(), "validate");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         

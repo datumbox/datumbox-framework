@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.sampling;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -28,10 +29,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SystematicSamplingTest {
-    
-    public SystematicSamplingTest() {
-    }
+public class SystematicSamplingTest extends BaseTest {
 
     protected FlatDataCollection generateFlatDataCollection() {
         //Example from Papageorgious' notes

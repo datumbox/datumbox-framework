@@ -16,8 +16,7 @@
 package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.RandomGenerator;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.FileReader;
 import java.io.Reader;
@@ -35,10 +34,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DatasetTest {
-    
-    public DatasetTest() {
-    }
+public class DatasetTest extends BaseTest {
     
     /**
      * Test of parseCSVFile method, of class Dataset.Builder.
@@ -46,7 +42,7 @@ public class DatasetTest {
     @Test
     public void testParseCSVFile() {
         TestUtils.log(this.getClass(), "parseCSVFile");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Reader fileReader;
@@ -139,7 +135,7 @@ public class DatasetTest {
     @Test
     public void testGetColumns() {
         TestUtils.log(this.getClass(), "getColumns");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Dataset dataset = new Dataset(dbConf);
@@ -179,7 +175,7 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValues() {
         TestUtils.log(this.getClass(), "extractColumnValues");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
@@ -215,7 +211,7 @@ public class DatasetTest {
     @Test
     public void testExtractColumnValuesByY() {
         TestUtils.log(this.getClass(), "extractColumnValuesByY");
-        RandomGenerator.setSeed(TestConfiguration.RANDOM_SEED);
+        
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";

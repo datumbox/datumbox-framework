@@ -17,6 +17,7 @@ package com.datumbox.framework.statistics.decisiontheory;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.AbstractMap;
@@ -28,10 +29,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DecisionCriteriaTest {
-    
-    public DecisionCriteriaTest() {
-    }
+public class DecisionCriteriaTest extends BaseTest {
     
     protected DataTable2D generatePayoffMatrix() {
         //Example from Dimakis' Notes on Decision Theory

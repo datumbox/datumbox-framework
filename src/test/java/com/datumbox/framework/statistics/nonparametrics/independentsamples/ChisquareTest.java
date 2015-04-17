@@ -16,6 +16,7 @@
 package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.DataTable2D;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
@@ -25,10 +26,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareTest {
-    
-    public ChisquareTest() {
-    }
+public class ChisquareTest extends BaseTest {
 
     /**
      * Test of test method, of class Chisquare.

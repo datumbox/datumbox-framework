@@ -38,7 +38,7 @@ import org.apache.commons.math3.stat.StatUtils;
  * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
  * data to be loaded in memory.
  * 
- * @author bbriniotis
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.TrainingParameters> {
     /*

@@ -16,6 +16,7 @@
 package com.datumbox.framework.statistics.parametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataList;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -26,10 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DurbinWatsonTest {
-    
-    public DurbinWatsonTest() {
-    }
+public class DurbinWatsonTest extends BaseTest {
    
     /**
      * Test of test method, of class DurbinWatson.

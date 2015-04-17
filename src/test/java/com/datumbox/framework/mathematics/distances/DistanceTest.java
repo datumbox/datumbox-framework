@@ -17,6 +17,7 @@ package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +28,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DistanceTest {
-    
-    public DistanceTest() {
-    }
+public class DistanceTest extends BaseTest {
     
     private Map<Object, Object> getMap1() {
         Map<Object, Object> map = new HashMap<>();

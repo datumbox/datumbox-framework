@@ -16,6 +16,7 @@
 package com.datumbox.framework.utilities.text.analysis;
 
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,11 +25,8 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PHPSimilarTextTest {
+public class PHPSimilarTextTest extends BaseTest {
     
-    public PHPSimilarTextTest() {
-    }
-
     /**
      * Test of similarityChars method, of class PHPSimilarText.
      */

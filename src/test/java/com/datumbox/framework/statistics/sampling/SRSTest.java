@@ -19,6 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
@@ -29,10 +30,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SRSTest {
-    
-    public SRSTest() {
-    }
+public class SRSTest extends BaseTest {
 
     protected FlatDataCollection generateFlatDataCollection() {
         //Example from Papageorgious' notes

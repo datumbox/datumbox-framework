@@ -16,6 +16,7 @@
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,10 +25,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FIndependentSamplesTest {
-    
-    public FIndependentSamplesTest() {
-    }
+public class FIndependentSamplesTest extends BaseTest {
     
     /**
      * Test of testVariances method, of class FIndependentSamples.

@@ -16,6 +16,7 @@
 package com.datumbox.framework.utilities.text.analysis;
 
 import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,13 +25,10 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ReadabilityStatisticsTest {
+public class ReadabilityStatisticsTest extends BaseTest {
     
     protected static final String TEST_STRING = "if you can keep your head when all about you are losing theirs and blaming it on you, if you can trust yourself when all men doubt you but make allowance for their doubting too, if you can wait and not be tired by waiting, or being lied about, don't deal in lies, or being hated, don't give way to hating, and yet don't look too good, nor talk too wise: if you can dream - and not make dreams your master, if you can think - and not make thoughts your aim; if you can meet with triumph and disaster and treat those two impostors just the same; if you can bear to hear the truth you've spoken twisted by knaves to make a trap for fools, or watch the things you gave your life to, broken, and stoop and build 'em up with worn-out tools: if you can make one heap of all your winnings and risk it all on one turn of pitch-and-toss, and lose, and start again at your beginnings and never breath a word about your loss; if you can force your heart and nerve and sinew to serve your turn long after they are gone, and so hold on when there is nothing in you except the will which says to them: \\\"hold on\\\" if you can talk with crowds and keep your virtue, or walk with kings - nor lose the common touch, if neither foes nor loving friends can hurt you; if all men count with you, but none too much, if you can fill the unforgiving minute with sixty seconds' worth of distance run, yours is the earth and everything that's in it, and - which is more - you'll be a man, my son!";
     
-    public ReadabilityStatisticsTest() {
-    }
-
     /**
      * Test of flesch_kincaid_reading_ease method, of class ReadabilityStatistics.
      */
