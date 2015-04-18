@@ -44,8 +44,6 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         private int keepFloatPointsUntilCombination=3; //After 3 word combinations ignore the float points to reduce memory and improve speed
         private double keepFloatPointsAbove=0.1; //ignore all floating point scores less than 0.1 to reduce memory and improve speed
         
-        private Class<? extends Tokenizer> tokenizer = WhitespaceTokenizer.class;
-
         public int getMaxCombinations() {
             return maxCombinations;
         }
@@ -101,14 +99,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         public void setKeepFloatPointsAbove(double keepFloatPointsAbove) {
             this.keepFloatPointsAbove = keepFloatPointsAbove;
         }
-
-        public Class<? extends Tokenizer> getTokenizer() {
-            return tokenizer;
-        }
-
-        public void setTokenizer(Class<? extends Tokenizer> tokenizer) {
-            this.tokenizer = tokenizer;
-        }
+        
     }
     
     protected static final String SEPARATOR = "_";
@@ -119,6 +110,10 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
     private Map<Integer, Integer> position2ID; //word position=>ID
 
     private Integer numberOfWordsInDoc;
+
+    public NgramsExtractor(Parameters parameters) {
+        super(parameters);
+    }
         
     @Override
     public Map<String, Double> extract(final String text) {
@@ -199,21 +194,12 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         return keywordsMap;
     }
  
-    public double numberOfOccurrences(String keyword, final String text) {
-        if(parameters==null) {
-            parameters = new Parameters();
-        }
-        
+    public double numberOfOccurrences(String keyword, final String text) {        
         double points=0.0;
         
 
-        Tokenizer tokenizer = null;
-        try {
-            tokenizer = parameters.getTokenizer().newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
+        Tokenizer tokenizer = parameters.generateTokenizer();
+        
         List<String> tmpKwd = tokenizer.tokenize(keyword);
         
         int numberOfWords=tmpKwd.size();
@@ -380,13 +366,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         
         Map<String, Integer> word2ID = new HashMap<>();
         
-        Tokenizer tokenizer = null;
-        try {
-            tokenizer = parameters.getTokenizer().newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
+        Tokenizer tokenizer = parameters.generateTokenizer();
         List<String> keywordList = tokenizer.tokenize(text);
         
         int lastId=-1;

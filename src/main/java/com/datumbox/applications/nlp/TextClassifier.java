@@ -90,8 +90,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         initializeTrainingConfiguration(trainingParameters);
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
-        textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
+        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
         
         //build trainingDataset
         Dataset trainingDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
@@ -155,8 +154,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
-        textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
+        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
         
         //build the testDataset
         Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, dbConf);
@@ -174,10 +172,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass());
-        textExtractor.setParameters(trainingParameters.getTextExtractorTrainingParameters());
+        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
         
-
         //build the testDataset
         Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, dbConf);
         

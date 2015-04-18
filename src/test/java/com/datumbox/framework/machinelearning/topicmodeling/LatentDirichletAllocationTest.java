@@ -65,8 +65,8 @@ public class LatentDirichletAllocationTest extends BaseTest {
             return;
         }
         
-        UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor();
-        wsExtractor.setParameters(new UniqueWordSequenceExtractor.Parameters());
+        UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
+        
         Dataset trainingData = Dataset.Builder.parseTextFiles(dataset, wsExtractor, dbConf);
         
         

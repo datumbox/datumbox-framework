@@ -27,26 +27,18 @@ import java.util.Map;
  */
 public class WordSequenceExtractor extends TextExtractor<WordSequenceExtractor.Parameters, Integer, String> {
     
-    public static class Parameters extends TextExtractor.Parameters {           
-        private Class<? extends Tokenizer> tokenizer = WhitespaceTokenizer.class;
-
-        public Class<? extends Tokenizer> getTokenizer() {
-            return tokenizer;
-        }
-
-        public void setTokenizer(Class<? extends Tokenizer> tokenizer) {
-            this.tokenizer = tokenizer;
-        }
+    public static class Parameters extends TextExtractor.Parameters {     
+        
     }
+    
+    public WordSequenceExtractor(Parameters parameters) {
+        super(parameters);
+    }
+    
     @Override
     public Map<Integer, String> extract(final String text) {
-        Tokenizer tokenizer = null;
-        try {
-            tokenizer = parameters.getTokenizer().newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
+        Tokenizer tokenizer = parameters.generateTokenizer();
+        
         List<String> tmpKwd = tokenizer.tokenize(text);
         
         Map<Integer, String> keywordSequence = new LinkedHashMap<>();

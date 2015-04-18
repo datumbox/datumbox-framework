@@ -34,8 +34,8 @@ public class WordSequenceExtractorTest extends BaseTest {
     public void testExtract() {
         TestUtils.log(this.getClass(), "extract");
         String text = "this is a text sequence that is amazing text sequence";
-        WordSequenceExtractor instance = new WordSequenceExtractor();
-        instance.setParameters(new WordSequenceExtractor.Parameters());
+        WordSequenceExtractor instance = new WordSequenceExtractor(new WordSequenceExtractor.Parameters());
+        
         Map<Integer, String> expResult = new LinkedHashMap<>();
         expResult.put(0, "this");
         expResult.put(1, "is");

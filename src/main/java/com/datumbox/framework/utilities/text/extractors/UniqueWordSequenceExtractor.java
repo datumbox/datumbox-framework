@@ -16,7 +16,6 @@
 package com.datumbox.framework.utilities.text.extractors;
 
 import com.datumbox.framework.utilities.text.tokenizers.Tokenizer;
-import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -28,26 +27,18 @@ import java.util.Set;
  */
 public class UniqueWordSequenceExtractor extends TextExtractor<UniqueWordSequenceExtractor.Parameters, Integer, String> {
     
-    public static class Parameters extends TextExtractor.Parameters {           
-        private Class<? extends Tokenizer> tokenizer = WhitespaceTokenizer.class;
-
-        public Class<? extends Tokenizer> getTokenizer() {
-            return tokenizer;
-        }
-
-        public void setTokenizer(Class<? extends Tokenizer> tokenizer) {
-            this.tokenizer = tokenizer;
-        }
+    public static class Parameters extends TextExtractor.Parameters {  
+        
     }
+    
+    public UniqueWordSequenceExtractor(Parameters parameters) {
+        super(parameters);
+    }
+    
     @Override
     public Map<Integer, String> extract(final String text) {
-        Tokenizer tokenizer = null;
-        try {
-            tokenizer = parameters.getTokenizer().newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
+        Tokenizer tokenizer = parameters.generateTokenizer();
+        
         Set<String> tmpKwd = new LinkedHashSet<>(tokenizer.tokenize(text));
         
         Map<Integer, String> keywordSequence = new LinkedHashMap<>();

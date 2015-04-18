@@ -78,12 +78,11 @@ public class TextSimilarity {
         preprocessDocument(text1);
         preprocessDocument(text2);
 
-        NgramsExtractor.Parameters conf = new NgramsExtractor.Parameters();
-        conf.setMaxCombinations(w);
-        conf.setMaxDistanceBetweenKwds(0);
+        NgramsExtractor.Parameters parameters = new NgramsExtractor.Parameters();
+        parameters.setMaxCombinations(w);
+        parameters.setMaxDistanceBetweenKwds(0);
 
-        NgramsExtractor ngrams = new NgramsExtractor();
-        ngrams.setParameters(conf);
+        NgramsExtractor ngrams = new NgramsExtractor(parameters);
 
         
         Map<String, Double> keywords1 = ngrams.extract(text1);
@@ -94,7 +93,7 @@ public class TextSimilarity {
         filterKeywordCombinations(keywords2, w);
         
         ngrams=null;
-        conf=null;
+        parameters=null;
         
         double totalKeywords=0.0;
         double commonKeywords=0.0;

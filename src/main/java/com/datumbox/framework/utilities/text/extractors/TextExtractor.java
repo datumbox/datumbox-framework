@@ -16,6 +16,8 @@
 package com.datumbox.framework.utilities.text.extractors;
 
 import com.datumbox.common.objecttypes.Parameterizable;
+import com.datumbox.framework.utilities.text.tokenizers.Tokenizer;
+import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
@@ -23,23 +25,44 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <TP>
+ * @param <K>
+ * @param <V>
  */
 public abstract class TextExtractor<TP extends TextExtractor.Parameters, K, V> {
     
-    public static abstract class Parameters implements Parameterizable {
+    public static abstract class Parameters implements Parameterizable {         
+        
+        private Class<? extends Tokenizer> tokenizer = WhitespaceTokenizer.class;
+
+        public Tokenizer generateTokenizer() {
+            if(tokenizer==null) {
+                return null;
+            }
+            
+            try {
+                return tokenizer.newInstance();
+            } 
+            catch (InstantiationException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        public Class<? extends Tokenizer> getTokenizer() {
+            return tokenizer;
+        }
+
+        public void setTokenizer(Class<? extends Tokenizer> tokenizer) {
+            this.tokenizer = tokenizer;
+        }
 
     }
     
     protected TP parameters;
     
-    public TP getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(TP parameters) {
+    public TextExtractor(TP parameters) {
         this.parameters = parameters;
-    }     
-     
+    }
+    
     public abstract Map<K, V> extract(final String text);
     
     /**
@@ -47,15 +70,17 @@ public abstract class TextExtractor<TP extends TextExtractor.Parameters, K, V> {
      * TextExtractor.
      * 
      * @param <T>
+     * @param <TP>
      * @param tClass
+     * @param parameters
      * @return 
      */
-    public static <T extends TextExtractor> T newInstance(Class<T> tClass) {
+    public static <T extends TextExtractor, TP extends TextExtractor.Parameters> T newInstance(Class<T> tClass, TP parameters) {
         T textExtractor = null;
         try {
-            textExtractor = (T) tClass.getConstructor().newInstance();
+            textExtractor = (T) tClass.getConstructors()[0].newInstance(parameters);
         } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
         

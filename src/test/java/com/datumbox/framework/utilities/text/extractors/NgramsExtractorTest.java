@@ -33,11 +33,11 @@ public class NgramsExtractorTest extends BaseTest {
      * Test of extract method, of class NgramsExtractor.
      */
     @Test
-    public void testExtract() throws Exception {
+    public void testExtract() {
         TestUtils.log(this.getClass(), "extract");
         String text = "In publishing and graphic design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1] In publishing and graphic design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1]";
-        NgramsExtractor instance = new NgramsExtractor();
-        instance.setParameters(new NgramsExtractor.Parameters());
+        NgramsExtractor instance = new NgramsExtractor(new NgramsExtractor.Parameters());
+        
         Map<String, Double> expResult = new HashMap<>();
         
         expResult.put("In", 2.0);
@@ -242,8 +242,8 @@ public class NgramsExtractorTest extends BaseTest {
         TestUtils.log(this.getClass(), "numberOfOccurrences");
         String keyword = "lorem ipsum is";
         String text = "In publishing and graphic design, lorem ipsum is a placeholder text and used to demonstrate. In publishing and graphic design, lorem ipsum is a placeholder text and used to demonstrate.";
-        NgramsExtractor instance = new NgramsExtractor();
-        instance.setParameters(new NgramsExtractor.Parameters());
+        NgramsExtractor instance = new NgramsExtractor(new NgramsExtractor.Parameters());
+        
         double expResult = 2.0;
         double result = instance.numberOfOccurrences(keyword, text);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);

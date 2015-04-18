@@ -15,8 +15,8 @@
  */
 package com.datumbox.configuration;
 
-import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
+import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
 /**
