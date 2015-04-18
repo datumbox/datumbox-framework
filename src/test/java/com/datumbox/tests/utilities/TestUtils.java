@@ -35,15 +35,12 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Utility methods used only by the JUnit tests.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TestUtils {
