@@ -29,7 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Convenience class which can be used to train Text Classifiers from text files.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, TextClassifier.TrainingParameters>  {
@@ -79,28 +80,26 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         super(dbName, dbConf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
     }
     
-    @Deprecated
     @Override
-    public void fit(Dataset trainingData, TrainingParameters trainingParameters) {
-        throw new UnsupportedOperationException("This version of fit() is not supported."); 
-    }
-    
-    public void fit(Map<Object, URI> dataset, TrainingParameters trainingParameters) { 
+    public void fit(Dataset trainingData, TrainingParameters trainingParameters) { 
         logger.info("fit()");
         
         initializeTrainingConfiguration(trainingParameters);
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
-        
-        //build trainingDataset
-        Dataset trainingDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
-        
-        _fit(trainingDataset);
-        
-        trainingDataset.erase();
+        _fit(trainingData);
         
         //store database
         knowledgeBase.save();
+    }
+    
+    public void fit(Map<Object, URI> dataset, TrainingParameters trainingParameters) { 
+        //build trainingDataset
+        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
+        Dataset trainingData = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
+        
+        fit(trainingData, trainingParameters);
+        
+        trainingData.erase();
     }
     
     @Override
@@ -142,42 +141,58 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
     }
     
-    public Dataset predict(URI datasetURI) {
+    public void predict(Dataset testDataset) {
         logger.info("predict()");
+        
+        //ensure db loaded
+        knowledgeBase.load();
+        
+        getPredictions(testDataset);
+    }
+    
+    public Dataset predict(URI datasetURI) {        
+        //ensure db loaded
+        knowledgeBase.load();
         
         //create a dummy dataset map
         Map<Object, URI> dataset = new HashMap<>();
         dataset.put(null, datasetURI);
         
-        //ensure db loaded
-        knowledgeBase.load();
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
         
         //build the testDataset
-        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, dbConf);
+        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
         
-        getPredictions(testDataset);
+        predict(testDataset);
         
         return testDataset;
     }
     
-    public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> dataset) {  
+    public BaseMLmodel.ValidationMetrics validate(Dataset testDataset) {  
         logger.info("validate()");
         
         //ensure db loaded
         knowledgeBase.load();
+        
+        BaseMLmodel.ValidationMetrics vm = getPredictions(testDataset);
+        
+        return vm;
+    }
+    
+    public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> dataset) {
+        //ensure db loaded
+        knowledgeBase.load();
+        
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
         
         //build the testDataset
-        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, dbConf);
+        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
         
-        BaseMLmodel.ValidationMetrics vm = getPredictions(testDataset);
+        BaseMLmodel.ValidationMetrics vm = validate(testDataset);
         
         testDataset.erase();
         

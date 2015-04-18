@@ -42,7 +42,7 @@ public class InMemoryConnector implements DatabaseConnector {
     public InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         this.dbConf = dbConf;
         String outputFolder = this.dbConf.getOutputFolder();
-        if(outputFolder.isEmpty()) {
+        if(outputFolder == null || outputFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }
         else {

@@ -113,7 +113,7 @@ public class MapDBConnector implements DatabaseConnector {
         String outputFolder = this.dbConf.getOutputFolder();
         
         Path filepath = null;
-        if(outputFolder.isEmpty()) {
+        if(outputFolder == null || outputFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }
         else {

@@ -35,6 +35,10 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +74,7 @@ public class TestUtils {
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile("datumbox", ".tmp");
+            tmpFile.deleteOnExit();
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -116,11 +121,16 @@ public class TestUtils {
     }
 
     public static DatabaseConfiguration getDBConfig() {
+        String tmpFolder = System.getProperty("java.io.tmpdir");
         if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
-            return ConfigurationFactory.INMEMORY.getConfiguration();
+            InMemoryConfiguration dbConf = (InMemoryConfiguration) ConfigurationFactory.INMEMORY.getConfiguration();
+            dbConf.setOutputFolder(tmpFolder);
+            return dbConf;
         } 
         else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
-            return ConfigurationFactory.MAPDB.getConfiguration();
+            MapDBConfiguration dbConf = (MapDBConfiguration) ConfigurationFactory.MAPDB.getConfiguration();
+            dbConf.setOutputFolder(tmpFolder);
+            return dbConf;
         }
         return null;
     }
