@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -72,16 +73,20 @@ public final class Dataset implements Serializable, Iterable<Integer> {
             return dataset;
         }
 
-        public static Dataset parseCSVFile(Reader reader, Map<String, TypeInference.DataType> headerDataTypes, char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
+        public static Dataset parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
             Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
             
             logger.info("Parsing CSV file");
             
-            if (!headerDataTypes.containsKey(yColumnName)) {
-                logger.warn("WARNING: The file is missing the response variable column " + Dataset.yColumnName + ".");
+            if (!headerDataTypes.containsKey(yVariable)) {
+                logger.warn("WARNING: The file is missing the response variable column " + yVariable + ".");
             }
             
-            Dataset dataset = new Dataset(dbConf, headerDataTypes.get(yColumnName), headerDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
+            TypeInference.DataType yDataType = headerDataTypes.get(yVariable);
+            Map<String, TypeInference.DataType> xDataTypes = new HashMap<>(headerDataTypes); //copy header types
+            xDataTypes.remove(yVariable); //remove the response variable from xDataTypes
+            Dataset dataset = new Dataset(dbConf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
+            
             
             CSVFormat format = CSVFormat
                                 .RFC4180
@@ -105,7 +110,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                         TypeInference.DataType dataType = entry.getValue();
                         
                         Object value = TypeInference.DataType.parse(row.get(column), dataType); //parse the string value according to the DataType
-                        if (yColumnName.equals(column)) {
+                        if (yVariable != null && yVariable.equals(column)) {
                             y = value;
                         } 
                         else {
@@ -163,7 +168,6 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         this(dbConf);
         this.yDataType = yDataType;
         this.xDataTypes.putAll(xDataTypes);
-        this.xDataTypes.remove(yColumnName); //make sure to remove the response variable from the xDataTypes
     }
     
     /**

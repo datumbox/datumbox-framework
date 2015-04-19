@@ -18,8 +18,10 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -49,7 +51,7 @@ public class DatasetTest extends BaseTest {
         try {
             fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile());
         }
-        catch(Exception ex) {
+        catch(MalformedURLException | FileNotFoundException ex) {
             TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
             return;
         }
@@ -61,9 +63,9 @@ public class DatasetTest extends BaseTest {
         headerDataTypes.put("traffic_rank", TypeInference.DataType.ORDINAL);
         headerDataTypes.put("is_capital", TypeInference.DataType.BOOLEAN);
         headerDataTypes.put("name_of_port", TypeInference.DataType.CATEGORICAL);
-        headerDataTypes.put(Dataset.yColumnName, TypeInference.DataType.NUMERICAL);
+        headerDataTypes.put("metro_population", TypeInference.DataType.NUMERICAL);
         
-        Dataset dataset = Dataset.Builder.parseCSVFile(fileReader, headerDataTypes, ',', '"', "\r\n", dbConf);
+        Dataset dataset = Dataset.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
         Dataset expResult = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -73,7 +75,7 @@ public class DatasetTest extends BaseTest {
         xData1.put("traffic_rank", (short)3);
         xData1.put("is_capital", true);
         xData1.put("name_of_port", "Piraeus");
-        expResult.add(new Record(xData1, 1.0));
+        expResult.add(new Record(xData1, 3753783.0));
         
         AssociativeArray xData2 = new AssociativeArray();
         xData2.put("city", "London");
@@ -81,8 +83,8 @@ public class DatasetTest extends BaseTest {
         xData2.put("is_sunny", false);
         xData2.put("traffic_rank", (short)2);
         xData2.put("is_capital", true);
-        xData2.put("name_of_port", "Port of Lond");
-        expResult.add(new Record(xData2, null));
+        xData2.put("name_of_port", "Port of London");
+        expResult.add(new Record(xData2, 13614409.0));
         
         AssociativeArray xData3 = new AssociativeArray();
         xData3.put("city", "New York");
@@ -100,7 +102,7 @@ public class DatasetTest extends BaseTest {
         xData4.put("traffic_rank", (short)4);
         xData4.put("is_capital", null);
         xData4.put("name_of_port", null);
-        expResult.add(new Record(xData4, 4.0));
+        expResult.add(new Record(xData4, null));
         
         for(Integer rId : expResult) {
             Record r1 = expResult.get(rId);
