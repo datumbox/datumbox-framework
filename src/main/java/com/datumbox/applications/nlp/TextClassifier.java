@@ -15,7 +15,9 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
@@ -23,6 +25,7 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Feat
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
+import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
 import java.net.URI;
 import java.util.HashMap;
@@ -170,6 +173,27 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         return testDataset;
     }
     
+    public Record predict(String text) {         
+        //ensure db loaded
+        knowledgeBase.load();
+        
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        
+        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
+        
+        Dataset testDataset = new Dataset(knowledgeBase.getDbConf());
+        
+        testDataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(text))), null));
+        
+        predict(testDataset);
+        
+        Record r = testDataset.get(testDataset.iterator().next());
+        
+        testDataset.erase();
+        
+        return r;
+    }
+        
     public BaseMLmodel.ValidationMetrics validate(Dataset testDataset) {  
         logger.info("validate()");
         
