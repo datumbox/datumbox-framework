@@ -55,6 +55,6 @@ public class XMinMaxNormalizer extends BaseDummyMinMaxTransformer {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
-        BaseDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
+        BaseDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
     }
 }
