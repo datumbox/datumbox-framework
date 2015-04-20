@@ -1041,7 +1041,7 @@ public class Datasets {
             data.add(new Record(xData, isRich));
         }
         
-        return new Dataset[]{data};
+        return new Dataset[] {data, data.copy()};
     }
     
     public static Dataset[] featureTransformationCPA(DatabaseConfiguration dbConf) {
@@ -1060,7 +1060,7 @@ public class Datasets {
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-14.1401, -6.4677, 1.4920}, null));
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-23.8837, 3.7408, -2.3614}, null));
         
-        return new Dataset[]{originalData, transformedData};
+        return new Dataset[] {originalData, transformedData};
     }
     
     public static Dataset[] featureSelectionTFIDF(DatabaseConfiguration dbConf) {
@@ -1092,7 +1092,7 @@ public class Datasets {
         
         Dataset validationData = trainingData.copy();
         
-        return new Dataset[]{trainingData, validationData};
+        return new Dataset[] {trainingData, validationData};
     }
     
     public static Dataset[] recommenderSystemFood(DatabaseConfiguration dbConf) {
@@ -1205,7 +1205,7 @@ public class Datasets {
         profileData.put("salad", 0.5);
         validationData.add(new Record(profileData, null));
         
-        return new Dataset[]{trainingData, validationData};
+        return new Dataset[] {trainingData, validationData};
     }
     
     public static Dataset[] regressionNumeric(DatabaseConfiguration dbConf) {
@@ -1242,7 +1242,7 @@ public class Datasets {
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
         
-        return new Dataset[]{trainingData, validationData};
+        return new Dataset[] {trainingData, validationData};
     }
     
     public static Dataset[] regressionMixed(DatabaseConfiguration dbConf) {
@@ -1302,7 +1302,7 @@ public class Datasets {
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
         
-        return new Dataset[]{trainingData, validationData};
+        return new Dataset[] {trainingData, validationData};
     }
     
 }

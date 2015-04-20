@@ -126,11 +126,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             if(CategoricalFeatureSelection.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((CategoricalFeatureSelection.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
             }
-            //find the most popular features
-            featureSelection.fit(trainingDataset, trainingParameters.getFeatureSelectionTrainingParameters());   
-
-            //remove unnecessary features
-            featureSelection.transform(trainingDataset);
+            //find the most popular features & remove unnecessary features
+            featureSelection.fit_transform(trainingDataset, trainingParameters.getFeatureSelectionTrainingParameters());   
         }
         
         //initialize mlmodel

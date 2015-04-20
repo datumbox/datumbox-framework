@@ -175,10 +175,6 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     }
     
     protected static void fitY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        if(data.isEmpty()) {
-            return;
-        }
-        
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             //if this is numeric normalize it
 
@@ -266,31 +262,28 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
-    private static boolean covert2dummy(TypeInference.DataType columnType) {
-        return columnType==TypeInference.DataType.CATEGORICAL || columnType==TypeInference.DataType.ORDINAL;
-    }
-    
-    protected static void extractDummies(Dataset data, Map<Object, Object> referenceLevels) {
-
+    protected static void fitDummy(Dataset data, Map<Object, Object> referenceLevels) {
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
-        if(referenceLevels.isEmpty()) {
-            //Training Mode
-            
-            //find the referenceLevels for each categorical variable
-            for(Integer rId: data) {
-                Record r = data.get(rId);
-                for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
-                    Object column = entry.getKey();
-                    if(referenceLevels.containsKey(column)==false) { //already set?
-                        if(covert2dummy(columnTypes.get(column))==false) { 
-                            continue; //only ordinal and categorical are converted into dummyvars
-                        }
-                        Object value = entry.getValue();
-                        referenceLevels.put(column, value);
+
+        //find the referenceLevels for each categorical variable
+        for(Integer rId: data) {
+            Record r = data.get(rId);
+            for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
+                Object column = entry.getKey();
+                if(referenceLevels.containsKey(column)==false) { //already set?
+                    if(covert2dummy(columnTypes.get(column))==false) { 
+                        continue; //only ordinal and categorical are converted into dummyvars
                     }
+                    Object value = entry.getValue();
+                    referenceLevels.put(column, value);
                 }
             }
         }
+    }
+    
+    protected static void transformDummy(Dataset data, Map<Object, Object> referenceLevels) {
+
+        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
         //Replace variables with dummy versions
         for(Integer rId: data) {
@@ -329,6 +322,10 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         
         //Reset Meta info
         data.recalculateMeta();
+    }
+    
+    private static boolean covert2dummy(TypeInference.DataType columnType) {
+        return columnType==TypeInference.DataType.CATEGORICAL || columnType==TypeInference.DataType.ORDINAL;
     }
     
 }

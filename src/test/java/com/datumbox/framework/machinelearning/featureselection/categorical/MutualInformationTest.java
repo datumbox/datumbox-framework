@@ -39,7 +39,9 @@ public class MutualInformationTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset trainingData = Datasets.featureSelectionCategorical(dbConf, 1000)[0];
+        Dataset[] data = Datasets.featureSelectionCategorical(dbConf, 1000);
+        Dataset trainingData = data[0];
+        Dataset validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
         MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
@@ -50,13 +52,13 @@ public class MutualInformationTest extends BaseTest {
         MutualInformation instance = new MutualInformation(dbName, dbConf);
         
         
-        instance.fit(trainingData, param);
+        instance.fit_transform(trainingData, param);
         instance = null;
         
         
         instance = new MutualInformation(dbName, dbConf);
         
-        instance.transform(trainingData);
+        instance.transform(validationData);
         
         Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));
         Set<Object> result = trainingData.getXDataTypes().keySet();
@@ -64,6 +66,7 @@ public class MutualInformationTest extends BaseTest {
         instance.erase();
         
         trainingData.erase();
+        validationData.erase();
     }
 
 }

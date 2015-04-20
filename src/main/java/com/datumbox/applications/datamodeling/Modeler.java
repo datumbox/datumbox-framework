@@ -73,9 +73,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
-            featureSelection.fit(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
-            
-            featureSelection.transform(trainingData);
+            featureSelection.fit_transform(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
         }
         
         

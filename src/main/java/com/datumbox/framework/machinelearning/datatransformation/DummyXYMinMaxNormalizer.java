@@ -35,17 +35,19 @@ public class DummyXYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     }
 
     @Override
-    protected void _transform(Dataset data) {
+    protected void _fit(Dataset data) {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
         
-        if(minColumnValues.isEmpty() || maxColumnValues.isEmpty()) {
-            //Training Mode
-            BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
-            BaseDummyMinMaxTransformer.fitY(data, minColumnValues, maxColumnValues);
-        }
+        BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
+        BaseDummyMinMaxTransformer.fitY(data, minColumnValues, maxColumnValues);
         
-        BaseDummyMinMaxTransformer.extractDummies(data, knowledgeBase.getModelParameters().getReferenceLevels());
+        BaseDummyMinMaxTransformer.fitDummy(data, knowledgeBase.getModelParameters().getReferenceLevels());
+    }
+
+    @Override
+    protected void _convert(Dataset data) {
+        BaseDummyMinMaxTransformer.transformDummy(data, knowledgeBase.getModelParameters().getReferenceLevels());
     }
     
     @Override

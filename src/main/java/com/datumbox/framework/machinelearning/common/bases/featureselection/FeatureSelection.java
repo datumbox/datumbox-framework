@@ -53,6 +53,11 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         super(dbName, dbConf, mpClass, tpClass);
     }
     
+    public void fit_transform(Dataset trainingData, TP trainingParameters) {
+        fit(trainingData, trainingParameters);
+        transform(trainingData);
+    }
+    
     public void transform(Dataset newData) {
         logger.info("transform()");
         

@@ -32,14 +32,15 @@ public class XMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     }
     
     @Override
-    protected void _transform(Dataset data) {
+    protected void _fit(Dataset data) {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
+        BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
+    }
+    
+    @Override
+    protected void _convert(Dataset data) {
         
-        if(minColumnValues.isEmpty() || maxColumnValues.isEmpty()) {
-            //Training Mode
-            BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
-        }
     }
     
     @Override

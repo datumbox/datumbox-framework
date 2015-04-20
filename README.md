@@ -13,7 +13,7 @@ Copyright (c) 2013-2015 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbri
 Version
 -------
 
-The latest version is 0.6.0 (build 20150419). The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
+The latest version is 0.6.0 (build 20150420). The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
 
 Installation
 ------------

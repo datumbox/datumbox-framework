@@ -56,61 +56,48 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         super(dbName, dbConf, mpClass, tpClass);
     }
     
-    /*
-     The DataTransformers perform transform() at the same time as fit(), concequently
-     the fit() method alone is not supported. Use instead the fit_transform() method.
-    */
+    public void fit_transform(Dataset trainingData, TP trainingParameters) {
+        fit(trainingData, trainingParameters); 
+        transform(trainingData);
+    }
+    
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {  
-        throw new UnsupportedOperationException("fit() is not supported. Call fit_transform() instead."); 
-    }
-    
-    @Override
-    protected void _fit(Dataset trainingData) {
-        throw new UnsupportedOperationException("fit() is not supported. Call fit_transform() instead."); 
-    }
-    
-    
-    
-    public void fit_transform(Dataset trainingData, TP trainingParameters) {  
+        logger.info("fit()");
         
         initializeTrainingConfiguration(trainingParameters);
         
-        logger.info("fit_transform()");
-        
-        _transform(trainingData);     
-        _normalize(trainingData);
+        _fit(trainingData);  
             
         logger.info("Saving model");
         knowledgeBase.save();
     }
     
-    
     public void transform(Dataset newData) {
+        logger.info("transform()");
+        
         knowledgeBase.load();
         
-        logger.info("transform()");
-        _transform(newData); 
+        _convert(newData); 
         _normalize(newData);
         
     }
     
     public void denormalize(Dataset data) {
-        knowledgeBase.load();
-        
         logger.info("denormalize()");
+        
+        knowledgeBase.load();
         
         _denormalize(data);
     }
     
     /**
-     * Converts the data (adding/modifying/removing columns). The transformations 
+     * Converts the data (adding/modifying/removing columns). The conversions 
      * are not possible to be rolledback.
      * 
      * @param data 
-     * @param trainingMode 
      */
-    protected abstract void _transform(Dataset data);
+    protected abstract void _convert(Dataset data);
     
     /**
      * Normalizes the data by modifying the columns. The changes should be 

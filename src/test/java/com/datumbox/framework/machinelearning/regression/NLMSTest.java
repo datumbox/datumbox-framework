@@ -116,8 +116,7 @@ public class NLMSTest extends BaseTest {
         featureSelectionParameters.setMaxDimensions(trainingData.getVariableNumber()-1);
         featureSelectionParameters.setWhitened(false);
         featureSelectionParameters.setVarianceThreshold(0.99999995);
-        featureSelection.fit(trainingData, featureSelectionParameters);
-        featureSelection.transform(trainingData);
+        featureSelection.fit_transform(trainingData, featureSelectionParameters);
         featureSelection.erase();
         
         
