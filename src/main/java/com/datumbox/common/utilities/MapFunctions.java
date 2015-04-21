@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -125,13 +124,10 @@ public class MapFunctions {
      */
     public static <K, V> Map<K, V> sortNumberMapByKeyAscending(Set<Map.Entry<K, V>> entrySet) {
         ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(entrySet);
-        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
-          @Override
-          public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = TypeInference.toDouble(a.getKey());
-              Double vb = TypeInference.toDouble(b.getKey());
-              return va.compareTo(vb);
-          }
+        Collections.sort(entries, (Map.Entry<K, V> a, Map.Entry<K, V> b) -> {
+            Double va = TypeInference.toDouble(a.getKey());
+            Double vb = TypeInference.toDouble(b.getKey());
+            return va.compareTo(vb);
         });
         
         Map<K, V> sortedMap = new LinkedHashMap<>();
@@ -166,13 +162,10 @@ public class MapFunctions {
      */
     public static <K, V> Map<K, V> sortNumberMapByKeyDescending(Set<Map.Entry<K, V>> entrySet) {
         ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(entrySet);
-        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
-          @Override
-          public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = TypeInference.toDouble(a.getKey());
-              Double vb = TypeInference.toDouble(b.getKey());
-              return -va.compareTo(vb);
-          }
+        Collections.sort(entries, (Map.Entry<K, V> a, Map.Entry<K, V> b) -> {
+            Double va = TypeInference.toDouble(a.getKey());
+            Double vb = TypeInference.toDouble(b.getKey());
+            return -va.compareTo(vb);
         });
         
         Map<K, V> sortedMap = new LinkedHashMap<>();
@@ -193,13 +186,10 @@ public class MapFunctions {
      */
     public static <K, V> Map<K, V> sortNumberMapByValueAscending(Map<K, V> map) {
         ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(map.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
-          @Override
-          public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = TypeInference.toDouble(a.getValue());
-              Double vb = TypeInference.toDouble(b.getValue());
-              return va.compareTo(vb);
-          }
+        Collections.sort(entries, (Map.Entry<K, V> a, Map.Entry<K, V> b) -> {
+            Double va = TypeInference.toDouble(a.getValue());
+            Double vb = TypeInference.toDouble(b.getValue());
+            return va.compareTo(vb);
         });
         
         Map<K, V> sortedMap = new LinkedHashMap<>();
@@ -220,13 +210,10 @@ public class MapFunctions {
      */
     public static <K, V> Map<K, V> sortNumberMapByValueDescending(Map<K, V> map) {
         ArrayList<Map.Entry<K, V>> entries = new ArrayList<>(map.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
-          @Override
-          public int compare(Map.Entry<K, V> a, Map.Entry<K, V> b){
-              Double va = TypeInference.toDouble(a.getValue());
-              Double vb = TypeInference.toDouble(b.getValue());
-              return -va.compareTo(vb);
-          }
+        Collections.sort(entries, (Map.Entry<K, V> a, Map.Entry<K, V> b) -> {
+            Double va = TypeInference.toDouble(a.getValue());
+            Double vb = TypeInference.toDouble(b.getValue());
+            return -va.compareTo(vb);
         });
         
         Map<K, V> sortedMap = new LinkedHashMap<>();
@@ -245,13 +232,10 @@ public class MapFunctions {
      */
     public static AssociativeArray sortAssociativeArrayByValueAscending(AssociativeArray associativeArray) {
         ArrayList<Map.Entry<Object, Object>> entries = new ArrayList<>(associativeArray.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<Object,Object>>() {
-          @Override
-          public int compare(Map.Entry<Object, Object> a, Map.Entry<Object, Object> b){
-              Double va = TypeInference.toDouble(a.getValue());
-              Double vb = TypeInference.toDouble(b.getValue());
-              return va.compareTo(vb);
-          }
+        Collections.sort(entries, (Map.Entry<Object, Object> a, Map.Entry<Object, Object> b) -> {
+            Double va = TypeInference.toDouble(a.getValue());
+            Double vb = TypeInference.toDouble(b.getValue());
+            return va.compareTo(vb);
         });
         
         AssociativeArray sortedAssociativeArray = new AssociativeArray();
@@ -270,13 +254,10 @@ public class MapFunctions {
      */
     public static AssociativeArray sortAssociativeArrayByValueDescending(AssociativeArray associativeArray) {
         ArrayList<Map.Entry<Object, Object>> entries = new ArrayList<>(associativeArray.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<Object,Object>>() {
-          @Override
-          public int compare(Map.Entry<Object, Object> a, Map.Entry<Object, Object> b){
-              Double va = TypeInference.toDouble(a.getValue());
-              Double vb = TypeInference.toDouble(b.getValue());
-              return -va.compareTo(vb);
-          }
+        Collections.sort(entries, (Map.Entry<Object, Object> a, Map.Entry<Object, Object> b) -> {
+            Double va = TypeInference.toDouble(a.getValue());
+            Double vb = TypeInference.toDouble(b.getValue());
+            return -va.compareTo(vb);
         });
         
         AssociativeArray sortedAssociativeArray = new AssociativeArray();

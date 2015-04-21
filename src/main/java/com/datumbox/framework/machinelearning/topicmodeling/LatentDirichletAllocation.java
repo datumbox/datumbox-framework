@@ -58,11 +58,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         - http://stats.stackexchange.com/questions/18167/how-to-calculate-perplexity-of-a-holdout-with-latent-dirichlet-allocation
         - http://www.slideserve.com/adamdaniel/an-introduction-to-latent-dirichlet-allocation-lda
     */
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
         private int totalIterations;

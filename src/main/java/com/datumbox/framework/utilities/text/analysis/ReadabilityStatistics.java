@@ -53,9 +53,9 @@ public class ReadabilityStatistics {
      * @param   strText         Text to be checked
      * @return 
      */
-    public static double flesch_kincaid_reading_ease(String strText) {
-        strText = clean_text(strText);
-        return PHPfunctions.round((206.835 - (1.015 * average_words_per_sentence(strText)) - (84.6 * average_syllables_per_word(strText))), 1);
+    public static double fleschKincaidReadingEase(String strText) {
+        strText = cleanText(strText);
+        return PHPfunctions.round((206.835 - (1.015 * averageWordsPerSentence(strText)) - (84.6 * averageSyllablesPerWord(strText))), 1);
     }
 
     /**
@@ -63,9 +63,9 @@ public class ReadabilityStatistics {
      * @param   strText         Text to be checked
      * @return 
      */
-    public static double flesch_kincaid_grade_level(String strText) {
-        strText = clean_text(strText);
-        return PHPfunctions.round(((0.39 * average_words_per_sentence(strText)) + (11.8 * average_syllables_per_word(strText)) - 15.59), 1);
+    public static double fleschKincaidGradeLevel(String strText) {
+        strText = cleanText(strText);
+        return PHPfunctions.round(((0.39 * averageWordsPerSentence(strText)) + (11.8 * averageSyllablesPerWord(strText)) - 15.59), 1);
     }
 
     /**
@@ -73,9 +73,9 @@ public class ReadabilityStatistics {
      * @param   strText         Text to be checked
      * @return 
      */
-    public static double gunning_fog_score(String strText) {
-        strText = clean_text(strText);
-        return PHPfunctions.round(((average_words_per_sentence(strText) + percentage_words_with_three_syllables(strText)) * 0.4), 1);
+    public static double gunningFogScore(String strText) {
+        strText = cleanText(strText);
+        return PHPfunctions.round(((averageWordsPerSentence(strText) + percentageWordsWithThreeSyllables(strText)) * 0.4), 1);
     }
 
     /**
@@ -83,10 +83,10 @@ public class ReadabilityStatistics {
      * @param   strText         Text to be checked
      * @return 
      */
-    public static double coleman_liau_index(String strText) {
-        strText = clean_text(strText);
-        int intWordCount = word_count(strText);
-        return PHPfunctions.round( ( (5.89 * (letter_count(strText) / (double)intWordCount)) - (0.3 * (sentence_count(strText) / (double)intWordCount)) - 15.8 ), 1);
+    public static double colemanLiauIndex(String strText) {
+        strText = cleanText(strText);
+        int intWordCount = wordCount(strText);
+        return PHPfunctions.round( ( (5.89 * (letterCount(strText) / (double)intWordCount)) - (0.3 * (sentenceCount(strText) / (double)intWordCount)) - 15.8 ), 1);
     }
 
     /**
@@ -94,9 +94,9 @@ public class ReadabilityStatistics {
      * @param   strText         Text to be checked
      * @return 
      */
-    public static double smog_index(String strText) {
-        strText = clean_text(strText);
-        return PHPfunctions.round(1.043 * Math.sqrt((words_with_three_syllables(strText) * (30.0 / sentence_count(strText))) + 3.1291), 1);
+    public static double smogIndex(String strText) {
+        strText = cleanText(strText);
+        return PHPfunctions.round(1.043 * Math.sqrt((wordsWithThreeSyllables(strText) * (30.0 / sentenceCount(strText))) + 3.1291), 1);
     }
 
     /**
@@ -104,14 +104,14 @@ public class ReadabilityStatistics {
      * @param   strText         Text to be checked
      * @return 
      */
-    public static double automated_readability_index(String strText) {
-        strText = clean_text(strText);
-        int intWordCount = word_count(strText);
-        return PHPfunctions.round(((4.71 * (letter_count(strText) / (double)intWordCount)) + (0.5 * (intWordCount / (double)sentence_count(strText))) - 21.43), 1);
+    public static double automatedReadabilityIndex(String strText) {
+        strText = cleanText(strText);
+        int intWordCount = wordCount(strText);
+        return PHPfunctions.round(((4.71 * (letterCount(strText) / (double)intWordCount)) + (0.5 * (intWordCount / (double)sentenceCount(strText))) - 21.43), 1);
     }
     
-    public static double dale_chall_score(String strText) {
-        strText = clean_text(strText);
+    public static double daleChallScore(String strText) {
+        strText = cleanText(strText);
         int intDifficultWordCount = 0;
         List<String> arrWords = (new WhitespaceTokenizer()).tokenize(strText);
         int intWordCount = arrWords.size();
@@ -120,7 +120,7 @@ public class ReadabilityStatistics {
                 ++intDifficultWordCount;
             }
         }
-        int intSentenceCount=sentence_count(strText);
+        int intSentenceCount=sentenceCount(strText);
 
         double percentageOfDifficultWords=intDifficultWordCount/(double)intWordCount;
         double score=0.1579*(100*percentageOfDifficultWords)+0.0496*(intWordCount/(double)intSentenceCount);
@@ -131,9 +131,9 @@ public class ReadabilityStatistics {
         return score;
     }
 
-    public static double dale_chall_grade(String strText) {
+    public static double daleChallGrade(String strText) {
         //http://rfptemplates.technologyevaluation.com/dale-chall-list-of-3000-simple-words.html
-        double score=dale_chall_score(strText);
+        double score=daleChallScore(strText);
         if(score<5.0) {
             return 2.5;
         }
@@ -157,9 +157,9 @@ public class ReadabilityStatistics {
         }
     }
 
-    public static double spache_score(String strText) {
+    public static double spacheScore(String strText) {
         //http://simple.wikipedia.org/wiki/Spache_Readability_Formula
-        strText = clean_text(strText);
+        strText = cleanText(strText);
         int intUniqueUnfamiliarWordCount = 0;
         Set<String> arrWords = new HashSet<>((new WhitespaceTokenizer()).tokenize(strText));
         for(String word : arrWords) {
@@ -167,8 +167,8 @@ public class ReadabilityStatistics {
                 ++intUniqueUnfamiliarWordCount;
             }
         }
-        int intSentenceCount=sentence_count(strText);
-        int intWordCount = word_count(strText);
+        int intSentenceCount=sentenceCount(strText);
+        int intWordCount = wordCount(strText);
 
         return 0.121*intWordCount/(double)intSentenceCount+0.082*intUniqueUnfamiliarWordCount+0.659;
     }
@@ -178,7 +178,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int word_count(String strText) {
+    protected static int wordCount(String strText) {
         return PHPfunctions.substr_count(strText, ' ')+1; // Space count + 1 is word count
     }
 
@@ -187,7 +187,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int letter_count(String strText) {
+    protected static int letterCount(String strText) {
         return strText.replaceAll("[^\\p{L}0-9]", "").length(); //remove all non-alphanumerics
     }
 
@@ -196,7 +196,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int sentence_count(String strText) {
+    protected static int sentenceCount(String strText) {
         int numberOfDots=PHPfunctions.substr_count(strText, '.');
         // Will be tripped up by "Mr." or "U.K.". Not a major concern at this point.
         if(strText.charAt(strText.length()-1)!='.') { //missing the final dot, count it too
@@ -210,7 +210,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be transformed
      * @return 
      */
-    protected static String clean_text(String strText) {
+    protected static String cleanText(String strText) {
         strText = HTMLCleaner.unsafeRemoveAllTags(strText);
         strText = strText.toLowerCase();
         
@@ -227,9 +227,9 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static double average_words_per_sentence(String strText) {
-        int intSentenceCount = sentence_count(strText);
-        int intWordCount = word_count(strText);
+    protected static double averageWordsPerSentence(String strText) {
+        int intSentenceCount = sentenceCount(strText);
+        int intWordCount = wordCount(strText);
         return (intWordCount / (double)intSentenceCount);
     }
 
@@ -238,13 +238,13 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int total_syllables(String strText) {
+    protected static int totalSyllables(String strText) {
         int intSyllableCount = 0;
         
         List<String> arrWords = (new WhitespaceTokenizer()).tokenize(strText);
         int intWordCount = arrWords.size();
         for (int i = 0; i < intWordCount; ++i) {
-            intSyllableCount += syllable_count(arrWords.get(i));
+            intSyllableCount += syllableCount(arrWords.get(i));
         }
         return intSyllableCount;
     }
@@ -254,9 +254,9 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static double average_syllables_per_word(String strText) {
-        int intSyllableCount = total_syllables(strText);
-        int intWordCount = word_count(strText);
+    protected static double averageSyllablesPerWord(String strText) {
+        int intSyllableCount = totalSyllables(strText);
+        int intWordCount = wordCount(strText);
         
         return (intSyllableCount / (double)intWordCount);
     }
@@ -266,13 +266,13 @@ public class ReadabilityStatistics {
      * @param   strText                  Text to be measured
      * @return 
      */
-    protected static int words_with_three_syllables(String strText) {
+    protected static int wordsWithThreeSyllables(String strText) {
         int intLongWordCount = 0;
         
         List<String> arrWords = (new WhitespaceTokenizer()).tokenize(strText);
         int intWordCount = arrWords.size();
         for (int i = 0; i < intWordCount; ++i) {
-            if(syllable_count(arrWords.get(i)) > 2) {
+            if(syllableCount(arrWords.get(i)) > 2) {
                 ++intLongWordCount; //it also counts the proper nouns which should be excluded for Fog index, but this is not a major issue
             }
         }
@@ -285,9 +285,9 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static double percentage_words_with_three_syllables(String strText) {
-        int intWordCount = word_count(strText);
-        int intLongWordCount = words_with_three_syllables(strText);
+    protected static double percentageWordsWithThreeSyllables(String strText) {
+        int intWordCount = wordCount(strText);
+        int intLongWordCount = wordsWithThreeSyllables(strText);
         double percentage = ((intLongWordCount / (double)intWordCount) * 100.0);
         return percentage;
     }
@@ -300,7 +300,7 @@ public class ReadabilityStatistics {
      * @param   strWord      Word to be measured
      * @return 
      */
-    protected static int syllable_count(String strWord) {
+    protected static int syllableCount(String strWord) {
 
         int intSyllableCount = 0;
         

@@ -17,7 +17,6 @@ package com.datumbox.framework.statistics.sampling;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
@@ -31,11 +30,6 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class StratifiedSampling {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Samples nh ids from each strata based on their Frequency Table

@@ -50,7 +50,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     
     
     @Override
-    public void _fit(Dataset trainingData) { 
+    protected void _fit(Dataset trainingData) { 
         
         //get the training parameters
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();

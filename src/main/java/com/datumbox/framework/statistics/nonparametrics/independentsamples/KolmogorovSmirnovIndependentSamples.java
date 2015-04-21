@@ -27,11 +27,6 @@ import java.util.TreeSet;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class KolmogorovSmirnovIndependentSamples {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Tests the rejection of null Hypothesis for a particular confidence level

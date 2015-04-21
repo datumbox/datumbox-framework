@@ -38,11 +38,6 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     * http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
     * https://class.coursera.org/ml-003/lecture/index
     */
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 

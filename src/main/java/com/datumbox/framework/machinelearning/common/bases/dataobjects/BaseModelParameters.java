@@ -36,7 +36,7 @@ public abstract class BaseModelParameters implements Learnable {
         bigMapInitializer(dbc);
     }
     
-    public final void bigMapInitializer(DatabaseConnector dbc) {
+    private void bigMapInitializer(DatabaseConnector dbc) {
         //get all the fields from all the inherited classes
         for(Field field : getAllFields(new LinkedList<>(), this.getClass())){
             

@@ -26,12 +26,6 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
  */
 public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters, BayesianEnsembleMethod.ValidationMetrics> {
     //References: http://www.stanford.edu/class/cs124/lec/sentiment.pptx
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
-    
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 

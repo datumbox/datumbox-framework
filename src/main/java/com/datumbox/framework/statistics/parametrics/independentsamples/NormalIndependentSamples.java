@@ -22,11 +22,6 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class NormalIndependentSamples {
-    /**
-     * The dataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the dataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Independent Samples Mean Test for Normal.

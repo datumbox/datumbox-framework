@@ -29,12 +29,6 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Descriptives {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
-    
     
     /**
      * Returns the sum of a Collection

@@ -16,7 +16,6 @@
 package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -29,11 +28,6 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class WilcoxonRelatedSamples {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Calculates the p-value of null Hypothesis.

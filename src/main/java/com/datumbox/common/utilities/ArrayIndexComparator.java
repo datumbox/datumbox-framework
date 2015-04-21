@@ -33,16 +33,14 @@ public class ArrayIndexComparator<T extends Comparable<T>> implements Comparator
 
     public Integer[] createIndexArray() {
         Integer[] indexes = new Integer[array.length];
-        for (int i = 0; i < array.length; i++)
-        {
-            indexes[i] = i; // Autoboxing
+        for (int i = 0; i < array.length; ++i) {
+            indexes[i] = i;
         }
         return indexes;
     }
 
     @Override
     public int compare(Integer index1, Integer index2) {
-         // Autounbox from Integer to int to use as array indexes
         return array[index1].compareTo(array[index2]);
     }
 }

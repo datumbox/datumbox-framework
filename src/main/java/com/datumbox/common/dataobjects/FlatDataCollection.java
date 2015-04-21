@@ -15,7 +15,6 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.google.common.collect.HashMultiset;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +37,7 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
      * @return
      * @throws IllegalArgumentException
      */
-    public <T> T[] copyCollection2Array(Class<T> c) throws IllegalArgumentException {
+    public final <T> T[] copyCollection2Array(Class<T> c) throws IllegalArgumentException {
         int n = internalData.size();
         if (n == 0) {
             throw new IllegalArgumentException();
@@ -57,7 +56,7 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
      *
      * @return
      */
-    public Double[] copyCollection2DoubleArray() {
+    public final Double[] copyCollection2DoubleArray() {
         int n = internalData.size();
         Double[] doubleArray = new Double[n];
         int i = 0;
@@ -94,7 +93,7 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
     }
     
     @SuppressWarnings("unchecked")
-    public FlatDataList toFlatDataList() {
+    public final FlatDataList toFlatDataList() {
         List<Object> list;
         if (internalData instanceof List<?>) {
             list = (List<Object>)internalData;
@@ -109,24 +108,11 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
     public boolean equals(Object o) {
         if ( this == o ) return true;
         if ( !(o instanceof FlatDataCollection) ) return false;
-        
-        if (internalData.size() != ((FlatDataCollection)o).internalData.size()) {
-            return false;
-        }
-        
-        //we should not care about the order of the elements in the collections. We care about duplicates, that's why we use HashMultisets
-        return HashMultiset.create(internalData).equals(HashMultiset.create(((FlatDataCollection)o).internalData));
+        return internalData.equals(((FlatDataCollection)o).internalData);
     }
 
     @Override
     public int hashCode() {
-        /*
-        int hash = 5;
-        for( Object value : internalData ) {
-            hash = hash * 31 + ((value == null) ? 0 : value.hashCode());
-        }
-        return hash;
-        */
         return internalData.hashCode();
     }
     

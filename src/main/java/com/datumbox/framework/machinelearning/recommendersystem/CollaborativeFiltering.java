@@ -43,13 +43,6 @@ import java.util.Set;
  */
 public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters> {
 
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
-
-   
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
         
         //number of observations used for training

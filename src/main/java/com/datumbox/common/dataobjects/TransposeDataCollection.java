@@ -58,31 +58,10 @@ public final class TransposeDataCollection extends DataStructureMap<Map<Object, 
         return internalData.values();
     }
     
-    
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
         if ( !(o instanceof TransposeDataCollection) ) return false;
-        /*
-        TransposeDataCollection otherObject = ((TransposeDataCollection)o);
-        
-        if(internalData.size() != otherObject.internalData.size()) {
-            return false;
-        }
-        
-        //first ensure that the keys are the same. IMPORTANT: we ignore order since we use sets here
-        if(internalData.keySet().equals(otherObject.internalData.keySet())==false) {
-            return false;
-        }
-        
-        //now compare the FlatDataCollections if they are equal
-        for(Object key : internalData.keySet()) {            
-            if(internalData.get(key).equals(otherObject.internalData.get(key))==false) {
-                return false;
-            }
-        }
-        return true;
-        */
         return internalData.equals(((TransposeDataCollection)o).internalData);
     }
 

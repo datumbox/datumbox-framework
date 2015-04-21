@@ -25,10 +25,11 @@ import java.io.InputStream;
 
 /**
  * Creates a Deep Copy of an object by serializing and deserializing it.
- * Restructured code from 
- * http://www.whitebyte.info/programming/java/java-serialization-class
+ * 
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class DeepCopy {
+    
     /**
      * Serialized the Object to byte array.
      * 
@@ -36,18 +37,14 @@ public class DeepCopy {
      * @return 
      */
     public static byte[] serialize(Object obj) {
-        byte[] result = null;
-
         try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(obj);
-            result = bos.toByteArray();
+            return bos.toByteArray();
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
-        } 
-        
-        return result;
+        }
     }
     
     /**
@@ -57,17 +54,13 @@ public class DeepCopy {
      * @return 
      */
     public static Object deserialize(byte[] arr) {
-        Object result = null;
-        
         try (InputStream bis = new ByteArrayInputStream(arr);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
-            result = ois.readObject();
+            return ois.readObject();
         } 
         catch (IOException | ClassNotFoundException ex) {
             throw new RuntimeException(ex);
-        } 
-
-        return result;
+        }
     }
     
     /**
@@ -78,7 +71,7 @@ public class DeepCopy {
      * @return 
      */
     @SuppressWarnings("unchecked")
-    public static <T> T cloneObject(T obj) {
+    public static <T> T clone(T obj) {
         return (T)deserialize(serialize((Object)obj));
     }
 }

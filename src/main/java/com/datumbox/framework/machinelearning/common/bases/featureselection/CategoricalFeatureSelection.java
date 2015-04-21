@@ -182,23 +182,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
     }
     
-    public static void removeRareFeatures(Dataset data, DatabaseConnector dbc, Integer rareFeatureThreshold, Map<Object, Double> featureCounts, boolean ignoringNumericalFeatures) {
-        //This method contains part of the statistics collection of the object
-        //but can also be called statically in order to aggressively remove rare
-        //features especially in NLP applications. It was developed in such a way
-        //so that duplicate code is reduced. To do so, "call by reference" is 
-        //required. In Java what we can do is initialize an empty featureCounts
-        //map externally and pass it here to be constructred. When called by the
-        //object itself this map is part of the statistics that it collects during
-        //feature selection. If called statically, the map should be instatiated
-        //just before the call to this method and dropped immediately after 
-        //since it has no use.
-        Logger logger = LoggerFactory.getLogger(CategoricalFeatureSelection.class);
+    private void removeRareFeatures(Dataset data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
-        
-        if(!featureCounts.isEmpty()) {
-            throw new RuntimeException("The featureCounts map should be empty.");
-        }
+        DatabaseConnector dbc = knowledgeBase.getDbc();
+        TP trainingParameters = knowledgeBase.getTrainingParameters();
+        Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
+        boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
@@ -253,13 +242,11 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     private void buildFeatureStatistics(Dataset data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         logger.debug("buildFeatureStatistics()");
         TP trainingParameters = knowledgeBase.getTrainingParameters();
-        Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         //the method below does not only removes the rare features but also
         //first and formost calculates the contents of featureCounts map. 
-        //The map must be empty or else you get a RuntimeException
-        removeRareFeatures(data, knowledgeBase.getDbc(), rareFeatureThreshold, featureCounts, ignoringNumericalFeatures);
+        removeRareFeatures(data, featureCounts);
         
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         //now find the classCounts and the featureClassCounts

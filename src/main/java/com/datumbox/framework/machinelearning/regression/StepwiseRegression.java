@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
 import java.util.HashSet;

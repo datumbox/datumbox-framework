@@ -95,10 +95,10 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         knowledgeBase.save();
     }
     
-    public void fit(Map<Object, URI> dataset, TrainingParameters trainingParameters) { 
+    public void fit(Map<Object, URI> datasets, TrainingParameters trainingParameters) { 
         //build trainingDataset
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
-        Dataset trainingData = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
+        Dataset trainingData = Dataset.Builder.parseTextFiles(datasets, textExtractor, knowledgeBase.getDbConf());
         
         fit(trainingData, trainingParameters);
         
@@ -202,7 +202,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         return vm;
     }
     
-    public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> dataset) {
+    public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> datasets) {
         //ensure db loaded
         knowledgeBase.load();
         
@@ -211,7 +211,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorTrainingParameters());
         
         //build the testDataset
-        Dataset testDataset = Dataset.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
+        Dataset testDataset = Dataset.Builder.parseTextFiles(datasets, textExtractor, knowledgeBase.getDbConf());
         
         BaseMLmodel.ValidationMetrics vm = validate(testDataset);
         

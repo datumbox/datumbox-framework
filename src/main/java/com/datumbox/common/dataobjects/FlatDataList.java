@@ -33,6 +33,15 @@ public final class FlatDataList extends DataStructureList<List<Object>> implemen
     public FlatDataList(List<Object> internalData) {
         super(internalData);
     }
+    
+    public FlatDataList(FlatDataList fList) {
+        this();
+        if(fList != null) {
+            internalData.addAll(fList.internalData);
+        }
+    }
+    
+    
     /*
     public final boolean remove(Object o) {
         return internalData.remove(o);

@@ -25,11 +25,6 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class PearsonCorrelation {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Calculates Pearson's Correlation for a given transposed array (2xn table)

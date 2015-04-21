@@ -31,13 +31,9 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Lilliefors {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     protected static final DataTable2D CRITICAL_VALUES = new DataTable2D(); //maintain the order to the first keys
+    
     static {
         //The first key stores the aLevel (statistical significance).
         //The second one stores the number of observations in sample. The values are from 0-30.

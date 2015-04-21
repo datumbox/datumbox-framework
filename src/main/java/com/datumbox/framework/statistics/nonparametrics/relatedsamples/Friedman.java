@@ -17,7 +17,6 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
@@ -31,11 +30,6 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Friedman {
-    /**
-     * The internalDataCollections that are passed in this function are modified after the analysis. 
-     * Don't pass directly the internalDataCollection unless you don't need them afterwards
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = false;
     
     /**
      * Calculates the p-value of null Hypothesis .
@@ -56,11 +50,10 @@ public class Friedman {
         //Find Ranks from Data Table. We don't store them to reduce memory consumption
         for(Map.Entry<Object, AssociativeArray> entry1 : dataTable.entrySet()) {
             Object i = entry1.getKey();
-            //AssociativeArray row = DeepCopy.<AssociativeArray>cloneObject(entry1.getValue()); //copy to avoid changes on the structure of the original table!
             AssociativeArray row = entry1.getValue(); 
             
             //find the number of tied values and convert values into ranks
-            AssociativeArray tiedValuesArray = Ranks.getRanksFromValues(row);
+            AssociativeArray tiedValuesArray = Ranks.getRanksFromValues(new AssociativeArray(row)); //this copies the data before passing them into the Ranks.
             
             for(Object value : tiedValuesArray.values()) {
                 tiesCounter.add( ((Number)value).intValue() );

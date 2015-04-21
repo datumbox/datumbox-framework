@@ -235,17 +235,9 @@ public class PHPfunctions {
         Arrays.sort(indexes, comparator);
         
         //sort the array based on the indexes
-        //sortArrayBasedOnIndex(array, indexes);
         Arrays.sort(array,Collections.reverseOrder());
         
         return indexes;
     }
-    /*
-    private static <T extends Comparable<T>> void sortArrayBasedOnIndex(T[] array, Integer[] indexes) {
-        T[] arrayBackup =  array.clone();
-        for(int i=0;i<indexes.length;++i) {
-            array[i] = arrayBackup[indexes[i]];
-        }
-    }
-    */
+    
 }

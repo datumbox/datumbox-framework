@@ -1,6 +1,8 @@
 CODE IMPROVEMENTS
 =================
 
+- Check if we can remove Guava
+
 - Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
 - Add multithreading support.

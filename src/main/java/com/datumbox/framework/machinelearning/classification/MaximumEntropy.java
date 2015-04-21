@@ -40,11 +40,6 @@ import java.util.Set;
  */
 public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParameters, MaximumEntropy.TrainingParameters, MaximumEntropy.ValidationMetrics> {
     //References: http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 

@@ -50,11 +50,6 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         - http://rbakker.myweb.uga.edu/pols8501/MLENotes6a.pdf
         - http://www.academicjournals.org/article/article1379683447_Tamayo.pdf
     */
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 

@@ -16,7 +16,6 @@
 package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -28,11 +27,6 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SpearmanCorrelation {
-    /**
-     * The internalDataCollections that are passed in this function are modified after the analysis. 
-     * Don't pass directly the internalDataCollection unless you don't need them afterwards
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = false;
 
     public static double calculateCorrelation(TransposeDataList transposeDataList) throws IllegalArgumentException { //unsafe internalData pointer. modifying the variable internalData
         Object[] keys = transposeDataList.keySet().toArray();
@@ -43,8 +37,8 @@ public class SpearmanCorrelation {
         Object keyX = keys[0];
         Object keyY = keys[1];
 
-        FlatDataList flatDataListX = transposeDataList.get(keyX);
-        FlatDataList flatDataListY = transposeDataList.get(keyY);
+        FlatDataList flatDataListX = new FlatDataList(transposeDataList.get(keyX)); //copies data
+        FlatDataList flatDataListY = new FlatDataList(transposeDataList.get(keyY)); //copies data
 
         int n = flatDataListX.size();
         if(n<=0 || n!=flatDataListY.size()) {

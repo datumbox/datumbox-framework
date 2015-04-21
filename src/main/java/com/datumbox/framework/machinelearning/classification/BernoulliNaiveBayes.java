@@ -37,11 +37,6 @@ import java.util.Set;
  */
 public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters, BernoulliNaiveBayes.ValidationMetrics> {
     //References: http://nlp.stanford.edu/IR-book/html/htmledition/the-bernoulli-model-1.html
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
         @BigMap

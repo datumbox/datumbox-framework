@@ -17,7 +17,6 @@ package com.datumbox.framework.statistics.survival.nonparametrics.independentsam
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -25,7 +24,6 @@ import com.datumbox.framework.statistics.descriptivestatistics.CensoredDescripti
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +33,6 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CoxMantel {
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Calculates the p-value of null Hypothesis.
@@ -73,19 +66,16 @@ public class CoxMantel {
                 }
             }
         }
-        Collections.sort(mergedUncensoredData,new Comparator<Object>() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                double v1 = TypeInference.toDouble(o1);
-                double v2 = TypeInference.toDouble(o2);
-                if(v1>v2) {
-                    return 1;
-                }
-                else if(v1<v2) {
-                    return -1;
-                }
-                return 0;
+        Collections.sort(mergedUncensoredData, (Object o1, Object o2) -> {
+            double v1 = TypeInference.toDouble(o1);
+            double v2 = TypeInference.toDouble(o2);
+            if(v1>v2) {
+                return 1;
             }
+            else if(v1<v2) {
+                return -1;
+            }
+            return 0;
         });
 
         AssociativeArray2D testTable = new AssociativeArray2D();

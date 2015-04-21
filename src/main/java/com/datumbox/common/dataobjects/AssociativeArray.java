@@ -44,6 +44,11 @@ public final class AssociativeArray extends DataStructureMap<Map<Object, Object>
         }
     }
     
+    public final void overwrite(Map<Object, Object> data) {
+        internalData.clear();
+        internalData.putAll(data);
+    }
+    
     public final void addValues(AssociativeArray array) {
         addRemoveValues(array, +1);
     }

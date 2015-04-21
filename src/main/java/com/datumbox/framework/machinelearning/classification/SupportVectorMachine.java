@@ -42,11 +42,6 @@ import libsvm.svm_problem;
  */
 public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> {
     //References: http://phpir.com/svm https://github.com/ianbarber/php-svm https://github.com/encog/libsvm-java
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 

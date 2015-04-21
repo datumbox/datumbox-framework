@@ -26,11 +26,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  */
 public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters, BinarizedNaiveBayes.ValidationMetrics> {
     //References: http://www.stanford.edu/class/cs124/lec/sentiment.pptx
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 

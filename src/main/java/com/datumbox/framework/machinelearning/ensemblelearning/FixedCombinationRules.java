@@ -31,11 +31,6 @@ import java.util.Map;
  */
 public class FixedCombinationRules {
     //References: www2.cs.uh.edu/~ceick/ML/Topic12.ppt‎
-    /**
-     * The internalDataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the internalDataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     public static AssociativeArray sum(DataTable2D classifierClassProbabilityMatrix) {
         AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())

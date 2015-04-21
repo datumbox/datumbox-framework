@@ -15,7 +15,6 @@
  */
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Arrays;
@@ -25,11 +24,6 @@ import java.util.Arrays;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ShapiroWilk {
-    /**
-     * The dataCollections that are passed in this function are NOT modified after the analysis. 
-     * You can safely pass directly the dataCollection without worrying about having them modified.
-     */
-    public static final boolean DATA_SAFE_CALL_BY_REFERENCE = true;
     
     /**
      * Tests the rejection of null Hypothesis for a particular confidence level
