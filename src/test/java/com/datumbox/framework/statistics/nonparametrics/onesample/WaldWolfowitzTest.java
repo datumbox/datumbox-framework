@@ -34,7 +34,7 @@ public class WaldWolfowitzTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return True.
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{'Α', 'Β', 'Α', 'Β', 'Α', 'Β', 'Α', 'Β', 'Α', 'Β', 'Β', 'Α', 'Β', 'Α', 'Β', 'Α', 'Α', 'Β'}));
         double aLevel = 0.05;

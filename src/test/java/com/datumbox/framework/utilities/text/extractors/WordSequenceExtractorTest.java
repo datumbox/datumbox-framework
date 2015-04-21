@@ -32,7 +32,7 @@ public class WordSequenceExtractorTest extends BaseTest {
      */
     @Test
     public void testExtract() {
-        TestUtils.log(this.getClass(), "extract");
+        logger.info("extract");
         String text = "this is a text sequence that is amazing text sequence";
         WordSequenceExtractor instance = new WordSequenceExtractor(new WordSequenceExtractor.Parameters());
         

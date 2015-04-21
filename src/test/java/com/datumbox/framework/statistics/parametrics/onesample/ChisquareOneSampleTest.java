@@ -32,7 +32,7 @@ public class ChisquareOneSampleTest extends BaseTest {
      */
     @Test
     public void testTestVariance() {
-        TestUtils.log(this.getClass(), "testVariance");
+        logger.info("testVariance");
         double stdbar = 0.0063;
         int n = 100;
         double H0std = 0.01;

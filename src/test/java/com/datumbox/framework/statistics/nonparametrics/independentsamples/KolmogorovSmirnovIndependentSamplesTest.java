@@ -35,7 +35,7 @@ public class KolmogorovSmirnovIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         TransposeDataList transposeDataList = new TransposeDataList();
         
         //Synthetic internalData coming the first from normal and the second from logistic. It should reject the null hypothesis

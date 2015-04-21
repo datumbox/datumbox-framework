@@ -47,7 +47,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
      */
     @Test
     public void testValidate() throws URISyntaxException, MalformedURLException {
-        TestUtils.log(this.getClass(), "validate");
+        logger.info("validate");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -61,7 +61,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
             dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         }
         catch(Exception ex) {
-            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+            logger.warn("Unable to download datasets, skipping test.");
             return;
         }
         

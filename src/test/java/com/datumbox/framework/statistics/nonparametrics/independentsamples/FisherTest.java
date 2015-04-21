@@ -32,7 +32,7 @@ public class FisherTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Mpesmpeas Notes, rejests null hypothesis
         int n11 = 1;
         int n12 = 5;

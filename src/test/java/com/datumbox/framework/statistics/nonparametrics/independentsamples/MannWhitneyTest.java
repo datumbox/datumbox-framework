@@ -35,7 +35,7 @@ public class MannWhitneyTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return true.
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put("group1", new FlatDataCollection(Arrays.asList(new Object[]{32,26.5,28.5,30,26})));

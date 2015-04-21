@@ -32,7 +32,7 @@ public class FIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestVariances() {
-        TestUtils.log(this.getClass(), "testVariances");
+        logger.info("testVariances");
         double stdbarx = 65.54909;
         double stdbary = 61.85425;
         int n = 100;

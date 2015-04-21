@@ -58,7 +58,7 @@ public class ClusterSamplingTest extends BaseTest {
      */
     @Test
     public void testNbar() {
-        TestUtils.log(this.getClass(), "Nbar");
+        logger.info("Nbar");
         TransposeDataList clusterIdList = generateClusterIdList();
         
         double expResult = 10.0;
@@ -71,7 +71,7 @@ public class ClusterSamplingTest extends BaseTest {
      */
     @Test
     public void testRandomSampling() {
-        TestUtils.log(this.getClass(), "randomSampling");
+        logger.info("randomSampling");
         TransposeDataList clusterIdList = generateClusterIdList();
         int sampleM = 2;
         double expResult = sampleM;
@@ -85,7 +85,7 @@ public class ClusterSamplingTest extends BaseTest {
      */
     @Test
     public void testMean() {
-        TestUtils.log(this.getClass(), "mean");
+        logger.info("mean");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         double expResult = 17.5;
         double result = ClusterSampling.mean(sampleDataCollection);
@@ -97,7 +97,7 @@ public class ClusterSamplingTest extends BaseTest {
      */
     @Test
     public void testXbarVariance() {
-        TestUtils.log(this.getClass(), "xbarVariance");
+        logger.info("xbarVariance");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         int populationM = 4;
         double Nbar = 10.0;
@@ -111,7 +111,7 @@ public class ClusterSamplingTest extends BaseTest {
      */
     @Test
     public void testXbarStd() {
-        TestUtils.log(this.getClass(), "xbarStd");
+        logger.info("xbarStd");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         int populationM = 4;
         double Nbar = 10.0;

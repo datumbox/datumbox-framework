@@ -36,7 +36,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testAsort() {
-        TestUtils.log(this.getClass(), "asort");
+        logger.info("asort");
         Double[] array = {1.1, 1.2, 1.3, 1.4, 1.0};
         Integer[] expResult = {4, 0, 1, 2, 3};
         Integer[] result = PHPfunctions.<Double>asort(array);
@@ -48,7 +48,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testArsort() {
-        TestUtils.log(this.getClass(), "arsort");
+        logger.info("arsort");
         Double[] array = {1.1, 1.2, 1.3, 1.4, 1.0};
         Integer[] expResult = {3, 2, 1, 0, 4};
         Integer[] result = PHPfunctions.<Double>arsort(array);
@@ -60,7 +60,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testLtrim() {
-        TestUtils.log(this.getClass(), "ltrim");
+        logger.info("ltrim");
         String s = "  test";
         String expResult = "test";
         String result = PHPfunctions.ltrim(s);
@@ -72,7 +72,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testRtrim() {
-        TestUtils.log(this.getClass(), "rtrim");
+        logger.info("rtrim");
         String s = "test   ";
         String expResult = "test";
         String result = PHPfunctions.rtrim(s);
@@ -85,7 +85,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testSubstr_count_String_String() {
-        TestUtils.log(this.getClass(), "substr_count");
+        logger.info("substr_count");
         String string = "test tester";
         String substring = "test";
         int expResult = 2;
@@ -98,7 +98,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testSubstr_count_String_char() {
-        TestUtils.log(this.getClass(), "substr_count");
+        logger.info("substr_count");
         String string = "test test";
         char character = 't';
         int expResult = 4;
@@ -111,7 +111,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testRound() {
-        TestUtils.log(this.getClass(), "round");
+        logger.info("round");
         double d = 3.1415;
         int i = 2;
         double expResult = 3.14;
@@ -124,7 +124,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testLog() {
-        TestUtils.log(this.getClass(), "log");
+        logger.info("log");
         double d = 100.0;
         double base = 10.0;
         double expResult = 2.0;
@@ -137,7 +137,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testMt_rand_0args() {
-        TestUtils.log(this.getClass(), "mt_rand");
+        logger.info("mt_rand");
         
         int expResult = -1562431105;
         int result = PHPfunctions.mt_rand();
@@ -149,7 +149,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testMt_rand_int_int() {
-        TestUtils.log(this.getClass(), "mt_rand");
+        logger.info("mt_rand");
         
         int min = 0;
         int max = 10;
@@ -163,7 +163,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testArray_flip() {
-        TestUtils.log(this.getClass(), "array_flip");
+        logger.info("array_flip");
         Map<String, Integer> original = new HashMap<>();
         original.put("1", 10);
         original.put("2", 11);
@@ -184,7 +184,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testShuffle() {
-        TestUtils.log(this.getClass(), "shuffle");
+        logger.info("shuffle");
         
         Integer[] result = {1,2,3,4,5};
         Integer[] expResult = {2,3,4,5,1};
@@ -197,7 +197,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testPreg_replace_3args_1() {
-        TestUtils.log(this.getClass(), "preg_replace");
+        logger.info("preg_replace");
         String regex = "\\s+";
         String replacement = " ";
         String subject = "a   a";
@@ -211,7 +211,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testPreg_replace_3args_2() {
-        TestUtils.log(this.getClass(), "preg_replace");
+        logger.info("preg_replace");
         Pattern pattern = Pattern.compile("\\s+");
         String replacement = " ";
         String subject = "a   a";
@@ -225,7 +225,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testPreg_match_String_String() {
-        TestUtils.log(this.getClass(), "preg_match");
+        logger.info("preg_match");
         String regex = "\\s{2,}";
         String subject = "a   a  a";
         int expResult = 2;
@@ -238,7 +238,7 @@ public class PHPfunctionsTest extends BaseTest {
      */
     @Test
     public void testPreg_match_Pattern_String() {
-        TestUtils.log(this.getClass(), "preg_match");
+        logger.info("preg_match");
         Pattern pattern = Pattern.compile("\\s{2,}");
         String subject = "a   a  a";
         int expResult = 2;

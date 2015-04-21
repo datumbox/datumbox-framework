@@ -32,7 +32,7 @@ public class PHPSimilarTextTest extends BaseTest {
      */
     @Test
     public void testSimilarityChars() {
-        TestUtils.log(this.getClass(), "similarityChars");
+        logger.info("similarityChars");
         String txt1 = "this is a fine text";
         String txt2 = "this is a great document";
         int expResult = 12;
@@ -45,7 +45,7 @@ public class PHPSimilarTextTest extends BaseTest {
      */
     @Test
     public void testSimilarityPercentage() {
-        TestUtils.log(this.getClass(), "similarityPercentage");
+        logger.info("similarityPercentage");
         String txt1 = "this is a fine text";
         String txt2 = "this is a great document";
         double expResult = 55.813953488372;

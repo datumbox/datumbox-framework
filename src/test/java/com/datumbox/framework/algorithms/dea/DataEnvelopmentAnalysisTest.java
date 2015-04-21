@@ -35,7 +35,7 @@ public class DataEnvelopmentAnalysisTest extends BaseTest {
      */
     @Test
     public void testEstimateEfficiency() {
-        TestUtils.log(this.getClass(), "estimateEfficiency");
+        logger.info("estimateEfficiency");
         Map<Object, DataEnvelopmentAnalysis.DeaRecord> id2DeaRecordMapDatabase = new LinkedHashMap<>();
         id2DeaRecordMapDatabase.put("Depot1", new DataEnvelopmentAnalysis.DeaRecord(new FlatDataList(Arrays.asList(40.0,55.0,30.0)), new FlatDataList(Arrays.asList(3.0,5.0))));
         id2DeaRecordMapDatabase.put("Depot2", new DataEnvelopmentAnalysis.DeaRecord(new FlatDataList(Arrays.asList(45.0,50.0,40.0)), new FlatDataList(Arrays.asList(2.5,4.5))));

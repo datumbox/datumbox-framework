@@ -32,7 +32,7 @@ public class BinomialTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         int k = 10;
         int n = 40;
         double p = 0.35;

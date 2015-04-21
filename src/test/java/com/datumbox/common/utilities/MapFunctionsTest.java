@@ -34,7 +34,7 @@ public class MapFunctionsTest extends BaseTest {
      */
     @Test
     public void testSelectMaxKeyValue() {
-        TestUtils.log(this.getClass(), "selectMaxKeyValue");
+        logger.info("selectMaxKeyValue");
         AssociativeArray keyValueMap = new AssociativeArray();
         keyValueMap.put("1", 1.0);
         keyValueMap.put("2", 2.0);
@@ -52,7 +52,7 @@ public class MapFunctionsTest extends BaseTest {
      */
     @Test
     public void testSelectMinKeyValue() {
-        TestUtils.log(this.getClass(), "selectMaxKeyValue");
+        logger.info("selectMaxKeyValue");
         AssociativeArray keyValueMap = new AssociativeArray();
         keyValueMap.put("1", 1);
         keyValueMap.put("2", 2);

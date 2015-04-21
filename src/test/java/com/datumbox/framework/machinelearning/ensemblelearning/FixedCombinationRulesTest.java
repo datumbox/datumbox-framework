@@ -60,7 +60,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testSum() {
-        TestUtils.log(this.getClass(), "sum");
+        logger.info("sum");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -79,7 +79,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testAverage() {
-        TestUtils.log(this.getClass(), "average");
+        logger.info("average");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -99,7 +99,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testWeightedAverage() {
-        TestUtils.log(this.getClass(), "weightedAverage");
+        logger.info("weightedAverage");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         AssociativeArray classifierWeights = new AssociativeArray();
         classifierWeights.put("Classifier1", 0.5);
@@ -123,7 +123,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testMedian() {
-        TestUtils.log(this.getClass(), "median");
+        logger.info("median");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -142,7 +142,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testMaximum() {
-        TestUtils.log(this.getClass(), "maximum");
+        logger.info("maximum");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -161,7 +161,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testMinimum() {
-        TestUtils.log(this.getClass(), "minimum");
+        logger.info("minimum");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -180,7 +180,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testProduct() {
-        TestUtils.log(this.getClass(), "product");
+        logger.info("product");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();
@@ -199,7 +199,7 @@ public class FixedCombinationRulesTest extends BaseTest {
      */
     @Test
     public void testMajorityVote() {
-        TestUtils.log(this.getClass(), "majorityVote");
+        logger.info("majorityVote");
         DataTable2D classifierClassProbabilityMatrix = getClassifierClassProbabilityMatrix();
         
         AssociativeArray expResult = new AssociativeArray();

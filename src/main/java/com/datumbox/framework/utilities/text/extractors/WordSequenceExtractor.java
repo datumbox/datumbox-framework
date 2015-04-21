@@ -16,7 +16,6 @@
 package com.datumbox.framework.utilities.text.extractors;
 
 import com.datumbox.framework.utilities.text.tokenizers.Tokenizer;
-import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

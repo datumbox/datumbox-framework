@@ -33,7 +33,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testChisquareCdf() {
-        TestUtils.log(this.getClass(), "ChisquareCdf");
+        logger.info("ChisquareCdf");
         double x = 3.0;
         int df = 10;
         double expResult = 0.018575928421771;
@@ -46,7 +46,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testGaussCdf() {
-        TestUtils.log(this.getClass(), "GaussCdf");
+        logger.info("GaussCdf");
         double z = 3.0;
         double expResult = 0.9986501025724;
         double result = ContinuousDistributions.GaussCdf(z);
@@ -58,7 +58,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testLogGamma() {
-        TestUtils.log(this.getClass(), "LogGamma");
+        logger.info("LogGamma");
         double Z = 3.0;
         double expResult = 0.69314718044741;
         double result = ContinuousDistributions.LogGamma(Z);
@@ -70,7 +70,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testStudentsCdf() {
-        TestUtils.log(this.getClass(), "StudentsCdf");
+        logger.info("StudentsCdf");
         double x = 3.0;
         int df = 10;
         double expResult = 0.99332817273466;
@@ -83,7 +83,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testExponentialCdf() {
-        TestUtils.log(this.getClass(), "ExponentialCdf");
+        logger.info("ExponentialCdf");
         double x = 3.0;
         double lamda = 10.0;
         double expResult = 0.99999999999991;
@@ -96,7 +96,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testBetaCdf() {
-        TestUtils.log(this.getClass(), "BetaCdf");
+        logger.info("BetaCdf");
         double x = 0.9;
         double a = 10.0;
         double b = 2.0;
@@ -110,7 +110,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testFCdf() {
-        TestUtils.log(this.getClass(), "FCdf");
+        logger.info("FCdf");
         double x = 3.0;
         int f1 = 10;
         int f2 = 2;
@@ -124,7 +124,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testGammaCdf() {
-        TestUtils.log(this.getClass(), "GammaCdf");
+        logger.info("GammaCdf");
         double x = 9.0;
         double a = 10.0;
         double b = 2.0;
@@ -138,7 +138,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testUniformCdf() {
-        TestUtils.log(this.getClass(), "UniformCdf");
+        logger.info("UniformCdf");
         double x = 3.0;
         double a = 2.0;
         double b = 10.0;
@@ -152,7 +152,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testKolmogorov() {
-        TestUtils.log(this.getClass(), "Kolmogorov");
+        logger.info("Kolmogorov");
         double z = 2.0;
         double expResult = 0.99932907474422;
         double result = ContinuousDistributions.Kolmogorov(z);
@@ -164,7 +164,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testGaussInverseCdf() {
-        TestUtils.log(this.getClass(), "GaussInverseCdf");
+        logger.info("GaussInverseCdf");
         double p = 0.32;
         double expResult = -0.46769879942903;
         double result = ContinuousDistributions.GaussInverseCdf(p);
@@ -176,7 +176,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testChisquareInverseCdf() {
-        TestUtils.log(this.getClass(), "ChisquareInverseCdf");
+        logger.info("ChisquareInverseCdf");
         double p = 0.32;
         int df = 10;
         double expResult = 11.498788492223;
@@ -189,7 +189,7 @@ public class ContinuousDistributionsTest extends BaseTest {
      */
     @Test
     public void testNormalQuantile() {
-        TestUtils.log(this.getClass(), "normalQuantile");
+        logger.info("normalQuantile");
         double p = 0.32;
         double mu = 1.0;
         double sigma = 1.0;

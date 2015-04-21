@@ -32,7 +32,7 @@ public class NormalOneSampleTest extends BaseTest {
      */
     @Test
     public void testTestMean() {
-        TestUtils.log(this.getClass(), "testMean");
+        logger.info("testMean");
         double xbar = 215.0;
         int n = 60;
         double H0mean = 200.0;
@@ -49,7 +49,7 @@ public class NormalOneSampleTest extends BaseTest {
      */
     @Test
     public void testTestSum() {
-        TestUtils.log(this.getClass(), "testSum");
+        logger.info("testSum");
         double xsum = 65.3;
         int n = 100;
         double H0sum = 0.65;
@@ -66,7 +66,7 @@ public class NormalOneSampleTest extends BaseTest {
      */
     @Test
     public void testTestPercentage() {
-        TestUtils.log(this.getClass(), "testPercentage");
+        logger.info("testPercentage");
         double pbar = 0.60;
         int n = 100;
         double H0p = 0.65;

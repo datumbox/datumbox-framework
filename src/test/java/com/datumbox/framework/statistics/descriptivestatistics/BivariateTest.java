@@ -155,7 +155,7 @@ public class BivariateTest extends BaseTest {
      */
     @Test
     public void testCovarianceMatrix() {
-        TestUtils.log(this.getClass(), "covarianceMatrix");
+        logger.info("covarianceMatrix");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -189,7 +189,7 @@ public class BivariateTest extends BaseTest {
      */
     @Test
     public void testPearsonMatrix() {
-        TestUtils.log(this.getClass(), "pearsonMatrix");
+        logger.info("pearsonMatrix");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -223,7 +223,7 @@ public class BivariateTest extends BaseTest {
      */
     @Test
     public void testSpearmanMatrix() {
-        TestUtils.log(this.getClass(), "spearmanMatrix");
+        logger.info("spearmanMatrix");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -258,7 +258,7 @@ public class BivariateTest extends BaseTest {
      */
     @Test
     public void testKendalltauMatrix() {
-        TestUtils.log(this.getClass(), "kendalltauMatrix");
+        logger.info("kendalltauMatrix");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

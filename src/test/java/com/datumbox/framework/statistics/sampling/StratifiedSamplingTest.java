@@ -77,7 +77,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testWeightedProbabilitySampling() {
-        TestUtils.log(this.getClass(), "weightedProbabilitySampling");
+        logger.info("weightedProbabilitySampling");
         AssociativeArray2D strataFrequencyTable = new AssociativeArray2D();
         strataFrequencyTable.put2d("strata1", "1", 10);
         strataFrequencyTable.put2d("strata1", "2", 20);
@@ -109,7 +109,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testRandomSampling() {
-        TestUtils.log(this.getClass(), "randomSampling");
+        logger.info("randomSampling");
         
         TransposeDataList strataIdList = new TransposeDataList();
         strataIdList.put("strata1", new FlatDataList(Arrays.asList(new Object[]{"1","2","3","4"})));
@@ -132,7 +132,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testMean() {
-        TestUtils.log(this.getClass(), "mean");
+        logger.info("mean");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 6.4888888888889;
@@ -145,7 +145,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testVariance() {
-        TestUtils.log(this.getClass(), "variance");
+        logger.info("variance");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 9.43856960409;
@@ -158,7 +158,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testStd() {
-        TestUtils.log(this.getClass(), "std");
+        logger.info("std");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 3.0722255132211;
@@ -171,7 +171,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testXbarVariance() {
-        TestUtils.log(this.getClass(), "xbarVariance");
+        logger.info("xbarVariance");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         AssociativeArray nh = generateNh2();
         AssociativeArray populationNh = generatePopulationNh();
@@ -185,7 +185,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testXbarStd() {
-        TestUtils.log(this.getClass(), "xbarStd");
+        logger.info("xbarStd");
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         AssociativeArray nh = generateNh2();
         AssociativeArray populationNh = generatePopulationNh();
@@ -199,7 +199,7 @@ public class StratifiedSamplingTest extends BaseTest {
      */
     @Test
     public void testOptimumSampleSize() {
-        TestUtils.log(this.getClass(), "optimumSampleSize");
+        logger.info("optimumSampleSize");
         int n = 0;
         AssociativeArray populationNh = new AssociativeArray();
         populationNh.put(1,394);

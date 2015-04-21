@@ -32,7 +32,7 @@ public class StudentsOneSampleTest extends BaseTest {
      */
     @Test
     public void testTestMean() {
-        TestUtils.log(this.getClass(), "testMean");
+        logger.info("testMean");
         double xbar = 7.4;
         int n = 28;
         double H0mean = 7.0;
@@ -49,7 +49,7 @@ public class StudentsOneSampleTest extends BaseTest {
      */
     @Test
     public void testTestAutocorrelation() {
-        TestUtils.log(this.getClass(), "testAutocorrelation");
+        logger.info("testAutocorrelation");
         double pk = 0.2;
         int n = 50;
         boolean is_twoTailed = false;

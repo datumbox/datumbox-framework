@@ -33,7 +33,7 @@ public class FriedmanTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         DataTable2D dataTable = new DataTable2D();
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return true.
         dataTable.put2d(0,0,4); dataTable.put2d(0,1,7); dataTable.put2d(0,2,8); dataTable.put2d(0,3,6); dataTable.put2d(0,4,5); dataTable.put2d(0,5,5); 

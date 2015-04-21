@@ -42,7 +42,7 @@ public class TypeInference {
          * @return 
          */
         protected static Object parse(String s, DataType dataType) {
-            if(s==null || s.isEmpty() || s.toLowerCase().equals("null")) {
+            if(s==null || s.isEmpty() || "null".equalsIgnoreCase(s)) {
                 return null;
             }
 

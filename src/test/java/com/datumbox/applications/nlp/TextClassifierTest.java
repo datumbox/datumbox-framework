@@ -50,7 +50,7 @@ public class TextClassifierTest extends BaseTest {
      */
     @Test
     public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
-        TestUtils.log(this.getClass(), "TrainAndPredict");
+        logger.info("TrainAndPredict");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -63,7 +63,7 @@ public class TextClassifierTest extends BaseTest {
             dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         }
         catch(Exception ex) {
-            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+            logger.warn("Unable to download datasets, skipping test.");
             return;
         }
         
@@ -113,7 +113,7 @@ public class TextClassifierTest extends BaseTest {
             validationDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         }
         catch(Exception ex) {
-            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+            logger.warn("Unable to download datasets, skipping test.");
             return;
         }
         

@@ -35,7 +35,7 @@ public class SignRelatedSamplesTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         TransposeDataList transposeDataList = new TransposeDataList();
         transposeDataList.put(0, new FlatDataList(Arrays.asList(new Object[]{136,115,142,140,123,147,133,150,138,147,151,145,147.0})));
         transposeDataList.put(1, new FlatDataList(Arrays.asList(new Object[]{141.0,117,141,145,127,146,135,152,135,152,149,148,147})));

@@ -35,7 +35,7 @@ public class SpearmanCorrelationTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         TransposeDataList transposeDataList = new TransposeDataList();
         //Example from https://statistics.laerd.com/statistical-guides/spearmans-rank-order-correlation-statistical-guide.php. 
         //It should reject the null hypothesis and return true.

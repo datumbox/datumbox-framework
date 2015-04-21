@@ -35,7 +35,7 @@ public class LogrankTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Dimaki's Survival Non-parametrics notes. It should reject the null hypothesis and return true.
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{23,"16+","18+","20+","24+"})));

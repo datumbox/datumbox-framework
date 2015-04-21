@@ -35,7 +35,7 @@ public class KruskalWallisTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{82,93,86,87,99,95,93,89,96})));
         transposeDataCollection.put(1, new FlatDataCollection(Arrays.asList(new Object[]{81,85,93,91,84,88,84,92,81,92})));

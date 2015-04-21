@@ -35,7 +35,7 @@ public class PearsonCorrelationTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         TransposeDataList transposeDataList = new TransposeDataList();
         transposeDataList.put(0, new FlatDataList(Arrays.asList(new Object[]{64,61,84,70,88,92,72,77})));
         transposeDataList.put(1, new FlatDataList(Arrays.asList(new Object[]{20,16,34,23,27,32,18,22})));

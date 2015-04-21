@@ -40,7 +40,7 @@ public class CollaborativeFilteringTest extends BaseTest {
      */
     @Test
     public void testPredict() {
-        TestUtils.log(this.getClass(), "predict");
+        logger.info("predict");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

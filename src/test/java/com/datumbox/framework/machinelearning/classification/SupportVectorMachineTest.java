@@ -42,7 +42,7 @@ public class SupportVectorMachineTest extends BaseTest {
      */
     @Test
     public void testValidate() {
-        TestUtils.log(this.getClass(), "validate");
+        logger.info("validate");
         
         svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
@@ -102,7 +102,7 @@ public class SupportVectorMachineTest extends BaseTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        TestUtils.log(this.getClass(), "kFoldCrossValidation");
+        logger.info("kFoldCrossValidation");
         
         svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();

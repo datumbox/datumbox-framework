@@ -35,7 +35,7 @@ public class CombinatoricsTest extends BaseTest {
      */
     @Test
     public void testPermutations() {
-        TestUtils.log(this.getClass(), "permutations");
+        logger.info("permutations");
         Collection<List<String>> expResult = new ArrayList<>();
         expResult.add(new ArrayList<>(Arrays.asList("a","b","c")));
         expResult.add(new ArrayList<>(Arrays.asList("a","c","b")));
@@ -52,7 +52,7 @@ public class CombinatoricsTest extends BaseTest {
      */
     @Test
     public void testCombinations() {
-        TestUtils.log(this.getClass(), "combinations");
+        logger.info("combinations");
         Collection<List<String>> expResult = new ArrayList<>();
         expResult.add(new ArrayList<>(Arrays.asList("a","b")));
         expResult.add(new ArrayList<>(Arrays.asList("a","c")));

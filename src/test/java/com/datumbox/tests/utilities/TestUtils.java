@@ -36,7 +36,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import static org.junit.Assert.assertEquals;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods used only by the JUnit tests.
@@ -68,38 +67,37 @@ public class TestUtils {
     }
     
     public static URI getRemoteFile(URL url) {
-        File tmpFile = null;
         try {
-            tmpFile = File.createTempFile("datumbox", ".tmp");
+            File tmpFile = File.createTempFile("datumbox", ".tmp");
             tmpFile.deleteOnExit();
-        } 
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        try (DataInputStream in = new DataInputStream(new BufferedInputStream(url.openStream()));
-             DataOutputStream out = new DataOutputStream(new FileOutputStream(tmpFile))) {
-            
-            int n;
-            byte[] buffer = new byte[4096];
-            while ((n = in.read(buffer)) != -1) {
-                out.write(buffer, 0, n);
-            }
-            
-            return tmpFile.toURI();
+            URLConnection con = url.openConnection();
+            con.setConnectTimeout(3000);
+            con.setReadTimeout(5000);
+            try (DataInputStream in = new DataInputStream(new BufferedInputStream(con.getInputStream()));
+                 DataOutputStream out = new DataOutputStream(new FileOutputStream(tmpFile))) {
+
+                int n;
+                byte[] buffer = new byte[4096];
+                while ((n = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, n);
+                }
+
+                return tmpFile.toURI();
+            } 
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public static String webRequest(String url) {
+    public static String webRequest(String urlStr) {
         StringBuilder sb = new StringBuilder();
         try {
-            URL yahoo = new URL(url);
-            URLConnection yc = yahoo.openConnection();
-            try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            yc.getInputStream()))) {
+            URL url = new URL(urlStr);
+            URLConnection con = url.openConnection();
+            con.setConnectTimeout(3000);
+            con.setReadTimeout(5000);
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     sb.append(inputLine);
@@ -111,10 +109,6 @@ public class TestUtils {
         } 
         
         return sb.toString();
-    }
-    
-    public static final synchronized void log(Class klass, String msg) {
-        LoggerFactory.getLogger(klass).info(msg);
     }
 
     public static DatabaseConfiguration getDBConfig() {

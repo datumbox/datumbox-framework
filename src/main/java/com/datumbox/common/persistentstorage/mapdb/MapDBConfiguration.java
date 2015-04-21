@@ -51,8 +51,8 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     public void load(Properties properties) {
         outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
         cacheSize = Integer.valueOf(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
-        compressed = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.compressed").toLowerCase());
-        transacted = "true".equals(properties.getProperty("dbConfig.MapDBConfiguration.transacted").toLowerCase());
+        compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
+        transacted = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.transacted"));
     }
 
     public String getOutputFolder() {

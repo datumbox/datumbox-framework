@@ -45,7 +45,7 @@ public class SmoothingTest extends BaseTest {
      */
     @Test
     public void testSimpleMovingAverage() {
-        TestUtils.log(this.getClass(), "simpleMovingAverage");
+        logger.info("simpleMovingAverage");
         FlatDataList flatDataList = generateFlatDataList();
         int N = 3;
         double expResult = 23.0;
@@ -58,7 +58,7 @@ public class SmoothingTest extends BaseTest {
      */
     @Test
     public void testSimpleMovingAverageQuick() {
-        TestUtils.log(this.getClass(), "simpleMovingAverageQuick");
+        logger.info("simpleMovingAverageQuick");
         double Yt = 23.5;
         double YtminusN = 20.0;
         double Ft = 23.0;
@@ -73,7 +73,7 @@ public class SmoothingTest extends BaseTest {
      */
     @Test
     public void testWeightedMovingAverage() {
-        TestUtils.log(this.getClass(), "weightedMovingAverage");
+        logger.info("weightedMovingAverage");
         FlatDataList flatDataList = generateFlatDataList();
         int N = 3;
         double expResult =22.0;
@@ -86,7 +86,7 @@ public class SmoothingTest extends BaseTest {
      */
     @Test
     public void testSimpleExponentialSmoothing() {
-        TestUtils.log(this.getClass(), "simpleExponentialSmoothing");
+        logger.info("simpleExponentialSmoothing");
         FlatDataList flatDataList = generateFlatDataList();
         double a = 0.9;
         double expResult = 23.240433133179;
@@ -99,7 +99,7 @@ public class SmoothingTest extends BaseTest {
      */
     @Test
     public void testSimpleExponentialSmoothingQuick() {
-        TestUtils.log(this.getClass(), "simpleExponentialSmoothingQuick");
+        logger.info("simpleExponentialSmoothingQuick");
         double Ytminus1 = 23.5;
         double Stminus1 = 23.240433133179;
         double a = 0.9;
@@ -113,7 +113,7 @@ public class SmoothingTest extends BaseTest {
      */
     @Test
     public void testHoltWintersSmoothing() {
-        TestUtils.log(this.getClass(), "holtWintersSmoothing");
+        logger.info("holtWintersSmoothing");
         FlatDataList flatDataList = generateFlatDataList();
         int season_length = 3;
         double alpha = 0.2;

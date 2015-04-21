@@ -44,7 +44,7 @@ public class ModelerTest extends BaseTest {
      */
     @Test
     public void testTrainAndValidate() {
-        TestUtils.log(this.getClass(), "testTrainAndValidate");
+        logger.info("testTrainAndValidate");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -89,7 +89,7 @@ public class ModelerTest extends BaseTest {
         instance = null;
         
         
-        TestUtils.log(this.getClass(), "validate");
+        logger.info("validate");
         
         
         instance = new Modeler(dbName, dbConf);

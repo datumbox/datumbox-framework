@@ -35,7 +35,7 @@ public class LevenesIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestVariances() {
-        TestUtils.log(this.getClass(), "testVariances");
+        logger.info("testVariances");
         TransposeDataCollection transposeDataCollection = new TransposeDataCollection();
         
         transposeDataCollection.put(0, new FlatDataCollection(Arrays.asList(new Object[]{60.8,57.0,65.0,58.6,61.7})));

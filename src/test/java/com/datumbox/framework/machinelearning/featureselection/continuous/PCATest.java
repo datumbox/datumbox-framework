@@ -40,7 +40,7 @@ public class PCATest extends BaseTest {
      */
     @Test
     public void testSelectFeatures() {
-        TestUtils.log(this.getClass(), "selectFeatures");
+        logger.info("selectFeatures");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

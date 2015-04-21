@@ -32,7 +32,7 @@ public class McNemarTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Wikipedia: http://en.wikipedia.org/wiki/McNemar's_test 
         //It should reject the null hypothesis and return true.
         int n11 = 101;

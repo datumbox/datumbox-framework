@@ -35,7 +35,7 @@ public class RanksTest extends BaseTest {
      */
     @Test
     public void testGetRanksFromValues() {
-        TestUtils.log(this.getClass(), "getRanksFromValues");
+        logger.info("getRanksFromValues");
         FlatDataList flatDataCollection =  new FlatDataList(Arrays.asList(new Object[]{50,10,10,30,40}));
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{5.0,1.5,1.5,3.0,4.0}));
         AssociativeArray expResult2 = new AssociativeArray(new ConcurrentSkipListMap<>());

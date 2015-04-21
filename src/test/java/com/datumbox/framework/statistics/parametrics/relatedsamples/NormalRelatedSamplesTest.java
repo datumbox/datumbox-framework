@@ -32,7 +32,7 @@ public class NormalRelatedSamplesTest extends BaseTest {
      */
     @Test
     public void testTestMean() {
-        TestUtils.log(this.getClass(), "testMean");
+        logger.info("testMean");
         double dbar = 2.2;
         int n = 30;
         double dbarStd = 1.924;

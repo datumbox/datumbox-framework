@@ -18,10 +18,8 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -43,7 +41,7 @@ public class DatasetTest extends BaseTest {
      */
     @Test
     public void testParseCSVFile() {
-        TestUtils.log(this.getClass(), "parseCSVFile");
+        logger.info("parseCSVFile");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -51,8 +49,8 @@ public class DatasetTest extends BaseTest {
         try {
             fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile());
         }
-        catch(MalformedURLException | FileNotFoundException ex) {
-            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+        catch(Exception ex) {
+            logger.warn("Unable to download datasets, skipping test.");
             return;
         }
         
@@ -124,7 +122,7 @@ public class DatasetTest extends BaseTest {
      */
     @Test
     public void testCopyCollection2Array() {
-        TestUtils.log(this.getClass(), "copyCollection2Array");
+        logger.info("copyCollection2Array");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{1,2,3,4,5}));
         Object[] expResult = new Object[]{1,2,3,4,5};
         Object[] result = flatDataCollection.<Object>copyCollection2Array(Object.class);
@@ -136,7 +134,7 @@ public class DatasetTest extends BaseTest {
      */
     @Test
     public void testGetColumns() {
-        TestUtils.log(this.getClass(), "getColumns");
+        logger.info("getColumns");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -176,7 +174,7 @@ public class DatasetTest extends BaseTest {
      */
     @Test
     public void testExtractColumnValues() {
-        TestUtils.log(this.getClass(), "extractColumnValues");
+        logger.info("extractColumnValues");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -212,7 +210,7 @@ public class DatasetTest extends BaseTest {
      */
     @Test
     public void testExtractColumnValuesByY() {
-        TestUtils.log(this.getClass(), "extractColumnValuesByY");
+        logger.info("extractColumnValuesByY");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

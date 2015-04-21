@@ -33,7 +33,7 @@ public class URLParserTest extends BaseTest {
      */
     @Test
     public void testToAbsolute_String_String() throws Exception {
-        TestUtils.log(this.getClass(), "toAbsolute");
+        logger.info("toAbsolute");
         String base = "http://user:password@www.example.com:8080/to/path/document?arg1=val1&arg2=val2#part";
         String relative = "../path2/doc2?a=1&b=2#part2";
         String expResult = "http://user:password@www.example.com:8080/to/path2/doc2?a=1&b=2#part2";
@@ -46,7 +46,7 @@ public class URLParserTest extends BaseTest {
      */
     @Test
     public void testSplitURL_String() throws Exception {
-        TestUtils.log(this.getClass(), "splitURL");
+        logger.info("splitURL");
         String URLString = "http://user:password@www.example.com:8080/to/path/document?arg1=val1&arg2=val2#part";
         Map<URLParser.URLParts, String> expResult = new HashMap<>();
         expResult.put(URLParser.URLParts.PROTOCOL, "http");
@@ -68,7 +68,7 @@ public class URLParserTest extends BaseTest {
      */
     @Test
     public void testJoinURL() throws Exception {
-        TestUtils.log(this.getClass(), "joinURL");
+        logger.info("joinURL");
         Map<URLParser.URLParts, String> urlParts = new HashMap<>();
         urlParts.put(URLParser.URLParts.PROTOCOL, "http");
         urlParts.put(URLParser.URLParts.PATH, "/to/path/document");
@@ -90,7 +90,7 @@ public class URLParserTest extends BaseTest {
      */
     @Test
     public void testSplitDomain1() {
-        TestUtils.log(this.getClass(), "splitDomain1");
+        logger.info("splitDomain1");
         String domain = "www.cars.example.co.uk";
         Map<URLParser.DomainParts, String> expResult = new HashMap<>();
         expResult.put(URLParser.DomainParts.TLD, "co.uk");
@@ -107,7 +107,7 @@ public class URLParserTest extends BaseTest {
      */
     @Test
     public void testSplitDomain2() {
-        TestUtils.log(this.getClass(), "splitDomain2");
+        logger.info("splitDomain2");
         String domain = "example.com";
         Map<URLParser.DomainParts, String> expResult = new HashMap<>();
         expResult.put(URLParser.DomainParts.TLD, "com");
@@ -124,7 +124,7 @@ public class URLParserTest extends BaseTest {
      */
     @Test
     public void testSplitDomain3() {
-        TestUtils.log(this.getClass(), "splitDomain3");
+        logger.info("splitDomain3");
         String domain = "www.example.com";
         Map<URLParser.DomainParts, String> expResult = new HashMap<>();
         expResult.put(URLParser.DomainParts.TLD, "com");

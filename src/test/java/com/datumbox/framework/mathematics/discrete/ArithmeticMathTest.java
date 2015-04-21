@@ -32,7 +32,7 @@ public class ArithmeticMathTest extends BaseTest {
      */
     @Test
     public void testFactorial() {
-        TestUtils.log(this.getClass(), "factorial");
+        logger.info("factorial");
         int k = 10;
         double expResult = 3628800.0;
         double result = ArithmeticMath.factorial(k);
@@ -44,7 +44,7 @@ public class ArithmeticMathTest extends BaseTest {
      */
     @Test
     public void testCombination() {
-        TestUtils.log(this.getClass(), "combination");
+        logger.info("combination");
         int n = 10;
         int k = 3;
         double expResult = 120.0;

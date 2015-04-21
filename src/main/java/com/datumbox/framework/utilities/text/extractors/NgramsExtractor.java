@@ -17,7 +17,6 @@ package com.datumbox.framework.utilities.text.extractors;
 
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.utilities.text.tokenizers.Tokenizer;
-import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -32,7 +32,7 @@ public class StudentsIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestMeansUnknownNotEqualVars() {
-        TestUtils.log(this.getClass(), "testMeansUnknownNotEqualVars");
+        logger.info("testMeansUnknownNotEqualVars");
         double xbar = 215.0;
         double ybar = 200.0;
         int n = 60;
@@ -51,7 +51,7 @@ public class StudentsIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestMeansUnknownEqualVars() {
-        TestUtils.log(this.getClass(), "testMeansUnknownEqualVars");
+        logger.info("testMeansUnknownEqualVars");
         double xbar = 14.14;
         double ybar = 12.08;
         int n = 15;

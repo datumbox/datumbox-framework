@@ -33,7 +33,7 @@ public class CETRTest extends BaseTest {
      */
     @Test
     public void testExtract() {
-        TestUtils.log(this.getClass(), "extract");
+        logger.info("extract");
          
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -44,7 +44,7 @@ public class CETRTest extends BaseTest {
             text = TestUtils.webRequest("http://www.example.org/");
         }
         catch(Exception ex) {
-            TestUtils.log(this.getClass(), "Unable to download datasets, skipping test.");
+            logger.warn("Unable to download datasets, skipping test.");
             return;
         }
         

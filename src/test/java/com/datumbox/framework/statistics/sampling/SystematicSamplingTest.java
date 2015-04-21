@@ -42,7 +42,7 @@ public class SystematicSamplingTest extends BaseTest {
      */
     @Test
     public void testRandomSampling() {
-        TestUtils.log(this.getClass(), "randomSampling");
+        logger.info("randomSampling");
         FlatDataList idList = new FlatDataList(Arrays.asList(new Object[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}));
         int n = 6;
         boolean randomizeRecords = false;
@@ -57,7 +57,7 @@ public class SystematicSamplingTest extends BaseTest {
      */
     @Test
     public void testMean() {
-        TestUtils.log(this.getClass(), "mean");
+        logger.info("mean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 103.41666666667;
         double result = SystematicSampling.mean(flatDataCollection);
@@ -69,7 +69,7 @@ public class SystematicSamplingTest extends BaseTest {
      */
     @Test
     public void testXbarVariance() {
-        TestUtils.log(this.getClass(), "xbarVariance");
+        logger.info("xbarVariance");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 405.75;
         double result = SystematicSampling.xbarVariance(flatDataCollection);
@@ -81,7 +81,7 @@ public class SystematicSamplingTest extends BaseTest {
      */
     @Test
     public void testXbarStd() {
-        TestUtils.log(this.getClass(), "xbarStd");
+        logger.info("xbarStd");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 20.143237078484;
         double result = SystematicSampling.xbarStd(flatDataCollection);

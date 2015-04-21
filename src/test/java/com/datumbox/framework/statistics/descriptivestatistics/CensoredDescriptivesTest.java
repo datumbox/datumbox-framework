@@ -44,7 +44,7 @@ public class CensoredDescriptivesTest extends BaseTest {
      */
     @Test
     public void testMedian() {
-        TestUtils.log(this.getClass(), "median");
+        logger.info("median");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 9.6111111111111;
         double result = CensoredDescriptives.median(survivalFunction);
@@ -56,7 +56,7 @@ public class CensoredDescriptivesTest extends BaseTest {
      */
     @Test
     public void testMean() {
-        TestUtils.log(this.getClass(), "mean");
+        logger.info("mean");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 10.0875;
         double result = CensoredDescriptives.mean(survivalFunction);
@@ -68,7 +68,7 @@ public class CensoredDescriptivesTest extends BaseTest {
      */
     @Test
     public void testMeanVariance() {
-        TestUtils.log(this.getClass(), "meanVariance");
+        logger.info("meanVariance");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 2.7874113520408;
         double result = CensoredDescriptives.meanVariance(survivalFunction);
@@ -80,7 +80,7 @@ public class CensoredDescriptivesTest extends BaseTest {
      */
     @Test
     public void testMeanStd() {
-        TestUtils.log(this.getClass(), "meanStd");
+        logger.info("meanStd");
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 1.6695542375259;
         double result = CensoredDescriptives.meanStd(survivalFunction);

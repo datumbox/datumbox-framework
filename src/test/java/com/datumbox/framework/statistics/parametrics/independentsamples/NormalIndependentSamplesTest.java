@@ -32,7 +32,7 @@ public class NormalIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestMeans() {
-        TestUtils.log(this.getClass(), "testMeans");
+        logger.info("testMeans");
         double xbar = 215.0;
         double ybar = 200.0;
         int n = 60;
@@ -51,7 +51,7 @@ public class NormalIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestPercentages() {
-        TestUtils.log(this.getClass(), "testPercentages");
+        logger.info("testPercentages");
         double p1bar = 0.54;
         double p2bar = 0.61;
         int n1 = 1000;
@@ -68,7 +68,7 @@ public class NormalIndependentSamplesTest extends BaseTest {
      */
     @Test
     public void testTestOddsRatio() {
-        TestUtils.log(this.getClass(), "testOddsRatio");
+        logger.info("testOddsRatio");
         int n11 = 131;
         int n12 = 33;
         int n21 = 251;

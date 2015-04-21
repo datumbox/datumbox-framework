@@ -19,6 +19,8 @@ package com.datumbox.tests.bases;
 import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.configuration.TestConfiguration;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The base abstract class for all the Tests of the framework.
@@ -27,9 +29,12 @@ import org.junit.Before;
  */
 public abstract class BaseTest {
     
+    protected final Logger logger;
+    
     public BaseTest() {
         //Set the global seed (Optional)
         RandomGenerator.setGlobalSeed(TestConfiguration.RANDOM_SEED);
+        logger = LoggerFactory.getLogger(this.getClass());
     }
     
     @Before

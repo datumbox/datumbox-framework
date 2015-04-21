@@ -33,7 +33,7 @@ public class CochranQTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return True.
         DataTable2D dataTable = new DataTable2D();
         dataTable.put2d(0, 0, 0); dataTable.put2d(0, 1, 0); dataTable.put2d(0, 2, 0); 

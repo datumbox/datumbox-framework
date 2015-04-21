@@ -48,7 +48,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testSum() {
-        TestUtils.log(this.getClass(), "sum");
+        logger.info("sum");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 214.71;
         double result = Descriptives.sum(flatDataCollection);
@@ -60,7 +60,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMean() {
-        TestUtils.log(this.getClass(), "mean");
+        logger.info("mean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 5.36775;
         double result = Descriptives.mean(flatDataCollection);
@@ -72,7 +72,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMeanSE() {
-        TestUtils.log(this.getClass(), "meanSE");
+        logger.info("meanSE");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 3.8698920757412;
         double result = Descriptives.meanSE(flatDataCollection);
@@ -84,7 +84,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMedian() {
-        TestUtils.log(this.getClass(), "median");
+        logger.info("median");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 2.565;
         double result = Descriptives.median(flatDataCollection);
@@ -96,7 +96,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMin() {
-        TestUtils.log(this.getClass(), "min");
+        logger.info("min");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = -36.4;
         double result = Descriptives.min(flatDataCollection);
@@ -108,7 +108,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMax() {
-        TestUtils.log(this.getClass(), "max");
+        logger.info("max");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 50.85;
         double result = Descriptives.max(flatDataCollection);
@@ -120,7 +120,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testRange() {
-        TestUtils.log(this.getClass(), "range");
+        logger.info("range");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 87.25;
         double result = Descriptives.range(flatDataCollection);
@@ -132,7 +132,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testGeometricMean() {
-        TestUtils.log(this.getClass(), "geometricMean");
+        logger.info("geometricMean");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{56.0,75.0,45.0,71.0,61.0,64.0,58.0,80.0,76.0,61.0}));
         double expResult = 63.85415130126;
         double result = Descriptives.geometricMean(flatDataCollection);
@@ -144,7 +144,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testHarmonicMean() {
-        TestUtils.log(this.getClass(), "harmonicMean");
+        logger.info("harmonicMean");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 9.7666088743776;
         double result = Descriptives.harmonicMean(flatDataCollection);
@@ -156,7 +156,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testVariance() {
-        TestUtils.log(this.getClass(), "variance");
+        logger.info("variance");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         boolean isSample = true;
         double expResult = 599.04258711538;
@@ -169,7 +169,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testStd() {
-        TestUtils.log(this.getClass(), "std");
+        logger.info("std");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         boolean isSample = true;
         double expResult = 24.475346516758;
@@ -182,7 +182,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testCv() {
-        TestUtils.log(this.getClass(), "cv");
+        logger.info("cv");
         double std = 24.475346516758;
         double mean = 5.36775;
         double expResult = 4.5597031375824;
@@ -195,7 +195,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMoment_Collection_int() {
-        TestUtils.log(this.getClass(), "moment");
+        logger.info("moment");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         int r = 3;
         double expResult = 3484.6106601128;
@@ -208,7 +208,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMoment_3args() {
-        TestUtils.log(this.getClass(), "moment");
+        logger.info("moment");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         int r = 3;
         double mean = 5.36775;
@@ -222,7 +222,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testKurtosis() {
-        TestUtils.log(this.getClass(), "kurtosis");
+        logger.info("kurtosis");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = -0.74454696650836;
         double result = Descriptives.kurtosis(flatDataCollection);
@@ -234,7 +234,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testKurtosisSE() {
-        TestUtils.log(this.getClass(), "kurtosisSE");
+        logger.info("kurtosisSE");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.77459666924148;
         double result = Descriptives.kurtosisSE(flatDataCollection);
@@ -246,7 +246,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testSkewness() {
-        TestUtils.log(this.getClass(), "skewness");
+        logger.info("skewness");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.24686572127408;
         double result = Descriptives.skewness(flatDataCollection);
@@ -258,7 +258,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testSkewnessSE() {
-        TestUtils.log(this.getClass(), "skewnessSE");
+        logger.info("skewnessSE");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.37378336538587;
         double result = Descriptives.skewnessSE(flatDataCollection);
@@ -270,7 +270,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testPercentiles() {
-        TestUtils.log(this.getClass(), "percentiles");
+        logger.info("percentiles");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         int cutPoints = 4;
         AssociativeArray expResult = new AssociativeArray();
@@ -290,7 +290,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testQuartiles() {
-        TestUtils.log(this.getClass(), "quartiles");
+        logger.info("quartiles");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{0,1,2,3}));
         AssociativeArray expResult = new AssociativeArray();
         expResult.put(25.0, 0.25);
@@ -305,7 +305,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testCovariance() {
-        TestUtils.log(this.getClass(), "covariance");
+        logger.info("covariance");
         
         TransposeDataList transposeDataList = new TransposeDataList();
         
@@ -323,7 +323,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testAutocorrelation() {
-        TestUtils.log(this.getClass(), "autocorrelation");
+        logger.info("autocorrelation");
         FlatDataList flatDataList = generateFlatDataCollection().toFlatDataList();
         int lags = 1;
         double expResult = -0.014242212135952;
@@ -336,7 +336,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testFrequencies() {
-        TestUtils.log(this.getClass(), "frequencies");
+        logger.info("frequencies");
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{1.0,1.0,1.0,2.0,3.0,4.3,2.0}));
         AssociativeArray expResult = new AssociativeArray();
         expResult.put(1.0, 3);
@@ -352,7 +352,7 @@ public class DescriptivesTest extends BaseTest {
      */
     @Test
     public void testMode() {
-        TestUtils.log(this.getClass(), "mode");
+        logger.info("mode");
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         flatDataCollection.add(4.65);
         flatDataCollection.add(4.65);

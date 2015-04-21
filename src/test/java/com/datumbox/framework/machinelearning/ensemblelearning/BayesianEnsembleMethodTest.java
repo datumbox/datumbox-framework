@@ -40,7 +40,7 @@ public class BayesianEnsembleMethodTest extends BaseTest {
      */
     @Test
     public void testValidate() {
-        TestUtils.log(this.getClass(), "validate");
+        logger.info("validate");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

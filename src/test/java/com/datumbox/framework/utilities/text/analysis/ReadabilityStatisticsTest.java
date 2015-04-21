@@ -34,7 +34,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testFlesch_kincaid_reading_ease() {
-        TestUtils.log(this.getClass(), "flesch_kincaid_reading_ease");
+        logger.info("flesch_kincaid_reading_ease");
         String strText = TEST_STRING;
         double expResult = -188.4;
         double result = ReadabilityStatistics.flesch_kincaid_reading_ease(strText);
@@ -46,7 +46,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testFlesch_kincaid_grade_level() {
-        TestUtils.log(this.getClass(), "flesch_kincaid_grade_level");
+        logger.info("flesch_kincaid_grade_level");
         String strText = TEST_STRING;
         double expResult = 112.3;
         double result = ReadabilityStatistics.flesch_kincaid_grade_level(strText);
@@ -58,7 +58,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testGunning_fog_score() {
-        TestUtils.log(this.getClass(), "gunning_fog_score");
+        logger.info("gunning_fog_score");
         String strText = TEST_STRING;
         double expResult = 118.0;
         double result = ReadabilityStatistics.gunning_fog_score(strText);
@@ -70,7 +70,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testColeman_liau_index() {
-        TestUtils.log(this.getClass(), "coleman_liau_index");
+        logger.info("coleman_liau_index");
         String strText = TEST_STRING;
         double expResult = 6.8;
         double result = ReadabilityStatistics.coleman_liau_index(strText);
@@ -82,7 +82,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testSmog_index() {
-        TestUtils.log(this.getClass(), "smog_index");
+        logger.info("smog_index");
         String strText = TEST_STRING;
         double expResult = 14.1;
         double result = ReadabilityStatistics.smog_index(strText);
@@ -94,7 +94,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testAutomated_readability_index() {
-        TestUtils.log(this.getClass(), "automated_readability_index");
+        logger.info("automated_readability_index");
         String strText = TEST_STRING;
         double expResult = 143.2;
         double result = ReadabilityStatistics.automated_readability_index(strText);
@@ -106,7 +106,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testDale_chall_score() {
-        TestUtils.log(this.getClass(), "dale_chall_score");
+        logger.info("dale_chall_score");
         String strText = TEST_STRING;
         double expResult = 20.486603754266213;
         double result = ReadabilityStatistics.dale_chall_score(strText);
@@ -118,7 +118,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testDale_chall_grade() {
-        TestUtils.log(this.getClass(), "dale_chall_grade");
+        logger.info("dale_chall_grade");
         String strText = TEST_STRING;
         double expResult = 16.0;
         double result = ReadabilityStatistics.dale_chall_grade(strText);
@@ -130,7 +130,7 @@ public class ReadabilityStatisticsTest extends BaseTest {
      */
     @Test
     public void testSpache_score() {
-        TestUtils.log(this.getClass(), "spache_score");
+        logger.info("spache_score");
         String strText = TEST_STRING;
         double expResult = 41.523999999999994;
         double result = ReadabilityStatistics.spache_score(strText);

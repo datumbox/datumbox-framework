@@ -34,7 +34,7 @@ public class LjungBoxTest extends BaseTest {
      */
     @Test
     public void testTestAutocorrelation() {
-        TestUtils.log(this.getClass(), "testAutocorrelation");
+        logger.info("testAutocorrelation");
         FlatDataCollection pkList = new FlatDataCollection(Arrays.asList(new Object[]{0.810,0.631,0.469,0.349}));
         int n = 100;
         double aLevel = 0.05;

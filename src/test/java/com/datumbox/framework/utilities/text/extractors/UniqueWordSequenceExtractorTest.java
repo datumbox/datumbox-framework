@@ -33,7 +33,7 @@ public class UniqueWordSequenceExtractorTest extends BaseTest {
      */
     @Test
     public void testExtract() {
-        TestUtils.log(this.getClass(), "extract");
+        logger.info("extract");
         String text = "this is a text sequence that is amazing text sequence";
         UniqueWordSequenceExtractor instance = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         

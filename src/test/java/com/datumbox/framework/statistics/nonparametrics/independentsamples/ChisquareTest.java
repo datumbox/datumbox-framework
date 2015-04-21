@@ -33,7 +33,7 @@ public class ChisquareTest extends BaseTest {
      */
     @Test
     public void testTest() {
-        TestUtils.log(this.getClass(), "test");
+        logger.info("test");
         //Example from Dimaki's Non-parametrics notes. It should reject the null hypothesis and return True.
         DataTable2D dataTable = new DataTable2D();
         dataTable.put2d(0, 0, 13);

@@ -41,7 +41,7 @@ public class AdaboostTest extends BaseTest {
      */
     @Test
     public void testValidate() {
-        TestUtils.log(this.getClass(), "validate");
+        logger.info("validate");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
@@ -112,7 +112,7 @@ public class AdaboostTest extends BaseTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        TestUtils.log(this.getClass(), "kFoldCrossValidation");
+        logger.info("kFoldCrossValidation");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

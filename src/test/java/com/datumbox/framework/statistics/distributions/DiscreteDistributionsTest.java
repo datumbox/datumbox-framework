@@ -33,7 +33,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testBernoulli() {
-        TestUtils.log(this.getClass(), "Bernoulli");
+        logger.info("Bernoulli");
         boolean k = true;
         double p = 0.5;
         double expResult = 0.5;
@@ -46,7 +46,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testBernoulliCdf() {
-        TestUtils.log(this.getClass(), "BernoulliCdf");
+        logger.info("BernoulliCdf");
         int k = 1;
         double p = 0.5;
         double expResult = 1.0;
@@ -59,7 +59,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testBinomial() {
-        TestUtils.log(this.getClass(), "Binomial");
+        logger.info("Binomial");
         int k = 3;
         double p = 0.5;
         int n = 10;
@@ -73,7 +73,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testBinomialCdf() {
-        TestUtils.log(this.getClass(), "BinomialCdf");
+        logger.info("BinomialCdf");
         int k = 3;
         double p = 0.5;
         int n = 10;
@@ -87,7 +87,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testGeometric() {
-        TestUtils.log(this.getClass(), "Geometric");
+        logger.info("Geometric");
         int k = 3;
         double p = 0.5;
         double expResult = 0.125;
@@ -100,7 +100,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testGeometricCdf() {
-        TestUtils.log(this.getClass(), "GeometricCdf");
+        logger.info("GeometricCdf");
         int k = 3;
         double p = 0.5;
         double expResult = 0.875;
@@ -113,7 +113,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testNegativeBinomial() {
-        TestUtils.log(this.getClass(), "NegativeBinomial");
+        logger.info("NegativeBinomial");
         int n = 10;
         int r = 4;
         double p = 0.5;
@@ -127,7 +127,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testNegativeBinomialCdf() {
-        TestUtils.log(this.getClass(), "NegativeBinomialCdf");
+        logger.info("NegativeBinomialCdf");
         int n = 10;
         int r = 4;
         double p = 0.5;
@@ -141,7 +141,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testUniform() {
-        TestUtils.log(this.getClass(), "Uniform");
+        logger.info("Uniform");
         int n = 10;
         double expResult = 0.1;
         double result = DiscreteDistributions.Uniform(n);
@@ -153,7 +153,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testUniformCdf() {
-        TestUtils.log(this.getClass(), "UniformCdf");
+        logger.info("UniformCdf");
         int k = 3;
         int n = 10;
         double expResult = 0.3;
@@ -166,7 +166,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testHypergeometric() {
-        TestUtils.log(this.getClass(), "Hypergeometric");
+        logger.info("Hypergeometric");
         int k = 3;
         int n = 10;
         int Kp = 30;
@@ -181,7 +181,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testHypergeometricCdf() {
-        TestUtils.log(this.getClass(), "HypergeometricCdf");
+        logger.info("HypergeometricCdf");
         int k = 3;
         int n = 10;
         int Kp = 30;
@@ -196,7 +196,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testPoisson() {
-        TestUtils.log(this.getClass(), "Poisson");
+        logger.info("Poisson");
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.14037389583692;
@@ -209,7 +209,7 @@ public class DiscreteDistributionsTest extends BaseTest {
      */
     @Test
     public void testPoissonCdf() {
-        TestUtils.log(this.getClass(), "PoissonCdf");
+        logger.info("PoissonCdf");
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.26502591533403;
