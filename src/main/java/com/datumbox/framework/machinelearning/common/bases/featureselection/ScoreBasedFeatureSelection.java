@@ -57,7 +57,8 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
         
         logger.debug("Estimating the minPermittedScore");
         Double minPermittedScore=Ordering.<Double>natural().greatestOf(featureScores.values().iterator(), maxFeatures).get(maxFeatures-1);
-
+        //Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
+        
         //remove any entry with score less than the minimum permitted one
         logger.debug("Removing features with scores less than threshold");
         Iterator<Map.Entry<Object, Double>> it = featureScores.entrySet().iterator();
