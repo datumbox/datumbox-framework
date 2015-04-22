@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.mathematics.discrete;
 
-import com.google.common.collect.Collections2;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -29,23 +29,35 @@ import java.util.Set;
 public class Combinatorics {
     
     /**
-     * Returns the permutations of a collection. Uses Guava library's Collection2.
+     * Returns the permutations of a collection. 
+     * Ported from:
+     * http://stackoverflow.com/questions/10503392/java-code-for-permutations-of-a-list-of-numbers
      * 
      * @param <T>
      * @param elements
      * @return 
      */
     public static <T> Collection<List<T>> permutations(Collection<T> elements) {
-        Collection<List<T>> permutations = Collections2.permutations(elements);
-        
-        List<List<T>> result = new ArrayList<>();
-        for(List<T> internalList : permutations) {
-            result.add(new ArrayList<>(internalList));
+        Collection<List<T>> result = new ArrayList<>();
+        if (elements.isEmpty()) {
+            result.add(new LinkedList<>());
+            return result;
         }
         
+        List<T> rest = new LinkedList<>(elements);
+        T head = rest.remove(0);
+        for (List<T> permutations : permutations(rest)) {
+            List<List<T>> subLists = new ArrayList<>();
+            for (int i = 0; i <= permutations.size(); i++) {
+                List<T> subList = new ArrayList<>();
+                subList.addAll(permutations);
+                subList.add(i, head);
+                subLists.add(subList);
+            }
+            result.addAll(subLists);
+        }
         return result;
     }
-
     
     /**
      * Possible combinations of a list. 

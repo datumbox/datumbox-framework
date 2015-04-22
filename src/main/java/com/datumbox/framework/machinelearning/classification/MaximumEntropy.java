@@ -215,7 +215,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", true);
             Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();

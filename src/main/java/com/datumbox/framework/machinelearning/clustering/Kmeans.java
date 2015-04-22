@@ -587,7 +587,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         AssociativeArray clusterDistances = new AssociativeArray();
         for(int iteration=0;iteration<maxIterations;++iteration) {
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             //reset cluster points
             for(Cluster c : clusterList.values()) {

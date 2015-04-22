@@ -206,7 +206,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         int t=0;
         int retryCounter = 0;
         while(t<totalWeakClassifiers) {
-            logger.debug("Training Weak learner "+t);
+            logger.debug("Training Weak learner {}", t);
             //We sample a list of Ids based on their weights
             FlatDataList sampledIDs = SRS.weightedSampling(observationWeights, n, true).toFlatDataList();
             

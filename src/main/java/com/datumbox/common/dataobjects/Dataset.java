@@ -57,7 +57,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                 Object theClass = entry.getKey();
                 URI datasetURI = entry.getValue();
                 
-                logger.info("Dataset Parsing " + theClass + " class");
+                logger.info("Dataset Parsing {} class", theClass);
                 
                 try (final BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
                     for (String line; (line = br.readLine()) != null;) {
@@ -79,7 +79,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
             logger.info("Parsing CSV file");
             
             if (!headerDataTypes.containsKey(yVariable)) {
-                logger.warn("WARNING: The file is missing the response variable column " + yVariable + ".");
+                logger.warn("WARNING: The file is missing the response variable column {}.", yVariable);
             }
             
             TypeInference.DataType yDataType = headerDataTypes.get(yVariable);
@@ -99,7 +99,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                 for (CSVRecord row : parser) {
                     
                     if (!row.isConsistent()) {
-                        logger.warn("WARNING: Skipping row " + row.getRecordNumber() + " because its size does not match the header size.");
+                        logger.warn("WARNING: Skipping row {} because its size does not match the header size.", row.getRecordNumber());
                         continue;
                     }
                     

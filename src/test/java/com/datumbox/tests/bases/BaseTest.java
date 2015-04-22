@@ -29,12 +29,11 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseTest {
     
-    protected final Logger logger;
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     public BaseTest() {
         //Set the global seed (Optional)
         RandomGenerator.setGlobalSeed(TestConfiguration.RANDOM_SEED);
-        logger = LoggerFactory.getLogger(this.getClass());
     }
     
     @Before

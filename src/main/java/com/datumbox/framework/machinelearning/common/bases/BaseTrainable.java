@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends BaseTrainingParameters, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
-    protected final Logger logger;
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     protected KB knowledgeBase;
     protected String dbName;
@@ -64,8 +64,6 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         }
         
         this.dbName = dbName;
-        
-        logger = LoggerFactory.getLogger(this.getClass());
     }
     
     protected BaseTrainable(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {

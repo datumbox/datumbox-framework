@@ -184,7 +184,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
             

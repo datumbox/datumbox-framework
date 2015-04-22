@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.google.common.collect.Ordering;
+import com.datumbox.common.utilities.SelectKth;
 import java.util.Iterator;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -56,8 +56,7 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
         logger.debug("selectHighScoreFeatures()");
         
         logger.debug("Estimating the minPermittedScore");
-        Double minPermittedScore=Ordering.<Double>natural().greatestOf(featureScores.values().iterator(), maxFeatures).get(maxFeatures-1);
-        //Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
+        Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
         
         //remove any entry with score less than the minimum permitted one
         logger.debug("Removing features with scores less than threshold");

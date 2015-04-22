@@ -306,7 +306,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         int iteration=0;
         while(iteration<maxIterations) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             int changedCounter = 0;
             //collapsed gibbs sampler
@@ -387,7 +387,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             }
             ++iteration;
             
-            logger.debug("Reassigned Records "+ changedCounter);
+            logger.debug("Reassigned Records {}", changedCounter);
             
             if(changedCounter==0) {
                 break;
@@ -533,7 +533,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         double perplexity = Double.MAX_VALUE;
         for(int iteration=0;iteration<maxIterations;++iteration) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             
             //collapsed gibbs sampler
@@ -632,7 +632,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
 
             perplexity=Math.exp(-perplexity/totalDatasetWords);
             
-            logger.debug("Reassigned Records "+ changedCounter +" - Perplexity: "+perplexity);
+            logger.debug("Reassigned Records {} - Perplexity: {}", changedCounter, perplexity);
             
             if(changedCounter==0) {
                 break;

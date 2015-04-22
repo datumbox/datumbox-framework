@@ -109,7 +109,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
             

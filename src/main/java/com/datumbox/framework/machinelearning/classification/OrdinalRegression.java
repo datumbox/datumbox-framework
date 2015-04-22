@@ -218,7 +218,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
             

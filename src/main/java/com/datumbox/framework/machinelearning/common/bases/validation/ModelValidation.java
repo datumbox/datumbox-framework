@@ -36,12 +36,12 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> {
     
-    protected final Logger logger;
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     public static final String DB_INDICATOR="Kfold";
     
     public ModelValidation() {
-        logger = LoggerFactory.getLogger(this.getClass());
+        
     }
     
     public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
@@ -69,7 +69,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
             
-            logger.info("Kfold "+fold);
+            logger.info("Kfold {}", fold);
             
             //as fold window we consider the part of the ids that are used for validation
             FlatDataList foldTrainingIds = new FlatDataList(new ArrayList<>(n-foldSize));

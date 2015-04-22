@@ -280,7 +280,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         int iteration=0;
         while(iteration<maxIterations && noChangeMade==false) {
             
-            logger.debug("Iteration "+iteration);
+            logger.debug("Iteration {}", iteration);
             
             noChangeMade=true;
             for(Integer rId : dataset) {

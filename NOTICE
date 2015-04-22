@@ -4,16 +4,6 @@ Copyright (C) 2013 Vasilis Vryniotis <bbriniotis@datumbox.com>
 
 The following libraries are included in packaged versions of this project:
 
-* JUnit
- * COPYRIGHT: Copyright 2002 JUnit
- * LICENSE: http://www.opensource.org/licenses/cpl.php (Common Public License Version 1.0)
- * HOMEPAGE: http://www.junit.org/
-
-* ClasspathSuite
- * COPYRIGHT: Copyright 2006 Johannes Link
- * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
- * HOMEPAGE: https://github.com/takari/takari-cpsuite
-
 * Apache Commons Lang
  * COPYRIGHT: Copyright 2001 The Apache Software Foundation
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
@@ -29,10 +19,10 @@ The following libraries are included in packaged versions of this project:
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
  * HOMEPAGE: http://commons.apache.org/proper/commons-csv/
 
-* Guava
- * COPYRIGHT: Copyright 2007 Google Inc.
- * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
- * HOMEPAGE: http://code.google.com/p/guava-libraries/
+* SLF4J API
+ * COPYRIGHT: Copyright 2004 QOS.ch
+ * LICENSE: http://www.slf4j.org/license.html (MIT License)
+ * HOMEPAGE: http://www.slf4j.org/
 
 * LIBSVM
  * COPYRIGHT: Copyright 2000 Chih-Chung Chang and Chih-Jen Lin
@@ -49,8 +39,30 @@ The following libraries are included in packaged versions of this project:
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
  * HOMEPAGE: http://www.mapdb.org/
 
+
+Code from the following software is included in this project:
+
+* Guava
+ * COPYRIGHT: Copyright 2007 Google Inc.
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: http://code.google.com/p/guava-libraries/
+
+
+The following libraries are required for the tests of this project:
+
+* JUnit
+ * COPYRIGHT: Copyright 2002 JUnit
+ * LICENSE: http://www.opensource.org/licenses/cpl.php (Common Public License Version 1.0)
+ * HOMEPAGE: http://www.junit.org/
+
+* ClasspathSuite
+ * COPYRIGHT: Copyright 2006 Johannes Link
+ * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
+ * HOMEPAGE: https://github.com/takari/takari-cpsuite
+
 * Logback
  * COPYRIGHT: Copyright 1999 QOS.ch
  * LICENSE: http://logback.qos.ch/license.html (Eclipse Public License v1.0 / GNU Lesser General Public License version 2.1)
  * HOMEPAGE: http://logback.qos.ch/
+
 
