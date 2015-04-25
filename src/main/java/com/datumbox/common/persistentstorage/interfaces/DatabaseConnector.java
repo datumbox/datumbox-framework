@@ -15,7 +15,6 @@
  */
 package com.datumbox.common.persistentstorage.interfaces;
 
-import java.io.Closeable;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface DatabaseConnector extends Closeable {
+public interface DatabaseConnector {
     
     /**
      * This method is responsible for storing serializable objects in the
@@ -52,8 +51,14 @@ public interface DatabaseConnector extends Closeable {
     /**
      * Closes the connection and clean ups the resources.
      */
-    @Override
     public void close();
+    
+    /**
+     * Checks if the connector is closed.
+     * 
+     * @return 
+     */
+    public boolean isClosed();
     
     /**
      * Checks if a particular database exists.

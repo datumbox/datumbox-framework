@@ -66,6 +66,8 @@ public class StepwiseRegressionTest extends BaseTest {
         instance.fit(trainingData, param);
         
         
+        instance.close();
+        df.close();
         instance = null;
         df = null;
         

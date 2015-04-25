@@ -15,6 +15,7 @@
  */
 package com.datumbox.common.persistentstorage.inmemory;
 
+import com.datumbox.common.persistentstorage.AutoCloseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.util.HashMap;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class InMemoryConnector implements DatabaseConnector {
+public class InMemoryConnector extends AutoCloseConnector {
         
     private final InMemoryConfiguration dbConf;
     private final String database;
@@ -50,6 +51,7 @@ public class InMemoryConnector implements DatabaseConnector {
      * @param dbConf 
      */
     protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
+        super();
         this.dbConf = dbConf;
         this.database = database;
     }
@@ -64,6 +66,7 @@ public class InMemoryConnector implements DatabaseConnector {
      */
     @Override
     public <T extends Serializable> void save(String name, T serializableObject) {
+        ensureNotClosed();
         try { 
             Files.write(getDefaultPath(), DeepCopy.serialize(serializableObject));
         } 
@@ -83,6 +86,7 @@ public class InMemoryConnector implements DatabaseConnector {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T load(String name, Class<T> klass) {
+        ensureNotClosed();
         try { 
             //read the stored serialized object
             T serializableObject = (T)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
@@ -101,7 +105,10 @@ public class InMemoryConnector implements DatabaseConnector {
      */
     @Override
     public void close() {
-        //nothing to do
+        if(isClosed()){
+            return; 
+        }
+        super.close();
     }
     
     /**
@@ -111,6 +118,7 @@ public class InMemoryConnector implements DatabaseConnector {
      */
     @Override
     public boolean existsDatabase() {
+        ensureNotClosed();
         return Files.exists(getDefaultPath());
     }
     
@@ -119,6 +127,7 @@ public class InMemoryConnector implements DatabaseConnector {
      */
     @Override
     public void dropDatabase() {
+        ensureNotClosed();
         if(!existsDatabase()) {
             return;
         }
@@ -143,6 +152,7 @@ public class InMemoryConnector implements DatabaseConnector {
      */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
+        ensureNotClosed();
         return new HashMap<>();
     }  
     
@@ -155,6 +165,7 @@ public class InMemoryConnector implements DatabaseConnector {
      */
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
+        ensureNotClosed();
         map.clear();
     } 
 

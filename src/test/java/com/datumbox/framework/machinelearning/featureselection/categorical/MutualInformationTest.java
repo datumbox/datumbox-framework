@@ -53,6 +53,7 @@ public class MutualInformationTest extends BaseTest {
         
         
         instance.fit_transform(trainingData, param);
+        instance.close();
         instance = null;
         
         

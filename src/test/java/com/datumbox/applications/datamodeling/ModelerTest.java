@@ -85,7 +85,7 @@ public class ModelerTest extends BaseTest {
         
         double expResult2 = 0.8;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        
+        instance.close();
         instance = null;
         
         

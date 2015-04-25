@@ -64,7 +64,7 @@ public class GaussianDPMMTest extends BaseTest {
         
         instance.fit(trainingData, param);
         
-        
+        instance.close();
         instance = null;
         instance = new GaussianDPMM(dbName, dbConf);
         

@@ -134,6 +134,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         for(int t=0;t<totalWeakClassifiers;++t) {
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             mlclassifier.predict(newData);
+            mlclassifier.close();
             mlclassifier = null;
             
             classifierWeightsArray.put(t, weakClassifierWeights.get(t));
@@ -219,28 +220,18 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             //as stored in the sampledIDs list.
             
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
-            boolean copyData = mlclassifier.modifiesData();
             
-            
-            if(copyData) {
-                sampledTrainingDataset = sampledTrainingDataset.copy();
-            }
             mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
             sampledTrainingDataset.erase();
             sampledTrainingDataset = null;
             
             
             Dataset validationDataset = trainingData;
-            if(copyData) {
-                validationDataset = validationDataset.copy();
-            }
             mlclassifier.predict(validationDataset);
+            mlclassifier.close();
             mlclassifier = null;
             
             Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights, sampledIDs);
-            if(copyData) {
-                validationDataset.erase();
-            }
             validationDataset = null;
             
             if(status==Status.STOP) {

@@ -57,6 +57,7 @@ public class PCATest extends BaseTest {
         param.setMaxDimensions(null);
         
         instance.fit_transform(originalData, param);
+        instance.close();
         instance=null;
         
         instance = new PCA(dbName, dbConf);

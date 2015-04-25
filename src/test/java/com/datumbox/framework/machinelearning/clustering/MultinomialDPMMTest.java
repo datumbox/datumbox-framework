@@ -61,7 +61,7 @@ public class MultinomialDPMMTest extends BaseTest {
         
         instance.fit(trainingData, param);
         
-        
+        instance.close();
         instance = null;
         instance = new MultinomialDPMM(dbName, dbConf);
         

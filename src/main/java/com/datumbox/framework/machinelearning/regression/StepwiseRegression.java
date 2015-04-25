@@ -198,6 +198,15 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         super.erase();
     }
     
+    @Override
+    public void close() {
+        loadRegressor();
+        mlregressor.close();
+        mlregressor = null;
+        
+        super.close();
+    }
+    
     private void loadRegressor() {
         if(mlregressor==null) {
             //initialize algorithm

@@ -498,10 +498,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
         dbc.dropBigMap("tmp_recordList", recordList);
         dbc.dropDatabase();
-        
-        dbName = null;
-        dbc = null;
-        dbConf = null;
+        dbc.close();
         
         //Ensures that the Dataset can't be used after erase() is called.
         yDataType = null;

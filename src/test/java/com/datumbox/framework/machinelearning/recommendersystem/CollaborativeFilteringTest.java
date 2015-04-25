@@ -58,7 +58,7 @@ public class CollaborativeFilteringTest extends BaseTest {
         
         instance.fit(trainingData, param);
         
-        
+        instance.close();
         instance = null;
         instance = new CollaborativeFiltering(dbName, dbConf);
         

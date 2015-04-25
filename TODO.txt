@@ -1,9 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Do we need close() in models and dataset etc?
-- Make sure the connector is closed automatically if not closed manually?
-
 - Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
 - Add multithreading support.

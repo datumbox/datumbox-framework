@@ -55,6 +55,7 @@ public class TFIDFTest extends BaseTest {
         TFIDF instance = new TFIDF(dbName, dbConf);
         
         instance.fit_transform(trainingData, param);
+        instance.close();
         instance = null;
         
         

@@ -48,16 +48,14 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * @param trainingParameters
      */
     public void fit(Dataset trainingData, TP trainingParameters);
-    
-    /**
-     * Returns whether the algorithm modifies the provided data.
-     * 
-     * @return 
-     */
-    public boolean modifiesData();
             
     /**
      * Deletes the database of the algorithm. 
      */
     public void erase();
+            
+    /**
+     * Closes all the resources of the algorithm. 
+     */
+    public void close();
 }

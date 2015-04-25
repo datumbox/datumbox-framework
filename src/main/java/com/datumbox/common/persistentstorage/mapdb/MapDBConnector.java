@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.persistentstorage.mapdb;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.AutoCloseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -39,7 +39,7 @@ import org.mapdb.DBMaker;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConnector implements DatabaseConnector {
+public class MapDBConnector extends AutoCloseConnector {
     
     /**
      * Enum class which stores the Database Type used for every collection.
@@ -66,6 +66,7 @@ public class MapDBConnector implements DatabaseConnector {
      * @param dbConf 
      */
     protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
+        super();
         this.dbConf = dbConf;
         this.database = database;
     }
@@ -80,6 +81,7 @@ public class MapDBConnector implements DatabaseConnector {
      */
     @Override
     public <T extends Serializable> void save(String name, T serializableObject) {
+        ensureNotClosed();
         openDB(DatabaseType.DEFAULT_DB);
         DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
         Atomic.Var<T> knowledgeBaseVar = db.getAtomicVar(name);
@@ -99,6 +101,7 @@ public class MapDBConnector implements DatabaseConnector {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T load(String name, Class<T> klass) {
+        ensureNotClosed();
         openDB(DatabaseType.DEFAULT_DB);
         DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
@@ -110,12 +113,11 @@ public class MapDBConnector implements DatabaseConnector {
      */
     @Override
     public void close() {
-        //close all dbs stored in dbRegistry
-        for(DB db : dbRegistry.values()) {
-            if(isOpenDB(db)) {
-                db.close();
-            }
+        if(isClosed()){
+            return; 
         }
+        super.close();
+        closeAllDBs();
     }
     
     /**
@@ -125,6 +127,7 @@ public class MapDBConnector implements DatabaseConnector {
      */
     @Override
     public boolean existsDatabase() {
+        ensureNotClosed();
         if(Files.exists(getDefaultPath())) {
             return true;
         }
@@ -143,13 +146,14 @@ public class MapDBConnector implements DatabaseConnector {
      */
     @Override
     public void dropDatabase() {
+        ensureNotClosed();
         if(!existsDatabase()) {
             return;
         }
         
-        try {
-            close();
+        closeAllDBs();
             
+        try {
             dbRegistry.clear();
             Files.deleteIfExists(getDefaultPath());
             Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".p"));
@@ -172,6 +176,7 @@ public class MapDBConnector implements DatabaseConnector {
      */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
+        ensureNotClosed();
         validateName(name, isTemporary);
         
         DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
@@ -191,6 +196,7 @@ public class MapDBConnector implements DatabaseConnector {
      */
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
+        ensureNotClosed();
         boolean isTemporary = existsInDB(dbRegistry.get(DatabaseType.TEMP_DB), name); 
         
         DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
@@ -202,6 +208,15 @@ public class MapDBConnector implements DatabaseConnector {
     }
     
     //private methods of connector class
+    
+    private void closeAllDBs() {
+        //close all dbs stored in dbRegistry
+        for(DB db : dbRegistry.values()) {
+            if(isOpenDB(db)) {
+                db.close();
+            }
+        }
+    }
     
     private boolean isOpenDB(DB db) {
         return !(db == null || db.isClosed());

@@ -68,6 +68,8 @@ public class HierarchicalAgglomerativeTest extends BaseTest {
         instance.fit(trainingData, param);
         
         
+        instance.close();
+        df.close();
         instance = null;
         df = null;
         

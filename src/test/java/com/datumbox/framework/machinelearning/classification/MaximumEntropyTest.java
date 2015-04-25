@@ -58,7 +58,7 @@ public class MaximumEntropyTest extends BaseTest {
         
         instance.fit(trainingData, param);
         
-        
+        instance.close();
         instance = null;
         instance = new MaximumEntropy(dbName, dbConf);
         

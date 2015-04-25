@@ -217,6 +217,7 @@ public class CETR {
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
         
         instance.erase(); //erase immediately the result
+        instance = null;
     }
     
     private List<Double> calculateTTRlist(List<String> rows) {

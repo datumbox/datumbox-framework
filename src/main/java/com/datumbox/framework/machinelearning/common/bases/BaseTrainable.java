@@ -83,6 +83,11 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     }
     
     @Override
+    public void close() {
+        knowledgeBase.close();
+    }
+    
+    @Override
      public MP getModelParameters() {
        return knowledgeBase.getModelParameters();
 
@@ -98,12 +103,6 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         
         //store database
         knowledgeBase.save();
-    }
-    
-    @Override
-    public boolean modifiesData() {
-        //If the algorithm modifies the data it should override this method
-        return false;
     }
     
     protected void initializeTrainingConfiguration(TP trainingParameters) {

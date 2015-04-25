@@ -149,6 +149,21 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         }
         knowledgeBase.erase();
     }
+      
+    
+    @Override
+    public void close() {
+        if(dataTransformer!=null) {
+            dataTransformer.close();
+        }
+        if(featureSelection!=null) {
+            featureSelection.close();
+        }
+        if(mlmodel!=null) {
+            mlmodel.close();
+        }
+        knowledgeBase.close();
+    }
 
     
     public <VM extends BaseMLmodel.ValidationMetrics> VM getValidationMetrics() {
