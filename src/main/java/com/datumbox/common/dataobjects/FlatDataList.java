@@ -21,76 +21,146 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * The FlatDataList is a data structure that stores internally a List<Object>. 
+ * The class provides a set of useful methods to access and modify the contents 
+ * of the collection.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public final class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object> {
     
+    /**
+     * Default constructor which initializes the internal data with an ArrayList.
+     */
     public FlatDataList() {
+        super();
         internalData = new ArrayList<>();
     }
     
+    /**
+     * Constructor that initializes the internal data with the provided list.
+     * 
+     * @param internalData 
+     */
     public FlatDataList(List<Object> internalData) {
         super(internalData);
     }
     
-    public FlatDataList(FlatDataList fList) {
-        this();
-        if(fList != null) {
-            internalData.addAll(fList.internalData);
-        }
+    /**
+     * Generates a copy of this object.
+     * 
+     * @return 
+     */
+    public FlatDataList copy() {
+        FlatDataList copy = new FlatDataList();
+        copy.internalData.addAll(this.internalData);
+        return copy;
     }
     
-    
-    /*
-    public final boolean remove(Object o) {
-        return internalData.remove(o);
-    }
-    */
+    /**
+     * Removes an element at the specified position in the internal list and returns it.
+     * 
+     * @param index
+     * @return 
+     */
     public final Object remove(int index) {
         return internalData.remove(index);
     }
     
+    /**
+     * Gets an element at the specified position in the internal list.
+     * 
+     * @param index
+     * @return 
+     */
     public final Object get(int index) {
         return internalData.get(index);
     }
     
+    /**
+     * Gets an element at the specified position in this list, converts it into
+     * Double and returns its value. The value must be numeric or boolean or else
+     * an exception is thrown.
+     * 
+     * @param index
+     * @return 
+     */
     public final Double getDouble(int index) {
         return TypeInference.toDouble(internalData.get(index));
     }
     
+    /**
+     * Appends the specified element to the end of the internal list.
+     * 
+     * @param e
+     * @return 
+     */
     public final boolean add(Object e) {
         return internalData.add(e);
     }
     
+    /**
+     * Replaces the element at the specified position in the internal list with the
+     * specified element and returns the previous value.
+     * 
+     * @param index
+     * @param element
+     * @return 
+     */
     public final Object set(int index, Object element) {
         return internalData.set(index, element);
     }
     
-    /*
-    public final void add(int index, Object element) {
-        internalData.add(index, element);
-    }
-    */
-    
+    /**
+     * Adds all the elements of the provided collection in the internal list.
+     * 
+     * @param c
+     * @return 
+     */
     public final boolean addAll(Collection<Object> c) {
         return internalData.addAll(c);
     }
-    /*
-    public final boolean addAll(int index, Collection<Object> c) {
-        return internalData.addAll(index, c);
-    }
-    */
     
+    /**
+     * It returns an iterator on the internal data collection.
+     * 
+     * @return 
+     */
     @Override
     public final Iterator<Object> iterator() {
         return internalData.iterator();
     }
     
+    /**
+     * Returns a FlatDataCollection with the values of the internal list without
+     * coping the data.
+     * 
+     * @return 
+     */
     public final FlatDataCollection toFlatDataCollection() {
         return new FlatDataCollection(internalData);
     }
     
+    /*
+    public final boolean remove(Object o) {
+        return internalData.remove(o);
+    }
+    
+    public final void add(int index, Object element) {
+        internalData.add(index, element);
+    }
+    
+    public final boolean addAll(int index, Collection<Object> c) {
+        return internalData.addAll(index, c);
+    }
+    */
+    
+    /**
+     * Checks whether the provided object is equal to the current object.
+     * 
+     * @param o
+     * @return 
+     */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -98,6 +168,11 @@ public final class FlatDataList extends DataStructureList<List<Object>> implemen
         return internalData.equals( ((FlatDataList)o).internalData );
     }
 
+    /**
+     * Returns the hash code of the object.
+     * 
+     * @return 
+     */
     @Override
     public int hashCode() {
         return internalData.hashCode();

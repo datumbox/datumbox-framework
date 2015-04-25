@@ -22,14 +22,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * The FlatDataCollection is a data structure that stores internally a Collection<Object>. 
+ * The actual implementation of the collection can be Sets, Lists etc and
+ * they must store Objects internally. The class provides a set of useful methods 
+ * to access and modify the contents of the collection.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public final class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
 
     /**
      * Converts to Object[] the original FlatDataCollection. The method is used to
-     * generate a deep copy of the flatDataCollection and it is called in order to
+     * generate a copy of the flatDataCollection and it is called in order to
      * avoid modifying the original array.
      *
      * @param <T>
@@ -67,31 +71,65 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
         return doubleArray;
     }
     
-    public FlatDataCollection() throws IllegalArgumentException {
-        throw new IllegalArgumentException();
-    }
-    
+    /**
+     * Public constructor which accepts as argument a Collection of Objects.
+     * 
+     * @param internalData 
+     */
     public FlatDataCollection(Collection<Object> internalData) {
         super(internalData);
     }
     
+    /**
+     * Removes a particular object from the internal data. It returns a boolean
+     * which indicates whether the object was found the collection.
+     * 
+     * @param o
+     * @return 
+     */
     public final boolean remove(Object o) {
         return internalData.remove(o);
     }
     
+    /**
+     * It adds an object in the collection. It returns a boolean which indicates 
+     * whether the collection changed as a result of the call.
+     * 
+     * @param e
+     * @return 
+     */
     public final boolean add(Object e) {
         return internalData.add(e);
     }
     
+    /**
+     * Adds all the objects of the provided collection to the internal data. It 
+     * returns a boolean which indicates whether the collection changed as a 
+     * result of the call.
+     * 
+     * @param c
+     * @return 
+     */
     public final boolean addAll(Collection<Object> c) {
         return internalData.addAll(c);
     }
     
+    /**
+     * It returns an iterator on the internal data collection.
+     * 
+     * @return 
+     */
     @Override
     public final Iterator<Object> iterator() {
         return internalData.iterator();
     }
     
+    /**
+     * Converts the FlatDataCollection to a FlatDataList trying (if possible)
+     * not to copy the data.
+     * 
+     * @return 
+     */
     @SuppressWarnings("unchecked")
     public final FlatDataList toFlatDataList() {
         List<Object> list;
@@ -104,6 +142,12 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
         return new FlatDataList(list);
     }
     
+    /**
+     * Checks whether the provided object is equal to this object.
+     * 
+     * @param o
+     * @return 
+     */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -111,6 +155,11 @@ public final class FlatDataCollection extends DataStructureCollection<Collection
         return internalData.equals(((FlatDataCollection)o).internalData);
     }
 
+    /**
+     * Returns the hash code of the object.
+     * 
+     * @return 
+     */
     @Override
     public int hashCode() {
         return internalData.hashCode();

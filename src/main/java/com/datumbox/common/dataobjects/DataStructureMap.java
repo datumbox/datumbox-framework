@@ -18,33 +18,62 @@ package com.datumbox.common.dataobjects;
 import java.util.Map;
 
 /**
+ * Abstract class for every DataStructure which internally uses a Map
+ * Object.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <T>
  */
 public abstract class DataStructureMap<T extends Map<?,?>> extends DataStructure<T> {
     
+    /**
+     * Default public constructor
+     */
     public DataStructureMap() {
-        
+        super();
     }
     
+    /**
+     * Public constructor which takes as argument the appropriate Java collection.
+     * 
+     * @param data 
+     */
     public DataStructureMap(T data) {
         super(data);
     }
     
+    /**
+     * Returns the size of the map.
+     * 
+     * @return 
+     */
     public final int size() {
         return internalData.size();
     }
     
-    public final boolean containsKey(Object key) {
-        return internalData.containsKey(key);
-    }
-    
+    /**
+     * Clears the internal data.
+     */
     public final void clear() {
         internalData.clear();
     }
     
+    /**
+     * Checks if the internal data are empty.
+     * 
+     * @return 
+     */
     public final boolean isEmpty() {
         return internalData.isEmpty();
+    }
+    
+    /**
+     * Checks if the provided key exists in the map.
+     * 
+     * @param key
+     * @return 
+     */
+    public final boolean containsKey(Object key) {
+        return internalData.containsKey(key);
     }
 }

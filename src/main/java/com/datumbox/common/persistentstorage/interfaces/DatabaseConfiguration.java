@@ -18,7 +18,8 @@ package com.datumbox.common.persistentstorage.interfaces;
 import java.util.Properties;
 
 /**
- * DB connectors can be configured by objects that implement this interface.
+ * This interface should be implemented by objects that store the configuration 
+ * of DB connectors.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

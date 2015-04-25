@@ -25,7 +25,11 @@ import java.util.Properties;
 
 /**
  * Factory that initializes and returns the DatabaseConfiguration based on the
- * configuration file.
+ * configuration file. 
+ * 
+ * The following persistence storage engines are supported:
+ * - INMEMORY: It is the default storage engine, it is very fast and it should be used when the data fit the memory.
+ * - MAPDB: It is an alternative storage engine, which should be used when the data don't fit in memory.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -35,6 +39,11 @@ public enum ConfigurationFactory {
     
     private final Class<? extends DatabaseConfiguration> klass;
     
+    /**
+     * Private constructor for the enum.
+     * 
+     * @param klass 
+     */
     private ConfigurationFactory(Class<? extends DatabaseConfiguration> klass) {
         this.klass = klass;
     }

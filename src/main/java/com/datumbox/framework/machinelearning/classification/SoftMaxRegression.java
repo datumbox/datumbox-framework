@@ -34,82 +34,149 @@ import java.util.Set;
 
 
 /**
- *
+ * The SoftMaxRegression implements the Multinomial Logistic Regression classifier.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> {
     //References: http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
-        /**
-         * Thita weights
-         */
         @BigMap
-        
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
 
-        
-
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Getter for the Thita coefficients of the model.
+         * 
+         * @return 
+         */
         public Map<List<Object>, Double> getThitas() {
             return thitas;
         }
-
+        
+        /**
+         * Setter for the Thita coefficients of the model.
+         * 
+         * @param thitas 
+         */
         public void setThitas(Map<List<Object>, Double> thitas) {
             this.thitas = thitas;
         }
     } 
-
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
         private int totalIterations=100; 
         private double learningRate=0.1;
         
+        /**
+         * Getter for the total iterations of the training process.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
-
+        
+        /**
+         * Setter for the total iterations of the training process.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
-
+        
+        /**
+         * Getter for the initial value of the Learning Rate.
+         * 
+         * @return 
+         */
         public double getLearningRate() {
             return learningRate;
         }
-
+        
+        /**
+         * Setter for the initial value of the Learning Rate. This value will be
+         * adapted during the iterations.
+         * 
+         * @param learningRate 
+         */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
         }
 
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
         private double SSE = 0.0; 
         private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
         
+        /**
+         * Getter for the SSE metric.
+         * 
+         * @return 
+         */
         public double getSSE() {
             return SSE;
         }
-
+        
+        /**
+         * Setter for the SSE metric.
+         * 
+         * @param SSE 
+         */
         public void setSSE(double SSE) {
             this.SSE = SSE;
         }
-
+        
+        /**
+         * Getter for the Count R^2 metric.
+         * 
+         * @return 
+         */
         public double getCountRSquare() {
             return CountRSquare;
         }
-
+        
+        /**
+         * Setter for the Count R^2 metric.
+         * 
+         * @param CountRSquare 
+         */
         public void setCountRSquare(double CountRSquare) {
             this.CountRSquare = CountRSquare;
         }
         
     }
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public SoftMaxRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidation());
     }
@@ -211,7 +278,6 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         }
     }
     
-    
     @Override
     protected SoftMaxRegression.ValidationMetrics validateModel(Dataset validationData) {
         SoftMaxRegression.ValidationMetrics validationMetrics = super.validateModel(validationData);
@@ -274,7 +340,6 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
     }
     
-
     private Double calculateClassScore(AssociativeArray x, Object theClass, Map<List<Object>, Double> thitas) {
         double score = thitas.get(Arrays.<Object>asList(Dataset.constantColumnName, theClass));
         
@@ -324,4 +389,5 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         return predictionProbabilities;
     }
+
 }

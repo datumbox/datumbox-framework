@@ -77,7 +77,12 @@ public class TypeInference {
 
         
         private final Class klass;
-
+        
+        /**
+         * Private enum constructor.
+         * 
+         * @param klass 
+         */
         private DataType(Class klass) {
             this.klass = klass;
         }

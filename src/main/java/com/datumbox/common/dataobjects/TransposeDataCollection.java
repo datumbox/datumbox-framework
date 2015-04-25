@@ -21,43 +21,98 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * Data structure which stores internally a Map<Object, FlatDataCollection>. This
+ * data structure is usually used when we want to store the values of a particular
+ * variable separately per each category or group. The class provides a number of 
+ * methods to access and modify the internal map.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public final class TransposeDataCollection extends DataStructureMap<Map<Object, FlatDataCollection>> {
     
+    /**
+     * Default constructor which initializes the internal data with a LinkedHashMap.
+     */
     public TransposeDataCollection() {
+        super();
         internalData = new LinkedHashMap<>();
     }
     
+    /**
+     * Constructor that initializes the internal data with the provided map.
+     * 
+     * @param internalData 
+     */
     public TransposeDataCollection(Map<Object, FlatDataCollection> internalData) {
         super(internalData);
     }
     
+    /**
+     * Removes a particular key from the internal map and returns the value 
+     * associated with that key if present in the map.
+     * 
+     * @param key
+     * @return 
+     */
     public final FlatDataCollection remove(Object key) {
         return internalData.remove(key);
     }
     
+    /**
+     * Returns the value which is associated with the provided key.
+     * 
+     * @param key
+     * @return 
+     */
     public final FlatDataCollection get(Object key) {
         return internalData.get(key);
     }
     
+    /**
+     * Adds a particular key-value into the internal map. It returns the previous
+     * value which was associated with that key.
+     * 
+     * @param key
+     * @param value
+     * @return 
+     */
     public final FlatDataCollection put(Object key, FlatDataCollection value) {
         return internalData.put(key, value);
     }
     
+    /**
+     * Returns the entrySet of the internal map.
+     * 
+     * @return 
+     */
     public final Set<Map.Entry<Object, FlatDataCollection>> entrySet() {
         return internalData.entrySet();
     }
     
+    /**
+     * Returns the keySet of the internal map.
+     * 
+     * @return 
+     */
     public final Set<Object> keySet() {
         return internalData.keySet();
     }
     
+    /**
+     * Returns the values of the internal map.
+     * 
+     * @return 
+     */
     public final Collection<FlatDataCollection> values() {
         return internalData.values();
     }
     
+    /**
+     * Checks whether the provided object is equal to the current object.
+     * 
+     * @param o
+     * @return 
+     */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -65,6 +120,11 @@ public final class TransposeDataCollection extends DataStructureMap<Map<Object, 
         return internalData.equals(((TransposeDataCollection)o).internalData);
     }
 
+    /**
+     * Returns the hash code of the object.
+     * 
+     * @return 
+     */
     @Override
     public int hashCode() {
         return internalData.hashCode();

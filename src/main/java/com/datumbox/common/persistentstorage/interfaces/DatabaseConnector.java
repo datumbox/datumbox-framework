@@ -15,7 +15,8 @@
  */
 package com.datumbox.common.persistentstorage.interfaces;
 
-import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import java.io.Closeable;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -26,25 +27,33 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface DatabaseConnector {
+public interface DatabaseConnector extends Closeable {
     
     /**
-     * This method is responsible for storing the data of each algorithm in the
+     * This method is responsible for storing serializable objects in the
      * database.
      * 
-     * @param <KB>
-     * @param knowledgeBaseObject 
+     * @param <T>
+     * @param name
+     * @param serializableObject 
      */
-    public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject);
+    public <T extends Serializable> void save(String name, T serializableObject);
     
     /**
-     * Loads the data of an algorithm from the database.
+     * Loads serializable objects from the database.
      * 
-     * @param <KB>
+     * @param <T>
+     * @param name
      * @param klass
      * @return 
      */
-    public <KB extends KnowledgeBase> KB load(Class<KB> klass);
+    public <T extends Serializable> T load(String name, Class<T> klass);
+    
+    /**
+     * Closes the connection and clean ups the resources.
+     */
+    @Override
+    public void close();
     
     /**
      * Checks if a particular database exists.
@@ -59,8 +68,8 @@ public interface DatabaseConnector {
     public void dropDatabase();
     
     /**
-     * Creates or loads a database-backed Map. The BigMap maps are used to store
-     * a huge number of records.
+     * Creates or loads a Big Map which is capable of storing large number of 
+     * records. 
      * 
      * @param <K>
      * @param <V>
@@ -71,7 +80,7 @@ public interface DatabaseConnector {
     public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary);
     
     /**
-     * Drops a particular database-backed Map.
+     * Drops a particular Big Map.
      * 
      * @param <T>
      * @param name

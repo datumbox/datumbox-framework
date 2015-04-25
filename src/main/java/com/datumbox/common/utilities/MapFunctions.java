@@ -25,7 +25,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * The MapFunctions class contains a list of convenience methods for Maps and 
+ * AssociativeArrays.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MapFunctions {
@@ -51,6 +53,12 @@ public class MapFunctions {
         return new AbstractMap.SimpleEntry<>(maxValueKey, keyValueMap.get(maxValueKey));
     }
     
+    /**
+     * Selects the key-value entry with the largest value.
+     * 
+     * @param keyValueMap
+     * @return 
+     */
     public static Map.Entry<Object, Double> selectMaxKeyValue(Map<Object, Double> keyValueMap) {
         Double maxValue=Double.NEGATIVE_INFINITY;
         Object maxValueKey = null;
@@ -87,6 +95,12 @@ public class MapFunctions {
         return new AbstractMap.SimpleEntry<>(minValueKey, keyValueMap.get(minValueKey));
     }
     
+    /**
+     * Selects the key-value entry with the smallest value.
+     * 
+     * @param keyValueMap
+     * @return 
+     */
     public static Map.Entry<Object, Double> selectMinKeyValue(Map<Object, Double> keyValueMap) {
         Double minValue=Double.POSITIVE_INFINITY;
         Object minValueKey = null;
@@ -137,8 +151,6 @@ public class MapFunctions {
         
         return sortedMap;
     }
-    
-    
     
     /**
      * Sorts by Key a Map in descending order. 

@@ -33,109 +33,185 @@ import java.util.TreeSet;
 
 
 /**
- *
+ * The OrdinalRegression implements the Multinomial Ordinal Regression.
+ * 
+ * References: 
+ * http://qwone.com/~jason/writing/olr.pdf
+ * http://www.rbsd.de/PDF/olr_mr.pdf
+ * http://www.econ.kuleuven.be/public/ndbae06/pdf-files/Robust%20estimation%20for%20ordinal%20regression.pdf
+ * http://fa.bianp.net/blog/2013/logistic-ordinal-regression/ 
+ * https://github.com/fabianp/minirank/blob/master/minirank/logistic.py 
+ * https://github.com/gcapan/recommender/blob/master/recommender-core/src/main/java/com/discovery/recommender/gradient/RegularizedOrdinalGradient.java
+ * http://www.stat.uchicago.edu/~pmcc/pubs/paper2.pdf
+ * http://ttic.uchicago.edu/~nati/Publications/RennieSrebroIJCAI05.pdf
+ * http://rbakker.myweb.uga.edu/pols8501/MLENotes6a.pdf
+ * http://www.academicjournals.org/article/article1379683447_Tamayo.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> {
-    /*
-    References: 
-        - http://qwone.com/~jason/writing/olr.pdf
-        - http://www.rbsd.de/PDF/olr_mr.pdf
-        - http://www.econ.kuleuven.be/public/ndbae06/pdf-files/Robust%20estimation%20for%20ordinal%20regression.pdf
-        - http://fa.bianp.net/blog/2013/logistic-ordinal-regression/ 
-        - https://github.com/fabianp/minirank/blob/master/minirank/logistic.py 
-        - https://github.com/gcapan/recommender/blob/master/recommender-core/src/main/java/com/discovery/recommender/gradient/RegularizedOrdinalGradient.java
-        - http://www.stat.uchicago.edu/~pmcc/pubs/paper2.pdf
-        - http://ttic.uchicago.edu/~nati/Publications/RennieSrebroIJCAI05.pdf
-        - http://rbakker.myweb.uga.edu/pols8501/MLENotes6a.pdf
-        - http://www.academicjournals.org/article/article1379683447_Tamayo.pdf
-    */
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
-        /**
-         * W weights
-         */
         @BigMap
-        
         private Map<Object, Double> weights; //the W parameters of the model
 
         /**
          * Right-side limits of the class on the ordinal regression line. 
          */
         @BigMap
-        
         private Map<Object, Double> thitas; 
-        
 
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Getter for the weight coefficients.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getWeights() {
             return weights;
         }
-
+        
+        /**
+         * Setter for the weight coefficients.
+         * 
+         * @param weights 
+         */
         public void setWeights(Map<Object, Double> weights) {
             this.weights = weights;
         }
-
+        
+        /**
+         * Getter for the Thita coefficients.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getThitas() {
             return thitas;
         }
-
+        
+        /**
+         * Setter for the Thita coefficients.
+         * 
+         * @param thitas 
+         */
         public void setThitas(Map<Object, Double> thitas) {
             this.thitas = thitas;
         }
         
     } 
-
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
         private int totalIterations=100; 
         private double learningRate=0.1;
         
+        /**
+         * Getter for the total iterations of the training process.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
 
+        /**
+         * Setter for the total iterations of the training process.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
-
+        
+        /**
+         * Getter for the initial value of the Learning Rate.
+         * 
+         * @return 
+         */
         public double getLearningRate() {
             return learningRate;
         }
-
+        
+        /**
+         * Setter for the initial value of the Learning Rate. This value will be
+         * adapted during the iterations.
+         * 
+         * @param learningRate 
+         */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
         }
 
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
         private double SSE = 0.0; 
         private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
         
+        /**
+         * Getter for the SSE metric.
+         * 
+         * @return 
+         */
         public double getSSE() {
             return SSE;
         }
-
+        
+        /**
+         * Setter for the SSE metric.
+         * 
+         * @param SSE 
+         */
         public void setSSE(double SSE) {
             this.SSE = SSE;
         }
-
+        
+        /**
+         * Getter for the Count R^2 metric.
+         * 
+         * @return 
+         */
         public double getCountRSquare() {
             return CountRSquare;
         }
-
+        
+        /**
+         * Setter for the Count R^2 metric.
+         * 
+         * @param CountRSquare 
+         */
         public void setCountRSquare(double CountRSquare) {
             this.CountRSquare = CountRSquare;
         }
         
     }
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public OrdinalRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidation());
     }
@@ -252,8 +328,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
-    
-    
+   
     @Override
     protected ValidationMetrics validateModel(Dataset validationData) {
         ValidationMetrics validationMetrics = super.validateModel(validationData);
@@ -409,4 +484,5 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         return previousThitaMapping;
     }
+    
 }

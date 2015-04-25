@@ -32,44 +32,76 @@ import java.util.Set;
 
 
 /**
+ * The BernoulliNaiveBayes class implements the Bernoulli Naive Bayes model. 
+ * 
+ * References: 
+ * http://nlp.stanford.edu/IR-book/html/htmledition/the-bernoulli-model-1.html
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters, BernoulliNaiveBayes.ValidationMetrics> {
-    //References: http://nlp.stanford.edu/IR-book/html/htmledition/the-bernoulli-model-1.html
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
         @BigMap
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
 
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        
+        /**
+         * Getter for the sumOfLog1minusProb coefficients.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getSumOfLog1minusProb() {
             return sumOfLog1minusProb;
         }
-
+        
+        /**
+         * Setter for the sumOfLog1minusProb coefficients.
+         * 
+         * @param sumOfLog1minusProb 
+         */
         public void setSumOfLog1minusProb(Map<Object, Double> sumOfLog1minusProb) {
             this.sumOfLog1minusProb = sumOfLog1minusProb;
         }
     } 
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
 
     } 
-
     
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
 
     }
 
-    protected static final boolean IS_BINARIZED = true;
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public BernoulliNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class);
+        isBinarized = true;
     }
     
     @Override

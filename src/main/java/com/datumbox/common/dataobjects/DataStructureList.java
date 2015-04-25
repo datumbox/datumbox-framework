@@ -18,16 +18,26 @@ package com.datumbox.common.dataobjects;
 import java.util.List;
 
 /**
- *
+ * Abstract class for every DataStructure which internally uses a List
+ * Object.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <T>
  */
 public abstract class DataStructureList<T extends List<?>> extends DataStructureCollection<T> {
     
+    /**
+     * Default public constructor
+     */
     public DataStructureList() {
-        
+        super();
     }
     
+    /**
+     * Public constructor which takes as argument the appropriate Java collection.
+     * 
+     * @param data 
+     */
     public DataStructureList(T data) {
         super(data);
     }

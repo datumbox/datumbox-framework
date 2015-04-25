@@ -24,7 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import java.io.Serializable;
 import java.util.HashMap;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
@@ -32,11 +32,18 @@ import org.mapdb.DBMaker;
 
 
 /**
+ * The MapDBConnector is responsible for saving and loading data from MapDB files,
+ * creating BigMaps which are backed by files and persisting data. The MapDBConnector 
+ * does not load all the contents of BigMaps in memory, maintains an LRU cache
+ * to speed up data retrieval and persists all data in MapDB files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MapDBConnector implements DatabaseConnector {
     
+    /**
+     * Enum class which stores the Database Type used for every collection.
+     */
     private enum DatabaseType {
         DEFAULT_DB,
         TEMP_DB;
@@ -51,10 +58,150 @@ public class MapDBConnector implements DatabaseConnector {
      */
     private final Map<DatabaseType, DB> dbRegistry = new HashMap<>(); 
     
-    public MapDBConnector(String database, MapDBConfiguration dbConf) {  
+    /**
+     * Non-public constructor used by MapDBConfiguration class to generate
+     * new connections.
+     * 
+     * @param database
+     * @param dbConf 
+     */
+    protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
         this.dbConf = dbConf;
         this.database = database;
     }
+
+    /**
+     * This method is responsible for storing serializable objects in the
+     * database.
+     * 
+     * @param <T>
+     * @param name
+     * @param serializableObject 
+     */
+    @Override
+    public <T extends Serializable> void save(String name, T serializableObject) {
+        openDB(DatabaseType.DEFAULT_DB);
+        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
+        Atomic.Var<T> knowledgeBaseVar = db.getAtomicVar(name);
+        knowledgeBaseVar.set(serializableObject);
+        db.commit();
+        db.compact();
+    }
+
+    /**
+     * Loads serializable objects from the database.
+     * 
+     * @param <T>
+     * @param name
+     * @param klass
+     * @return 
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Serializable> T load(String name, Class<T> klass) {
+        openDB(DatabaseType.DEFAULT_DB);
+        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
+        Atomic.Var<T> atomicVar = db.getAtomicVar(name);
+        return atomicVar.get();
+    }
+    
+    /**
+     * Closes the connection and clean ups the resources.
+     */
+    @Override
+    public void close() {
+        //close all dbs stored in dbRegistry
+        for(DB db : dbRegistry.values()) {
+            if(isOpenDB(db)) {
+                db.close();
+            }
+        }
+    }
+    
+    /**
+     * Checks if a particular database exists.
+     * 
+     * @return 
+     */
+    @Override
+    public boolean existsDatabase() {
+        if(Files.exists(getDefaultPath())) {
+            return true;
+        }
+        
+        for(DB db: dbRegistry.values()) {
+            if(db != null) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Drops the particular database.
+     */
+    @Override
+    public void dropDatabase() {
+        if(!existsDatabase()) {
+            return;
+        }
+        
+        try {
+            close();
+            
+            dbRegistry.clear();
+            Files.deleteIfExists(getDefaultPath());
+            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".p"));
+            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
+        } 
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    /**
+     * Creates or loads a Big Map which is capable of storing large number of 
+     * records. 
+     * 
+     * @param <K>
+     * @param <V>
+     * @param name
+     * @param isTemporary
+     * @return 
+     */
+    @Override
+    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
+        validateName(name, isTemporary);
+        
+        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
+
+        openDB(dbType);
+        return dbRegistry.get(dbType).createHashMap(name)
+            .counterEnable()
+            .makeOrGet();
+    }   
+    
+    /**
+     * Drops a particular Big Map.
+     * 
+     * @param <T>
+     * @param name
+     * @param map 
+     */
+    @Override
+    public <T extends Map> void dropBigMap(String name, T map) {
+        boolean isTemporary = existsInDB(dbRegistry.get(DatabaseType.TEMP_DB), name); 
+        
+        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
+        
+        DB db = dbRegistry.get(dbType);
+        if(isOpenDB(db)) {
+            db.delete(name);
+        }
+    }
+    
+    //private methods of connector class
     
     private boolean isOpenDB(DB db) {
         return !(db == null || db.isClosed());
@@ -122,86 +269,4 @@ public class MapDBConnector implements DatabaseConnector {
         
         return filepath;
     }
-
-    @Override
-    public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
-        openDB(DatabaseType.DEFAULT_DB);
-        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
-        Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
-        knowledgeBaseVar.set(knowledgeBaseObject);
-        db.commit();
-        db.compact();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
-        openDB(DatabaseType.DEFAULT_DB);
-        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
-        Atomic.Var<KB> knowledgeBaseVar = db.getAtomicVar("KnowledgeBase");
-        return knowledgeBaseVar.get();
-    }
-    
-    @Override
-    public boolean existsDatabase() {
-        if(Files.exists(getDefaultPath())) {
-            return true;
-        }
-        
-        for(DB db: dbRegistry.values()) {
-            if(db != null) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    @Override
-    public void dropDatabase() {
-        if(!existsDatabase()) {
-            return;
-        }
-        
-        try {
-            //close all dbs stored in dbRegistry
-            for(DB db : dbRegistry.values()) {
-                if(isOpenDB(db)) {
-                    db.close();
-                }
-            }
-            dbRegistry.clear();
-            Files.deleteIfExists(getDefaultPath());
-            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".p"));
-            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
-        } 
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    @Override
-    public <T extends Map> void dropBigMap(String name, T map) {
-        boolean isTemporary = existsInDB(dbRegistry.get(DatabaseType.TEMP_DB), name); 
-        
-        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
-        
-        DB db = dbRegistry.get(dbType);
-        if(isOpenDB(db)) {
-            db.delete(name);
-        }
-    }
-    
-    @Override
-    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
-        validateName(name, isTemporary);
-        
-        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
-
-        openDB(dbType);
-        return dbRegistry.get(dbType).createHashMap(name)
-            .counterEnable()
-            .makeOrGet();
-    }   
-
 }

@@ -23,6 +23,8 @@ import java.lang.annotation.Target;
 
 /**
  * BigMap annotation is used to declare large Maps in the ModelParameters classes.
+ * Fields that are annotated with this annotation, are automatically initialized
+ * by the BaseModelParameters object.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

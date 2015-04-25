@@ -20,6 +20,10 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.Properties;
 
 /**
+ * The MapDBConfiguration class is used to configure the MapDB persistence
+ * storage and generate new storage connections. MapDB storage uses collections 
+ * which are backed by file and thus it does not load all the data in memory. 
+ * The data are persisted in MapDB files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -37,16 +41,32 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     
     private boolean transacted = false;
 
+    /**
+     * It initializes a new connector to the Database.
+     * 
+     * @param database
+     * @return 
+     */
     @Override
     public DatabaseConnector getConnector(String database) {
         return new MapDBConnector(database, this);
     }
-
+    
+    /**
+     * Returns the separator that is used in the DB names.
+     * 
+     * @return 
+     */
     @Override
     public String getDBnameSeparator() {
         return DBNAME_SEPARATOR;
     }
-
+    
+    /**
+     * Initializes the MapDBConfiguration object by using a property file.
+     * 
+     * @param properties 
+     */
     @Override
     public void load(Properties properties) {
         outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
@@ -55,34 +75,78 @@ public class MapDBConfiguration implements DatabaseConfiguration {
         transacted = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.transacted"));
     }
 
+    /**
+     * Getter for the output folder where the MapDB data files are stored.
+     * 
+     * @return 
+     */
     public String getOutputFolder() {
         return outputFolder;
     }
 
+    /**
+     * Setter for the output folder where the MapDB data files are stored.
+     * 
+     * @param outputFolder 
+     */
     public void setOutputFolder(String outputFolder) {
         this.outputFolder = outputFolder;
     }
-
+    
+    /**
+     * Getter for the size of items stored in the LRU cache by MapDB.
+     * 
+     * @return 
+     */
     public int getCacheSize() {
         return cacheSize;
     }
-
+    
+    /**
+     * Setter for the size of items stored in LRU cache by MapDB. Set it to 0 to
+     * turn off caching.
+     * 
+     * @param cacheSize 
+     */
     public void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
     }
 
+    /**
+     * Getter for the compression option.
+     * 
+     * @return 
+     */
     public boolean isCompressed() {
         return compressed;
     }
-
+    
+    /**
+     * Setter for the compression option. If turned on the records will be compressed.
+     * It is turned on by default.
+     * 
+     * @param compressed 
+     */
     public void setCompressed(boolean compressed) {
         this.compressed = compressed;
     }
-
+    
+    /**
+     * Getter for the transaction support option.
+     * 
+     * @return 
+     */
     public boolean isTransacted() {
         return transacted;
     }
 
+    /**
+     * Setter for the transaction support option. Turning off transactions can
+     * speed up significantly the algorithms nevertheless it could potentially
+     * lead to corrupted MapDB files. Transactions are disabled by default.
+     * 
+     * @param transacted 
+     */
     public void setTransacted(boolean transacted) {
         this.transacted = transacted;
     }

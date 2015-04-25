@@ -44,11 +44,10 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
 
     }
-
-    protected static final boolean IS_BINARIZED = true;
     
     public BayesianEnsembleMethod(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class);
+        isBinarized = true;
     }
     
     @Override

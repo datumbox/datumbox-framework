@@ -37,8 +37,8 @@ public class SpearmanCorrelation {
         Object keyX = keys[0];
         Object keyY = keys[1];
 
-        FlatDataList flatDataListX = new FlatDataList(transposeDataList.get(keyX)); //copies data
-        FlatDataList flatDataListY = new FlatDataList(transposeDataList.get(keyY)); //copies data
+        FlatDataList flatDataListX = transposeDataList.get(keyX).copy();
+        FlatDataList flatDataListY = transposeDataList.get(keyY).copy();
 
         int n = flatDataListX.size();
         if(n<=0 || n!=flatDataListY.size()) {

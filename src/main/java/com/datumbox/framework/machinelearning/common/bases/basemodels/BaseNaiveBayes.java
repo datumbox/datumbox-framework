@@ -95,11 +95,12 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
     }
         
         
-    protected static final boolean IS_BINARIZED = false;
+    protected boolean isBinarized;
 
     
     protected BaseNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass);
+        isBinarized = false;
     } 
     
     @Override
@@ -144,7 +145,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
                 
                 
                 Double occurrences=TypeInference.toDouble(entry.getValue());
-                if((!knowledgeBase.getTrainingParameters().isMultiProbabilityWeighted() || IS_BINARIZED) && occurrences>0) {
+                if((!knowledgeBase.getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
                     occurrences=1.0;
                 }
                 
@@ -208,7 +209,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
-                if(IS_BINARIZED && occurrences>0) {
+                if(isBinarized && occurrences>0) {
                     occurrences=1.0;
                 }
                 

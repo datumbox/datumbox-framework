@@ -28,7 +28,10 @@ import lpsolve.LpSolveException;
 /**
  * Class that performs Data Envelopment Analysis. It requires the installation of
  * lpsolve 5.5.2.0. http://lpsolve.sourceforge.net/5.5/
- * References: http://en.wikipedia.org/wiki/Data_envelopment_analysis and http://deazone.com/en/resources/tutorial/weights-to-determine-relative-efficiency
+ * 
+ * References: 
+ * http://en.wikipedia.org/wiki/Data_envelopment_analysis 
+ * http://deazone.com/en/resources/tutorial/weights-to-determine-relative-efficiency
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

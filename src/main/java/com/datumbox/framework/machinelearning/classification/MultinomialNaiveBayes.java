@@ -21,29 +21,52 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
 
 
 /**
- *
+ * The MultinomialNaiveBayes class provides an implementation of Multinomial
+ * Naive Bayes model.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters, MultinomialNaiveBayes.ValidationMetrics> {
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     } 
-
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
         
     } 
-
     
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
 
     }
 
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public MultinomialNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class);
     }

@@ -53,7 +53,7 @@ public class Friedman {
             AssociativeArray row = entry1.getValue(); 
             
             //find the number of tied values and convert values into ranks
-            AssociativeArray tiedValuesArray = Ranks.getRanksFromValues(new AssociativeArray(row)); //this copies the data before passing them into the Ranks.
+            AssociativeArray tiedValuesArray = Ranks.getRanksFromValues(row.copy()); //this copies the data before passing them into the Ranks.
             
             for(Object value : tiedValuesArray.values()) {
                 tiesCounter.add( ((Number)value).intValue() );

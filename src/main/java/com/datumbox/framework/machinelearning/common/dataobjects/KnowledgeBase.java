@@ -82,7 +82,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
             throw new IllegalArgumentException("Can not store an empty KnowledgeBase.");
         }
         
-        dbc.save(this);
+        dbc.save("KnowledgeBase", this);
     }
     
     public void load() {
@@ -92,7 +92,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
             //constructor. As a result it does not have an initialized dbc object.
             //We don't care for that though because this instance has a valid dbc object
             //and the kbObject is only used to copy its values (we don't use it).
-            KnowledgeBase kbObject = dbc.load(this.getClass());
+            KnowledgeBase kbObject = dbc.load("KnowledgeBase", this.getClass());
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }

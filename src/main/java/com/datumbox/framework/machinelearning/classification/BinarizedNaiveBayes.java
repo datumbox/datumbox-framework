@@ -21,34 +21,59 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 /**
- *
+ * The BinarizedNaiveBayes class implements an alternative version of Multinomial
+ * Naive Bayes, in which the total number of counts of each activated feature
+ * is clipped to 1.
+ * 
+ * References: 
+ * http://www.stanford.edu/class/cs124/lec/sentiment.pptx
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters, BinarizedNaiveBayes.ValidationMetrics> {
-    //References: http://www.stanford.edu/class/cs124/lec/sentiment.pptx
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
     } 
-
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
 
-    } 
-
+    }
     
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
 
     }
-
-    protected static final boolean IS_BINARIZED = true;
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public BinarizedNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class);
+        isBinarized = true;
     }
     
     @Override

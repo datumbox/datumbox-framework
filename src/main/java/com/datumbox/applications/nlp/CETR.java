@@ -37,7 +37,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * The CETR class (Content Extraction with Tag Ratios) enables you to extract the
+ * content text from HTML pages. It uses the tag ratios of each line and performs
+ * clustering to separate the real text of the page from menus, footers and headers.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CETR {
@@ -86,9 +89,16 @@ public class CETR {
         this.dbConf = dbConf;
     }
     
-    public String extract(String text, CETR.Parameters parameters) {
-        text = clearText(text); //preprocess the Document by removing irrelevant HTML tags and empty lines
-        List<String> rows = extractRows(text); //break the document to its lines
+    /**
+     * Extracts the main content for an HTML page.
+     * 
+     * @param html
+     * @param parameters
+     * @return 
+     */
+    public String extract(String html, CETR.Parameters parameters) {
+        html = clearText(html); //preprocess the Document by removing irrelevant HTML tags and empty lines
+        List<String> rows = extractRows(html); //break the document to its lines
         
         List<Integer> selectedRowIds = selectRows(rows, parameters);
         

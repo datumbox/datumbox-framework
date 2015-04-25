@@ -38,17 +38,43 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
- *
+ * The Dataset class stores a list of Records Objects and several meta-data. All
+ * Machine Learning algorithms get as argument Dataset objects. The class has an
+ * internal static Builder class which can be used to generate Dataset objects 
+ * from Text or CSV files.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public final class Dataset implements Serializable, Iterable<Integer> {
     
     public static final String yColumnName = "~Y";
     public static final String constantColumnName = "~CONSTANT";
-
+    
+    /**
+     * The Builder is a utility class which can help you build Dataset from
+     * Text files and CSV files.
+     */
     public static final class Builder {
-
+        
+        /**
+         * It builds a Dataset object from a provided list of text files. The data
+         * map should have as keys the names of each class and as values the URIs
+         * of the training files. The files should contain one training example
+         * per row. If we want to parse a Text File of unknown category then
+         * pass a single URI with null as key.
+         * 
+         * The method requires as arguments a file with the category names and locations
+         * of the training files, an instance of a TextExtractor which is used
+         * to extract the keywords from the documents and the Database Configuration
+         * Object.
+         * 
+         * @param textFilesMap
+         * @param textExtractor
+         * @param dbConf
+         * @return 
+         */
         public static Dataset parseTextFiles(Map<Object, URI> textFilesMap, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
             Dataset dataset = new Dataset(dbConf);
             Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
@@ -72,8 +98,29 @@ public final class Dataset implements Serializable, Iterable<Integer> {
             
             return dataset;
         }
-
-        public static Dataset parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
+        
+        /**
+         * It builds a Dataset object from a CSV file; the first line of the provided 
+         * CSV file must have a header with the column names.
+         * 
+         * The method accepts the following arguments: A Reader object from where
+         * we will read the contents of the csv file. The name column of the 
+         * response variable y. A map with the column names and their respective
+         * DataTypes. The char delimiter for the columns, the char for quotes and
+         * the string of the record/row separator. The Database Configuration
+         * object.
+         * 
+         * @param reader
+         * @param yVariable
+         * @param headerDataTypes
+         * @param delimiter
+         * @param quote
+         * @param recordSeparator
+         * @param dbConf
+         * @return 
+         */
+        public static Dataset parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, 
+                                           char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
             Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
             
             logger.info("Parsing CSV file");
@@ -171,7 +218,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns the type of the response variable.
+     * Returns the type of the response variable y.
      * 
      * @return 
      */
@@ -180,7 +227,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns an Map with columns as keys and types are values.
+     * Returns an Map with column names as keys and DataTypes as values.
      * 
      * @return 
      */
@@ -189,7 +236,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns the number of columns of the internalDataset.
+     * Returns the total number of columns on the internalDataset.
      * 
      * @return 
      */
@@ -198,7 +245,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns the number of Records in the internalDataset.
+     * Returns the total number of Records in the internalDataset.
      * 
      * @return 
      */
@@ -216,8 +263,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * It extracts the values of a particular column from all observations and
-     * stores them into an array. It basically extracts the "flatDataCollection".
+     * It extracts the values of a particular column from all records and
+     * stores them into an FlatDataList.
      * 
      * @param column
      * @return 
@@ -234,8 +281,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * It extracts the values of a Y values from all observations and
-     * stores them into an array. It basically extracts the "flatDataCollection".
+     * It extracts the values of the response variables from all observations and
+     * stores them into an FlatDataList.
      * 
      * @return 
      */
@@ -251,10 +298,10 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * For each Response variable Y found in the internalDataset, it extracts the 
-     * values of column and stores it in a list. This method is used usually when we 
+     * It extracts the values of a particular column and groups them by the 
+     * Response variable Y. This method is usually used when we 
      * have categories in Y and we want the values of a particular column to be
-     * extracted for each category. It basically extracts the "transposeDataList".
+     * extracted for each category.
      * 
      * @param column
      * @return 
@@ -275,9 +322,10 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns a subset of the Dataset. It is used for k-fold cross validation
-     * and sampling and he Records in the new Dataset have DIFFERENT ids from the
-     * original.
+     * It generates and returns a new Dataset which contains a subset of this Dataset. 
+     * All the Records of the returned Dataset are copies of the original Records. 
+     * The method is used for k-fold cross validation and sampling. Note that the 
+     * Records in the new Dataset have DIFFERENT ids from the original ones.
      * 
      * @param idsCollection
      * @return 
@@ -292,7 +340,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns a copy of the Dataset. 
+     * Returns a deep copy of the Dataset. 
      * 
      * @return 
      */
@@ -306,7 +354,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Retrieves from the Dataset a particular Record by its id.
+     * Returns a particular Record using its id.
      * 
      * @param id
      * @return 
@@ -316,7 +364,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Remove completely a list of columns from the dataset.
+     * Removes completely a list of columns from the dataset. The meta-data of the 
+     * Dataset are updated.
      * 
      * @param columnSet
      */
@@ -333,7 +382,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         for(Integer rId : this) {
             Record r = recordList.get(rId);
             
-            AssociativeArray xData = new AssociativeArray(r.getX());
+            AssociativeArray xData = r.getX().copy();
             int d = xData.size();
             xData.keySet().removeAll(columnSet);
             
@@ -346,7 +395,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Updates the meta information of the Dataset such as the supported columns.
+     * Updates the meta data of the Dataset using the provided Record. 
+     * The Meta-data include the supported columns and their DataTypes.
      * 
      * @param r 
      */
@@ -365,6 +415,9 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         }
     }
     
+    /**
+     * It forces the recalculation of Meta data using the Records of the dataset.
+     */
     public void recalculateMeta() {
         yDataType = null;
         xDataTypes.clear();
@@ -374,7 +427,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Adds the record in the dataset. The add method returns the id of the new record.
+     * Adds a record in the Dataset and updates the Meta data. The method returns 
+     * the id of the record.
      * 
      * @param r
      * @return 
@@ -399,7 +453,14 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Sets the record in a particular id in dataset.
+     * Sets the record of a particular id in the dataset. The record must already
+     * exists within the dataset or an IndexOutOfBoundsException is thrown.
+     * 
+     * Note that the meta-data are partially updated. This means that if the replaced 
+     * Record contained a column which is now no longer available in the dataset,
+     * then the meta-data will not refect this update (the column will continue to exist
+     * in the meta data). If this is a problem, you should call the recalculateMeta()
+     * method to force them being recalculated.
      * 
      * @param rId
      * @param r
@@ -413,9 +474,11 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     
     /**
      * Sets the record in a particular position in the dataset, WITHOUT updating
-     * the internal meta-info. This method allows quick updates on the dataset 
-     * but it is essential to call the resetMeta() immediately afterwards to
-     * rebuild the meta info.
+     * the internal meta-info. This method is similar to set() and it allows quick updates 
+     * on the dataset. Nevertheless it is not advised to use this method because 
+     * unless you explicitly call the recalculateMeta() method, the meta data
+     * will be corrupted. If you do use this method, MAKE sure you perform the
+     * recalculation after you are done with the updates.
      * 
      * @param rId
      * @param r 
@@ -428,7 +491,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Erases the Dataset and removes all internal variables.
+     * Erases the Dataset and removes all internal variables. Once you erase a
+     * dataset, the instance can no longer be used.
      */
     public void erase() {
         dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
@@ -446,12 +510,16 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Implementing read-only iterator on Dataset to use it in loops.
+     * Implementing read-only iterator on the Record IDs to use it in loops.
      * 
      * @return 
      */
     @Override
     public Iterator<Integer> iterator() {
+        //Instead of looping through the recordList keyset we exploit the way
+        //that the Dataset builds the Ids and instead we loop through them using
+        //a counter. If the construction of the Dataset changes, this optimization
+        //should be removed.
         return new Iterator<Integer>() {
             //private Iterator<Integer> it = recordList.keySet().iterator();
             private Integer counter = 0;

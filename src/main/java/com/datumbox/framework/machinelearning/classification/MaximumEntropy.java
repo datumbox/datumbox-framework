@@ -35,57 +35,95 @@ import java.util.Set;
 
 
 /**
- *
+ * The MaximumEntropy implements the Max Ent classifier which is an alternative
+ * implementation of Multinomial Logistic Regression model.
+ * 
+ * References: 
+ * http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParameters, MaximumEntropy.TrainingParameters, MaximumEntropy.ValidationMetrics> {
-    //References: http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
-        /**
-         * Lambda weights
-         */
         @BigMap
-        
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
 
-        
-
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Getter for the Lambda coefficients.
+         * 
+         * @return 
+         */
         public Map<List<Object>, Double> getLambdas() {
             return lambdas;
         }
-
+        
+        /**
+         * Setter for the Lambda coefficients.
+         * 
+         * @param lambdas 
+         */
         public void setLambdas(Map<List<Object>, Double> lambdas) {
             this.lambdas = lambdas;
         }
+        
     } 
-
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
         private int totalIterations=100; 
-
+        
+        /**
+         * Getter for the total iterations of the training process.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
-
+        
+        /**
+         * Setter for the total iterations of the training process.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
 
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
 
     }
         
-
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public MaximumEntropy(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class);
     }
@@ -201,7 +239,6 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         dbc.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
     }
     
-
     private void IIS(Dataset trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
@@ -373,7 +410,6 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
     }
     
-
     private Double calculateClassScore(AssociativeArray x, Object theClass) {
         double score = 0;
         
@@ -397,4 +433,5 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         return score;
     }
+
 }

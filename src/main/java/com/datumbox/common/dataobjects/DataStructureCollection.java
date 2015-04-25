@@ -19,40 +19,83 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
+ * Abstract class for every DataStructure which internally uses a Collection
+ * Object.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <T>
  */
 public abstract class DataStructureCollection<T extends Collection<?>> extends DataStructure<T> {
     
+    /**
+     * Default public constructor
+     */
     public DataStructureCollection() {
-        
+        super();
     }
     
+    /**
+     * Public constructor which takes as argument the appropriate Java collection.
+     * 
+     * @param data 
+     */
     public DataStructureCollection(T data) {
         super(data);
     }
     
+    /**
+     * Returns the size of the collection.
+     * 
+     * @return 
+     */
     public final int size() {
         return internalData.size();
     }
     
+    /**
+     * Clears the internal data.
+     */
     public final void clear() {
         internalData.clear();
     }
     
+    /**
+     * Checks if the internal data are empty.
+     * 
+     * @return 
+     */
     public final boolean isEmpty() {
         return internalData.isEmpty();
     }
     
+    /**
+     * Returns a copy of the internal data as an Array. Note that this method
+     * copies the data, so its use must be avoided.
+     * 
+     * @return 
+     */
     public final Object[] toArray() {
         return internalData.toArray();
     }
     
+    /**
+     * Checks whether the provided object is contained in the internal data.
+     * 
+     * @param o
+     * @return 
+     */
     public final boolean contains(Object o) {
         return internalData.contains(o);
     }
     
+    /**
+     * Iterator which casts the values of the Data Structure from Object to Double.
+     * This iterator should be used only when the underling Data Structure contains
+     * Numeric or Boolean values. Accessing this iterator when other data types
+     * are stored will lead to an Exception.
+     * 
+     * @return 
+     */
     public final Iterator<Double> iteratorDouble() {
         return new Iterator<Double>() {
             private final Iterator<Object> objectIterator = (Iterator<Object>) internalData.iterator();

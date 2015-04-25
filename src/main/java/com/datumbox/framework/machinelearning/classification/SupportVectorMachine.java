@@ -37,60 +37,120 @@ import libsvm.svm_problem;
 
 
 /**
- *
+ * The SupportVectorMachine class enables you to train SVM models. This implementation
+ * uses internally the LIBSVM library.
+ * 
+ * WARNING: This class copies the Dataset to double arrays which forces all of the
+ * data to be loaded in memory.
+ * 
+ * References: 
+ * http://phpir.com/svm 
+ * https://github.com/ianbarber/php-svm 
+ * https://github.com/encog/libsvm-java
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> {
-    //References: http://phpir.com/svm https://github.com/ianbarber/php-svm https://github.com/encog/libsvm-java
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
 
-        /**
-         * Feature set
-         */
         @BigMap
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         private Map<Object, Integer> classIds = new HashMap<>(); //this is small. Size equal to class numbers;
         
-        
         private svm_model svmModel; //the parameters of the svm model
         
-
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Getter for the mapping of the column names to column ids. The implementation
+         * internally converts the data into double[] and as a result we need to 
+         * estimate and store the mapping between the column names and their 
+         * positions in the array. This mapping is estimated during training.
+         * 
+         * @return 
+         */
         public Map<Object, Integer> getFeatureIds() {
             return featureIds;
         }
-
+        
+        /**
+         * Setter for the mapping of the column names to column ids. The implementation
+         * internally converts the data into double[] and as a result we need to 
+         * estimate and store the mapping between the column names and their 
+         * positions in the array. This mapping is estimated during training.
+         * 
+         * @param featureIds 
+         */
         public void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
-
+        
+        /**
+         * Getter for the internal svm_model of the LIBSVM library.
+         * 
+         * @return 
+         */
         public svm_model getSvmModel() {
             return svmModel;
         }
 
+        
+        /**
+         * Setter for the internal svm_model of the LIBSVM library.
+         * 
+         * @param svmModel
+         */
         public void setSvmModel(svm_model svmModel) {
             this.svmModel = svmModel;
         }
-
+        
+        /**
+         * Getter for the mapping between class names and ids. The implementation
+         * requires converting any category names into integer codes. This mapping
+         * is estimated during training.
+         * 
+         * @return 
+         */
         public Map<Object, Integer> getClassIds() {
             return classIds;
         }
-
+        
+        /**
+         * Setter for the mapping between class names and ids. The implementation
+         * requires converting any category names into integer codes. This mapping
+         * is estimated during training.
+         * 
+         * @param classIds 
+         */
         public void setClassIds(Map<Object, Integer> classIds) {
             this.classIds = classIds;
         }
         
     } 
-
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
         private svm_parameter svmParameter = new svm_parameter();
         
+        /**
+         * Default constructor
+         */
         public TrainingParameters() {
             super();
             
@@ -111,28 +171,45 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
             svmParameter.weight_label = new int[0];
             svmParameter.weight = new double[0];
         }
-
+        
+        /**
+         * Getter for the svm_parameter object.
+         * 
+         * @return 
+         */
         public svm_parameter getSvmParameter() {
             return svmParameter;
         }
-
+        
+        /**
+         * Setter for the svm_parameter object. It contains many different 
+         * parameters that tune the LIBSVM algorithm such as the kernel, the 
+         * weights etc.
+         * 
+         * @param svmParameter 
+         */
         public void setSvmParameter(svm_parameter svmParameter) {
             this.svmParameter = svmParameter;
         }
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
 
     }
         
-
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public SupportVectorMachine(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class);
     }
-    
-    
     
     @Override
     protected void predictDataset(Dataset newData) { 
@@ -195,7 +272,6 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         LibSVMTrainer(trainingData);
     }
     
-
     private void LibSVMTrainer(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
@@ -259,7 +335,6 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         modelParameters.setSvmModel(model);
     }
     
-
     private AssociativeArray calculateClassScores(AssociativeArray x) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         

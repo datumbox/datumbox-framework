@@ -90,7 +90,7 @@ public class TextClassifierTest extends BaseTest {
         
         //text extraction configuration
         trainingParameters.setTextExtractorClass(NgramsExtractor.class);
-        trainingParameters.setTextExtractorTrainingParameters(new NgramsExtractor.Parameters());
+        trainingParameters.setTextExtractorParameters(new NgramsExtractor.Parameters());
         
         instance.fit(dataset, trainingParameters);
         

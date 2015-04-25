@@ -21,8 +21,19 @@ import java.util.Objects;
 
 /**
  * The Record is the object that stores all the entries of the Dataset and it contains
- * information about the x, y, predicted class and predicted probabilities of the
- * observation. The record is immutable.
+ * information about the x, y, predicted class and probabilities of the
+ * predictions. The record is immutable.
+ * 
+ * In general Machine Learning methods can work with a variety of different types 
+ * (Numbers, Boolean, Categorical and Ordinal). The types of the provided data
+ * are not known at compile time but rather on runtime and they heavily depend
+ * on the case or method. As a result all the data of x and y in the Record object, 
+ * are stored internally as Objects. Moreover note that the column names of X are 
+ * also defined as Object. This is because depending on the case, the columns can 
+ * be Strings, Integers or even Tuples in the case of categorical features 
+ * (tuples are implemented as immutable List<Object>). For the response variable
+ * y it applies the same; depending on the method it can be a Number, Boolean,
+ * Categorical or Ordinal. As a result it is also stored as Object.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -42,44 +53,92 @@ public final class Record implements Serializable {
     
     
     // Constructors
+    
+    /**
+     * Constructor which takes as arguments the x and y data. If the real response 
+     * variable y is unknown you should pass a null value.
+     * 
+     * @param x
+     * @param y 
+     */
     public Record(AssociativeArray x, Object y) {
         this(x, y, null, null);
     }
     
+    /**
+     * Constructor which takes as arguments the x, y, predicted y and predicted
+     * probaibilites.
+     * 
+     * @param x
+     * @param y
+     * @param yPredicted
+     * @param yPredictedProbabilities 
+     */
     public Record(AssociativeArray x, Object y, Object yPredicted, AssociativeArray yPredictedProbabilities) {
-        this.x = new AssociativeArray(x);
+        this.x = x.copy();
         this.y = y;
         this.yPredicted = yPredicted;
         if (yPredictedProbabilities != null) {
-            this.yPredictedProbabilities = new AssociativeArray(yPredictedProbabilities);
+            this.yPredictedProbabilities = yPredictedProbabilities.copy();
         }
         else {
             this.yPredictedProbabilities = null;
         }
     }
-
+    
+    /**
+     * It returns an AssociativeArray with all the xData of the Record. The 
+     * data are stored in an unmodifiable map to ensure they can't be changed.
+     * 
+     * @return 
+     */
     public AssociativeArray getX() {
         if(x == null) {
             return null;
         }
         return new AssociativeArray(Collections.unmodifiableMap(x.internalData));
     }
-
+    
+    /**
+     * It returns the real response variable of the Record. If unknown it will have
+     * a null value.
+     * 
+     * @return 
+     */
     public Object getY() {
         return y;
     }
-
+    
+    /**
+     * It returns the predicted response variable of the Record. The predicted
+     * variable has a non-null value when a prediction is made by the
+     * machine learning model.
+     * 
+     * @return 
+     */
     public Object getYPredicted() {
         return yPredicted;
     }
-
+    
+    /**
+     * If prediction probabilities are available for the particular algorithm, 
+     * then this method will return these probabilities. This is supported by
+     * all the classification and some clustering algorithms.
+     * 
+     * @return 
+     */
     public AssociativeArray getYPredictedProbabilities() {
         if(yPredictedProbabilities == null) {
             return null;
         }
         return new AssociativeArray(Collections.unmodifiableMap(yPredictedProbabilities.internalData));
     }
-
+    
+    /**
+     * The hash code of the record. Depends only on x and y.
+     * 
+     * @return 
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -87,7 +146,14 @@ public final class Record implements Serializable {
         hash = 23 * hash + Objects.hashCode(this.y);
         return hash;
     }
-
+    
+    /**
+     * Checks if the provided object is equal to the current instance. It checks
+     * only x and y.
+     * 
+     * @param obj
+     * @return 
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -105,6 +171,5 @@ public final class Record implements Serializable {
         }
         return true;
     }
-    
     
 }

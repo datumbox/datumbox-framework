@@ -20,22 +20,35 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * Data structure which extends the AssociativeArray2D. The only difference of this
+ * class with AssociativeArray2D is that all the cells within the internal map
+ * should be set. In other words the internal map should have a rectangular 
+ * format. The class provides a number of methods to access and modify the internal map.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public final class DataTable2D extends AssociativeArray2D {
 
-    
+    /**
+     * Default constructor.
+     */
     public DataTable2D() {
         super();
     }
     
+    /**
+     * Constructor that initializes the internal data with the provided map.
+     * 
+     * @param internalData 
+     */
     public DataTable2D(Map<Object, AssociativeArray> internalData) {
         super(internalData);
     }
     
     /**
-     * Checks whether all the DataTable cells are set.
+     * Returns if the DataTable2D is valid. This data structure is considered
+     * valid it all the DataTable cells are set and as a result the DataTable
+     * has a rectangular format.
      * 
      * @return 
      */
@@ -67,6 +80,12 @@ public final class DataTable2D extends AssociativeArray2D {
         return true;
     }
     
+    /**
+     * Checks whether the provided object is equal to the current object.
+     * 
+     * @param o
+     * @return 
+     */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -74,6 +93,11 @@ public final class DataTable2D extends AssociativeArray2D {
         return internalData.equals(((DataTable2D)o).internalData);
     }
 
+    /**
+     * Returns the hash code of the object.
+     * 
+     * @return 
+     */
     @Override
     public int hashCode() {
         return internalData.hashCode();

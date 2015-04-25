@@ -24,11 +24,17 @@ import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 
 /**
- *
+ * Modeler is a convenience class which can be used to train Machine Learning
+ * models. It is a wrapper class which automatically takes care of the data 
+ * transformation, feature selection and model training processes.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.TrainingParameters>  {
     
+    /**
+     * It contains all the Model Parameters which are learned during the training.
+     */
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
         public ModelParameters(DatabaseConnector dbc) {
@@ -37,18 +43,48 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         
     }
     
+    /**
+     * It contains the Training Parameters of the Modeler.
+     */
     public static class TrainingParameters extends BaseWrapper.TrainingParameters<DataTransformer, FeatureSelection, BaseMLmodel> {
 
     }
 
-    
-    
+    /**
+     * Constructor for the Modeler class. It accepts as arguments the name of the
+     * database were the results are stored and the Database Configuration.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public Modeler(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
     }
 
+    /**
+     * Generates predictions for the given dataset.
+     * 
+     * @param newData 
+     */
+    public void predict(Dataset newData) {
+        logger.info("predict()");
+        
+        evaluateData(newData, false);
+    }
     
-    
+    /**
+     * Validates the algorithm with the provided dataset and returns the Validation
+     * Metrics. The provided dataset must contain the real response variables.
+     * 
+     * @param testData
+     * @return 
+     */
+    public BaseMLmodel.ValidationMetrics validate(Dataset testData) {
+        logger.info("validate()");
+        
+        return evaluateData(testData, true);
+    }
+
     @Override
     protected void _fit(Dataset trainingData) { 
         
@@ -91,18 +127,6 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         }
     }
     
-    public void predict(Dataset newData) {
-        logger.info("predict()");
-        
-        evaluateData(newData, false);
-    }
-
-    public BaseMLmodel.ValidationMetrics validate(Dataset testData) {
-        logger.info("validate()");
-        
-        return evaluateData(testData, true);
-    }
-            
     private BaseMLmodel.ValidationMetrics evaluateData(Dataset data, boolean estimateValidationMetrics) {
         //ensure db loaded
         knowledgeBase.load();

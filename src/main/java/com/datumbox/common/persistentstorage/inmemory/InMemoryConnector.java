@@ -26,47 +26,67 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import com.datumbox.common.utilities.DeepCopy;
-import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import java.io.Serializable;
 import java.util.HashMap;
 
 
 /**
+ * The InMemoryConnector is responsible for saving and loading data in memory,
+ * creating BigMaps and persisting data. The InMemoryConnector loads all the
+ * data in memory and persists all data in serialized files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class InMemoryConnector implements DatabaseConnector {
         
-    private final Path filepath;
     private final InMemoryConfiguration dbConf;
+    private final String database;
     
-    public InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
+    /**
+     * Non-public constructor used by InMemoryConfiguration class to generate
+     * new connections.
+     * 
+     * @param database
+     * @param dbConf 
+     */
+    protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         this.dbConf = dbConf;
-        String outputFolder = this.dbConf.getOutputFolder();
-        if(outputFolder == null || outputFolder.isEmpty()) {
-            filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
-        }
-        else {
-            filepath= Paths.get(outputFolder + File.separator + database);
-        }
+        this.database = database;
     }
-
+    
+    /**
+     * This method is responsible for storing serializable objects in the
+     * database.
+     * 
+     * @param <T>
+     * @param name
+     * @param serializableObject 
+     */
     @Override
-    public <KB extends KnowledgeBase> void save(KB knowledgeBaseObject) {
+    public <T extends Serializable> void save(String name, T serializableObject) {
         try { 
-            Files.write(filepath, DeepCopy.serialize(knowledgeBaseObject));
+            Files.write(getDefaultPath(), DeepCopy.serialize(serializableObject));
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
+    /**
+     * Loads serializable objects from the database.
+     * 
+     * @param <T>
+     * @param name
+     * @param klass
+     * @return 
+     */
     @Override
     @SuppressWarnings("unchecked")
-    public <KB extends KnowledgeBase> KB load(Class<KB> klass) {
+    public <T extends Serializable> T load(String name, Class<T> klass) {
         try { 
             //read the stored serialized object
-            KB knowledgeBaseObject = (KB)DeepCopy.deserialize(Files.readAllBytes(filepath));
-            return knowledgeBaseObject;
+            T serializableObject = (T)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
+            return serializableObject;
         } 
         catch (NoSuchFileException ex) {
             return null;
@@ -76,11 +96,27 @@ public class InMemoryConnector implements DatabaseConnector {
         }
     }
     
+    /**
+     * Closes the connection and clean ups the resources.
+     */
     @Override
-    public boolean existsDatabase() {
-        return Files.exists(filepath);
+    public void close() {
+        //nothing to do
     }
     
+    /**
+     * Checks if a particular database exists.
+     * 
+     * @return 
+     */
+    @Override
+    public boolean existsDatabase() {
+        return Files.exists(getDefaultPath());
+    }
+    
+    /**
+     * Drops the particular database.
+     */
     @Override
     public void dropDatabase() {
         if(!existsDatabase()) {
@@ -88,21 +124,52 @@ public class InMemoryConnector implements DatabaseConnector {
         }
         
         try {
-            Files.deleteIfExists(filepath);
+            Files.deleteIfExists(getDefaultPath());
         } 
         catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
     
-    @Override
-    public <T extends Map> void dropBigMap(String name, T map) {
-        map.clear();
-    }
-    
+    /**
+     * Creates or loads a Big Map which is capable of storing large number of 
+     * records. 
+     * 
+     * @param <K>
+     * @param <V>
+     * @param name
+     * @param isTemporary
+     * @return 
+     */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
         return new HashMap<>();
-    }   
+    }  
+    
+    /**
+     * Drops a particular Big Map.
+     * 
+     * @param <T>
+     * @param name
+     * @param map 
+     */
+    @Override
+    public <T extends Map> void dropBigMap(String name, T map) {
+        map.clear();
+    } 
 
+    private Path getDefaultPath() {
+        //get the default filepath of the permanet db file
+        String outputFolder = this.dbConf.getOutputFolder();
+        
+        Path filepath = null;
+        if(outputFolder == null || outputFolder.isEmpty()) {
+            filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
+        }
+        else {
+            filepath= Paths.get(outputFolder + File.separator + database);
+        }
+        
+        return filepath;
+    }
 }

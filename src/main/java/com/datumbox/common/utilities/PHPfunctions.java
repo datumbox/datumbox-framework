@@ -17,6 +17,7 @@ package com.datumbox.common.utilities;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -25,7 +26,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Class that simulates PHP array functions
+ * This class contains a number of convenience methods which have an API similar
+ * to PHP functions and their are implemented in Java.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -77,6 +79,13 @@ public class PHPfunctions {
         return count;
     }
     
+    /**
+     * Count the number of times a character appears in the string.
+     * 
+     * @param string
+     * @param character
+     * @return 
+     */
     public static int substr_count(final String string, final char character) {
         int count = 0;
         
@@ -88,12 +97,30 @@ public class PHPfunctions {
 
         return count;
     }
-
+    
+    /**
+     * Matches a string with a regex and replaces the matched components with 
+     * a provided string.
+     * 
+     * @param regex
+     * @param replacement
+     * @param subject
+     * @return 
+     */
     public static String preg_replace(String regex, String replacement, String subject) {
         Pattern p = Pattern.compile(regex);
         return preg_replace(p, replacement, subject);
     }
-
+    
+    /**
+     * Matches a string with a pattern and replaces the matched components with 
+     * a provided string.
+     * 
+     * @param pattern
+     * @param replacement
+     * @param subject
+     * @return 
+     */
     public static String preg_replace(Pattern pattern, String replacement, String subject) {
         Matcher m = pattern.matcher(subject);
         StringBuffer sb = new StringBuffer(subject.length());
@@ -103,12 +130,26 @@ public class PHPfunctions {
         m.appendTail(sb);
         return sb.toString();
     }
-
+    
+    /**
+     * Matches a string with a regex.
+     * 
+     * @param regex
+     * @param subject
+     * @return 
+     */
     public static int preg_match(String regex, String subject) {
         Pattern p = Pattern.compile(regex);
         return preg_match(p, subject);
     }
     
+    /**
+     * Matches a string with a pattern.
+     * 
+     * @param pattern
+     * @param subject
+     * @return 
+     */
     public static int preg_match(Pattern pattern, String subject) {
         int matches=0;
         Matcher m = pattern.matcher(subject);
@@ -118,11 +159,25 @@ public class PHPfunctions {
         return matches;
     }
     
+    /**
+     * Rounds a number to a specified precision.
+     * 
+     * @param d
+     * @param i
+     * @return 
+     */
     public static double round(double d, int i) {
         double multiplier = Math.pow(10, i);
         return Math.round(d*multiplier)/multiplier;
     }
     
+    /**
+     * Returns the logarithm of a number at an arbitrary base.
+     * 
+     * @param d
+     * @param base
+     * @return 
+     */
     public static double log(double d, double base) {
         if(base==1.0 || base<=0.0) {
             throw new RuntimeException("Invalid base for logarithm");
@@ -163,7 +218,7 @@ public class PHPfunctions {
     }
     
     /**
-     * Flip key and values of a map.
+     * It flips the key and values of a map.
      * 
      * @param <K>
      * @param <V>
@@ -179,7 +234,7 @@ public class PHPfunctions {
     }
     
     /**
-     * Shuffles the array values
+     * Shuffles the values of any array in place.
      * 
      * @param <T>
      * @param array 
@@ -197,12 +252,20 @@ public class PHPfunctions {
         }
     }
     
+    /**
+     * Returns the contexts of an Objects in a human readable format.
+     * 
+     * @param <T>
+     * @param object
+     * @return 
+     */
     public static <T> String print_r(T object) {
         return ToStringBuilder.reflectionToString(object);
     }
     
     /**
-     * Sorts array and returns the original index order
+     * Sorts an array in ascending order and returns an array with indexes of 
+     * the original order.
      * 
      * @param <T>
      * @param array
@@ -222,7 +285,8 @@ public class PHPfunctions {
     }
     
     /**
-     * Sorts array in descending order and returns the original index order
+     * Sorts an array in descending order and returns an array with indexes of 
+     * the original order.
      * 
      * @param <T>
      * @param array
@@ -240,4 +304,41 @@ public class PHPfunctions {
         return indexes;
     }
     
+}
+
+/*
+ * Modified code found at:
+ * http://stackoverflow.com/questions/4859261/get-the-indices-of-an-array-after-sorting
+ */
+class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Integer> {
+    protected final T[] array;
+
+    public ArrayIndexComparator(T[] array) {
+        this.array = array;
+    }
+
+    public Integer[] createIndexArray() {
+        Integer[] indexes = new Integer[array.length];
+        for (int i = 0; i < array.length; ++i) {
+            indexes[i] = i;
+        }
+        return indexes;
+    }
+
+    @Override
+    public int compare(Integer index1, Integer index2) {
+        return array[index1].compareTo(array[index2]);
+    }
+}
+
+class ArrayIndexReverseComparator<T extends Comparable<T>> extends ArrayIndexComparator<T> {
+
+    public ArrayIndexReverseComparator(T[] array) {
+        super(array);
+    }
+    
+    @Override
+    public int compare(Integer index1, Integer index2) {
+        return array[index2].compareTo(array[index1]);
+    }
 }

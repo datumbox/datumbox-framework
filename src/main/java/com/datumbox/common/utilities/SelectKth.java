@@ -22,12 +22,20 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * The SelectKth class provides a fast implementation of a Selection algorithm.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 
 public class SelectKth {
-
+    
+    /**
+     * Selects the kth largest element from an iterable object.
+     * 
+     * @param elements
+     * @param k
+     * @return 
+     */
     public static Double largest(Iterator<Double> elements, int k) {
         Iterator<Double> oppositeElements = new Iterator<Double>() {
             @Override
@@ -37,12 +45,19 @@ public class SelectKth {
 
             @Override
             public Double next() {
-                return -elements.next();
+                return -elements.next(); //reverse the sign of every value
             }
         };
-        return -smallest(oppositeElements,k);
+        return -smallest(oppositeElements,k); //reverse the sign of the retrieved value
     }
     
+    /**
+     * Selects the kth smallest element from an iterable object.
+     * 
+     * @param elements
+     * @param k
+     * @return 
+     */
     /*
      * This method is adapted from Guava. Original method leastOf().
      * 

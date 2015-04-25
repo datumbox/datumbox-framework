@@ -21,48 +21,99 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Data structure which stores internally a Map<Object, Map<Object, Object>>.
+ * Data structure which stores internally a Map<Object, Map<Object, Object>>. The 
+ * class provides a number of methods to access and modify the internal map.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class AssociativeArray2D extends DataStructureMap<Map<Object, AssociativeArray>> {
     
+    /**
+     * Default constructor which initializes the internal data with a LinkedHashMap.
+     */
     public AssociativeArray2D() {
+        super();
         internalData = new LinkedHashMap<>();
     }
     
+    /**
+     * Constructor that initializes the internal data with the provided map.
+     * 
+     * @param internalData 
+     */
     public AssociativeArray2D(Map<Object, AssociativeArray> internalData) {
         super(internalData);
     }
     
+    /**
+     * Generates a copy of this object.
+     * 
+     * @return 
+     */
     public AssociativeArray2D copy() {
         AssociativeArray2D aArray2D = new AssociativeArray2D();
         for(Map.Entry<Object, AssociativeArray> entry: internalData.entrySet()) {
-            aArray2D.internalData.put(entry.getKey(), new AssociativeArray(entry.getValue()));
+            aArray2D.internalData.put(entry.getKey(), entry.getValue().copy());
         }
         return aArray2D;
     }
     
+    /**
+     * Removes a particular key from the internal map and returns the value 
+     * associated with that key if present in the map.
+     * 
+     * @param key
+     * @return 
+     */
     public final AssociativeArray remove(Object key) {
         return internalData.remove(key);
     }
     
+    /**
+     * Returns the value which is associated with the provided key.
+     * 
+     * @param key
+     * @return 
+     */
     public final AssociativeArray get(Object key) {
         return internalData.get(key);
     }
     
+    /**
+     * Adds a particular key-value into the internal map. It returns the previous
+     * value which was associated with that key.
+     * 
+     * @param key
+     * @param value
+     * @return 
+     */
     public final AssociativeArray put(Object key, AssociativeArray value) {
         return internalData.put(key, value);
     }
     
+    /**
+     * Returns the entrySet of the internal map.
+     * 
+     * @return 
+     */
     public final Set<Map.Entry<Object, AssociativeArray>> entrySet() {
         return internalData.entrySet();
     }
     
+    /**
+     * Returns the keySet of the internal map.
+     * 
+     * @return 
+     */
     public final Set<Object> keySet() {
         return internalData.keySet();
     }
     
+    /**
+     * Returns the values of the internal map.
+     * 
+     * @return 
+     */
     public final Collection<AssociativeArray> values() {
         return internalData.values();
     }
@@ -100,13 +151,24 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
         return internalData.get(key1).internalData.put(key2, value);
     }
     
+    /**
+     * Checks whether the provided object is equal to the current object.
+     * 
+     * @param o
+     * @return 
+     */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
         if ( !(o instanceof AssociativeArray2D) ) return false;
         return internalData.equals(((AssociativeArray2D)o).internalData);
     }
-
+    
+    /**
+     * Returns the hash code of the object.
+     * 
+     * @return 
+     */
     @Override
     public int hashCode() {
         return internalData.hashCode();

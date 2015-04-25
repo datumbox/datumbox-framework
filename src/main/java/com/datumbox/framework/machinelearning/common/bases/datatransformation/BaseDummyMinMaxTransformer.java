@@ -110,7 +110,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     protected static void normalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data) {
             Record r = data.get(rId);
-            AssociativeArray xData = new AssociativeArray(r.getX());
+            AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
             for(Object column : minColumnValues.keySet()) {
@@ -146,7 +146,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     protected static void denormalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data) {
             Record r = data.get(rId);
-            AssociativeArray xData = new AssociativeArray(r.getX());
+            AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
             for(Object column : minColumnValues.keySet()) {
@@ -289,7 +289,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         for(Integer rId: data) {
             Record r = data.get(rId);
             
-            AssociativeArray xData = new AssociativeArray(r.getX());
+            AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
