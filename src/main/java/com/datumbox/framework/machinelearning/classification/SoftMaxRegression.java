@@ -23,8 +23,6 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
-
-
 import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -36,10 +34,15 @@ import java.util.Set;
 /**
  * The SoftMaxRegression implements the Multinomial Logistic Regression classifier.
  * 
+ * References:
+ * http://blog.datumbox.com/machine-learning-tutorial-the-multinomial-logistic-regression-softmax-regression/
+ * http://blog.datumbox.com/tuning-the-learning-rate-in-gradient-descent/
+ * http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html
+ * http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> {
-    //References: http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
     
     /**
      * The ModelParameters class stores the coefficients that were learned during

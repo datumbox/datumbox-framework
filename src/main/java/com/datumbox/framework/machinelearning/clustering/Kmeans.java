@@ -36,43 +36,56 @@ import java.util.Set;
 
 
 /**
- *
+ * This class implements the K-means clustering algorithm supporting different 
+ * Initialization and distance methods. Several different expansions on the standard
+ * algorithm are used to ensure we can handle mixed data (k-representative, k-prototype,
+ * etc).
+ * 
+ * References:
+ * http://cs.gsu.edu/~wkim/index_files/papers/kprototype.pdf
+ * http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf
+ * http://www.ima.umn.edu/~iwen/REU/BATS-Means.pdf
+ * http://web.cs.swarthmore.edu/~turnbull/Papers/Turnbull_GenreRBF_KDE05.pdf
+ * http://thesis.neminis.org/wp-content/plugins/downloads-manager/upload/masterThesis-VR.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> {
 
-    
+    /**
+     * The Cluster class of the Kmeans model.
+     */
     public static class Cluster extends BaseMLclusterer.Cluster {
         
         private Record centroid;
         
         private transient AssociativeArray xi_sum;
 
+        /**
+         * Public constructor of Cluster which takes as argument a unique id.
+         * 
+         * @param clusterId 
+         */
         public Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
         }
-    
+        
+        /**
+         * Returns the centroid of the cluster.
+         * 
+         * @return 
+         */
         public Record getCentroid() {
             return centroid;
         }
-
-        @Override
-        protected boolean add(Integer rId, Record r) {
-            boolean result = recordIdSet.add(rId);
-            if(result) {
-                xi_sum.addValues(r.getX());
-            }
-            return result;
-        }
         
-        @Override
-        protected boolean remove(Integer rId, Record r) {
-            //No need to implement this method in this algorithm
-            throw new UnsupportedOperationException();
-        }
-        
+        /**
+         * Updates the cluster parameters by estimating again the centroid.
+         * 
+         * @return 
+         */
         public boolean updateClusterParameters() {
             boolean changed=false;
             
@@ -91,6 +104,21 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             return changed;
         }
+
+        @Override
+        protected boolean add(Integer rId, Record r) {
+            boolean result = recordIdSet.add(rId);
+            if(result) {
+                xi_sum.addValues(r.getX());
+            }
+            return result;
+        }
+        
+        @Override
+        protected boolean remove(Integer rId, Record r) {
+            //No need to implement this method in this algorithm
+            throw new UnsupportedOperationException();
+        }
                 
         @Override
         protected void clear() {
@@ -99,6 +127,10 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         }
     }
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<Kmeans.Cluster> {
         
         private int totalIterations;
@@ -106,36 +138,61 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         @BigMap
         private Map<Object, Double> featureWeights; 
         
-
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        
+        /**
+         * Getter for the total number of iterations used in training.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
-
+        
+        /**
+         * Setter for the total number of iterations used in training.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
-
+        
+        /**
+         * Getter for the estimated weights of each feature.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getFeatureWeights() {
             return featureWeights;
         }
-
+        
+        /**
+         * Setter for the estimated weights of each feature.
+         * 
+         * @param featureWeights 
+         */
         public void setFeatureWeights(Map<Object, Double> featureWeights) {
             this.featureWeights = featureWeights;
         }
         
-
-        
-        
     } 
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {    
-
+        /**
+         * The Initialization method that we use.
+         */
         public enum Initialization {
             FORGY, //Forgy
             RANDOM_PARTITION, //Random Partition
@@ -145,6 +202,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             PLUS_PLUS; //Kmeans++: http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf    http://www.ima.umn.edu/~iwen/REU/BATS-Means.pdf
         }
         
+        /**
+         * The Distance method used in the calculations.
+         */
         public enum Distance {
             EUCLIDIAN,
             MANHATTAN;
@@ -167,71 +227,150 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         private boolean weighted = false; //whether the weighted version of the algorithm will run. The weighted version estimates weights for every feature
         
         //Getters Setters
-        
+        /**
+         * Getter for the number of clusters k.
+         * 
+         * @return 
+         */
         public int getK() {
             return k;
         }
-
+        
+        /**
+         * Setter for the number of clusters k.
+         * 
+         * @param k 
+         */
         public void setK(int k) {
             this.k = k;
         }
         
+        /**
+         * Getter for the initialization method that we use.
+         * 
+         * @return 
+         */
         public Initialization getInitMethod() {
             return initMethod;
         }
-
+        
+        /**
+         * Setter for the initialization method that we use.
+         * 
+         * @param initMethod 
+         */
         public void setInitMethod(Initialization initMethod) {
             this.initMethod = initMethod;
         }
-
+        
+        /**
+         * Getter for the distance method that we use.
+         * 
+         * @return 
+         */
         public Distance getDistanceMethod() {
             return distanceMethod;
         }
-
+        
+        /**
+         * Setter for the distance method that we use.
+         * 
+         * @param distanceMethod 
+         */
         public void setDistanceMethod(Distance distanceMethod) {
             this.distanceMethod = distanceMethod;
         }
-
+        
+        /**
+         * Getter for the maximum permitted iterations during training.
+         * 
+         * @return 
+         */
         public int getMaxIterations() {
             return maxIterations;
         }
-
+        
+        /**
+         * Setter for the maximum permitted iterations during training.
+         * 
+         * @param maxIterations 
+         */
         public void setMaxIterations(int maxIterations) {
             this.maxIterations = maxIterations;
         }
-
+        
+        /**
+         * Getter for the C value of the SubsetFurthestFirst initialization method. 
+         * 
+         * @return 
+         */
         public double getSubsetFurthestFirstcValue() {
             return subsetFurthestFirstcValue;
         }
-
+        
+        /**
+         * Setter for the C value of the SubsetFurthestFirst initialization method.
+         * 
+         * @param subsetFurthestFirstcValue 
+         */
         public void setSubsetFurthestFirstcValue(double subsetFurthestFirstcValue) {
             this.subsetFurthestFirstcValue = subsetFurthestFirstcValue;
         }
-
+        
+        /**
+         * Getter for the Categorical Gama Multiplier.
+         * 
+         * @return 
+         */
         public double getCategoricalGamaMultiplier() {
             return categoricalGamaMultiplier;
         }
-
+        
+        /**
+         * Setter for the Categorical Gama Multiplier.
+         * 
+         * @param categoricalGamaMultiplier 
+         */
         public void setCategoricalGamaMultiplier(double categoricalGamaMultiplier) {
             this.categoricalGamaMultiplier = categoricalGamaMultiplier;
         }
-
+        
+        /**
+         * Getter for whether the algorithm should estimate the weights of the
+         * features dynamically.
+         * 
+         * @return 
+         */
         public boolean isWeighted() {
             return weighted;
         }
-
+        
+        /**
+         * Setter for whether the algorithm should estimate the weights of the
+         * features dynamically.
+         * 
+         * @param weighted 
+         */
         public void setWeighted(boolean weighted) {
             this.weighted = weighted;
         }
         
     } 
 
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
         
     }
     
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public Kmeans(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class);
     } 
@@ -625,4 +764,5 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
         }
     }
+
 }

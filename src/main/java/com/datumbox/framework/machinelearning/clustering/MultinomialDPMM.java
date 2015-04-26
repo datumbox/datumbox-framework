@@ -27,27 +27,29 @@ import org.apache.commons.math3.linear.RealVector;
 
 
 /**
- * Multinomial with Dirichlet priors. 
+ * The MultinomialDPMM implements Dirichlet Process Mixture Models with Multinomial 
+ * and Dirichlet priors. 
  * 
  * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
  * data to be loaded in memory.
  * 
+ * References:
+ * http://blog.datumbox.com/overview-of-cluster-analysis-and-dirichlet-process-mixture-models/
+ * http://blog.datumbox.com/clustering-documents-and-gaussian-data-with-dirichlet-process-mixture-models/
+ * http://web.science.mq.edu.au/~mjohnson/papers/Johnson11MLSS-talk-extras.pdf
+ * https://web.archive.org/web/20100119210345/http://cog.brown.edu/~mj/classes/cg168/slides/ChineseRestaurants.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters, MultinomialDPMM.ValidationMetrics> {
-    /*
-      References:
-           http://web.science.mq.edu.au/~mjohnson/papers/Johnson11MLSS-talk-extras.pdf
-           https://web.archive.org/web/20100119210345/http://cog.brown.edu/~mj/classes/cg168/slides/ChineseRestaurants.pdf
-           iso-notes.docx
-           notes.txt
-    */
     
+    /**
+     * The Cluster class of the MultinomialDPMM model.
+     */
     public static class Cluster extends BaseDPMM.Cluster {
         //informational fields
         private int dimensions;
         
-
         //hyper parameters
         private double alphaWords; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
         
@@ -55,53 +57,113 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         private RealVector wordCounts;
         
         //Cache
-        /**
-         * Cached value of WordCountsPlusAlpha used only for speed optimization
-         */
-        private transient Double cache_wordcounts_plusalpha;
+        private transient Double cache_wordcounts_plusalpha; //Cached value of WordCountsPlusAlpha used only for speed optimization
 
-        
-        
-        
+        /**
+         * Public constructor of Cluster which takes as argument a unique id.
+         * 
+         * @param clusterId 
+         */
         public Cluster(Integer clusterId) {
             super(clusterId);
         }
-
-        protected Map<Object, Integer> getFeatureIds() {
-            return featureIds;
-        }
-
-        protected void setFeatureIds(Map<Object, Integer> featureIds) {
-            this.featureIds = featureIds;
-        }
-        
         
         //hyper parameters getters/setters
-        
+        /**
+         * Getter for the Alpha hyperparameter of the words.
+         * 
+         * @return 
+         */
         public double getAlphaWords() {
             return alphaWords;
         }
-
+        
+        /**
+         * Setter for the Alpha hyperparameter of the words.
+         * 
+         * @param alphaWords 
+         */
         public void setAlphaWords(double alphaWords) {
             this.alphaWords = alphaWords;
         }
 
+        /**
+         * Getter for number of Dimensions.
+         * 
+         * @return 
+         */
         public int getDimensions() {
             return dimensions;
         }
 
+        /**
+         * Setter for number of Dimensions.
+         * 
+         * @param dimensions 
+         */
         public void setDimensions(int dimensions) {
             this.dimensions = dimensions;
         }
-
         
-        
+        /**
+         * Initializes the cluster's internal parameters: mean, covariance, meanError and meanDf.
+         */
+        @Override
+        public void initializeClusterParameters() {
+            //Set default hyperparameters if not set
 
+            cache_wordcounts_plusalpha=null;
+            wordCounts = new ArrayRealVector(dimensions); 
+        }
+
+        /**
+         * Estimates the posterior LogPdf of a Record belonging to the cluster.
+         * 
+         * @param r
+         * @return 
+         */
+        @Override
+        public double posteriorLogPdf(Record r) {
+            RealVector x_mu = MatrixDataset.parseRecord(r, featureIds);    
+
+            RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
+            RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
+
+            double cOfWordCountsPlusAlpha;
+            if(cache_wordcounts_plusalpha==null) {
+                cache_wordcounts_plusalpha=C(wordCountsPlusAlpha);
+            }
+            cOfWordCountsPlusAlpha=cache_wordcounts_plusalpha;
+
+            //double pdf= C(wordCountsPlusAlpha.add(x_mu))/C(wordCountsPlusAlpha);
+            double logPdf= C(wordCountsPlusAlpha.add(x_mu))-cOfWordCountsPlusAlpha;
+            return logPdf;
+        }
+
+        /**
+         * Getter for the featureIds which is a mapping between the column names
+         * and their positions on the vector.
+         * 
+         * @return 
+         */
+        protected Map<Object, Integer> getFeatureIds() {
+            return featureIds;
+        }
+        
+        /**
+         * Setter for the featureIds which is a mapping between the column names
+         * and their positions on the vector.
+         * 
+         * @param featureIds 
+         */
+        protected void setFeatureIds(Map<Object, Integer> featureIds) {
+            this.featureIds = featureIds;
+        }
 
         /**
          * Internal method that adds the record in cluster and updates clusterParams
          * 
-         * @param rId
+         * @param rId  The id of the record in the dataset.
          * @param r    The point that we wish to add in the cluster.
          * @return 
          */
@@ -128,6 +190,13 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             return true;
         }
         
+        /**
+         * Internal method that removes the record in cluster and updates clusterParams
+         * 
+         * @param rId  The id of the record in the dataset.
+         * @param r    The point that we wish to add in the cluster.
+         * @return 
+         */
         @Override
         protected boolean remove(Integer rId, Record r) {
             if(recordIdSet.remove(rId)==false) {
@@ -143,39 +212,10 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             
             return true;
         }
-
-        /**
-         * Initializes the cluster's internal parameters: mean, covariance, meanError and meanDf.
-         */
-        @Override
-        public void initializeClusterParameters() {
-            //Set default hyperparameters if not set
-
-            cache_wordcounts_plusalpha=null;
-            wordCounts = new ArrayRealVector(dimensions); 
-        }
-
+        
         @Override
         protected void updateClusterParameters() {
             cache_wordcounts_plusalpha=null;
-        }
-
-        @Override
-        public double posteriorLogPdf(Record r) {
-            RealVector x_mu = MatrixDataset.parseRecord(r, featureIds);    
-
-            RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
-            RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
-
-            double cOfWordCountsPlusAlpha;
-            if(cache_wordcounts_plusalpha==null) {
-                cache_wordcounts_plusalpha=C(wordCountsPlusAlpha);
-            }
-            cOfWordCountsPlusAlpha=cache_wordcounts_plusalpha;
-
-            //double pdf= C(wordCountsPlusAlpha.add(x_mu))/C(wordCountsPlusAlpha);
-            double logPdf= C(wordCountsPlusAlpha.add(x_mu))-cOfWordCountsPlusAlpha;
-            return logPdf;
         }
         
         /**
@@ -206,14 +246,26 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         }
     }
     
-    
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseDPMM.ModelParameters<MultinomialDPMM.Cluster> {
         
-
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
+        /**
+         * Getter for the List of Clusters.
+         * 
+         * @return 
+         */
         @Override
         public Map<Integer, Cluster> getClusterList() {
             Map<Integer, Cluster> clusterList = super.getClusterList();
@@ -230,31 +282,59 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         }
     }
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseDPMM.TrainingParameters {
         
         private double alphaWords = 50.0; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
-
+        
+        /**
+         * Getter for the Alpha hyperparameter of the words.
+         * 
+         * @return 
+         */
         public double getAlphaWords() {
             return alphaWords;
         }
-
+        
+        /**
+         * Setter for the Alpha hyperparameter of the words.
+         * 
+         * @param alphaWords 
+         */
         public void setAlphaWords(double alphaWords) {
             this.alphaWords = alphaWords;
         }
         
     }
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseDPMM.ValidationMetrics {
         
     }
 
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public MultinomialDPMM(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
     }
     
+    /**
+     * Creates a new cluster with the provided clusterId and it initializes it
+     * accordingly.
+     * 
+     * @param clusterId
+     * @return 
+     */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();

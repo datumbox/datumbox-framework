@@ -26,6 +26,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  * is clipped to 1.
  * 
  * References: 
+ * http://blog.datumbox.com/machine-learning-tutorial-the-naive-bayes-text-classifier/
  * http://www.stanford.edu/class/cs124/lec/sentiment.pptx
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>

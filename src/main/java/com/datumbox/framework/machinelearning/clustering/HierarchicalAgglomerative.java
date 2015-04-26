@@ -33,12 +33,20 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * This class implements the Hierarchical Agglomerative clustering algorithm
+ * supporting different Linkage and Distance methods.
+ * 
+ * References:
+ * http://nlp.stanford.edu/IR-book/html/htmledition/hierarchical-agglomerative-clustering-1.html
+ * http://php-nlp-tools.com/posts/faster-hierarchical-clustering.html
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> {
 
-    
+    /**
+     * The Cluster class of the HierarchicalAgglomerative model.
+     */
     public static class Cluster extends BaseMLclusterer.Cluster {
         
         private Record centroid;
@@ -47,14 +55,59 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         private transient AssociativeArray xi_sum;
         
+        /**
+         * Public constructor of Cluster which takes as argument a unique id.
+         * 
+         * @param clusterId 
+         */
         public Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
         }
         
+        /**
+         * Returns the centroid of the cluster.
+         * 
+         * @return 
+         */
         public Record getCentroid() {
             return centroid;
+        }
+        
+        /**
+         * Merges this cluster with the provided cluster.
+         * 
+         * @param c
+         * @return 
+         */
+        public boolean merge(Cluster c) {
+            xi_sum.addValues(c.xi_sum);
+            return recordIdSet.addAll(c.recordIdSet);
+        }
+        
+        /**
+         * Updates the cluster parameters by estimating again the centroid.
+         * 
+         * @return 
+         */
+        public boolean updateClusterParameters() {
+            boolean changed=false;
+            
+            int size = recordIdSet.size();
+            
+            AssociativeArray centoidValues = new AssociativeArray();
+            centoidValues.addValues(xi_sum);
+            
+            if(size>0) {
+                centoidValues.multiplyValues(1.0/size);
+            }
+            if(!centroid.getX().equals(centoidValues)) {
+                changed=true;
+                centroid = new Record(centoidValues, centroid.getY());
+            }
+            
+            return changed;
         }
 
         protected boolean isActive() {
@@ -79,30 +132,6 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             //No need to implement this method in this algorithm
             throw new UnsupportedOperationException();
         }
-        
-        public boolean merge(Cluster c) {
-            xi_sum.addValues(c.xi_sum);
-            return recordIdSet.addAll(c.recordIdSet);
-        }
-        
-        public boolean updateClusterParameters() {
-            boolean changed=false;
-            
-            int size = recordIdSet.size();
-            
-            AssociativeArray centoidValues = new AssociativeArray();
-            centoidValues.addValues(xi_sum);
-            
-            if(size>0) {
-                centoidValues.multiplyValues(1.0/size);
-            }
-            if(!centroid.getX().equals(centoidValues)) {
-                changed=true;
-                centroid = new Record(centoidValues, centroid.getY());
-            }
-            
-            return changed;
-        }
                 
         @Override
         protected void clear() {
@@ -111,22 +140,41 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
     }
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
           
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
+        
     } 
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {    
         
+        /**
+         * The Linkage method used in the calculations.
+         */
         public enum Linkage {
             AVERAGE, //Average Linkage (all points to all points)
             SINGLE, //Nearest Neightbour
             COMPLETE; //Farther Neightbour
         }
         
+        /**
+         * The Distance method used in the calculations.
+         */
         public enum Distance {
             EUCLIDIAN,
             MANHATTAN,
@@ -144,46 +192,94 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         private double minClustersThreshold = 2;
         
         //Getters Setters
+        /**
+         * Getter for Linkage Method.
+         * 
+         * @return 
+         */
         public Linkage getLinkageMethod() {
             return linkageMethod;
         }
-
+        
+        /**
+         * Setter for Linkage Method.
+         * 
+         * @param linkageMethod 
+         */
         public void setLinkageMethod(Linkage linkageMethod) {
             this.linkageMethod = linkageMethod;
         }
-
+        
+        /**
+         * Getter for Distance Method.
+         * 
+         * @return 
+         */
         public Distance getDistanceMethod() {
             return distanceMethod;
         }
-
+        
+        /**
+         * Setter for Distance Method.
+         * 
+         * @param distanceMethod 
+         */
         public void setDistanceMethod(Distance distanceMethod) {
             this.distanceMethod = distanceMethod;
         }
-
+        
+        /**
+         * Getter for the maximum distance threshold.
+         * 
+         * @return 
+         */
         public double getMaxDistanceThreshold() {
             return maxDistanceThreshold;
         }
-
+        
+        /**
+         * Setter for the maximum distance threshold.
+         * 
+         * @param maxDistanceThreshold 
+         */
         public void setMaxDistanceThreshold(double maxDistanceThreshold) {
             this.maxDistanceThreshold = maxDistanceThreshold;
         }
 
+        /**
+         * Getter for the minimum clusters threshold.
+         * 
+         * @return 
+         */
         public double getMinClustersThreshold() {
             return minClustersThreshold;
         }
-
+        
+        /**
+         * Setter for the minimum clusters threshold.
+         * 
+         * @param minClustersThreshold 
+         */
         public void setMinClustersThreshold(double minClustersThreshold) {
             this.minClustersThreshold = minClustersThreshold;
         }
         
     } 
-
     
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
         
     }
     
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class);
     } 

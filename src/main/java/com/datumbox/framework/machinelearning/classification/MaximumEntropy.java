@@ -23,8 +23,6 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
-
-
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +37,7 @@ import java.util.Set;
  * implementation of Multinomial Logistic Regression model.
  * 
  * References: 
+ * http://blog.datumbox.com/machine-learning-tutorial-the-max-entropy-text-classifier/
  * http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>

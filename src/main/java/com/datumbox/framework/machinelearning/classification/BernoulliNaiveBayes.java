@@ -35,6 +35,7 @@ import java.util.Set;
  * The BernoulliNaiveBayes class implements the Bernoulli Naive Bayes model. 
  * 
  * References: 
+ * http://blog.datumbox.com/machine-learning-tutorial-the-naive-bayes-text-classifier/
  * http://nlp.stanford.edu/IR-book/html/htmledition/the-bernoulli-model-1.html
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>

@@ -24,6 +24,9 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
  * The MultinomialNaiveBayes class provides an implementation of Multinomial
  * Naive Bayes model.
  * 
+ * References:
+ * http://blog.datumbox.com/machine-learning-tutorial-the-naive-bayes-text-classifier/
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters, MultinomialNaiveBayes.ValidationMetrics> {
