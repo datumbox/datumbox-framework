@@ -21,6 +21,7 @@ import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * This class contains methods for estimating and testing Pearson's Correlation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

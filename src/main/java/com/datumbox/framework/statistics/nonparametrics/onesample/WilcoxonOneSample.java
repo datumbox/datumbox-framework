@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * One sample Wilcoxon test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

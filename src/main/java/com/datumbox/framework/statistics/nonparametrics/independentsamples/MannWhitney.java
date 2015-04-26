@@ -25,6 +25,7 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 /**
+ * Mann-Whitney non-parametric test for independent samples.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

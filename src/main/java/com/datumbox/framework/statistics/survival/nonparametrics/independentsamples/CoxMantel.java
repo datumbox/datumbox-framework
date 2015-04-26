@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Implementation of the Cox-Mantel non-parametric test.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CoxMantel {

@@ -18,13 +18,14 @@ package com.datumbox.framework.statistics.parametrics.relatedsamples;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
- *
+ * Student's Paired T-test for mean.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class StudentsRelatedSamples {
     
     /**
-     * Related Samples (Paired) Mean Test for Students.
+     * Related Samples (Paired) Mean Test of Student's.
      * Requirements: Normal with known or unknown variances
      * 
      * @param dbar

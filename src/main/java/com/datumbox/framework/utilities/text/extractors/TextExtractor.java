@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
+ * Base class for all Text exactor classes. The Text Extractors are parameterized
+ * with a Parameters class and they take as input strings.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <TP>
@@ -30,10 +32,18 @@ import java.util.Map;
  */
 public abstract class TextExtractor<TP extends TextExtractor.Parameters, K, V> {
     
+    /**
+     * Parameters of the TextExtractor.
+     */
     public static abstract class Parameters implements Parameterizable {         
         
         private Class<? extends Tokenizer> tokenizer = WhitespaceTokenizer.class;
 
+        /**
+         * Generates a new Tokenizer object by using the provided tokenizer class.
+         * 
+         * @return 
+         */
         public Tokenizer generateTokenizer() {
             if(tokenizer==null) {
                 return null;
@@ -47,10 +57,20 @@ public abstract class TextExtractor<TP extends TextExtractor.Parameters, K, V> {
             }
         }
 
+        /**
+         * Getter of the Tokenizer class.
+         * 
+         * @return 
+         */
         public Class<? extends Tokenizer> getTokenizer() {
             return tokenizer;
         }
-
+        
+        /**
+         * Setter of the Tokenizer class.
+         * 
+         * @param tokenizer 
+         */
         public void setTokenizer(Class<? extends Tokenizer> tokenizer) {
             this.tokenizer = tokenizer;
         }
@@ -59,10 +79,25 @@ public abstract class TextExtractor<TP extends TextExtractor.Parameters, K, V> {
     
     protected TP parameters;
     
+    /**
+     * Public constructor that accepts as arguments the Parameters object.
+     * 
+     * @param parameters 
+     */
     public TextExtractor(TP parameters) {
         this.parameters = parameters;
     }
     
+    /**
+     * This method gets as input a string and returns a map with the result of
+     * the analysis. The type and the contents of the map depend on the implementation
+     * of the extractor. Some extractors provide the tokens (keywords) along with 
+     * metrics (frequencies, occurrences, scores etc) while others return the
+     * text as a sequence of words.
+     * 
+     * @param text
+     * @return 
+     */
     public abstract Map<K, V> extract(final String text);
     
     /**

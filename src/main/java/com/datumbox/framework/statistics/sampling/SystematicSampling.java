@@ -21,7 +21,8 @@ import com.datumbox.common.utilities.PHPfunctions;
 import java.util.Iterator;
 
 /**
- * Systematic Sampling
+ * This class provides methods which can be used for performing Systematic Sampling.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SystematicSampling {

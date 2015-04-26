@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.parametrics.independentsamples;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * Normal independent samples mean test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

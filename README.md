@@ -44,7 +44,7 @@ The Framework currently supports performing multiple Parametric & non-parametric
 Documentation
 -------------
 
-At the moment the Framework has a very poor documentation. Fortunately for every model there is a JUnit Test which clearly shows how to train and use the models. If you use the framework or part of it, please consider commenting the methods that you used and contributing your changes by sending a pull request. 
+Most of the public methods and classes of the Framework are documented with Javadoc comments. Moreover for every model there is a JUnit Test which clearly shows how to train and use the models. 
 
 Bug Reports
 -----------
@@ -54,7 +54,7 @@ Despite the fact that parts of the Framework have been used in commercial applic
 Contributing
 ------------
 
-By far the most important part missing from the Framework is the Documentation and comments of the code. Other important enhancements include adding Thread support (where possible), improving the architecture of the framework and supporting more Machine Learning and Statistical Models. Please consider contributing if you want to keep this project alive. 
+The Framework can be improved in many ways and as a result any contribution is welcome. By far the most important part missing from the Framework is multithread support and the ability of using the framework from command line. Other important enhancements include improving the documentation, the test coverage and the examples, improving the architecture of the framework and supporting more Machine Learning and Statistical Models. Please consider contributing if you want to keep this project alive. 
 
 Acknowledgements
 ----------------

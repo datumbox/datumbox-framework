@@ -25,26 +25,21 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * The TextSimilarity class provides methods that estimate the similarity of two
+ * different strings.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TextSimilarity {
-    protected static String preprocessDocument(String text) {
-        //URLs
-        text=StringCleaner.tokenizeURLs(text);
-
-        //Remove HTML
-        text=HTMLCleaner.extractText(text);
-
-        //Remove an Accents
-        text=StringCleaner.removeAccents(text);
-        
-        //Remove extra spaces
-        text=StringCleaner.removeExtraSpaces(text);
-        
-        return text;
-    }
-
+    
+    /**
+     * This calculates the similarity between two strings as described in Programming 
+     * Classics: Implementing the World's Best Algorithms by Oliver (ISBN 0-131-00413-1).
+     * 
+     * @param text1
+     * @param text2
+     * @return 
+     */
     public static double oliverSimilarity(String text1, String text2) {
         preprocessDocument(text1);
         preprocessDocument(text2);
@@ -61,20 +56,21 @@ public class TextSimilarity {
 
         return p;
     }
-
     
-    private static void filterKeywordCombinations(Map<String, Double> keywords, int w) {
-        Iterator<Map.Entry<String, Double>> it = keywords.entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<String, Double> entry = it.next();
-            if(PHPfunctions.substr_count(entry.getKey(), ' ')!=w-1) {
-                it.remove();
-            }
-        }
-    }
+    /**
+     * Estimates the w-shingler similarity between two texts. The w is the number
+     * of word sequences that are used for the estimation.
+     * 
+     * References:
+     * http://phpir.com/shingling-near-duplicate-detection
+     * http://www.std.org/~msm/common/clustering.html
+     * 
+     * @param text1
+     * @param text2
+     * @param w
+     * @return 
+     */
     public static double shinglerSimilarity(String text1, String text2, int w) {
-        //http://phpir.com/shingling-near-duplicate-detection
-        //http://www.std.org/~msm/common/clustering.html
         preprocessDocument(text1);
         preprocessDocument(text2);
 
@@ -115,6 +111,32 @@ public class TextSimilarity {
         keywords2=null;
 
         return resemblance;
+    }
+    
+    protected static String preprocessDocument(String text) {
+        //URLs
+        text=StringCleaner.tokenizeURLs(text);
+
+        //Remove HTML
+        text=HTMLCleaner.extractText(text);
+
+        //Remove an Accents
+        text=StringCleaner.removeAccents(text);
+        
+        //Remove extra spaces
+        text=StringCleaner.removeExtraSpaces(text);
+        
+        return text;
+    }
+    
+    private static void filterKeywordCombinations(Map<String, Double> keywords, int w) {
+        Iterator<Map.Entry<String, Double>> it = keywords.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<String, Double> entry = it.next();
+            if(PHPfunctions.substr_count(entry.getKey(), ' ')!=w-1) {
+                it.remove();
+            }
+        }
     }
 }
     

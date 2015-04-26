@@ -20,6 +20,7 @@ import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * This class provides methods for estimating and testing Kendall Tau's Correlation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

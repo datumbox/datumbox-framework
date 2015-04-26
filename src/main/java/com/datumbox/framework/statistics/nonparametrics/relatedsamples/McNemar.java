@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * McNemar's test for paired nominal data.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

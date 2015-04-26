@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * Levene's test for assessing the equality of variances.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

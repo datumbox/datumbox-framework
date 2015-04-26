@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Kruskal–Wallis one-way analysis of variance.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

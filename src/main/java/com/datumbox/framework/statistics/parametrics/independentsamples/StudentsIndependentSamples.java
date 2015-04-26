@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.parametrics.independentsamples;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * Student's Independent Sample Mean test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

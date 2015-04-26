@@ -26,11 +26,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * The URLParser class contains static methods which can be used for parsing the
+ * contents of URL strings.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class URLParser {
     
+    /**
+     * Enum with the parts of a URL string.
+     */
     public enum URLParts {
         PROTOCOL,
         USERINFO,
@@ -43,6 +48,9 @@ public class URLParser {
         REF
     }
     
+    /**
+     * Enum with the parts of a domain name.
+     */
     public enum DomainParts {
         SUBDOMAIN, //www
         DOMAINNAME, //example
@@ -55,10 +63,26 @@ public class URLParser {
     //common second level domains (example: com.gr, gov.uk etc)
     public static final Set<String> commonSLDs = new HashSet<>(Arrays.asList("com", "gov", "edu", "org", "net", "co", "gob", "ac", "or", "se", "uk", "gb", "eu", "id", "info", "mil"));
     
+    /**
+     * Converts a relative URL to absolute URL.
+     * 
+     * @param baseURL
+     * @param relative
+     * @return
+     * @throws MalformedURLException 
+     */
     public static URL toAbsolute(URL baseURL, String relative) throws MalformedURLException {
         return new URL(baseURL, relative);
     }
     
+    /**
+     * Converts a relative URL to absolute URL.
+     * 
+     * @param base
+     * @param relative
+     * @return
+     * @throws MalformedURLException 
+     */
     public static String toAbsolute(String base, String relative) throws MalformedURLException {
         String absolute = null;
         base = base.trim();
@@ -79,10 +103,23 @@ public class URLParser {
         return absolute;
     }
     
+    /**
+     * This method splits a URL into parts and return a map containing them.
+     * 
+     * @param URLString
+     * @return
+     * @throws MalformedURLException 
+     */
     public static Map<URLParts, String> splitURL(String URLString) throws MalformedURLException {
         return splitURL(new URL(URLString));
     }
     
+    /**
+     * This method splits a URL into parts and return a map containing them.
+     * 
+     * @param url
+     * @return 
+     */
     public static Map<URLParts, String> splitURL(URL url) {
         Map<URLParts, String> urlParts = new HashMap<>();
         
@@ -105,11 +142,24 @@ public class URLParser {
         return urlParts;
     }
     
+    /**
+     * This method can be used to build a URL from its parts.
+     * 
+     * @param urlParts
+     * @return
+     * @throws URISyntaxException 
+     */
     public static String joinURL(Map<URLParts, String> urlParts) throws URISyntaxException {
         URI uri = new URI(urlParts.get(URLParts.PROTOCOL), urlParts.get(URLParts.AUTHORITY), urlParts.get(URLParts.PATH), urlParts.get(URLParts.QUERY), urlParts.get(URLParts.REF));
         return uri.toString();
     }
     
+    /**
+     * Splits a domain name to parts and returns them in a map.
+     * 
+     * @param domain
+     * @return 
+     */
     public static Map<DomainParts, String> splitDomain(String domain) {
         Map<DomainParts, String> domainParts = null;
         

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Cluster Sampling
+ * This class provides methods which can be used for performing Cluster Sampling.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

@@ -20,6 +20,7 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Iterator;
 
 /**
+ * LjungBox's parametric test for autocorrelation of timeseries.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

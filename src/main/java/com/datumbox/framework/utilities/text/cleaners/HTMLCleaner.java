@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
+ * The HTMLCleaner class is a utility class that provides a list of helpful methods
+ * which can be used to sanitize, clean up and manipulate HTML documents.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -36,86 +38,142 @@ public class HTMLCleaner {
     private static final Pattern METATAG_PATTERN = Pattern.compile("<[\\s]*meta[^>]*name[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*content[\\s]*=[\\s]*[\\\"']([^\\\"']*)[\\\"'][^>]*>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);    
     private static final Pattern HX_PATTERN = Pattern.compile("<[\\s]*(H[1-6])[^>]*?>(.*?)</\\1>", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);    
     
-    public static String replaceImgWithAlt(String text) {
-        Matcher m = IMG_ALT_TITLE_PATTERN.matcher(text);
+    /**
+     * Replaces the img tags with their alt text.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String replaceImgWithAlt(String html) {
+        Matcher m = IMG_ALT_TITLE_PATTERN.matcher(html);
         if (m.find()) {
             return m.replaceAll(" $1 ");
         }
-        return text;
+        return html;
     }
     
-    public static String removeComments(String text) {
-        return text.replaceAll("(?s)<!--.*?-->", "");
+    /**
+     * Removes all HTML comments from string.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String removeComments(String html) {
+        return html.replaceAll("(?s)<!--.*?-->", "");
     }
     
-    public static String unsafeRemoveAllTags(String text) {
-        return text.replaceAll("\\<.*?>"," ");
+    /**
+     * A fast way but unsafe way to remove the tags from an HTML string. The method
+     * does not remove javascript, css and other non text blocks and thus it should
+     * be used with caution.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String unsafeRemoveAllTags(String html) {
+        return html.replaceAll("\\<.*?>"," ");
     }
     
-    public static String safeRemoveAllTags(String text) {
-        text = removeNonTextTags(text);
-        text = unsafeRemoveAllTags(text);
-        return text;
+    /**
+     * A safe way to remove the tags from an HTML string. The method removes first
+     * javascript, css and other non text blocks and then removes all HTML tags.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String safeRemoveAllTags(String html) {
+        html = removeNonTextTags(html);
+        html = unsafeRemoveAllTags(html);
+        return html;
     }
     
-    protected static String removeNonTextTags(String text) {
-        text = removeComments(text);
-        Matcher m = NON_TEXT_TAGS_PATTERN.matcher(text);
+    protected static String removeNonTextTags(String html) {
+        html = removeComments(html);
+        Matcher m = NON_TEXT_TAGS_PATTERN.matcher(html);
         if(m.find()) {
-            text = m.replaceAll(" ");
+            html = m.replaceAll(" ");
         }
         
-        return text;
+        return html;
     }
     
-    public static String removeNonTextTagsAndAttributes(String text) {
-        text = removeNonTextTags(text);
+    /**
+     * Removes all non-text tags (Javascript, css etc) from a string along with
+     * all the attributes from the tags.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String removeNonTextTagsAndAttributes(String html) {
+        html = removeNonTextTags(html);
         
-        Matcher m = REMOVE_ATTRIBUTES_PATTERN.matcher(text);
+        Matcher m = REMOVE_ATTRIBUTES_PATTERN.matcher(html);
         if(m.find()) {
-            text = m.replaceAll("<$1$2>");
+            html = m.replaceAll("<$1$2>");
         }
         
-        text = StringEscapeUtils.unescapeHtml4(text);
+        html = StringEscapeUtils.unescapeHtml4(html);
         
-        return text;
+        return html;
     }
     
-    public static String extractText(String text) {
+    /**
+     * Extracts the text from an HTML page.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String extractText(String html) {
         //return Jsoup.parse(text).text();
-        text = replaceImgWithAlt(text);
-        text = safeRemoveAllTags(text);
+        html = replaceImgWithAlt(html);
+        html = safeRemoveAllTags(html);
         
-        text = StringEscapeUtils.unescapeHtml4(text);
+        html = StringEscapeUtils.unescapeHtml4(html);
         
-        return text;
+        return html;
     }
     
-    protected static String clear(String text) {
-        return StringCleaner.removeExtraSpaces(StringEscapeUtils.unescapeHtml4(unsafeRemoveAllTags(text)));
+    protected static String clear(String html) {
+        return StringCleaner.removeExtraSpaces(StringEscapeUtils.unescapeHtml4(unsafeRemoveAllTags(html)));
     }
     
-    public static String extractTitle(String text) {
-        Matcher m = TITLE_PATTERN.matcher(text);
+    /**
+     * Extracts the title of the page.
+     * 
+     * @param html
+     * @return 
+     */
+    public static String extractTitle(String html) {
+        Matcher m = TITLE_PATTERN.matcher(html);
         if (m.find()) {
             return clear(m.group(0));
         }
         return null;
     }
     
+    /**
+     * Enum with the various components of a hyperlink.
+     */
     public enum HyperlinkPart {
         HTMLTAG, 
         URL,
         ANCHORTEXT
     }
     
-    public static Map<HyperlinkPart, List<String>> extractHyperlinks(String text) {
+    /**
+     * Extracts the hyperlinks from an html string and returns their components 
+     * in a map.
+     * 
+     * @param html
+     * @return 
+     */
+    public static Map<HyperlinkPart, List<String>> extractHyperlinks(String html) {
         Map<HyperlinkPart, List<String>> hyperlinksMap = new HashMap<>();
         hyperlinksMap.put(HyperlinkPart.HTMLTAG, new ArrayList<>());
         hyperlinksMap.put(HyperlinkPart.URL, new ArrayList<>());
         hyperlinksMap.put(HyperlinkPart.ANCHORTEXT, new ArrayList<>());
                 
-        Matcher m = HYPERLINK_PATTERN.matcher(text);
+        Matcher m = HYPERLINK_PATTERN.matcher(html);
         while (m.find()) {
             if(m.groupCount()==2) {
                 String tag = m.group(0);
@@ -129,10 +187,16 @@ public class HTMLCleaner {
         return hyperlinksMap;
     }
     
-    public static Map<String, String> extractMetatags(String text) {
+    /**
+     * Extracts the meta tags from an HTML page and returns them in a map.
+     * 
+     * @param html
+     * @return 
+     */
+    public static Map<String, String> extractMetatags(String html) {
         Map<String, String> metatagsMap = new HashMap<>();
                 
-        Matcher m = METATAG_PATTERN.matcher(text);
+        Matcher m = METATAG_PATTERN.matcher(html);
         while (m.find()) {
             if(m.groupCount()==2) {
                 String name = m.group(1);
@@ -143,13 +207,19 @@ public class HTMLCleaner {
         return metatagsMap;
     }
     
-    public static Map<String, List<String>> extractHTMLheaders(String text) {
+    /**
+     * Extracts the HTML headers (h1-h6 tags) from an HTML page.
+     * 
+     * @param html
+     * @return 
+     */
+    public static Map<String, List<String>> extractHTMLheaders(String html) {
         Map<String, List<String>> hxtagsMap = new HashMap<>();
         for(int i=1;i<=6;++i) {
             hxtagsMap.put("H"+i, new ArrayList<>());
         }
                 
-        Matcher m = HX_PATTERN.matcher(text);
+        Matcher m = HX_PATTERN.matcher(html);
         while (m.find()) {
             if(m.groupCount()==2) {
                 String tagType = m.group(1).toUpperCase();

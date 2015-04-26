@@ -23,6 +23,7 @@ import com.datumbox.framework.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * This class provides methods to estimate and test Spearman's Correlation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

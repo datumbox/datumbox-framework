@@ -30,6 +30,8 @@ public class URLParserTest extends BaseTest {
 
     /**
      * Test of toAbsolute method, of class URLParser.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testToAbsolute_String_String() throws Exception {
@@ -43,6 +45,8 @@ public class URLParserTest extends BaseTest {
 
     /**
      * Test of splitURL method, of class URLParser.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testSplitURL_String() throws Exception {
@@ -65,6 +69,8 @@ public class URLParserTest extends BaseTest {
 
     /**
      * Test of joinURL method, of class URLParser.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testJoinURL() throws Exception {

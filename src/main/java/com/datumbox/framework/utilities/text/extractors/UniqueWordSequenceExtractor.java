@@ -22,19 +22,40 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * This extractor class extracts the unique keywords of a string as a sequence of words.
+ * Keywords that already appeared at the beginning of the string, do not reappear 
+ * in the returned sequence more than once.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class UniqueWordSequenceExtractor extends TextExtractor<UniqueWordSequenceExtractor.Parameters, Integer, String> {
     
+    /**
+     * Parameters of the UniqueWordSequenceExtractor.
+     */
     public static class Parameters extends TextExtractor.Parameters {  
         
     }
     
+    /**
+     * Public constructor that accepts as arguments the Parameters object.
+     * 
+     * @param parameters 
+     */
     public UniqueWordSequenceExtractor(Parameters parameters) {
         super(parameters);
     }
     
+    /**
+     * This method gets as input a string and returns as output a numbered sequence
+     * of the unique tokens. In the returned map as keys we store the position of the word
+     * in the original string and as value the actual unique token in that position.
+     * Note that the sequence includes only the position of the first occurrence of
+     * each word while the next occurrences are ignored.
+     * 
+     * @param text
+     * @return 
+     */
     @Override
     public Map<Integer, String> extract(final String text) {
         Tokenizer tokenizer = parameters.generateTokenizer();

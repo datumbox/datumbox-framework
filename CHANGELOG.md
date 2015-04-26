@@ -11,6 +11,7 @@ Version 0.6.0 - Build 20150426
 - Changed the public methods of the Machine Learning models to resemble Python's Scikit-Learn APIs.
 - Changed the software License from "GNU General Public License v3.0" to "Apache License, Version 2.0".
 - Added convenience methods to build a dataset from CSV or text files.
+- Enhanced the documentation and Javadoc comments of the Framework.
 
 Version 0.5.1 - Build 20141105
 ------------------------------

@@ -20,6 +20,7 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Iterator;
 
 /**
+ * One sample Sign test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

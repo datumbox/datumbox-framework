@@ -20,6 +20,7 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Arrays;
 
 /**
+ * Shapiro-Wilk test for normality.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

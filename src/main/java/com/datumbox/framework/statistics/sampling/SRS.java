@@ -19,14 +19,14 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;
 
 /**
- * Simple Random Sampling
+ * This class provides methods which can be used for performing Simple Random Sampling.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SRS {

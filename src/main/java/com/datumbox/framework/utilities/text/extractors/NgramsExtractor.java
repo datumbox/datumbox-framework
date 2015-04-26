@@ -26,11 +26,17 @@ import java.util.Map;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
+ * The NgramsExtractor class can be used to tokenize a string, extract its keyword
+ * combinations and estimate their occurrence scores in the original string. This
+ * extractor is ideal for the feature extraction phase of Text Classification.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, String, Double> {
     
+    /**
+     * Parameters of the NgramsExtractor.
+     */
     public static class Parameters extends TextExtractor.Parameters {           
         private int maxCombinations=3;
         
@@ -43,58 +49,143 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         private int keepFloatPointsUntilCombination=3; //After 3 word combinations ignore the float points to reduce memory and improve speed
         private double keepFloatPointsAbove=0.1; //ignore all floating point scores less than 0.1 to reduce memory and improve speed
         
+        /**
+         * Getter for the number of Maximum keyword combinations that we want to
+         * extract.
+         * 
+         * @return 
+         */
         public int getMaxCombinations() {
             return maxCombinations;
         }
-
+        
+        /**
+         * Setter for the number of Maximum keyword combinations that we want to
+         * extract. The default number of keyword combinations extracted by this
+         * class is 3.
+         * 
+         * @param maxCombinations 
+         */
         public void setMaxCombinations(int maxCombinations) {
             this.maxCombinations = maxCombinations;
         }
 
+        /**
+         * Getter for the minimum word length threshold. Words with a length less
+         * than this value will not be extracted.
+         * 
+         * @return 
+         */
         public int getMinWordLength() {
             return minWordLength;
         }
 
+        /**
+         * Setter for the minimum word length threshold. Words with a length less
+         * than this value will not be extracted. The default value for this
+         * threshold is 1.
+         * 
+         * @param minWordLength 
+         */
         public void setMinWordLength(int minWordLength) {
             this.minWordLength = minWordLength;
         }
-
+        
+        /**
+         * Getter for the minimum word occurrence threshold. Words with less
+         * occurrences than this value will be ignored.
+         * 
+         * @return 
+         */
         public int getMinWordOccurrence() {
             return minWordOccurrence;
         }
-
+        
+        /**
+         * Setter for the minimum word occurrence threshold. Words with less
+         * occurrences than this value will be ignored. The default value for
+         * this threshold is 1.
+         * 
+         * @param minWordOccurrence 
+         */
         public void setMinWordOccurrence(int minWordOccurrence) {
             this.minWordOccurrence = minWordOccurrence;
         }
 
+        /**
+         * Getter for the length of the examination window in which we search
+         * for keyword combinations.
+         * 
+         * @return 
+         */
         public int getExaminationWindowLength() {
             return examinationWindowLength;
         }
-
+        
+        /**
+         * Setter for the length of the examination window in which we search
+         * for keyword combinations. The default value for this length is 15.
+         * 
+         * @param examinationWindowLength 
+         */
         public void setExaminationWindowLength(int examinationWindowLength) {
             this.examinationWindowLength = examinationWindowLength;
         }
-
+        
+        /**
+         * Getter for the maximum distance between keywords. If the distance 
+         * between keywords is greater than this value, the keyword combination 
+         * is ignored.
+         * 
+         * @return 
+         */
         public int getMaxDistanceBetweenKwds() {
             return maxDistanceBetweenKwds;
         }
-
+        
+        /**
+         * Setter for the maximum distance between keywords. If the distance 
+         * between keywords is greater than this value, the keyword combination 
+         * is ignored. The default value for this threshold is 4.
+         * 
+         * @param maxDistanceBetweenKwds 
+         */
         public void setMaxDistanceBetweenKwds(int maxDistanceBetweenKwds) {
             this.maxDistanceBetweenKwds = maxDistanceBetweenKwds;
         }
-
+        
+        /**
+         * Getter for the keepFloatPointsUntilCombination variable. 
+         * 
+         * @return 
+         */
         public int getKeepFloatPointsUntilCombination() {
             return keepFloatPointsUntilCombination;
         }
 
+        /**
+         * Setter for the keepFloatPointsUntilCombination variable.
+         * 
+         * @param keepFloatPointsUntilCombination 
+         */
         public void setKeepFloatPointsUntilCombination(int keepFloatPointsUntilCombination) {
             this.keepFloatPointsUntilCombination = keepFloatPointsUntilCombination;
         }
 
+        /**
+         * Getter for the keepFloatPointsAbove variable.
+         * 
+         * @return 
+         */
         public double getKeepFloatPointsAbove() {
             return keepFloatPointsAbove;
         }
-
+        
+        /**
+         * Setter for the keepFloatPointsAbove variable.
+         * 
+         * @param keepFloatPointsAbove 
+         */
         public void setKeepFloatPointsAbove(double keepFloatPointsAbove) {
             this.keepFloatPointsAbove = keepFloatPointsAbove;
         }
@@ -110,10 +201,23 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
 
     private Integer numberOfWordsInDoc;
 
+    /**
+     * Public constructor that accepts as arguments the Parameters object.
+     * 
+     * @param parameters 
+     */
     public NgramsExtractor(Parameters parameters) {
         super(parameters);
     }
-        
+    
+    /**
+     * This method gets as input a string and returns as output a map with the
+     * extracted keywords along with the number of their scores in the text. Their
+     * scores are a combination of occurrences and proximity metrics.
+     * 
+     * @param text
+     * @return 
+     */
     @Override
     public Map<String, Double> extract(final String text) {
         //initialize/reset the protected variables
@@ -192,7 +296,14 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         
         return keywordsMap;
     }
- 
+    
+    /**
+     * Counts the number of occurrences of a keyword combination in the text.
+     * 
+     * @param keyword
+     * @param text
+     * @return 
+     */
     public double numberOfOccurrences(String keyword, final String text) {        
         double points=0.0;
         

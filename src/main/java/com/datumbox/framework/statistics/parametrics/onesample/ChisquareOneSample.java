@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.parametrics.onesample;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * One-sample Parametric Chisquare test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

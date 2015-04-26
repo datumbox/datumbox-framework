@@ -20,7 +20,8 @@ import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
- *
+ * Sign Related Sample test.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SignRelatedSamples {

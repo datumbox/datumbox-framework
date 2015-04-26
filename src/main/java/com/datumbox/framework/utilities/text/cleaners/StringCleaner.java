@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
+ * This is a utility class which contains several methods which are commonly 
+ * applied to clean-up a string before text classification.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -48,19 +50,22 @@ public class StringCleaner {
         smileys.put("=\\(", " PREPROCESSDOC_EM14 ");
     }
     
+    /**
+     * Replaces all the URLs within the text with a token.
+     * 
+     * @param text
+     * @return 
+     */
     public static String tokenizeURLs(String text) {
-        /*
-        Matcher m = URL_PATTERN.matcher(text);
-        StringBuffer sb = new StringBuffer(text.length());
-        while(m.find()){ 
-            m.appendReplacement(sb, TOKENIZED_URL); 
-        }
-        m.appendTail(sb);
-        return sb.toString();
-        */
         return PHPfunctions.preg_replace(URL_PATTERN, TOKENIZED_URL, text);
     }
     
+    /**
+     * Replaces all the smileys within the text with their tokens.
+     * 
+     * @param text
+     * @return 
+     */
     public static String tokenizeSmileys(String text) {
         for(Map.Entry<String, String> smiley : smileys.entrySet()) {
             text = text.replaceAll(smiley.getKey(), smiley.getValue());
@@ -68,17 +73,36 @@ public class StringCleaner {
         return text;
     }
     
+    /**
+     * Replaces all extra spaces with one space.
+     * 
+     * @param text
+     * @return 
+     */
     public static String removeExtraSpaces(String text) {
         text = text.trim().replaceAll("\\s+", " ");
         return text;
     }
     
+    /**
+     * Removes all the non-alphanumeric symbols from the text.
+     * 
+     * @param text
+     * @return 
+     */
     public static String removeSymbols(String text) {
         //text = text.replaceAll("[^\\w\\s]","");
         text = text.replaceAll("[^\\p{L}\\p{Z}_]","");
         return text;
     }
     
+    /**
+     * Replaces all terminators with space or dots. The final string will contain only
+     * alphanumerics and dots.
+     * 
+     * @param text
+     * @return 
+     */
     public static String unifyTerminators(String text) {
         text = text.replaceAll("[\",:;()\\-]+", " "); // Replace commas, hyphens, quotes etc (count them as spaces)
         text = text.replaceAll("[\\.!?]", "."); // Unify terminators
@@ -87,13 +111,25 @@ public class StringCleaner {
         return text.trim();
     }
     
+    /**
+     * Removes all accepts from the text.
+     * 
+     * @param text
+     * @return 
+     */
     public static String removeAccents(String text) {
         text = Normalizer.normalize(text, Normalizer.Form.NFD);
         text = text.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return text;
     }
     
-    
+    /**
+     * Convenience method which tokenizes the URLs and the smileys, removes accents 
+     * and symbols and eliminates the extra spaces from the provided text.
+     * 
+     * @param text
+     * @return 
+     */
     public static String clear(String text) {
         text = StringCleaner.tokenizeURLs(text);
         text = StringCleaner.tokenizeSmileys(text);

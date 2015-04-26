@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * Kolmogorov-Smirnov's test for independent samples.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

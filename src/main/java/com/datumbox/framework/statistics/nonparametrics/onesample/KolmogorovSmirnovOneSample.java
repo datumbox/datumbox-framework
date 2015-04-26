@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
+ * Kolmogorov–Smirnov's test for equality of distributions.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

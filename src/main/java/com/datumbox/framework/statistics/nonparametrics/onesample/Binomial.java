@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.nonparametrics.onesample;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
- *
+ * Binomial exact test.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Binomial {
@@ -54,7 +55,7 @@ public class Binomial {
     }
     
     /**
-     * Returns the Pvalue for a particular $score
+     * Returns the Pvalue for a particular score
      * 
      * @param score
      * @param n

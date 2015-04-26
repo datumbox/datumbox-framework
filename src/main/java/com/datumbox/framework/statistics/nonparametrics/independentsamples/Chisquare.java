@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Chisqaure non-parametric independent sample test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

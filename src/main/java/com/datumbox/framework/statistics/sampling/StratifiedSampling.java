@@ -26,7 +26,8 @@ import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Map;
 
 /**
- * Stratified Sampling
+ * This class provides methods which can be used for performing Stratified Sampling.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class StratifiedSampling {

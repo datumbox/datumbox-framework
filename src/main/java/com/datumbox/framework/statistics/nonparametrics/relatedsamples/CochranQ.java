@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * CochranQ related sample non-parametric test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

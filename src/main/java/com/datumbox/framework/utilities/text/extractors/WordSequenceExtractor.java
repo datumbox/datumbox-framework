@@ -21,19 +21,36 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * This extractor class extracts the keywords of a string as a sequence of words.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class WordSequenceExtractor extends TextExtractor<WordSequenceExtractor.Parameters, Integer, String> {
     
+    /**
+     * Parameters of the WordSequenceExtractor.
+     */
     public static class Parameters extends TextExtractor.Parameters {     
         
     }
     
+    /**
+     * Public constructor that accepts as arguments the Parameters object.
+     * 
+     * @param parameters 
+     */
     public WordSequenceExtractor(Parameters parameters) {
         super(parameters);
     }
     
+    /**
+     * This method gets as input a string and returns as output a numbered sequence
+     * of the tokens. In the returned map as keys we store the position of the word
+     * in the original string and as value the actual token in that position.
+     * 
+     * @param text
+     * @return 
+     */
     @Override
     public Map<Integer, String> extract(final String text) {
         Tokenizer tokenizer = parameters.generateTokenizer();

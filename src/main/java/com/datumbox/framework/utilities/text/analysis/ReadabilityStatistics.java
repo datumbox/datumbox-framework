@@ -30,6 +30,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * This class provides a list of methods which can be used to estimate the
+ * readability of a text.
+ * 
+ * The methods are ported from PHP code:
+ * https://github.com/DaveChild/Text-Statistics
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -49,7 +54,8 @@ public class ReadabilityStatistics {
 
     
     /**
-     * Gives the Flesch-Kincaid Reading Ease of text entered rounded to one digit
+     * Returns the Flesch-Kincaid Reading Ease of text entered rounded to one digit.
+     * 
      * @param   strText         Text to be checked
      * @return 
      */
@@ -59,7 +65,8 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Gives the Flesch-Kincaid Grade level of text entered rounded to one digit
+     * Returns the Flesch-Kincaid Grade level of text entered rounded to one digit.
+     * 
      * @param   strText         Text to be checked
      * @return 
      */
@@ -69,7 +76,8 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Gives the Gunning-Fog score of text entered rounded to one digit
+     * Returns the Gunning-Fog score of text entered rounded to one digit.
+     * 
      * @param   strText         Text to be checked
      * @return 
      */
@@ -79,7 +87,8 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Gives the Coleman-Liau Index of text entered rounded to one digit
+     * Returns the Coleman-Liau Index of text entered rounded to one digit.
+     * 
      * @param   strText         Text to be checked
      * @return 
      */
@@ -90,7 +99,8 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Gives the SMOG Index of text entered rounded to one digit
+     * Returns the SMOG Index of text entered rounded to one digit.
+     * 
      * @param   strText         Text to be checked
      * @return 
      */
@@ -100,7 +110,8 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Gives the Automated Readability Index of text entered rounded to one digit
+     * Returns the Automated Readability Index of text entered rounded to one digit.
+     * 
      * @param   strText         Text to be checked
      * @return 
      */
@@ -110,6 +121,12 @@ public class ReadabilityStatistics {
         return PHPfunctions.round(((4.71 * (letterCount(strText) / (double)intWordCount)) + (0.5 * (intWordCount / (double)sentenceCount(strText))) - 21.43), 1);
     }
     
+    /**
+     * Returns the Dale Chall Score of the text.
+     * 
+     * @param strText
+     * @return 
+     */
     public static double daleChallScore(String strText) {
         strText = cleanText(strText);
         int intDifficultWordCount = 0;
@@ -131,6 +148,12 @@ public class ReadabilityStatistics {
         return score;
     }
 
+    /**
+     * Returns the Dale Chall Grade of the text.
+     * 
+     * @param strText
+     * @return 
+     */
     public static double daleChallGrade(String strText) {
         //http://rfptemplates.technologyevaluation.com/dale-chall-list-of-3000-simple-words.html
         double score=daleChallScore(strText);
@@ -157,6 +180,12 @@ public class ReadabilityStatistics {
         }
     }
 
+    /**
+     * Returns the Spache Score of the text.
+     * 
+     * @param strText
+     * @return 
+     */
     public static double spacheScore(String strText) {
         //http://simple.wikipedia.org/wiki/Spache_Readability_Formula
         strText = cleanText(strText);
@@ -175,6 +204,7 @@ public class ReadabilityStatistics {
     
     /**
      * Returns word count for text.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -183,7 +213,9 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Gives letter count (ignores all non-letters). Tries mb_strlen and if that fails uses regular strlen.
+     * Returns letter count (ignores all non-letters). Tries mb_strlen and if 
+     * that fails uses regular strlen.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -193,6 +225,7 @@ public class ReadabilityStatistics {
 
     /**
      * Returns sentence count for text.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -207,6 +240,7 @@ public class ReadabilityStatistics {
     
     /**
      * Trims, removes line breaks, multiple spaces and generally cleans text before processing.
+     * 
      * @param   strText      Text to be transformed
      * @return 
      */
@@ -224,6 +258,7 @@ public class ReadabilityStatistics {
 
     /**
      * Returns average words per sentence for text.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -235,6 +270,7 @@ public class ReadabilityStatistics {
 
     /**
      * Returns total syllable count for text.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -251,6 +287,7 @@ public class ReadabilityStatistics {
     
     /**
      * Returns average syllables per word for text.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -262,7 +299,8 @@ public class ReadabilityStatistics {
     }
 
     /**
-     * Returns the number of words with more than three syllables
+     * Returns the number of words with more than three syllables.
+     * 
      * @param   strText                  Text to be measured
      * @return 
      */
@@ -281,7 +319,8 @@ public class ReadabilityStatistics {
     }
     
     /**
-     * Returns the percentage of words with more than three syllables
+     * Returns the percentage of words with more than three syllables.
+     * 
      * @param   strText      Text to be measured
      * @return 
      */
@@ -297,6 +336,7 @@ public class ReadabilityStatistics {
     /**
      * Returns the number of syllables in the word.
      * Based in part on Greg Fast's Perl module Lingua::EN::Syllables
+     * 
      * @param   strWord      Word to be measured
      * @return 
      */

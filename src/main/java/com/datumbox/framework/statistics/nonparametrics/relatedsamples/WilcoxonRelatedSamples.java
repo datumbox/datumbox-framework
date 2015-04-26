@@ -24,7 +24,8 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;
 
 /**
- *
+ * Wilcoxon's Related Samples non-parametric test.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class WilcoxonRelatedSamples {

@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.parametrics.onesample;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * Normal One sample parametric tests.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

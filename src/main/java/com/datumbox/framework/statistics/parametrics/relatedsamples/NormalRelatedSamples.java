@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.parametrics.relatedsamples;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * Normal Related Samples parametric tests.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

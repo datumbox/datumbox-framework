@@ -28,6 +28,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
+ * Implementation of the Logrank non-parametric test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

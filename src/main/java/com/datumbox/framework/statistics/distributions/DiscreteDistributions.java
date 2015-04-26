@@ -18,7 +18,9 @@ package com.datumbox.framework.statistics.distributions;
 import com.datumbox.framework.mathematics.discrete.ArithmeticMath;
 
 /**
- *
+ * This class provides methods for the CDFs and PDFs of the most common discrete 
+ * distributions.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class DiscreteDistributions {
@@ -236,30 +238,6 @@ public class DiscreteDistributions {
         
         return probabilitySum;
     }
-
-    /*
-    //does not work because we consider the number of success R and not the number of failures as R
-    protected static function approxNegativeBinomialCdf($n,$r,$p) {
-        //use an approximation as described at http://www.math.ucla.edu/~tom/distributions/Negbinomial.html
-        $Xoriginal=$r;
-        $Roriginal=$n-$r;
-
-        $Z=1-$p;
-        $A=$Xoriginal+1; //SUCCESSES
-        $B=$Roriginal; //FAILURES
-        $S=$A+$B;        
-        $BT=exp(ContinuousDistributions::_LogGamma($S)-ContinuousDistributions::_LogGamma($B)-ContinuousDistributions::_LogGamma($A)+$A*log($Z)+$B*log(1-$Z));
-        if ($Z<($A+1)/($S+2)) {
-            $probabilitySum=$BT*ContinuousDistributions::_Betinc($Z,$A,$B);
-        } 
-        else {
-            $probabilitySum=1-$BT*ContinuousDistributions::_Betinc(1-$Z,$B,$A);
-        }
-        $probabilitySum=1-$probabilitySum;
-
-        return $probabilitySum;
-    }
-    */
 
     /**
      * Returns the probability of uniform discrete distribution with parameter n

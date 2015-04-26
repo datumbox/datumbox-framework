@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
+ * Lilliefors test for normality.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

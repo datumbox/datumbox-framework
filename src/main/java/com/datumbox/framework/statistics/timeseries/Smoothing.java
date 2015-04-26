@@ -18,7 +18,8 @@ package com.datumbox.framework.statistics.timeseries;
 import com.datumbox.common.dataobjects.FlatDataList;
 
 /**
- *
+ * This class provides several Smoothing and moving average methods.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Smoothing {

@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Fisher's exact test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

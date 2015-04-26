@@ -18,9 +18,18 @@ package com.datumbox.framework.utilities.text.tokenizers;
 import java.util.List;
 
 /**
- *
+ * This interface should be implemented by classes that are responsible to get
+ * a string as input and separate it into tokens/keywords.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public interface Tokenizer {
+    
+    /**
+     * The tokenize method accepts a string as input and returns a list of tokens.
+     * 
+     * @param text
+     * @return 
+     */
     public List<String> tokenize(String text);
 }

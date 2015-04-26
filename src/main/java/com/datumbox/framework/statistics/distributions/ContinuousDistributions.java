@@ -19,7 +19,9 @@ import com.datumbox.common.utilities.RandomGenerator;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 
 /**
- *
+ * This class provides methods for the CDFs and PDFs of the most common continuous 
+ * distributions.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ContinuousDistributions {

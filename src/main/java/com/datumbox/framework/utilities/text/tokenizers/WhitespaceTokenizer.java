@@ -20,11 +20,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * The white space tokenizer separates the keywords of a string using the white
+ * space.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class WhitespaceTokenizer implements Tokenizer {
-
+    
+    /**
+     * Separates the tokens of a string by splitting it on white space.
+     * 
+     * @param text
+     * @return 
+     */
     @Override
     public List<String> tokenize(String text) {
         List<String> tokens = new ArrayList<>(Arrays.asList(text.split("[\\p{Z}\\p{C}]+")));

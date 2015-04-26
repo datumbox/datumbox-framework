@@ -16,6 +16,8 @@
 package com.datumbox.framework.utilities.text.analysis;
 
 /**
+ * Estimates the similarity of two strings.
+ * 
  * I ported from php's similar_text() method which is written in C and it's
  * original code can be found on:
  * http://stackoverflow.com/questions/14136349/how-does-similar-text-work
@@ -54,11 +56,26 @@ public class PHPSimilarText {
         }
     }
     
+    /**
+     * Checks the similarity of two strings and returns the number of matching 
+     * chars in both strings.
+     * 
+     * @param txt1
+     * @param txt2
+     * @return 
+     */
     public static int similarityChars(String txt1, String txt2) {
         int sim = similar_char(txt1, txt1.length(), txt2, txt2.length());
         return sim;
     }
     
+    /**
+     * Checks the similarity of two strings and returns their similarity percentage.
+     * 
+     * @param txt1
+     * @param txt2
+     * @return 
+     */
     public static double similarityPercentage(String txt1, String txt2) {
         double sim = similarityChars(txt1, txt2);
         return sim * 200.0 / (txt1.length() + txt2.length());

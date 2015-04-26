@@ -19,6 +19,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * Durbin–Watson parametric test for detecting autocorrelation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

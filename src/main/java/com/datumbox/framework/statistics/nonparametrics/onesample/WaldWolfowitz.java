@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Wald-Wolfowitz runs test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

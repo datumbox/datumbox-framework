@@ -18,6 +18,7 @@ package com.datumbox.framework.statistics.parametrics.independentsamples;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 
 /**
+ * F-test of equality of variances.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -25,7 +26,7 @@ public class FIndependentSamples {
     
     /**
      * Independent Samples Variance Test for F.
-     * Requirements: Normal with known variances
+     * Requirements: Normal
      * 
      * @param stdbarx
      * @param stdbary

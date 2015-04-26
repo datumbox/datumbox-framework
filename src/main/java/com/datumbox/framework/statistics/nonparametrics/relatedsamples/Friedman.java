@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Friedman's related sample non-parametric test.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
