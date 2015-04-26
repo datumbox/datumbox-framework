@@ -24,7 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
+ * Utility class which provides methods related to Rank estimation.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Ranks {

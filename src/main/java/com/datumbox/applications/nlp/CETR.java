@@ -206,7 +206,7 @@ public class CETR {
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(numberOfClusters);
         param.setMaxIterations(200);
-        param.setInitMethod(Kmeans.TrainingParameters.Initialization.SET_FIRST_K); //using the first k
+        param.setInitializationMethod(Kmeans.TrainingParameters.Initialization.SET_FIRST_K); //using the first k
         param.setDistanceMethod(Kmeans.TrainingParameters.Distance.EUCLIDIAN);
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);

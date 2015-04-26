@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
+ * This class provides several methods to estimate Descriptive Statistics about
+ * a particular list of values.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Descriptives {
@@ -665,6 +667,12 @@ public class Descriptives {
         return modeList.toFlatDataCollection();
     }
     
+    /**
+     * Normalizes the provided associative array by dividing its values with the
+     * sum of the observations.
+     * 
+     * @param associativeArray 
+     */
     public static void normalize(AssociativeArray associativeArray) {
         double sum = 0.0;
         //Prevents numeric underflow by subtracting the max. References: http://www.youtube.com/watch?v=-RVM21Voo7Q
@@ -682,6 +690,12 @@ public class Descriptives {
         }
     }
     
+    /**
+     * Normalizes the exponentials of provided associative array by using the 
+     * log-sum-exp trick.
+     * 
+     * @param associativeArray 
+     */
     public static void normalizeExp(AssociativeArray associativeArray) {
         double max = max(associativeArray.toFlatDataCollection());
 

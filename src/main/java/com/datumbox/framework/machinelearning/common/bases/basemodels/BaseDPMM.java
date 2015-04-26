@@ -34,7 +34,8 @@ import java.util.Set;
 
 
 /**
- *
+ * Base class for Dirichlet Process Mixtures Models.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <CL>
  * @param <MP>
@@ -44,10 +45,18 @@ import java.util.Set;
 
 public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.ModelParameters, TP extends BaseDPMM.TrainingParameters, VM extends BaseDPMM.ValidationMetrics>  extends BaseMLclusterer<CL, MP, TP, VM> {
     
+    /**
+     * Base class for the Cluster class of the DPMM.
+     */
     public static abstract class Cluster extends BaseMLclusterer.Cluster {
         
         protected transient Map<Object, Integer> featureIds; //This is only a reference to the real Map. It is used to convert the Records to Arrays
         
+        /**
+         * Public constructor.
+         * 
+         * @param clusterId 
+         */
         public Cluster(Integer clusterId) {
             super(clusterId);
         }
@@ -76,40 +85,70 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         protected abstract boolean remove(Integer rId, Record r);
     }
     
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     * 
+     * @param <CL> 
+     */
     public static abstract class ModelParameters<CL extends BaseDPMM.Cluster> extends BaseMLclusterer.ModelParameters<CL> {
         
         private int totalIterations;
 
-        /**
-         * Feature set
-         */
         @BigMap
         private Map<Object, Integer> featureIds; //list of all the supported features
 
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-
         
-        
+        /**
+         * Getter for the total number of iterations used in training.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
-
+        
+        /**
+         * Setter for the total number of iterations used in training.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
 
+        /**
+         * Getter for the featureIds which is a mapping between the column names
+         * and their positions on the vector.
+         * 
+         * @return 
+         */
         public Map<Object, Integer> getFeatureIds() {
             return featureIds;
         }
 
+        /**
+         * Setter for the featureIds which is a mapping between the column names
+         * and their positions on the vector.
+         * 
+         * @param featureIds 
+         */
         public void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
         
     }
     
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLclusterer.TrainingParameters {   
         /**
          * Alpha value of Dirichlet process
@@ -117,7 +156,10 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         private double alpha;    
         
         private int maxIterations = 1000;
-
+        
+        /**
+         * Initialization method enum.
+         */
         public enum Initialization {
             ONE_CLUSTER_PER_RECORD,
             RANDOM_ASSIGNMENT
@@ -128,32 +170,65 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         //are generated and the observations are assigned randomly in it.
         private Initialization initializationMethod = Initialization.ONE_CLUSTER_PER_RECORD; 
         
+        /**
+         * Getter for Alpha hyperparameter.
+         * 
+         * @return 
+         */
         public double getAlpha() {
             return alpha;
         }
-
+        
+        /**
+         * Setter for Alpha hyperparameter.
+         * 
+         * @param alpha 
+         */
         public void setAlpha(double alpha) {
             this.alpha = alpha;
         }
-
+        
+        /**
+         * Getter for the maximum permitted iterations during training.
+         * 
+         * @return 
+         */
         public int getMaxIterations() {
             return maxIterations;
         }
-
+        
+        /**
+         * Setter for the maximum permitted iterations during training.
+         * 
+         * @param maxIterations 
+         */
         public void setMaxIterations(int maxIterations) {
             this.maxIterations = maxIterations;
         }
-
+        
+        /**
+         * Getter for the initialization method that we use.
+         * 
+         * @return 
+         */
         public Initialization getInitializationMethod() {
             return initializationMethod;
         }
-
+        
+        /**
+         * Setter for the initialization method that we use.
+         * 
+         * @param initializationMethod 
+         */
         public void setInitializationMethod(Initialization initializationMethod) {
             this.initializationMethod = initializationMethod;
         }
         
     }
     
+    /**
+     * Base class for the Validation Parameters of the algorithm.
+     */
     public static abstract class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
         
     }
@@ -162,7 +237,6 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         super(dbName, dbConf, mpClass, tpClass, vmClass);
     } 
     
-
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
@@ -360,7 +434,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         return iteration;
     }
     
-    public AssociativeArray clusterProbabilities(Record r, int n, Map<Integer, CL> clusterMap) {
+    private AssociativeArray clusterProbabilities(Record r, int n, Map<Integer, CL> clusterMap) {
         AssociativeArray condProbCiGivenXiAndOtherCi = new AssociativeArray();
         double alpha = knowledgeBase.getTrainingParameters().getAlpha();
         

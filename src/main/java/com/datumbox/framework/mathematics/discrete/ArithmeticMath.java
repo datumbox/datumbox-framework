@@ -16,11 +16,18 @@
 package com.datumbox.framework.mathematics.discrete;
 
 /**
- *
+ * Utility class with useful arithmetic methods.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ArithmeticMath {
     
+    /**
+     * It estimates the factorial of an integer.
+     * 
+     * @param k
+     * @return 
+     */
     public static double factorial(int k) {
         double factorial=1.0;
         while(k>0) {
@@ -31,6 +38,14 @@ public class ArithmeticMath {
         return factorial;
     }
     
+    /**
+     * It estimates the number of k-combinations of n objects.
+     * 
+     * @param n
+     * @param k
+     * @return
+     * @throws IllegalArgumentException 
+     */
     public static double combination(int n, int k) throws IllegalArgumentException {
         if(n<k) {
             throw new IllegalArgumentException();

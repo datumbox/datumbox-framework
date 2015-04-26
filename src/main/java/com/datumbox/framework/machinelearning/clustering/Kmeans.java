@@ -214,7 +214,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         private int k = 2;
         
-        private Initialization initMethod = Initialization.PLUS_PLUS;
+        private Initialization initializationMethod = Initialization.PLUS_PLUS;
         
         private Distance distanceMethod = Distance.EUCLIDIAN;
         
@@ -250,17 +250,17 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
          * 
          * @return 
          */
-        public Initialization getInitMethod() {
-            return initMethod;
+        public Initialization getInitializationMethod() {
+            return initializationMethod;
         }
         
         /**
          * Setter for the initialization method that we use.
          * 
-         * @param initMethod 
+         * @param initializationMethod 
          */
-        public void setInitMethod(Initialization initMethod) {
-            this.initMethod = initMethod;
+        public void setInitializationMethod(Initialization initializationMethod) {
+            this.initializationMethod = initializationMethod;
         }
         
         /**
@@ -553,10 +553,10 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         double distance = 0.0;
         TrainingParameters.Distance distanceMethod = trainingParameters.getDistanceMethod();
         if(distanceMethod==TrainingParameters.Distance.EUCLIDIAN) {
-            distance = Distance.euclideanWeighhted(r1.getX(), r2.getX(), featureWeights);
+            distance = Distance.euclideanWeighted(r1.getX(), r2.getX(), featureWeights);
         }
         else if(distanceMethod==TrainingParameters.Distance.MANHATTAN) {
-            distance = Distance.manhattanWeighhted(r1.getX(), r2.getX(), featureWeights);
+            distance = Distance.manhattanWeighted(r1.getX(), r2.getX(), featureWeights);
         }
         else {
             throw new RuntimeException("Unsupported Distance method");
@@ -576,11 +576,11 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         int k = trainingParameters.getK();
-        TrainingParameters.Initialization initMethod = trainingParameters.getInitMethod();
+        TrainingParameters.Initialization initializationMethod = trainingParameters.getInitializationMethod();
         
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
-        if(initMethod==TrainingParameters.Initialization.SET_FIRST_K || 
-           initMethod==TrainingParameters.Initialization.FORGY) {
+        if(initializationMethod==TrainingParameters.Initialization.SET_FIRST_K || 
+           initializationMethod==TrainingParameters.Initialization.FORGY) {
             int i = 0;
             for(Integer rId : trainingData) { 
                 Record r = trainingData.get(rId);
@@ -596,7 +596,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 ++i;
             }
         }
-        else if(initMethod==TrainingParameters.Initialization.RANDOM_PARTITION) {
+        else if(initializationMethod==TrainingParameters.Initialization.RANDOM_PARTITION) {
             int i = 0;
             
             for(Integer rId : trainingData) { 
@@ -617,11 +617,11 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 c.updateClusterParameters();
             }
         }
-        else if(initMethod==TrainingParameters.Initialization.FURTHEST_FIRST ||
-                initMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
+        else if(initializationMethod==TrainingParameters.Initialization.FURTHEST_FIRST ||
+                initializationMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
             
             int sampleSize = modelParameters.getN();
-            if(initMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
+            if(initializationMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
                 sampleSize = (int)Math.max(Math.ceil(trainingParameters.getSubsetFurthestFirstcValue()*k*PHPfunctions.log(k, 2)), k);
             }
             
@@ -668,7 +668,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             alreadyAddedPoints = null;
         }
-        else if(initMethod==TrainingParameters.Initialization.PLUS_PLUS) {
+        else if(initializationMethod==TrainingParameters.Initialization.PLUS_PLUS) {
             DatabaseConnector dbc = knowledgeBase.getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {

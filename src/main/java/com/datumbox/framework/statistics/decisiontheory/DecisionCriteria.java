@@ -24,7 +24,8 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 /**
- *
+ * Implementations of various Decision Criteria based on a payoff matrix.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class DecisionCriteria {

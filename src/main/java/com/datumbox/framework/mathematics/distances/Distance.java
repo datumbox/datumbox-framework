@@ -16,7 +16,6 @@
 package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.TypeInference;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,11 +24,20 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- *
+ * The Distance class provides methods to estimate various types of distances
+ * between Associative Arrays.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Distance {
     
+    /**
+     * Estimates the euclidean distance of two Associative Arrays.
+     * 
+     * @param a1
+     * @param a2
+     * @return 
+     */
     public static double euclidean(AssociativeArray a1, AssociativeArray a2) {
         Map<Object, Double> columnDistances = columnDistances(a1, a2, null);
         
@@ -41,7 +49,15 @@ public class Distance {
         return Math.sqrt(distance);
     }
     
-    public static double euclideanWeighhted(AssociativeArray a1, AssociativeArray a2, Map<Object, Double> columnWeights) {
+    /**
+     * Estimates the weighted euclidean distance of two Associative Arrays.
+     * 
+     * @param a1
+     * @param a2
+     * @param columnWeights
+     * @return 
+     */
+    public static double euclideanWeighted(AssociativeArray a1, AssociativeArray a2, Map<Object, Double> columnWeights) {
         Map<Object, Double> columnDistances = columnDistances(a1, a2, columnWeights.keySet());
         
         double distance = 0.0;
@@ -52,6 +68,13 @@ public class Distance {
         return Math.sqrt(distance);
     }
     
+    /**
+     * Estimates the manhattan distance of two Associative Arrays.
+     * 
+     * @param a1
+     * @param a2
+     * @return 
+     */
     public static double manhattan(AssociativeArray a1, AssociativeArray a2) {
         Map<Object, Double> columnDistances = columnDistances(a1, a2, null);
         
@@ -63,7 +86,15 @@ public class Distance {
         return distance;
     }
     
-    public static double manhattanWeighhted(AssociativeArray a1, AssociativeArray a2, Map<Object, Double> columnWeights) {
+    /**
+     * Estimates the weighted manhattan distance of two Associative Arrays.
+     * 
+     * @param a1
+     * @param a2
+     * @param columnWeights
+     * @return 
+     */
+    public static double manhattanWeighted(AssociativeArray a1, AssociativeArray a2, Map<Object, Double> columnWeights) {
         Map<Object, Double> columnDistances = columnDistances(a1, a2, columnWeights.keySet());
         
         double distance = 0.0;
@@ -74,6 +105,13 @@ public class Distance {
         return distance;
     }
     
+    /**
+     * Estimates the maximum distance of two Associative Arrays.
+     * 
+     * @param a1
+     * @param a2
+     * @return 
+     */
     public static double maximum(AssociativeArray a1, AssociativeArray a2) {
         Map<Object, Double> columnDistances = columnDistances(a1, a2, null);
         

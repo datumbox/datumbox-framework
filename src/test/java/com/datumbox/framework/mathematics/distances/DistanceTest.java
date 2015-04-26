@@ -77,7 +77,7 @@ public class DistanceTest extends BaseTest {
     }
 
     /**
-     * Test of euclideanWeighhted method, of class Distance.
+     * Test of euclideanWeighted method, of class Distance.
      */
     @Test
     public void testEuclideanWeighhted() {
@@ -86,7 +86,7 @@ public class DistanceTest extends BaseTest {
         AssociativeArray a2 = new AssociativeArray(getMap2());
         Map<Object, Double> columnWeights = getWeights();
         double expResult = 2.449489742783178;
-        double result = Distance.euclideanWeighhted(a1, a2, columnWeights);
+        double result = Distance.euclideanWeighted(a1, a2, columnWeights);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
@@ -104,7 +104,7 @@ public class DistanceTest extends BaseTest {
     }
 
     /**
-     * Test of manhattanWeighhted method, of class Distance.
+     * Test of manhattanWeighted method, of class Distance.
      */
     @Test
     public void testManhattanWeighhted() {
@@ -113,7 +113,7 @@ public class DistanceTest extends BaseTest {
         AssociativeArray a2 = new AssociativeArray(getMap2());
         Map<Object, Double> columnWeights = getWeights();
         double expResult = 5.0;
-        double result = Distance.manhattanWeighhted(a1, a2, columnWeights);
+        double result = Distance.manhattanWeighted(a1, a2, columnWeights);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 

@@ -63,7 +63,7 @@ public class KmeansTest extends BaseTest {
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
         param.setMaxIterations(200);
-        param.setInitMethod(Kmeans.TrainingParameters.Initialization.FORGY);
+        param.setInitializationMethod(Kmeans.TrainingParameters.Initialization.FORGY);
         param.setDistanceMethod(Kmeans.TrainingParameters.Distance.EUCLIDIAN);
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);
@@ -138,7 +138,7 @@ public class KmeansTest extends BaseTest {
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
         param.setMaxIterations(200);
-        param.setInitMethod(Kmeans.TrainingParameters.Initialization.FORGY);
+        param.setInitializationMethod(Kmeans.TrainingParameters.Initialization.FORGY);
         param.setDistanceMethod(Kmeans.TrainingParameters.Distance.EUCLIDIAN); 
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);

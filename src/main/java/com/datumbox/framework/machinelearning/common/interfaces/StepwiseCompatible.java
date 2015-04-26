@@ -25,5 +25,10 @@ import java.util.Map;
  */
 public interface StepwiseCompatible {
     
+    /**
+     * Getter for the p-values of the Features.
+     * 
+     * @return 
+     */
     public Map<Object, Double> getFeaturePvalues();
 }

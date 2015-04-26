@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * Utility class for combinations and permutations.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Combinatorics {
@@ -60,7 +61,7 @@ public class Combinatorics {
     }
     
     /**
-     * Possible combinations of a list. 
+     * Returns all the possible combinations of a list. 
      * Ported from:
      * http://codereview.stackexchange.com/questions/26854/recursive-method-to-return-a-set-of-all-combinations
      * 

@@ -18,14 +18,15 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.DeepCopy;
 import com.datumbox.common.dataobjects.TypeInference;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
- *
+ * This class provides several methods to estimate the descriptive statistics
+ * of censored observations.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CensoredDescriptives {

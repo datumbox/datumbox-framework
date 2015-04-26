@@ -20,42 +20,83 @@ import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
 
 /**
- *
+ * The LPSolver provides an easy way to formulate and solve Linear Programming
+ * problems.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class LPSolver {
     
+    /**
+     * The Result class of the LP problem.
+     */
     public static class LPResult {
         private Double objectiveValue;
         private double[] variableValues;
         private double[] dualSolution;
         
-        public LPResult(int numberOfVariables, int numberOfConstraints) {
+        /**
+         * Protected Constructor.
+         * 
+         * @param numberOfVariables
+         * @param numberOfConstraints 
+         */
+        protected LPResult(int numberOfVariables, int numberOfConstraints) {
             objectiveValue=null;
             variableValues=new double[numberOfVariables];
             dualSolution=new double[numberOfVariables+numberOfConstraints+1];
         }
-
+        
+        /**
+         * Getter for the Objective value.
+         * 
+         * @return 
+         */
         public Double getObjectiveValue() {
             return objectiveValue;
         }
-
+        
+        /**
+         * Setter for the Objective value.
+         * 
+         * @param objectiveValue 
+         */
         public void setObjectiveValue(Double objectiveValue) {
             this.objectiveValue = objectiveValue;
         }
-
+        
+        /**
+         * Getter for the values of the Variables.
+         * 
+         * @return 
+         */
         public double[] getVariableValues() {
             return variableValues;
         }
-
+        
+        /**
+         * Setter for the values of the Variables.
+         * 
+         * @param variableValues 
+         */
         public void setVariableValues(double[] variableValues) {
             this.variableValues = variableValues;
         }
 
+        /**
+         * Getter for the Dual solution.
+         * 
+         * @return 
+         */
         public double[] getDualSolution() {
             return dualSolution;
         }
-
+        
+        /**
+         * Setter for the Dual solution.
+         * 
+         * @param dualSolution 
+         */
         public void setDualSolution(double[] dualSolution) {
             this.dualSolution = dualSolution;
         }
@@ -94,14 +135,29 @@ public class LPSolver {
             this.value=value;
         }
 
+        /**
+         * Getter for the body of the constraint.
+         * 
+         * @return 
+         */
         public double[] getContraintBody() {
             return contraintBody;
         }
-
+        
+        /**
+         * Getter for the sign of the constraint.
+         * 
+         * @return 
+         */
         public int getSign() {
             return sign;
         }
-
+        
+        /**
+         * Getter for the value of the constraint.
+         * 
+         * @return 
+         */
         public double getValue() {
             return value;
         }
@@ -130,6 +186,18 @@ public class LPSolver {
         return (status == 0) || (status == 1) || (status == 11) || (status == 12);
     }
     
+    /**
+     * Solves the LP problem and returns the result.
+     * 
+     * @param linearObjectiveFunction
+     * @param linearConstraintsList
+     * @param lowBoundsOfVariables
+     * @param upBoundsOfVariables
+     * @param strictlyIntegerVariables
+     * @param scalingMode
+     * @return
+     * @throws LpSolveException 
+     */
     public static LPResult solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, double[] lowBoundsOfVariables, double[] upBoundsOfVariables, boolean[] strictlyIntegerVariables, Integer scalingMode) throws LpSolveException {
         //Important note. All the double[] arrays that are passed to the lpsolve
         //lib MUST start from 1. Do not use the 0 index because it is discarded.

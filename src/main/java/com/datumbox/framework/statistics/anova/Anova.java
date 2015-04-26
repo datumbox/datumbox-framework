@@ -26,7 +26,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
+ * Analysis of Variance implementation.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Anova {

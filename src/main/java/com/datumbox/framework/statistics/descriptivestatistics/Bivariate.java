@@ -25,6 +25,8 @@ import com.datumbox.framework.statistics.parametrics.relatedsamples.PearsonCorre
 import java.util.Map;
 
 /**
+ * The Bivariate class enables us to estimate correlation metrics between different
+ * variables.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
