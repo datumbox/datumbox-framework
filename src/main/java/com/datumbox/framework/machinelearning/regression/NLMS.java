@@ -42,7 +42,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
     } 
@@ -82,15 +82,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
 
     @Override
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
-        
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         

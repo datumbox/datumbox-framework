@@ -46,7 +46,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         @BigMap
         protected Map<Object, Double> maxColumnValues;
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
@@ -54,7 +54,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return referenceLevels;
         }
 
-        public void setReferenceLevels(Map<Object, Object> referenceLevels) {
+        protected void setReferenceLevels(Map<Object, Object> referenceLevels) {
             this.referenceLevels = referenceLevels;
         }
 
@@ -62,7 +62,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return minColumnValues;
         }
 
-        public void setMinColumnValues(Map<Object, Double> minColumnValues) {
+        protected void setMinColumnValues(Map<Object, Double> minColumnValues) {
             this.minColumnValues = minColumnValues;
         }
 
@@ -70,7 +70,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             return maxColumnValues;
         }
 
-        public void setMaxColumnValues(Map<Object, Double> maxColumnValues) {
+        protected void setMaxColumnValues(Map<Object, Double> maxColumnValues) {
             this.maxColumnValues = maxColumnValues;
         }
         

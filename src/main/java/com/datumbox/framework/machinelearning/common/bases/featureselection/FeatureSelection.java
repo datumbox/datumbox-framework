@@ -19,9 +19,9 @@ import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 /**
@@ -35,7 +35,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

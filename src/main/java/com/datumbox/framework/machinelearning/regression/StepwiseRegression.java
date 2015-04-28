@@ -38,7 +38,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     public static class ModelParameters extends BaseMLregressor.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -113,7 +113,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
 
     
     @Override
-    @SuppressWarnings("unchecked")
     public BaseMLregressor.ValidationMetrics kFoldCrossValidation(Dataset trainingData, TrainingParameters trainingParameters, int k) {
         throw new UnsupportedOperationException("K-fold Cross Validation is not supported. Run it directly to the wrapped regressor."); 
     }
@@ -127,7 +126,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
 
     @Override
     protected void _fit(Dataset trainingData) {
-        //get the training parameters
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Integer maxIterations = trainingParameters.getMaxIterations();
@@ -167,12 +165,6 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
                 break; //if no more features exit
             }
         }
-        
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
-        //set the only parameters that are inherited by the BaseMLregressor.MP abstract
-        modelParameters.setD(copiedTrainingData.getVariableNumber());
-        modelParameters.setN(copiedTrainingData.getRecordNumber());        
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 

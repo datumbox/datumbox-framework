@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
+import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
@@ -29,30 +30,9 @@ import com.datumbox.framework.machinelearning.common.bases.validation.ModelValid
 public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters, TP extends BaseMLregressor.TrainingParameters, VM extends BaseMLregressor.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
-        //number of observations used for training
-        private Integer n =0 ;
         
-        //number of features in data. IN DATA not in the algorithm. Typically the features of the algortihm is d*c
-        private Integer d =0 ;
-
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
-        }
-        
-        public Integer getN() {
-            return n;
-        }
-
-        public void setN(Integer n) {
-            this.n = n;
-        }
-
-        public Integer getD() {
-            return d;
-        }
-
-        public void setD(Integer d) {
-            this.d = d;
         }
         
     } 
@@ -70,5 +50,4 @@ public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters
     protected BaseMLregressor(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
-    
 }

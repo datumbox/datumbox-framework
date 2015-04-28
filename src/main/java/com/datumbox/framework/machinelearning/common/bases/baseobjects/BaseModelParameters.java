@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.machinelearning.common.bases.dataobjects;
+package com.datumbox.framework.machinelearning.common.bases.baseobjects;
 
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -30,12 +30,53 @@ import java.util.List;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public abstract class BaseModelParameters implements Learnable {
-    
+    //number of data points used for training
+    private Integer n = 0;
+
+    //number of features in data points used for training
+    private Integer d = 0;
+        
     public BaseModelParameters(DatabaseConnector dbc) {
         //Initialize all the BigMap fields
         bigMapInitializer(dbc);
     }
-    
+
+    /**
+     * Getter for the total number of records used in training.
+     * 
+     * @return 
+     */
+    public Integer getN() {
+        return n;
+    }
+
+    /**
+     * Setter for the total number of records used in training.
+     * 
+     * @param n 
+     */
+    protected void setN(Integer n) {
+        this.n = n;
+    }
+
+    /**
+     * Getter for the dimension of the dataset used in training.
+     * 
+     * @return 
+     */
+    public Integer getD() {
+        return d;
+    }
+
+    /**
+     * Setter for the dimension of the dataset used in training.
+     * 
+     * @param d 
+     */
+    protected void setD(Integer d) {
+        this.d = d;
+    }
+
     private void bigMapInitializer(DatabaseConnector dbc) {
         //get all the fields from all the inherited classes
         for(Field field : getAllFields(new LinkedList<>(), this.getClass())){

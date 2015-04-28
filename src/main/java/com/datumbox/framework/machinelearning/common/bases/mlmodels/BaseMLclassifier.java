@@ -41,51 +41,23 @@ import java.util.Set;
 public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParameters, TP extends BaseMLclassifier.TrainingParameters, VM extends BaseMLclassifier.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
-        //number of observations used for training
-        private Integer n = 0;
         
-        //number of features in data. IN DATA not in the algorithm. Typically the features of the algortihm is d*c
-        private Integer d = 0;
-        
-        //number of classes in data
-        private Integer c = 0;
-
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        public Integer getN() {
-            return n;
-        }
-
-        public void setN(Integer n) {
-            this.n = n;
-        }
-
-        public Integer getD() {
-            return d;
-        }
-
-        public void setD(Integer d) {
-            this.d = d;
-        }
-
         public Integer getC() {
-            return c;
-        }
-
-        public void setC(Integer c) {
-            this.c = c;
+            return classes.size();
         }
 
         public Set<Object> getClasses() {
             return classes;
         }
 
-        public void setClasses(Set<Object> classes) {
+        protected void setClasses(Set<Object> classes) {
             this.classes = classes;
         }
         
@@ -290,4 +262,5 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         
         return maxEntry.getKey();
     }
+    
 }

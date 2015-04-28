@@ -54,11 +54,11 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -76,7 +76,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
          * 
          * @param thitas 
          */
-        public void setThitas(Map<List<Object>, Double> thitas) {
+        protected void setThitas(Map<List<Object>, Double> thitas) {
             this.thitas = thitas;
         }
     } 
@@ -209,16 +209,8 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
@@ -231,9 +223,6 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             
             classesSet.add(theClass); 
         }
-
-        int c = classesSet.size();
-        modelParameters.setC(c);
         
         //we initialize the thitas to zero for all features and all classes compinations
         for(Object theClass : classesSet) {

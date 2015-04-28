@@ -64,10 +64,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
         private int totalIterations;
         
-        //number of observations used for training
-        private Integer n =0;
-        private Integer d =0; //the vocabulary size
-        
         @BigMap
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
@@ -84,11 +80,11 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -106,44 +102,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * 
          * @param totalIterations 
          */
-        public void setTotalIterations(int totalIterations) {
+        protected void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
-        }
-        
-        /**
-         * Getter for the total number of records used in training.
-         * 
-         * @return 
-         */
-        public Integer getN() {
-            return n;
-        }
-        
-        /**
-         * Setter for the total number of records used in training.
-         * 
-         * @param n 
-         */
-        public void setN(Integer n) {
-            this.n = n;
-        }
-        
-        /**
-         * Getter for the dimension of the data.
-         * 
-         * @return 
-         */
-        public Integer getD() {
-            return d;
-        }
-        
-        /**
-         * Setter for the dimension of the data.
-         * 
-         * @param d 
-         */
-        public void setD(Integer d) {
-            this.d = d;
         }
         
         /**
@@ -165,7 +125,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * 
          * @param topicAssignmentOfDocumentWord 
          */
-        public void setTopicAssignmentOfDocumentWord(Map<List<Object>, Integer> topicAssignmentOfDocumentWord) {
+        protected void setTopicAssignmentOfDocumentWord(Map<List<Object>, Integer> topicAssignmentOfDocumentWord) {
             this.topicAssignmentOfDocumentWord = topicAssignmentOfDocumentWord;
         }
         
@@ -189,7 +149,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * 
          * @param documentTopicCounts 
          */
-        public void setDocumentTopicCounts(Map<List<Integer>, Integer> documentTopicCounts) {
+        protected void setDocumentTopicCounts(Map<List<Integer>, Integer> documentTopicCounts) {
             this.documentTopicCounts = documentTopicCounts;
         }
         
@@ -214,7 +174,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * 
          * @param topicWordCounts 
          */
-        public void setTopicWordCounts(Map<List<Object>, Integer> topicWordCounts) {
+        protected void setTopicWordCounts(Map<List<Object>, Integer> topicWordCounts) {
             this.topicWordCounts = topicWordCounts;
         }
 
@@ -238,7 +198,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * 
          * @param documentWordCounts 
          */
-        public void setDocumentWordCounts(Map<Integer, Integer> documentWordCounts) {
+        protected void setDocumentWordCounts(Map<Integer, Integer> documentWordCounts) {
             this.documentWordCounts = documentWordCounts;
         }
 
@@ -258,7 +218,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * 
          * @param topicCounts 
          */
-        public void setTopicCounts(Map<Integer, Integer> topicCounts) {
+        protected void setTopicCounts(Map<Integer, Integer> topicCounts) {
             this.topicCounts = topicCounts;
         }
         
@@ -431,14 +391,11 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     
     @Override
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        int d = modelParameters.getD();
+        
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         //get model parameters
         int k = trainingParameters.getK(); //number of topics

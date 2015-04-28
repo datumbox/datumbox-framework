@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.machinelearning.common.bases;
+package com.datumbox.framework.machinelearning.common.bases.baseobjects;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.objecttypes.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 
@@ -93,15 +91,25 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
 
     }
     
-    
+    /**
+     * Trains a Machine Learning model using the provided training data.
+     * 
+     * @param trainingData
+     * @param trainingParameters 
+     */
     @Override
     public void fit(Dataset trainingData, TP trainingParameters) {
         logger.info("fit()");
         
         initializeTrainingConfiguration(trainingParameters);
+        
+        MP modelParameters = knowledgeBase.getModelParameters();
+        modelParameters.setN(trainingData.getRecordNumber());
+        modelParameters.setD(trainingData.getVariableNumber());
+        
         _fit(trainingData);
         
-        //store database
+        logger.info("Saving model");
         knowledgeBase.save();
     }
     

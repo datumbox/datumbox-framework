@@ -51,11 +51,11 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -73,7 +73,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
          * 
          * @param sumOfLog1minusProb 
          */
-        public void setSumOfLog1minusProb(Map<Object, Double> sumOfLog1minusProb) {
+        protected void setSumOfLog1minusProb(Map<Object, Double> sumOfLog1minusProb) {
             this.sumOfLog1minusProb = sumOfLog1minusProb;
         }
     } 
@@ -186,21 +186,17 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     
     @Override
     protected void _fit(Dataset trainingData) {
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        int n = modelParameters.getN();
+        int d = modelParameters.getD();
+        
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<List<Object>, Double> likelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
         Map<Object, Double> sumOfLog1minusProb = modelParameters.getSumOfLog1minusProb();
-        
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         
         //calculate first statistics about the classes
@@ -260,10 +256,6 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
             }
             
         }
-        
-        int c = classesSet.size();
-        modelParameters.setC(c);
-        
         
         //calculate prior log probabilities
         for(Map.Entry<Object, Double> entry : logPriors.entrySet()) {

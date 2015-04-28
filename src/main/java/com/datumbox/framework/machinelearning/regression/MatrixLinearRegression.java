@@ -49,7 +49,6 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
          * Feature set
          */
         @BigMap
-        
         private Map<Object, Integer> featureIds; //list of all the supported features
         
         /**
@@ -59,7 +58,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
         
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -67,7 +66,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             return featureIds;
         }
 
-        public void setFeatureIds(Map<Object, Integer> featureIds) {
+        protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
         
@@ -97,15 +96,9 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
 
     @Override
     protected void _fit(Dataset trainingData) {
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
+        int n = modelParameters.getN();
+        int d = modelParameters.getD();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();

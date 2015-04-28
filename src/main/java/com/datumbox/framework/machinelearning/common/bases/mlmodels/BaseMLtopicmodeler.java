@@ -30,7 +30,7 @@ public abstract class BaseMLtopicmodeler<MP extends BaseMLtopicmodeler.ModelPara
     
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

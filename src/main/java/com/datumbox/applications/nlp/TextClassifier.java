@@ -47,7 +47,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -117,24 +117,6 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public TextClassifier(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
-    }
-    
-    /**
-     * Trains a Machine Learning model using the provided training data.
-     * 
-     * @param trainingData
-     * @param trainingParameters 
-     */
-    @Override
-    public void fit(Dataset trainingData, TrainingParameters trainingParameters) { 
-        logger.info("fit()");
-        
-        initializeTrainingConfiguration(trainingParameters);
-        
-        _fit(trainingData);
-        
-        //store database
-        knowledgeBase.save();
     }
     
     /**

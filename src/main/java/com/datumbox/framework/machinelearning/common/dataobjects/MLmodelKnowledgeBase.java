@@ -17,6 +17,7 @@ package com.datumbox.framework.machinelearning.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**

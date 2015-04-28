@@ -151,14 +151,6 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
     }
     
     public static abstract class ModelParameters<CL extends BaseMLclusterer.Cluster> extends BaseMLmodel.ModelParameters {
-        //number of observations used for training
-        private Integer n =0 ;
-        
-        //number of features in data. IN DATA not in the algorithm.
-        private Integer d =0 ;
-        
-        //number of clusters
-        private Integer c =0;
         
         //number of classes if the dataset is annotated. Use Linked Hash Set to ensure that the order of classes will be maintained. 
         private Set<Object> goldStandardClasses = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
@@ -168,35 +160,15 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         private Map<Integer, CL> clusterList = new HashMap<>(); //the cluster objects of the model
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
         
         //Getters / Setters
         
-        public Integer getN() {
-            return n;
-        }
-
-        public void setN(Integer n) {
-            this.n = n;
-        }
-
-        public Integer getD() {
-            return d;
-        }
-
-        public void setD(Integer d) {
-            this.d = d;
-        }
-
         public Integer getC() {
-            return c;
-        }
-
-        public void setC(Integer c) {
-            this.c = c;
+            return clusterList.size();
         }
 
         public Set<Object> getGoldStandardClasses() {

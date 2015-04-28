@@ -18,12 +18,12 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseValidationMetrics;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseValidationMetrics;
 import com.datumbox.framework.machinelearning.common.dataobjects.MLmodelKnowledgeBase;
 
 /**
@@ -44,12 +44,9 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
      */
     public static abstract class ModelParameters extends BaseModelParameters {
-
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-            
-        //here goes the parameters of the Machine Learning model
     }
     
     /**
@@ -151,6 +148,4 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     protected abstract VM validateModel(Dataset validationData);
     
     protected abstract void predictDataset(Dataset newData);
-
-
 }

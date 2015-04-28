@@ -17,9 +17,10 @@ package com.datumbox.framework.machinelearning.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 
@@ -119,7 +120,9 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         dbc = dbConf.getConnector(dbName); //re-open connector
         
         try {
-            modelParameters = mpClass.getConstructor(DatabaseConnector.class).newInstance(dbc);
+            Constructor<MP> c = mpClass.getDeclaredConstructor(DatabaseConnector.class);
+            c.setAccessible(true);
+            modelParameters = c.newInstance(dbc);
             trainingParameters = tpClass.getConstructor().newInstance();
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {

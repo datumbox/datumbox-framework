@@ -36,7 +36,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
     
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

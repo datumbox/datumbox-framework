@@ -17,13 +17,11 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Abstract Class for a Machine Learning algorithm.
@@ -39,7 +37,7 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      */
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
             
@@ -80,6 +78,5 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
     } 
     
     protected abstract void predictDataset(Dataset newData);
-
 
 }

@@ -49,7 +49,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         @BigMap
         private Map<Object, Double> thitas; //the thita parameters of the model
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
@@ -59,7 +59,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
             return thitas;
         }
 
-        public void setThitas(Map<Object, Double> thitas) {
+        protected void setThitas(Map<Object, Double> thitas) {
             this.thitas = thitas;
         }
     } 

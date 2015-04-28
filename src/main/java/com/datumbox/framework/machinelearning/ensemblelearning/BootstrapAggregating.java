@@ -40,7 +40,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
     
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

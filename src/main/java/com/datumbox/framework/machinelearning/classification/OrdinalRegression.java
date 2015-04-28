@@ -67,11 +67,11 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         private Map<Object, Double> thitas; 
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -89,7 +89,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
          * 
          * @param weights 
          */
-        public void setWeights(Map<Object, Double> weights) {
+        protected void setWeights(Map<Object, Double> weights) {
             this.weights = weights;
         }
         
@@ -107,7 +107,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
          * 
          * @param thitas 
          */
-        public void setThitas(Map<Object, Double> thitas) {
+        protected void setThitas(Map<Object, Double> thitas) {
             this.thitas = thitas;
         }
         
@@ -240,17 +240,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
-        
+                
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -264,9 +256,6 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         }
         Set<Object> classesSet = modelParameters.getClasses();
         classesSet.addAll(sortedClasses);
-        
-        int c = classesSet.size();
-        modelParameters.setC(c);
         
         //we initialize the weights and thitas to zero
         for(Object feature: trainingData.getXDataTypes().keySet()) {

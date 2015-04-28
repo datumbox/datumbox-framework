@@ -29,7 +29,7 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
     
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
@@ -51,9 +51,9 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
     }
     
     @Override
-    public void fit(Dataset trainingData, TrainingParameters trainingParameters) {
-        trainingParameters.setMultiProbabilityWeighted(false);
-        super.fit(trainingData, trainingParameters);
+    public void _fit(Dataset trainingData) {
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
+        super._fit(trainingData);
     }
     
 }

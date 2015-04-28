@@ -68,23 +68,15 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
 
         
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-        
-        public int getN() {
-            return N;
-        }
-
-        public void setN(int N) {
-            this.N = N;
-        }
-
+    
         public Map<Object, Double> getMaxTFIDFfeatureScores() {
             return maxTFIDFfeatureScores;
         }
 
-        public void setMaxTFIDFfeatureScores(Map<Object, Double> maxTFIDFfeatureScores) {
+        protected void setMaxTFIDFfeatureScores(Map<Object, Double> maxTFIDFfeatureScores) {
             this.maxTFIDFfeatureScores = maxTFIDFfeatureScores;
         }
 
@@ -103,8 +95,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         boolean binarized = trainingParameters.isBinarized();
         
         
-        int n = trainingData.getRecordNumber();
-        modelParameters.setN(n);
+        int n = modelParameters.getN();
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", true);

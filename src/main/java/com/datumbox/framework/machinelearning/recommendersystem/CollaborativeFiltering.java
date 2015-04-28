@@ -45,44 +45,21 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
         
-        //number of observations used for training
-        private Integer n =0 ;
-        
-        //number of features in data. IN DATA not in the algorithm.
-        private Integer d =0 ;
-
-        
         @BigMap
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
         
         //Getters / Setters
         
-        public Integer getN() {
-            return n;
-        }
-
-        public void setN(Integer n) {
-            this.n = n;
-        }
-
-        public Integer getD() {
-            return d;
-        }
-
-        public void setD(Integer d) {
-            this.d = d;
-        }
-
         public Map<List<Object>, Double> getSimilarities() {
             return similarities;
         }
 
-        public void setSimilarities(Map<List<Object>, Double> similarities) {
+        protected void setSimilarities(Map<List<Object>, Double> similarities) {
             this.similarities = similarities;
         }
 
@@ -117,14 +94,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
     @Override
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         //calculate similarity matrix
         Map<List<Object>, Double> similarities = modelParameters.getSimilarities();

@@ -253,11 +253,11 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
     public static class ModelParameters extends BaseDPMM.ModelParameters<MultinomialDPMM.Cluster> {
         
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 

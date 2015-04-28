@@ -384,11 +384,11 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     public static class ModelParameters extends BaseDPMM.ModelParameters<GaussianDPMM.Cluster> {
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

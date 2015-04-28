@@ -34,7 +34,7 @@ public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSel
 
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

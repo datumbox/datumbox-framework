@@ -51,24 +51,17 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
         //Getters and Setters
         
-        public int getN() {
-            return N;
-        }
-
-        public void setN(int N) {
-            this.N = N;
-        }
         public Map<Object, Double> getFeatureScores() {
             return featureScores;
         }
 
-        public void setFeatureScores(Map<Object, Double> featureScores) {
+        protected void setFeatureScores(Map<Object, Double> featureScores) {
             this.featureScores = featureScores;
         }
         
@@ -115,12 +108,6 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     
     @Override
     protected void _fit(Dataset data) {
-        
-        //set the number of observations
-        MP modelParameters = knowledgeBase.getModelParameters();
-        
-        modelParameters.setN(data.getRecordNumber());
-        
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         

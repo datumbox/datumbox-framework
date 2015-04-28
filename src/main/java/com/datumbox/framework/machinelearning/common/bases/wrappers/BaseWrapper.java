@@ -17,10 +17,10 @@ package com.datumbox.framework.machinelearning.common.bases.wrappers;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseValidationMetrics;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseValidationMetrics;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
@@ -49,7 +49,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
 
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

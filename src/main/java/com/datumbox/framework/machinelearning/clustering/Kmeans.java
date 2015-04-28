@@ -139,11 +139,11 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         private Map<Object, Double> featureWeights; 
         
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -161,7 +161,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
          * 
          * @param totalIterations 
          */
-        public void setTotalIterations(int totalIterations) {
+        protected void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
         
@@ -179,7 +179,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
          * 
          * @param featureWeights 
          */
-        public void setFeatureWeights(Map<Object, Double> featureWeights) {
+        protected void setFeatureWeights(Map<Object, Double> featureWeights) {
             this.featureWeights = featureWeights;
         }
         
@@ -403,15 +403,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
@@ -432,10 +424,6 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         //calculate clusters
         calculateClusters(trainingData);
-        
-        
-        //update the number of clusters
-        modelParameters.setC(clusterList.size());
         
     }
     

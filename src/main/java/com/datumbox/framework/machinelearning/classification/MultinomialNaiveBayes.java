@@ -38,11 +38,11 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         

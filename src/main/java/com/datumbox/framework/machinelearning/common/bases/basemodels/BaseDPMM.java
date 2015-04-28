@@ -98,11 +98,11 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -240,15 +240,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Integer, CL> clusterList = modelParameters.getClusterList();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
@@ -275,9 +267,6 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
         //set the actual iterations performed
         modelParameters.setTotalIterations(totalIterations);
-        
-        //update the number of clusters
-        modelParameters.setC(clusterList.size());
         
     }
     

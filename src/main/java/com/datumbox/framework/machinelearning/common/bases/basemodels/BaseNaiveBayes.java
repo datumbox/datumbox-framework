@@ -54,7 +54,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         @BigMap
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
@@ -63,7 +63,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             return logPriors;
         }
 
-        public void setLogPriors(Map<Object, Double> logPriors) {
+        protected void setLogPriors(Map<Object, Double> logPriors) {
             this.logPriors = logPriors;
         }
 
@@ -71,7 +71,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             return logLikelihoods;
         }
 
-        public void setLogLikelihoods(Map<List<Object>, Double> logLikelihoods) {
+        protected void setLogLikelihoods(Map<List<Object>, Double> logLikelihoods) {
             this.logLikelihoods = logLikelihoods;
         }
     } 
@@ -168,15 +168,9 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
-        
+        int n = modelParameters.getN();
+        int d = modelParameters.getD();
         
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
@@ -235,9 +229,6 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             }
             
         }
-        
-        int c = classesSet.size();
-        modelParameters.setC(c);
         
         //calculate prior log probabilities
         for(Map.Entry<Object, Double> entry : logPriors.entrySet()) {

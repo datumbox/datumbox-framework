@@ -259,7 +259,7 @@ public class PHPfunctions {
      * @param object
      * @return 
      */
-    public static <T> String print_r(T object) {
+    public static <T> String var_export(T object) {
         return ToStringBuilder.reflectionToString(object);
     }
     

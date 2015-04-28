@@ -90,7 +90,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         private double[][] components; //components weights 
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -99,7 +99,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             return feature2ColumnId;
         }
 
-        public void setFeature2ColumnId(Map<Object, Integer> feature2ColumnId) {
+        protected void setFeature2ColumnId(Map<Object, Integer> feature2ColumnId) {
             this.feature2ColumnId = feature2ColumnId;
         }
 
@@ -107,7 +107,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             return rows;
         }
 
-        public void setRows(int rows) {
+        protected void setRows(int rows) {
             this.rows = rows;
         }
 
@@ -115,7 +115,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             return cols;
         }
 
-        public void setCols(int cols) {
+        protected void setCols(int cols) {
             this.cols = cols;
         }
         
@@ -123,7 +123,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             return mean;
         }
 
-        public void setMean(double[] mean) {
+        protected void setMean(double[] mean) {
             this.mean = mean;
         }
 
@@ -131,7 +131,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             return eigenValues;
         }
 
-        public void setEigenValues(double[] eigenValues) {
+        protected void setEigenValues(double[] eigenValues) {
             this.eigenValues = eigenValues;
         }
 
@@ -139,7 +139,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             return components;
         }
 
-        public void setComponents(double[][] components) {
+        protected void setComponents(double[][] components) {
             this.components = components;
         }
 
@@ -151,15 +151,15 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     }
 
     @Override
-    protected void _fit(Dataset originaldata) {
+    protected void _fit(Dataset originalData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        int n = originaldata.getRecordNumber();
-        int d = originaldata.getVariableNumber();
+        int n = modelParameters.getN();
+        int d = modelParameters.getD();
         
         //convert data into matrix
         Map<Object, Integer> feature2ColumnId= modelParameters.getFeature2ColumnId();
-        MatrixDataset matrixDataset = MatrixDataset.newInstance(originaldata, false, feature2ColumnId);
+        MatrixDataset matrixDataset = MatrixDataset.newInstance(originalData, false, feature2ColumnId);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -168,7 +168,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             Object feature = entry.getKey();
             Integer columnId = entry.getValue();
             
-            meanValues[columnId] = Descriptives.mean(originaldata.extractXColumnValues(feature).toFlatDataCollection());
+            meanValues[columnId] = Descriptives.mean(originalData.extractXColumnValues(feature).toFlatDataCollection());
             
             for(int row=0;row<n;++row) {
                 X.addToEntry(row, columnId, -meanValues[columnId]); //inplace subtraction!!!

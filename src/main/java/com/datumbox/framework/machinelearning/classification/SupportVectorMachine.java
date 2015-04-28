@@ -67,11 +67,11 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         private svm_model svmModel; //the parameters of the svm model
         
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -88,14 +88,11 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         }
         
         /**
-         * Setter for the mapping of the column names to column ids. The implementation
-         * internally converts the data into double[] and as a result we need to 
-         * estimate and store the mapping between the column names and their 
-         * positions in the array. This mapping is estimated during training.
+         * Setter for the mapping of the column names to column ids. 
          * 
          * @param featureIds 
          */
-        public void setFeatureIds(Map<Object, Integer> featureIds) {
+        protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
         
@@ -114,7 +111,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
          * 
          * @param svmModel
          */
-        public void setSvmModel(svm_model svmModel) {
+        protected void setSvmModel(svm_model svmModel) {
             this.svmModel = svmModel;
         }
         
@@ -130,13 +127,11 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         }
         
         /**
-         * Setter for the mapping between class names and ids. The implementation
-         * requires converting any category names into integer codes. This mapping
-         * is estimated during training.
+         * Setter for the mapping between class names and ids. 
          * 
          * @param classIds 
          */
-        public void setClassIds(Map<Object, Integer> classIds) {
+        protected void setClassIds(Map<Object, Integer> classIds) {
             this.classIds = classIds;
         }
         
@@ -234,14 +229,6 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
-        
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();
@@ -267,9 +254,6 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
             }
         }
         
-        int c = classIds.size();
-        modelParameters.setC(c);
-        
         //calling the method that handles the training with LibSVM library
         LibSVMTrainer(trainingData);
     }
@@ -280,7 +264,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();
         
-        int n = trainingData.getRecordNumber();
+        int n = modelParameters.getN();
         int sparseD = featureIds.size();
         
         //creating a new SVM problem

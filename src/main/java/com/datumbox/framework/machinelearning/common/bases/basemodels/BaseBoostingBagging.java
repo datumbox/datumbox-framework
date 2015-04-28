@@ -49,7 +49,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         private List<Double> weakClassifierWeights = new ArrayList<>(); //this is small. maximum as the total number of classifiers
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -57,7 +57,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             return weakClassifierWeights;
         }
 
-        public void setWeakClassifierWeights(List<Double> weakClassifierWeights) {
+        protected void setWeakClassifierWeights(List<Double> weakClassifierWeights) {
             this.weakClassifierWeights = weakClassifierWeights;
         }
         
@@ -170,12 +170,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
+        int n = modelParameters.getN();
         
         Set<Object> classesSet = modelParameters.getClasses();
         
@@ -186,9 +181,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             
             classesSet.add(theClass); 
         }
-
-        int c = classesSet.size();
-        modelParameters.setC(c);
         
         
         

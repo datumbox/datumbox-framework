@@ -147,11 +147,11 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
           
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -313,14 +313,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     @Override
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
@@ -339,9 +332,6 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
-        
-        //update the number of clusters
-        modelParameters.setC(clusterList.size());
         
     }
     

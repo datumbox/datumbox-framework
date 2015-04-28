@@ -54,11 +54,11 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
 
         /**
-         * Public constructor which accepts as argument the DatabaseConnector.
+         * Protected constructor which accepts as argument the DatabaseConnector.
          * 
          * @param dbc 
          */
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -76,7 +76,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
          * 
          * @param lambdas 
          */
-        public void setLambdas(Map<List<Object>, Double> lambdas) {
+        protected void setLambdas(Map<List<Object>, Double> lambdas) {
             this.lambdas = lambdas;
         }
         
@@ -151,14 +151,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     @SuppressWarnings("unchecked")
     protected void _fit(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
-        int n = trainingData.getRecordNumber();
-        int d = trainingData.getVariableNumber();
-        
-        
-        //initialization
-        modelParameters.setN(n);
-        modelParameters.setD(d);
+        int n = modelParameters.getN();
         
         
         Map<List<Object>, Double> lambdas = modelParameters.getLambdas();
@@ -171,10 +164,6 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             classesSet.add(theClass); 
         }
-
-        int c = classesSet.size();
-        modelParameters.setC(c);
-        
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = knowledgeBase.getDbc();

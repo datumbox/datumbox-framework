@@ -17,11 +17,11 @@ package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 
 import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.BaseTrainable;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.dataobjects.BaseTrainingParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
+import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 /**
@@ -35,7 +35,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
             
@@ -59,18 +59,6 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void fit_transform(Dataset trainingData, TP trainingParameters) {
         fit(trainingData, trainingParameters); 
         transform(trainingData);
-    }
-    
-    @Override
-    public void fit(Dataset trainingData, TP trainingParameters) {  
-        logger.info("fit()");
-        
-        initializeTrainingConfiguration(trainingParameters);
-        
-        _fit(trainingData);  
-            
-        logger.info("Saving model");
-        knowledgeBase.save();
     }
     
     public void transform(Dataset newData) {

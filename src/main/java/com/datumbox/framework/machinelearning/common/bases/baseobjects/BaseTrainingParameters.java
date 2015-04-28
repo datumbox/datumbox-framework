@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.machinelearning.common.bases.dataobjects;
+package com.datumbox.framework.machinelearning.common.bases.baseobjects;
 
 import com.datumbox.common.objecttypes.Parameterizable;
 

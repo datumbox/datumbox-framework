@@ -41,7 +41,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
-        public ModelParameters(DatabaseConnector dbc) {
+        protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
