@@ -23,6 +23,7 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.utilities.RandomGenerator;
 
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
@@ -209,6 +210,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
      */
     public SupportVectorMachine(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class);
+        svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
     
     @Override

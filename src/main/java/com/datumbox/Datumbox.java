@@ -22,14 +22,15 @@ import java.net.URLClassLoader;
 import java.util.jar.Manifest;
 
 /**
- * Main class of the Framework; it prints on stdout the Version and Build of the
- * Framework.
+ * Main class of the Framework.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Datumbox {
 
     /**
+     * It prints on stdout the Version and Build of the Framework.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {

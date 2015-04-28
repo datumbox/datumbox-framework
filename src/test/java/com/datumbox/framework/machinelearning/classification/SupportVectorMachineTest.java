@@ -26,7 +26,6 @@ import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import libsvm.svm;
 import libsvm.svm_parameter;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -43,8 +42,6 @@ public class SupportVectorMachineTest extends BaseTest {
     @Test
     public void testValidate() {
         logger.info("validate");
-        
-        svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
@@ -104,8 +101,6 @@ public class SupportVectorMachineTest extends BaseTest {
     @Test
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
-        
-        svm.rand.setSeed(TestConfiguration.RANDOM_SEED); //The SVM implementation uses Random() internally
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         int k = 5;
@@ -123,7 +118,7 @@ public class SupportVectorMachineTest extends BaseTest {
         
         SupportVectorMachine.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
-        double expResult = 0.5861704961704961;
+        double expResult = 0.6473992673992675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.erase();

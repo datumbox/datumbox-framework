@@ -25,8 +25,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.dataobjects.TypeInference;
-
-
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
 import com.datumbox.framework.machinelearning.common.validation.LatentDirichletAllocationValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -37,28 +35,32 @@ import java.util.Map;
 
 
 /**
+ * Implementation of the Latent Dirichlet Allocation algorithm.
+ * 
+ * References:
+ * http://videolectures.net/mlss09uk_blei_tm/
+ * http://www.ncbi.nlm.nih.gov/pmc/articles/PMC387300/
+ * https://github.com/angeloskath/php-nlp-tools/blob/master/src/NlpTools/Models/Lda.php
+ * https://gist.github.com/mblondel/542786
+ * http://stats.stackexchange.com/questions/9315/topic-prediction-using-latent-dirichlet-allocation
+ * http://home.uchicago.edu/~lkorsos/GibbsNGramLDA.pdf
+ * http://machinelearning.wustl.edu/mlpapers/paper_files/BleiNJ03.pdf
+ * http://www.cl.cam.ac.uk/teaching/1213/L101/clark_lectures/lect7.pdf
+ * http://www.ics.uci.edu/~newman/pubs/fastlda.pdf
+ * http://www.tnkcs.inf.elte.hu/vedes/Biro_Istvan_Tezisek_en.pdf (Limit Gibbs Sampler & unseen inference)
+ * http://airweb.cse.lehigh.edu/2008/submissions/biro_2008_latent_dirichlet_allocation_spam.pdf (unseen inference)
+ * http://www.cs.cmu.edu/~akyrola/10702project/kyrola10702FINAL.pdf 
+ * http://stats.stackexchange.com/questions/18167/how-to-calculate-perplexity-of-a-holdout-with-latent-dirichlet-allocation
+ * http://www.slideserve.com/adamdaniel/an-introduction-to-latent-dirichlet-allocation-lda
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
-    /*
-    References:
-        - http://videolectures.net/mlss09uk_blei_tm/
-        - http://www.ncbi.nlm.nih.gov/pmc/articles/PMC387300/
-        - https://github.com/angeloskath/php-nlp-tools/blob/master/src/NlpTools/Models/Lda.php
-        - https://gist.github.com/mblondel/542786
-        - http://stats.stackexchange.com/questions/9315/topic-prediction-using-latent-dirichlet-allocation
-        - http://home.uchicago.edu/~lkorsos/GibbsNGramLDA.pdf
-        - http://machinelearning.wustl.edu/mlpapers/paper_files/BleiNJ03.pdf
-        - http://www.cl.cam.ac.uk/teaching/1213/L101/clark_lectures/lect7.pdf
-        - http://www.ics.uci.edu/~newman/pubs/fastlda.pdf
-        - http://www.tnkcs.inf.elte.hu/vedes/Biro_Istvan_Tezisek_en.pdf (Limit Gibbs Sampler & unseen inference)
-        - http://airweb.cse.lehigh.edu/2008/submissions/biro_2008_latent_dirichlet_allocation_spam.pdf (unseen inference)
-        - http://www.cs.cmu.edu/~akyrola/10702project/kyrola10702FINAL.pdf 
-        - http://stats.stackexchange.com/questions/18167/how-to-calculate-perplexity-of-a-holdout-with-latent-dirichlet-allocation
-        - http://www.slideserve.com/adamdaniel/an-introduction-to-latent-dirichlet-allocation-lda
-    */
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
         private int totalIterations;
         
@@ -66,137 +68,206 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         private Integer n =0;
         private Integer d =0; //the vocabulary size
         
-        /**
-         * The topic assignments of a particular word in a particular document.
-         * It is a key-value of <Integer, Object> => Integer 
-         * The key is a combination of Record.id and Word Position number (also 
-         * an Integer but stored as object because the Record stores columns as Objects).
-         * The value is the Id of the topic to which the word is assigned.
-         */
         @BigMap
-        
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
-        /**
-         * Counts the number of occurrences of topics in a particular document
-         * (in other words the number of times that a word from the particular
-         * document has been assigned to a particular topic).
-         * It is a key value of <Integer, Integer> => Integer
-         * The key is a combination of Record.id and Topic id.
-         * The value is the number of counts of the pair.
-         */
         @BigMap
-        
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
-        /**
-         * Counts the number of times a particular word is assigned to a particular
-         * topic.
-         * It is a key value of <Integer, Object> => Integer
-         * The key is a combination of Topic id and Record Value which should normally
-         * be a String (the word) but is stored in the associative array of the
-         * record as an Object.
-         * The value is the number of counts of the pair.
-         */
         @BigMap
-        
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
-        /**
-         * Counts the number of words in a document. Even though this information
-         * is available to us from Record.size(), we store this info to be able
-         * to compute the probability of θ without having access on the original
-         * Record.
-         * It is a key value of Integer => Integer
-         * The key the Record.Id.
-         * The Value is the number of counts.
-         */
         @BigMap
-        
         private Map<Integer, Integer> documentWordCounts; //the n.(d) in the papers
         
-        /**
-         * Counts the number of words assigned to the particular topic.
-         * It is a key value of Integer => Integer
-         * The key the Topic Id.
-         * The Value is the number of counts.
-         */
         @BigMap
-        
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
 
+        /**
+         * Public constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         public ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-
+        /**
+         * Getter for the total number of iterations performed during training.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
-
+        
+        /**
+         * Setter for the total number of iterations performed during training.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
         
+        /**
+         * Getter for the total number of records used in training.
+         * 
+         * @return 
+         */
         public Integer getN() {
             return n;
         }
-
+        
+        /**
+         * Setter for the total number of records used in training.
+         * 
+         * @param n 
+         */
         public void setN(Integer n) {
             this.n = n;
         }
-
+        
+        /**
+         * Getter for the dimension of the data.
+         * 
+         * @return 
+         */
         public Integer getD() {
             return d;
         }
-
+        
+        /**
+         * Setter for the dimension of the data.
+         * 
+         * @param d 
+         */
         public void setD(Integer d) {
             this.d = d;
         }
-
+        
+        /**
+         * Getter for the Topic Assignments of the words of the document. 
+         * It returns the topic assignments of a particular word in a particular document.
+         * It is a key-value of [<Integer>, <Object>] => Integer 
+         * The key is a combination of Record.id and Word Position number (also 
+         * an Integer but stored as object because the Record stores columns as Objects).
+         * The value is the Id of the topic to which the word is assigned. 
+         * 
+         * @return 
+         */
         public Map<List<Object>, Integer> getTopicAssignmentOfDocumentWord() {
             return topicAssignmentOfDocumentWord;
         }
-
+        
+        /**
+         * Setter for the Topic Assignments of the words of the document. 
+         * 
+         * @param topicAssignmentOfDocumentWord 
+         */
         public void setTopicAssignmentOfDocumentWord(Map<List<Object>, Integer> topicAssignmentOfDocumentWord) {
             this.topicAssignmentOfDocumentWord = topicAssignmentOfDocumentWord;
         }
-
+        
+        /**
+         * Getter for the Document's Topic counts.
+         * It contains counts the number of occurrences of topics in a particular document
+         * (in other words the number of times that a word from the particular
+         * document has been assigned to a particular topic).
+         * It is a key value of [<Integer>, <Integer>] => Integer
+         * The key is a combination of Record.id and Topic id.
+         * The value is the number of counts of the pair.
+         * 
+         * @return 
+         */
         public Map<List<Integer>, Integer> getDocumentTopicCounts() {
             return documentTopicCounts;
         }
-
+        
+        /**
+         * setter for the Document's Topic counts.
+         * 
+         * @param documentTopicCounts 
+         */
         public void setDocumentTopicCounts(Map<List<Integer>, Integer> documentTopicCounts) {
             this.documentTopicCounts = documentTopicCounts;
         }
-
+        
+        /**
+         * Getter for the topic-word counts.
+         * It counts the number of times a particular word is assigned to a particular
+         * topic.
+         * It is a key value of [<Integer>, <Object>] => Integer
+         * The key is a combination of Topic id and Record Value which should normally
+         * be a String (the word) but is stored in the associative array of the
+         * record as an Object.
+         * The value is the number of counts of the pair.
+         * 
+         * @return 
+         */
         public Map<List<Object>, Integer> getTopicWordCounts() {
             return topicWordCounts;
         }
-
+        
+        /**
+         * Setter for the topic-word counts.
+         * 
+         * @param topicWordCounts 
+         */
         public void setTopicWordCounts(Map<List<Object>, Integer> topicWordCounts) {
             this.topicWordCounts = topicWordCounts;
         }
 
+        /**
+         * Getter for the number of words in each document.
+         * Even though this information is available to us from Record.size(), we 
+         * store this info to be able to compute the probability of θ without 
+         * having access on the original Record.
+         * It is a key value of Integer => Integer
+         * The key is the Record.Id.
+         * The Value is the number of counts.
+         * 
+         * @return 
+         */
         public Map<Integer, Integer> getDocumentWordCounts() {
             return documentWordCounts;
         }
-
+        
+        /**
+         * Setter for the number of words in each document.
+         * 
+         * @param documentWordCounts 
+         */
         public void setDocumentWordCounts(Map<Integer, Integer> documentWordCounts) {
             this.documentWordCounts = documentWordCounts;
         }
 
+        /**
+         * Getter for the number of words assigned to the particular topic.
+         * It is a key value of Integer => Integer
+         * The key the Topic Id. The Value is the number of counts.
+         * 
+         * @return 
+         */
         public Map<Integer, Integer> getTopicCounts() {
             return topicCounts;
         }
-
+        
+        /**
+         * Setter for the number of words assigned to the particular topic.
+         * 
+         * @param topicCounts 
+         */
         public void setTopicCounts(Map<Integer, Integer> topicCounts) {
             this.topicCounts = topicCounts;
         }
         
-        
-    } 
+    }  
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLtopicmodeler.TrainingParameters {    
         private int k = 2; //number of topics
         private int maxIterations = 50; //both for training and testing
@@ -204,59 +275,160 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         //a good value for alpha and beta is to set them equal to 1.0/k
         private double alpha = 1.0; //the hyperparameter of dirichlet prior for document topic distribution
         private double beta = 1.0; //the hyperparameter of dirichlet prior for word topic distribution
-
+        
+        /**
+         * Getter for the total number of topics k.
+         * 
+         * @return 
+         */
         public int getK() {
             return k;
         }
-
+        
+        /**
+         * Setter for the total number of topics k.
+         * 
+         * @param k 
+         */
         public void setK(int k) {
             this.k = k;
         }
-
+        
+        /**
+         * Getter for the total number of max iterations permitted in the training.
+         * 
+         * @return 
+         */
         public int getMaxIterations() {
             return maxIterations;
         }
-
+        
+        /**
+         * Setter for the total number of max iterations permitted in the training.
+         * 
+         * @param maxIterations 
+         */
         public void setMaxIterations(int maxIterations) {
             this.maxIterations = maxIterations;
         }
-
+        
+        /**
+         * Getter for the hyperparameter of dirichlet prior for document topic distribution.
+         * 
+         * @return 
+         */
         public double getAlpha() {
             return alpha;
         }
-
+        
+        /**
+         * Setter for the hyperparameter of dirichlet prior for document topic distribution.
+         * 
+         * @param alpha 
+         */
         public void setAlpha(double alpha) {
             this.alpha = alpha;
         }
-
+        
+        /**
+         * Getter for the hyperparameter of dirichlet prior for word topic distribution.
+         * 
+         * @return 
+         */
         public double getBeta() {
             return beta;
         }
-
+        
+        /**
+         * Setter for the hyperparameter of dirichlet prior for word topic distribution.
+         * 
+         * @param beta 
+         */
         public void setBeta(double beta) {
             this.beta = beta;
         }
         
     } 
-
+    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseMLtopicmodeler.ValidationMetrics {
         double perplexity = 0.0;
-
+        
+        /**
+         * Getter for the perplexity metric.
+         * 
+         * @return 
+         */
         public double getPerplexity() {
             return perplexity;
         }
-
+        
+        /**
+         * Setter for the perplexity metric.
+         * 
+         * @param perplexity 
+         */
         public void setPerplexity(double perplexity) {
             this.perplexity = perplexity;
         }
 
     }
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public LatentDirichletAllocation(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidation()); 
     }
     
-
+    /**
+     * Returns the distribution of the words in each topic.
+     * 
+     * @return 
+     */
+    public AssociativeArray2D getWordProbabilitiesPerTopic() {
+        AssociativeArray2D ptw = new AssociativeArray2D();
+        
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        
+        //initialize a probability list for every topic
+        int k = trainingParameters.getK();
+        for(int topicId=0;topicId<k;++topicId) {
+            ptw.put(topicId, new AssociativeArray());
+        }
+        
+        int d = modelParameters.getD();
+        double beta = trainingParameters.getBeta();
+        
+        Map<List<Object>, Integer> topicWordCounts = modelParameters.getTopicWordCounts();
+        Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
+        for(Map.Entry<List<Object>, Integer> entry : topicWordCounts.entrySet()) {
+            List<Object> tpk = entry.getKey();
+            Integer topicId = (Integer)tpk.get(0);
+            Object word = tpk.get(1);
+            Integer njw = entry.getValue();
+            
+            Integer nj = topicCounts.get(topicId);
+            
+            double probability = (njw+beta)/(nj+beta*d);
+            
+            ptw.get(topicId).put(word, probability);
+        }
+        
+        for(int topicId=0;topicId<k;++topicId) {
+            ptw.put(topicId, MapFunctions.sortAssociativeArrayByValueDescending(ptw.get(topicId)));
+        }
+        
+        return ptw;
+    }
+    
     @Override
     protected void _fit(Dataset trainingData) {
         int n = trainingData.getRecordNumber();
@@ -406,43 +578,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     @Override
     protected ValidationMetrics validateModel(Dataset validationData) {
         return predictAndValidate(validationData);
-    }
-    
-    public AssociativeArray2D getWordProbabilitiesPerTopic() {
-        AssociativeArray2D ptw = new AssociativeArray2D();
-        
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        //initialize a probability list for every topic
-        int k = trainingParameters.getK();
-        for(int topicId=0;topicId<k;++topicId) {
-            ptw.put(topicId, new AssociativeArray());
-        }
-        
-        int d = modelParameters.getD();
-        double beta = trainingParameters.getBeta();
-        
-        Map<List<Object>, Integer> topicWordCounts = modelParameters.getTopicWordCounts();
-        Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
-        for(Map.Entry<List<Object>, Integer> entry : topicWordCounts.entrySet()) {
-            List<Object> tpk = entry.getKey();
-            Integer topicId = (Integer)tpk.get(0);
-            Object word = tpk.get(1);
-            Integer njw = entry.getValue();
-            
-            Integer nj = topicCounts.get(topicId);
-            
-            double probability = (njw+beta)/(nj+beta*d);
-            
-            ptw.get(topicId).put(word, probability);
-        }
-        
-        for(int topicId=0;topicId<k;++topicId) {
-            ptw.put(topicId, MapFunctions.sortAssociativeArrayByValueDescending(ptw.get(topicId)));
-        }
-        
-        return ptw;
     }
     
     /**
