@@ -117,7 +117,7 @@ public class NLMSTest extends BaseTest {
         PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
         featureSelectionParameters.setMaxDimensions(trainingData.getVariableNumber()-1);
         featureSelectionParameters.setWhitened(false);
-        featureSelectionParameters.setVarianceThreshold(0.99999995);
+        featureSelectionParameters.setVariancePercentageThreshold(0.99999995);
         featureSelection.fit_transform(trainingData, featureSelectionParameters);
         featureSelection.erase();
         

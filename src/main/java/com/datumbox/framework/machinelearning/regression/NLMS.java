@@ -27,55 +27,96 @@ import com.datumbox.common.dataobjects.TypeInference;
 import java.util.Map;
 
 /**
- *
+ * Linear Regression model which uses the Normalised Least Mean Squares Algorithm.
+ * This implementation should be preferred from MatrixLinearRegression when the 
+ * data can't fit the memory.
+ * 
+ * References:
+ * http://cs229.stanford.edu/notes/cs229-notes1.pdf
+ * http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
+ * https://class.coursera.org/ml-003/lecture/index
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> {
-    /*
-    * Normalised Least Mean Squares Algorithm
-    * References:
-    * http://cs229.stanford.edu/notes/cs229-notes1.pdf
-    * http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
-    * https://class.coursera.org/ml-003/lecture/index
-    */
-    
+     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
-
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
     } 
 
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {         
         private int totalIterations=1000; 
         private double learningRate=0.1;
 
+        /**
+         * Getter for the total iterations of the training process.
+         * 
+         * @return 
+         */
         public int getTotalIterations() {
             return totalIterations;
         }
 
+        /**
+         * Setter for the total iterations of the training process.
+         * 
+         * @param totalIterations 
+         */
         public void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
 
+        /**
+         * Getter for the initial value of the Learning Rate.
+         * 
+         * @return 
+         */
         public double getLearningRate() {
             return learningRate;
         }
 
+        /**
+         * Setter for the initial value of the Learning Rate. This value will be
+         * adapted during the iterations.
+         * 
+         * @param learningRate 
+         */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
         }
 
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
         
     }
 
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public NLMS(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
     }

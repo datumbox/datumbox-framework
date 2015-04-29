@@ -29,6 +29,12 @@ import java.util.Map;
  */
 public class DummyXMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public DummyXMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf);
     }

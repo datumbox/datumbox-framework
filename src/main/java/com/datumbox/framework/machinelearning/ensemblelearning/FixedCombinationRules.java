@@ -17,7 +17,6 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -26,14 +25,25 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
+ * Implementation of various Fixed combination rules which can be used in order
+ * to combine the responses of multiple classifiers.
+ * 
+ * References:
+ * http://www2.cs.uh.edu/~ceick/ML/Topic12.ppt
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class FixedCombinationRules {
-    //References: www2.cs.uh.edu/~ceick/ML/Topic12.ppt‎
     
+    /**
+     * Combines the responses of the classifiers by using estimating the sum
+     * of the probabilities of their responses.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray sum(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {
             //Object classifier = entry.getKey();
@@ -54,8 +64,15 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }
     
+    /**
+     * Combines the responses of the classifiers by using estimating the average
+     * of the probabilities of their responses.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray average(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         int numberOfClasses = classifierClassProbabilityMatrix.size();
         
@@ -78,8 +95,16 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }
     
+    /**
+     * Combines the responses of the classifiers by estimating the weighted
+     * average of the probabilities of their responses.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @param classifierWeights
+     * @return 
+     */
     public static AssociativeArray weightedAverage(DataTable2D classifierClassProbabilityMatrix, AssociativeArray classifierWeights) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {
             Object classifier = entry.getKey();
@@ -101,8 +126,15 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }
     
+    /**
+     * Combines the responses of the classifiers by using estimating the median
+     * of the probabilities of their responses.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray median(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         //extract all the classes first
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {
@@ -133,8 +165,15 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }
     
+    /**
+     * Combines the responses of the classifiers by using selecting the maximum
+     * probability of each class.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray maximum(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {
             //Object classifier = entry.getKey();
@@ -154,8 +193,15 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }    
     
+    /**
+     * Combines the responses of the classifiers by using selecting the minimum
+     * probability of each class.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray minimum(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {
             //Object classifier = entry.getKey();
@@ -175,8 +221,15 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }    
     
+    /**
+     * Combines the responses of the classifiers by using estimating the product
+     * of the probabilities of their responses.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray product(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {
             //Object classifier = entry.getKey();
@@ -197,8 +250,15 @@ public class FixedCombinationRules {
         return combinedClassProbabilities;
     }
     
+    /**
+     * Combines the responses of the classifiers by summing the votes of each
+     * winner class.
+     * 
+     * @param classifierClassProbabilityMatrix
+     * @return 
+     */
     public static AssociativeArray majorityVote(DataTable2D classifierClassProbabilityMatrix) {
-        AssociativeArray combinedClassProbabilities = new AssociativeArray(); //new TreeMap<>(Collections.reverseOrder())
+        AssociativeArray combinedClassProbabilities = new AssociativeArray(); 
         
         //extract all the classes first
         for(Map.Entry<Object, AssociativeArray> entry : classifierClassProbabilityMatrix.entrySet()) {

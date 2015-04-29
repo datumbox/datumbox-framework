@@ -43,6 +43,10 @@ import org.apache.commons.math3.linear.RealVector;
  */
 public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {
 
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
 
         /**
@@ -51,49 +55,98 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         @BigMap
         private Map<Object, Integer> featureIds; //list of all the supported features
         
-        /**
-         * This is NOT always available. Calculated during training ONLY if the model is
-         * configured to. It is useful when we perform StepwiseRegression.
-         */
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
-        
-
+    
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Getter for the mapping of the column names to column ids. The implementation
+         * internally converts the data into vectors and as a result we need to 
+         * estimate and store the mapping between the column names and their 
+         * positions in the array. This mapping is estimated during training.
+         * 
+         * @return 
+         */
         public Map<Object, Integer> getFeatureIds() {
             return featureIds;
         }
-
+        
+        /**
+         * Setter for the mapping of the column names to column ids.
+         * 
+         * @param featureIds 
+         */
         protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
         
+        /**
+         * Getter for the p-values of the variables which are estimated during 
+         * the regression. 
+         * This is NOT always available. Calculated during training ONLY if the model is
+         * configured to. It is useful when we perform StepwiseRegression.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getFeaturePvalues() {
             return featurePvalues;
         } 
         
+        /**
+         * Setter for the p-values of the variables which are estimated during 
+         * the regression.
+         * 
+         * @param featurePvalues 
+         */
         protected void setFeaturePvalues(Map<Object, Double> featurePvalues) {
             this.featurePvalues = featurePvalues;
         } 
     } 
 
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {    
 
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
         
     }
 
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public MatrixLinearRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
     }
 
+    /**
+     * Getter for the p-values of the variables which are estimated during the regression.
+     * This method is required by the StepwiseCompatible Interface.
+     * 
+     * @return 
+     */
+    @Override
+    public Map<Object, Double> getFeaturePvalues() {
+        return knowledgeBase.getModelParameters().getFeaturePvalues();
+    }
+    
     @Override
     protected void _fit(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
@@ -195,11 +248,5 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         matrixDataset = null;
     }
 
-    //Methods required by the StepwiseCompatible Intefrace
-
-    @Override
-    public Map<Object, Double> getFeaturePvalues() {
-        return knowledgeBase.getModelParameters().getFeaturePvalues();
-    }
     
 }

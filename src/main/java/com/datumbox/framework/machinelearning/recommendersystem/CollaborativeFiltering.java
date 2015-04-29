@@ -38,36 +38,60 @@ import java.util.Set;
 
 
 /**
+ * Implementation of Collaborative Filtering algorithm.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters> {
 
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
         
         @BigMap
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        
         //Getters / Setters
         
+        /**
+         * Getter for the similarities map.
+         * 
+         * @return 
+         */
         public Map<List<Object>, Double> getSimilarities() {
             return similarities;
         }
-
+        
+        /**
+         * Setter for the similarities map.
+         * 
+         * @param similarities 
+         */
         protected void setSimilarities(Map<List<Object>, Double> similarities) {
             this.similarities = similarities;
         }
-
-        
+   
     }
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseMLrecommender.TrainingParameters {
- 
+        /**
+         * Enum with Similarity Measures.
+         */
         public enum SimilarityMeasure {
             EUCLIDIAN,
             MANHATTAN,
@@ -75,23 +99,37 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         }
         
         private SimilarityMeasure similarityMethod = SimilarityMeasure.EUCLIDIAN;
-
+        
+        /**
+         * Getter for the similarity method.
+         * 
+         * @return 
+         */
         public SimilarityMeasure getSimilarityMethod() {
             return similarityMethod;
         }
-
+        
+        /**
+         * Setter for the similarity method.
+         * 
+         * @param similarityMethod 
+         */
         public void setSimilarityMethod(SimilarityMeasure similarityMethod) {
             this.similarityMethod = similarityMethod;
         }
 
     }
     
-
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public CollaborativeFiltering(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
     } 
     
-
     @Override
     protected void _fit(Dataset trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();

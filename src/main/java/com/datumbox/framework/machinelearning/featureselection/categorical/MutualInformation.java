@@ -26,24 +26,47 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Implementation of the Mutual Information Feature Selection algorithm which can be used
+ * for evaluating categorical and boolean variables.
+ * 
+ * References: 
+ * http://nlp.stanford.edu/IR-book/html/htmledition/mutual-information-1.html
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MutualInformation extends CategoricalFeatureSelection<MutualInformation.ModelParameters, MutualInformation.TrainingParameters>{
-    //References: http://nlp.stanford.edu/IR-book/html/htmledition/mutual-information-1.html
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     }
 
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends CategoricalFeatureSelection.TrainingParameters {
 
     }
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public MutualInformation(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
     }
@@ -110,5 +133,4 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
 
     }
     
-
 }

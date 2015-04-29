@@ -29,39 +29,57 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Implementation of Adaboost algorithm.
+ * 
+ * References: 
+ * ftp://vista.eng.tau.ac.il/dropbox/Alon.Harell/samme.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters, Adaboost.ValidationMetrics> {
-
-    /*
-    References: 
-            ftp://vista.eng.tau.ac.il/dropbox/Alon.Harell/samme.pdf
-    */
-    
+ 
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     } 
 
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters {      
         
     } 
-    
-    
+        
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseBoostingBagging.ValidationMetrics {
 
     }
     
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public Adaboost(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
     } 
-
 
     @Override
     protected Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) { 
@@ -119,4 +137,5 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
         
         return status; 
     }
+
 }

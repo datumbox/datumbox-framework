@@ -21,14 +21,19 @@ import com.datumbox.framework.machinelearning.common.bases.datatransformation.Ba
 import java.util.Map;
 
 /**
- * Dummy XY MinMax Normalizer: Transforms the X vector and Y values of the 
- * Records to the 0.0-1.0 scale and builds dummy variables when non-numerics are
- * detected. This normalizer can be used in continuous regression models.
+ * XY MinMax Normalizer: Transforms the X vector and Y values of the Records to 
+ * the 0.0-1.0 scale. This normalizer can be used in continuous regression models.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class XYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public XYMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf);
     }

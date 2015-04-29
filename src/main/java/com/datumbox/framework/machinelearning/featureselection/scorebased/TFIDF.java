@@ -27,62 +27,109 @@ import java.util.Map;
 
 
 /**
- *
+ * Implementation of the TF-IDF Feature Selection algorithm. * 
+ * 
+ * References: 
+ * http://en.wikipedia.org/wiki/Tf%E2%80%93idf
+ * https://gist.github.com/AloneRoad/1605037
+ * http://www.tfidf.com/
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
-    /*
-        References: 
-            http://en.wikipedia.org/wiki/Tf%E2%80%93idf
-            https://gist.github.com/AloneRoad/1605037
-            http://www.tfidf.com/
-    */
 
-    public static class TrainingParameters extends ScoreBasedFeatureSelection.TrainingParameters {
-        private boolean binarized = false;
-        private Integer maxFeatures=null;
-
-        public boolean isBinarized() {
-            return binarized;
-        }
-
-        public void setBinarized(boolean binarized) {
-            this.binarized = binarized;
-        }
-
-        public Integer getMaxFeatures() {
-            return maxFeatures;
-        }
-
-        public void setMaxFeatures(Integer maxFeatures) {
-            this.maxFeatures = maxFeatures;
-        }
-        
-    }
-    
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends ScoreBasedFeatureSelection.ModelParameters {
-        private int N;
         
         @BigMap
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
 
-        
-
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-    
+        
+        /**
+         * Getter for the maximum TFIDF scores of each keyword in the vocabulary.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getMaxTFIDFfeatureScores() {
             return maxTFIDFfeatureScores;
         }
-
+        
+        /**
+         * Setter for the maximum TFIDF scores of each keyword in the vocabulary.
+         * 
+         * @param maxTFIDFfeatureScores 
+         */
         protected void setMaxTFIDFfeatureScores(Map<Object, Double> maxTFIDFfeatureScores) {
             this.maxTFIDFfeatureScores = maxTFIDFfeatureScores;
         }
 
     }
     
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
+    public static class TrainingParameters extends ScoreBasedFeatureSelection.TrainingParameters {
+        private boolean binarized = false;
+        private Integer maxFeatures=null;
+        
+        /**
+         * Getter for the binarized flag; when it is set on the frequencies of the
+         * activated keywords are clipped to 1.
+         * 
+         * @return 
+         */
+        public boolean isBinarized() {
+            return binarized;
+        }
+        
+        /**
+         * Setter for the binarized flag; when it is set on the frequencies of the
+         * activated keywords are clipped to 1.
+         * 
+         * @param binarized 
+         */
+        public void setBinarized(boolean binarized) {
+            this.binarized = binarized;
+        }
+        
+        /**
+         * Getter for the threshold of maximum selected features.
+         * 
+         * @return 
+         */
+        public Integer getMaxFeatures() {
+            return maxFeatures;
+        }
+        
+        /**
+         * Setter for the threshold of maximum selected features.
+         * 
+         * @param maxFeatures 
+         */
+        public void setMaxFeatures(Integer maxFeatures) {
+            this.maxFeatures = maxFeatures;
+        }
+        
+    }    
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public TFIDF(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
     }

@@ -31,7 +31,6 @@ public class TestConfiguration {
     
     public static final long RANDOM_SEED = 42L;
     
-
     public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
     //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
     

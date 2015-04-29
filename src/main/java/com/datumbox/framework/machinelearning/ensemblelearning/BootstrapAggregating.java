@@ -24,43 +24,61 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.List;
 
 /**
- *
+ * Implementation of Bagging algorithm.
+ * 
+ * References: 
+ * www.cis.temple.edu/~latecki/Courses/AI-Fall10/Lectures/ch7EL.ppt         
+ * http://www2.icmc.usp.br/~moacir/papers/PontiJr_TutorialMCS_SIBGRAPI2011.pdf
+ * https://en.wikipedia.org/wiki/Bootstrap_aggregating 
+ * http://artint.info/html/ArtInt_184.html
+ * http://www.cs.man.ac.uk/~gbrown/research/brown10ensemblelearning.pdf
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters, BootstrapAggregating.ValidationMetrics> {
 
-    /*
-    References: 
-            www.cis.temple.edu/~latecki/Courses/AI-Fall10/Lectures/ch7EL.ppt         
-            http://www2.icmc.usp.br/~moacir/papers/PontiJr_TutorialMCS_SIBGRAPI2011.pdf
-            https://en.wikipedia.org/wiki/Bootstrap_aggregating 
-            http://artint.info/html/ArtInt_184.html
-            http://www.cs.man.ac.uk/~gbrown/research/brown10ensemblelearning.pdf
-    */
-    
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     } 
 
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters {      
         
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseBoostingBagging.ValidationMetrics {
 
     }
     
-    
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public BootstrapAggregating(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
     } 
-
 
     @Override
     protected Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) {
@@ -80,4 +98,5 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
         
         return Status.NEXT; //always go to next 
     }
+
 }

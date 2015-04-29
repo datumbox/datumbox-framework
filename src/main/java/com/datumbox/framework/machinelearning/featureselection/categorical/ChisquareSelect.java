@@ -28,27 +28,59 @@ import java.util.Map;
 import java.util.List;
 
 /**
- *
+ * Implementation of the Chisquare Feature Selection algorithm which can be used
+ * for evaluating categorical and boolean variables.
+ * 
+ * References: 
+ * http://nlp.stanford.edu/IR-book/html/htmledition/feature-selectionchi2-feature-selection-1.html
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters>{
-    //References: http://nlp.stanford.edu/IR-book/html/htmledition/feature-selectionchi2-feature-selection-1.html
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     }
 
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends CategoricalFeatureSelection.TrainingParameters {
+        
         private double aLevel = 0.05; 
-
+        
+        /**
+         * Getter for the threshold of the maximum p-value; a feature must
+         * have a p-value less or equal than the threshold to be retained in the 
+         * feature list.
+         * 
+         * @return 
+         */
         public double getALevel() {
             return aLevel;
         }
-
+        
+        /**
+         * Setter for the threshold of the maximum p-value; a feature must
+         * have a p-value less or equal than the threshold to be retained in the 
+         * feature list.
+         * 
+         * @param aLevel 
+         */
         public void setALevel(double aLevel) {
             if(aLevel>1 || aLevel<0) {
                 throw new RuntimeException("Wrong statistical significance aLevel");
@@ -57,6 +89,12 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         }
     }
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public ChisquareSelect(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
     }

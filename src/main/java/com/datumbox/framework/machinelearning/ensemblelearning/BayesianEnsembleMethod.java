@@ -20,38 +20,64 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 
-/**
+/** 
+ * Implementation of Bayesian Ensemble Method. This algorithm can be used to 
+ * combine the responses of multiple different classifiers into one strong 
+ * classifier.
+ * 
+ * References: 
+ * http://www.stanford.edu/class/cs124/lec/sentiment.pptx
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters, BayesianEnsembleMethod.ValidationMetrics> {
-    //References: http://www.stanford.edu/class/cs124/lec/sentiment.pptx
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
     } 
 
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
 
     } 
-
-    
+        
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
 
     }
     
+    /**
+     * Public constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public BayesianEnsembleMethod(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class);
         isBinarized = true;
     }
     
     @Override
-    public void _fit(Dataset trainingData) {
+    protected void _fit(Dataset trainingData) {
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }
