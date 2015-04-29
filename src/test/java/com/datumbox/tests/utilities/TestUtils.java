@@ -44,6 +44,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestUtils {
     
+    /**
+     * Assert method for DataTable2D data structure which stores double values.
+     * 
+     * @param expResult
+     * @param result 
+     */
     public static void assertDoubleDataTable2D(DataTable2D expResult, DataTable2D result) {
         for (Object key1 : result.keySet()) {
             for (Object key2 : result.get(key1).keySet()) {
@@ -56,6 +62,12 @@ public class TestUtils {
         }
     }
     
+    /**
+     * Assert method for AssociativeArray data structure which stores double values.
+     * 
+     * @param expResult
+     * @param result 
+     */
     public static void assetDoubleAssociativeArray(AssociativeArray expResult, AssociativeArray result) {
         
         for (Object key : result.keySet()) {
@@ -66,6 +78,13 @@ public class TestUtils {
         }
     }
     
+    /**
+     * Downloads a file from a remote URL, it stores it locally in a temporary
+     * file and it returns its URI.
+     * 
+     * @param url
+     * @return 
+     */
     public static URI getRemoteFile(URL url) {
         try {
             File tmpFile = File.createTempFile("datumbox", ".tmp");
@@ -90,6 +109,12 @@ public class TestUtils {
         }
     }
 
+    /**
+     * Gets the contents of a URL and it returns it as a string.
+     * 
+     * @param urlStr
+     * @return 
+     */
     public static String webRequest(String urlStr) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -111,6 +136,12 @@ public class TestUtils {
         return sb.toString();
     }
 
+    /**
+     * Initializes and returns the correct DatabaseConfiguration based on the
+     * configuration.
+     * 
+     * @return 
+     */
     public static DatabaseConfiguration getDBConfig() {
         String tmpFolder = System.getProperty("java.io.tmpdir");
         if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
@@ -126,7 +157,14 @@ public class TestUtils {
         return null;
     }
     
-    // new record methods
+    /**
+     * Generates a new Record from an Array.
+     * 
+     * @param <T>
+     * @param xArray
+     * @param y
+     * @return 
+     */
     public static <T> Record newDataVector(T[] xArray, Object y) {
         AssociativeArray x = new AssociativeArray();
         for(int i=0;i<xArray.length;++i) {

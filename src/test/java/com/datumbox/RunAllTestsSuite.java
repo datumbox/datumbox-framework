@@ -30,6 +30,12 @@ import org.junit.runner.RunWith;
 @RunWith(ClasspathSuite.class)
 @SuiteTypes({SuiteType.TEST_CLASSES})
 public class RunAllTestsSuite {
+    /**
+     * Executes in a serial manner all the tests of the project.
+     * 
+     * @param args
+     * @throws InterruptedException 
+     */
     public static void main(String[] args) throws InterruptedException {
         //Thread.sleep(30000);
         JUnitCore.runClasses(RunAllTestsSuite.class);

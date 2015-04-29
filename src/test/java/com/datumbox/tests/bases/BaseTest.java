@@ -28,14 +28,21 @@ import org.slf4j.LoggerFactory;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public abstract class BaseTest {
-    
+    //We want this to be non-static in order to print the names of the inherited classes
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
+    /**
+     * Public constructor of the Tests. It sets up the global seed in the RandomGenerator.
+     */
     public BaseTest() {
         //Set the global seed (Optional)
         RandomGenerator.setGlobalSeed(TestConfiguration.RANDOM_SEED);
     }
     
+    /**
+     * This method is executed before every test. It resets the seed of the
+     * local Random to the original seed.
+     */
     @Before
     public void setUp() {
         //Reset the seed of the local Random before every method execution

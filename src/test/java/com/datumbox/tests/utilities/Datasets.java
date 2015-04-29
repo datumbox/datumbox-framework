@@ -25,7 +25,9 @@ import java.util.Random;
 
 
 /**
- *
+ * This class contains a series of different Datasets which can be used for 
+ * testing the accuracy of the algorithms.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Datasets {
