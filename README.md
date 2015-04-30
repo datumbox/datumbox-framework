@@ -8,12 +8,14 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 Copyright & License
 -------------------
 
-Copyright (c) 2013-2015 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
+Copyright (c) 2013-2015 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
+The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
 
 Version
 -------
 
-The latest version is 0.6.0 (build 20150430). The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
+The latest version is 0.6.0 (build 20150430). 
+The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
 
 Installation
 ------------
@@ -44,7 +46,7 @@ The Framework currently supports performing multiple Parametric & non-parametric
 Documentation
 -------------
 
-Most of the public methods and classes of the Framework are documented with Javadoc comments. Moreover for every model there is a JUnit Test which clearly shows how to train and use the models. Finally for more examples on how to use the framework checkout the [official Blog](http://blog.datumbox.com/).
+All the public methods and classes of the Framework are documented with Javadoc comments. Moreover for every model there is a JUnit Test which clearly shows how to train and use the models. Finally for more examples on how to use the framework checkout the [official Blog](http://blog.datumbox.com/).
 
 Bug Reports
 -----------
