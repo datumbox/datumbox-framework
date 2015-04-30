@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -31,7 +30,7 @@ import static org.junit.Assert.*;
  */
 public class SystematicSamplingTest extends BaseTest {
 
-    protected FlatDataCollection generateFlatDataCollection() {
+    private FlatDataCollection generateFlatDataCollection() {
         //Example from Papageorgious' notes
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{54,16,250,8,145,62,64,55,87,23,60,120,18,29,320,160,102,12,28,280,130,45,74,340}));
         return flatDataCollection;

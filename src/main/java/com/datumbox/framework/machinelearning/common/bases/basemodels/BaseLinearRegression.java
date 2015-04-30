@@ -428,6 +428,12 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         return validationMetrics;
     }
     
+    /**
+     * Estimates the Sum of Squared Errors of the provided dataset.
+     * 
+     * @param validationData
+     * @return 
+     */
     protected double calculateSSE(Dataset validationData) {
         double SSE = 0.0;
         for(Integer rId : validationData) {

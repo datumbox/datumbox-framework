@@ -113,7 +113,7 @@ public class TextSimilarity {
         return resemblance;
     }
     
-    protected static String preprocessDocument(String text) {
+    private static String preprocessDocument(String text) {
         //URLs
         text=StringCleaner.tokenizeURLs(text);
 

@@ -19,7 +19,6 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.AbstractMap;
 import java.util.Map;
 import org.junit.Test;
@@ -31,7 +30,12 @@ import static org.junit.Assert.*;
  */
 public class DecisionCriteriaTest extends BaseTest {
     
-    protected DataTable2D generatePayoffMatrix() {
+    /**
+     * Generates an example PayoffMatrix.
+     * 
+     * @return 
+     */
+    private DataTable2D generatePayoffMatrix() {
         //Example from Dimakis' Notes on Decision Theory
         DataTable2D payoffMatrix = new DataTable2D();
         payoffMatrix.put2d("E1", "A1", 400.0);
@@ -54,7 +58,12 @@ public class DecisionCriteriaTest extends BaseTest {
         return payoffMatrix;
     }
     
-    protected AssociativeArray generateEventProbabilities() {
+    /**
+     * Generates the example Event Probabilities.
+     * 
+     * @return 
+     */
+    private AssociativeArray generateEventProbabilities() {
         AssociativeArray eventProbabilities = new AssociativeArray();
         eventProbabilities.put("E1", 0.3);
         eventProbabilities.put("E2", 0.4);

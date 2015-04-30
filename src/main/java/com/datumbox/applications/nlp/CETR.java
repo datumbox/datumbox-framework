@@ -41,41 +41,79 @@ import java.util.regex.Pattern;
  * content text from HTML pages. It uses the tag ratios of each line and performs
  * clustering to separate the real text of the page from menus, footers and headers.
  * 
+ * References: 
+ *  http://www.cs.uiuc.edu/~hanj/pdf/www10_tweninger.pdf 
+ *  http://web.engr.illinois.edu/~weninge1/cetr/
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CETR {
     /**
-     * References: 
-     *  http://www.cs.uiuc.edu/~hanj/pdf/www10_tweninger.pdf 
-     *  http://web.engr.illinois.edu/~weninge1/cetr/
      */
     private static final Pattern NUMBER_OF_TAGS_PATTERN = Pattern.compile("<[^>]+?>", Pattern.DOTALL);
     
+    /**
+     * The object with the Parameters of the Algorithm.
+     */
     public static class Parameters implements Parameterizable {
         private int numberOfClusters = 2;
         private int alphaWindowSizeFor2DModel = 3; //0 turns off the 2d Model. Suggested value from paper: 3
         private int smoothingAverageRadius = 2; //used by smoothing average method if selected
-
+        
+        /**
+         * Getter for the number of clusters that will be used by the clustering
+         * algorithm
+         * 
+         * @return 
+         */
         public int getNumberOfClusters() {
             return numberOfClusters;
         }
-
+        
+        /**
+         * Setter for the number of clusters that will be used by the clustering
+         * algorithm
+         * 
+         * @param numberOfClusters 
+         */
         public void setNumberOfClusters(int numberOfClusters) {
             this.numberOfClusters = numberOfClusters;
         }
-
+        
+        /**
+         * Getter for the alpha parameter which is the window size used in the
+         * moving average of the 2D model.
+         * 
+         * @return 
+         */
         public int getAlphaWindowSizeFor2DModel() {
             return alphaWindowSizeFor2DModel;
         }
-
+        
+        /**
+         * Setter for the alpha parameter which is the window size used in the
+         * moving average of the 2D model.
+         * 
+         * @param alphaWindowSizeFor2DModel 
+         */
         public void setAlphaWindowSizeFor2DModel(int alphaWindowSizeFor2DModel) {
             this.alphaWindowSizeFor2DModel = alphaWindowSizeFor2DModel;
         }
-
+        
+        /**
+         * Getter for the smoothing average radius.
+         * 
+         * @return 
+         */
         public int getSmoothingAverageRadius() {
             return smoothingAverageRadius;
         }
-
+        
+        /**
+         * Setter for the smoothing average radius.
+         * 
+         * @param smoothingAverageRadius 
+         */
         public void setSmoothingAverageRadius(int smoothingAverageRadius) {
             this.smoothingAverageRadius = smoothingAverageRadius;
         }
@@ -84,6 +122,13 @@ public class CETR {
     private final String dbName;
     private final DatabaseConfiguration dbConf;
     
+    /**
+     * Constructor for the CETR class. It accepts as arguments the name of the
+     * database were the temporary results are stored and the Database Configuration.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     public CETR(String dbName, DatabaseConfiguration dbConf) {
         this.dbName = dbName;
         this.dbConf = dbConf;
@@ -97,12 +142,12 @@ public class CETR {
      * @return 
      */
     public String extract(String html, CETR.Parameters parameters) {
-        html = clearText(html); //preprocess the Document by removing irrelevant HTML tags and empty lines
-        List<String> rows = extractRows(html); //break the document to its lines
+        html = clearText(html); //preprocess the Document by removing irrelevant HTML tags and empty lines and break the document to its lines
+        List<String> rows = extractRows(html); //
         
         List<Integer> selectedRowIds = selectRows(rows, parameters);
         
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(html.length());
         for(Integer rowId : selectedRowIds) {
             String row = rows.get(rowId);
             

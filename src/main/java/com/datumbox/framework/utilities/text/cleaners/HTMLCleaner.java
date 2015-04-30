@@ -87,7 +87,7 @@ public class HTMLCleaner {
         return html;
     }
     
-    protected static String removeNonTextTags(String html) {
+    private static String removeNonTextTags(String html) {
         html = removeComments(html);
         Matcher m = NON_TEXT_TAGS_PATTERN.matcher(html);
         if(m.find()) {
@@ -133,7 +133,7 @@ public class HTMLCleaner {
         return html;
     }
     
-    protected static String clear(String html) {
+    private static String clear(String html) {
         return StringCleaner.removeExtraSpaces(StringEscapeUtils.unescapeHtml4(unsafeRemoveAllTags(html)));
     }
     
@@ -155,8 +155,19 @@ public class HTMLCleaner {
      * Enum with the various components of a hyperlink.
      */
     public enum HyperlinkPart {
+        /**
+         * The entire HTML tag.
+         */
         HTMLTAG, 
+        
+        /**
+         * The URL address.
+         */
         URL,
+        
+        /***
+         * The Anchor Text.
+         */
         ANCHORTEXT
     }
     

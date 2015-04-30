@@ -28,7 +28,10 @@ import org.slf4j.LoggerFactory;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public abstract class BaseTest {
-    //We want this to be non-static in order to print the names of the inherited classes
+    /**
+     * The Logger of all Tests.
+     * We want this to be non-static in order to print the names of the inherited classes.
+     */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     /**

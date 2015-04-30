@@ -340,7 +340,7 @@ public class DiscreteDistributions {
         return probabilitySum;
     }
     
-    protected static double approxHypergeometricCdf(double x,double n,double m,double nn) {
+    private static double approxHypergeometricCdf(double x,double n,double m,double nn) {
         //Approximate estimation as described at http://www.math.ucla.edu/~tom/distributions/Hypergeometric.html?
         double Prob=0;
         if (2*m>nn) {
@@ -360,7 +360,7 @@ public class DiscreteDistributions {
         return Prob;
     }
 
-    protected static double hyp(double x, double n, double m, double nn) {
+    private static double hyp(double x, double n, double m, double nn) {
         double nz=0;
         double mz=0;
         if (m<n) {         //best to have n<m

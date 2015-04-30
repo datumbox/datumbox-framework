@@ -17,7 +17,6 @@ package com.datumbox.framework.utilities.text.extractors;
 
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;

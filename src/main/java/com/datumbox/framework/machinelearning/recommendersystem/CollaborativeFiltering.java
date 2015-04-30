@@ -93,8 +93,19 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
          * Enum with Similarity Measures.
          */
         public enum SimilarityMeasure {
+            /**
+             * Euclidian distance.
+             */
             EUCLIDIAN,
+            
+            /**
+             * Manhattan distance.
+             */
             MANHATTAN,
+            
+            /**
+             * Pearson's Correlation.
+             */
             PEARSONS_CORRELATION;
         }
         

@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * The FlatDataList is a data structure that stores internally a List<Object>. 
+ * The FlatDataList is a data structure that stores internally a {@literal List<Object>}. 
  * The class provides a set of useful methods to access and modify the contents 
  * of the collection.
  * 

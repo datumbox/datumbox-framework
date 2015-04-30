@@ -40,15 +40,23 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * Base class for the Model Parameters of the algorithm.
      */
     public static class ModelParameters extends DataTransformer.ModelParameters {
-            
+        /**
+         * The reference levels of each categorical variable.
+         */
         @BigMap
-        protected Map<Object, Object> referenceLevels;
+        private Map<Object, Object> referenceLevels;
         
+        /**
+         * The minimum value of each numerical variable.
+         */
         @BigMap
-        protected Map<Object, Double> minColumnValues;
-
+        private Map<Object, Double> minColumnValues;
+        
+        /**
+         * The maximum value of each numerical variable.
+         */
         @BigMap
-        protected Map<Object, Double> maxColumnValues;
+        private Map<Object, Double> maxColumnValues;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.

@@ -30,7 +30,14 @@ import java.util.regex.Pattern;
 public class StringCleaner {
     private static final Pattern URL_PATTERN = Pattern.compile("(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     
+    /**
+     * All URLs are replaced within the text by using the TOKENIZED_URL constant.
+     */
     public static final String TOKENIZED_URL = " PREPROCESSDOC_URL ";
+    
+    /**
+     * Mapping between smileys and their tokenized representation.
+     */
     public static final Map<String, String> smileys = new HashMap<>();
     
     static {

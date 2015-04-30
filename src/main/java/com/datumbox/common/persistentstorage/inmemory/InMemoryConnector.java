@@ -16,7 +16,6 @@
 package com.datumbox.common.persistentstorage.inmemory;
 
 import com.datumbox.common.persistentstorage.AutoCloseConnector;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;

@@ -54,14 +54,14 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         private boolean active = true;
         
-        private transient AssociativeArray xi_sum;
+        private final transient AssociativeArray xi_sum;
         
         /**
-         * Public constructor of Cluster which takes as argument a unique id.
+         * Protected constructor of Cluster which takes as argument a unique id.
          * 
          * @param clusterId 
          */
-        public Cluster(int clusterId) {
+        protected Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
@@ -82,7 +82,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
          * @param c
          * @return 
          */
-        public boolean merge(Cluster c) {
+        protected boolean merge(Cluster c) {
             xi_sum.addValues(c.xi_sum);
             return recordIdSet.addAll(c.recordIdSet);
         }
@@ -92,7 +92,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
          * 
          * @return 
          */
-        public boolean updateClusterParameters() {
+        protected boolean updateClusterParameters() {
             boolean changed=false;
             
             int size = recordIdSet.size();
@@ -110,11 +110,21 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             
             return changed;
         }
-
+        
+        /**
+         * Getter for whether the cluster is active.
+         * 
+         * @return 
+         */
         protected boolean isActive() {
             return active;
         }
-
+        
+        /**
+         * Setter for whether the cluster is active.
+         * 
+         * @param active 
+         */
         protected void setActive(boolean active) {
             this.active = active;
         }
@@ -168,17 +178,39 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
          * The Linkage method used in the calculations.
          */
         public enum Linkage {
-            AVERAGE, //Average Linkage (all points to all points)
-            SINGLE, //Nearest Neightbour
-            COMPLETE; //Farther Neightbour
+            /**
+             * Average Linkage (all points to all points).
+             */
+            AVERAGE,
+            
+            /**
+             * Nearest Neighbour.
+             */
+            SINGLE,
+            
+            /**
+             * Farther Neighbour.
+             */
+            COMPLETE;
         }
         
         /**
          * The Distance method used in the calculations.
          */
         public enum Distance {
+            /**
+             * Euclidian distance.
+             */
             EUCLIDIAN,
+            
+            /**
+             * Manhattan distance.
+             */
             MANHATTAN,
+            
+            /**
+             * Maximum distance.
+             */
             MAXIMUM;
         }
         

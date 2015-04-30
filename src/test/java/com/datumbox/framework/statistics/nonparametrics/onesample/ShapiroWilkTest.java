@@ -18,7 +18,6 @@ package com.datumbox.framework.statistics.nonparametrics.onesample;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;

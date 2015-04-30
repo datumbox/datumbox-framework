@@ -15,9 +15,10 @@
  */
 package com.datumbox.configuration;
 
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
-import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+
+import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
+//import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 
 /**
  * Configuration constants for the Tests.
@@ -25,15 +26,29 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TestConfiguration {
-    //The accuracy of assert on different levels
+    /**
+     * High Accuracy Level for assert.
+     */
     public static final double DOUBLE_ACCURACY_HIGH = 0.000001;
+    
+    /**
+     * Medium Accuracy Level for assert.
+     */
     public static final double DOUBLE_ACCURACY_MEDIUM = 0.01;
+    
+    /**
+     * Low Accuracy Level for assert.
+     */
     public static final double DOUBLE_ACCURACY_LOW = 0.5;
     
-    //The initial seed of the RandomGenerator
+    /**
+     * Seed of the RandomGenerator.
+     */
     public static final long RANDOM_SEED = 42L;
     
-    //The class of the DatabaseConfiguration
+    /**
+     * The class of the DatabaseConfiguration.
+     */
     public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
     //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
     

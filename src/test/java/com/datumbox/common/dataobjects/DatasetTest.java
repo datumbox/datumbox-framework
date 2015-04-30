@@ -18,8 +18,10 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -49,7 +51,7 @@ public class DatasetTest extends BaseTest {
         try {
             fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile());
         }
-        catch(Exception ex) {
+        catch(MalformedURLException | FileNotFoundException | RuntimeException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }

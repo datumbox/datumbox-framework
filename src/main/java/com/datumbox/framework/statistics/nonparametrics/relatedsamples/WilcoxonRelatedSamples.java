@@ -66,7 +66,7 @@ public class WilcoxonRelatedSamples {
             if(delta<0) {
                 key="-";
             }
-            Di.put(key+Integer.valueOf(j).toString(), Math.abs(delta));
+            Di.put(key+Integer.toString(j), Math.abs(delta));
         }
 
         //converts the values of the table with its Ranks

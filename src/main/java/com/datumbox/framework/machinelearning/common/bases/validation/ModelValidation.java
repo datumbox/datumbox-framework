@@ -40,6 +40,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> {
     
+    /**
+     * The Logger of all Validators.
+     * We want this to be non-static in order to print the names of the inherited classes.
+     */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     private static final String DB_INDICATOR="Kfold";

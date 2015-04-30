@@ -60,14 +60,14 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         private Record centroid;
         
-        private transient AssociativeArray xi_sum;
+        private final transient AssociativeArray xi_sum;
 
         /**
-         * Public constructor of Cluster which takes as argument a unique id.
+         * Protected constructor of Cluster which takes as argument a unique id.
          * 
          * @param clusterId 
          */
-        public Cluster(int clusterId) {
+        protected Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
@@ -87,7 +87,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
          * 
          * @return 
          */
-        public boolean updateClusterParameters() {
+        protected boolean updateClusterParameters() {
             boolean changed=false;
             
             int size = recordIdSet.size();
@@ -195,19 +195,56 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
          * The Initialization method that we use.
          */
         public enum Initialization {
-            FORGY, //Forgy
-            RANDOM_PARTITION, //Random Partition
-            SET_FIRST_K, //Set First K points as Initial Centroid
-            FURTHEST_FIRST, //Furthest First: http://www.cs.utexas.edu/users/inderjit/elkankmeans.ppt
-            SUBSET_FURTHEST_FIRST, //Subset Furthest First: http://www.cs.utexas.edu/users/inderjit/elkankmeans.ppt
-            PLUS_PLUS; //Kmeans++: http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf    http://www.ima.umn.edu/~iwen/REU/BATS-Means.pdf
+            /**
+             * Forgy.
+             */
+            FORGY,
+            
+            /**
+             * Random Partition.
+             */
+            RANDOM_PARTITION,
+            
+            /**
+             * Set First K points as Initial Centroid.
+             */
+            SET_FIRST_K,
+            
+            /**
+             * Furthest First.
+             * References: 
+             * http://www.cs.utexas.edu/users/inderjit/elkankmeans.ppt
+             */
+            FURTHEST_FIRST,
+            
+            /**
+             * Subset Furthest First.
+             * References: 
+             * http://www.cs.utexas.edu/users/inderjit/elkankmeans.ppt
+             */
+            SUBSET_FURTHEST_FIRST,
+            
+            /**
+             * Kmeans++.
+             * References: 
+             * http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf
+             * http://www.ima.umn.edu/~iwen/REU/BATS-Means.pdf
+             */
+            PLUS_PLUS;
         }
         
         /**
          * The Distance method used in the calculations.
          */
         public enum Distance {
+            /**
+             * Euclidian distance.
+             */
             EUCLIDIAN,
+            
+            /**
+             * Manhattan distance.
+             */
             MANHATTAN;
         }
         

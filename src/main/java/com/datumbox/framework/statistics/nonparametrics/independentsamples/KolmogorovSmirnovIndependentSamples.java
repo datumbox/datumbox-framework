@@ -133,7 +133,8 @@ public class KolmogorovSmirnovIndependentSamples {
      * Calculate Critical Value for a particular $n and $aLevel combination
      * 
      * @param is_twoTailed
-     * @param n
+     * @param n1
+     * @param n2
      * @param aLevel
      * @return 
      */

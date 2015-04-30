@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class Lilliefors {
     
-    protected static final DataTable2D CRITICAL_VALUES = new DataTable2D(); //maintain the order to the first keys
+    private static final DataTable2D CRITICAL_VALUES = new DataTable2D(); //maintain the order to the first keys
     
     static {
         //The first key stores the aLevel (statistical significance).

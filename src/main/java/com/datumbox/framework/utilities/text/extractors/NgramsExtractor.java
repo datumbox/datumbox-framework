@@ -192,9 +192,8 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         
     }
     
-    protected static final String SEPARATOR = "_";
+    private static final String SEPARATOR = "_";
         
-    
     private Map<Integer, String> ID2word; //ID=>Kwd
     private Map<Integer, Double> ID2occurrences; //ID=>counts/scores
     private Map<Integer, Integer> position2ID; //word position=>ID
@@ -279,7 +278,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
                 
                 String[] listOfWordIDsReverse = IDcombinationReverse.split(SEPARATOR);
                 
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder(listOfWordIDsReverse.length*6);
                 for(int i=listOfWordIDsReverse.length-1;i>=0;--i) {
                     Integer ID = Integer.valueOf(listOfWordIDsReverse[i]);
                     sb.append(ID2word.get(ID)).append(" ");
@@ -389,7 +388,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         return points;
     }
 
-    protected Map<String, Integer> getCombinationsWithinWindow(Integer windowStart, int maxCombinations) {
+    private Map<String, Integer> getCombinationsWithinWindow(Integer windowStart, int maxCombinations) {
         int windowLength=Math.min(windowStart+parameters.getExaminationWindowLength(), numberOfWordsInDoc);
         
         //stores IDn_...ID2_ID1_=>words Between last word and windowStart
@@ -458,21 +457,21 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         return wordCombinations;
     }
     
-    protected boolean useThisWord(Integer wordID) {
+    private boolean useThisWord(Integer wordID) {
         String word = ID2word.get(wordID);
         if(word==null) {
             return false;
         }
-        if(parameters.getMinWordLength()>1 && word.length() <parameters.getMinWordLength() && !NumberUtils.isNumber(word)) {
+        else if(parameters.getMinWordLength()>1 && word.length() <parameters.getMinWordLength() && !NumberUtils.isNumber(word)) {
             return false;
         }
-        if(parameters.getMinWordOccurrence()>1 && ID2occurrences.get(wordID)<parameters.getMinWordOccurrence()) {
+        else if(parameters.getMinWordOccurrence()>1 && ID2occurrences.get(wordID)<parameters.getMinWordOccurrence()) {
             return false;
         }
         return true;
     }
     
-    protected void buildInternalArrays(final String text) {
+    private void buildInternalArrays(final String text) {
         
         Map<String, Integer> word2ID = new HashMap<>();
         

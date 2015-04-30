@@ -48,8 +48,14 @@ import org.slf4j.LoggerFactory;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public final class Dataset implements Serializable, Iterable<Integer> {
-    
+    /**
+     * Internal name of the response variable.
+     */
     public static final String yColumnName = "~Y";
+    
+    /**
+     * Internal name of the constant.
+     */
     public static final String constantColumnName = "~CONSTANT";
     
     /**
@@ -182,7 +188,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     /* Stores columnName=> DataType */
     private Map<Object, TypeInference.DataType> xDataTypes;
     
-    private transient String dbName;
+    private String dbName;
     private transient DatabaseConnector dbc;
     private transient DatabaseConfiguration dbConf;
     

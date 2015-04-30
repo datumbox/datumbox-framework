@@ -16,7 +16,6 @@
 package com.datumbox.framework.utilities.text.cleaners;
 
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

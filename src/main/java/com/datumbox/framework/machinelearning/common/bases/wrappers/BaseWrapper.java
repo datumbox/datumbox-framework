@@ -36,9 +36,20 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Feat
  * @param <TP>
  */
 public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP extends BaseWrapper.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
-
+    
+    /**
+     * The DataTransformer instance of the wrapper.
+     */
     protected DataTransformer dataTransformer = null;
+    
+    /**
+     * The FeatureSelection instance of the wrapper.
+     */
     protected FeatureSelection featureSelection = null;
+    
+    /**
+     * The Machine Learning model instance of the wrapper.
+     */
     protected BaseMLmodel mlmodel = null;
     
     /**

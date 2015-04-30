@@ -18,7 +18,6 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.Test;

@@ -28,8 +28,15 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SpearmanCorrelation {
-
-    public static double calculateCorrelation(TransposeDataList transposeDataList) throws IllegalArgumentException { //unsafe internalData pointer. modifying the variable internalData
+    
+    /**
+     * Estimates Spearman's Correlation for the provided data.
+     * 
+     * @param transposeDataList
+     * @return
+     * @throws IllegalArgumentException 
+     */
+    public static double calculateCorrelation(TransposeDataList transposeDataList) throws IllegalArgumentException {
         Object[] keys = transposeDataList.keySet().toArray();
         if(keys.length!=2) {
             throw new IllegalArgumentException();

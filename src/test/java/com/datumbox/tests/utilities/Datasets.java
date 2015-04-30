@@ -32,6 +32,12 @@ import java.util.Random;
  */
 public class Datasets {
     
+    /**
+     * Cars Numeric Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] carsNumeric(DatabaseConfiguration dbConf) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -103,6 +109,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Cars Categorical Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] carsCategorical(DatabaseConfiguration dbConf) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
@@ -134,6 +146,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Wines Ordinal Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] winesOrdinal(DatabaseConfiguration dbConf) {   
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         Dataset trainingData = new Dataset(dbConf);
@@ -744,6 +762,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Gaussian Clusters Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] gaussianClusters(DatabaseConfiguration dbConf) {
         Dataset trainingData = new Dataset(dbConf);
         int observationsPerCluster = 5;
@@ -765,6 +789,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Multinomial Clusters Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] multinomialClusters(DatabaseConfiguration dbConf) {
         Dataset trainingData = new Dataset(dbConf);
         //cluster 1
@@ -786,6 +816,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Heart Disease Clusters Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] heartDiseaseClusters(DatabaseConfiguration dbConf) {
         //Heart Disease - C2: Age, Sex, ChestPain, RestBP, Cholesterol, BloodSugar, ECG, MaxHeartRate, Angina, OldPeak, STSlope, Vessels, Thal
         //http://www.sgi.com/tech/mlc/db/heart.names
@@ -978,7 +1014,13 @@ public class Datasets {
         
         return new Dataset[] {trainingData, validationData};
     }
-
+    
+    /**
+     * Ensemble Learning Responses Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] ensembleLearningResponses(DatabaseConfiguration dbConf) {
         Dataset trainingData = new Dataset(dbConf);
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -1010,6 +1052,13 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Categorical Feature Selection Dataset.
+     * 
+     * @param dbConf
+     * @param n
+     * @return 
+     */
     public static Dataset[] featureSelectionCategorical(DatabaseConfiguration dbConf, int n) {
         Dataset data = new Dataset(dbConf);
         for(int i=0;i<n;++i) {
@@ -1046,7 +1095,13 @@ public class Datasets {
         return new Dataset[] {data, data.copy()};
     }
     
-    public static Dataset[] featureTransformationCPA(DatabaseConfiguration dbConf) {
+    /**
+     * PCA Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
+    public static Dataset[] featureTransformationPCA(DatabaseConfiguration dbConf) {
         Dataset originalData = new Dataset(dbConf);
         originalData.add(TestUtils.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originalData.add(TestUtils.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
@@ -1065,6 +1120,12 @@ public class Datasets {
         return new Dataset[] {originalData, transformedData};
     }
     
+    /**
+     * TF-IDF Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] featureSelectionTFIDF(DatabaseConfiguration dbConf) {
         Dataset trainingData = new Dataset(dbConf);
         
@@ -1097,6 +1158,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Recommender System Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] recommenderSystemFood(DatabaseConfiguration dbConf) {
         Dataset trainingData = new Dataset(dbConf);
         
@@ -1210,6 +1277,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Regression Numeric Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] regressionNumeric(DatabaseConfiguration dbConf) {
         /*
         Synthetic Data generated with:
@@ -1247,6 +1320,12 @@ public class Datasets {
         return new Dataset[] {trainingData, validationData};
     }
     
+    /**
+     * Regression Mixed Dataset.
+     * 
+     * @param dbConf
+     * @return 
+     */
     public static Dataset[] regressionMixed(DatabaseConfiguration dbConf) {
         /*
         Synthetic Data generated with:

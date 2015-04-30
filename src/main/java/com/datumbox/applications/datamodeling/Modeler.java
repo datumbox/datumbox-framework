@@ -37,6 +37,11 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
      */
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

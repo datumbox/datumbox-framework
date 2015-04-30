@@ -17,7 +17,6 @@ package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

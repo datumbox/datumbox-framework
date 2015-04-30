@@ -18,7 +18,6 @@ package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

@@ -78,11 +78,11 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private transient RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
         
         /**
-         * Public constructor of Cluster which takes as argument a unique id.
+         * Protected constructor of Cluster which takes as argument a unique id.
          * 
          * @param clusterId 
          */
-        public Cluster(Integer clusterId) {
+        protected Cluster(Integer clusterId) {
             super(clusterId);
         }
 
@@ -113,7 +113,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public int getKappa0() {
+        protected int getKappa0() {
             return kappa0;
         }
 
@@ -122,7 +122,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @param kappa0
          */
-        public void setKappa0(int kappa0) {
+        protected void setKappa0(int kappa0) {
             this.kappa0 = kappa0;
         }
 
@@ -131,7 +131,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public int getNu0() {
+        protected int getNu0() {
             return nu0;
         }
 
@@ -140,7 +140,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @param nu0 
          */
-        public void setNu0(int nu0) {
+        protected void setNu0(int nu0) {
             this.nu0 = nu0;
         }
 
@@ -149,7 +149,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public RealVector getMu0() {
+        protected RealVector getMu0() {
             return mu0;
         }
 
@@ -158,7 +158,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @param mu0 
          */
-        public void setMu0(RealVector mu0) {
+        protected void setMu0(RealVector mu0) {
             this.mu0 = mu0;
         }
 
@@ -167,7 +167,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public RealMatrix getPsi0() {
+        protected RealMatrix getPsi0() {
             return psi0;
         }
         
@@ -176,7 +176,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @param psi0 
          */
-        public void setPsi0(RealMatrix psi0) {
+        protected void setPsi0(RealMatrix psi0) {
             this.psi0 = psi0;
         }
 
@@ -185,7 +185,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public int getDimensions() {
+        protected int getDimensions() {
             return dimensions;
         }
         
@@ -194,7 +194,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @param dimensions 
          */
-        public void setDimensions(int dimensions) {
+        protected void setDimensions(int dimensions) {
             this.dimensions = dimensions;
         }
         
@@ -203,7 +203,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public RealMatrix getMeanError() {
+        protected RealMatrix getMeanError() {
             return meanError;
         }
         
@@ -212,7 +212,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * 
          * @return 
          */
-        public int getMeanDf() {
+        protected int getMeanDf() {
             return meanDf;
         }
         
@@ -223,7 +223,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @return 
          */
         @Override
-        public double posteriorLogPdf(Record r) {
+        protected double posteriorLogPdf(Record r) {
             RealVector x_mu = MatrixDataset.parseRecord(r, featureIds);    
 
             x_mu = x_mu.subtract(mean);
@@ -254,7 +254,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * Initializes the cluster's internal parameters: mean, covariance, meanError and meanDf.
          */
         @Override
-        public void initializeClusterParameters() {
+        protected void initializeClusterParameters() {
             //Set default hyperparameters if not set
 
             if(nu0<dimensions) {
@@ -346,7 +346,10 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             xi_sum = null;
             xi_square_sum = null;
         }
-
+        
+        /**
+         * Updates the cluster parameters by using the assigned points.
+         */
         @Override
         protected void updateClusterParameters() {
             int n = recordIdSet.size();

@@ -22,6 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,11 +49,20 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
      * assigned points, the parameters and the label.
      */
     public static abstract class Cluster implements Learnable, Iterable<Integer> {
+        /**
+         * The id of the cluster.
+         */
         protected Integer clusterId;
         
+        /**
+         * The set which contains the id of the records included in the cluster.
+         */
         protected Set<Integer> recordIdSet; 
         
-        protected Object labelY = null;
+        /**
+         * The Y label of the cluster is the "gold standard class" (if available).
+         */
+        protected Object labelY;
         
         /**
          * Protected Constructor.
@@ -79,7 +89,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
          * @return 
          */
         public Set<Integer> getRecordIdSet() {
-            return recordIdSet;
+            return Collections.unmodifiableSet(recordIdSet);
         }
         
         /**
@@ -174,8 +184,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             if (getClass() != obj.getClass()) {
                 return false;
             }
-            final Cluster other = (Cluster) obj;
-            if (!Objects.equals(this.clusterId, other.clusterId)) {
+            else if (!Objects.equals(this.clusterId, ((Cluster) obj).clusterId)) {
                 return false;
             }
             return true;

@@ -18,7 +18,6 @@ package com.datumbox.framework.statistics.distributions;
 
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

@@ -25,7 +25,14 @@ import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SignRelatedSamples {
-
+    
+    /**
+     * Estimates the p-value of the sign test for the provided data.
+     * 
+     * @param transposeDataList
+     * @return
+     * @throws IllegalArgumentException 
+     */
     public static double getPvalue(TransposeDataList transposeDataList) throws IllegalArgumentException {
         Object[] keys = transposeDataList.keySet().toArray();
         if(keys.length!=2) {

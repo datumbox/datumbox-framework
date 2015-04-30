@@ -44,7 +44,7 @@ public class PCATest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset[] data = Datasets.featureTransformationCPA(dbConf);
+        Dataset[] data = Datasets.featureTransformationPCA(dbConf);
         
         Dataset originalData = data[0];
         Dataset validationdata = data[0].copy();

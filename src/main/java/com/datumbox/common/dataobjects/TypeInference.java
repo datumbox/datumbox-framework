@@ -28,10 +28,29 @@ public class TypeInference {
      */
     public enum DataType {
         //NOTE: DO NOT CHANGE THE ORDER OF THE ENUMS!!!
-        BOOLEAN(Boolean.class), //dummy variable => the value is boolean
-        ORDINAL(Short.class), //ordinal variable => the value is short
-        NUMERICAL(Number.class), //numberical variable => the value is any numeric except of short
-        CATEGORICAL(Object.class); //categorical variable => the value is anything else
+        /**
+         * Boolean/Dummy Variable.
+         * Stored as boolean.
+         */
+        BOOLEAN(Boolean.class), 
+        
+        /**
+         * Ordinal variable. 
+         * Stored as short by convention.
+         */
+        ORDINAL(Short.class),
+        
+        /**
+         * Numerical variable.
+         * Any numeric except of short which is reserved for ordinal variables.
+         */
+        NUMERICAL(Number.class),
+        
+        /**
+         * Categorical variable.
+         * Any value that is non numeric or boolean.
+         */
+        CATEGORICAL(Object.class); 
 
         /**
          * Takes a String and tries to translate it to the provided DataType.

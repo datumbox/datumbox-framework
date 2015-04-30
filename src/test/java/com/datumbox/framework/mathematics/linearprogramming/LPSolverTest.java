@@ -17,7 +17,6 @@ package com.datumbox.framework.mathematics.linearprogramming;
 
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import lpsolve.LpSolve;
@@ -32,6 +31,8 @@ public class LPSolverTest extends BaseTest {
 
     /**
      * Test of solve method, of class LPSolver.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testSolve() throws Exception {

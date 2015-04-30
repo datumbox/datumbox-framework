@@ -120,7 +120,6 @@ public class PetoPetoWilcoxon {
             }
             else {
                 testTable.put2d(key, "mi", ((Integer)value) +1); 
-                continue; //continue in order not to count twice the r*ti below
             }
             
             //place here the probablities    

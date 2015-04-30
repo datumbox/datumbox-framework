@@ -25,7 +25,6 @@ import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +35,7 @@ import static org.junit.Assert.*;
  */
 public class StratifiedSamplingTest extends BaseTest {
     
-    protected AssociativeArray generateNh() {
+    private AssociativeArray generateNh() {
         AssociativeArray nh = new AssociativeArray();
         nh.put("strata1", 3);
         nh.put("strata2", 4);
@@ -44,7 +43,7 @@ public class StratifiedSamplingTest extends BaseTest {
         return nh;
     }
     
-    protected AssociativeArray generateNh2() {
+    private AssociativeArray generateNh2() {
         AssociativeArray nh = new AssociativeArray();
         nh.put(1, 4);
         nh.put(2, 3);
@@ -53,7 +52,7 @@ public class StratifiedSamplingTest extends BaseTest {
         return nh;
     }
     
-    protected AssociativeArray generatePopulationNh() {
+    private AssociativeArray generatePopulationNh() {
         AssociativeArray populationNh = new AssociativeArray();
         populationNh.put(1, 14);
         populationNh.put(2, 8);
@@ -61,9 +60,8 @@ public class StratifiedSamplingTest extends BaseTest {
         
         return populationNh;
     }
-
     
-    protected TransposeDataCollection generateSampleDataCollection() {
+    private TransposeDataCollection generateSampleDataCollection() {
         TransposeDataCollection sampleDataCollection = new TransposeDataCollection();
         sampleDataCollection.put(1, new FlatDataCollection(Arrays.asList(new Object[]{2,3,6,5}))); //,6,8,6,7,8,6,7,7,9,8
         sampleDataCollection.put(2, new FlatDataCollection(Arrays.asList(new Object[]{10,9,12}))); //,8,14,7,12,9

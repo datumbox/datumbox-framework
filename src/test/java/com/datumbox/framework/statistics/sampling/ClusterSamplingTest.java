@@ -22,7 +22,6 @@ import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -33,7 +32,7 @@ import static org.junit.Assert.*;
  */
 public class ClusterSamplingTest extends BaseTest {
     
-    protected TransposeDataList generateClusterIdList() {
+    private TransposeDataList generateClusterIdList() {
         TransposeDataList clusterIdList = new TransposeDataList();
         clusterIdList.put("cluster1", new FlatDataList(Arrays.asList(new Object[]{0,1,2,3,4,5,6,7,8,9})));
         clusterIdList.put("cluster2", new FlatDataList(Arrays.asList(new Object[]{10,11,12,13,14,15,16,17,18,19})));
@@ -43,7 +42,7 @@ public class ClusterSamplingTest extends BaseTest {
         return clusterIdList;
     }
     
-    protected TransposeDataCollection generateSampleDataCollection() {
+    private TransposeDataCollection generateSampleDataCollection() {
         TransposeDataCollection sampleDataCollection = new TransposeDataCollection();
         sampleDataCollection.put("cluster1", new FlatDataCollection(Arrays.asList(new Object[]{21,12,23,14,25,16,27,18,29,10})));
         sampleDataCollection.put("cluster2", new FlatDataCollection(Arrays.asList(new Object[]{11,12,13,14,15,16,17,18,19,20})));

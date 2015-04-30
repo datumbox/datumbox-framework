@@ -33,6 +33,9 @@ import static org.junit.Assert.*;
  */
 public class ChisquareSelectTest extends BaseTest {
     
+    /**
+     * Test of fit_transform method, of class ChisquareSelect.
+     */
     @Test
     public void testSelectFeatures() {
         logger.info("selectFeatures");

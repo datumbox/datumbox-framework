@@ -313,11 +313,11 @@ public class PHPfunctions {
 class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Integer> {
     protected final T[] array;
 
-    public ArrayIndexComparator(T[] array) {
+    protected ArrayIndexComparator(T[] array) {
         this.array = array;
     }
 
-    public Integer[] createIndexArray() {
+    protected Integer[] createIndexArray() {
         Integer[] indexes = new Integer[array.length];
         for (int i = 0; i < array.length; ++i) {
             indexes[i] = i;
@@ -333,7 +333,7 @@ class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Intege
 
 class ArrayIndexReverseComparator<T extends Comparable<T>> extends ArrayIndexComparator<T> {
 
-    public ArrayIndexReverseComparator(T[] array) {
+    protected ArrayIndexReverseComparator(T[] array) {
         super(array);
     }
     

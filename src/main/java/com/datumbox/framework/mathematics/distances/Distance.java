@@ -126,7 +126,7 @@ public class Distance {
         return distance;
     }
     
-    protected static Map<Object, Double> columnDistances(AssociativeArray a1, AssociativeArray a2, Set<Object> comparingColumns) {
+    private static Map<Object, Double> columnDistances(AssociativeArray a1, AssociativeArray a2, Set<Object> comparingColumns) {
         if(comparingColumns==null) {
             //if the list of comparing columns is not set, build it from the data
             comparingColumns = new HashSet<>(a1.keySet());

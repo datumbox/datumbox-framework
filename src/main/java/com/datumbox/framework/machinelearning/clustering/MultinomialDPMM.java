@@ -60,11 +60,11 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         private transient Double cache_wordcounts_plusalpha; //Cached value of WordCountsPlusAlpha used only for speed optimization
 
         /**
-         * Public constructor of Cluster which takes as argument a unique id.
+         * Protected constructor of Cluster which takes as argument a unique id.
          * 
          * @param clusterId 
          */
-        public Cluster(Integer clusterId) {
+        protected Cluster(Integer clusterId) {
             super(clusterId);
         }
         
@@ -74,7 +74,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          * 
          * @return 
          */
-        public double getAlphaWords() {
+        protected double getAlphaWords() {
             return alphaWords;
         }
         
@@ -83,7 +83,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          * 
          * @param alphaWords 
          */
-        public void setAlphaWords(double alphaWords) {
+        protected void setAlphaWords(double alphaWords) {
             this.alphaWords = alphaWords;
         }
 
@@ -92,7 +92,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          * 
          * @return 
          */
-        public int getDimensions() {
+        protected int getDimensions() {
             return dimensions;
         }
 
@@ -101,7 +101,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          * 
          * @param dimensions 
          */
-        public void setDimensions(int dimensions) {
+        protected void setDimensions(int dimensions) {
             this.dimensions = dimensions;
         }
         
@@ -109,7 +109,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          * Initializes the cluster's internal parameters: mean, covariance, meanError and meanDf.
          */
         @Override
-        public void initializeClusterParameters() {
+        protected void initializeClusterParameters() {
             //Set default hyperparameters if not set
 
             cache_wordcounts_plusalpha=null;
@@ -123,7 +123,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          * @return 
          */
         @Override
-        public double posteriorLogPdf(Record r) {
+        protected double posteriorLogPdf(Record r) {
             RealVector x_mu = MatrixDataset.parseRecord(r, featureIds);    
 
             RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
@@ -213,6 +213,9 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             return true;
         }
         
+        /**
+         * Updates the cluster parameters.
+         */
         @Override
         protected void updateClusterParameters() {
             cache_wordcounts_plusalpha=null;

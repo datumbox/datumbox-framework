@@ -34,7 +34,6 @@ import libsvm.svm;
 import libsvm.svm_model;
 import libsvm.svm_node;
 import libsvm.svm_parameter;
-import libsvm.svm_print_interface;
 import libsvm.svm_problem;
 
 
@@ -313,8 +312,8 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         svm_parameter params = knowledgeBase.getTrainingParameters().getSvmParameter();
         
         //train the model
-        svm.svm_set_print_string_function(new svm_print_interface() { 
-            public void print(String s) { logger.debug(s); }
+        svm.svm_set_print_string_function((String s) -> {
+            logger.debug(s);
         });
         svm_model model = svm.svm_train(prob, params);
         

@@ -77,6 +77,9 @@ public abstract class TextExtractor<TP extends TextExtractor.Parameters, K, V> {
 
     }
     
+    /**
+     * The Parameters of the TextExtractor.
+     */
     protected TP parameters;
     
     /**

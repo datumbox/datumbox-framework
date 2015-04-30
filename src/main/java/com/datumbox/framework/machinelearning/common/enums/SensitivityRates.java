@@ -21,8 +21,23 @@ package com.datumbox.framework.machinelearning.common.enums;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public enum SensitivityRates {
-    TP, //true positive
-    TN, //true negative
-    FP, //false positive
-    FN  //false negative
+    /**
+     * True Positive.
+     */
+    TP,
+    
+    /**
+     * True Negative.
+     */
+    TN, 
+    
+    /**
+     * False Positive.
+     */
+    FP,
+    
+    /**
+     * False Negative.
+     */
+    FN; 
 }

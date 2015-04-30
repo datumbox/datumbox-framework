@@ -47,6 +47,11 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public static class ModelParameters extends BaseWrapper.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -289,7 +294,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
     }
     
-    protected BaseMLmodel.ValidationMetrics getPredictions(Dataset testDataset) {
+    private BaseMLmodel.ValidationMetrics getPredictions(Dataset testDataset) {
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         

@@ -41,7 +41,10 @@ import java.util.Set;
  * @param <VM>
  */
 public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, TP extends BaseNaiveBayes.TrainingParameters, VM extends BaseNaiveBayes.ValidationMetrics> extends BaseMLclassifier<MP, TP, VM> {
-        
+    /**
+     * Flag that indicates whether the algorithm binarizes the provided activated 
+     * features.
+     */
     protected boolean isBinarized;
     
     /**

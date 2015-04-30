@@ -33,6 +33,9 @@ import static org.junit.Assert.*;
  */
 public class MutualInformationTest extends BaseTest {
 
+    /**
+     * Test of fit_transform method, of class MutualInformation.
+     */
     @Test
     public void testSelectFeatures() {
         logger.info("selectFeatures");

@@ -50,15 +50,20 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
      * Base class for the Cluster class of the DPMM.
      */
     public static abstract class Cluster extends BaseMLclusterer.Cluster {
-        
-        protected transient Map<Object, Integer> featureIds; //This is only a reference to the real Map. It is used to convert the Records to Arrays
+        /**
+         * The featureIds provides a mapping between the column names
+         * and their positions on the internal data vector.
+         * This is only a reference to the real Map. It is used to convert the 
+         * Records to Arrays.
+         */
+        protected transient Map<Object, Integer> featureIds;
         
         /**
          * Public constructor.
          * 
          * @param clusterId 
          */
-        public Cluster(Integer clusterId) {
+        protected Cluster(Integer clusterId) {
             super(clusterId);
         }
         
@@ -71,8 +76,14 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             this.clusterId = clusterId;
         }
         
+        /**
+         * Updates the cluster parameters by using the assigned points.
+         */
         protected abstract void updateClusterParameters();
         
+        /**
+         * Initializes the cluster's internal parameters.
+         */
         protected abstract void initializeClusterParameters();
         
         /**
@@ -82,7 +93,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
          * @param r    The point for which we want to estimate the PDF.
          * @return      The log posterior PDF
          */
-        public abstract double posteriorLogPdf(Record r);
+        protected abstract double posteriorLogPdf(Record r);
         
         @Override
         protected abstract boolean add(Integer rId, Record r);
@@ -167,8 +178,15 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
          * Initialization method enum.
          */
         public enum Initialization {
+            /**
+             * One cluster per record.
+             */
             ONE_CLUSTER_PER_RECORD,
-            RANDOM_ASSIGNMENT
+            
+            /**
+             * Random Assignment in a*log(n) clusters.
+             */
+            RANDOM_ASSIGNMENT;
         }
         
         //My optimization: it controls whether the algorithm will be initialized with every observation
@@ -492,7 +510,12 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         return maxEntry.getKey();
     }
     
-    //create new cluster, set the ID, initialize it and pass to it the featureIds
-    //DO NOT add it on the clusterList
+    /**
+     * Creates a new cluster, sets the ID, initializes it and passes it the
+     * featureIds variable, WITHOUT adding it in the clusterList.
+     * 
+     * @param clusterId
+     * @return 
+     */
     protected abstract CL createNewCluster(Integer clusterId); 
 }

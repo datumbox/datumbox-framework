@@ -116,7 +116,7 @@ public class TestUtils {
      * @return 
      */
     public static String webRequest(String urlStr) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(2048);
         try {
             URL url = new URL(urlStr);
             URLConnection con = url.openConnection();

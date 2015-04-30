@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection2D;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;

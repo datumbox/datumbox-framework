@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.configuration.TestConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -32,7 +31,7 @@ import static org.junit.Assert.*;
  */
 public class SRSTest extends BaseTest {
 
-    protected FlatDataCollection generateFlatDataCollection() {
+    private FlatDataCollection generateFlatDataCollection() {
         //Example from Papageorgious' notes
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{9.44,24.25,20.49,14.40,14.20,19.51,6.53,5.03,25.46,7.05,11.40,19.33,7.08,9.58,25.18}));
         return flatDataCollection;

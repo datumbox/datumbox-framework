@@ -31,7 +31,8 @@ import java.util.Arrays;
  */
 public class KolmogorovSmirnovOneSample {
     
-    protected static final DataTable2D CRITICAL_VALUES = new DataTable2D();
+    private static final DataTable2D CRITICAL_VALUES = new DataTable2D();
+    
     static {
         //The first key stores the aLevel (statistical significance).
         //The second one stores the number of observations in sample. The values are from 0-40.

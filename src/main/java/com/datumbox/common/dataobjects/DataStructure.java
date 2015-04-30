@@ -22,7 +22,7 @@ import java.io.Serializable;
  * a variety of different DataStructures such as Lists, Arrays, Sets, Maps, Maps
  * of Maps etc. Their use depends on the method or algorithm. While designing
  * the framework we had the option to use either native collections (such as
- * Lists<Double>) or build wrapper classes for each supported data structure. 
+ * {@literal Lists<Double>}) or build wrapper classes for each supported data structure. 
  * 
  * We follow the latter approach. The benefit of this is that we limit the number
  * of total Data Structures used internally in the framework, making the methods
@@ -43,20 +43,22 @@ import java.io.Serializable;
  *
  * DataStructure Class          Wrapped Java Collection        
  * -------------------          -----------------------
- * FlatDataList			List<Object>
- * FlatDataCollection		Collection<Object>
- * AssociativeArray		Map<Object, Object>
- * TransposeDataList		Map<Object, FlatDataList>
- * TransposeDataCollection	Map<Object, FlatDataCollection>
- * TransposeDataCollection2D    Map<Object, TransposeDataCollection>
- * AssociativeArray2D		Map<Object, AssociativeArray>
- * DataTable2D                  Map<Object, AssociativeArray>
+ * FlatDataList			{@literal List<Object>}
+ * FlatDataCollection		{@literal Collection<Object>}
+ * AssociativeArray		{@literal Map<Object, Object>}
+ * TransposeDataList		{@literal Map<Object, FlatDataList>}
+ * TransposeDataCollection	{@literal Map<Object, FlatDataCollection>}
+ * TransposeDataCollection2D    {@literal Map<Object, TransposeDataCollection>}
+ * AssociativeArray2D		{@literal Map<Object, AssociativeArray>}
+ * DataTable2D                  {@literal Map<Object, AssociativeArray>}
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <T>
  */
 public abstract class DataStructure<T> implements Serializable {
-    //Internal Wrapped Java Collection
+    /**
+     * Internal Wrapped Java Collection.
+     */
     protected T internalData;
     
     /**

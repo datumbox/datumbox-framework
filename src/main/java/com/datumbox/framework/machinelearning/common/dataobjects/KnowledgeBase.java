@@ -34,16 +34,39 @@ import java.lang.reflect.InvocationTargetException;
  * @param <TP>
  */
 public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements Serializable {
-
+    /**
+     * The name of the database which is used by the Database Connector.
+     */
     protected String dbName; 
     
+    /**
+     * Connection to the Permanent Storage Engine driver.
+     */
     protected transient DatabaseConnector dbc;
+    
+    /**
+     * The database configuration of the permanent storage.
+     */
     protected transient DatabaseConfiguration dbConf;
-
+    
+    /**
+     * The class of the ModelParameters class of the algorithm.
+     */
     protected Class<MP> mpClass;
+    
+    /**
+     * The class of the TrainingParameters class of the algorithm.
+     */
     protected Class<TP> tpClass;
     
+    /**
+     * The ModelParameters object of the algorithm.
+     */
     protected MP modelParameters;
+    
+    /**
+     * The TrainingParameters object of the algorithm.
+     */
     protected TP trainingParameters;
     
     /**

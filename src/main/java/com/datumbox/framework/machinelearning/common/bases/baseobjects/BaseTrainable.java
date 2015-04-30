@@ -34,9 +34,20 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends BaseTrainingParameters, KB extends KnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
     
+    /**
+     * The Logger of all algorithms.
+     * We want this to be non-static in order to print the names of the inherited classes.
+     */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
+    /**
+     * The KnowledgeBase instance of the algorithm.
+     */
     protected KB knowledgeBase;
+    
+    /**
+     * The name of the Database where we persist our data.
+     */
     protected String dbName;
     
     /**

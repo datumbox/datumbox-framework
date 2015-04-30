@@ -17,7 +17,6 @@ package com.datumbox.common.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.TestUtils;
 import java.util.AbstractMap;
 import java.util.Map;
 import org.junit.Test;

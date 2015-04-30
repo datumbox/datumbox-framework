@@ -302,8 +302,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
                 
                 if(Math.abs(EpFj_observed_value-EpFj_model_value)<=1e-8) {
                     //if those two are equal or both zero (pay attention to this, we try to handle the zero cases here)
-                    //then continue. The two are equal so no change on weights is required.
-                    continue;
+                    //then do nothing. The two are equal so no change on weights is required.
                 }
                 else if(EpFj_observed_value==0.0) {
                     //The feature did not appear at all in the dataset for this class

@@ -109,7 +109,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         /**
          * Getter for the Topic Assignments of the words of the document. 
          * It returns the topic assignments of a particular word in a particular document.
-         * It is a key-value of [<Integer>, <Object>] => Integer 
+         * It is a key-value of {@literal [<Integer>, <Object>]} => Integer 
          * The key is a combination of Record.id and Word Position number (also 
          * an Integer but stored as object because the Record stores columns as Objects).
          * The value is the Id of the topic to which the word is assigned. 
@@ -134,7 +134,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * It contains counts the number of occurrences of topics in a particular document
          * (in other words the number of times that a word from the particular
          * document has been assigned to a particular topic).
-         * It is a key value of [<Integer>, <Integer>] => Integer
+         * It is a key value of {@literal [<Integer>, <Integer>]} => Integer
          * The key is a combination of Record.id and Topic id.
          * The value is the number of counts of the pair.
          * 
@@ -157,7 +157,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
          * Getter for the topic-word counts.
          * It counts the number of times a particular word is assigned to a particular
          * topic.
-         * It is a key value of [<Integer>, <Object>] => Integer
+         * It is a key value of {@literal [<Integer>, <Object>]} => Integer
          * The key is a combination of Topic id and Record Value which should normally
          * be a String (the word) but is stored in the associative array of the
          * record as an Object.
@@ -315,7 +315,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
      * algorithm.
      */
     public static class ValidationMetrics extends BaseMLtopicmodeler.ValidationMetrics {
-        double perplexity = 0.0;
+        private double perplexity = 0.0;
         
         /**
          * Getter for the perplexity metric.

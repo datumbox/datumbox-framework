@@ -31,6 +31,9 @@ import java.util.Queue;
  */
 public class CensoredDescriptives {
     
+    /**
+     * Postfix character used in Censored observations.
+     */
     public static final String CENSORED_NUMBER_POSTFIX="+";
     
     /**
@@ -136,7 +139,7 @@ public class CensoredDescriptives {
     }
     
     /**
-     * Calculates median
+     * Calculates median.
      * 
      * @param survivalFunction
      * @return
@@ -158,7 +161,7 @@ public class CensoredDescriptives {
             Double Sti = row.getDouble("Sti");
             
             if(Sti==null) {
-                continue; //skip censored internalData
+                continue; //skip censored
             }
             
             Double point = Double.valueOf(ti.toString());
@@ -176,6 +179,9 @@ public class CensoredDescriptives {
         
         if(n==1) {
             return (ApointTi!=null)?ApointTi:BpointTi;
+        }
+        else if(ApointTi == null || BpointTi == null) {
+            throw new IllegalArgumentException(); //we should never get here
         }
         
         double ApointTiValue = TypeInference.toDouble(survivalFunction.get2d(ApointTi.toString(), "Sti"));
@@ -219,6 +225,10 @@ public class CensoredDescriptives {
         Map.Entry<Object, AssociativeArray> lastRowEntry = null;
         for(Map.Entry<Object, AssociativeArray> currentRowEntry : survivalFunction.entrySet()) {
             lastRowEntry=currentRowEntry;
+        }
+        
+        if(lastRowEntry==null) {
+            throw new IllegalArgumentException();
         }
         
         AssociativeArray lastRow = lastRowEntry.getValue();

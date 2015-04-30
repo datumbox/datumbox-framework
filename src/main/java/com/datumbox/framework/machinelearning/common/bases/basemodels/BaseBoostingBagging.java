@@ -312,10 +312,24 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
     }
-
+    
+    /**
+     * The status of the weight estimation process.
+     */
     protected enum Status {
+        /**
+         * Keep the weak learner and move to the next one.
+         */
         NEXT,
+        
+        /**
+         * Keep the weak learner and stop.
+         */
         STOP,
+        
+        /**
+         * Ignore the weak learner and move to the next one.
+         */
         IGNORE;
     }
     
@@ -338,7 +352,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         super.erase();
     }
     
-    protected void eraseWeakClassifiers() {
+    private void eraseWeakClassifiers() {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         

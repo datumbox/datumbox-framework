@@ -28,7 +28,8 @@ import java.util.Map;
  */
 public class WaldWolfowitz {
 
-    protected static final AssociativeArray2D CRITICAL_VALUES = new AssociativeArray2D();
+    private static final AssociativeArray2D CRITICAL_VALUES = new AssociativeArray2D();
+    
     static {
         CRITICAL_VALUES.put2d(5, 4, "2,9"); CRITICAL_VALUES.put2d(5, 5, "2,10"); 
         CRITICAL_VALUES.put2d(6, 3, "2,"); CRITICAL_VALUES.put2d(6, 4, "2,9"); CRITICAL_VALUES.put2d(6, 5, "3,10"); CRITICAL_VALUES.put2d(6, 6, "3,11"); 

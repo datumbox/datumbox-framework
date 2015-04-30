@@ -31,7 +31,7 @@ import java.util.Objects;
  * are stored internally as Objects. Moreover note that the column names of X are 
  * also defined as Object. This is because depending on the case, the columns can 
  * be Strings, Integers or even Tuples in the case of categorical features 
- * (tuples are implemented as immutable List<Object>). For the response variable
+ * (tuples are implemented as immutable {@literal List<Object>}). For the response variable
  * y it applies the same; depending on the method it can be a Number, Boolean,
  * Categorical or Ordinal. As a result it is also stored as Object.
  * 
@@ -159,14 +159,16 @@ public final class Record implements Serializable {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        else if (getClass() != obj.getClass()) {
             return false;
         }
+        
         final Record other = (Record) obj;
+        
         if (!Objects.equals(this.y, other.y)) {
             return false;
         }
-        if (!Objects.equals(this.x, other.x)) {
+        else if (!Objects.equals(this.x, other.x)) {
             return false;
         }
         return true;

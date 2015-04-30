@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * The FlatDataCollection is a data structure that stores internally a Collection<Object>. 
+ * The FlatDataCollection is a data structure that stores internally a {@literal Collection<Object>}. 
  * The actual implementation of the collection can be Sets, Lists etc and
  * they must store Objects internally. The class provides a set of useful methods 
  * to access and modify the contents of the collection.
