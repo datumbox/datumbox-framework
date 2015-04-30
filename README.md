@@ -17,6 +17,8 @@ Version
 
 The latest version is 0.6.0 (build 20150430). 
 
+The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
+
 The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
 
 Installation
