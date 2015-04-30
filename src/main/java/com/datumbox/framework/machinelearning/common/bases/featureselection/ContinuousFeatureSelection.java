@@ -19,7 +19,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 /**
- * Abstract class which is the base of every Categorical Feature Selection algorithm.
+ * Abstract class which is the base of every Continuous Feature Selection algorithm.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -27,20 +27,37 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  */
 public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSelection.ModelParameters, TP extends ContinuousFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
 
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     }
     
-    
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends FeatureSelection.TrainingParameters {
         
     }
     
-
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     */
     protected ContinuousFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }

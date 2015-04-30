@@ -24,7 +24,7 @@ import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrain
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 /**
- * Abstract Class for a Machine Learning algorithm.
+ * Abstract Class for recommender algorithms.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -33,34 +33,41 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParameters, TP extends BaseMLrecommender.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
     
     /**
-     * Parameters/Weights of a trained model: For example in regression you have the weights of the parameters learned.
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
      */
     public static abstract class ModelParameters extends BaseModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-            
-        //here goes the parameters of the Machine Learning model
+        
     }
     
     /**
-     * Training Parameters of an algorithm: For example in regression you have the number of total regressors
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
      */
     public static abstract class TrainingParameters extends BaseTrainingParameters {
         
-        //here goes public fields that are used as initial training parameters
     } 
     
-    
-    
-    /*
-        IMPORTANT METHODS FOR THE FUNCTIONALITY
-    */
+    /**
+     * Protected constructor of the recommender.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     */
     protected BaseMLrecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     } 
-    
     
     /**
      * Calculates the predictions for the newData and stores the predictions
@@ -77,6 +84,11 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
 
     } 
     
+    /**
+     * Estimates the predictions for a new Dataset.
+     * 
+     * @param newData 
+     */
     protected abstract void predictDataset(Dataset newData);
 
 }

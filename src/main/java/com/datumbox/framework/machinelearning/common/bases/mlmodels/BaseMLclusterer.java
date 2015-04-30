@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,6 +33,7 @@ import java.util.Set;
 
 
 /**
+ * Base Class for all the Clustering algorithms.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <CL>
@@ -42,38 +42,69 @@ import java.util.Set;
  * @param <VM>
  */
 public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP extends BaseMLclusterer.ModelParameters, TP extends BaseMLclusterer.TrainingParameters, VM extends BaseMLclusterer.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
-    
+
+    /**
+     * The Cluster class stores all the information of the cluster, including the
+     * assigned points, the parameters and the label.
+     */
     public static abstract class Cluster implements Learnable, Iterable<Integer> {
-        //variables
         protected Integer clusterId;
-        
         
         protected Set<Integer> recordIdSet; 
         
         protected Object labelY = null;
         
+        /**
+         * Protected Constructor.
+         * 
+         * @param clusterId 
+         */
         protected Cluster(Integer clusterId) {
             this.clusterId = clusterId;
             recordIdSet = new HashSet<>(); //This is large but it should store only references of the Records not the actualy objects
         }
 
-        
-        //Getters
-        
+        /**
+         * Getter for cluster id.
+         * 
+         * @return 
+         */
         public Integer getClusterId() {
             return clusterId;
         }
-
+        
+        /**
+         * Getter for the set of Record Ids assigned to this cluster.
+         * 
+         * @return 
+         */
         public Set<Integer> getRecordIdSet() {
             return recordIdSet;
         }
         
+        /**
+         * Getter for the label Y of the cluster.
+         * 
+         * @return 
+         */
         public Object getLabelY() {
             return labelY;
         }
         
-        //Wrapper methods for the recordIdSet
+        /**
+         * Setter for the label Y of the cluster.
+         * 
+         * @param labelY 
+         */
+        protected void setLabelY(Object labelY) {
+            this.labelY = labelY;
+        }
         
+        /**
+         * Returns the number of records assigned to this cluster.
+         * 
+         * @return 
+         */
         public int size() {
             if(recordIdSet == null) {
                 return 0;
@@ -82,7 +113,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         }
         
         /**
-         * Implementing a read-only iterator on recordIdSet to use it in loops.
+         * Implements a read-only iterator on recordIdSet to use it in loops.
          * 
          * @return 
          */
@@ -108,25 +139,33 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             };
         }
         
-        //internal methods
-        
+        /**
+         * Clears all the assignments and internal parameters of the cluster.
+         */
         protected void clear() {
             if(recordIdSet!=null) {
                 recordIdSet.clear();
             }
         }
         
-        protected void setLabelY(Object labelY) {
-            this.labelY = labelY;
-        }
-        
+        /**
+         * Returns the hash of the cluster.
+         * 
+         * @return 
+         */
         @Override
         public int hashCode() {
             int hash = 7;
             hash = 89 * hash + this.clusterId;
             return hash;
         }
-
+        
+        /**
+         * Checks if another object is equal to the current object.
+         * 
+         * @param obj
+         * @return 
+         */
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -144,90 +183,174 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         //abstract methods that modify the cluster set and should update its statistics in each implementation
         
+        /**
+         * Adds the Record r with unique identified rId in the cluster.
+         * 
+         * @param rId
+         * @param r
+         * @return 
+         */
         protected abstract boolean add(Integer rId, Record r);
         
+        /**
+         * Removes the Record r with unique identified rId from the cluster.
+         * 
+         * @param rId
+         * @param r
+         * @return 
+         */
         protected abstract boolean remove(Integer rId, Record r);
 
     }
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     * @param <CL>
+     */
     public static abstract class ModelParameters<CL extends BaseMLclusterer.Cluster> extends BaseMLmodel.ModelParameters {
         
         //number of classes if the dataset is annotated. Use Linked Hash Set to ensure that the order of classes will be maintained. 
-        private Set<Object> goldStandardClasses = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
-        
-        
-        
+        private Set<Object> goldStandardClasses = new LinkedHashSet<>();
         
         private Map<Integer, CL> clusterList = new HashMap<>(); //the cluster objects of the model
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        
-        //Getters / Setters
-        
+        /**
+         * Returns the number of clusters.
+         * 
+         * @return 
+         */
         public Integer getC() {
             return clusterList.size();
         }
-
+        
+        /**
+         * Getter for Gold Standard Classes.
+         * 
+         * @return 
+         */
         public Set<Object> getGoldStandardClasses() {
             return goldStandardClasses;
         }
-
-        public void setGoldStandardClasses(Set<Object> goldStandardClasses) {
+        
+        /**
+         * Setter for Gold Standard Classes.
+         * 
+         * @param goldStandardClasses 
+         */
+        protected void setGoldStandardClasses(Set<Object> goldStandardClasses) {
             this.goldStandardClasses = goldStandardClasses;
         }
-
+        
+        /**
+         * Getter for Cluster List.
+         * 
+         * @return 
+         */
         public Map<Integer, CL> getClusterList() {
             return clusterList;
         }
-
-        public void setClusterList(Map<Integer, CL> clusterList) {
+        
+        /**
+         * Setter for Cluster List.
+         * 
+         * @param clusterList 
+         */
+        protected void setClusterList(Map<Integer, CL> clusterList) {
             this.clusterList = clusterList;
         }
         
-        
     } 
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {    
 
     } 
 
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     * 
+     * References: 
+     * http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html
+     * http://thesis.neminis.org/wp-content/plugins/downloads-manager/upload/masterThesis-VR.pdf
+     */
     public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
-        //References: http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html
-        //http://thesis.neminis.org/wp-content/plugins/downloads-manager/upload/masterThesis-VR.pdf
+        
         private Double purity = null;
         private Double NMI = null; //Normalized Mutual Information: I(Omega,Gama) calculation
         
+        /**
+         * Getter for Purity.
+         * 
+         * @return 
+         */
         public Double getPurity() {
             return purity;
         }
-
+        
+        /**
+         * Setter for Purity.
+         * 
+         * @param purity 
+         */
         public void setPurity(Double purity) {
             this.purity = purity;
         }
-
+        
+        /**
+         * Getter for NMI.
+         * 
+         * @return 
+         */
         public Double getNMI() {
             return NMI;
         }
-
+        
+        /**
+         * Setter for NMI.
+         * 
+         * @param NMI 
+         */
         public void setNMI(Double NMI) {
             this.NMI = NMI;
         }
         
     }
     
-    protected BaseMLclusterer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClustererValidation<>());
-    } 
-    
+    /**
+     * Protected constructor of the clusterer.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
+     * @param vmClass
+     * @param modelValidator 
+     */
     protected BaseMLclusterer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
-    
+    /**
+     * Validates the model with the provided dataset and returns the validation
+     * metrics.
+     * 
+     * @param validationData
+     * @return 
+     */
     @Override
     protected VM validateModel(Dataset validationData) {
         predictDataset(validationData);
@@ -326,6 +449,11 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         return validationMetrics;
     }
     
+    /**
+     * Getter for the Cluster list.
+     * 
+     * @return 
+     */
     public Map<Integer, CL> getClusters() {
         if(knowledgeBase==null) {
             return null;

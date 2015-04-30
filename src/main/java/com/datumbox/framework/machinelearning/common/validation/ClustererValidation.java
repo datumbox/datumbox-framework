@@ -20,6 +20,7 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLcluste
 import java.util.List;
 
 /**
+ * Validation class for the Clustering models.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -28,13 +29,15 @@ import java.util.List;
  */
 public class ClustererValidation<MP extends BaseMLclusterer.ModelParameters, TP extends BaseMLclusterer.TrainingParameters, VM extends BaseMLclusterer.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
     
-    
-    public ClustererValidation() {
-        super();
-    }
-    
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */
     @Override
-    public VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
+    protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         
         if(validationMetricsList.isEmpty()) {
             return null;

@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract class which is the base of every Categorical Feature Selection algorithm.
+ * Abstract class which is the base of every Scored Based Feature Selection algorithm.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -32,25 +32,48 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ScoreBasedFeatureSelection<MP extends ScoreBasedFeatureSelection.ModelParameters, TP extends ScoreBasedFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
 
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     }
     
-    
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends FeatureSelection.TrainingParameters {
         
     }
     
-
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     */
     protected ScoreBasedFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }
     
-    
+    /**
+     * This method keeps the highest scoring features of the provided feature map
+     * and removes all the others.
+     * 
+     * @param featureScores
+     * @param maxFeatures 
+     */
     public static void selectHighScoreFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
         Logger logger = LoggerFactory.getLogger(ScoreBasedFeatureSelection.class);
         logger.debug("selectHighScoreFeatures()");

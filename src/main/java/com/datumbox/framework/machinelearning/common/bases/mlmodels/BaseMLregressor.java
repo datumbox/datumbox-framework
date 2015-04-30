@@ -15,12 +15,12 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
-import com.datumbox.common.dataobjects.Dataset;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 
 /**
+ * Base Class for all the Regression algorithms.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -29,24 +29,50 @@ import com.datumbox.framework.machinelearning.common.bases.validation.ModelValid
  */
 public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters, TP extends BaseMLregressor.TrainingParameters, VM extends BaseMLregressor.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
-        
+
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     } 
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {    
 
     } 
 
-    //DO NOT DECLARE ABSTRACT!!!! IT IS INITIALIZED BY StepwiseRegression class
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     * DO NOT DECLARE ABSTRACT!!!! IT IS INITIALIZED BY StepwiseRegression class
+     */
     public static class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
         
     }
     
+    /**
+     * Protected constructor of the regressor.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     * @param vmClass 
+     * @param modelValidator 
+     */
     protected BaseMLregressor(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 

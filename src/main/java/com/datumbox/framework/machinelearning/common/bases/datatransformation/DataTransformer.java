@@ -25,6 +25,7 @@ import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrain
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 /**
+ * Base class for all the Data Transformers of the framework.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -32,35 +33,59 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  */
 public abstract class DataTransformer<MP extends DataTransformer.ModelParameters, TP extends DataTransformer.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
-    
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
             
-        //here goes the parameters of the transformer
     }
     
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseTrainingParameters {
-                
-        //here goes public fields that are used as initial training parameters        
+                     
     }
     
-    
-    
-    /*
-        IMPORTANT METHODS FOR THE FUNCTIONALITY
-    */
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     */
     protected DataTransformer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }
     
+    /**
+     * Fits, transforms and normalizes the data of the provided dataset.
+     * 
+     * @param trainingData
+     * @param trainingParameters 
+     */
     public void fit_transform(Dataset trainingData, TP trainingParameters) {
         fit(trainingData, trainingParameters); 
         transform(trainingData);
     }
     
+    /**
+     * Transforms and Normalizes the data of the provided dataset. The transformations are
+     * non-reversible operations of on the dataset, while normalizations are 
+     * are reversible.
+     * 
+     * @param newData 
+     */
     public void transform(Dataset newData) {
         logger.info("transform()");
         
@@ -71,6 +96,11 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
         
     }
     
+    /**
+     * Denormalizes the data of the provided dataset.
+     * 
+     * @param data 
+     */
     public void denormalize(Dataset data) {
         logger.info("denormalize()");
         
@@ -101,6 +131,5 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * @param data 
      */
     protected abstract void _denormalize(Dataset data);
-    
     
 }

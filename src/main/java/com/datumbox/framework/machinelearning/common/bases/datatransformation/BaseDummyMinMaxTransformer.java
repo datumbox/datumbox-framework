@@ -30,11 +30,15 @@ import java.util.Map;
 
 
 /**
+ * Base class for Dummy and MinMax Transformers.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDummyMinMaxTransformer.ModelParameters, BaseDummyMinMaxTransformer.TrainingParameters> {
     
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static class ModelParameters extends DataTransformer.ModelParameters {
             
         @BigMap
@@ -46,45 +50,95 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         @BigMap
         protected Map<Object, Double> maxColumnValues;
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
+        /**
+         * Getter for the reference levels of the categorical variables.
+         * 
+         * @return 
+         */
         public Map<Object, Object> getReferenceLevels() {
             return referenceLevels;
         }
-
+        
+        /**
+         * Setter for the reference levels of the categorical variables.
+         * 
+         * @param referenceLevels 
+         */
         protected void setReferenceLevels(Map<Object, Object> referenceLevels) {
             this.referenceLevels = referenceLevels;
         }
-
+        
+        /**
+         * Getter for the minimum values of the columns.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getMinColumnValues() {
             return minColumnValues;
         }
-
+        
+        /**
+         * Setter for the minimum values of the columns.
+         * 
+         * @param minColumnValues 
+         */
         protected void setMinColumnValues(Map<Object, Double> minColumnValues) {
             this.minColumnValues = minColumnValues;
         }
-
+        
+        /**
+         * Getter for the maximum values of the columns.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getMaxColumnValues() {
             return maxColumnValues;
         }
 
+        /**
+         * Setter for the maximum values of the columns.
+         * 
+         * @param maxColumnValues 
+         */
         protected void setMaxColumnValues(Map<Object, Double> maxColumnValues) {
             this.maxColumnValues = maxColumnValues;
         }
         
-        
     }
     
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static class TrainingParameters extends DataTransformer.TrainingParameters {
         
     }
-
+    
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     */
     protected BaseDummyMinMaxTransformer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BaseDummyMinMaxTransformer.ModelParameters.class, BaseDummyMinMaxTransformer.TrainingParameters.class);
     }
     
+    /**
+     * Learns the normalization parameters for the X data.
+     * 
+     * @param data
+     * @param minColumnValues
+     * @param maxColumnValues 
+     */
     protected static void fitX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         
         for(Map.Entry<Object, TypeInference.DataType> entry : data.getXDataTypes().entrySet()) {
@@ -107,6 +161,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         //do nothing for the response variable Y
     }
     
+    /**
+     * Normalizes the X data.
+     * 
+     * @param data
+     * @param minColumnValues
+     * @param maxColumnValues 
+     */
     protected static void normalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data) {
             Record r = data.get(rId);
@@ -143,6 +204,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    /**
+     * Denormalizes the X data.
+     * 
+     * @param data
+     * @param minColumnValues
+     * @param maxColumnValues 
+     */
     protected static void denormalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data) {
             Record r = data.get(rId);
@@ -174,6 +242,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    /**
+     * Learns the normalization parameters for the Y variable.
+     * 
+     * @param data
+     * @param minColumnValues
+     * @param maxColumnValues 
+     */
     protected static void fitY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             //if this is numeric normalize it
@@ -187,6 +262,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    /**
+     * Normalizes the Y variable.
+     * 
+     * @param data
+     * @param minColumnValues
+     * @param maxColumnValues 
+     */
     protected static void normalizeY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         if(data.isEmpty()) {
             return;
@@ -220,6 +302,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    /**
+     * Denormalizes the Y variable.
+     * 
+     * @param data
+     * @param minColumnValues
+     * @param maxColumnValues 
+     */
     protected static void denormalizeY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         
         if(data.isEmpty()) {
@@ -262,6 +351,12 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    /**
+     * Learns the reference levels of the categorical variables.
+     * 
+     * @param data
+     * @param referenceLevels 
+     */
     protected static void fitDummy(Dataset data, Map<Object, Object> referenceLevels) {
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
 
@@ -281,6 +376,12 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         }
     }
     
+    /**
+     * Transforms the categorical variables into dummy (boolean) variables.
+     * 
+     * @param data
+     * @param referenceLevels 
+     */
     protected static void transformDummy(Dataset data, Map<Object, Object> referenceLevels) {
 
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
@@ -324,6 +425,12 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         data.recalculateMeta();
     }
     
+    /**
+     * Checks whether the variable should be converted into dummy (boolean).
+     * 
+     * @param columnType
+     * @return 
+     */
     private static boolean covert2dummy(TypeInference.DataType columnType) {
         return columnType==TypeInference.DataType.CATEGORICAL || columnType==TypeInference.DataType.ORDINAL;
     }

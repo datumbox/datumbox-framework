@@ -20,18 +20,21 @@ import com.datumbox.framework.machinelearning.topicmodeling.LatentDirichletAlloc
 import java.util.List;
 
 /**
+ * Validation class for Latent Dirichlet Allocation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class LatentDirichletAllocationValidation extends ModelValidation<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
     
-    
-    public LatentDirichletAllocationValidation() {
-        super();
-    }
-        
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */        
     @Override
-    public LatentDirichletAllocation.ValidationMetrics calculateAverageValidationMetrics(List<LatentDirichletAllocation.ValidationMetrics> validationMetricsList) {
+    protected LatentDirichletAllocation.ValidationMetrics calculateAverageValidationMetrics(List<LatentDirichletAllocation.ValidationMetrics> validationMetricsList) {
 
         if(validationMetricsList.isEmpty()) {
             return null;

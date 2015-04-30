@@ -25,6 +25,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
+import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 import com.datumbox.framework.machinelearning.ensemblelearning.FixedCombinationRules;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
@@ -35,6 +36,7 @@ import java.util.Set;
 
 /**
  * Base class for Adaboost and BoostrapAgregating.
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
@@ -42,28 +44,50 @@ import java.util.Set;
  */
 public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelParameters, TP extends BaseBoostingBagging.TrainingParameters, VM extends BaseBoostingBagging.ValidationMetrics> extends BaseMLclassifier<MP, TP, VM> {
 
-    public static final String DB_INDICATOR="Cmp";
+    private static final String DB_INDICATOR = "Cmp";
     private static final int maxNumberOfRetries = 2;
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
         
-        private List<Double> weakClassifierWeights = new ArrayList<>(); //this is small. maximum as the total number of classifiers
+        private List<Double> weakClassifierWeights = new ArrayList<>();
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Getter for the weights of the weak classifiers.
+         * 
+         * @return 
+         */
         public List<Double> getWeakClassifierWeights() {
             return weakClassifierWeights;
         }
-
+        
+        /**
+         * Setter for the weights of the weak classifiers.
+         * 
+         * @param weakClassifierWeights 
+         */
         protected void setWeakClassifierWeights(List<Double> weakClassifierWeights) {
             this.weakClassifierWeights = weakClassifierWeights;
         }
         
     } 
 
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLclassifier.TrainingParameters {      
         
         //primitives/wrappers
@@ -75,42 +99,81 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         //Parameter Objects
         private BaseMLclassifier.TrainingParameters weakClassifierTrainingParameters; //the parameters of the weak classifier
         
+        /**
+         * Getter for the maximum number of weak classifiers.
+         * 
+         * @return 
+         */
         public int getMaxWeakClassifiers() {
             return maxWeakClassifiers;
         }
-
+        
+        /**
+         * Setter for the maximum number of weak classifiers.
+         * 
+         * @param maxWeakClassifiers 
+         */
         public void setMaxWeakClassifiers(int maxWeakClassifiers) {
             this.maxWeakClassifiers = maxWeakClassifiers;
         }
-
+        
+        /**
+         * Getter for the Java class of the weak classifier.
+         * 
+         * @return 
+         */
         public Class<? extends BaseMLclassifier> getWeakClassifierClass() {
             return weakClassifierClass;
         }
-
+        
+        /**
+         * Setter for the Java class of the weak classifier.
+         * 
+         * @param weakClassifierClass 
+         */
         public void setWeakClassifierClass(Class<? extends BaseMLclassifier> weakClassifierClass) {
             this.weakClassifierClass = weakClassifierClass;
         }
-
+        
+        /**
+         * Getter for the Training Parameters of the weak classifier.
+         * 
+         * @return 
+         */
         public BaseMLclassifier.TrainingParameters getWeakClassifierTrainingParameters() {
             return weakClassifierTrainingParameters;
         }
 
+        /**
+         * Setter for the Training Parameters of the weak classifier.
+         * 
+         * @param weakClassifierTrainingParameters 
+         */
         public void setWeakClassifierTrainingParameters(BaseMLclassifier.TrainingParameters weakClassifierTrainingParameters) {
             this.weakClassifierTrainingParameters = weakClassifierTrainingParameters;
         }
         
-        
-        
     } 
     
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static abstract class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
 
     }
-    
-    
+
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf 
+     * @param mpClass 
+     * @param tpClass 
+     * @param vmClass 
+     */
     protected BaseBoostingBagging(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass);
+        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
     } 
     
     @Override
@@ -250,8 +313,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
     }
 
-    
-    
     protected enum Status {
         NEXT,
         STOP,
@@ -268,6 +329,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      */
     protected abstract Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping);
     
+    /**
+     * Deletes the database of all the weak algorithms. 
+     */
     @Override
     public void erase() {
         eraseWeakClassifiers();
@@ -277,7 +341,11 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     protected void eraseWeakClassifiers() {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-
+        
+        if(modelParameters==null) {
+            return;
+        }
+        
         Class<? extends BaseMLclassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());

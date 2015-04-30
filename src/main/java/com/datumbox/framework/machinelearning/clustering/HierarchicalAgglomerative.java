@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
+import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -281,7 +282,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      * @param dbConf 
      */
     public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class);
+        super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidation<>());
     } 
     
     @Override

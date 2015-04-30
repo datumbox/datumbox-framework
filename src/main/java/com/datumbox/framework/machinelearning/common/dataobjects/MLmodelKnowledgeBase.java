@@ -17,13 +17,12 @@ package com.datumbox.framework.machinelearning.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * The knowledgeBase represents the "database" that the algorithm learned. 
- * It is a wrapper of the 3 classes of model & training parameters and validation metrics.
- * This object is imported and exported every time we use or train an algorithm.
+ * The MLmodelKnowledgeBase is the Knowledge Base object which is used by most Machine 
+ * Learning models. It extends the KnowledgeBase class and includes an extra field
+ * to store the validation metrics of the algorithm.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -32,29 +31,26 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> extends KnowledgeBase<MP, TP> {
 
-    /*
-        VARIABLES
-        =========
-    */
-    
     protected Class<VM> vmClass;
     
     private VM validationMetrics;
     
-    
-    
-    /*
-        EXTENDING ABSTRACT
-        ==================
-    */
-    
+    /**
+     * Public constructor of the object.
+     * 
+     * @param dbName
+     * @param dbConf 
+     * @param mpClass 
+     * @param tpClass 
+     * @param vmClass 
+     */
     public MLmodelKnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass);
         this.vmClass = vmClass;
     }
     
     /**
-     * Loads a BaseMLmodelKnowledgeBase
+     * Loads a KnowledgeBase from the permanent storage.
      */
     @Override
     public void load() {
@@ -75,15 +71,19 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
         }
     }
     
+    /**
+     * Deletes the database of the algorithm. 
+     */
     @Override
     public void erase() {
         super.erase();
-        
         validationMetrics = null;
     }
     
     /**
-     * Erases the data from BaseMLmodelKnowledgeBase and from permanent storage
+     * Deletes and re-initializes KnowledgeBase object. It erases all data from 
+     * storage, it releases all resources, reinitializes the internal objects and
+     * opens new connection to the permanent storage.
      */
     @Override
     public void reinitialize() {
@@ -91,16 +91,9 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
         validationMetrics = getEmptyValidationMetricsObject();
     }
     
-    
-    
-    
-    /*
-        IMPORTANT PUBLIC METHODS
-        ========================
-    */
-
     /**
-     * Returns an empty ValidationMetrics Object
+     * Returns an empty ValidationMetrics Object.
+     * 
      * @return 
      */
     public VM getEmptyValidationMetricsObject() {
@@ -112,17 +105,20 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
         }
     }
     
-    
-    
-    /*
-        GETTER SETTERS
-        ==============
-    */
-
+    /**
+     * Getter for the Validation Metrics of the algorithm.
+     * 
+     * @return 
+     */
     public VM getValidationMetrics() {
         return validationMetrics;
     }
-
+    
+    /**
+     * Setter for the Validation Metrics of the algorithm.
+     * 
+     * @param validationMetrics 
+     */
     public void setValidationMetrics(VM validationMetrics) {
         this.validationMetrics = validationMetrics;
     }

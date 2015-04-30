@@ -31,8 +31,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.
  * 
@@ -42,69 +40,125 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureSelection.ModelParameters, TP extends CategoricalFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
     
-    
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
-        private int N;
-
         @BigMap
-        
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        //Getters and Setters
-        
+        /**
+         * Getter of the Feature Scores.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getFeatureScores() {
             return featureScores;
         }
-
+        
+        /**
+         * Setter of the Feature Scores.
+         * 
+         * @param featureScores 
+         */
         protected void setFeatureScores(Map<Object, Double> featureScores) {
             this.featureScores = featureScores;
         }
         
     }
     
-    
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends FeatureSelection.TrainingParameters {
         
         private Integer rareFeatureThreshold = null;
         private Integer maxFeatures=null;
         private boolean ignoringNumericalFeatures = true;
-
+        
+        /**
+         * Getter for the rare feature threshold. Any feature that exists
+         * in the training dataset less times than this number will be removed
+         * directly. 
+         * 
+         * @return 
+         */
         public Integer getRareFeatureThreshold() {
             return rareFeatureThreshold;
         }
-
+        
+        /**
+         * Setter for the rare feature threshold. Set to null to deactivate this 
+         * feature. Any feature that exists in the training dataset less times 
+         * than this number will be removed directly. 
+         * 
+         * @param rareFeatureThreshold 
+         */
         public void setRareFeatureThreshold(Integer rareFeatureThreshold) {
             this.rareFeatureThreshold = rareFeatureThreshold;
         }
-
+        
+        /**
+         * Getter for the maximum number of features that should be kept in the
+         * dataset.
+         * 
+         * @return 
+         */
         public Integer getMaxFeatures() {
             return maxFeatures;
         }
-
+        
+        /**
+         * Setter for the maximum number of features that should be kept in the
+         * dataset. Set to null for unlimited.
+         * 
+         * @param maxFeatures 
+         */
         public void setMaxFeatures(Integer maxFeatures) {
             this.maxFeatures = maxFeatures;
         }
-
+        
+        /**
+         * Getter for whether the algorithm should ignore numerical features.
+         * 
+         * @return 
+         */
         public boolean isIgnoringNumericalFeatures() {
             return ignoringNumericalFeatures;
         }
-
+        
+        /**
+         * Setter for whether the algorithm should ignore numerical features.
+         * 
+         * @param ignoringNumericalFeatures 
+         */
         public void setIgnoringNumericalFeatures(boolean ignoringNumericalFeatures) {
             this.ignoringNumericalFeatures = ignoringNumericalFeatures;
         }
         
     }
     
-
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     */
     protected CategoricalFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }
-    
     
     @Override
     protected void _fit(Dataset data) {
@@ -280,5 +334,13 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
     }
     
+    /**
+     * Abstract method which is responsible for estimating the score of each
+     * Feature.
+     * 
+     * @param classCounts
+     * @param featureClassCounts
+     * @param featureCounts 
+     */
     protected abstract void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts);
 }

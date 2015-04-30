@@ -25,6 +25,7 @@ import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrain
 import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 
 /**
+ * Base class for all the Feature Selectors of the framework.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -32,32 +33,58 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  */
 public abstract class FeatureSelection<MP extends FeatureSelection.ModelParameters, TP extends FeatureSelection.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
-    
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseModelParameters {
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        //here goes the parameters of the feature slection
     }
     
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseTrainingParameters {
-        //here goes public fields that are used as initial training parameters        
+        
     }
     
-    /*
-        IMPORTANT METHODS FOR THE FUNCTIONALITY
-    */
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass 
+     */
     protected FeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }
     
+    
+    /**
+     * Fits and transforms the data of the provided dataset. 
+     * 
+     * @param trainingData
+     * @param trainingParameters 
+     */
     public void fit_transform(Dataset trainingData, TP trainingParameters) {
         fit(trainingData, trainingParameters);
         transform(trainingData);
     }
     
+    /**
+     * Performs feature selection on the provided dataset.
+     * 
+     * @param newData 
+     */
     public void transform(Dataset newData) {
         logger.info("transform()");
         
@@ -66,5 +93,10 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
         filterFeatures(newData);
     }
     
+    /**
+     * Performs the filtering of the features.
+     * 
+     * @param newdata 
+     */
     protected abstract void filterFeatures(Dataset newdata);
 }

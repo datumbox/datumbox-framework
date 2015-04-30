@@ -36,6 +36,11 @@ public abstract class BaseModelParameters implements Learnable {
     //number of features in data points used for training
     private Integer d = 0;
         
+    /**
+     * Protected constructor which accepts as argument the DatabaseConnector.
+     * 
+     * @param dbc 
+     */
     public BaseModelParameters(DatabaseConnector dbc) {
         //Initialize all the BigMap fields
         bigMapInitializer(dbc);
@@ -77,6 +82,12 @@ public abstract class BaseModelParameters implements Learnable {
         this.d = d;
     }
 
+    /**
+     * Initializes all the fields of the class which are marked with the BigMap
+     * annotation automatically.
+     * 
+     * @param dbc 
+     */
     private void bigMapInitializer(DatabaseConnector dbc) {
         //get all the fields from all the inherited classes
         for(Field field : getAllFields(new LinkedList<>(), this.getClass())){
@@ -97,6 +108,13 @@ public abstract class BaseModelParameters implements Learnable {
         }
     }
     
+    /**
+     * Gets all the fields recursively from all the parent classes.
+     * 
+     * @param fields
+     * @param type
+     * @return 
+     */
     private List<Field> getAllFields(List<Field> fields, Class<?> type) {
         fields.addAll(Arrays.asList(type.getDeclaredFields()));
 

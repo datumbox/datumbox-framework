@@ -20,6 +20,7 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinear
 import java.util.List;
 
 /**
+ * Validation class for Linear Regression.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -28,12 +29,15 @@ import java.util.List;
  */
 public class LinearRegressionValidation<MP extends BaseLinearRegression.ModelParameters, TP extends BaseLinearRegression.TrainingParameters, VM extends BaseLinearRegression.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
 
-    public LinearRegressionValidation() {
-        super();
-    }
-       
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */        
     @Override
-    public VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
+    protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         
         if(validationMetricsList.isEmpty()) {
             return null;

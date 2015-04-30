@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import java.util.Set;
 
 
 /**
+ * Base class for Naive Bayes Models.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -39,67 +41,111 @@ import java.util.Set;
  * @param <VM>
  */
 public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, TP extends BaseNaiveBayes.TrainingParameters, VM extends BaseNaiveBayes.ValidationMetrics> extends BaseMLclassifier<MP, TP, VM> {
+        
+    protected boolean isBinarized;
     
-    
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
-        /**
-         * log priors for log( P(c) )
-         */
+
         @BigMap
         private Map<Object, Double> logPriors; //prior log probabilities of the classes
 
-        /**
-         * log likelihood for log( P(x|c) ) 
-         */
         @BigMap
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
-        
+        /**
+         * Getter for the log of priors of the classes.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getLogPriors() {
             return logPriors;
         }
-
+        
+        /**
+         * Setter for the log of priors of the classes.
+         * 
+         * @param logPriors 
+         */
         protected void setLogPriors(Map<Object, Double> logPriors) {
             this.logPriors = logPriors;
         }
-
+        
+        /**
+         * Getter for the log likelihood of P(x|c).
+         * 
+         * @return 
+         */
         public Map<List<Object>, Double> getLogLikelihoods() {
             return logLikelihoods;
         }
-
+        
+        /**
+         * Setter for the log likelihood of P(x|c).
+         * 
+         * @param logLikelihoods 
+         */
         protected void setLogLikelihoods(Map<List<Object>, Double> logLikelihoods) {
             this.logLikelihoods = logLikelihoods;
         }
     } 
 
-    
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
         private boolean multiProbabilityWeighted=false; //whether the classifier weights the probabilities based on the number of occurences. (multiple occurences are taken into account when we estimate the classification scores) 
-                
+        
+        /**
+         * Getter for whether the algorithm weights the probabilities based on the
+         * multiple occurrences of a feature.
+         * 
+         * @return 
+         */
         public boolean isMultiProbabilityWeighted() {
             return multiProbabilityWeighted;
         }
-
+        
+        /**
+         * Setter for whether the algorithm weights the probabilities based on the
+         * multiple occurrences of a feature.
+         * 
+         * @param multiProbabilityWeighted 
+         */
         public void setMultiProbabilityWeighted(boolean multiProbabilityWeighted) {
             this.multiProbabilityWeighted = multiProbabilityWeighted;
         }
     } 
     
-    
+    /**
+     * Base class for the Validation Parameters of the algorithm.
+     */
     public static abstract class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
 
     }
-        
-        
-    protected boolean isBinarized;
 
-    
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
+     * @param vmClass 
+     */
     protected BaseNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass);
+        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
         isBinarized = false;
     } 
     

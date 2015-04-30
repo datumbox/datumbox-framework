@@ -23,6 +23,7 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -124,7 +125,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
      * @param dbConf 
      */
     public MaximumEntropy(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class);
+        super(dbName, dbConf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class, new ClassifierValidation<>());
     }
     
     @Override

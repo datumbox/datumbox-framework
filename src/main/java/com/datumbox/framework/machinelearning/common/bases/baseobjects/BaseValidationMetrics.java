@@ -16,10 +16,10 @@
 package com.datumbox.framework.machinelearning.common.bases.baseobjects;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * Base class for every ValidationMetrics class in the framework. 
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -27,8 +27,8 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class BaseValidationMetrics implements Serializable {
 
     /**
-     * This method allows us to build a new empty object of the current object
-     * directly from it. Casting to the appropriate type is required.
+     * This method allows us to create a new empty Validation Metrics object 
+     * from an existing object. Casting to the appropriate type is required.
      * 
      * @return 
      */

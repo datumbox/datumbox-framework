@@ -19,18 +19,21 @@ import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import java.util.List;
 
 /**
+ * Validation class for SoftMax Regression.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class SoftMaxRegressionValidation extends ClassifierValidation<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> {
     
-    
-    public SoftMaxRegressionValidation() {
-        super();
-    }
-        
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */        
     @Override
-    public SoftMaxRegression.ValidationMetrics calculateAverageValidationMetrics(List<SoftMaxRegression.ValidationMetrics> validationMetricsList) {
+    protected SoftMaxRegression.ValidationMetrics calculateAverageValidationMetrics(List<SoftMaxRegression.ValidationMetrics> validationMetricsList) {
         SoftMaxRegression.ValidationMetrics avgValidationMetrics = super.calculateAverageValidationMetrics(validationMetricsList);
         if(avgValidationMetrics==null) {
             return null;

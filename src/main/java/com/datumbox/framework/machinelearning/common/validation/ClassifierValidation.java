@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Validation class for the Classifier models.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -32,13 +33,15 @@ import java.util.Set;
  */
 public class ClassifierValidation<MP extends BaseMLclassifier.ModelParameters, TP extends BaseMLclassifier.TrainingParameters, VM extends BaseMLclassifier.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
     
-    
-    public ClassifierValidation() {
-        super();
-    }
-    
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */
     @Override
-    public VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
+    protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         
         if(validationMetricsList.isEmpty()) {
             return null;

@@ -28,6 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The ModelValidation class is an abstract class responsible for the K-fold Cross
+ * Validation and for the estimation of the average validation metrics. Given that
+ * different models use different validation metrics, each model family implements
+ * its own validator.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -38,12 +42,20 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
     
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
-    public static final String DB_INDICATOR="Kfold";
+    private static final String DB_INDICATOR="Kfold";
     
-    public ModelValidation() {
-        
-    }
-    
+    /**
+     * Performs K-fold cross validation by using the provided dataset and number
+     * of folds and returns the average metrics across all folds.
+     * 
+     * @param dataset
+     * @param k
+     * @param dbName
+     * @param dbConf
+     * @param aClass
+     * @param trainingParameters
+     * @return 
+     */
     public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.getRecordNumber();
         if(k<=0 || n<=k) {
@@ -116,7 +128,6 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             validationData.erase();
             validationData = null;
             
-            
             //delete algorithm
             mlmodel.erase();
             mlmodel = null;
@@ -125,13 +136,19 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             validationMetricsList.add(entrySample);
         }
         
-        
         VM avgValidationMetrics = calculateAverageValidationMetrics(validationMetricsList);
         
         return avgValidationMetrics;
     }
     
-    public abstract VM calculateAverageValidationMetrics(List<VM> validationMetricsList);
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */
+    protected abstract VM calculateAverageValidationMetrics(List<VM> validationMetricsList);
     
 
 }

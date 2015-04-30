@@ -25,6 +25,7 @@ import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
+import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
 import java.util.HashMap;
@@ -61,6 +62,11 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             super(clusterId);
         }
         
+        /**
+         * Setter for the Cluster id.
+         * 
+         * @param clusterId 
+         */
         protected void setClusterId(Integer clusterId) {
             this.clusterId = clusterId;
         }
@@ -233,8 +239,17 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
     }
     
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
+     * @param vmClass 
+     */
     protected BaseDPMM(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass);
+        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClustererValidation<>());
     } 
     
     @Override

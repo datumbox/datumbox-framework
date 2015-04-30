@@ -19,18 +19,21 @@ import com.datumbox.framework.machinelearning.classification.OrdinalRegression;
 import java.util.List;
 
 /**
+ * Validation class for Ordinal Regression.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class OrdinalRegressionValidation extends ClassifierValidation<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> {
     
-    
-    public OrdinalRegressionValidation() {
-        super();
-    }
-        
+    /**
+     * Calculates the average validation metrics by combining the results of the
+     * provided list.
+     * 
+     * @param validationMetricsList
+     * @return 
+     */        
     @Override
-    public OrdinalRegression.ValidationMetrics calculateAverageValidationMetrics(List<OrdinalRegression.ValidationMetrics> validationMetricsList) {
+    protected OrdinalRegression.ValidationMetrics calculateAverageValidationMetrics(List<OrdinalRegression.ValidationMetrics> validationMetricsList) {
         OrdinalRegression.ValidationMetrics avgValidationMetrics = super.calculateAverageValidationMetrics(validationMetricsList);
         if(avgValidationMetrics==null) {
             return null;

@@ -23,7 +23,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.enums.SensitivityRates;
-import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -32,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Base Class for all the Classifier algorithms.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -40,37 +40,65 @@ import java.util.Set;
  */
 public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParameters, TP extends BaseMLclassifier.TrainingParameters, VM extends BaseMLclassifier.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
+    /**
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
         
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
-        private Set<Object> classes = new LinkedHashSet<>(); //this is small. Size equal to class numbers;
+        private Set<Object> classes = new LinkedHashSet<>();
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
+        /**
+         * Returns the size of the classes.
+         * 
+         * @return 
+         */
         public Integer getC() {
             return classes.size();
         }
 
+        /**
+         * Getter for the set of classes.
+         * 
+         * @return 
+         */
         public Set<Object> getClasses() {
             return classes;
         }
-
+        
+        /**
+         * Setter for the set of classes.
+         * 
+         * @param classes 
+         */
         protected void setClasses(Set<Object> classes) {
             this.classes = classes;
         }
         
-        
-        
     } 
     
-    
+    /**
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {    
 
     } 
 
-    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
     public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
         
         //validation metrics
@@ -88,79 +116,172 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         
         private Map<List<Object>, Double> ContingencyTable = new HashMap<>(); //this is small. Size equal to 4*class numbers
         
+        /**
+         * Getter for Accuracy.
+         * 
+         * @return 
+         */
         public double getAccuracy() {
             return accuracy;
         }
-
+        
+        /**
+         * Setter for Accuracy.
+         * 
+         * @param accuracy 
+         */
         public void setAccuracy(double accuracy) {
             this.accuracy = accuracy;
         }
-
+        
+        /**
+         * Getter for Macro Precision.
+         * 
+         * @return 
+         */
         public double getMacroPrecision() {
             return macroPrecision;
         }
-
+        
+        /**
+         * Setter for Macro Precision.
+         * 
+         * @param macroPrecision 
+         */
         public void setMacroPrecision(double macroPrecision) {
             this.macroPrecision = macroPrecision;
         }
-
+        
+        /**
+         * Getter for Macro Recall.
+         * 
+         * @return 
+         */
         public double getMacroRecall() {
             return macroRecall;
         }
-
+        
+        /**
+         * Setter for Macro Recall.
+         * 
+         * @param macroRecall 
+         */
         public void setMacroRecall(double macroRecall) {
             this.macroRecall = macroRecall;
         }
-
+        
+        /**
+         * Getter for Macro F1.
+         * 
+         * @return 
+         */
         public double getMacroF1() {
             return macroF1;
         }
-
+        
+        /**
+         * Setter for Macro F1.
+         * 
+         * @param macroF1 
+         */
         public void setMacroF1(double macroF1) {
             this.macroF1 = macroF1;
         }
-
+        
+        /**
+         * Getter for Micro Precision.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getMicroPrecision() {
             return microPrecision;
         }
 
+        /**
+         * Setter for Micro Precision.
+         * 
+         * @param microPrecision 
+         */
         public void setMicroPrecision(Map<Object, Double> microPrecision) {
             this.microPrecision = microPrecision;
         }
-
+        
+        /**
+         * Getter for Micro Recall.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getMicroRecall() {
             return microRecall;
         }
-
+        
+        /**
+         * Setter for Micro Recall.
+         * 
+         * @param microRecall 
+         */
         public void setMicroRecall(Map<Object, Double> microRecall) {
             this.microRecall = microRecall;
         }
 
+        /**
+         * Getter for Micro F1.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getMicroF1() {
             return microF1;
         }
 
+        /**
+         * Setter for Micro F1.
+         * 
+         * @param microF1 
+         */
         public void setMicroF1(Map<Object, Double> microF1) {
             this.microF1 = microF1;
         }
-
+        
+        /**
+         * Getter for Contingency Table.
+         * 
+         * @return 
+         */
         public Map<List<Object>, Double> getContingencyTable() {
             return ContingencyTable;
         }
-
+        
+        /**
+         * Setter for Contingency Table.
+         * 
+         * @param ContingencyTable 
+         */
         public void setContingencyTable(Map<List<Object>, Double> ContingencyTable) {
             this.ContingencyTable = ContingencyTable;
         }
     }
-    
-    protected BaseMLclassifier(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
-    } 
-    
+        
+    /**
+     * Protected constructor of the classifier.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
+     * @param vmClass
+     * @param modelValidator 
+     */
     protected BaseMLclassifier(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
+    /**
+     * Validates the model with the provided dataset and returns the validation
+     * metrics.
+     * 
+     * @param validationData
+     * @return 
+     */
     @Override
     protected VM validateModel(Dataset validationData) {
         predictDataset(validationData);
@@ -257,6 +378,12 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         return validationMetrics;
     }
     
+    /**
+     * Estimates the selected class from the prediction scores.
+     * 
+     * @param predictionScores
+     * @return 
+     */
     protected Object getSelectedClassFromClassScores(AssociativeArray predictionScores) {
         Map.Entry<Object, Object> maxEntry = MapFunctions.selectMaxKeyValue(predictionScores);
         

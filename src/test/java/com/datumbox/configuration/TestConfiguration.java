@@ -25,12 +25,15 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TestConfiguration {
+    //The accuracy of assert on different levels
     public static final double DOUBLE_ACCURACY_HIGH = 0.000001;
     public static final double DOUBLE_ACCURACY_MEDIUM = 0.01;
     public static final double DOUBLE_ACCURACY_LOW = 0.5;
     
+    //The initial seed of the RandomGenerator
     public static final long RANDOM_SEED = 42L;
     
+    //The class of the DatabaseConfiguration
     public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
     //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
     

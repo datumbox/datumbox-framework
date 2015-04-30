@@ -32,6 +32,7 @@ import java.util.Map;
 
 
 /**
+ * Base class for Linear Regression Models.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -39,37 +40,53 @@ import java.util.Map;
  * @param <VM>
  */
 public abstract class BaseLinearRegression<MP extends BaseLinearRegression.ModelParameters, TP extends BaseLinearRegression.TrainingParameters, VM extends BaseLinearRegression.ValidationMetrics> extends BaseMLregressor<MP, TP, VM> {
-
     
+    /**
+     * Base class for the Model Parameters of the algorithm.
+     */
     public static abstract class ModelParameters extends BaseMLregressor.ModelParameters {
 
-        /**
-         * Thita weights
-         */
         @BigMap
         private Map<Object, Double> thitas; //the thita parameters of the model
 
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-
         
-        
+        /**
+         * Getter for the Thita coefficients.
+         * 
+         * @return 
+         */
         public Map<Object, Double> getThitas() {
             return thitas;
         }
-
+        
+        /**
+         * Setter for the Thita coefficients.
+         * 
+         * @param thitas 
+         */
         protected void setThitas(Map<Object, Double> thitas) {
             this.thitas = thitas;
         }
     } 
 
-    
+    /**
+     * Base class for the Training Parameters of the algorithm.
+     */
     public static abstract class TrainingParameters extends BaseMLregressor.TrainingParameters {     
 
     } 
     
-    
+    /**
+     * Base class for the Validation Parameters of the algorithm.
+     */
     public static abstract class ValidationMetrics extends BaseMLregressor.ValidationMetrics {
         private double RSquare = 0.0; 
         private double RSquareAdjusted = 0.0; 
@@ -84,119 +101,256 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         private Double StdErrorOfEstimate = 0.0; //this can have null value if dfResidual is 0
         private double DW = 0.0; //Durbin–Watson statistic
         private double NormalResiduals = 0.0; //Test on whether the residuals can be considered Normal
-
+        
+        /**
+         * Getter for the R Square.
+         * 
+         * @return 
+         */
         public double getRSquare() {
             return RSquare;
         }
-
+        
+        /**
+         * Setter for the R Square.
+         * 
+         * @param RSquare 
+         */
         public void setRSquare(double RSquare) {
             this.RSquare = RSquare;
         }
-
+        
+        /**
+         * Getter for the R Square Adjusted.
+         * 
+         * @return 
+         */
         public double getRSquareAdjusted() {
             return RSquareAdjusted;
         }
-
+        
+        /**
+         * Setter for the R Square Adjusted.
+         * 
+         * @param RSquareAdjusted 
+         */
         public void setRSquareAdjusted(double RSquareAdjusted) {
             this.RSquareAdjusted = RSquareAdjusted;
         }
-
+        
+        /**
+         * Getter for the Sum of Squared Errors.
+         * 
+         * @return 
+         */
         public double getSSE() {
             return SSE;
         }
-
+        
+        /**
+         * Setter for the Sum of Squared Errors.
+         * 
+         * @param SSE 
+         */
         public void setSSE(double SSE) {
             this.SSE = SSE;
         }
-
+        
+        /**
+         * Getter for the Sum of Squared due to Regression.
+         * 
+         * @return 
+         */
         public double getSSR() {
             return SSR;
         }
-
+        
+        /**
+         * Setter for the Sum of Squared due to Regression.
+         * 
+         * @param SSR 
+         */
         public void setSSR(double SSR) {
             this.SSR = SSR;
         }
 
+        /**
+         * Getter for the Sum of Squared Total.
+         * 
+         * @return 
+         */
         public double getSST() {
             return SST;
         }
-
+        
+        /**
+         * Setter for the Sum of Squared Total.
+         * 
+         * @param SST 
+         */
         public void setSST(double SST) {
             this.SST = SST;
         }
 
+        /**
+         * Getter for the degrees of freedom of Regression.
+         * 
+         * @return 
+         */
         public double getDfRegression() {
             return dfRegression;
         }
-
+        
+        /**
+         * Setter for the degrees of freedom of Regression.
+         * 
+         * @param dfRegression 
+         */
         public void setDfRegression(double dfRegression) {
             this.dfRegression = dfRegression;
         }
-
+        
+        /**
+         * Getter for the degrees of freedom of Residual.
+         * 
+         * @return 
+         */
         public double getDfResidual() {
             return dfResidual;
         }
-
+        
+        /**
+         * Setter for the degrees of freedom of Residual.
+         * 
+         * @param dfResidual 
+         */
         public void setDfResidual(double dfResidual) {
             this.dfResidual = dfResidual;
         }
-
+        
+        /**
+         * Getter for the degrees of freedom of Total.
+         * 
+         * @return 
+         */
         public double getDfTotal() {
             return dfTotal;
         }
-
+        
+        /**
+         * Setter for the degrees of freedom of Total.
+         * 
+         * @param dfTotal 
+         */
         public void setDfTotal(double dfTotal) {
             this.dfTotal = dfTotal;
         }
-
+        
+        /**
+         * Getter for F score.
+         * 
+         * @return 
+         */
         public double getF() {
             return F;
         }
-
+        
+        /**
+         * Setter for F score.
+         * 
+         * @param F 
+         */
         public void setF(double F) {
             this.F = F;
         }
-
+        
+        /**
+         * Getter for F p-value.
+         * 
+         * @return 
+         */
         public double getFPValue() {
             return FPValue;
         }
-
+        
+        /**
+         * Setter for F p-value.
+         * 
+         * @param FPValue 
+         */
         public void setFPValue(double FPValue) {
             this.FPValue = FPValue;
         }
-
+        
+        /**
+         * Getter for Standard Error of Estimate.
+         * 
+         * @return 
+         */
         public Double getStdErrorOfEstimate() {
             return StdErrorOfEstimate;
         }
-
+        
+        /**
+         * Setter for Standard Error of Estimate.
+         * 
+         * @param StdErrorOfEstimate 
+         */
         public void setStdErrorOfEstimate(Double StdErrorOfEstimate) {
             this.StdErrorOfEstimate = StdErrorOfEstimate;
         }
-
+        
+        /**
+         * Getter of Durbin Watson statistic.
+         * 
+         * @return 
+         */
         public double getDW() {
             return DW;
         }
-
+        
+        /**
+         * Setter of Durbin Watson statistic.
+         * 
+         * @param DW 
+         */
         public void setDW(double DW) {
             this.DW = DW;
         }
-
+        
+        /**
+         * Getter for Normal Residuals.
+         * 
+         * @return 
+         */
         public double getNormalResiduals() {
             return NormalResiduals;
         }
-
+        
+        /**
+         * Setter for Normal Residuals.
+         * 
+         * @param NormalResiduals 
+         */
         public void setNormalResiduals(double NormalResiduals) {
             this.NormalResiduals = NormalResiduals;
         }
         
     }
-
     
+    /**
+     * Protected constructor of the algorithm.
+     * 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
+     * @param vmClass 
+     */
     protected BaseLinearRegression(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new LinearRegressionValidation<>());
     } 
     
-
     @Override
     protected VM validateModel(Dataset validationData) {
         predictDataset(validationData);

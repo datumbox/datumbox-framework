@@ -27,6 +27,7 @@ import com.datumbox.common.dataobjects.TypeInference;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
+import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
@@ -372,7 +373,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      * @param dbConf 
      */
     public Kmeans(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class);
+        super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidation<>());
     } 
     
     @Override
