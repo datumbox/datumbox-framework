@@ -15,7 +15,7 @@ The code is licensed under the [Apache License, Version 2.0](https://github.com/
 Version
 -------
 
-The latest version is 0.6.0 (build 20150430). 
+The latest version is 0.6.0 (build 20150504). 
 
 The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 

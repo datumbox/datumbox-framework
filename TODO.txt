@@ -19,6 +19,7 @@ NEW ALGORITHMS
 ==============
 
 - Rewrite PCA to avoid using RealMatrix.
+- Add regularization in the currenlty supported algorithms.
 - Write a Mixture of Gaussians clustering method.
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.
 - Include an anomaly detection algorithm.
