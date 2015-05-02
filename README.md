@@ -37,6 +37,11 @@ Maven:
 
 Note: A couple of classes which use Linear Programming require installing an external C library called [lpsolve](http://sourceforge.net/projects/lpsolve/). Most users won't use these classes and thus installing the binary library can be considered optional; please check the [Detailed Installation Guide](http://blog.datumbox.com/how-to-install-and-use-the-datumbox-machine-learning-framework/) for more info.
 
+Documentation and Code Examples
+-------------------------------
+
+All the public methods and classes of the Framework are documented with Javadoc comments. Moreover for every model there is a JUnit Test which clearly shows how to train and use the models. Finally for more examples on how to use the framework checkout the [Code Examples](https://github.com/datumbox/datumbox-framework-examples/) or the [official Blog](http://blog.datumbox.com/).
+
 Technical Details
 -----------------
 
@@ -46,11 +51,6 @@ Which methods/algorithms are supported?
 ---------------------------------------
 
 The Framework currently supports performing multiple Parametric & non-parametric Statistical tests, calculating descriptive statistics on censored & uncensored data, performing ANOVA, Cluster Analysis, Dimension Reduction, Regression Analysis, Timeseries Analysis, Sampling and calculation of probabilities from the most common discrete and continues Distributions. In addition it provides several implemented algorithms including Max Entropy, Naive Bayes, SVM, Bootstrap Aggregating, Adaboost, Kmeans, Hierarchical Clustering, Dirichlet Process Mixture Models, Softmax Regression, Ordinal Regression, Linear Regression, Stepwise Regression, PCA and several other techniques that can be used for feature selection, ensemble learning, linear programming solving and recommender systems.
-
-Documentation
--------------
-
-All the public methods and classes of the Framework are documented with Javadoc comments. Moreover for every model there is a JUnit Test which clearly shows how to train and use the models. Finally for more examples on how to use the framework checkout the [official Blog](http://blog.datumbox.com/).
 
 Bug Reports
 -----------
@@ -70,8 +70,8 @@ Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios
 Useful Links
 ------------
 
-Project Description: http://blog.datumbox.com/new-open-source-machine-learning-framework-written-in-java/
+- [Code Examples](https://github.com/datumbox/datumbox-framework-examples/)
+- [Project Description](http://blog.datumbox.com/new-open-source-machine-learning-framework-written-in-java/)
+- [Datumbox.com](http://www.datumbox.com/)
+- [Machine Learning Blog](http://blog.datumbox.com/)
 
-Datumbox: http://www.datumbox.com/
-
-Machine Learning Blog: http://blog.datumbox.com/
