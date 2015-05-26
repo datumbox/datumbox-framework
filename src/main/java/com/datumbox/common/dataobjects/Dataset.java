@@ -91,7 +91,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                 
                 logger.info("Dataset Parsing {} class", theClass);
                 
-                try (final BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
                     for (String line; (line = br.readLine()) != null;) {
                         dataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass));
                     }

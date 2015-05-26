@@ -18,10 +18,9 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -47,14 +46,6 @@ public class DatasetTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Reader fileReader;
-        try {
-            fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile());
-        }
-        catch(MalformedURLException | FileNotFoundException | RuntimeException ex) {
-            logger.warn("Unable to download datasets, skipping test.");
-            return;
-        }
         
         Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
         headerDataTypes.put("city", TypeInference.DataType.CATEGORICAL);
@@ -65,7 +56,15 @@ public class DatasetTest extends BaseTest {
         headerDataTypes.put("name_of_port", TypeInference.DataType.CATEGORICAL);
         headerDataTypes.put("metro_population", TypeInference.DataType.NUMERICAL);
         
-        Dataset dataset = Dataset.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
+        Dataset dataset;
+        try (Reader fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile())) {
+            dataset = Dataset.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
+        }
+        catch(IOException ex) {
+            logger.warn("Unable to download datasets, skipping test.");
+            return;
+        }
+        
         Dataset expResult = new Dataset(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();

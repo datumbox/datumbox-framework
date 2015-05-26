@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+Version 0.6.1 - Build 20150526
+------------------------------
+
+- Resolving minor bugs (Unreleased Resource problem on tests).
+
 Version 0.6.0 - Build 20150502
 ------------------------------
 
