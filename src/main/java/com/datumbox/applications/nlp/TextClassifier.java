@@ -154,7 +154,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         //ensure db loaded
         knowledgeBase.load();
         
-        getPredictions(testDataset);
+        preprocessTestDataset(testDataset);
+        mlmodel.predict(testDataset);
     }
     
     /**
@@ -226,7 +227,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         //ensure db loaded
         knowledgeBase.load();
         
-        BaseMLmodel.ValidationMetrics vm = getPredictions(testDataset);
+        preprocessTestDataset(testDataset);
+        BaseMLmodel.ValidationMetrics vm = mlmodel.validate(testDataset);
         
         return vm;
     }
@@ -294,7 +296,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         }
     }
     
-    private BaseMLmodel.ValidationMetrics getPredictions(Dataset testDataset) {
+    private void preprocessTestDataset(Dataset testDataset) {
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
         
@@ -321,20 +323,10 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
             featureSelection.transform(testDataset);
         }
         
-        
         //initialize mlmodel
         if(mlmodel==null) {
             mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
-        
-        //call predict of the mlmodel for the new dataset
-        BaseMLmodel.ValidationMetrics vm = mlmodel.validate(testDataset);
-        
-        if(transformData) {
-            dataTransformer.denormalize(testDataset); //optional denormization
-        }
-        
-        return vm;
     }
     
 }

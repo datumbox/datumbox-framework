@@ -1,10 +1,13 @@
 CHANGELOG
 =========
 
-Version 0.6.1 - Build 20150526
+Version 0.6.1 - Build 20151231
 ------------------------------
 
-- Resolving minor bugs (Unreleased Resource problem on tests).
+- Fixed a minor issue related to Unreleased Resources on tests.
+- Resolved a memory leak on the AutoCloseConnector class. Shutdown hooks are now removed when close() is called.
+- Updated the TypeInference class to reduce memory consumption.
+- Refactored the TextClassifier class and improved its speed.
 
 Version 0.6.0 - Build 20150502
 ------------------------------

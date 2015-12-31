@@ -16,6 +16,7 @@
 package com.datumbox.common.persistentstorage;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Any class that inherits from the abstract AutoCloseConnector class can be used
@@ -27,18 +28,25 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  */
 public abstract class AutoCloseConnector implements DatabaseConnector, AutoCloseable {
     
-    private boolean isClosed = false;
+    private final AtomicBoolean isClosed = new AtomicBoolean(false);
+    
+    private Thread hook;
     
     /**
      * Protected Constructor which is responsible for adding the Shutdown hook.
      */
     protected AutoCloseConnector() {
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        hook = new Thread(new Runnable() {
             @Override
             public void run() {
+                AutoCloseConnector.this.hook = null;
+                if(AutoCloseConnector.this.isClosed()) {
+                    return;
+                }
                 AutoCloseConnector.this.close();
             }
         });
+        Runtime.getRuntime().addShutdownHook(hook);
     }
     
     /**
@@ -48,7 +56,7 @@ public abstract class AutoCloseConnector implements DatabaseConnector, AutoClose
      */
     @Override
     public boolean isClosed() {
-        return isClosed;
+        return isClosed.get();
     }
     
     /**
@@ -56,15 +64,21 @@ public abstract class AutoCloseConnector implements DatabaseConnector, AutoClose
      */
     @Override
     public void close() {
-        isClosed = true;
+        if(isClosed() == false && hook != null) {
+            //remove hook to save memory
+            Runtime.getRuntime().removeShutdownHook(hook);
+            hook = null;
+        }
+        isClosed.set(true);
     }
     
     /**
      * Ensures the connection is not closed.
      */
     protected void ensureNotClosed() {
-        if(isClosed) {
+        if(isClosed()) {
             throw new RuntimeException("The connector is already closed");
         }
     }
+    
 }

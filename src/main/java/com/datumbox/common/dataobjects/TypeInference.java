@@ -27,7 +27,6 @@ public class TypeInference {
      * Internal DataTypes used by the Framework.
      */
     public enum DataType {
-        //NOTE: DO NOT CHANGE THE ORDER OF THE ENUMS!!!
         /**
          * Boolean/Dummy Variable.
          * Stored as boolean.
@@ -126,15 +125,24 @@ public class TypeInference {
      * @return 
      */
     public static DataType getDataType(Object v) {
-        for(DataType dataType : DataType.values()) {
-            if(dataType.isInstance(v)) {
-                return dataType;
-            }
+        //NOTE: DO NOT CHANGE THE ORDER OF THE IFS!!!
+        if(DataType.BOOLEAN.isInstance(v)) {
+            return DataType.BOOLEAN;
         }
-        
-        //We will reach this point ONLY if the value is null. 
-        //This is because the last enum value in the loop is Categorical which uses the Object class.
-        return null; 
+        else if(DataType.ORDINAL.isInstance(v)) {
+            return DataType.ORDINAL;
+        }
+        else if(DataType.NUMERICAL.isInstance(v)) {
+            return DataType.NUMERICAL;
+        }
+        else if(DataType.CATEGORICAL.isInstance(v)) {
+            return DataType.CATEGORICAL;
+        }
+        else {
+            //We will reach this point ONLY if the value is null. 
+            //This is because the last enum value in the loop is Categorical which uses the Object class.
+            return null; 
+        }
     }
     
     /**
