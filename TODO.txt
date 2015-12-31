@@ -1,7 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Add support to MapDB 2.0.
+- Add support for MapDB 2.0 and upgrade all dependencies.
 - Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
 - Add multithreading support.
