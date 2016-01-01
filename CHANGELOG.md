@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-Version 0.6.1 - Build 20160101
-------------------------------
+Version 0.6.1-SNAPSHOT - Build 20160101
+---------------------------------------
 
 - Fixed a minor issue related to Unreleased Resources on tests.
 - Resolved a memory leak on the AutoCloseConnector class. The shutdown hooks are now removed when close() is called.
