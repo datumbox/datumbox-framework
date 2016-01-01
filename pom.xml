@@ -80,20 +80,20 @@
         <maven-compiler-plugin-version>3.3</maven-compiler-plugin-version>
         <maven-javadoc-plugin-version>2.10.3</maven-javadoc-plugin-version>
         <maven-source-plugin-version>2.4</maven-source-plugin-version>
-        <maven-surfire-plugin-version>2.18.1</maven-surfire-plugin-version>
+        <maven-surefire-plugin-version>2.19</maven-surefire-plugin-version>
         <maven-jar-plugin-version>2.6</maven-jar-plugin-version>
         <gmaven-plugin-version>1.5</gmaven-plugin-version>
-        <license-maven-plugin-version>2.10</license-maven-plugin-version>
+        <license-maven-plugin-version>2.11</license-maven-plugin-version>
         <gpg-plugin-version>1.6</gpg-plugin-version>
         
         <!-- Code Dependencies -->
         <commons-lang-version>3.4</commons-lang-version>
         <commons-math-version>3.5</commons-math-version>
-        <commons-csv-version>1.1</commons-csv-version>
-        <slf4j-api-version>1.7.12</slf4j-api-version>
+        <commons-csv-version>1.2</commons-csv-version>
+        <slf4j-api-version>1.7.13</slf4j-api-version>
         <libsvm-version>3.18.1</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
-        <mapdb-version>1.0.7</mapdb-version>
+        <mapdb-version>1.0.8</mapdb-version>
         
         <!-- Test Dependencies -->
         <junit-version>4.12</junit-version>
@@ -168,7 +168,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surfire-plugin-version}</version>
+                <version>${maven-surefire-plugin-version}</version>
                 <configuration>
                     <threadCount>3</threadCount>
                     <parallel>classes</parallel>

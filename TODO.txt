@@ -1,7 +1,10 @@
 CODE IMPROVEMENTS
 =================
 
-- Add support for MapDB 2.0 and upgrade all dependencies.
+- Create a libsvm project in datumbox github with the latest mavenized version 3.21. Have a look on Facebook's version: https://github.com/cberner/libsvm/blob/master/pom.xml & https://github.com/cjlin1/libsvm
+- Add support for MapDB 2.0.
+- Test datumbox examples project with the latest framework.
+
 - Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
 - Add multithreading support.

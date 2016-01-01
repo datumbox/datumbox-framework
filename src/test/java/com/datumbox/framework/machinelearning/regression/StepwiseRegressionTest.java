@@ -49,9 +49,9 @@ public class StepwiseRegressionTest extends BaseTest {
         Dataset validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
+        
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(validationData);
         
         StepwiseRegression instance = new StepwiseRegression(dbName, dbConf);
         
@@ -62,8 +62,9 @@ public class StepwiseRegressionTest extends BaseTest {
         MatrixLinearRegression.TrainingParameters trainingParams = new MatrixLinearRegression.TrainingParameters();
         param.setRegressionTrainingParameters(trainingParams);
                 
-        
         instance.fit(trainingData, param);
+        
+        df.denormalize(trainingData);
         
         
         instance.close();
@@ -72,12 +73,11 @@ public class StepwiseRegressionTest extends BaseTest {
         df = null;
         
         df = new DummyXYMinMaxNormalizer(dbName, dbConf);
-        instance = new StepwiseRegression(dbName, dbConf);
+        df.transform(validationData);
         
+        instance = new StepwiseRegression(dbName, dbConf);
         instance.validate(validationData);
         
-	        
-        df.denormalize(trainingData);
         df.denormalize(validationData);
         
         double std = Descriptives.std(trainingData.extractYValues().toFlatDataCollection(), true);

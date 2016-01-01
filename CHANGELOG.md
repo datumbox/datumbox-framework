@@ -5,9 +5,10 @@ Version 0.6.1 - Build 20151231
 ------------------------------
 
 - Fixed a minor issue related to Unreleased Resources on tests.
-- Resolved a memory leak on the AutoCloseConnector class. Shutdown hooks are now removed when close() is called.
+- Resolved a memory leak on the AutoCloseConnector class. The shutdown hooks are now removed when close() is called.
 - Updated the TypeInference class to reduce memory consumption.
 - Refactored the TextClassifier class and improved its speed.
+- Updated all dependencies and maven plugins to the latest stable versions.
 
 Version 0.6.0 - Build 20150502
 ------------------------------
