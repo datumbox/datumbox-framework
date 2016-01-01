@@ -91,7 +91,7 @@
         <commons-math-version>3.5</commons-math-version>
         <commons-csv-version>1.2</commons-csv-version>
         <slf4j-api-version>1.7.13</slf4j-api-version>
-        <libsvm-version>3.18.1</libsvm-version>
+        <libsvm-version>3.21</libsvm-version>
         <lpsolve-version>5.5.2.0</lpsolve-version>
         <mapdb-version>1.0.8</mapdb-version>
         
@@ -279,7 +279,7 @@
             <version>${slf4j-api-version}</version>
         </dependency>
         <dependency>
-            <groupId>com.facebook.thirdparty</groupId>
+            <groupId>com.datumbox</groupId>
             <artifactId>libsvm</artifactId>
             <version>${libsvm-version}</version>
         </dependency>
