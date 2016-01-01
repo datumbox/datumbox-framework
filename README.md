@@ -8,7 +8,7 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 Copyright & License
 -------------------
 
-Copyright (c) 2013-2015 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
+Copyright (C) 2013-2016 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
 
 The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
 

@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.6.1 - Build 20151231
+Version 0.6.1 - Build 20160101
 ------------------------------
 
 - Fixed a minor issue related to Unreleased Resources on tests.
