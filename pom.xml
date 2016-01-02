@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.6.1</version>
     
     <name>Datumbox Machine Learning Framework</name>
     <description>Datumbox is an open-source Machine Learning Framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
