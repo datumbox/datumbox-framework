@@ -182,11 +182,9 @@ public final class Dataset implements Serializable, Iterable<Integer> {
 
     }    
     
-    private Map<Integer, Record> recordList;
-    
     private TypeInference.DataType yDataType; 
-    /* Stores columnName=> DataType */
     private Map<Object, TypeInference.DataType> xDataTypes;
+    private Map<Integer, Record> recordList;
     
     private String dbName;
     private transient DatabaseConnector dbc;
@@ -278,8 +276,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public FlatDataList extractXColumnValues(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Integer rId : this) {
-            Record r = recordList.get(rId);
+        for(Record r : recordList.values()) {
             flatDataList.add(r.getX().get(column));
         }
         
@@ -295,8 +292,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public FlatDataList extractYValues() {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Integer rId : this) {
-            Record r = recordList.get(rId);
+        for(Record r : recordList.values()) {
             flatDataList.add(r.getY());
         }
         
@@ -315,8 +311,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public TransposeDataList extractXColumnValuesByY(Object column) {
         TransposeDataList transposeDataList = new TransposeDataList();
         
-        for(Integer rId : this) {
-            Record r = recordList.get(rId);   
+        for(Record r : recordList.values()) {  
             if(!transposeDataList.containsKey(r.getY())) {
                 transposeDataList.put(r.getY(), new FlatDataList(new ArrayList<>()) );
             }
@@ -353,8 +348,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public Dataset copy() {
         Dataset d = new Dataset(dbConf);
         
-        for(Integer rId : this) {
-            d.add(recordList.get(rId)); 
+        for(Record r : recordList.values()) {
+            d.add(r); 
         }        
         return d;
     }
@@ -385,14 +380,15 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
 
-        for(Integer rId : this) {
-            Record r = recordList.get(rId);
+        for(Map.Entry<Integer, Record> entry : recordList.entrySet()) {
+            Record r = entry.getValue();
             
             AssociativeArray xData = r.getX().copy();
             int d = xData.size();
             xData.keySet().removeAll(columnSet);
             
             if(xData.size()!=d) {
+                Integer rId = entry.getKey();
                 r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 recordList.put(rId, r);
             }
@@ -427,8 +423,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     public void recalculateMeta() {
         yDataType = null;
         xDataTypes.clear();
-        for(Integer rId: this) {
-            updateMeta(recordList.get(rId));
+        for(Record r : recordList.values()) {
+            updateMeta(r);
         }
     }
     
@@ -453,7 +449,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @return 
      */
     private Integer _add(Record r) {
-        Integer newId=(Integer) recordList.size();
+        Integer newId = recordList.size();
         recordList.put(newId, r);
         return newId;
     }
@@ -497,6 +493,17 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
+     * Clears all the internal Records of the Dataset. The Dataset can be used
+     * after you clear it.
+     */
+    public void clear() {
+        yDataType = null;
+        
+        xDataTypes.clear();
+        recordList.clear();
+    }
+
+    /**
      * Erases the Dataset and removes all internal variables. Once you erase a
      * dataset, the instance can no longer be used.
      */
@@ -519,25 +526,17 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      */
     @Override
     public Iterator<Integer> iterator() {
-        //Instead of looping through the recordList keyset we exploit the way
-        //that the Dataset builds the Ids and instead we loop through them using
-        //a counter. If the construction of the Dataset changes, this optimization
-        //should be removed.
         return new Iterator<Integer>() {
-            //private Iterator<Integer> it = recordList.keySet().iterator();
-            private Integer counter = 0;
-            private final int n = recordList.size();
+            private final Iterator<Integer> it = recordList.keySet().iterator();
             
             @Override
             public boolean hasNext() {
-                //return it.hasNext();
-                return counter<n;
+                return it.hasNext();
             }
 
             @Override
             public Integer next() {
-                //return it.next();
-                return counter++;
+                return it.next();
             }
 
             @Override
