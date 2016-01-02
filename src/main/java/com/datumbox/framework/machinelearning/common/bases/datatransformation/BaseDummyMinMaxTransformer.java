@@ -425,7 +425,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             
             if(modified) {
                 r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                data.set(rId, r);
+                data._set(rId, r);
             }
         }
         
