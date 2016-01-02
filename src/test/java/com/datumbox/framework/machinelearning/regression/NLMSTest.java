@@ -83,11 +83,11 @@ public class NLMSTest extends BaseTest {
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
 
@@ -104,7 +104,7 @@ public class NLMSTest extends BaseTest {
         
         Dataset[] data = Datasets.regressionMixed(dbConf);
         Dataset trainingData = data[0];
-        data[1].erase();
+        data[1].delete();
         
         String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
@@ -115,11 +115,11 @@ public class NLMSTest extends BaseTest {
         
         PCA featureSelection = new PCA(dbName, dbConf);
         PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
-        featureSelectionParameters.setMaxDimensions(trainingData.getVariableNumber()-1);
+        featureSelectionParameters.setMaxDimensions(trainingData.xColumnSize()-1);
         featureSelectionParameters.setWhitened(false);
         featureSelectionParameters.setVariancePercentageThreshold(0.99999995);
         featureSelection.fit_transform(trainingData, featureSelectionParameters);
-        featureSelection.erase();
+        featureSelection.delete();
         
         
         NLMS instance = new NLMS(dbName, dbConf);
@@ -136,10 +136,10 @@ public class NLMSTest extends BaseTest {
         double result = vm.getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
+        trainingData.delete();
     }
 
     

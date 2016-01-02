@@ -89,11 +89,11 @@ public class SoftMaxRegressionTest extends BaseTest {
         }
         assertEquals(expResult, result);
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
 
@@ -110,7 +110,7 @@ public class SoftMaxRegressionTest extends BaseTest {
         
         Dataset[] data = Datasets.carsNumeric(dbConf);
         Dataset trainingData = data[0];
-        data[1].erase();
+        data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
@@ -129,10 +129,10 @@ public class SoftMaxRegressionTest extends BaseTest {
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
+        trainingData.delete();
     }
 
     

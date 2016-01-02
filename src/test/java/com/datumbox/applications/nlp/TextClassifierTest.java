@@ -123,8 +123,8 @@ public class TextClassifierTest extends BaseTest {
             assertEquals(expResult.get(rId), r.getYPredicted());
         }
         
-        instance.erase();
-        validationDataset.erase();
+        instance.delete();
+        validationDataset.delete();
     }
 
 }

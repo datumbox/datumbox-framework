@@ -61,7 +61,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
      * @return 
      */
     public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
-        int n = dataset.getRecordNumber();
+        int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds");
         }
@@ -121,7 +121,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             Dataset trainingData = dataset.generateNewSubset(foldTrainingIds);
             mlmodel.fit(trainingData, trainingParameters); 
-            trainingData.erase();
+            trainingData.delete();
             trainingData = null;
                         
             
@@ -129,11 +129,11 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             
             //fetch validation metrics
             VM entrySample = mlmodel.validate(validationData);
-            validationData.erase();
+            validationData.delete();
             validationData = null;
             
             //delete algorithm
-            mlmodel.erase();
+            mlmodel.delete();
             mlmodel = null;
             
             //add the validationMetrics in the list

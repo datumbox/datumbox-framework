@@ -142,8 +142,8 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         knowledgeBase.setTrainingParameters(trainingParameters);
         
         MP modelParameters = knowledgeBase.getModelParameters();
-        modelParameters.setN(trainingData.getRecordNumber());
-        modelParameters.setD(trainingData.getVariableNumber());
+        modelParameters.setN(trainingData.size());
+        modelParameters.setD(trainingData.xColumnSize());
         
         _fit(trainingData);
         
@@ -155,8 +155,8 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
      * Deletes the database of the algorithm. 
      */
     @Override
-    public void erase() {
-        knowledgeBase.erase();
+    public void delete() {
+        knowledgeBase.delete();
     }
             
     /**

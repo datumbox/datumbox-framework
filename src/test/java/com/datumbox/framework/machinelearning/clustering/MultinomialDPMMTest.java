@@ -84,10 +84,10 @@ public class MultinomialDPMMTest extends BaseTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
     
@@ -104,7 +104,7 @@ public class MultinomialDPMMTest extends BaseTest {
         
         Dataset[] data = Datasets.multinomialClusters(dbConf);
         Dataset trainingData = data[0];
-        data[1].erase();
+        data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
@@ -122,9 +122,9 @@ public class MultinomialDPMMTest extends BaseTest {
         double expResult = 1.0;
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
+        trainingData.delete();
     }
 
     

@@ -134,7 +134,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     /**
      * Deletes the database of the algorithm. 
      */
-    public void erase() {
+    public void delete() {
     	dbc.dropDatabase();
         dbc.close();
         
@@ -155,7 +155,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
      * opens new connection to the permanent storage.
      */
     public void reinitialize() {
-        erase();
+        delete();
         dbc = dbConf.getConnector(dbName); //re-open connector
         
         try {

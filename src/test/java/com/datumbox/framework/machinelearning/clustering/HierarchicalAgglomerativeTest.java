@@ -97,11 +97,11 @@ public class HierarchicalAgglomerativeTest extends BaseTest {
         }
         assertEquals(expResult, result);
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
     
@@ -118,7 +118,7 @@ public class HierarchicalAgglomerativeTest extends BaseTest {
         
         Dataset[] data = Datasets.heartDiseaseClusters(dbConf);
         Dataset trainingData = data[0];
-        data[1].erase();
+        data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
@@ -145,10 +145,10 @@ public class HierarchicalAgglomerativeTest extends BaseTest {
         double result = vm.getPurity();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
+        trainingData.delete();
     }
 
 }

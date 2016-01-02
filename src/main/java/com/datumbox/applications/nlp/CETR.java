@@ -240,7 +240,7 @@ public class CETR {
             }
         }
         
-        dataset.erase();
+        dataset.delete();
         
         return selectedRows;
     }
@@ -261,7 +261,7 @@ public class CETR {
         instance.predict(dataset);
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
         
-        instance.erase(); //erase immediately the result
+        instance.delete(); //erase immediately the result
         instance = null;
     }
     

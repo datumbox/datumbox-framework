@@ -338,7 +338,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             }            
         }
         else {
-            int numberOfNewClusters = (int)(Math.max(alpha, 1)*Math.log(dataset.getRecordNumber())); //a*log(n) clusters on average
+            int numberOfNewClusters = (int)(Math.max(alpha, 1)*Math.log(dataset.size())); //a*log(n) clusters on average
             if(numberOfNewClusters<=0) {
                 numberOfNewClusters=1;
             }

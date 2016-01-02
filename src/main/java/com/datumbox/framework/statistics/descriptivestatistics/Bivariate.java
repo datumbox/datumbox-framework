@@ -61,7 +61,7 @@ public class Bivariate {
             transposeDataList = new TransposeDataList();
             
             //extract values of first variable
-            transposeDataList.put(0, dataSet.extractXColumnValues(variable0));
+            transposeDataList.put(0, dataSet.getXColumn(variable0));
             
             for(int j=i;j<numberOfVariables;++j) {
                 Object variable1 = allVariables[j];
@@ -69,7 +69,7 @@ public class Bivariate {
                     continue;
                 }
             
-                transposeDataList.put(1, dataSet.extractXColumnValues(variable1));
+                transposeDataList.put(1, dataSet.getXColumn(variable1));
                 
                 double value = 0.0;
                 if(type==BivariateType.COVARIANCE) {

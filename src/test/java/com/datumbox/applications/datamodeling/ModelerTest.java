@@ -107,10 +107,10 @@ public class ModelerTest extends BaseTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
     
 }

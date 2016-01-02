@@ -185,12 +185,12 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
      * Deletes the database of the algorithm. 
      */
     @Override
-    public void erase() {
+    public void delete() {
         loadRegressor();
-        mlregressor.erase();
+        mlregressor.delete();
         mlregressor = null;
         
-        super.erase();
+        super.delete();
     }
          
     /**
@@ -260,10 +260,10 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             
             Set<Object> removedFeatures = new HashSet<>();
             removedFeatures.add(maxPvalueEntry.getKey());
-            copiedTrainingData.removeColumns(removedFeatures);
+            copiedTrainingData.dropXColumns(removedFeatures);
             removedFeatures = null;
             
-            if(copiedTrainingData.getVariableNumber()==0) {
+            if(copiedTrainingData.xColumnSize()==0) {
                 break; //if no more features exit
             }
         }
@@ -272,7 +272,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
         
         mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
-        copiedTrainingData.erase();
+        copiedTrainingData.delete();
         copiedTrainingData = null;
     }
 
@@ -301,7 +301,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
 
         //get pvalues
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
-        mlregressor.erase();
+        mlregressor.delete();
         
         return pvalues;
     }

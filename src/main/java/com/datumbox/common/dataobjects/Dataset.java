@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -97,7 +96,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                     }
                 } 
                 catch (IOException ex) {
-                    dataset.erase();
+                    dataset.delete();
                     throw new RuntimeException(ex);
                 }
             }
@@ -174,7 +173,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                 }
             } 
             catch (IOException ex) {
-                dataset.erase();
+                dataset.delete();
                 throw new RuntimeException(ex);
             }
             return dataset;
@@ -240,20 +239,20 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns the total number of columns on the internalDataset.
+     * Returns the total number of columns on the Dataset.
      * 
      * @return 
      */
-    public int getVariableNumber() {
+    public int xColumnSize() {
         return xDataTypes.size();
     }
     
     /**
-     * Returns the total number of Records in the internalDataset.
+     * Returns the total number of Records of the Dataset.
      * 
      * @return 
      */
-    public int getRecordNumber() {
+    public int size() {
         return recordList.size();
     }
     
@@ -273,7 +272,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * @param column
      * @return 
      */
-    public FlatDataList extractXColumnValues(Object column) {
+    public FlatDataList getXColumn(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
         for(Record r : recordList.values()) {
@@ -289,7 +288,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * 
      * @return 
      */
-    public FlatDataList extractYValues() {
+    public FlatDataList getYColumn() {
         FlatDataList flatDataList = new FlatDataList();
         
         for(Record r : recordList.values()) {
@@ -297,29 +296,6 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         }
         
         return flatDataList;
-    }
-    
-    /**
-     * It extracts the values of a particular column and groups them by the 
-     * Response variable Y. This method is usually used when we 
-     * have categories in Y and we want the values of a particular column to be
-     * extracted for each category.
-     * 
-     * @param column
-     * @return 
-     */
-    public TransposeDataList extractXColumnValuesByY(Object column) {
-        TransposeDataList transposeDataList = new TransposeDataList();
-        
-        for(Record r : recordList.values()) {  
-            if(!transposeDataList.containsKey(r.getY())) {
-                transposeDataList.put(r.getY(), new FlatDataList(new ArrayList<>()) );
-            }
-            
-            transposeDataList.get(r.getY()).add(r.getX().get(column));
-        }
-        
-        return transposeDataList;
     }
     
     /**
@@ -370,7 +346,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * 
      * @param columnSet
      */
-    public void removeColumns(Set<Object> columnSet) {  
+    public void dropXColumns(Set<Object> columnSet) {  
         columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataset
         
         if(columnSet.isEmpty()) {
@@ -504,28 +480,27 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
 
     /**
-     * Erases the Dataset and removes all internal variables. Once you erase a
-     * dataset, the instance can no longer be used.
+     * Erases the Dataset and removes all internal variables. Once you delete a
+ dataset, the instance can no longer be used.
      */
-    public void erase() {
+    public void delete() {
         dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
         dbc.dropBigMap("tmp_recordList", recordList);
         dbc.dropDatabase();
         dbc.close();
         
-        //Ensures that the Dataset can't be used after erase() is called.
+        //Ensures that the Dataset can't be used after delete() is called.
         yDataType = null;
         xDataTypes = null;
         recordList = null;
     }
     
     /**
-     * Implementing read-only iterator on the Record IDs to use it in loops.
+     * Returns a read-only iterator on the keys of the Dataset.
      * 
      * @return 
      */
-    @Override
-    public Iterator<Integer> iterator() {
+    public Iterator<Integer> keys() {
         return new Iterator<Integer>() {
             private final Iterator<Integer> it = recordList.keySet().iterator();
             
@@ -544,5 +519,41 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+    
+    /**
+     * Returns a read-only iterator on the values of the Dataset.
+     * 
+     * @return 
+     */
+    public Iterator<Record> values() {
+        return new Iterator<Record>() {
+            private final Iterator<Record> it = recordList.values().iterator();
+             
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public Record next() {
+                return it.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+    
+    /**
+     * Returns a read-only iterator on the keys of the Dataset.
+     * 
+     * @return 
+     */
+    @Override
+    public Iterator<Integer> iterator() {
+        return keys();
     }
 }

@@ -66,10 +66,10 @@ public class TFIDFTest extends BaseTest {
         Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
         Set<Object> result = validationData.getXDataTypes().keySet();
         assertEquals(expResult, result);
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
     
 }

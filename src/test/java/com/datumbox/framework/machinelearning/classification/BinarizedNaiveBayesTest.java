@@ -73,10 +73,10 @@ public class BinarizedNaiveBayesTest extends BaseTest {
         }
         assertEquals(expResult, result);
         
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
 
@@ -93,7 +93,7 @@ public class BinarizedNaiveBayesTest extends BaseTest {
         
         Dataset[] data = Datasets.carsNumeric(dbConf);
         Dataset trainingData = data[0];
-        data[1].erase();
+        data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
@@ -106,9 +106,9 @@ public class BinarizedNaiveBayesTest extends BaseTest {
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
+        trainingData.delete();
     }
     
 }

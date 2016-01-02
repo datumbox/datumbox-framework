@@ -64,7 +64,7 @@ public class PCATest extends BaseTest {
         
         instance.transform(validationdata);
         
-        assertEquals(validationdata.getRecordNumber(), expResult.getRecordNumber());
+        assertEquals(validationdata.size(), expResult.size());
         
         Iterator<Integer> itResult = validationdata.iterator();
         Iterator<Integer> itExpectedResult = expResult.iterator();
@@ -82,11 +82,11 @@ public class PCATest extends BaseTest {
             }
         }
         
-        instance.erase();
+        instance.delete();
         
-        originalData.erase();
-        validationdata.erase();
-        expResult.erase();
+        originalData.delete();
+        validationdata.delete();
+        expResult.delete();
     }
     
 }

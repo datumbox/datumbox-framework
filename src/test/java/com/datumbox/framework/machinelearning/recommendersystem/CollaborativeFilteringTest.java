@@ -81,10 +81,10 @@ public class CollaborativeFilteringTest extends BaseTest {
         }
         
         
-        instance.erase();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
     

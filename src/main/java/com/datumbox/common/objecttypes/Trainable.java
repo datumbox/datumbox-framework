@@ -52,7 +52,7 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
     /**
      * Deletes the database of the algorithm. 
      */
-    public void erase();
+    public void delete();
             
     /**
      * Closes all the resources of the algorithm. 

@@ -223,17 +223,17 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
      * Deletes the database of all the internal algorithms. 
      */
     @Override
-    public void erase() {
+    public void delete() {
         if(dataTransformer!=null) {
-            dataTransformer.erase();
+            dataTransformer.delete();
         }
         if(featureSelection!=null) {
-            featureSelection.erase();
+            featureSelection.delete();
         }
         if(mlmodel!=null) {
-            mlmodel.erase();
+            mlmodel.delete();
         }
-        knowledgeBase.erase();
+        knowledgeBase.delete();
     }
       
     /**

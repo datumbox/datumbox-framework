@@ -85,11 +85,11 @@ public class BayesianEnsembleMethodTest extends BaseTest {
         }
         assertEquals(expResult, result);
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
 }

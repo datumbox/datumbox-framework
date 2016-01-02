@@ -89,8 +89,8 @@ public class MatrixDataset {
         }
         
         
-        int n = dataset.getRecordNumber();
-        int d = dataset.getVariableNumber();
+        int n = dataset.size();
+        int d = dataset.xColumnSize();
         
         if(addConstantColumn) {
             ++d;
@@ -158,7 +158,7 @@ public class MatrixDataset {
             throw new RuntimeException("The featureIdsReference map should not be empty.");
         }
         
-        int n = newDataset.getRecordNumber();
+        int n = newDataset.size();
         int d = featureIdsReference.size();
         
         MatrixDataset m = new MatrixDataset(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);

@@ -214,7 +214,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         }
         
         logger.debug("Removing Columns");
-        data.removeColumns(tmp_removedColumns.keySet());
+        data.dropXColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
         dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);

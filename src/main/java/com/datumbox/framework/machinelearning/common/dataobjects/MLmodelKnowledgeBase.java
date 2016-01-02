@@ -81,8 +81,8 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
      * Deletes the database of the algorithm. 
      */
     @Override
-    public void erase() {
-        super.erase();
+    public void delete() {
+        super.delete();
         validationMetrics = null;
     }
     

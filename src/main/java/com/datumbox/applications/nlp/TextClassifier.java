@@ -140,7 +140,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         fit(trainingData, trainingParameters);
         
-        trainingData.erase();
+        trainingData.delete();
     }
     
     /**
@@ -209,7 +209,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         Record r = testDataset.get(testDataset.iterator().next());
         
-        testDataset.erase();
+        testDataset.delete();
         
         return r;
     }
@@ -255,7 +255,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         BaseMLmodel.ValidationMetrics vm = validate(testDataset);
         
-        testDataset.erase();
+        testDataset.delete();
         
         return vm;
     }

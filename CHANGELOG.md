@@ -4,7 +4,24 @@ CHANGELOG
 Version 0.7.0-SNAPSHOT - Build 20160102
 ---------------------------------------
 
-- Add here the changes.
+- Rename the erase() method to delete() in all interfaces.
+- Major refactoring of the Dataset class:
+    - Renamed methods:
+        - getRecordNumber() -> size()
+        - extractXColumnValues() -> getXColumn()
+        - extractYValues() -> getYColumn()
+        - removeColumns() -> dropXColumns()
+        - getVariableNumber() -> xColumnSize()
+        - erase() -> delete()
+    - Removed methods:
+        - extractXColumnValuesByY()
+    - New methods:
+        - clear()
+        - keys()
+        - values()
+    - Modified methods:
+        - 
+        
 
 Version 0.6.1 - Build 20160102
 ------------------------------

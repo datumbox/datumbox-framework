@@ -29,12 +29,12 @@ import java.util.Map;
 /**
  * Linear Regression model which uses the Normalised Least Mean Squares Algorithm.
  * This implementation should be preferred from MatrixLinearRegression when the 
- * data can't fit the memory.
- * 
- * References:
- * http://cs229.stanford.edu/notes/cs229-notes1.pdf
- * http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
- * https://class.coursera.org/ml-003/lecture/index
+ data can't fit the memory.
+ 
+ References:
+ http://cs229.stanford.edu/notes/cs229-notes1.pdf
+ http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
+ https://class.coursera.org/ml-003/lecture/keys
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

@@ -80,17 +80,17 @@ public class StepwiseRegressionTest extends BaseTest {
         
         df.denormalize(validationData);
         
-        double std = Descriptives.std(trainingData.extractYValues().toFlatDataCollection(), true);
+        double std = Descriptives.std(trainingData.getYColumn().toFlatDataCollection(), true);
         for(Integer rId : validationData) {
             Record r = validationData.get(rId);
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), std);
         }
         
-        df.erase();
-        instance.erase();
+        df.delete();
+        instance.delete();
         
-        trainingData.erase();
-        validationData.erase();
+        trainingData.delete();
+        validationData.delete();
     }
 
 

@@ -154,7 +154,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             TypeInference.DataType columnType = entry.getValue();
 
             if(columnType==TypeInference.DataType.NUMERICAL) {
-                FlatDataList columnValues = data.extractXColumnValues(column);
+                FlatDataList columnValues = data.getXColumn(column);
                 Double max = Descriptives.max(columnValues.toFlatDataCollection());
                 Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
@@ -261,7 +261,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             //if this is numeric normalize it
 
-            FlatDataList columnValues = data.extractYValues();
+            FlatDataList columnValues = data.getYColumn();
             Double max = Descriptives.max(columnValues.toFlatDataCollection());
             Double min = Descriptives.min(columnValues.toFlatDataCollection());
 

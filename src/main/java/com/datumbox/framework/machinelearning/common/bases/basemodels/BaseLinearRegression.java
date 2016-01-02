@@ -359,7 +359,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         //create new validation metrics object
         VM validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
-        int n = validationData.getRecordNumber();
+        int n = validationData.size();
         
         FlatDataList errorList = new FlatDataList();
         double Ybar = 0.0;

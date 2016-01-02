@@ -284,7 +284,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             Object feature = entry.getKey();
             Integer columnId = entry.getValue();
             
-            meanValues[columnId] = Descriptives.mean(originalData.extractXColumnValues(feature).toFlatDataCollection());
+            meanValues[columnId] = Descriptives.mean(originalData.getXColumn(feature).toFlatDataCollection());
             
             for(int row=0;row<n;++row) {
                 X.addToEntry(row, columnId, -meanValues[columnId]); //inplace subtraction!!!

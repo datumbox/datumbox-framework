@@ -277,7 +277,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             
             mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
-            sampledTrainingDataset.erase();
+            sampledTrainingDataset.delete();
             sampledTrainingDataset = null;
             
             
@@ -347,9 +347,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      * Deletes the database of all the weak algorithms. 
      */
     @Override
-    public void erase() {
+    public void delete() {
         eraseWeakClassifiers();
-        super.erase();
+        super.delete();
     }
     
     private void eraseWeakClassifiers() {
@@ -365,7 +365,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
-            mlclassifier.erase();
+            mlclassifier.delete();
         }
     }
 }

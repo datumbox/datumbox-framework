@@ -100,11 +100,11 @@ public class LatentDirichletAllocationTest extends BaseTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
 
-        smr.erase();
-        lda.erase();
-        reducedTrainingData.erase();
+        smr.delete();
+        lda.delete();
+        reducedTrainingData.delete();
         
-        trainingData.erase();
+        trainingData.delete();
     }
 
     

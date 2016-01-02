@@ -114,8 +114,8 @@ public class DatasetTest extends BaseTest {
         
         assertEquals(expResult.getXDataTypes().equals(dataset.getXDataTypes()),true);
         
-        expResult.erase();
-        dataset.erase();
+        expResult.delete();
+        dataset.delete();
     }
     
     /**
@@ -167,7 +167,7 @@ public class DatasetTest extends BaseTest {
         
         assertEquals(dataset.getYDataType(), null);
         
-        dataset.erase();
+        dataset.delete();
     }
 
     /**
@@ -200,10 +200,10 @@ public class DatasetTest extends BaseTest {
         
         
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{188.0,189.0,190.0}));
-        FlatDataList result = dataset.extractXColumnValues(column);
+        FlatDataList result = dataset.getXColumn(column);
         assertEquals(expResult, result);
         
-        dataset.erase();
+        dataset.delete();
     }
 
     /**
@@ -233,14 +233,7 @@ public class DatasetTest extends BaseTest {
         xData3.put("weight", null);
         dataset.add(new Record(xData3, "Class2"));
         
-        
-        TransposeDataList expResult = new TransposeDataList();
-        expResult.put("Class1", new FlatDataList(Arrays.asList(new Object[]{188.0,189.0})));
-        expResult.put("Class2", new FlatDataList(Arrays.asList(new Object[]{190.0})));
-        TransposeDataList result = dataset.extractXColumnValuesByY(column);
-        assertEquals(expResult, result);
-        
-        dataset.erase();
+        dataset.delete();
     }
 
 }
