@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DatasetTest extends BaseTest {
+public class DataframeTest extends BaseTest {
     
     /**
      * Test of parseCSVFile method, of class Dataframe.Builder.
@@ -235,6 +235,40 @@ public class DatasetTest extends BaseTest {
         xData3.put("height", 190.0);
         xData3.put("weight", null);
         dataset.add(new Record(xData3, "Class2"));
+        
+        dataset.delete();
+    }
+
+    /**
+     * Test of remove method, of class Dataframe.
+     */
+    @Test
+    public void testRemove() {
+        logger.info("remove");
+        
+        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        
+        Dataframe dataset = new Dataframe(dbConf);
+        
+        AssociativeArray xData1 = new AssociativeArray();
+        xData1.put("1", true);
+        dataset.add(new Record(xData1, null));
+        
+        AssociativeArray xData2 = new AssociativeArray();
+        xData2.put("2", 1.0);
+        dataset.add(new Record(xData2, null));
+        
+        AssociativeArray xData3 = new AssociativeArray();
+        xData3.put("3", (short)1);
+        dataset.add(new Record(xData3, null));
+        
+        AssociativeArray xData4 = new AssociativeArray();
+        xData4.put("4", "s");
+        dataset.add(new Record(xData4, null));
+        
+        dataset.remove(2);
+        
+        assertEquals(3, dataset.size());
         
         dataset.delete();
     }
