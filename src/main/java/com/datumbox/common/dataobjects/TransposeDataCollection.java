@@ -28,7 +28,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class TransposeDataCollection extends DataStructureMap<Map<Object, FlatDataCollection>> {
+public class TransposeDataCollection extends DataStructureMap<Map<Object, FlatDataCollection>> {
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.

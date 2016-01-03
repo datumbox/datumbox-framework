@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <TP>
  * @param <VM>
  */
-public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> extends KnowledgeBase<MP, TP> {
+public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> extends KnowledgeBase<MP, TP> {
 
     /**
      * The class of the ValidationMetrics class of the algorithm.

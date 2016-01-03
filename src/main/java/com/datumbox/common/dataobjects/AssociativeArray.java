@@ -28,7 +28,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
+public class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.

@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class Dataframe implements Serializable, Collection<Record> {
+public class Dataframe implements Serializable, Collection<Record> {
     /**
      * Internal name of the response variable.
      */
@@ -64,7 +64,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * The Builder is a utility class which can help you build Dataframe from
  Text files and CSV files.
      */
-    public static final class Builder {
+    public static class Builder {
         
         /**
          * It builds a Dataframe object from a provided list of text files. The data

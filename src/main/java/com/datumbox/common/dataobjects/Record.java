@@ -37,7 +37,7 @@ import java.util.Objects;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class Record implements Serializable {
+public class Record implements Serializable {
     
     /* The X vector of the Record */
     private final AssociativeArray x;

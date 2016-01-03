@@ -27,7 +27,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object> {
+public class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object> {
     
     /**
      * Default constructor which initializes the internal data with an ArrayList.

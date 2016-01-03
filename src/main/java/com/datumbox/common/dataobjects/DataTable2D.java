@@ -27,7 +27,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class DataTable2D extends AssociativeArray2D {
+public class DataTable2D extends AssociativeArray2D {
 
     /**
      * Default constructor.

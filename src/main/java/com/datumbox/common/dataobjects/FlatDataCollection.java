@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
+public class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
 
     /**
      * Converts to Object[] the original FlatDataCollection. The method is used to

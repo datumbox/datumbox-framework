@@ -28,7 +28,7 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class TransposeDataCollection2D extends DataStructureMap<Map<Object, TransposeDataCollection>> {
+public class TransposeDataCollection2D extends DataStructureMap<Map<Object, TransposeDataCollection>> {
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.
