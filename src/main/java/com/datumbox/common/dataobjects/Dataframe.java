@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -277,7 +276,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean contains(Object o) {
-        return records.containsValue(o);
+        return records.containsValue((Record)o);
     }
     
     /**
@@ -386,7 +385,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public boolean removeAll(Collection<?> c) {
         boolean modified = false;
         for(Object o : c) {
-            modified |= remove(o);
+            modified |= remove((Record)o);
         }
         if(modified) {
             recalculateMeta();
