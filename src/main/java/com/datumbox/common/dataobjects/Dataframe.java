@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.csv.CSVFormat;
@@ -184,6 +186,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     
     private TypeInference.DataType yDataType; 
     private Map<Object, TypeInference.DataType> xDataTypes;
+    private List<Integer> index;
     private Map<Integer, Record> records;
     
     private String dbName;
@@ -202,10 +205,11 @@ public final class Dataframe implements Serializable, Collection<Record> {
         
         this.dbConf = dbConf;
         dbc = this.dbConf.getConnector(dbName);
-        records = dbc.getBigMap("tmp_recordList", true);
+        index = new LinkedList<>();
+        records = dbc.getBigMap("tmp_records", true);
         
         yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xColumnTypes", true);
+        xDataTypes = new HashMap<>();
     }
     
     /**
@@ -231,7 +235,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public int size() {
-        return records.size();
+        return index.size();
     }
     
     /**
@@ -241,7 +245,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean isEmpty() {
-        return records.isEmpty();
+        return index.isEmpty();
     }
     
     /**
@@ -253,6 +257,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
         yDataType = null;
         
         xDataTypes.clear();
+        index.clear();
         records.clear();
     }
 
@@ -312,19 +317,33 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public Object[] toArray() {
-        return records.values().toArray();
+        Object[] array = new Object[size()];
+        int i = 0;
+        for(Record r : values()) {
+            array[i++] = r;
+        }
+        return array;
     }
     
     /**
-     * Returns the Records of the Dataframe in a Record Array.
+     * Returns the Records of the Dataframe in an Array of specific type.
      * 
      * @param <T>
      * @param a
      * @return 
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
-        return records.values().toArray(a);
+        int size = size();
+        if (a.length < size) {
+            a = (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+        }
+        int i = 0;
+        for (Record r : values()) {
+            a[i++] = (T) r;
+        }
+        return a;
     }
     
     /**
@@ -335,7 +354,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     @Override
     public Iterator<Record> iterator() {
         return new Iterator<Record>() {
-            private final Iterator<Record> it = records.values().iterator();
+            private final Iterator<Integer> it = index().iterator();
              
             @Override
             public boolean hasNext() {
@@ -344,7 +363,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
 
             @Override
             public Record next() {
-                return it.next();
+                return get(it.next());
             }
 
             @Override
@@ -403,9 +422,9 @@ public final class Dataframe implements Serializable, Collection<Record> {
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean modified = false;
-        for(Record r : records.values()) {
-            if(!c.contains(r)) {
-                remove(r);
+        for(Integer rId : index()) {
+            if(!c.contains(get(rId))) {
+                remove(rId);
                 modified = true;
             }
         }
@@ -426,7 +445,10 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     public Record remove(Integer id) {
-        return records.remove(id);
+        if(index.remove(id)) {
+            return records.remove(id);
+        }
+        return null;
     }
     
     /**
@@ -439,9 +461,11 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     public Integer indexOf(Record r) {
-        for(Map.Entry<Integer, Record> entry : records.entrySet()) {
-            if(entry.getValue().equals(r)) {
-                return entry.getKey();
+        if(r!=null) {
+            for(Integer rId : index()) {
+                if(r.equals(get(rId))) {
+                    return rId;
+                }
             }
         }
         return null;
@@ -526,7 +550,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public FlatDataList getXColumn(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Record r : records.values()) {
+        for(Record r : values()) {
             flatDataList.add(r.getX().get(column));
         }
         
@@ -542,7 +566,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public FlatDataList getYColumn() {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Record r : records.values()) {
+        for(Record r : values()) {
             flatDataList.add(r.getY());
         }
         
@@ -565,17 +589,16 @@ public final class Dataframe implements Serializable, Collection<Record> {
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
 
-        for(Map.Entry<Integer, Record> entry : records.entrySet()) {
-            Record r = entry.getValue();
+        for(Integer rId : index()) {
+            Record r = get(rId);
             
             AssociativeArray xData = r.getX().copy();
             int d = xData.size();
             xData.keySet().removeAll(columnSet);
             
             if(xData.size()!=d) {
-                Integer rId = entry.getKey();
                 r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                records.put(rId, r);
+                _set(rId, r);
             }
         }
         
@@ -594,7 +617,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
         Dataframe d = new Dataframe(dbConf);
         
         for(Object id : idsCollection) {
-            d.add(records.get((Integer)id)); 
+            d.add(get((Integer)id)); 
         }        
         return d;
     }
@@ -605,7 +628,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public void recalculateMeta() {
         yDataType = null;
         xDataTypes.clear();
-        for(Record r : records.values()) {
+        for(Record r : values()) {
             updateMeta(r);
         }
     }
@@ -618,7 +641,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public Dataframe copy() {
         Dataframe d = new Dataframe(dbConf);
         
-        for(Record r : records.values()) {
+        for(Record r : values()) {
             d.add(r); 
         }        
         return d;
@@ -629,14 +652,14 @@ public final class Dataframe implements Serializable, Collection<Record> {
  dataset, the instance can no longer be used.
      */
     public void delete() {
-        dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
-        dbc.dropBigMap("tmp_recordList", records);
+        dbc.dropBigMap("tmp_records", records);
         dbc.dropDatabase();
         dbc.close();
         
         //Ensures that the Dataframe can't be used after delete() is called.
         yDataType = null;
         xDataTypes = null;
+        index = null;
         records = null;
     }
     
@@ -650,8 +673,8 @@ public final class Dataframe implements Serializable, Collection<Record> {
             @Override
             public Iterator<Integer> iterator() {
                 return new Iterator<Integer>() {
-                    private final Iterator<Integer> it = records.keySet().iterator();
-
+                    private final Iterator<Integer> it = index.iterator();
+                    
                     @Override
                     public boolean hasNext() {
                         return it.hasNext();
@@ -706,7 +729,8 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     private Integer _add(Record r) {
-        Integer newId = records.size();
+        Integer newId = size();
+        index.add(newId);
         records.put(newId, r);
         return newId;
     }

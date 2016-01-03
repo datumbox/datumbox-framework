@@ -9,6 +9,8 @@ Version 0.7.0-SNAPSHOT - Build 20160102
 - Major refactoring of the Dataset class:
     - It now implements the Collection<Record> interface and it is renamed as Dataframe.
     - It allows remove operations.
+    - It always stores xDataTypes in memory.
+    - It stores in memory an index LinkedList which is used to return Records in insertion order.
     - Renamed methods:
         - getRecordNumber() -> size()
         - extractXColumnValues() -> getXColumn()
