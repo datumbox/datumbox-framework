@@ -50,6 +50,8 @@ import org.slf4j.LoggerFactory;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Dataframe implements Serializable, Collection<Record> {
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Internal name of the response variable.
      */

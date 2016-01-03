@@ -1,14 +1,15 @@
 CODE IMPROVEMENTS
 =================
 
-- Create better Exceptions and Exception messages.
 - Add multithreading support.
-- Check out the Sparse Matrices/Vectors in Apache Math3 library. Use them in GaussianDPMM, MultinomialDPMM and MatrixLinearRegression.
-- Add the ability to call Machine Learning algorithms from command line like in Mahout.
-
 - Update all maven plugins and dependencies to their latest versions.
     - Add support for MapDB 2.0 once a stable version is released.
     - Upgrade maven-surefire to 2.19.1 once it is released.
+
+- Check out the Sparse Matrices/Vectors in Apache Math3 library. Use them in GaussianDPMM, MultinomialDPMM and MatrixLinearRegression.
+- Add the ability to call Machine Learning algorithms from command line like in Mahout.
+- Create better Exceptions and Exception messages.
+
 
 DOCUMENTATION
 =============
