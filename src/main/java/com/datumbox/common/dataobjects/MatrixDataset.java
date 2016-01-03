@@ -22,12 +22,12 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
 /**
- * The MatrixDataset class is responsible for converting a Dataset object to a
- * Matrix representation. Some of the methods on framework require working with
- * matrices and this class provides the tools to achieve the necessary conversions.
- * The major drawback of using this class is that all the data from the Dataset
- * object are brought in memory and this limits the amount of data that we can
- * use.
+ * The MatrixDataset class is responsible for converting a Dataframe object to a
+ Matrix representation. Some of the methods on framework require working with
+ matrices and this class provides the tools to achieve the necessary conversions.
+ The major drawback of using this class is that all the data from the Dataframe
+ object are brought in memory and this limits the amount of data that we can
+ use.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -47,7 +47,7 @@ public class MatrixDataset {
     }
     
     /**
-     * Getter for the X Matrix which contains the data of the Dataset.
+     * Getter for the X Matrix which contains the data of the Dataframe.
      * 
      * @return 
      */
@@ -73,8 +73,8 @@ public class MatrixDataset {
     }
     
     /**
-     * Method used to generate a training Dataset to a MatrixDataset and extracts its contents
-     * to Matrixes. It populates the featureIdsReference map with the mappings
+     * Method used to generate a training Dataframe to a MatrixDataset and extracts its contents
+ to Matrixes. It populates the featureIdsReference map with the mappings
      * between the feature names and the column ids of the matrix. Typically used
      * to convert the training dataset.
      * 
@@ -83,7 +83,7 @@ public class MatrixDataset {
      * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataset newInstance(Dataset dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference) {
+    public static MatrixDataset newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference) {
         if(!featureIdsReference.isEmpty()) {
             throw new RuntimeException("The featureIdsReference map should be empty.");
         }
@@ -110,7 +110,7 @@ public class MatrixDataset {
             for(int row=0;row<n;++row) {
                 m.X.setEntry(row, previousFeatureId, 1.0); //put the constant in evey row
             }
-            m.feature2ColumnId.put(Dataset.constantColumnName, previousFeatureId);
+            m.feature2ColumnId.put(Dataframe.constantColumnName, previousFeatureId);
             ++previousFeatureId; 
         }
 
@@ -153,7 +153,7 @@ public class MatrixDataset {
      * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataset parseDataset(Dataset newDataset, Map<Object, Integer> featureIdsReference) {
+    public static MatrixDataset parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference) {
         if(featureIdsReference.isEmpty()) {
             throw new RuntimeException("The featureIdsReference map should not be empty.");
         }
@@ -169,7 +169,7 @@ public class MatrixDataset {
         
         boolean extractY=(newDataset.getYDataType()==TypeInference.DataType.NUMERICAL);
         
-        boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataset.constantColumnName);
+        boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataframe.constantColumnName);
         
         //Assummes that the ids start from 0 and go up to n
         for(Integer rId : newDataset.index()) {
@@ -217,7 +217,7 @@ public class MatrixDataset {
         
         RealVector v = new ArrayRealVector(d);
         
-        boolean addConstantColumn = featureIdsReference.containsKey(Dataset.constantColumnName);
+        boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.constantColumnName);
         
 
         if(addConstantColumn) {

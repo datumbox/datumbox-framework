@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.common.bases.basemodels;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
@@ -177,7 +177,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     } 
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         Class<? extends BaseMLclassifier> weakClassifierClass = knowledgeBase.getTrainingParameters().getWeakClassifierClass();
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
         
@@ -229,7 +229,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
@@ -265,8 +265,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             //We sample a list of Ids based on their weights
             FlatDataList sampledIDs = SRS.weightedSampling(observationWeights, n, true).toFlatDataList();
             
-            //We construct a new Dataset from the sampledIDs
-            Dataset sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs);
+            //We construct a new Dataframe from the sampledIDs
+            Dataframe sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs);
             
             //WARNING: The ids of the new sampledTrainingDataset are not the same
             //as the ones on the original dataset.
@@ -280,7 +280,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             sampledTrainingDataset = null;
             
             
-            Dataset validationDataset = trainingData;
+            Dataframe validationDataset = trainingData;
             mlclassifier.predict(validationDataset);
             mlclassifier.close();
             mlclassifier = null;
@@ -340,7 +340,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      * @param idMapping
      * @return 
      */
-    protected abstract Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping);
+    protected abstract Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights, FlatDataList idMapping);
     
     /**
      * Deletes the database of all the weak algorithms. 

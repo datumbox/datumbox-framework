@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
@@ -78,7 +78,7 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }

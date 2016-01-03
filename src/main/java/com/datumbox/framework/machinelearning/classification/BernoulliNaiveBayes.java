@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -106,7 +106,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     }
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         if(newData.isEmpty()) {
             return;
         }
@@ -185,7 +185,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();

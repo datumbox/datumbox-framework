@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.basemodels;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -352,7 +352,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
     } 
     
     @Override
-    protected VM validateModel(Dataset validationData) {
+    protected VM validateModel(Dataframe validationData) {
         predictDataset(validationData);
         
         
@@ -432,7 +432,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
      * @param validationData
      * @return 
      */
-    protected double calculateSSE(Dataset validationData) {
+    protected double calculateSSE(Dataframe validationData) {
         double SSE = 0.0;
         for(Record r : validationData) {
             SSE += Math.pow(TypeInference.toDouble(r.getY())-TypeInference.toDouble(r.getYPredicted()), 2.0);

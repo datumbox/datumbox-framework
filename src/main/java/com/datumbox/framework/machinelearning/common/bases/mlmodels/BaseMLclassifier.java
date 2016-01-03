@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -283,7 +283,7 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
      * @return 
      */
     @Override
-    protected VM validateModel(Dataset validationData) {
+    protected VM validateModel(Dataframe validationData) {
         predictDataset(validationData);
         
         Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();

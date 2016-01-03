@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -147,7 +147,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected static void fitX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void fitX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         
         for(Map.Entry<Object, TypeInference.DataType> entry : data.getXDataTypes().entrySet()) {
             Object column = entry.getKey();
@@ -176,7 +176,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected static void normalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void normalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data.index()) {
             Record r = data.get(rId);
             AssociativeArray xData = r.getX().copy();
@@ -219,7 +219,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected static void denormalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void denormalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         for(Integer rId : data.index()) {
             Record r = data.get(rId);
             AssociativeArray xData = r.getX().copy();
@@ -257,7 +257,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected static void fitY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void fitY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             //if this is numeric normalize it
 
@@ -265,8 +265,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             Double max = Descriptives.max(columnValues.toFlatDataCollection());
             Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
-            minColumnValues.put(Dataset.yColumnName, min);
-            maxColumnValues.put(Dataset.yColumnName, max);
+            minColumnValues.put(Dataframe.yColumnName, min);
+            maxColumnValues.put(Dataframe.yColumnName, max);
         }
     }
     
@@ -277,7 +277,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected static void normalizeY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void normalizeY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         if(data.isEmpty()) {
             return;
         }
@@ -292,8 +292,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 }
                 
                 //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataset.yColumnName);
-                Double max = maxColumnValues.get(Dataset.yColumnName);
+                Double min = minColumnValues.get(Dataframe.yColumnName);
+                Double max = maxColumnValues.get(Dataframe.yColumnName);
                 
                 //it is important how we will handle 0 normalized values because
                 //0-valued features are considered inactive.
@@ -317,7 +317,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected static void denormalizeY(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+    protected static void denormalizeY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         
         if(data.isEmpty()) {
             return;
@@ -330,8 +330,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 Record r = data.get(rId);
                 
                 //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataset.yColumnName);
-                Double max = maxColumnValues.get(Dataset.yColumnName);
+                Double min = minColumnValues.get(Dataframe.yColumnName);
+                Double max = maxColumnValues.get(Dataframe.yColumnName);
                 
                 Object denormalizedY = null;
                 Object denormalizedYPredicted = null;
@@ -365,7 +365,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param data
      * @param referenceLevels 
      */
-    protected static void fitDummy(Dataset data, Map<Object, Object> referenceLevels) {
+    protected static void fitDummy(Dataframe data, Map<Object, Object> referenceLevels) {
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
 
         //find the referenceLevels for each categorical variable
@@ -389,7 +389,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param data
      * @param referenceLevels 
      */
-    protected static void transformDummy(Dataset data, Map<Object, Object> referenceLevels) {
+    protected static void transformDummy(Dataframe data, Map<Object, Object> referenceLevels) {
 
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         

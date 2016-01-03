@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.recommendersystem;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.dataobjects.TransposeDataList;
@@ -142,7 +142,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     } 
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //calculate similarity matrix
@@ -171,7 +171,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     }
 
     @Override
-    protected void predictDataset(Dataset newData) {
+    protected void predictDataset(Dataframe newData) {
         Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list

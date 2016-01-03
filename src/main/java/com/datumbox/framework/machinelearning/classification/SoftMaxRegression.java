@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -185,7 +185,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     }
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> classesSet = modelParameters.getClasses();
@@ -208,7 +208,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
@@ -225,7 +225,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         //we initialize the thitas to zero for all features and all classes compinations
         for(Object theClass : classesSet) {
-            thitas.put(Arrays.<Object>asList(Dataset.constantColumnName, theClass), 0.0);
+            thitas.put(Arrays.<Object>asList(Dataframe.constantColumnName, theClass), 0.0);
             
             for(Record r : trainingData) { 
                 for(Object feature : r.getX().keySet()) {
@@ -269,7 +269,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     }
     
     @Override
-    protected SoftMaxRegression.ValidationMetrics validateModel(Dataset validationData) {
+    protected SoftMaxRegression.ValidationMetrics validateModel(Dataframe validationData) {
         SoftMaxRegression.ValidationMetrics validationMetrics = super.validateModel(validationData);
         
         validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
@@ -280,7 +280,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         return validationMetrics;
     }
 
-    private void batchGradientDescent(Dataset trainingData, Map<List<Object>, Double> newThitas, double learningRate) {
+    private void batchGradientDescent(Dataframe trainingData, Map<List<Object>, Double> newThitas, double learningRate) {
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
@@ -308,7 +308,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
                 
                 
                 //update the weight of constant
-                List<Object> featureClassTuple = Arrays.<Object>asList(Dataset.constantColumnName, theClass);
+                List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.constantColumnName, theClass);
                 newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier);
                 
                 //update the rest of the weights
@@ -330,7 +330,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     }
     
     private Double calculateClassScore(AssociativeArray x, Object theClass, Map<List<Object>, Double> thitas) {
-        double score = thitas.get(Arrays.<Object>asList(Dataset.constantColumnName, theClass));
+        double score = thitas.get(Arrays.<Object>asList(Dataframe.constantColumnName, theClass));
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Double value = TypeInference.toDouble(entry.getValue());
@@ -347,7 +347,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         return score;
     }
     
-    private double calculateError(Dataset trainingData, Map<List<Object>, Double> thitas) {
+    private double calculateError(Dataframe trainingData, Map<List<Object>, Double> thitas) {
         //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression
         //It is optimized for speed to reduce the amount of loops
         double error=0.0;

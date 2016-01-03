@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -135,7 +135,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
@@ -221,7 +221,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     }
 
     @Override
-    protected void filterFeatures(Dataset newData) {
+    protected void filterFeatures(Dataframe newData) {
         DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
         

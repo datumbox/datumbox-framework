@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
@@ -215,19 +215,19 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
      * @return 
      */
     @Override
-    public BaseMLregressor.ValidationMetrics kFoldCrossValidation(Dataset trainingData, TrainingParameters trainingParameters, int k) {
+    public BaseMLregressor.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TrainingParameters trainingParameters, int k) {
         throw new UnsupportedOperationException("K-fold Cross Validation is not supported. Run it directly to the wrapped regressor."); 
     }
     
     @Override
-    protected BaseMLregressor.ValidationMetrics validateModel(Dataset validationData) {
+    protected BaseMLregressor.ValidationMetrics validateModel(Dataframe validationData) {
         loadRegressor();
         
         return (BaseMLregressor.ValidationMetrics) mlregressor.validate(validationData);
     }
 
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Integer maxIterations = trainingParameters.getMaxIterations();
@@ -237,7 +237,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         double aOut = trainingParameters.getAout();
         
         //copy data before starting
-        Dataset copiedTrainingData = trainingData.copy();
+        Dataframe copiedTrainingData = trainingData.copy();
         
         //backword elimination algorithm
         for(int iteration = 0; iteration<maxIterations ; ++iteration) {
@@ -249,7 +249,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             }
             
             //fetch the feature with highest pvalue, excluding constant
-            pvalues.remove(Dataset.constantColumnName);
+            pvalues.remove(Dataframe.constantColumnName);
             Map.Entry<Object, Double> maxPvalueEntry = MapFunctions.selectMaxKeyValue(pvalues);
             pvalues=null;
             
@@ -277,7 +277,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     }
 
     @Override
-    protected void predictDataset(Dataset newData) {
+    protected void predictDataset(Dataframe newData) {
         loadRegressor();
         
         mlregressor.predict(newData);
@@ -290,7 +290,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         }
     }
     
-    private Map<Object, Double> runRegression(Dataset trainingData) {
+    private Map<Object, Double> runRegression(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         //initialize algorithm

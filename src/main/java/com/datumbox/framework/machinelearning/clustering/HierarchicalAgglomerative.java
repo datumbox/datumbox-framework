@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -318,7 +318,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     } 
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         if(newData.isEmpty()) {
             return;
         }
@@ -345,7 +345,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
@@ -394,7 +394,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         return minEntry.getKey();
     }
     
-    private void calculateClusters(Dataset trainingData) {
+    private void calculateClusters(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();

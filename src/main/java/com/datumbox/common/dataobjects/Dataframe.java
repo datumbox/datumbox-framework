@@ -27,6 +27,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,14 +41,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Dataset class stores a list of Records Objects and several meta-data. All
- * Machine Learning algorithms get as argument Dataset objects. The class has an
- * internal static Builder class which can be used to generate Dataset objects 
- * from Text or CSV files.
+ * The Dataframe class stores a list of Records Objects and several meta-data. All
+ Machine Learning algorithms get as argument Dataframe objects. The class has an
+ internal static Builder class which can be used to generate Dataframe objects 
+ from Text or CSV files.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class Dataset implements Serializable, Iterable<Record> {
+public final class Dataframe implements Serializable, Collection<Record> {
     /**
      * Internal name of the response variable.
      */
@@ -58,13 +60,13 @@ public final class Dataset implements Serializable, Iterable<Record> {
     public static final String constantColumnName = "~CONSTANT";
     
     /**
-     * The Builder is a utility class which can help you build Dataset from
-     * Text files and CSV files.
+     * The Builder is a utility class which can help you build Dataframe from
+ Text files and CSV files.
      */
     public static final class Builder {
         
         /**
-         * It builds a Dataset object from a provided list of text files. The data
+         * It builds a Dataframe object from a provided list of text files. The data
  map should have as index the names of each class and as values the URIs
  of the training files. The files should contain one training example
  per row. If we want to parse a Text File of unknown category then
@@ -80,9 +82,9 @@ public final class Dataset implements Serializable, Iterable<Record> {
          * @param dbConf
          * @return 
          */
-        public static Dataset parseTextFiles(Map<Object, URI> textFilesMap, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
-            Dataset dataset = new Dataset(dbConf);
-            Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
+        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
+            Dataframe dataset = new Dataframe(dbConf);
+            Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             
             for (Map.Entry<Object, URI> entry : textFilesMap.entrySet()) {
                 Object theClass = entry.getKey();
@@ -105,8 +107,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
         }
         
         /**
-         * It builds a Dataset object from a CSV file; the first line of the provided 
-         * CSV file must have a header with the column names.
+         * It builds a Dataframe object from a CSV file; the first line of the provided 
+ CSV file must have a header with the column names.
          * 
          * The method accepts the following arguments: A Reader object from where
          * we will read the contents of the csv file. The name column of the 
@@ -124,9 +126,9 @@ public final class Dataset implements Serializable, Iterable<Record> {
          * @param dbConf
          * @return 
          */
-        public static Dataset parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, 
+        public static Dataframe parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, 
                                            char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
-            Logger logger = LoggerFactory.getLogger(Dataset.Builder.class);
+            Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             
             logger.info("Parsing CSV file");
             
@@ -137,7 +139,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
             TypeInference.DataType yDataType = headerDataTypes.get(yVariable);
             Map<String, TypeInference.DataType> xDataTypes = new HashMap<>(headerDataTypes); //copy header types
             xDataTypes.remove(yVariable); //remove the response variable from xDataTypes
-            Dataset dataset = new Dataset(dbConf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
+            Dataframe dataset = new Dataframe(dbConf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
             
             
             CSVFormat format = CSVFormat
@@ -169,7 +171,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
                             xData.put(column, value);
                         }
                     }
-                    dataset._add(new Record(xData, y)); //use the internal _add() to avoid the update of the Metas. The Metas are already set in the construction of the Dataset.
+                    dataset._add(new Record(xData, y)); //use the internal _add() to avoid the update of the Metas. The Metas are already set in the construction of the Dataframe.
                 }
             } 
             catch (IOException ex) {
@@ -194,7 +196,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * 
      * @param dbConf 
      */
-    public Dataset(DatabaseConfiguration dbConf) {
+    public Dataframe(DatabaseConfiguration dbConf) {
         //we dont need to have a unique name, because it is not used by the connector on the current implementations
         //dbName = "dts_"+new BigInteger(130, RandomGenerator.getThreadLocalRandom()).toString(32);
         dbName = "dts";
@@ -214,16 +216,17 @@ public final class Dataset implements Serializable, Iterable<Record> {
      * @param yDataType
      * @param xDataTypes 
      */
-    private Dataset(DatabaseConfiguration dbConf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
+    private Dataframe(DatabaseConfiguration dbConf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
         this(dbConf);
         this.yDataType = yDataType;
         this.xDataTypes.putAll(xDataTypes);
     }
     
+    
     //Mandatory Collection Methods
     
     /**
-     * Returns the total number of Records of the Dataset.
+     * Returns the total number of Records of the Dataframe.
      * 
      * @return 
      */
@@ -232,7 +235,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Checks if the Dataset is empty.
+     * Checks if the Dataframe is empty.
      * 
      * @return 
      */
@@ -241,8 +244,8 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Clears all the internal Records of the Dataset. The Dataset can be used
-     * after you clear it.
+     * Clears all the internal Records of the Dataframe. The Dataframe can be used
+ after you clear it.
      */
     public void clear() {
         yDataType = null;
@@ -252,20 +255,73 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
 
     /**
-     * Adds a record in the Dataset and updates the Meta data. The method returns 
-     * the id of the record.
+     * Adds a record in the Dataframe and updates the Meta data. 
      * 
      * @param r
      * @return 
      */
-    public Integer add(Record r) {
-        Integer newId=_add(r);
+    public boolean add(Record r) {
+        _add(r);
         updateMeta(r);
-        return newId;
+        return true;
     }
     
     /**
-     * Returns a read-only iterator on the values of the Dataset.
+     * Checks if the object exists in the Dataframe.
+     * 
+     * @param o
+     * @return 
+     */
+    public boolean contains(Object o) {
+        return recordList.containsValue(o);
+    }
+    
+    /**
+     * Adds all of the elements in the specified collection to this collection.
+     * 
+     * @param c
+     * @return 
+     */
+    public boolean addAll(Collection<? extends Record> c) {
+        for(Record r : c) {
+            add(r);
+        }
+        return true;
+    }
+    
+    /**
+     * Returns true if this collection contains all of the elements
+     * in the specified collection.
+     * 
+     * @param c
+     * @return 
+     */
+    public boolean containsAll(Collection<?> c) {
+        return recordList.values().containsAll(c);
+    }
+    
+    /**
+     * Returns the Records of the Dataframe in an Object Array.
+     * 
+     * @return 
+     */
+    public Object[] toArray() {
+        return recordList.values().toArray();
+    }
+    
+    /**
+     * Returns the Records of the Dataframe in a Record Array.
+     * 
+     * @param <T>
+     * @param a
+     * @return 
+     */
+    public <T> T[] toArray(T[] a) {
+        return recordList.values().toArray(a);
+    }
+    
+    /**
+     * Returns a read-only iterator on the values of the Dataframe.
      * 
      * @return 
      */
@@ -324,12 +380,44 @@ public final class Dataset implements Serializable, Iterable<Record> {
         return rId;
     }
     
+    /**
+     * Not supported: Removes a single instance of the specified element from this
+     * collection, if it is present.
+     * 
+     * @param o
+     * @return 
+     */
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not supported: Removes all of this collection's elements that are also contained in the
+     * specified collection.
+     * 
+     * @param c
+     * @return 
+     */
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not supported: Retains only the elements in this collection that are contained in the
+     * specified collection.  
+     * 
+     * @param c
+     * @return 
+     */
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
     
     
     //Other methods
     
     /**
-     * Returns the total number of X columns in the Dataset.
+     * Returns the total number of X columns in the Dataframe.
      * 
      * @return 
      */
@@ -390,12 +478,12 @@ public final class Dataset implements Serializable, Iterable<Record> {
     
     /**
      * Removes completely a list of columns from the dataset. The meta-data of the 
-     * Dataset are updated.
+ Dataframe are updated.
      * 
      * @param columnSet
      */
     public void dropXColumns(Set<Object> columnSet) {  
-        columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataset
+        columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataframe
         
         if(columnSet.isEmpty()) {
             return;
@@ -421,16 +509,16 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * It generates and returns a new Dataset which contains a subset of this Dataset. 
-     * All the Records of the returned Dataset are copies of the original Records. 
-     * The method is used for k-fold cross validation and sampling. Note that the 
-     * Records in the new Dataset have DIFFERENT ids from the original ones.
+     * It generates and returns a new Dataframe which contains a subset of this Dataframe. 
+     * All the Records of the returned Dataframe are copies of the original Records. 
+ The method is used for k-fold cross validation and sampling. Note that the 
+ Records in the new Dataframe have DIFFERENT ids from the original ones.
      * 
      * @param idsCollection
      * @return 
      */
-    public Dataset generateNewSubset(FlatDataList idsCollection) {
-        Dataset d = new Dataset(dbConf);
+    public Dataframe generateNewSubset(FlatDataList idsCollection) {
+        Dataframe d = new Dataframe(dbConf);
         
         for(Object id : idsCollection) {
             d.add(recordList.get((Integer)id)); 
@@ -450,12 +538,12 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Returns a deep copy of the Dataset. 
+     * Returns a deep copy of the Dataframe. 
      * 
      * @return 
      */
-    public Dataset copy() {
-        Dataset d = new Dataset(dbConf);
+    public Dataframe copy() {
+        Dataframe d = new Dataframe(dbConf);
         
         for(Record r : recordList.values()) {
             d.add(r); 
@@ -464,7 +552,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Deletes the Dataset and removes all internal variables. Once you delete a
+     * Deletes the Dataframe and removes all internal variables. Once you delete a
  dataset, the instance can no longer be used.
      */
     public void delete() {
@@ -473,14 +561,14 @@ public final class Dataset implements Serializable, Iterable<Record> {
         dbc.dropDatabase();
         dbc.close();
         
-        //Ensures that the Dataset can't be used after delete() is called.
+        //Ensures that the Dataframe can't be used after delete() is called.
         yDataType = null;
         xDataTypes = null;
         recordList = null;
     }
     
     /**
-     * Returns a read-only Iterable on the keys of the Dataset.
+     * Returns a read-only Iterable on the keys of the Dataframe.
      * 
      * @return 
      */
@@ -511,12 +599,12 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Returns a read-only Iterable on the values of the Dataset.
+     * Returns a read-only Iterable on the values of the Dataframe.
      * 
      * @return 
      */
     public Iterable<Record> values() {
-        return Dataset.this::iterator;
+        return Dataframe.this::iterator;
     }
     
     /**
@@ -551,7 +639,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Updates the meta data of the Dataset using the provided Record. 
+     * Updates the meta data of the Dataframe using the provided Record. 
      * The Meta-data include the supported columns and their DataTypes.
      * 
      * @param r 

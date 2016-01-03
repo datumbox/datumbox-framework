@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -390,7 +390,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int d = modelParameters.getD();
         
@@ -528,12 +528,12 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     }
 
     @Override
-    protected void predictDataset(Dataset newData) {
+    protected void predictDataset(Dataframe newData) {
         predictAndValidate(newData);
     }
     
     @Override
-    protected ValidationMetrics validateModel(Dataset validationData) {
+    protected ValidationMetrics validateModel(Dataframe validationData) {
         return predictAndValidate(validationData);
     }
     
@@ -566,7 +566,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         map.put(key, previousValue-1);
     }
     
-    private ValidationMetrics predictAndValidate(Dataset newData) {
+    private ValidationMetrics predictAndValidate(Dataframe newData) {
         //This method uses similar approach to the training but the most important
         //difference is that we do not wish to modify the original training params.
         //as a result we need to modify the code to use additional temporary

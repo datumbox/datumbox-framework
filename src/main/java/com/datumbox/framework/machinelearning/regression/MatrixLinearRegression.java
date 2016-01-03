@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinearRegression;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.MatrixDataset;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -36,8 +36,8 @@ import org.apache.commons.math3.linear.RealVector;
 /**
  * Performs Linear Regression using Matrices.
  * 
- * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
- * data to be loaded in memory.
+ * WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
+ data to be loaded in memory.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -148,7 +148,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
@@ -172,7 +172,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         Xt = null;
         
         //put the features coefficients in the thita map
-        thitas.put(Dataset.constantColumnName, coefficients.getEntry(0));
+        thitas.put(Dataframe.constantColumnName, coefficients.getEntry(0));
         for(Map.Entry<Object, Integer> entry : featureIds.entrySet()) {
             Object feature = entry.getKey();
             Integer featureId = entry.getValue();
@@ -220,7 +220,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     }
 
     @Override
-    protected void predictDataset(Dataset newData) {
+    protected void predictDataset(Dataframe newData) {
         //read model params
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 

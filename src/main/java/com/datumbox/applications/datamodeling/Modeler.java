@@ -15,7 +15,7 @@
  */
 package com.datumbox.applications.datamodeling;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
@@ -71,7 +71,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
      * 
      * @param newData 
      */
-    public void predict(Dataset newData) {
+    public void predict(Dataframe newData) {
         logger.info("predict()");
         
         evaluateData(newData, false);
@@ -84,14 +84,14 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
      * @param testData
      * @return 
      */
-    public BaseMLmodel.ValidationMetrics validate(Dataset testData) {
+    public BaseMLmodel.ValidationMetrics validate(Dataframe testData) {
         logger.info("validate()");
         
         return evaluateData(testData, true);
     }
 
     @Override
-    protected void _fit(Dataset trainingData) { 
+    protected void _fit(Dataframe trainingData) { 
         
         //get the training parameters
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -132,7 +132,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
         }
     }
     
-    private BaseMLmodel.ValidationMetrics evaluateData(Dataset data, boolean estimateValidationMetrics) {
+    private BaseMLmodel.ValidationMetrics evaluateData(Dataframe data, boolean estimateValidationMetrics) {
         //ensure db loaded
         knowledgeBase.load();
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();

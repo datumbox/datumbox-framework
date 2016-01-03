@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.objecttypes;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 
 /**
  * This interface is used to mark classes that can be trained. This interface 
@@ -47,7 +47,7 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * @param trainingData
      * @param trainingParameters
      */
-    public void fit(Dataset trainingData, TP trainingParameters);
+    public void fit(Dataframe trainingData, TP trainingParameters);
             
     /**
      * Deletes the database of the algorithm. 

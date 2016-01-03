@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.common.bases.basemodels;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -272,7 +272,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
@@ -308,7 +308,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
      * @param dataset The list of points that we want to cluster
      * @param maxIterations The maximum number of iterations
      */
-    private int collapsedGibbsSampling(Dataset dataset) {
+    private int collapsedGibbsSampling(Dataframe dataset) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, CL> tempClusterMap = new HashMap<>(modelParameters.getClusterList());
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -476,7 +476,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
     }
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         if(newData.isEmpty()) {
             return;
         }

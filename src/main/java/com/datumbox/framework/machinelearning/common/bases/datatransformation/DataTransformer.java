@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.datatransformation;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -74,7 +74,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * @param trainingData
      * @param trainingParameters 
      */
-    public void fit_transform(Dataset trainingData, TP trainingParameters) {
+    public void fit_transform(Dataframe trainingData, TP trainingParameters) {
         fit(trainingData, trainingParameters); 
         transform(trainingData);
     }
@@ -86,7 +86,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * 
      * @param newData 
      */
-    public void transform(Dataset newData) {
+    public void transform(Dataframe newData) {
         logger.info("transform()");
         
         knowledgeBase.load();
@@ -101,7 +101,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * 
      * @param data 
      */
-    public void denormalize(Dataset data) {
+    public void denormalize(Dataframe data) {
         logger.info("denormalize()");
         
         knowledgeBase.load();
@@ -115,7 +115,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * 
      * @param data 
      */
-    protected abstract void _convert(Dataset data);
+    protected abstract void _convert(Dataframe data);
     
     /**
      * Normalizes the data by modifying the columns. The changes should be 
@@ -123,13 +123,13 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
      * 
      * @param data 
      */
-    protected abstract void _normalize(Dataset data);
+    protected abstract void _normalize(Dataframe data);
     
     /**
      * Denormalizes the data by undoing the modifications performed by normilize().
      * 
      * @param data 
      */
-    protected abstract void _denormalize(Dataset data);
+    protected abstract void _denormalize(Dataframe data);
     
 }

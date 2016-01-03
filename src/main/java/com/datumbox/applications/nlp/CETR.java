@@ -16,7 +16,7 @@
 package com.datumbox.applications.nlp;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Parameterizable;
@@ -169,7 +169,7 @@ public class CETR {
         
         boolean use2Dmodel = (parameters.getAlphaWindowSizeFor2DModel()>0);
         
-        Dataset dataset = new Dataset(dbConf);
+        Dataframe dataset = new Dataframe(dbConf);
         if(use2Dmodel) {
             List<Double> G = computeDerivatives(TTRlist, parameters.getAlphaWindowSizeFor2DModel());
             gaussianSmoothing(G);
@@ -244,7 +244,7 @@ public class CETR {
         return selectedRows;
     }
 
-    private void performClustering(Dataset dataset, int numberOfClusters) {
+    private void performClustering(Dataframe dataset, int numberOfClusters) {
         Kmeans instance = new Kmeans(dbName, dbConf);
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -361,7 +361,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
      * @return 
      */
     @Override
-    protected VM validateModel(Dataset validationData) {
+    protected VM validateModel(Dataframe validationData) {
         predictDataset(validationData);
         
         int n = validationData.size();

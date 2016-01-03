@@ -16,7 +16,7 @@
 package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.nonparametrics.relatedsamples.KendallTauCorrelation;
@@ -43,7 +43,7 @@ public class Bivariate {
      * @param type
      * @return 
      */
-    private static DataTable2D bivariateMatrix(Dataset dataSet, BivariateType type) {        
+    private static DataTable2D bivariateMatrix(Dataframe dataSet, BivariateType type) {        
         DataTable2D bivariateMatrix = new DataTable2D();
         
         //extract values of first variable
@@ -125,7 +125,7 @@ public class Bivariate {
      * @param dataSet
      * @return 
      */
-    public static DataTable2D covarianceMatrix(Dataset dataSet) {
+    public static DataTable2D covarianceMatrix(Dataframe dataSet) {
         return bivariateMatrix(dataSet, Bivariate.BivariateType.COVARIANCE);
     }
     
@@ -135,7 +135,7 @@ public class Bivariate {
      * @param dataSet
      * @return 
      */
-    public static DataTable2D pearsonMatrix(Dataset dataSet) {
+    public static DataTable2D pearsonMatrix(Dataframe dataSet) {
         return bivariateMatrix(dataSet, Bivariate.BivariateType.PEARSONCORRELATION);
     }
     
@@ -145,7 +145,7 @@ public class Bivariate {
      * @param dataSet
      * @return 
      */
-    public static DataTable2D spearmanMatrix(Dataset dataSet) {
+    public static DataTable2D spearmanMatrix(Dataframe dataSet) {
         return bivariateMatrix(dataSet, Bivariate.BivariateType.SPEARMANCORRELATION);
     }
     
@@ -155,7 +155,7 @@ public class Bivariate {
      * @param dataSet
      * @return 
      */
-    public static DataTable2D kendalltauMatrix(Dataset dataSet) {
+    public static DataTable2D kendalltauMatrix(Dataframe dataSet) {
         return bivariateMatrix(dataSet, Bivariate.BivariateType.KENDALLTAUCORRELATION);
     }
     

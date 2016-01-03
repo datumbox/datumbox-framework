@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.datatransformation;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseDummyMinMaxTransformer;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class XYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     }
     
     @Override
-    protected void _fit(Dataset data) {       
+    protected void _fit(Dataframe data) {       
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
         
@@ -48,12 +48,12 @@ public class XYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     }
     
     @Override
-    protected void _convert(Dataset data) {
+    protected void _convert(Dataframe data) {
         
     }
     
     @Override
-    protected void _normalize(Dataset data) {
+    protected void _normalize(Dataframe data) {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
@@ -62,7 +62,7 @@ public class XYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     }
     
     @Override
-    protected void _denormalize(Dataset data) {
+    protected void _denormalize(Dataframe data) {
         Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 

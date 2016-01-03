@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.validation;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
 
@@ -60,7 +60,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
      * @param trainingParameters
      * @return 
      */
-    public VM kFoldCrossValidation(Dataset dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
+    public VM kFoldCrossValidation(Dataframe dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds");
@@ -119,13 +119,13 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             mlmodel = BaseMLmodel.newInstance(aClass, foldDBname+(fold+1), dbConf);
             
             
-            Dataset trainingData = dataset.generateNewSubset(foldTrainingIds);
+            Dataframe trainingData = dataset.generateNewSubset(foldTrainingIds);
             mlmodel.fit(trainingData, trainingParameters); 
             trainingData.delete();
             trainingData = null;
                         
             
-            Dataset validationData = dataset.generateNewSubset(foldValidationIds);
+            Dataframe validationData = dataset.generateNewSubset(foldValidationIds);
             
             //fetch validation metrics
             VM entrySample = mlmodel.validate(validationData);

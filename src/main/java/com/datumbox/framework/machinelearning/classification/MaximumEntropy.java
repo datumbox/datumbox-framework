@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -129,7 +129,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     }
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
                 
         for(Integer rId : newData.index()) {
@@ -150,7 +150,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         
@@ -226,7 +226,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         dbc.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
     }
     
-    private void IIS(Dataset trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
+    private void IIS(Dataframe trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 

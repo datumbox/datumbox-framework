@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
@@ -82,7 +82,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     } 
 
     @Override
-    protected Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) { 
+    protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) { 
         //calculate prediction error for this classifier
         double error = 0.0;
         for(Integer rId : validationDataset.index()) {

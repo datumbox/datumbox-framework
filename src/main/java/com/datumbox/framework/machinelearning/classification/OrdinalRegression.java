@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -217,7 +217,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     }
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Double> weights = modelParameters.getWeights();
@@ -239,7 +239,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
                 
@@ -317,7 +317,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     }
    
     @Override
-    protected ValidationMetrics validateModel(Dataset validationData) {
+    protected ValidationMetrics validateModel(Dataframe validationData) {
         ValidationMetrics validationMetrics = super.validateModel(validationData);
         
         
@@ -332,7 +332,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         return validationMetrics;
     }
 
-    private void batchGradientDescent(Dataset trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> newWeights, Map<Object, Double> newThitas, double learningRate) {
+    private void batchGradientDescent(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> newWeights, Map<Object, Double> newThitas, double learningRate) {
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
@@ -401,7 +401,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         return probabilities;
     }
     
-    private double calculateError(Dataset trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
+    private double calculateError(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
         double error=0.0;
         
         for(Record r : trainingData) { 

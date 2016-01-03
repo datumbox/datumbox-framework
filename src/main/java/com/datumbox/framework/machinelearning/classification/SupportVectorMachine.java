@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -39,15 +39,15 @@ import libsvm.svm_problem;
 
 /**
  * The SupportVectorMachine class enables you to train SVM models. This implementation
- * uses internally the LIBSVM library.
- * 
- * WARNING: This class copies the Dataset to double arrays which forces all of the
- * data to be loaded in memory.
- * 
- * References: 
- * http://phpir.com/svm 
- * https://github.com/ianbarber/php-svm 
- * https://github.com/encog/libsvm-java
+ uses internally the LIBSVM library.
+ 
+ WARNING: This class copies the Dataframe to double arrays which forces all of the
+ data to be loaded in memory.
+ 
+ References: 
+ http://phpir.com/svm 
+ https://github.com/ianbarber/php-svm 
+ https://github.com/encog/libsvm-java
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -209,7 +209,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     }
     
     @Override
-    protected void predictDataset(Dataset newData) { 
+    protected void predictDataset(Dataframe newData) { 
         for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             AssociativeArray predictionScores = calculateClassScores(r.getX());
@@ -224,7 +224,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     
     @Override
     @SuppressWarnings("unchecked")
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         knowledgeBase.getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
         
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
@@ -257,7 +257,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         LibSVMTrainer(trainingData);
     }
     
-    private void LibSVMTrainer(Dataset trainingData) {
+    private void LibSVMTrainer(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();

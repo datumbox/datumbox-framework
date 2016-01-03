@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -161,7 +161,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     }
     
     @Override
-    protected void _fit(Dataset data) {
+    protected void _fit(Dataframe data) {
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
@@ -188,12 +188,12 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     }
     
     @Override
-    protected void filterFeatures(Dataset newdata) {
+    protected void filterFeatures(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
         filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
     }
     
-    private static void filterData(Dataset data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
+    private static void filterData(Dataframe data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
         Logger logger = LoggerFactory.getLogger(CategoricalFeatureSelection.class);
         logger.debug("filterData()");
         
@@ -223,7 +223,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
     }
     
-    private void removeRareFeatures(Dataset data, Map<Object, Double> featureCounts) {
+    private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
         DatabaseConnector dbc = knowledgeBase.getDbc();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
@@ -279,7 +279,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         }
     }
     
-    private void buildFeatureStatistics(Dataset data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
+    private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         logger.debug("buildFeatureStatistics()");
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();

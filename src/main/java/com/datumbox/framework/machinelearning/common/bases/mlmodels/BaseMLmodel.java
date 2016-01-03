@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -98,7 +98,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @return  
      */
     @SuppressWarnings("unchecked")
-    public VM kFoldCrossValidation(Dataset trainingData, TP trainingParameters, int k) {
+    public VM kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("kFoldCrossValidation()");
         
         return modelValidator.kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getDbConf(), this.getClass(), trainingParameters);
@@ -110,7 +110,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * 
      * @param newData 
      */
-    public void predict(Dataset newData) { 
+    public void predict(Dataframe newData) { 
         logger.info("predict()");
         
         knowledgeBase.load();
@@ -126,7 +126,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param testingData
      * @return 
      */
-     public VM validate(Dataset testingData) {  
+     public VM validate(Dataframe testingData) {  
         logger.info("validate()");
         
         knowledgeBase.load();
@@ -167,12 +167,12 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param validationData
      * @return 
      */
-    protected abstract VM validateModel(Dataset validationData);
+    protected abstract VM validateModel(Dataframe validationData);
     
     /**
-     * Estimates the predictions for a new Dataset.
+     * Estimates the predictions for a new Dataframe.
      * 
      * @param newData 
      */
-    protected abstract void predictDataset(Dataset newData);
+    protected abstract void predictDataset(Dataframe newData);
 }

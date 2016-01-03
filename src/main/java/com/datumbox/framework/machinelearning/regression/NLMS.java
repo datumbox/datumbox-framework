@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinearRegression;
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -122,13 +122,13 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     }
 
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         
         //we initialize the thitas to zero for all features
-        thitas.put(Dataset.constantColumnName, 0.0);
+        thitas.put(Dataframe.constantColumnName, 0.0);
         for(Object feature : trainingData.getXDataTypes().keySet()) {
             thitas.put(feature, 0.0);
         }
@@ -172,7 +172,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     }
 
     @Override
-    protected void predictDataset(Dataset newData) {
+    protected void predictDataset(Dataframe newData) {
         Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
         
         for(Integer rId : newData.index()) {
@@ -182,7 +182,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         }
     }
     
-    private void batchGradientDescent(Dataset trainingData, Map<Object, Double> newThitas, double learningRate) {
+    private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
@@ -199,7 +199,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             
             //update the weight of constant
-            newThitas.put(Dataset.constantColumnName, newThitas.get(Dataset.constantColumnName)+errorMultiplier);
+            newThitas.put(Dataframe.constantColumnName, newThitas.get(Dataframe.constantColumnName)+errorMultiplier);
 
             //update the rest of the weights
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -214,7 +214,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         }
     }
     
-    private void stochasticGradientDescent(Dataset trainingData, Map<Object, Double> newThitas, double learningRate) {
+    private void stochasticGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
         double multiplier = learningRate/knowledgeBase.getModelParameters().getN();
         
         for(Record r : trainingData) { 
@@ -225,7 +225,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             
             //update the weight of constant
-            newThitas.put(Dataset.constantColumnName, newThitas.get(Dataset.constantColumnName)+errorMultiplier);
+            newThitas.put(Dataframe.constantColumnName, newThitas.get(Dataframe.constantColumnName)+errorMultiplier);
 
             //update the rest of the weights
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -240,7 +240,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         }
     }
     
-    private double calculateError(Dataset trainingData, Map<Object, Double> thitas) {
+    private double calculateError(Dataframe trainingData, Map<Object, Double> thitas) {
         //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression
         //It is optimized for speed to reduce the amount of loops
         double error=0.0;
@@ -256,7 +256,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     }
     
     private double hypothesisFunction(AssociativeArray x, Map<Object, Double> thitas) {
-        double sum = thitas.get(Dataset.constantColumnName);
+        double sum = thitas.get(Dataframe.constantColumnName);
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Object feature = entry.getKey();

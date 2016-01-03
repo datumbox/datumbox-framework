@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
@@ -77,7 +77,7 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
     }
     
     @Override
-    protected void _fit(Dataset trainingData) {
+    protected void _fit(Dataframe trainingData) {
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }

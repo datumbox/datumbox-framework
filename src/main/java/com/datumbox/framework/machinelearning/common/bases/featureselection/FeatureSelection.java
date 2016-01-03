@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.featureselection;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
@@ -75,7 +75,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
      * @param trainingData
      * @param trainingParameters 
      */
-    public void fit_transform(Dataset trainingData, TP trainingParameters) {
+    public void fit_transform(Dataframe trainingData, TP trainingParameters) {
         fit(trainingData, trainingParameters);
         transform(trainingData);
     }
@@ -85,7 +85,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
      * 
      * @param newData 
      */
-    public void transform(Dataset newData) {
+    public void transform(Dataframe newData) {
         logger.info("transform()");
         
         knowledgeBase.load();
@@ -98,5 +98,5 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
      * 
      * @param newdata 
      */
-    protected abstract void filterFeatures(Dataset newdata);
+    protected abstract void filterFeatures(Dataframe newdata);
 }
