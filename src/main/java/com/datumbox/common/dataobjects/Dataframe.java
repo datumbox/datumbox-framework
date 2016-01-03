@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -230,6 +229,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
+    @Override
     public int size() {
         return recordList.size();
     }
@@ -239,6 +239,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
+    @Override
     public boolean isEmpty() {
         return recordList.isEmpty();
     }
@@ -247,6 +248,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * Clears all the internal Records of the Dataframe. The Dataframe can be used
  after you clear it.
      */
+    @Override
     public void clear() {
         yDataType = null;
         
@@ -260,6 +262,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @param r
      * @return 
      */
+    @Override
     public boolean add(Record r) {
         _add(r);
         updateMeta(r);
@@ -272,6 +275,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @param o
      * @return 
      */
+    @Override
     public boolean contains(Object o) {
         return recordList.containsValue(o);
     }
@@ -282,6 +286,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @param c
      * @return 
      */
+    @Override
     public boolean addAll(Collection<? extends Record> c) {
         for(Record r : c) {
             add(r);
@@ -296,6 +301,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @param c
      * @return 
      */
+    @Override
     public boolean containsAll(Collection<?> c) {
         return recordList.values().containsAll(c);
     }
@@ -305,6 +311,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
+    @Override
     public Object[] toArray() {
         return recordList.values().toArray();
     }
@@ -316,6 +323,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @param a
      * @return 
      */
+    @Override
     public <T> T[] toArray(T[] a) {
         return recordList.values().toArray(a);
     }
@@ -351,6 +359,45 @@ public final class Dataframe implements Serializable, Collection<Record> {
     //Optional collection methods
     
     /**
+     * Not supported: Removes a single instance of the specified element from this
+     * collection, if it is present.
+     * 
+     * @param o
+     * @return 
+     */
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not supported: Removes all of this collection's elements that are also contained in the
+     * specified collection.
+     * 
+     * @param c
+     * @return 
+     */
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not supported: Retains only the elements in this collection that are contained in the
+     * specified collection.  
+     * 
+     * @param c
+     * @return 
+     */
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+    
+    
+    //Other methods
+    
+    /**
      * Returns a particular Record using its id.
      * 
      * @param id
@@ -379,42 +426,6 @@ public final class Dataframe implements Serializable, Collection<Record> {
         updateMeta(r);
         return rId;
     }
-    
-    /**
-     * Not supported: Removes a single instance of the specified element from this
-     * collection, if it is present.
-     * 
-     * @param o
-     * @return 
-     */
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not supported: Removes all of this collection's elements that are also contained in the
-     * specified collection.
-     * 
-     * @param c
-     * @return 
-     */
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not supported: Retains only the elements in this collection that are contained in the
-     * specified collection.  
-     * 
-     * @param c
-     * @return 
-     */
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-    
-    
-    //Other methods
     
     /**
      * Returns the total number of X columns in the Dataframe.
