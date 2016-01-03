@@ -266,7 +266,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             FlatDataList sampledIDs = SRS.weightedSampling(observationWeights, n, true).toFlatDataList();
             
             //We construct a new Dataframe from the sampledIDs
-            Dataframe sampledTrainingDataset = trainingData.generateNewSubset(sampledIDs);
+            Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
             
             //WARNING: The ids of the new sampledTrainingDataset are not the same
             //as the ones on the original dataset.

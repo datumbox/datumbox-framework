@@ -273,7 +273,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         prob.x = new svm_node[n][sparseD];
         
         //converting the dataset in the way that LibSVM can handle it
-        for(Integer rId : trainingData.index()) { 
+        for(Integer rId : trainingData.index()) { //CONTINUOUS_ID_ASSUMPTION
             Record r = trainingData.get(rId);
             
             Object theClass=r.getY();

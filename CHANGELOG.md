@@ -14,15 +14,18 @@ Version 0.7.0-SNAPSHOT - Build 20160102
         - removeColumns() -> dropXColumns()
         - getVariableNumber() -> xColumnSize()
         - erase() -> delete()
+        - generateNewSubset() -> getSubset()
     - Removed methods:
         - extractXColumnValuesByY()
     - New methods:
+        - addRecord()
+        - indexOf()
         - index()
         - values()
         - Plus all others required for the Collection interface.
     - Modified methods:
         - iterator() no longer returns Integers but Records.
-        - add() no longer returns the ID of the record but only a boolean instead.
+        - add() no longer returns the ID of the record but boolean. To get the ID use addRecord().
         
 
 Version 0.6.1 - Build 20160102

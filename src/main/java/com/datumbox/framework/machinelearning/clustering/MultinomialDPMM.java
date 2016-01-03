@@ -30,9 +30,6 @@ import org.apache.commons.math3.linear.RealVector;
  * The MultinomialDPMM implements Dirichlet Process Mixture Models with Multinomial 
  * and Dirichlet priors. 
  * 
- * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
- * data to be loaded in memory.
- * 
  * References:
  * http://blog.datumbox.com/overview-of-cluster-analysis-and-dirichlet-process-mixture-models/
  * http://blog.datumbox.com/clustering-documents-and-gaussian-data-with-dirichlet-process-mixture-models/

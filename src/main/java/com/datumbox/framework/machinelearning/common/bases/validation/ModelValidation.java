@@ -119,13 +119,13 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             mlmodel = BaseMLmodel.newInstance(aClass, foldDBname+(fold+1), dbConf);
             
             
-            Dataframe trainingData = dataset.generateNewSubset(foldTrainingIds);
+            Dataframe trainingData = dataset.getSubset(foldTrainingIds);
             mlmodel.fit(trainingData, trainingParameters); 
             trainingData.delete();
             trainingData = null;
                         
             
-            Dataframe validationData = dataset.generateNewSubset(foldValidationIds);
+            Dataframe validationData = dataset.getSubset(foldValidationIds);
             
             //fetch validation metrics
             VM entrySample = mlmodel.validate(validationData);

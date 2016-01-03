@@ -580,7 +580,6 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
         //get model parameters
-        int n = modelParameters.getN();
         int d = modelParameters.getD();
         int k = trainingParameters.getK(); //number of topics
         

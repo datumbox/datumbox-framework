@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.csv.CSVFormat;
@@ -184,7 +186,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     
     private TypeInference.DataType yDataType; 
     private Map<Object, TypeInference.DataType> xDataTypes;
-    private Map<Integer, Record> recordList;
+    private Map<Integer, Record> records;
     
     private String dbName;
     private transient DatabaseConnector dbc;
@@ -202,7 +204,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
         
         this.dbConf = dbConf;
         dbc = this.dbConf.getConnector(dbName);
-        recordList = dbc.getBigMap("tmp_recordList", true);
+        records = dbc.getBigMap("tmp_recordList", true);
         
         yDataType = null;
         xDataTypes = dbc.getBigMap("tmp_xColumnTypes", true);
@@ -231,7 +233,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public int size() {
-        return recordList.size();
+        return records.size();
     }
     
     /**
@@ -241,7 +243,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean isEmpty() {
-        return recordList.isEmpty();
+        return records.isEmpty();
     }
     
     /**
@@ -253,7 +255,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
         yDataType = null;
         
         xDataTypes.clear();
-        recordList.clear();
+        records.clear();
     }
 
     /**
@@ -264,8 +266,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean add(Record r) {
-        _add(r);
-        updateMeta(r);
+        addRecord(r);
         return true;
     }
     
@@ -277,7 +278,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean contains(Object o) {
-        return recordList.containsValue(o);
+        return records.containsValue(o);
     }
     
     /**
@@ -303,7 +304,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean containsAll(Collection<?> c) {
-        return recordList.values().containsAll(c);
+        return records.values().containsAll(c);
     }
     
     /**
@@ -313,7 +314,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public Object[] toArray() {
-        return recordList.values().toArray();
+        return records.values().toArray();
     }
     
     /**
@@ -325,7 +326,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public <T> T[] toArray(T[] a) {
-        return recordList.values().toArray(a);
+        return records.values().toArray(a);
     }
     
     /**
@@ -336,7 +337,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     @Override
     public Iterator<Record> iterator() {
         return new Iterator<Record>() {
-            private final Iterator<Record> it = recordList.values().iterator();
+            private final Iterator<Record> it = records.values().iterator();
              
             @Override
             public boolean hasNext() {
@@ -356,11 +357,21 @@ public final class Dataframe implements Serializable, Collection<Record> {
     }
     
     
-    //Optional collection methods
+    /*
+    None of the Remove operations are allowed on the Dataframe. This is because
+    a large number of methods use Matrixes and the current implementation assumes
+    a 1-to-1 mapping between the record ids and the rows of the Matrix. Removing
+    a record would cause a gap in the rows and this is not permitted.
+    
+    The classes that cause the problem are the following: 
+    MatrixDataset, SupportVectorMachine, PCA, MatrixLinearRegression
+    
+    All problematic areas are marked with "CONTINUOUS_ID_ASSUMPTION".
+    */
     
     /**
-     * Not supported: Removes a single instance of the specified element from this
-     * collection, if it is present.
+     * NOT SUPPORTED: Removes the first occurrence of the specified element from this Dataframe, 
+     * if it is present and it does not update the metadata.
      * 
      * @param o
      * @return 
@@ -368,11 +379,19 @@ public final class Dataframe implements Serializable, Collection<Record> {
     @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException();
+        /*
+        int id = indexOf((Record) o);
+        if(id == -1) {
+            return false;
+        }
+        remove(id);
+        return true;
+        */
     }
 
     /**
-     * Not supported: Removes all of this collection's elements that are also contained in the
-     * specified collection.
+     * NOT SUPPORTED: Removes all of this collection's elements that are also contained in the
+     * specified collection and updates the metadata.
      * 
      * @param c
      * @return 
@@ -380,11 +399,21 @@ public final class Dataframe implements Serializable, Collection<Record> {
     @Override
     public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
+        /*
+        boolean modified = false;
+        for(Object o : c) {
+            modified |= remove(o);
+        }
+        if(modified) {
+            recalculateMeta();
+        }
+        return modified;
+        */
     }
 
     /**
-     * Not supported: Retains only the elements in this collection that are contained in the
-     * specified collection.  
+     * NOT SUPPORTED: Retains only the elements in this collection that are contained in the
+     * specified collection and updates the meta data.
      * 
      * @param c
      * @return 
@@ -392,10 +421,54 @@ public final class Dataframe implements Serializable, Collection<Record> {
     @Override
     public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException();
+        /*
+        boolean modified = false;
+        for(Integer rId : index()) {
+            Record r = get(rId);
+            if(!c.contains(r)) {
+                remove(r);
+                modified = true;
+            }
+        }
+        if(modified) {
+            recalculateMeta();
+        }
+        return modified;
+        */
+    }
+    
+    /**
+     * NOT SUPPORTED: Removes a record with a particular id from the Dataframe but does not update
+     * the metadata.
+     * 
+     * @param id
+     * @return 
+     */
+    public Record remove(Integer id) {
+        throw new UnsupportedOperationException();
+        //return records.remove(id);
     }
     
     
     //Other methods
+    
+    /**
+     * Returns the index of the first occurrence of the specified element in this 
+     * Dataframe, or -1 if this Dataframe does not contain the element.
+     * WARNING: The Recordsare checked only for their X and Y values, not for 
+     * the yPredicted and yPredictedProbabilities values.
+     * 
+     * @param r
+     * @return 
+     */
+    public int indexOf(Record r) {
+        for(Map.Entry<Integer, Record> entry : records.entrySet()) {
+            if(entry.getValue().equals(r)) {
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
     
     /**
      * Returns a particular Record using its id.
@@ -404,7 +477,19 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     public Record get(Integer id) {
-        return recordList.get(id);
+        return records.get(id);
+    }
+    
+    /**
+     * Adds a Record in the Dataframe and returns its id.
+     * 
+     * @param r
+     * @return 
+     */
+    public Integer addRecord(Record r) {
+        Integer rId = _add(r);
+        updateMeta(r);
+        return rId;
     }
     
     /**
@@ -464,7 +549,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public FlatDataList getXColumn(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Record r : recordList.values()) {
+        for(Record r : records.values()) {
             flatDataList.add(r.getX().get(column));
         }
         
@@ -480,7 +565,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public FlatDataList getYColumn() {
         FlatDataList flatDataList = new FlatDataList();
         
-        for(Record r : recordList.values()) {
+        for(Record r : records.values()) {
             flatDataList.add(r.getY());
         }
         
@@ -488,8 +573,8 @@ public final class Dataframe implements Serializable, Collection<Record> {
     }
     
     /**
-     * Removes completely a list of columns from the dataset. The meta-data of the 
- Dataframe are updated.
+     * Removes completely a list of columns from the dataset. The meta-data of 
+     * the Dataframe are updated.
      * 
      * @param columnSet
      */
@@ -503,7 +588,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
 
-        for(Map.Entry<Integer, Record> entry : recordList.entrySet()) {
+        for(Map.Entry<Integer, Record> entry : records.entrySet()) {
             Record r = entry.getValue();
             
             AssociativeArray xData = r.getX().copy();
@@ -513,7 +598,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
             if(xData.size()!=d) {
                 Integer rId = entry.getKey();
                 r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                recordList.put(rId, r);
+                records.put(rId, r);
             }
         }
         
@@ -522,17 +607,17 @@ public final class Dataframe implements Serializable, Collection<Record> {
     /**
      * It generates and returns a new Dataframe which contains a subset of this Dataframe. 
      * All the Records of the returned Dataframe are copies of the original Records. 
- The method is used for k-fold cross validation and sampling. Note that the 
- Records in the new Dataframe have DIFFERENT ids from the original ones.
+     * The method is used for k-fold cross validation and sampling. Note that the 
+     * Records in the new Dataframe have DIFFERENT ids from the original ones.
      * 
      * @param idsCollection
      * @return 
      */
-    public Dataframe generateNewSubset(FlatDataList idsCollection) {
+    public Dataframe getSubset(FlatDataList idsCollection) {
         Dataframe d = new Dataframe(dbConf);
         
         for(Object id : idsCollection) {
-            d.add(recordList.get((Integer)id)); 
+            d.add(records.get((Integer)id)); 
         }        
         return d;
     }
@@ -543,7 +628,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public void recalculateMeta() {
         yDataType = null;
         xDataTypes.clear();
-        for(Record r : recordList.values()) {
+        for(Record r : records.values()) {
             updateMeta(r);
         }
     }
@@ -556,7 +641,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     public Dataframe copy() {
         Dataframe d = new Dataframe(dbConf);
         
-        for(Record r : recordList.values()) {
+        for(Record r : records.values()) {
             d.add(r); 
         }        
         return d;
@@ -568,14 +653,14 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     public void delete() {
         dbc.dropBigMap("tmp_xColumnTypes", xDataTypes);
-        dbc.dropBigMap("tmp_recordList", recordList);
+        dbc.dropBigMap("tmp_recordList", records);
         dbc.dropDatabase();
         dbc.close();
         
         //Ensures that the Dataframe can't be used after delete() is called.
         yDataType = null;
         xDataTypes = null;
-        recordList = null;
+        records = null;
     }
     
     /**
@@ -588,7 +673,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
             @Override
             public Iterator<Integer> iterator() {
                 return new Iterator<Integer>() {
-                    private final Iterator<Integer> it = recordList.keySet().iterator();
+                    private final Iterator<Integer> it = records.keySet().iterator();
 
                     @Override
                     public boolean hasNext() {
@@ -630,10 +715,10 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @param r 
      */
     public void _set(Integer rId, Record r) {
-        if(recordList.containsKey(rId)==false) {
+        if(records.containsKey(rId)==false) {
             throw new IndexOutOfBoundsException(); //ensure that the record has already be set with add()
         }
-        recordList.put(rId, r);
+        records.put(rId, r);
     }
     
     /**
@@ -644,8 +729,8 @@ public final class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     private Integer _add(Record r) {
-        Integer newId = recordList.size();
-        recordList.put(newId, r);
+        Integer newId = records.size();
+        records.put(newId, r);
         return newId;
     }
     
