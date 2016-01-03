@@ -71,15 +71,15 @@ public class Dataframe implements Serializable, Collection<Record> {
         
         /**
          * It builds a Dataframe object from a provided list of text files. The data
- map should have as index the names of each class and as values the URIs
- of the training files. The files should contain one training example
- per row. If we want to parse a Text File of unknown category then
- pass a single URI with null as key.
- 
- The method requires as arguments a file with the category names and locations
- of the training files, an instance of a TextExtractor which is used
- to extract the keywords from the documents and the Database Configuration
- Object.
+         * map should have as index the names of each class and as values the URIs
+         * of the training files. The files should contain one training example
+         * per row. If we want to parse a Text File of unknown category then
+         * pass a single URI with null as key.
+         * 
+         * The method requires as arguments a file with the category names and locations
+         * of the training files, an instance of a TextExtractor which is used
+         * to extract the keywords from the documents and the Database Configuration
+         * Object.
          * 
          * @param textFilesMap
          * @param textExtractor
@@ -112,7 +112,7 @@ public class Dataframe implements Serializable, Collection<Record> {
         
         /**
          * It builds a Dataframe object from a CSV file; the first line of the provided 
- CSV file must have a header with the column names.
+         * CSV file must have a header with the column names.
          * 
          * The method accepts the following arguments: A Reader object from where
          * we will read the contents of the csv file. The name column of the 
@@ -253,7 +253,7 @@ public class Dataframe implements Serializable, Collection<Record> {
     
     /**
      * Clears all the internal Records of the Dataframe. The Dataframe can be used
- after you clear it.
+     * after you clear it.
      */
     @Override
     public void clear() {
@@ -652,7 +652,7 @@ public class Dataframe implements Serializable, Collection<Record> {
     
     /**
      * Deletes the Dataframe and removes all internal variables. Once you delete a
- dataset, the instance can no longer be used.
+     * dataset, the instance can no longer be used.
      */
     public void delete() {
         dbc.dropBigMap("tmp_records", records);
