@@ -22,6 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 
 
 import java.util.Map;
@@ -148,7 +149,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, true);
             
             tmp_newThitas.putAll(thitas);
             

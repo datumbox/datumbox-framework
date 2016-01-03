@@ -24,6 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
@@ -501,9 +502,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             DatabaseConnector dbc = knowledgeBase.getDbc();
             
-            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", true);
-            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", true);
-            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", true);
+            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", MapType.HASHMAP, true);
+            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", MapType.HASHMAP, true);
+            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", MapType.HASHMAP, true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
@@ -703,7 +704,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             DatabaseConnector dbc = knowledgeBase.getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", true);
+                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
 
                 for(Map.Entry<Integer, Record> e : trainingData.entries()) {

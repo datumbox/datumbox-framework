@@ -29,6 +29,7 @@ import com.datumbox.common.utilities.DeepCopy;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 
 /**
@@ -147,13 +148,23 @@ public class InMemoryConnector extends AutoCloseConnector {
      * @param <K>
      * @param <V>
      * @param name
+     * @param type
      * @param isTemporary
      * @return 
      */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, boolean isTemporary) {
         ensureNotClosed();
-        return new HashMap<>();
+        
+        if(MapType.HASHMAP.equals(type)) {
+            return new HashMap<>();
+        }
+        else if(MapType.TREEMAP.equals(type)) {
+            return new TreeMap<>();
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported MapType.");
+        }
     }  
     
     /**

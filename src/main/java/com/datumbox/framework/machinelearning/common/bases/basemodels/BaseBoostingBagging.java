@@ -22,6 +22,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -183,7 +184,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Object> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", true);
+        Map<Object, Object> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", MapType.HASHMAP, true);
         
         //initialize array of recordDecisions
         AssociativeArray recordDecisionsArray = new AssociativeArray(tmp_recordDecisions);

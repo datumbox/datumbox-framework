@@ -5,7 +5,8 @@ Version 0.7.0-SNAPSHOT - Build 20160103
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
-- Non of the ML methods relies on recordIds for any calculation. Even the algorithms that use Matrixes are now patched.
+- None of the ML methods relies on recordIds for any calculation. Even the algorithms that use Matrixes are now patched.
+- Add support of Treemaps in the DatabaseConnector.
 - Major refactoring of the Dataset class:
     - It now implements the Collection<Record> interface and it is renamed as Dataframe.
     - It allows remove operations.

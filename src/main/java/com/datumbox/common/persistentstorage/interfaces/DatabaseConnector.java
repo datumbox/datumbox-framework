@@ -28,6 +28,11 @@ import java.util.Map;
  */
 public interface DatabaseConnector {
     
+    public enum MapType {
+        HASHMAP,
+        TREEMAP;
+    }
+    
     /**
      * This method is responsible for storing serializable objects in the
      * database.
@@ -79,10 +84,11 @@ public interface DatabaseConnector {
      * @param <K>
      * @param <V>
      * @param name
+     * @param type
      * @param isTemporary
      * @return 
      */
-    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary);
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, boolean isTemporary);
     
     /**
      * Drops a particular Big Map.

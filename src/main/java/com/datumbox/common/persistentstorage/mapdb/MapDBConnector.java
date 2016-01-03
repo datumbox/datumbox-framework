@@ -172,20 +172,32 @@ public class MapDBConnector extends AutoCloseConnector {
      * @param <K>
      * @param <V>
      * @param name
+     * @param type
      * @param isTemporary
      * @return 
      */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, boolean isTemporary) {
         ensureNotClosed();
         validateName(name, isTemporary);
         
         DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
 
         openDB(dbType);
-        return dbRegistry.get(dbType).createHashMap(name)
+        
+        if(MapType.HASHMAP.equals(type)) {
+            return dbRegistry.get(dbType).createHashMap(name)
             .counterEnable()
             .makeOrGet();
+        }
+        else if(MapType.TREEMAP.equals(type)) {
+            return dbRegistry.get(dbType).createTreeMap(name)
+            .counterEnable()
+            .makeOrGet();
+        }
+        else {
+            throw new IllegalArgumentException("Unsupported MapType.");
+        }
     }   
     
     /**

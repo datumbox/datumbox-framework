@@ -22,6 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -289,9 +290,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, true);
             
-            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", true);
+            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);

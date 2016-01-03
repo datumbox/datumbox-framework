@@ -23,6 +23,7 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -249,7 +250,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", true);
+            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, true);
             
             tmp_newThitas.putAll(thitas);
             batchGradientDescent(trainingData, tmp_newThitas, learningRate);

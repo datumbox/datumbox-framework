@@ -23,6 +23,7 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
@@ -172,7 +173,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", true);
+        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", MapType.HASHMAP, true);
         
         double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
         double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
@@ -246,7 +247,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", true);
+            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", MapType.HASHMAP, true);
             Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();
             
             //initialize the model probabilities with 0. We will start estimating them piece by piece

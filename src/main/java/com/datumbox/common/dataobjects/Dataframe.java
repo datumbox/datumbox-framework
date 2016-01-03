@@ -17,6 +17,7 @@ package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
 import java.io.BufferedReader;
@@ -210,7 +211,7 @@ public class Dataframe implements Serializable, Collection<Record> {
         this.dbConf = dbConf;
         dbc = this.dbConf.getConnector(dbName);
         index = new LinkedList<>();
-        records = dbc.getBigMap("tmp_records", true);
+        records = dbc.getBigMap("tmp_records", MapType.HASHMAP, true);
         
         yDataType = null;
         xDataTypes = new HashMap<>();

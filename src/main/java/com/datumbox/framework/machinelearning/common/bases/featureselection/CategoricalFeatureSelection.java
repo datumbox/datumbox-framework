@@ -22,6 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.dataobjects.TypeInference.DataType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 
 
 import java.util.Arrays;
@@ -165,9 +166,9 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
-        Map<Object, Integer> tmp_classCounts = dbc.getBigMap("tmp_classCounts", true); //map which stores the counts of the classes
-        Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", true); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", true); //map which stores the counts of the features
+        Map<Object, Integer> tmp_classCounts = dbc.getBigMap("tmp_classCounts", MapType.HASHMAP, true); //map which stores the counts of the classes
+        Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", MapType.HASHMAP, true); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", MapType.HASHMAP, true); //map which stores the counts of the features
 
         
         //build the maps with the feature statistics and counts
@@ -197,7 +198,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         Logger logger = LoggerFactory.getLogger(CategoricalFeatureSelection.class);
         logger.debug("filterData()");
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", true);
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, true);
         
         for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();

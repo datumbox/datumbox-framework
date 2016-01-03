@@ -18,6 +18,7 @@ package com.datumbox.framework.machinelearning.common.bases.baseobjects;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -98,7 +99,7 @@ public abstract class BaseModelParameters implements Learnable {
                 
                 try {
                     //call the getBigMap method to load it
-                    field.set(this, dbc.getBigMap(field.getName(), false));
+                    field.set(this, dbc.getBigMap(field.getName(), MapType.HASHMAP, false));
                 } 
                 catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new RuntimeException(ex);
