@@ -35,14 +35,14 @@ import org.apache.commons.math3.stat.StatUtils;
 
 /**
  * Implementation of Principal Component Analysis. The method can be used to project
- the Dataframe to the orthogonal space and to eliminate components with low variance.
- 
- WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
- data to be loaded in memory.
- 
- References: 
- Intelligent Data Analysis and Probabilistic Inference Slide 15
- Advanced statistical machine learning and pattern recognition slides 2, tutorial 3, cw 1 matlab code
+ * the Dataframe to the orthogonal space and to eliminate components with low variance.
+ * 
+ * WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
+ * data to be loaded in memory.
+ * 
+ * References: 
+ * Intelligent Data Analysis and Probabilistic Inference Slide 15
+ * Advanced statistical machine learning and pattern recognition slides 2, tutorial 3, cw 1 matlab code
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

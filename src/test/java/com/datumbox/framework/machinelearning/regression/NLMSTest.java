@@ -131,7 +131,7 @@ public class NLMSTest extends BaseTest {
         df.denormalize(trainingData);
 
         
-        double expResult = 0.9995921505698557;
+        double expResult = 0.999593336284933;
         double result = vm.getRSquare();
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
         

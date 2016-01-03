@@ -17,7 +17,7 @@ package com.datumbox.common.dataobjects;
 
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.BlockRealMatrix;
+import org.apache.commons.math3.linear.OpenMapRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -99,7 +99,7 @@ public class MatrixDataframe {
             ++d;
         }
         
-        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference, recordIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new OpenMapRealMatrix(n, d), featureIdsReference, recordIdsReference);
         
         
         if(dataset.isEmpty()) {
@@ -170,7 +170,7 @@ public class MatrixDataframe {
         int n = newDataset.size();
         int d = featureIdsReference.size();
         
-        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference, recordIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new OpenMapRealMatrix(n, d), featureIdsReference, recordIdsReference);
         
         if(newDataset.isEmpty()) {
             return m;

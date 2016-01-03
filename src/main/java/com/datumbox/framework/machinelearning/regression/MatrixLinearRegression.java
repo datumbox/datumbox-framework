@@ -37,7 +37,7 @@ import org.apache.commons.math3.linear.RealVector;
  * Performs Linear Regression using Matrices.
  * 
  * WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
- data to be loaded in memory.
+ * data to be loaded in memory.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

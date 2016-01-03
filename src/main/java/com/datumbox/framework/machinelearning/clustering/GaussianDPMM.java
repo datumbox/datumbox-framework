@@ -34,7 +34,7 @@ import org.apache.commons.math3.linear.RealVector;
  * The GaussianDPMM implements Dirichlet Process Mixture Models with Multivariate 
  * Normal and Normal-Inverse-Wishart prior. 
  * 
- * WARNING: This class copies the Dataset to a RealMatrix which forces all of the
+ * WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
  * data to be loaded in memory.
  * 
  * References:
