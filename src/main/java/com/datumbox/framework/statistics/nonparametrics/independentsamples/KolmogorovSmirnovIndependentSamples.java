@@ -36,15 +36,11 @@ public class KolmogorovSmirnovIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean test(TransposeDataList transposeDataList, boolean is_twoTailed, double aLevel) throws IllegalArgumentException { 
-        //Note! Despite the fact that this test seems very very easy, in fact it is SUPER HARD to calcuate.
-        
-        //validate the results of the test with the theory because the PHP to JAVA implementation changed a lot the logic!
+    public static boolean test(TransposeDataList transposeDataList, boolean is_twoTailed, double aLevel) { 
         int k=transposeDataList.size();
         if(k!=2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
         }
         
         Object[] keys = transposeDataList.keySet().toArray();
@@ -61,7 +57,7 @@ public class KolmogorovSmirnovIndependentSamples {
             Object keyj = keys[j];
             int nj=transposeDataList.get(keyj).size();
             if(nj<=0) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The number of observations in each group but be larger than 0.");
             }
             
             

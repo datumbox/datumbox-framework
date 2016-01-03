@@ -20,6 +20,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
@@ -75,7 +76,7 @@ public enum ConfigurationFactory {
             properties.load(in);
         }
         catch(IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
         
         //Look for user defined properties
@@ -85,7 +86,7 @@ public enum ConfigurationFactory {
                 properties.load(in);
             }
             catch(IOException ex) {
-                throw new RuntimeException(ex);
+                throw new UncheckedIOException(ex);
             }
         }
         

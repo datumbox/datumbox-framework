@@ -30,11 +30,10 @@ public class DiscreteDistributions {
      * @param k
      * @param p
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double Bernoulli(boolean k, double p) throws IllegalArgumentException {
+    public static double Bernoulli(boolean k, double p) {
         if(p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The probability p can't be negative.");
         }
         
         return (k)?p:(1-p);
@@ -46,11 +45,10 @@ public class DiscreteDistributions {
      * @param k
      * @param p
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double BernoulliCdf(int k, double p) throws IllegalArgumentException {
+    public static double BernoulliCdf(int k, double p) {
         if(p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The probability p can't be negative.");
         }
         
         double probabilitySum=0.0;
@@ -74,11 +72,10 @@ public class DiscreteDistributions {
      * @param p
      * @param n
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double Binomial(int k, double p, int n) throws IllegalArgumentException {
+    public static double Binomial(int k, double p, int n) {
         if(k<0 ||  p<0 || n<1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and n larger than 1.");
         }
         
         k = Math.min(k, n); 
@@ -105,11 +102,10 @@ public class DiscreteDistributions {
      * @param p
      * @param n
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double BinomialCdf(int k, double p, int n) throws IllegalArgumentException {
+    public static double BinomialCdf(int k, double p, int n) {
         if(k<0 ||  p<0 || n<1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and n larger than 1.");
         }
         
         k = Math.min(k, n);
@@ -162,11 +158,10 @@ public class DiscreteDistributions {
      * @param k
      * @param p
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double Geometric(int k, double p) throws IllegalArgumentException {
+    public static double Geometric(int k, double p) {
         if(k<=0 || p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double probability = Math.pow(1-p,k-1)*p;
@@ -180,11 +175,10 @@ public class DiscreteDistributions {
      * @param k
      * @param p
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double GeometricCdf(int k, double p) throws IllegalArgumentException {
+    public static double GeometricCdf(int k, double p) {
         if(k<=0 || p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double probabilitySum = 0.0;
@@ -202,12 +196,11 @@ public class DiscreteDistributions {
      * @param r
      * @param p
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double NegativeBinomial(int n, int r, double p) throws IllegalArgumentException {
+    public static double NegativeBinomial(int n, int r, double p) {
         //tested its validity with http://www.mathcelebrity.com/binomialneg.php
         if(n<0 || r<0 || p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         n = Math.max(n,r);//obvisouly the total number of tries must be larger than the number of required successes
         
@@ -223,11 +216,10 @@ public class DiscreteDistributions {
      * @param r
      * @param p
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double NegativeBinomialCdf(int n, int r, double p) throws IllegalArgumentException {
+    public static double NegativeBinomialCdf(int n, int r, double p) {
         if(n<0 || r<0 || p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         n = Math.max(n,r);
         
@@ -244,11 +236,10 @@ public class DiscreteDistributions {
      * 
      * @param n
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double Uniform(int n) throws IllegalArgumentException {
+    public static double Uniform(int n) {
         if(n<1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The n must be larger than 1.");
         }
         
         double probability = 1.0/n;
@@ -262,11 +253,10 @@ public class DiscreteDistributions {
      * @param k
      * @param n
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double UniformCdf(int k, int n) throws IllegalArgumentException {
+    public static double UniformCdf(int k, int n) {
         if(k<0 || n<1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and n larger than 1.");
         }
         k = Math.min(k, n);
         
@@ -283,11 +273,10 @@ public class DiscreteDistributions {
      * @param Kp
      * @param Np
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double Hypergeometric(int k, int n, int Kp, int Np) throws IllegalArgumentException {
+    public static double Hypergeometric(int k, int n, int Kp, int Np) {
         if(k<0 || n<0 || Kp<0 || Np<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         Kp = Math.max(k, Kp);
         Np = Math.max(n, Np);
@@ -316,11 +305,10 @@ public class DiscreteDistributions {
      * @param Kp
      * @param Np
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double HypergeometricCdf(int k, int n, int Kp, int Np) throws IllegalArgumentException {
+    public static double HypergeometricCdf(int k, int n, int Kp, int Np) {
         if(k<0 || n<0 || Kp<0 || Np<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         Kp = Math.max(k, Kp);
         Np = Math.max(n, Np);
@@ -398,11 +386,10 @@ public class DiscreteDistributions {
      * @param k
      * @param lamda
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double Poisson(int k, double lamda) throws IllegalArgumentException {
+    public static double Poisson(int k, double lamda) {
         if(k<0 || lamda<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         /*
@@ -426,11 +413,10 @@ public class DiscreteDistributions {
      * @param k
      * @param lamda
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double PoissonCdf(int k, double lamda) throws IllegalArgumentException {
+    public static double PoissonCdf(int k, double lamda) {
         if(k<0 || lamda<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         /*

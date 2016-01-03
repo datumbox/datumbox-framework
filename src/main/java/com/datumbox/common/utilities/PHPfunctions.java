@@ -180,7 +180,7 @@ public class PHPfunctions {
      */
     public static double log(double d, double base) {
         if(base==1.0 || base<=0.0) {
-            throw new RuntimeException("Invalid base for logarithm");
+            throw new IllegalArgumentException("Invalid base for logarithm.");
         }
         return Math.log(d)/Math.log(base);
     }

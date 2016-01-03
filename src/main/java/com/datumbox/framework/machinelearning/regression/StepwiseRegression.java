@@ -138,7 +138,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
          */
         public void setRegressionClass(Class<? extends BaseMLregressor> regressionClass) {
             if(!StepwiseCompatible.class.isAssignableFrom(regressionClass)) {
-                throw new RuntimeException("The regression model is not Stepwise Compatible as it does not calculates the pvalues of the features.");
+                throw new IllegalArgumentException("The regression model is not Stepwise Compatible.");
             }
             this.regressionClass = regressionClass;
         }

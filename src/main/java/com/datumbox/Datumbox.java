@@ -17,6 +17,7 @@ package com.datumbox;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.jar.Manifest;
@@ -56,7 +57,7 @@ public class Datumbox {
                 build = manifest.getMainAttributes().getValue("Implementation-Build");
             } 
             catch (IOException ex) {
-                throw new RuntimeException(ex);
+                throw new UncheckedIOException(ex);
             }
         }
         return new String[]{version, build};

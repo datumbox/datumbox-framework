@@ -37,12 +37,11 @@ public class StudentsIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testMeansUnknownNotEqualVars(double xbar, double ybar, int n, int m, double stdx, double stdy, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testMeansUnknownNotEqualVars(double xbar, double ybar, int n, int m, double stdx, double stdy, boolean is_twoTailed, double aLevel) {
         //also known as Welch's T-test: http://en.wikipedia.org/wiki/Welch's_t_test
         if(n<=1 || stdx<=0 || m<=1 || stdy<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The values of the provided parameters are not within the permitted range.");
         }
 
         double varx=stdx*stdx;
@@ -71,11 +70,10 @@ public class StudentsIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testMeansUnknownEqualVars(double xbar, double ybar, int n, int m, double stdx, double stdy, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testMeansUnknownEqualVars(double xbar, double ybar, int n, int m, double stdx, double stdy, boolean is_twoTailed, double aLevel) {
         if(n<=1 || stdx<=0 || m<=1 || stdy<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The values of the provided parameters are not within the permitted range.");
         }
 
         double PooledVariance=((n-1)*stdx*stdx+(m-1)*stdy*stdy)/(n+m-2.0);

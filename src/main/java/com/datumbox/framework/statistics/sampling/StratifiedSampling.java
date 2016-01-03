@@ -88,13 +88,12 @@ public class StratifiedSampling {
      * @param sampleDataCollection
      * @param populationNh
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double mean(TransposeDataCollection sampleDataCollection, AssociativeArray populationNh) throws IllegalArgumentException {
+    public static double mean(TransposeDataCollection sampleDataCollection, AssociativeArray populationNh) {
         double populationN = Descriptives.sum(populationNh.toFlatDataCollection());
         
         if(populationN<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The populationN parameter must be positive.");
         }
         
         double mean = 0.0;
@@ -104,7 +103,7 @@ public class StratifiedSampling {
             Integer strataPopulation = ((Number)populationNh.get(strata)).intValue();
         
             if(strataPopulation==null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid strata population size.");
             }
             
             mean += strataPopulation*SRS.mean(entry.getValue())/populationN;
@@ -120,7 +119,7 @@ public class StratifiedSampling {
      * @param populationNh
      * @return 
      */
-    public static double variance(TransposeDataCollection sampleDataCollection, AssociativeArray populationNh) throws IllegalArgumentException {
+    public static double variance(TransposeDataCollection sampleDataCollection, AssociativeArray populationNh) {
         double variance = 0.0;
         
         int populationN = 0;
@@ -132,7 +131,7 @@ public class StratifiedSampling {
             Integer strataPopulation = ((Number)populationNh.get(strata)).intValue();
         
             if(strataPopulation==null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid strata population size.");
             }
             
             populationN+=strataPopulation;
@@ -168,13 +167,12 @@ public class StratifiedSampling {
      * @param nh
      * @param populationNh
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double xbarVariance(TransposeDataCollection sampleDataCollection, AssociativeArray nh, AssociativeArray populationNh) throws IllegalArgumentException {
+    public static double xbarVariance(TransposeDataCollection sampleDataCollection, AssociativeArray nh, AssociativeArray populationNh) {
         double populationN = Descriptives.sum(populationNh.toFlatDataCollection());
         
         if(populationN<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The populationN parameter must be positive.");
         }
         
         double variance = 0.0;
@@ -185,7 +183,7 @@ public class StratifiedSampling {
             Integer strataSample = ((Number)nh.get(strata)).intValue();
         
             if(strataPopulation==null || strataSample==null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid strata population or sample size.");
             }
             
             double Wh = strataPopulation/populationN;
@@ -219,7 +217,7 @@ public class StratifiedSampling {
      * @param populationStdh
      * @return 
      */
-    public static AssociativeArray optimumSampleSize(int n, AssociativeArray populationNh, AssociativeArray populationStdh) throws IllegalArgumentException {
+    public static AssociativeArray optimumSampleSize(int n, AssociativeArray populationNh, AssociativeArray populationStdh) {
         AssociativeArray nh = new AssociativeArray();
         
         double sumNhSh = 0.0;
@@ -229,7 +227,7 @@ public class StratifiedSampling {
             Double populationStd = populationStdh.getDouble(strata);
             
             if(populationStd == null || populationInStrata <=0.0) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid strata population or strata std.");
             }
             
             double NhSh = populationInStrata*populationStd;
@@ -240,7 +238,7 @@ public class StratifiedSampling {
         }
         
         if(sumNhSh<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid strata populations.");
         }
         
         for(Map.Entry<Object, Object> entry : nh.entrySet()) {

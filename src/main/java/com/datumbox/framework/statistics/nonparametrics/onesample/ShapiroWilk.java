@@ -51,7 +51,6 @@ public class ShapiroWilk {
     * 
     * The following code is ported from Javascript to PHP to JAVA.
     * Original script: https://github.com/rniwa/js-shapiro-wilk/blob/master/shapiro-wilk.js
-    * 
     */
     
     /**
@@ -96,18 +95,16 @@ public class ShapiroWilk {
      * 
      * @param x
      * @return
-     * @throws IllegalArgumentException 
      */
-    private static double ShapiroWilkW(Double[] x) throws IllegalArgumentException {
+    private static double ShapiroWilkW(Double[] x) {
         Arrays.sort(x);
         
         int n = x.length;
         if(n<3) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 2 elements.");
         }
         if (n > 5000) {
-            //console.log("n is too big!")
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have less or equal to 5000 elements.");
         }
         
         int nn2 = n/2;
@@ -174,8 +171,7 @@ public class ShapiroWilk {
 
         range = x[n-1] - x[0];
         if (range < small) {
-            //console.log('range is too small!');
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The range is too small.");
         }
 
 
@@ -187,8 +183,7 @@ public class ShapiroWilk {
         for (i = 1, j = n - 1; i < n; j--) {
             xi = x[i] / range;
             if (xx - xi > small) {
-                //console.log("xx - xi is too big.", xx - xi);
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The xx - xi is too big.");
             }
             sx += xi;
             i++;

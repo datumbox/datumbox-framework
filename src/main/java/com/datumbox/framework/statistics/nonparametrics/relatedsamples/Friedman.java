@@ -37,11 +37,10 @@ public class Friedman {
      * 
      * @param dataTable
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static double getPvalue(DataTable2D dataTable) throws IllegalArgumentException {
+    public static double getPvalue(DataTable2D dataTable) {
         if(dataTable.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided Table does not have a rectangular format.");
         }
         
         Map<Object, Double> columnSum = new HashMap<>(); //it stores the column sums that are required by the algorithm

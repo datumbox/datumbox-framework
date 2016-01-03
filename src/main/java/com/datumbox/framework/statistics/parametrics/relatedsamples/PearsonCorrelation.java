@@ -32,14 +32,13 @@ public class PearsonCorrelation {
      * 
      * @param transposeDataList
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double calculateCorrelation(TransposeDataList transposeDataList) throws IllegalArgumentException {
+    public static double calculateCorrelation(TransposeDataList transposeDataList) {
         double pearson = 0.0;
         
         Object[] keys = transposeDataList.keySet().toArray();
         if(keys.length!=2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
         }
         
         Object keyX = keys[0];
@@ -50,7 +49,7 @@ public class PearsonCorrelation {
 
         int n = flatDataCollectionX.size();
         if(n<=2 || n!=flatDataCollectionY.size()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The number of observations in each group must be equal and larger than 2.");
         }
 
         double stdX=Descriptives.std(flatDataCollectionX,true);

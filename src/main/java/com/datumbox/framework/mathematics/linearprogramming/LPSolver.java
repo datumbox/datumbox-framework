@@ -196,9 +196,17 @@ public class LPSolver {
      * @param strictlyIntegerVariables
      * @param scalingMode
      * @return
-     * @throws LpSolveException 
      */
-    public static LPResult solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, double[] lowBoundsOfVariables, double[] upBoundsOfVariables, boolean[] strictlyIntegerVariables, Integer scalingMode) throws LpSolveException {
+    public static LPResult solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, double[] lowBoundsOfVariables, double[] upBoundsOfVariables, boolean[] strictlyIntegerVariables, Integer scalingMode) {
+        try {
+            return _solve(linearObjectiveFunction, linearConstraintsList, lowBoundsOfVariables, upBoundsOfVariables, strictlyIntegerVariables, scalingMode);
+        } 
+        catch (LpSolveException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    private static LPResult _solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, double[] lowBoundsOfVariables, double[] upBoundsOfVariables, boolean[] strictlyIntegerVariables, Integer scalingMode) throws LpSolveException {
         //Important note. All the double[] arrays that are passed to the lpsolve
         //lib MUST start from 1. Do not use the 0 index because it is discarded.
         
@@ -249,8 +257,7 @@ public class LPSolver {
             solver.setScaling(LpSolve.SCALE_NONE); //turn off automatic scaling
             status = solver.solve();
             if(isSolutionValid(status)==false) {
-                throw new RuntimeException("LPSolver: "+solver.getStatustext(status));
-                //solver.printLp();
+                throw new RuntimeException("LPSolver Error: "+solver.getStatustext(status));
             }
         }
                 

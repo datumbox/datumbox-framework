@@ -53,16 +53,11 @@ public class Lilliefors {
      * @param cdfMethod
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException
-     * @throws SecurityException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException 
      */
-    public static boolean test(FlatDataCollection flatDataCollection, String cdfMethod, double aLevel) throws IllegalArgumentException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException { 
+    public static boolean test(FlatDataCollection flatDataCollection, String cdfMethod, double aLevel) { 
         int n=flatDataCollection.size();
         if(n<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
 
         Double[] numberList = flatDataCollection.copyCollection2DoubleArray();
@@ -74,33 +69,38 @@ public class Lilliefors {
         double maxDelta=0;
         int rank=1;
                 
-        //Calculate the parameters of the Distribution based on the sample
-        Method method;
-        method = Lilliefors.class.getMethod(cdfMethod + "GetParams", FlatDataCollection.class);
-        AssociativeArray params = (AssociativeArray)method.invoke(null, flatDataCollection);
-        
-        //Fetch the method of the distribution.
-        method = Lilliefors.class.getMethod(cdfMethod, Double.class, AssociativeArray.class);
-        for(int i=0;i<numberList.length;++i) {
-            Double x = numberList[i];
-            
-            double observedProbabilityI=(double)rank/n;
+        try {    
+            //Calculate the parameters of the Distribution based on the sample
+            Method method;
+            method = Lilliefors.class.getMethod(cdfMethod + "GetParams", FlatDataCollection.class);
+            AssociativeArray params = (AssociativeArray)method.invoke(null, flatDataCollection);
 
-            Object methodResult = method.invoke(null, x, params);
-            double expectedProbabilityI = TypeInference.toDouble(methodResult);
-            
-            double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
-            if(delta>=maxDelta) {
-                maxDelta=delta;
+            //Fetch the method of the distribution.
+            method = Lilliefors.class.getMethod(cdfMethod, Double.class, AssociativeArray.class);
+            for(int i=0;i<numberList.length;++i) {
+                Double x = numberList[i];
+
+                double observedProbabilityI=(double)rank/n;
+
+                Object methodResult = method.invoke(null, x, params);
+                double expectedProbabilityI = TypeInference.toDouble(methodResult);
+
+                double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
+                if(delta>=maxDelta) {
+                    maxDelta=delta;
+                }
+
+                observedProbabilityIminus1=observedProbabilityI;
+                ++rank;
             }
 
-            observedProbabilityIminus1=observedProbabilityI;
-            ++rank;
-        }
+            boolean rejectH0=checkCriticalValue(maxDelta, n, aLevel);
 
-        boolean rejectH0=checkCriticalValue(maxDelta, n, aLevel);
-
-        return rejectH0;
+            return rejectH0;
+        } 
+        catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new IllegalArgumentException(ex);
+        } 
     }
     
     /**

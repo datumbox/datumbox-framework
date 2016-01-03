@@ -89,7 +89,7 @@ public class TypeInference {
             }
             else {
                 //can happen if null DataType is provided
-                throw new RuntimeException("Unknown Datatype");
+                throw new IllegalArgumentException("Unknown Datatype.");
             }
         }
 

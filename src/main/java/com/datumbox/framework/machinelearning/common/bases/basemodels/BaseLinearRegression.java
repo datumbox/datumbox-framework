@@ -27,7 +27,6 @@ import com.datumbox.framework.machinelearning.common.validation.LinearRegression
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
 import com.datumbox.framework.statistics.parametrics.onesample.DurbinWatson;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 
@@ -373,12 +372,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         double SSE = calculateSSE(validationData);
         validationMetrics.setSSE(SSE);
         
-        boolean normalResiduals;
-        try {
-            normalResiduals = Lilliefors.test(errorList.toFlatDataCollection(), "normalDistribution", 0.05);
-        } catch (IllegalArgumentException | SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
-        }
+        boolean normalResiduals = Lilliefors.test(errorList.toFlatDataCollection(), "normalDistribution", 0.05);
         validationMetrics.setNormalResiduals( (normalResiduals)?0.0:1.0 ); //if the Lilliefors validate rejects the H0 means that the normality hypothesis is rejected thus the residuals are not normal
         errorList = null;
         

@@ -32,12 +32,11 @@ public class SignOneSample {
      * @param flatDataCollection
      * @param median
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double getPvalue(FlatDataCollection flatDataCollection, double median) throws IllegalArgumentException {
+    public static double getPvalue(FlatDataCollection flatDataCollection, double median) {
         int n=flatDataCollection.size();
         if(n<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         int Tplus=0;

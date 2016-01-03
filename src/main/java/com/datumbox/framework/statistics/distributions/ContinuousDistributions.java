@@ -32,11 +32,10 @@ public class ContinuousDistributions {
      * @param x
      * @param df
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static double ChisquareCdf(double x, int df) throws IllegalArgumentException {
+    public static double ChisquareCdf(double x, int df) {
         if(df<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The degrees of freedom need to be positive.");
         }
         
         return GammaCdf(x/2.0, df/2.0);
@@ -158,11 +157,10 @@ public class ContinuousDistributions {
      * @param x
      * @param df
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static double StudentsCdf(double x, int df) throws IllegalArgumentException {
+    public static double StudentsCdf(double x, int df) {
         if(df<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The degrees of freedom need to be positive.");
         }
         
         double tcdf = 0.0;
@@ -194,11 +192,10 @@ public class ContinuousDistributions {
      * @param x
      * @param lamda
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double ExponentialCdf(double x, double lamda) throws IllegalArgumentException {
+    public static double ExponentialCdf(double x, double lamda) {
         if(x<0 || lamda<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double probability = 1.0 - Math.exp(-lamda*x);
@@ -214,9 +211,9 @@ public class ContinuousDistributions {
      * @param b
      * @return 
      */
-    public static double BetaCdf(double x, double a, double b) throws IllegalArgumentException {
+    public static double BetaCdf(double x, double a, double b) {
         if(x<0 || a<=0 || b<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double Bcdf = 0.0;
@@ -249,11 +246,10 @@ public class ContinuousDistributions {
      * @param f1
      * @param f2
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double FCdf(double x, int f1, int f2) throws IllegalArgumentException {
+    public static double FCdf(double x, int f1, int f2) {
         if(x<0 || f1<=0 || f2<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double FCdf=0.0;
@@ -324,11 +320,10 @@ public class ContinuousDistributions {
      * @param x
      * @param a
      * @return
-     * @throws IllegalArgumentException 
      */
-    protected static double GammaCdf(double x, double a) throws IllegalArgumentException {
+    protected static double GammaCdf(double x, double a) {
         if(x<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The x parameter must be positive.");
         }
         
         double GI=0;
@@ -360,11 +355,10 @@ public class ContinuousDistributions {
      * @param a
      * @param b
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double GammaCdf(double x, double a, double b) throws IllegalArgumentException {
+    public static double GammaCdf(double x, double a, double b) {
         if(a<=0 || b<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double GammaCdf = GammaCdf(x/b, a);
@@ -379,11 +373,10 @@ public class ContinuousDistributions {
      * @param a
      * @param b
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double UniformCdf(double x, double a, double b) throws IllegalArgumentException {
+    public static double UniformCdf(double x, double a, double b) {
         if(a>=b) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The a must be smaller than b.");
         }
         
         double probabilitySum=0;
@@ -537,10 +530,10 @@ public class ContinuousDistributions {
      * @param sigma
      * @return 
      */
-    public static double normalQuantile(double p, double mu, double sigma) throws IllegalArgumentException {
+    public static double normalQuantile(double p, double mu, double sigma) {
         // The inverse of cdf.
         if(sigma<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The sigma parameter must be positive.");
         }    
         else if(sigma==0) {
             return mu;

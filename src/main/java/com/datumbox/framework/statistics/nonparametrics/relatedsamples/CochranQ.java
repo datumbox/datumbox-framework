@@ -34,11 +34,10 @@ public class CochranQ {
      * 
      * @param dataTable
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static double getPvalue(DataTable2D dataTable) throws IllegalArgumentException {
+    public static double getPvalue(DataTable2D dataTable) {
         if(dataTable.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided Table does not have a rectangular format.");
         }
 
         //Estimate marginal scores and sum

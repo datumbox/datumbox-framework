@@ -18,6 +18,7 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
+import java.io.UncheckedIOException;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -43,7 +44,7 @@ public class CETRTest extends BaseTest {
         try {
             text = TestUtils.webRequest("http://www.example.org/");
         }
-        catch(Exception ex) {
+        catch(UncheckedIOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }

@@ -34,9 +34,8 @@ public class SystematicSampling {
      * @param n
      * @param randomizeRecords
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static FlatDataCollection randomSampling(FlatDataList idList, int n, boolean randomizeRecords) throws IllegalArgumentException {
+    public static FlatDataCollection randomSampling(FlatDataList idList, int n, boolean randomizeRecords) {
         FlatDataList sampledIds = new FlatDataList();
         
         int populationN = idList.size();
@@ -48,7 +47,7 @@ public class SystematicSampling {
         
         int k = populationN/n; //number of systematics
         if(k<2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The number of systematics is too small.");
         }
         
         int randomSystematic = PHPfunctions.mt_rand(0,k-1);
@@ -76,12 +75,11 @@ public class SystematicSampling {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double xbarVariance(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double xbarVariance(FlatDataCollection flatDataCollection) {
         double n = flatDataCollection.size();
         if(n<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         } 
         
         //As explained at http://www.fao.org/docrep/003/x6831e/x6831e12.htm

@@ -31,11 +31,9 @@ public class LPSolverTest extends BaseTest {
 
     /**
      * Test of solve method, of class LPSolver.
-     * 
-     * @throws java.lang.Exception
      */
     @Test
-    public void testSolve() throws Exception {
+    public void testSolve() {
         logger.info("solve");
         
         //Example from http://lpsolve.sourceforge.net/5.5/PHP.htm

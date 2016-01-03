@@ -48,8 +48,6 @@ import java.util.regex.Pattern;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class CETR {
-    /**
-     */
     private static final Pattern NUMBER_OF_TAGS_PATTERN = Pattern.compile("<[^>]+?>", Pattern.DOTALL);
     
     /**

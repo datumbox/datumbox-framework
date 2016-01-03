@@ -29,11 +29,9 @@ public class URLParserTest extends BaseTest {
 
     /**
      * Test of toAbsolute method, of class URLParser.
-     * 
-     * @throws java.lang.Exception
      */
     @Test
-    public void testToAbsolute_String_String() throws Exception {
+    public void testToAbsolute_String_String() {
         logger.info("toAbsolute");
         String base = "http://user:password@www.example.com:8080/to/path/document?arg1=val1&arg2=val2#part";
         String relative = "../path2/doc2?a=1&b=2#part2";
@@ -44,11 +42,9 @@ public class URLParserTest extends BaseTest {
 
     /**
      * Test of splitURL method, of class URLParser.
-     * 
-     * @throws java.lang.Exception
      */
     @Test
-    public void testSplitURL_String() throws Exception {
+    public void testSplitURL_String() {
         logger.info("splitURL");
         String URLString = "http://user:password@www.example.com:8080/to/path/document?arg1=val1&arg2=val2#part";
         Map<URLParser.URLParts, String> expResult = new HashMap<>();
@@ -68,11 +64,9 @@ public class URLParserTest extends BaseTest {
 
     /**
      * Test of joinURL method, of class URLParser.
-     * 
-     * @throws java.lang.Exception
      */
     @Test
-    public void testJoinURL() throws Exception {
+    public void testJoinURL() {
         logger.info("joinURL");
         Map<URLParser.URLParts, String> urlParts = new HashMap<>();
         urlParts.put(URLParser.URLParts.PROTOCOL, "http");

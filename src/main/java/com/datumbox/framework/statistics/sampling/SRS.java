@@ -162,11 +162,10 @@ public class SRS {
      * @param sampleN
      * @param populationN
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double xbarVariance(double variance, int sampleN, int populationN) throws IllegalArgumentException {
+    public static double xbarVariance(double variance, int sampleN, int populationN) {
         if(populationN<=0 || sampleN<=0 || sampleN>populationN) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and sampleN smaller than populationN.");
         }
         
         double xbarVariance=(1.0 - (double)sampleN/populationN)*variance/sampleN;
@@ -215,11 +214,10 @@ public class SRS {
      * @param sampleN
      * @param populationN
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double pbarVariance(double pbar, int sampleN, int populationN) throws IllegalArgumentException {
+    public static double pbarVariance(double pbar, int sampleN, int populationN) {
         if(populationN<=0 || sampleN<=0 || sampleN>populationN) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and sampleN smaller than populationN.");
         }
         double f = (double)sampleN/populationN;
         double pbarVariance=((1.0 - f)*pbar*(1.0 - pbar))/(sampleN-1.0);
@@ -269,9 +267,9 @@ public class SRS {
      * @param populationN
      * @return 
      */
-    public static int minimumSampleSizeForMaximumXbarStd(double maximumXbarStd, double populationStd, int populationN) throws IllegalArgumentException {
+    public static int minimumSampleSizeForMaximumXbarStd(double maximumXbarStd, double populationStd, int populationN) {
         if(populationN<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The populationN parameter must be positive.");
         }
         
         double minimumSampleN = 1.0/(Math.pow(maximumXbarStd/populationStd,2) + 1.0/populationN);
@@ -300,9 +298,9 @@ public class SRS {
      * @param populationN
      * @return 
      */
-    public static int minimumSampleSizeForGivenDandMaximumRisk(double d, double aLevel, double populationStd, int populationN) throws IllegalArgumentException {
+    public static int minimumSampleSizeForGivenDandMaximumRisk(double d, double aLevel, double populationStd, int populationN) {
         if(populationN<=0 || aLevel<=0 || d<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double a = 1.0 - aLevel/2.0;

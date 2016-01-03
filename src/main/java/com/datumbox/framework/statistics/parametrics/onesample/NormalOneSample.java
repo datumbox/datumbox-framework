@@ -35,11 +35,10 @@ public class NormalOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testMean(double xbar, int n, double H0mean, double std, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testMean(double xbar, int n, double H0mean, double std, boolean is_twoTailed, double aLevel) {
         if(n<=0 || std<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double z = (xbar-H0mean)/(std/Math.sqrt(n));
@@ -60,11 +59,10 @@ public class NormalOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testSum(double xsum, int n, double H0mean, double std, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testSum(double xsum, int n, double H0mean, double std, boolean is_twoTailed, double aLevel) {
         if(n<=0 || std<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double z = (xsum-n*H0mean)/(std*Math.sqrt(n));
@@ -84,11 +82,10 @@ public class NormalOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testPercentage(double pbar, int n, double H0p, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testPercentage(double pbar, int n, double H0p, boolean is_twoTailed, double aLevel) {
         if(n<=0 || H0p<=0 || pbar<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double z = (pbar-H0p)/Math.sqrt((H0p*(1.0 - H0p)/n));

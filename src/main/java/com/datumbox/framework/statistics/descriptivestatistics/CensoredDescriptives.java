@@ -43,15 +43,17 @@ public class CensoredDescriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static AssociativeArray2D survivalFunction(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static AssociativeArray2D survivalFunction(FlatDataCollection flatDataCollection) {
         AssociativeArray2D survivalFunction = new AssociativeArray2D(); //AssociativeArray2D is important to maintain the order of the first keys
         
         Queue<Double> censoredData = new PriorityQueue<>();
         Queue<Double> uncensoredData = new PriorityQueue<>();
         
         int n = flatDataCollection.size();
+        if(n==0) {
+            throw new IllegalArgumentException("The provided collection can't be empty.");
+        }
         for(Object value : flatDataCollection) {
             String str = value.toString();
             if(str.endsWith(CENSORED_NUMBER_POSTFIX)) {
@@ -62,9 +64,6 @@ public class CensoredDescriptives {
                 //uncensored internalData
                 uncensoredData.add(TypeInference.toDouble(value)); //convert it to double
             }
-        }
-        if(n==0) {
-            throw new IllegalArgumentException();
         }
         
         Double currentCensored = null;
@@ -143,15 +142,14 @@ public class CensoredDescriptives {
      * 
      * @param survivalFunction
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double median(AssociativeArray2D survivalFunction) throws IllegalArgumentException {
+    public static double median(AssociativeArray2D survivalFunction) {
         Double ApointTi = null;
         Double BpointTi = null;
         
         int n = survivalFunction.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         } 
         
         for(Map.Entry<Object, AssociativeArray> entry : survivalFunction.entrySet()) {
@@ -181,7 +179,7 @@ public class CensoredDescriptives {
             return (ApointTi!=null)?ApointTi:BpointTi;
         }
         else if(ApointTi == null || BpointTi == null) {
-            throw new IllegalArgumentException(); //we should never get here
+            throw new IllegalArgumentException("Invalid A and B points."); //we should never get here
         }
         
         double ApointTiValue = TypeInference.toDouble(survivalFunction.get2d(ApointTi.toString(), "Sti"));
@@ -196,11 +194,10 @@ public class CensoredDescriptives {
      * 
      * @param survivalFunction
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double mean(AssociativeArray2D survivalFunction) throws IllegalArgumentException {
+    public static double mean(AssociativeArray2D survivalFunction) {
         if(survivalFunction.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         } 
         
         return Ar(survivalFunction, 0);
@@ -212,11 +209,10 @@ public class CensoredDescriptives {
      * @param survivalFunction
      * @param r
      * @return
-     * @throws IllegalArgumentException 
      */
-    private static double Ar(AssociativeArray2D survivalFunction, int r) throws IllegalArgumentException {
+    private static double Ar(AssociativeArray2D survivalFunction, int r) {
         if(survivalFunction.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         AssociativeArray2D survivalFunctionCopy = survivalFunction;
@@ -228,7 +224,7 @@ public class CensoredDescriptives {
         }
         
         if(lastRowEntry==null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The last observation can't be censored.");
         }
         
         AssociativeArray lastRow = lastRowEntry.getValue();

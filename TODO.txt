@@ -7,7 +7,6 @@ CODE IMPROVEMENTS
     - Upgrade maven-surefire to 2.19.1 once it is released.
 
 - Add the ability to call Machine Learning algorithms from command line like in Mahout.
-- Create better Exceptions and Exception messages.
 
 
 DOCUMENTATION

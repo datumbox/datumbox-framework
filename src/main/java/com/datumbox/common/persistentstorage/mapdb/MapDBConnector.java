@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import java.io.Serializable;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
@@ -160,7 +161,7 @@ public class MapDBConnector extends AutoCloseConnector {
             Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
         } 
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
     
@@ -260,13 +261,13 @@ public class MapDBConnector extends AutoCloseConnector {
         DB db = dbRegistry.get(DatabaseType.TEMP_DB);
         if (existsInDB(db, name)) {
             //try to find a map in temporary db with the same name
-            throw new RuntimeException("A temporary map already exists with the same name.");
+            throw new IllegalArgumentException("A temporary map already exists with the same name.");
         }
         
         db = dbRegistry.get(DatabaseType.DEFAULT_DB);
         if (isTemporary && existsInDB(db, name)) {
             //try to find if a permanent map exists and we want to declare a new temporary with the same name
-            throw new RuntimeException("A BigMap already exists with the same name.");
+            throw new IllegalArgumentException("A BigMap already exists with the same name.");
         }
     }
     

@@ -55,9 +55,8 @@ public class WaldWolfowitz {
      * @param flatDataCollection
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean test(FlatDataCollection flatDataCollection, double aLevel) throws IllegalArgumentException {       
+    public static boolean test(FlatDataCollection flatDataCollection, double aLevel) {       
             //Note! This test works only for 2 valued internalData. If you have other types of internalData you must transform them into 2 valued internalData.
             int U=0;
             
@@ -81,7 +80,7 @@ public class WaldWolfowitz {
             
             //the internalData must be two valued in this test
             if(Ni.size()!=2) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
             }
             
             Object[] keys = Ni.keySet().toArray();

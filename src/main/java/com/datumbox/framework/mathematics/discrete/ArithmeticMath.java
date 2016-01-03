@@ -44,11 +44,10 @@ public class ArithmeticMath {
      * @param n
      * @param k
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double combination(int n, int k) throws IllegalArgumentException {
+    public static double combination(int n, int k) {
         if(n<k) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The n can't be smaller than k.");
         }
         return factorial(n)/(factorial(k)*factorial(n-k));
     }

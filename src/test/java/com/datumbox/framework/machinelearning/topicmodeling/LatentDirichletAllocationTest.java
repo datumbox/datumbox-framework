@@ -24,9 +24,9 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,12 +41,10 @@ import static org.junit.Assert.*;
 public class LatentDirichletAllocationTest extends BaseTest {
     
     /**
-     * Test of predict method, of class NLMS.
-     * @throws java.net.URISyntaxException
-     * @throws java.net.MalformedURLException
+     * Test of predict method, of class LatentDirichletAllocation.
      */
     @Test
-    public void testValidate() throws URISyntaxException, MalformedURLException {
+    public void testValidate() {
         logger.info("validate");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
@@ -60,7 +58,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
             dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
             dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         }
-        catch(Exception ex) {
+        catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }

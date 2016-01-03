@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lpsolve.LpSolve;
-import lpsolve.LpSolveException;
 
 /**
  * Class that performs Data Envelopment Analysis. It requires the installation of
@@ -236,14 +235,8 @@ public class DataEnvelopmentAnalysis {
             Integer scalingMode = LpSolve.SCALE_GEOMETRIC;
             
             //RUN SOLVE
-            Double objectiveValue = null;
-            try {
-                LPSolver.LPResult result = LPSolver.solve(objectiveFunction, constraints, lowBoundsOfVariables, upBoundsOfVariables, strictlyIntegerVariables, scalingMode);
-                objectiveValue = result.getObjectiveValue();
-            } 
-            catch (LpSolveException ex) {
-                throw new RuntimeException(ex);
-            }
+            LPSolver.LPResult result = LPSolver.solve(objectiveFunction, constraints, lowBoundsOfVariables, upBoundsOfVariables, strictlyIntegerVariables, scalingMode);
+            Double objectiveValue = result.getObjectiveValue();
             
             if(hasInput) {
                 constraints.remove(constraints.size()-1); //remove the last constraint that you put it

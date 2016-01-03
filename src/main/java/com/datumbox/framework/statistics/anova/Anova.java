@@ -41,13 +41,12 @@ public class Anova {
      * @param aLevel
      * @param outputTable
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean oneWayTestEqualVars(TransposeDataCollection transposeDataCollection, double aLevel, AssociativeArray2D outputTable) throws IllegalArgumentException {
+    public static boolean oneWayTestEqualVars(TransposeDataCollection transposeDataCollection, double aLevel, AssociativeArray2D outputTable) {
         int n = 0;
         int k = transposeDataCollection.size();
         if(k<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from at least 2 groups.");
         }
 
         Map<Object, Integer> nj = new HashMap<>();
@@ -59,7 +58,7 @@ public class Anova {
             
             int m = flatDataCollection.size();
             if(m==0) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The number of observations in each group but be larger than 0.");
             }
             nj.put(j, m); //get the number of observation for this category
             n+=m;
@@ -71,7 +70,7 @@ public class Anova {
         }
         
         if(n-k<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The number of observations must be larger than the number of groups.");
         }
         
         Ymean/=n;
@@ -141,13 +140,12 @@ public class Anova {
      * @param aLevel
      * @param outputTable
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean oneWayTestNotEqualVars(TransposeDataCollection transposeDataCollection, double aLevel, AssociativeArray2D outputTable) throws IllegalArgumentException {
+    public static boolean oneWayTestNotEqualVars(TransposeDataCollection transposeDataCollection, double aLevel, AssociativeArray2D outputTable) {
         int n = 0;
         int k = transposeDataCollection.size();
         if(k<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from at least 2 groups.");
         }
 
         Map<Object, Integer> nj = new HashMap<>();
@@ -160,7 +158,7 @@ public class Anova {
             
             int m = flatDataCollection.size();
             if(m==0) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The number of observations in each group but be larger than 0.");
             }
             nj.put(j, m); //get the number of observation for this category
             n+=m;
@@ -174,7 +172,7 @@ public class Anova {
         }
         
         if(n-k<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The number of observations must be larger than the number of groups.");
         }
         
         Ymean/=n;
@@ -247,9 +245,8 @@ public class Anova {
      * @param aLevel
      * @param outputTable
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean twoWayTestEqualCellsEqualVars(TransposeDataCollection2D twoFactorDataCollection, double aLevel, AssociativeArray2D outputTable) throws IllegalArgumentException {
+    public static boolean twoWayTestEqualCellsEqualVars(TransposeDataCollection2D twoFactorDataCollection, double aLevel, AssociativeArray2D outputTable) {
         //NOTE! This is correct ONLY when all the samples have the same size! Also we assume equal variances. We follow the method described at Ntzoufras' English anova.pdf but we degrees of freedom are calculated slighty differently. The outcome though is the same (the df are correct). We don't follow the notes in order to make it feasible to use the method for Unequal cells. In that case the analysis will not be correct!
         //To expand the test for Unequal Cells and Unequal Vars we must implement a different function described in the below papers:
         //http://www3.stat.sinica.edu.tw/statistica/oldpdf/a7n35.pdf
@@ -260,13 +257,13 @@ public class Anova {
         for(Map.Entry<Object, TransposeDataCollection> entry : twoFactorDataCollection.entrySet()) {
             if(Jtotal!=null) {
                 if(Jtotal!=entry.getValue().size()) {
-                    throw new IllegalArgumentException(); //cells must be of equal size
+                    throw new IllegalArgumentException("The cells must be of equal size.");
                 }
             }
             else {
                 Jtotal = entry.getValue().size();
                 if(Jtotal==0) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException("The size of Jtotal must be larger than 0.");
                 }
             }
         }

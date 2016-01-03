@@ -118,8 +118,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         
         @Override
         protected boolean remove(Integer rId, Record r) {
-            //No need to implement this method in this algorithm
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Remove operation is not supported.");
         }
                 
         @Override
@@ -587,7 +586,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             distance = Distance.manhattanWeighted(r1.getX(), r2.getX(), featureWeights);
         }
         else {
-            throw new RuntimeException("Unsupported Distance method");
+            throw new IllegalArgumentException("Unsupported Distance method.");
         }
         
         return distance;

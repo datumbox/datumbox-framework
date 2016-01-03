@@ -33,12 +33,11 @@ public class DurbinWatson {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean test(FlatDataList errorList, int k, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean test(FlatDataList errorList, int k, boolean is_twoTailed, double aLevel) {
         int n= errorList.size();
         if(n<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
 
         double DW=calculateScore(errorList);

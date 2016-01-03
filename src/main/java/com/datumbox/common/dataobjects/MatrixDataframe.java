@@ -88,7 +88,7 @@ public class MatrixDataframe {
      */
     public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
         if(!featureIdsReference.isEmpty()) {
-            throw new RuntimeException("The featureIdsReference map should be empty.");
+            throw new IllegalArgumentException("The featureIdsReference map should be empty.");
         }
         
         
@@ -164,7 +164,7 @@ public class MatrixDataframe {
      */
     public static MatrixDataframe parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
         if(featureIdsReference.isEmpty()) {
-            throw new RuntimeException("The featureIdsReference map should not be empty.");
+            throw new IllegalArgumentException("The featureIdsReference map should not be empty.");
         }
         
         int n = newDataset.size();
@@ -223,7 +223,7 @@ public class MatrixDataframe {
      */
     public static RealVector parseRecord(Record r, Map<Object, Integer> featureIdsReference) {
         if(featureIdsReference.isEmpty()) {
-            throw new RuntimeException("The featureIdsReference map should not be empty.");
+            throw new IllegalArgumentException("The featureIdsReference map should not be empty.");
         }
         
         int d = featureIdsReference.size();

@@ -115,10 +115,14 @@ public class URLParser {
      * @param baseURL
      * @param relative
      * @return
-     * @throws MalformedURLException 
      */
-    public static URL toAbsolute(URL baseURL, String relative) throws MalformedURLException {
-        return new URL(baseURL, relative);
+    public static URL toAbsolute(URL baseURL, String relative) {
+        try {
+            return new URL(baseURL, relative);
+        } 
+        catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**
@@ -127,9 +131,8 @@ public class URLParser {
      * @param base
      * @param relative
      * @return
-     * @throws MalformedURLException 
      */
-    public static String toAbsolute(String base, String relative) throws MalformedURLException {
+    public static String toAbsolute(String base, String relative) {
         String absolute = null;
         base = base.trim();
         relative = relative.trim();
@@ -144,7 +147,12 @@ public class URLParser {
             return absolute;
         }
         
-        absolute = toAbsolute(new URL(base), relative).toString();
+        try {
+            absolute = toAbsolute(new URL(base), relative).toString();
+        } 
+        catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
         
         return absolute;
     }
@@ -154,10 +162,14 @@ public class URLParser {
      * 
      * @param URLString
      * @return
-     * @throws MalformedURLException 
      */
-    public static Map<URLParts, String> splitURL(String URLString) throws MalformedURLException {
-        return splitURL(new URL(URLString));
+    public static Map<URLParts, String> splitURL(String URLString) {
+        try {
+            return splitURL(new URL(URLString));
+        } 
+        catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**
@@ -193,11 +205,15 @@ public class URLParser {
      * 
      * @param urlParts
      * @return
-     * @throws URISyntaxException 
      */
-    public static String joinURL(Map<URLParts, String> urlParts) throws URISyntaxException {
-        URI uri = new URI(urlParts.get(URLParts.PROTOCOL), urlParts.get(URLParts.AUTHORITY), urlParts.get(URLParts.PATH), urlParts.get(URLParts.QUERY), urlParts.get(URLParts.REF));
-        return uri.toString();
+    public static String joinURL(Map<URLParts, String> urlParts) {
+        try {
+            URI uri = new URI(urlParts.get(URLParts.PROTOCOL), urlParts.get(URLParts.AUTHORITY), urlParts.get(URLParts.PATH), urlParts.get(URLParts.QUERY), urlParts.get(URLParts.REF));
+            return uri.toString();
+        } 
+        catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**

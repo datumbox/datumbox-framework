@@ -37,12 +37,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double sum(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double sum(FlatDataCollection flatDataCollection) {
         int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         double sum = 0.0;
@@ -63,12 +62,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double mean(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double mean(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         double mean = 0.0;
@@ -96,12 +94,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double median(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double median(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         double median=0.0;
@@ -124,12 +121,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double min(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double min(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         double min=Double.MAX_VALUE;
@@ -154,12 +150,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double max(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double max(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         double max=Double.NEGATIVE_INFINITY;
@@ -195,15 +190,14 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException
      */
-    public static double geometricMean(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double geometricMean(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         else if(min(flatDataCollection)<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Negative or zero values are not allowed.");
         }
         
         double geometricMean = 0.0;
@@ -223,12 +217,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double harmonicMean(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double harmonicMean(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         double harmonicMean = 0.0;
@@ -249,12 +242,11 @@ public class Descriptives {
      * @param flatDataCollection
      * @param isSample
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double variance(FlatDataCollection flatDataCollection, boolean isSample) throws IllegalArgumentException {
+    public static double variance(FlatDataCollection flatDataCollection, boolean isSample) {
         int n = flatDataCollection.size();
         if(n<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
         
         double variance=0.0;
@@ -333,12 +325,11 @@ public class Descriptives {
      * @param r
      * @param mean
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double moment(FlatDataCollection flatDataCollection, int r, double mean) throws IllegalArgumentException {
+    public static double moment(FlatDataCollection flatDataCollection, int r, double mean) {
         int n = flatDataCollection.size();
         if(n<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
         
         double moment=0.0;
@@ -358,12 +349,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double kurtosis(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double kurtosis(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n<=3) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 3 elements.");
         }
         
         double kurtosis = 0.0;
@@ -396,12 +386,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double kurtosisSE(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double kurtosisSE(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n<=3) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 3 elements.");
         }
         
         double kurtosisSE = Math.sqrt(24.0/n);
@@ -414,22 +403,19 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double skewness(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double skewness(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
-        
-        double skewness = 0.0;
         
         double mean = mean(flatDataCollection);
         
         double m3 = moment(flatDataCollection, 3, mean);
         double variance = variance(flatDataCollection, false);        
     
-        skewness=m3/Math.pow(variance, 3.0/2.0);
+        double skewness=m3/Math.pow(variance, 3.0/2.0);
         
         return skewness;
     }
@@ -440,12 +426,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double skewnessSE(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static double skewnessSE(FlatDataCollection flatDataCollection) {
 	int n = flatDataCollection.size();
         if(n<=2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection must have more than 2 elements.");
         }
         
         double skewnessSE=Math.sqrt((6.0*n*(n-1.0))/((n-2.0)*(n+1.0)*(n+3.0)));
@@ -459,12 +444,11 @@ public class Descriptives {
      * @param flatDataCollection
      * @param cutPoints
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static AssociativeArray percentiles(FlatDataCollection flatDataCollection, int cutPoints) throws IllegalArgumentException {
+    public static AssociativeArray percentiles(FlatDataCollection flatDataCollection, int cutPoints) {
 	int n = flatDataCollection.size();
         if(n<=0 || cutPoints<=0 || n<cutPoints) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and n larger than cutPoints.");
         }
         
         AssociativeArray percintiles = new AssociativeArray();
@@ -529,11 +513,10 @@ public class Descriptives {
      * @param transposeDataList
      * @param isSample
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double covariance(TransposeDataList transposeDataList, boolean isSample) throws IllegalArgumentException {
+    public static double covariance(TransposeDataList transposeDataList, boolean isSample) {
         if(transposeDataList.size()!=2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
         }
         
         double covariance = 0.0;
@@ -547,7 +530,7 @@ public class Descriptives {
         
         int n = flatDataCollectionX.size();
         if(n<=1 || n!=flatDataCollectionY.size()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The number of observations in each group must be equal and larger than 1.");
         }
         
         double meanX = mean(flatDataCollectionX);
@@ -576,12 +559,11 @@ public class Descriptives {
      * @param flatDataList
      * @param lags
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double autocorrelation(FlatDataList flatDataList, int lags) throws IllegalArgumentException {
+    public static double autocorrelation(FlatDataList flatDataList, int lags) {
         int n = flatDataList.size();
         if(n<=0 || lags<=0 || n<lags) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive and n larger than lags.");
         }
         
         FlatDataCollection flatDataCollection = flatDataList.toFlatDataCollection();
@@ -609,12 +591,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static AssociativeArray frequencies(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static AssociativeArray frequencies(FlatDataCollection flatDataCollection) {
         int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         AssociativeArray frequencies = new AssociativeArray();
@@ -637,12 +618,11 @@ public class Descriptives {
      * 
      * @param flatDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static FlatDataCollection mode(FlatDataCollection flatDataCollection) throws IllegalArgumentException {
+    public static FlatDataCollection mode(FlatDataCollection flatDataCollection) {
         int n = flatDataCollection.size();
         if(n==0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
         AssociativeArray frequencies = frequencies(flatDataCollection);

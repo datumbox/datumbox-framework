@@ -35,11 +35,10 @@ public class FIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testVariances(double stdbarx, double stdbary, int n, int m, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testVariances(double stdbarx, double stdbary, int n, int m, boolean is_twoTailed, double aLevel) {
         if(n<=1 || stdbarx<=0 || m<=1 || stdbary<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The values of the provided parameters are not within the permitted range.");
         }
 
         //standardize it

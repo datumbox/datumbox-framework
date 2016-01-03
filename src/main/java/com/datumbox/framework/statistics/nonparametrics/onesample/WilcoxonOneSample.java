@@ -36,9 +36,8 @@ public class WilcoxonOneSample {
      * @param flatDataCollection
      * @param median
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double getPvalue(FlatDataCollection flatDataCollection, double median) throws IllegalArgumentException {
+    public static double getPvalue(FlatDataCollection flatDataCollection, double median) {
         int n=0;
         AssociativeArray Di = new AssociativeArray();
         Iterator<Double> it = flatDataCollection.iteratorDouble();
@@ -57,7 +56,7 @@ public class WilcoxonOneSample {
             ++n;
         }
         if(n<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
 
         //converts the values of the table with its Ranks

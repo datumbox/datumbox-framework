@@ -112,7 +112,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
      */
     public void save() {
         if(modelParameters==null) {
-            throw new IllegalArgumentException("Can not store an empty KnowledgeBase.");
+            throw new IllegalArgumentException("Can't save an empty KnowledgeBase.");
         }
         
         dbc.save("KnowledgeBase", this);

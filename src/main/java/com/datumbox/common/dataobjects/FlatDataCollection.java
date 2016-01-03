@@ -40,13 +40,9 @@ public class FlatDataCollection extends DataStructureCollection<Collection<Objec
      * @param <T>
      * @param c
      * @return
-     * @throws IllegalArgumentException
      */
-    public final <T> T[] copyCollection2Array(Class<T> c) throws IllegalArgumentException {
+    public final <T> T[] copyCollection2Array(Class<T> c) {
         int n = internalData.size();
-        if (n == 0) {
-            throw new IllegalArgumentException();
-        }
         T[] copy = (T[]) Array.newInstance(c, n);
         int i = 0;
         for (Object value : internalData) {

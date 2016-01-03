@@ -34,12 +34,11 @@ public class SpearmanCorrelation {
      * 
      * @param transposeDataList
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double calculateCorrelation(TransposeDataList transposeDataList) throws IllegalArgumentException {
+    public static double calculateCorrelation(TransposeDataList transposeDataList) {
         Object[] keys = transposeDataList.keySet().toArray();
         if(keys.length!=2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
         }
 
         Object keyX = keys[0];
@@ -50,7 +49,7 @@ public class SpearmanCorrelation {
 
         int n = flatDataListX.size();
         if(n<=0 || n!=flatDataListY.size()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The number of observations in each group must be equal and larger than 0.");
         }
 
 
@@ -102,9 +101,8 @@ public class SpearmanCorrelation {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean test(TransposeDataList transposeDataList, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean test(TransposeDataList transposeDataList, boolean is_twoTailed, double aLevel) {
         if(transposeDataList.isEmpty()) {
             return false;
         }

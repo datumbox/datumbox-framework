@@ -77,7 +77,7 @@ public abstract class AutoCloseConnector implements DatabaseConnector, AutoClose
      */
     protected void ensureNotClosed() {
         if(isClosed()) {
-            throw new RuntimeException("The connector is already closed");
+            throw new RuntimeException("The connector is already closed.");
         }
     }
     

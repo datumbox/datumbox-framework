@@ -33,12 +33,11 @@ public class LjungBox {
      * @param n
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testAutocorrelation(FlatDataCollection pkList, int n, double aLevel) throws IllegalArgumentException {
+    public static boolean testAutocorrelation(FlatDataCollection pkList, int n, double aLevel) {
         int h=pkList.size();
         if(n<=h) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The n must be larger than the size of pkList.");
         }
 
         double Q=0;

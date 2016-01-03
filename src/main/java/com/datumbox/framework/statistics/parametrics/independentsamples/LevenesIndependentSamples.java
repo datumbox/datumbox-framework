@@ -19,7 +19,6 @@ import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
-import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,13 +36,12 @@ public class LevenesIndependentSamples {
      * @param transposeDataCollection
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testVariances(TransposeDataCollection transposeDataCollection, double aLevel) throws IllegalArgumentException {
+    public static boolean testVariances(TransposeDataCollection transposeDataCollection, double aLevel) {
         int n=0;
         int k = transposeDataCollection.size();
         if(k<=1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from at least 2 groups.");
         }
 
         Map<Object, Integer> nj = new HashMap<>();
@@ -54,7 +52,7 @@ public class LevenesIndependentSamples {
             
             int tmp = flatDataCollection.size();
             if(tmp==0) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("The number of observations in each group but be larger than 0.");
             }
             nj.put(j, tmp); //get the number of observation for this category
             
@@ -109,7 +107,7 @@ public class LevenesIndependentSamples {
         nj = null;
 
         if(denominator==0) {
-            throw new InvalidParameterException();
+            throw new IllegalArgumentException("The values of the input collection are invalid.");
         }
 
         double W = ((n-k)/(k-1.0))*(numerator/denominator);

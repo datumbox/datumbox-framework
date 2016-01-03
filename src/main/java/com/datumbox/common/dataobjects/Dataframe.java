@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -102,7 +103,7 @@ public class Dataframe implements Serializable, Collection<Record> {
                 } 
                 catch (IOException ex) {
                     dataset.delete();
-                    throw new RuntimeException(ex);
+                    throw new UncheckedIOException(ex);
                 }
             }
             
@@ -179,7 +180,7 @@ public class Dataframe implements Serializable, Collection<Record> {
             } 
             catch (IOException ex) {
                 dataset.delete();
-                throw new RuntimeException(ex);
+                throw new UncheckedIOException(ex);
             }
             return dataset;
         }
@@ -370,7 +371,7 @@ public class Dataframe implements Serializable, Collection<Record> {
 
             @Override
             public void remove() {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
             }
         };
     }
@@ -497,7 +498,7 @@ public class Dataframe implements Serializable, Collection<Record> {
     
     /**
      * Sets the record of a particular id in the dataset. The record must already
-     * exists within the dataset or an IndexOutOfBoundsException is thrown.
+     * exists within the dataset or an IllegalArgumentException is thrown.
      * 
      * Note that the meta-data are partially updated. This means that if the replaced 
      * Record contained a column which is now no longer available in the dataset,
@@ -689,7 +690,7 @@ public class Dataframe implements Serializable, Collection<Record> {
 
                     @Override
                     public void remove() {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
                     }
                 };
             }
@@ -718,7 +719,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     public void _set(Integer rId, Record r) {
         if(records.containsKey(rId)==false) {
-            throw new IndexOutOfBoundsException(); //ensure that the record has already be set with add()
+            throw new IllegalArgumentException("Setting an id which does not exist is not permitted.");
         }
         records.put(rId, r);
     }

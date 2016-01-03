@@ -35,11 +35,10 @@ public class DecisionCriteria {
      * 
      * @param payoffMatrix
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> maxMin(DataTable2D payoffMatrix) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> maxMin(DataTable2D payoffMatrix) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         AssociativeArray minPayoffs = new AssociativeArray();
         
@@ -66,11 +65,10 @@ public class DecisionCriteria {
      * 
      * @param payoffMatrix
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> maxMax(DataTable2D payoffMatrix) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> maxMax(DataTable2D payoffMatrix) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
         Double maxMaxPayoff = Double.NEGATIVE_INFINITY;
@@ -98,11 +96,10 @@ public class DecisionCriteria {
      * 
      * @param payoffMatrix
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> savage(DataTable2D payoffMatrix) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> savage(DataTable2D payoffMatrix) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
         //Deep clone the payoffMatrix to avoid modifying its original values
@@ -130,11 +127,10 @@ public class DecisionCriteria {
      * 
      * @param payoffMatrix
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> laplace(DataTable2D payoffMatrix) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> laplace(DataTable2D payoffMatrix) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
         //http://orms.pef.czu.cz/text/game-theory/DecisionTheory.html
@@ -166,11 +162,10 @@ public class DecisionCriteria {
      * @param payoffMatrix
      * @param alpha
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> hurwiczAlpha(DataTable2D payoffMatrix, double alpha) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> hurwiczAlpha(DataTable2D payoffMatrix, double alpha) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
         AssociativeArray minPayoffs = new AssociativeArray();
@@ -211,11 +206,10 @@ public class DecisionCriteria {
      * @param payoffMatrix
      * @param eventProbabilities
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> maximumLikelihood(DataTable2D payoffMatrix, AssociativeArray eventProbabilities) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> maximumLikelihood(DataTable2D payoffMatrix, AssociativeArray eventProbabilities) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
         Map.Entry<Object, Object> eventEntry = MapFunctions.selectMaxKeyValue(eventProbabilities);
@@ -232,11 +226,10 @@ public class DecisionCriteria {
      * @param payoffMatrix
      * @param eventProbabilities
      * @return 
-     * @throws IllegalArgumentException 
      */
-    public static Map.Entry<Object, Object> bayes(DataTable2D payoffMatrix, AssociativeArray eventProbabilities) throws IllegalArgumentException {
+    public static Map.Entry<Object, Object> bayes(DataTable2D payoffMatrix, AssociativeArray eventProbabilities) {
         if(payoffMatrix.isValid()==false) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
         AssociativeArray expectedPayoffs = new AssociativeArray();

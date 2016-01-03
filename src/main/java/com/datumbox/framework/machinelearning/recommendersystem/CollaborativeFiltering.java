@@ -268,7 +268,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             similarity = PearsonCorrelation.calculateCorrelation(transposeDataList);
         }
         else { 
-            throw new RuntimeException("Unsupported Distance method");
+            throw new IllegalArgumentException("Unsupported Distance method.");
         }
         
         return similarity;

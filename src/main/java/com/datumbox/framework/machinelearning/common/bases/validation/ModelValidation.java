@@ -63,7 +63,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
     public VM kFoldCrossValidation(Dataframe dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends BaseMLmodel> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
-            throw new IllegalArgumentException("Invalid number of folds");
+            throw new IllegalArgumentException("Invalid number of folds.");
         }
         
         int foldSize= n/k; //floor the number

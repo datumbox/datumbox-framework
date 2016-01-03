@@ -22,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 
 /**
  * Creates a Deep Copy of an object by serializing and deserializing it.
@@ -43,7 +44,7 @@ public class DeepCopy {
             return bos.toByteArray();
         } 
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
     
@@ -58,7 +59,10 @@ public class DeepCopy {
              ObjectInputStream ois = new ObjectInputStream(bis)) {
             return ois.readObject();
         } 
-        catch (IOException | ClassNotFoundException ex) {
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+        catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
     }

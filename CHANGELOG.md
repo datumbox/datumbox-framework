@@ -33,6 +33,7 @@ Version 0.7.0-SNAPSHOT - Build 20160103
 - Fixing a bug on Adaboost which resulted in mapping incorrectly the recordIds.
 - Added serialVersionUID in every serializable class.
 - Modified the algorithms that require Matrixes to use the sparse OpenMapRealMatrix instead of BlockRealMatrix.
+- Improved Exceptions and Exception messages.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

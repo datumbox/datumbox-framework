@@ -21,6 +21,7 @@ import com.datumbox.tests.utilities.TestUtils;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -61,7 +62,7 @@ public class DataframeTest extends BaseTest {
         try (Reader fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile())) {
             dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
         }
-        catch(IOException ex) {
+        catch(UncheckedIOException | IOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }

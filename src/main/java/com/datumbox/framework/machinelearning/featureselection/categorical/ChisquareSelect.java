@@ -85,7 +85,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
          */
         public void setALevel(double aLevel) {
             if(aLevel>1 || aLevel<0) {
-                throw new RuntimeException("Wrong statistical significance aLevel");
+                throw new IllegalArgumentException("Invalid value for the level of statistical significance.");
             }
             this.aLevel = aLevel;
         }

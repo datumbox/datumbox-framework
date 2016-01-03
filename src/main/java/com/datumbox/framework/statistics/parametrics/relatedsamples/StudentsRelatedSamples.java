@@ -34,11 +34,10 @@ public class StudentsRelatedSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testMean(double dbar, int n, double dbarStd, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testMean(double dbar, int n, double dbarStd, boolean is_twoTailed, double aLevel) {
         if(n<=0 || dbarStd<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
 
         //standardize it

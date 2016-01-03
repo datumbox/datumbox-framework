@@ -37,11 +37,10 @@ public class NormalIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testMeans(double xbar, double ybar, int n, int m, double stdx, double stdy, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testMeans(double xbar, double ybar, int n, int m, double stdx, double stdy, boolean is_twoTailed, double aLevel) {
         if(n<=0 || stdx<=0 || m<=0 || stdy<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
 
         //standardize it
@@ -63,11 +62,10 @@ public class NormalIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testPercentages(double p1bar, double p2bar, int n1, int n2, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testPercentages(double p1bar, double p2bar, int n1, int n2, boolean is_twoTailed, double aLevel) {
         if(n1<=0 || p1bar<0 || n2<=0 || p2bar<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
 
         //standardize it
@@ -89,11 +87,10 @@ public class NormalIndependentSamples {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testOddsRatio(int n11, int n12, int n21, int n22, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testOddsRatio(int n11, int n12, int n21, int n22, boolean is_twoTailed, double aLevel) {
         if(n11<=0 || n12<=0 || n21<=0 || n22<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
 
         //standardize it

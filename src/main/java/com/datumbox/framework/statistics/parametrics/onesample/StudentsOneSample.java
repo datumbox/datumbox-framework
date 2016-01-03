@@ -35,11 +35,10 @@ public class StudentsOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testMean(double xbar, int n, double H0mean, double std, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testMean(double xbar, int n, double H0mean, double std, boolean is_twoTailed, double aLevel) {
         if(n<=0 || std<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
 
         //standardize it
@@ -58,11 +57,10 @@ public class StudentsOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testAutocorrelation(double pk, int n, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testAutocorrelation(double pk, int n, boolean is_twoTailed, double aLevel) {
         if(n<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
 
         //standardize it

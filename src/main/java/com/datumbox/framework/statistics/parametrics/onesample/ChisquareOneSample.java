@@ -34,11 +34,10 @@ public class ChisquareOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean testVariance(double stdbar, int n, double H0std, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {
+    public static boolean testVariance(double stdbar, int n, double H0std, boolean is_twoTailed, double aLevel) {
         if(n<=1 || H0std<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The values of the provided parameters are not within the permitted range.");
         }
 
         //standardize it

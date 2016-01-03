@@ -39,11 +39,10 @@ public class Logrank {
      * 
      * @param transposeDataCollection
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static double getPvalue(TransposeDataCollection transposeDataCollection) throws IllegalArgumentException {
+    public static double getPvalue(TransposeDataCollection transposeDataCollection) {
         if(transposeDataCollection.size()!=2) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
         }
         
         Object[] keys = transposeDataCollection.keySet().toArray();

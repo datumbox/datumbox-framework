@@ -141,8 +141,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         @Override
         protected boolean remove(Integer rId, Record r) {
-            //No need to implement this method in this algorithm
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Remove operation is not supported.");
         }
                 
         @Override
@@ -386,7 +385,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             distance = Distance.maximum(r1.getX(), r2.getX());
         }
         else {
-            throw new RuntimeException("Unsupported Distance method");
+            throw new IllegalArgumentException("Unsupported Distance method.");
         }
         
         return distance;

@@ -33,11 +33,10 @@ public class Binomial {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException 
      */
-    public static boolean test(int k, int n, double p, boolean is_twoTailed, double aLevel) throws IllegalArgumentException {        
+    public static boolean test(int k, int n, double p, boolean is_twoTailed, double aLevel) {        
         if(k<0 || n<=0 || p<0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("All the parameters must be positive.");
         }
         double pvalue = scoreToPvalue((double)k, n, p);
 

@@ -52,48 +52,49 @@ public class KolmogorovSmirnovOneSample {
      * @param is_twoTailed
      * @param aLevel
      * @return
-     * @throws IllegalArgumentException
-     * @throws SecurityException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException 
      */
-    public static boolean test(FlatDataCollection flatDataCollection, String cdfMethod, AssociativeArray params, boolean is_twoTailed, double aLevel) throws IllegalArgumentException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException { 
+    public static boolean test(FlatDataCollection flatDataCollection, String cdfMethod, AssociativeArray params, boolean is_twoTailed, double aLevel) { 
+
         int n=flatDataCollection.size();
         if(n<=0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The provided collection can't be empty.");
         }
 
         Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
-        Arrays.sort(doubleArray);        
-        
+        Arrays.sort(doubleArray);
+
         //Calculation of expected Probabilities
         double observedProbabilityIminus1=0;//the exact previous observed probability (i-1)
 
         double maxDelta=0;
         int rank=1;
-        
-        Method method = KolmogorovSmirnovOneSample.class.getMethod(cdfMethod, Double.class, AssociativeArray.class);
-        for(int i=0;i<doubleArray.length;++i) {
-            Double x = doubleArray[i];
-            
-            double observedProbabilityI=rank/(double)n;
 
-            Object methodResult = method.invoke(null, x, params);
-            double expectedProbabilityI = TypeInference.toDouble(methodResult);
-            
-            double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
-            if(delta>=maxDelta) {
-                maxDelta=delta;
+        try {    
+            Method method = KolmogorovSmirnovOneSample.class.getMethod(cdfMethod, Double.class, AssociativeArray.class);
+            for(int i=0;i<doubleArray.length;++i) {
+                Double x = doubleArray[i];
+                
+                double observedProbabilityI=rank/(double)n;
+                
+                Object methodResult = method.invoke(null, x, params);
+                double expectedProbabilityI = TypeInference.toDouble(methodResult);
+                
+                double delta=Math.max(Math.abs(expectedProbabilityI-observedProbabilityI),Math.abs(expectedProbabilityI-observedProbabilityIminus1));
+                if(delta>=maxDelta) {
+                    maxDelta=delta;
+                }
+                
+                observedProbabilityIminus1=observedProbabilityI;
+                ++rank;
             }
-
-            observedProbabilityIminus1=observedProbabilityI;
-            ++rank;
-        }
-
-        boolean rejectH0=checkCriticalValue(maxDelta, is_twoTailed, n, aLevel);
-
-        return rejectH0;
+            
+            boolean rejectH0=checkCriticalValue(maxDelta, is_twoTailed, n, aLevel);
+            
+            return rejectH0;
+        } 
+        catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new IllegalArgumentException(ex);
+        } 
     }
     
     /**

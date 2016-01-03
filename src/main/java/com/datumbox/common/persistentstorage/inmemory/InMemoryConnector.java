@@ -27,6 +27,7 @@ import java.util.Map;
 
 import com.datumbox.common.utilities.DeepCopy;
 import java.io.Serializable;
+import java.io.UncheckedIOException;
 import java.util.HashMap;
 
 
@@ -70,7 +71,7 @@ public class InMemoryConnector extends AutoCloseConnector {
             Files.write(getDefaultPath(), DeepCopy.serialize(serializableObject));
         } 
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
 
@@ -95,7 +96,7 @@ public class InMemoryConnector extends AutoCloseConnector {
             return null;
         }
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
     
@@ -135,7 +136,7 @@ public class InMemoryConnector extends AutoCloseConnector {
             Files.deleteIfExists(getDefaultPath());
         } 
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
     

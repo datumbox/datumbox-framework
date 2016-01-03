@@ -25,9 +25,9 @@ import com.datumbox.framework.machinelearning.featureselection.categorical.Chisq
 import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,11 +45,9 @@ public class TextClassifierTest extends BaseTest {
 
     /**
      * Test of train method, of class TextClassifier.
-     * @throws java.net.URISyntaxException
-     * @throws java.net.MalformedURLException
      */
     @Test
-    public void testTrainAndPredict() throws URISyntaxException, MalformedURLException {
+    public void testTrainAndPredict() {
         logger.info("TrainAndPredict");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
@@ -62,7 +60,7 @@ public class TextClassifierTest extends BaseTest {
             dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
             dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
         }
-        catch(Exception ex) {
+        catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }
@@ -112,7 +110,7 @@ public class TextClassifierTest extends BaseTest {
         try {
             validationDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         }
-        catch(Exception ex) {
+        catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }

@@ -144,7 +144,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
 
                 @Override
                 public void remove() {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
                 }
             };
         }
