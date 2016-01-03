@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.regression;
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinearRegression;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.dataobjects.MatrixDataset;
+import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -156,7 +156,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         
-        MatrixDataset matrixDataset = MatrixDataset.newInstance(trainingData, true, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, featureIds);
         
         RealVector Y = matrixDataset.getY();
         RealMatrix X = matrixDataset.getX();
@@ -235,7 +235,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             coefficients.setEntry(featureId, entry.getValue());
         }
         
-        MatrixDataset matrixDataset = MatrixDataset.parseDataset(newData, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds);
         
         RealMatrix X = matrixDataset.getX();
         

@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ContinuousFeatureSelection;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.dataobjects.MatrixDataset;
+import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
@@ -275,7 +275,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataset matrixDataset = MatrixDataset.newInstance(originalData, false, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -391,7 +391,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataset matrixDataset = MatrixDataset.parseDataset(newData, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds);
         RealMatrix X = matrixDataset.getX();
         /*
         //subtracting means

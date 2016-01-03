@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
-import com.datumbox.common.dataobjects.MatrixDataset;
+import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -121,7 +121,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          */
         @Override
         protected double posteriorLogPdf(Record r) {
-            RealVector x_mu = MatrixDataset.parseRecord(r, featureIds);    
+            RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);    
 
             RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
             RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
@@ -172,7 +172,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
                 return false;
             }
             
-            RealVector rv = MatrixDataset.parseRecord(r, featureIds);
+            RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
             if(size==0) {
@@ -200,7 +200,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
                 return false;
             }
             
-            RealVector rv = MatrixDataset.parseRecord(r, featureIds);
+            RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
             wordCounts=wordCounts.subtract(rv);

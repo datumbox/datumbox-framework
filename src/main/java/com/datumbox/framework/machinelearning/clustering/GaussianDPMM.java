@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
-import com.datumbox.common.dataobjects.MatrixDataset;
+import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -224,7 +224,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          */
         @Override
         protected double posteriorLogPdf(Record r) {
-            RealVector x_mu = MatrixDataset.parseRecord(r, featureIds);    
+            RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);    
 
             x_mu = x_mu.subtract(mean);
             
@@ -294,7 +294,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
                 return false;
             }
             
-            RealVector rv = MatrixDataset.parseRecord(r, featureIds);
+            RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
             if(size==0) {
@@ -324,7 +324,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
                 return false;
             }
             
-            RealVector rv = MatrixDataset.parseRecord(r, featureIds);
+            RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
             xi_sum=xi_sum.subtract(rv);

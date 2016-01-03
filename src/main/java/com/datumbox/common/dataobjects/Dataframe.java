@@ -364,7 +364,7 @@ public final class Dataframe implements Serializable, Collection<Record> {
     a record would cause a gap in the rows and this is not permitted.
     
     The classes that cause the problem are the following: 
-    MatrixDataset, SupportVectorMachine, PCA, MatrixLinearRegression
+    MatrixDataframe, SupportVectorMachine, PCA, MatrixLinearRegression
     
     All problematic areas are marked with "CONTINUOUS_ID_ASSUMPTION".
     */

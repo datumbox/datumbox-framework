@@ -22,7 +22,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
 /**
- * The MatrixDataset class is responsible for converting a Dataframe object to a
+ * The MatrixDataframe class is responsible for converting a Dataframe object to a
  Matrix representation. Some of the methods on framework require working with
  matrices and this class provides the tools to achieve the necessary conversions.
  The major drawback of using this class is that all the data from the Dataframe
@@ -31,7 +31,7 @@ import org.apache.commons.math3.linear.RealVector;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MatrixDataset {
+public class MatrixDataframe {
     
     private final RealVector Y;
     private final RealMatrix X;
@@ -65,7 +65,7 @@ public class MatrixDataset {
      * @param X
      * @param feature2ColumnId 
      */
-    private MatrixDataset(RealVector Y, RealMatrix X, Map<Object, Integer> feature2ColumnId) {
+    private MatrixDataframe(RealVector Y, RealMatrix X, Map<Object, Integer> feature2ColumnId) {
         //this constructor must be private because it is used only internally
         this.Y = Y;
         this.X = X;
@@ -73,7 +73,7 @@ public class MatrixDataset {
     }
     
     /**
-     * Method used to generate a training Dataframe to a MatrixDataset and extracts its contents
+     * Method used to generate a training Dataframe to a MatrixDataframe and extracts its contents
  to Matrixes. It populates the featureIdsReference map with the mappings
      * between the feature names and the column ids of the matrix. Typically used
      * to convert the training dataset.
@@ -83,7 +83,7 @@ public class MatrixDataset {
      * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataset newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference) {
+    public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference) {
         if(!featureIdsReference.isEmpty()) {
             throw new RuntimeException("The featureIdsReference map should be empty.");
         }
@@ -96,7 +96,7 @@ public class MatrixDataset {
             ++d;
         }
         
-        MatrixDataset m = new MatrixDataset(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
         
         
         if(dataset.isEmpty()) {
@@ -145,15 +145,15 @@ public class MatrixDataset {
     }
     
     /**
-     * Parses a testing dataset and converts it to MatrixDataset by using an already
-     * existing mapping between feature names and column ids. Typically used
+     * Parses a testing dataset and converts it to MatrixDataframe by using an already
+ existing mapping between feature names and column ids. Typically used
      * to parse the testing or validation dataset.
      * 
      * @param newDataset
      * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataset parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference) {
+    public static MatrixDataframe parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference) {
         if(featureIdsReference.isEmpty()) {
             throw new RuntimeException("The featureIdsReference map should not be empty.");
         }
@@ -161,7 +161,7 @@ public class MatrixDataset {
         int n = newDataset.size();
         int d = featureIdsReference.size();
         
-        MatrixDataset m = new MatrixDataset(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
         
         if(newDataset.isEmpty()) {
             return m;
