@@ -29,13 +29,10 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.URI;
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.csv.CSVFormat;
@@ -356,7 +353,7 @@ public class Dataframe implements Serializable, Collection<Record> {
     @Override
     public Iterator<Record> iterator() {
         return new Iterator<Record>() {
-            private final Iterator<Integer> it = index().iterator();
+            private final Iterator<Record> it = records.values().iterator();
              
             @Override
             public boolean hasNext() {
@@ -365,7 +362,7 @@ public class Dataframe implements Serializable, Collection<Record> {
 
             @Override
             public Record next() {
-                return get(it.next());
+                return it.next();
             }
 
             @Override
@@ -425,8 +422,10 @@ public class Dataframe implements Serializable, Collection<Record> {
     public synchronized boolean retainAll(Collection<?> c) {
         boolean modified = false;
         for(Map.Entry<Integer, Record> e : entries()) {
-            if(!c.contains(e.getValue())) {
-                remove(e.getKey());
+            Integer rId = e.getKey();
+            Record r = e.getValue();
+            if(!c.contains(r)) {
+                remove(rId);
                 modified = true;
             }
         }
@@ -456,14 +455,16 @@ public class Dataframe implements Serializable, Collection<Record> {
      * WARNING: The Recordsare checked only for their X and Y values, not for 
      * the yPredicted and yPredictedProbabilities values.
      * 
-     * @param r
+     * @param o
      * @return 
      */
-    public synchronized Integer indexOf(Record r) {
-        if(r!=null) {
+    public synchronized Integer indexOf(Record o) {
+        if(o!=null) {
             for(Map.Entry<Integer, Record> e : entries()) {
-                if(r.equals(e.getValue())) {
-                    return e.getKey();
+                Integer rId = e.getKey();
+                Record r = e.getValue();
+                if(o.equals(r)) {
+                    return rId;
                 }
             }
         }
