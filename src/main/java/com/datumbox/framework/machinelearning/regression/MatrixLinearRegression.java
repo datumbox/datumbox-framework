@@ -248,7 +248,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             Integer rId = e.getKey();
             Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);
-            newData.set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
         }
         
         recordIdsReference = null;

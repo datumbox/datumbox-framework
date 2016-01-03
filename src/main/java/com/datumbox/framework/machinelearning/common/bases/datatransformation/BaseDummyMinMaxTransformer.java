@@ -210,8 +210,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             }
             
             if(modified) {
-                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                data.set(rId, r);
+                data._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities())); //no modification on the actula columns takes place, safe to do.
             }
         }
     }
@@ -249,8 +248,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             }
             
             if(modified) {
-                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                data.set(rId, r);
+                data._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities())); //no modification on the actula columns takes place, safe to do.
             }
         }
     }
@@ -311,7 +309,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                     normalizedValue = (value-min)/(max-min);
                 }
                 
-                data.set(rId, new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities()));
+                data._unsafe_set(rId, new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities()));
             }
         }
     }
@@ -361,7 +359,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                     }
                 }
                 
-                data.set(rId, new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities()));
+                data._unsafe_set(rId, new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities()));
             }
         }
     }
@@ -431,13 +429,12 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             }
             
             if(modified) {
-                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                data._set(rId, r);
+                data._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
             }
         }
         
         //Reset Meta info
-        data.recalculateMeta();
+        data.recalculateMeta(); //call the recalculate because we used _unsafe_set()
     }
     
     /**

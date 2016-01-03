@@ -211,7 +211,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             Object theClass=getSelectedClassFromClassScores(predictionScores);
             Descriptives.normalizeExp(predictionScores);
             
-            newData.set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
         }
     }
     

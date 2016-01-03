@@ -184,7 +184,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             Integer rId = e.getKey();
             Record r = e.getValue();
             double yPredicted = hypothesisFunction(r.getX(), thitas);
-            newData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
         }
     }
     
@@ -255,7 +255,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             Integer rId = e.getKey();
             Record r = e.getValue();
             double yPredicted = hypothesisFunction(r.getX(), thitas);
-            trainingData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
+            trainingData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
             error+=Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }
         

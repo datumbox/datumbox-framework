@@ -223,7 +223,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(currentRecordDecisions, classifierWeightsArray);
             Descriptives.normalize(combinedClassVotes);
             
-            newData.set(rId, new Record(r.getX(), r.getY(), MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey(), combinedClassVotes));
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey(), combinedClassVotes));
         }
         
         //Drop the temporary Collection

@@ -508,7 +508,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     public synchronized Integer set(Integer rId, Record r) {
-        _set(rId, r);
+        _unsafe_set(rId, r);
         updateMeta(r);
         return rId;
     }
@@ -599,7 +599,7 @@ public class Dataframe implements Serializable, Collection<Record> {
             
             if(xData.size()!=d) {
                 r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                _set(rId, r);
+                _unsafe_set(rId, r);
             }
         }
         
@@ -735,7 +735,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param rId
      * @param r 
      */
-    public synchronized void _set(Integer rId, Record r) {
+    public synchronized void _unsafe_set(Integer rId, Record r) {
         if(records.containsKey(rId)==false) {
             throw new IllegalArgumentException("Setting an id which does not exist is not permitted.");
         }

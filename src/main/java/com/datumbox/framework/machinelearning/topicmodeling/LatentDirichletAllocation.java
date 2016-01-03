@@ -521,7 +521,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                 if(!mainTopic.equals(r.getYPredicted())) {
                     ++changedCounter;
                 }
-                trainingData.set(rId, new Record(r.getX(), r.getY(), mainTopic, topicAssignments));
+                trainingData._unsafe_set(rId, new Record(r.getX(), r.getY(), mainTopic, topicAssignments));
             }
             ++iteration;
             
@@ -729,7 +729,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                 if(!mainTopic.equals(r.getYPredicted())) {
                     ++changedCounter;
                 }                
-                newData.set(rId, new Record(r.getX(), r.getY(), mainTopic, topicAssignments));
+                newData._unsafe_set(rId, new Record(r.getX(), r.getY(), mainTopic, topicAssignments));
             }
 
             perplexity=Math.exp(-perplexity/totalDatasetWords);

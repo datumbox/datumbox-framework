@@ -386,13 +386,13 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
                 ++componentId;
             }
             
-            newData._set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
+            newData._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
         }
         
         recordIdsReference = null;
         matrixDataset = null;
         
-        newData.recalculateMeta();
+        newData.recalculateMeta(); //call the recalculate because we used _unsafe_set()
     }
     
 }

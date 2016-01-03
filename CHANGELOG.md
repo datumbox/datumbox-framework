@@ -19,6 +19,7 @@ Version 0.7.0-SNAPSHOT - Build 20160103
         - getVariableNumber() -> xColumnSize()
         - erase() -> delete()
         - generateNewSubset() -> getSubset()
+        - _set() -> _unsafe_set()
     - Removed methods:
         - extractXColumnValuesByY()
     - New methods:
@@ -36,6 +37,7 @@ Version 0.7.0-SNAPSHOT - Build 20160103
 - Modified the algorithms that require Matrixes to use the sparse OpenMapRealMatrix instead of BlockRealMatrix.
 - Improved Exceptions and Exception messages.
 - Add support of Treemaps in the DatabaseConnector. Dataframe stores the records in TreeMap.
+- Use _unsafe_set() where possible to speed up the calculations.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

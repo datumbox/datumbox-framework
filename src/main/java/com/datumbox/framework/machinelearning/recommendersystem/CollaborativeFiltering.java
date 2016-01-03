@@ -226,7 +226,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             if(!recommendations.isEmpty()) {
                 //sort recommendation by popularity
                 recommendations = MapFunctions.sortNumberMapByValueDescending(recommendations);
-                newData.set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray(recommendations)));
+                newData._unsafe_set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray(recommendations)));
             }
         }
     }
