@@ -8,8 +8,8 @@ CODE IMPROVEMENTS
 - Add the ability to call Machine Learning algorithms from command line like in Mahout.
 
 - Update all maven plugins and dependencies to their latest versions.
-	- Add support for MapDB 2.0 once a stable version is released.
-	- Upgrade maven-surefire to 2.19.1 once it is released.
+    - Add support for MapDB 2.0 once a stable version is released.
+    - Upgrade maven-surefire to 2.19.1 once it is released.
 
 DOCUMENTATION
 =============
@@ -29,20 +29,20 @@ NEW ALGORITHMS
 - Add the ability to search through the configuration space and find the best performing algorithmic configuration.
 
 
-CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE:
-================================================
+CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE
+===============================================
 
 - Java StoredMap + BerkeleyDB:
-	http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
-	http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
+    http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
+    http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
 
 - Vanilla-java - HugeCollections:
-	https://code.google.com/p/vanilla-java/wiki/HugeCollections
+    https://code.google.com/p/vanilla-java/wiki/HugeCollections
 
 - Fastutil:
-	http://fastutil.di.unimi.it/#install
+    http://fastutil.di.unimi.it/#install
 
 - Joafip:
-	http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
+    http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
 
 
