@@ -16,7 +16,7 @@
 package com.datumbox.tests.utilities;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPfunctions;
@@ -33,12 +33,12 @@ import java.util.Random;
 public class Datasets {
     
     /**
-     * Cars Numeric Dataset.
+     * Cars Numeric Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] carsNumeric(DatabaseConfiguration dbConf) {
+    public static Dataframe[] carsNumeric(DatabaseConfiguration dbConf) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
         FeatureList: 
@@ -51,7 +51,7 @@ public class Datasets {
             - c1: yes
             - c2: no
         */
-        Dataset trainingData = new Dataset(dbConf);
+        Dataframe trainingData = new Dataframe(dbConf);
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 0));
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 1.0, 0.0}, 1));
@@ -103,19 +103,19 @@ public class Datasets {
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 0.0, 1.0}, 0));
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {1.0, 0.0, 1.0, 0.0, 0.0, 1.0}, 1));
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<Double>newDataVector(new Double[] {1.0, 0.0, 0.0, 1.0, 1.0, 0.0}, 0));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Cars Categorical Dataset.
+     * Cars Categorical Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] carsCategorical(DatabaseConfiguration dbConf) {
+    public static Dataframe[] carsCategorical(DatabaseConfiguration dbConf) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
         FeatureList: 
@@ -128,7 +128,7 @@ public class Datasets {
             - c1: yes
             - c2: no
         */
-        Dataset trainingData = new Dataset(dbConf);
+        Dataframe trainingData = new Dataframe(dbConf);
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"red", "sports", "domestic"}, "no"));
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"red", "sports", "domestic"}, "yes"));
@@ -140,21 +140,21 @@ public class Datasets {
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"red", "suv", "imported"}, "no"));
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"red", "sports", "imported"}, "yes"));
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<String>newDataVector(new String[] {"red", "suv", "domestic"}, "no"));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Wines Ordinal Dataset.
+     * Wines Ordinal Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] winesOrdinal(DatabaseConfiguration dbConf) {   
+    public static Dataframe[] winesOrdinal(DatabaseConfiguration dbConf) {   
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
-        Dataset trainingData = new Dataset(dbConf);
+        Dataframe trainingData = new Dataframe(dbConf);
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {6.1828706420186,5.7573756868964,3.7194701511967}, 1));
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {6.0681823226512,5.4994335920427,7.598260774876}, 1));
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {5.9347712436828,5.4589863647794,4.6587268913845}, 1));
@@ -754,22 +754,22 @@ public class Datasets {
         trainingData.add(TestUtils.<Double>newDataVector(new Double[] {7.8872168038128,6.9977919468999,8.1205596528281}, 3));
         
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<Double>newDataVector(new Double[] {5.92085126899850,6.01037072456601,4.66307928268761}, 1));
         validationData.add(TestUtils.<Double>newDataVector(new Double[] {7.18606367787857,6.64194264491917,4.41233885708698}, 2));
         validationData.add(TestUtils.<Double>newDataVector(new Double[] {7.83232073356316,8.76007761528955,7.05235518409310}, 3));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Gaussian Clusters Dataset.
+     * Gaussian Clusters Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] gaussianClusters(DatabaseConfiguration dbConf) {
-        Dataset trainingData = new Dataset(dbConf);
+    public static Dataframe[] gaussianClusters(DatabaseConfiguration dbConf) {
+        Dataframe trainingData = new Dataframe(dbConf);
         int observationsPerCluster = 5;
         Random rnd = RandomGenerator.getThreadLocalRandom();
         for(int i=0;i<observationsPerCluster;++i) {
@@ -784,19 +784,19 @@ public class Datasets {
             trainingData.add(TestUtils.<Object>newDataVector(new Object[] {50+rnd.nextGaussian(),100+rnd.nextGaussian()}, "c3"));
         }
         
-        Dataset validationData = trainingData.copy();
+        Dataframe validationData = trainingData.copy();
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Multinomial Clusters Dataset.
+     * Multinomial Clusters Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] multinomialClusters(DatabaseConfiguration dbConf) {
-        Dataset trainingData = new Dataset(dbConf);
+    public static Dataframe[] multinomialClusters(DatabaseConfiguration dbConf) {
+        Dataframe trainingData = new Dataframe(dbConf);
         //cluster 1
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
@@ -811,21 +811,21 @@ public class Datasets {
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 10.0,16.0,4.0,6.0}, "c3"));
         
         
-        Dataset validationData = trainingData.copy();
+        Dataframe validationData = trainingData.copy();
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Heart Disease Clusters Dataset.
+     * Heart Disease Clusters Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] heartDiseaseClusters(DatabaseConfiguration dbConf) {
+    public static Dataframe[] heartDiseaseClusters(DatabaseConfiguration dbConf) {
         //Heart Disease - C2: Age, Sex, ChestPain, RestBP, Cholesterol, BloodSugar, ECG, MaxHeartRate, Angina, OldPeak, STSlope, Vessels, Thal
         //http://www.sgi.com/tech/mlc/db/heart.names
-        Dataset trainingData = new Dataset(dbConf);        
+        Dataframe trainingData = new Dataframe(dbConf);        
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {49,"F","2",134,271,"no","0",162,"no",0,2,0,"3"}, "healthy"));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {42,"M","3",130,180,"no","0",150,"no",0,1,0,"3"}, "healthy"));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {39,"F","3",94,199,"no","0",179,"no",0,1,0,"3"}, "healthy"));
@@ -1008,21 +1008,21 @@ public class Datasets {
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {67,"M","4",120,229,"no","2",129,"yes", 2.6,2,2,"7"}, "problem"));
         
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {51,"M","3",100,222,"no","0",143,"yes", 1.2,2,0,"3"}, "healthy"));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {67,"M","4",120,229,"no","2",129,"yes", 2.6,2,2,"7"}, "problem"));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Ensemble Learning Responses Dataset.
+     * Ensemble Learning Responses Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] ensembleLearningResponses(DatabaseConfiguration dbConf) {
-        Dataset trainingData = new Dataset(dbConf);
+    public static Dataframe[] ensembleLearningResponses(DatabaseConfiguration dbConf) {
+        Dataframe trainingData = new Dataframe(dbConf);
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -1043,24 +1043,24 @@ public class Datasets {
         trainingData.add(TestUtils.<String>newDataVector(new String[] {"neg","neg"}, "neg"));
         
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         validationData.add(TestUtils.<String>newDataVector(new String[] {"pos","neg"}, "pos"));
         validationData.add(TestUtils.<String>newDataVector(new String[] {"neg","pos"}, "neg"));
         validationData.add(TestUtils.<String>newDataVector(new String[] {"neg","neg"}, "neg"));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Categorical Feature Selection Dataset.
+     * Categorical Feature Selection Dataframe.
      * 
      * @param dbConf
      * @param n
      * @return 
      */
-    public static Dataset[] featureSelectionCategorical(DatabaseConfiguration dbConf, int n) {
-        Dataset data = new Dataset(dbConf);
+    public static Dataframe[] featureSelectionCategorical(DatabaseConfiguration dbConf, int n) {
+        Dataframe data = new Dataframe(dbConf);
         for(int i=0;i<n;++i) {
             AssociativeArray xData = new AssociativeArray();
             //important fields
@@ -1092,17 +1092,17 @@ public class Datasets {
             data.add(new Record(xData, isRich));
         }
         
-        return new Dataset[] {data, data.copy()};
+        return new Dataframe[] {data, data.copy()};
     }
     
     /**
-     * PCA Dataset.
+     * PCA Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] featureTransformationPCA(DatabaseConfiguration dbConf) {
-        Dataset originalData = new Dataset(dbConf);
+    public static Dataframe[] featureTransformationPCA(DatabaseConfiguration dbConf) {
+        Dataframe originalData = new Dataframe(dbConf);
         originalData.add(TestUtils.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originalData.add(TestUtils.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
         originalData.add(TestUtils.<Double>newDataVector(new Double[]{7.0, 8.0, 0.0}, null));
@@ -1110,24 +1110,24 @@ public class Datasets {
         originalData.add(TestUtils.<Double>newDataVector(new Double[]{13.0, 14.0, 15.0}, null));
         
         
-        Dataset transformedData = new Dataset(dbConf);
+        Dataframe transformedData = new Dataframe(dbConf);
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-6.0641, 1.0143, -4.8165}, null));
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-7.7270, 6.7253, 2.8399}, null));
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-14.1401, -6.4677, 1.4920}, null));
         transformedData.add(TestUtils.<Double>newDataVector(new Double[]{-23.8837, 3.7408, -2.3614}, null));
         
-        return new Dataset[] {originalData, transformedData};
+        return new Dataframe[] {originalData, transformedData};
     }
     
     /**
-     * TF-IDF Dataset.
+     * TF-IDF Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] featureSelectionTFIDF(DatabaseConfiguration dbConf) {
-        Dataset trainingData = new Dataset(dbConf);
+    public static Dataframe[] featureSelectionTFIDF(DatabaseConfiguration dbConf) {
+        Dataframe trainingData = new Dataframe(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("important1", 2.0);
@@ -1153,19 +1153,19 @@ public class Datasets {
         xData3.put("stopword3", 4.0);
         trainingData.add(new Record(xData3, null));
         
-        Dataset validationData = trainingData.copy();
+        Dataframe validationData = trainingData.copy();
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Recommender System Dataset.
+     * Recommender System Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] recommenderSystemFood(DatabaseConfiguration dbConf) {
-        Dataset trainingData = new Dataset(dbConf);
+    public static Dataframe[] recommenderSystemFood(DatabaseConfiguration dbConf) {
+        Dataframe trainingData = new Dataframe(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("ml1", 5.0);
@@ -1266,7 +1266,7 @@ public class Datasets {
         xData11.put("vg3", 0.5);
         trainingData.add(new Record(xData11, "pitta"));
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         
         AssociativeArray profileData = new AssociativeArray();
         profileData.put("pizza", 4.5);
@@ -1274,16 +1274,16 @@ public class Datasets {
         profileData.put("salad", 0.5);
         validationData.add(new Record(profileData, null));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Regression Numeric Dataset.
+     * Regression Numeric Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] regressionNumeric(DatabaseConfiguration dbConf) {
+    public static Dataframe[] regressionNumeric(DatabaseConfiguration dbConf) {
         /*
         Synthetic Data generated with:
         
@@ -1293,7 +1293,7 @@ public class Datasets {
         $y=2+0.002*$x1+30*$x2;
         $dataTable[]=array(array($x1,$x2),null);
         */
-        Dataset trainingData = new Dataset(dbConf);
+        Dataframe trainingData = new Dataframe(dbConf);
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
@@ -1305,7 +1305,7 @@ public class Datasets {
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
@@ -1317,16 +1317,16 @@ public class Datasets {
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
     /**
-     * Regression Mixed Dataset.
+     * Regression Mixed Dataframe.
      * 
      * @param dbConf
      * @return 
      */
-    public static Dataset[] regressionMixed(DatabaseConfiguration dbConf) {
+    public static Dataframe[] regressionMixed(DatabaseConfiguration dbConf) {
         /*
         Synthetic Data generated with:
         
@@ -1338,7 +1338,7 @@ public class Datasets {
         $y=2+10*$x1+0.002*$x2+30*$x3+10*$x4;
         $dataTable[]=array(array((string)$x1,$x2,$x3,(string)$x4),null);
         */
-        Dataset trainingData = new Dataset(dbConf);
+        Dataframe trainingData = new Dataframe(dbConf);
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
@@ -1371,7 +1371,7 @@ public class Datasets {
         trainingData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
         
         
-        Dataset validationData = new Dataset(dbConf);
+        Dataframe validationData = new Dataframe(dbConf);
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
@@ -1383,7 +1383,7 @@ public class Datasets {
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
         validationData.add(TestUtils.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
         
-        return new Dataset[] {trainingData, validationData};
+        return new Dataframe[] {trainingData, validationData};
     }
     
 }

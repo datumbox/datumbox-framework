@@ -38,7 +38,7 @@ import static org.junit.Assert.*;
 public class DatasetTest extends BaseTest {
     
     /**
-     * Test of parseCSVFile method, of class Dataset.Builder.
+     * Test of parseCSVFile method, of class Dataframe.Builder.
      */
     @Test
     public void testParseCSVFile() {
@@ -56,16 +56,16 @@ public class DatasetTest extends BaseTest {
         headerDataTypes.put("name_of_port", TypeInference.DataType.CATEGORICAL);
         headerDataTypes.put("metro_population", TypeInference.DataType.NUMERICAL);
         
-        Dataset dataset;
+        Dataframe dataset;
         try (Reader fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile())) {
-            dataset = Dataset.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
+            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
         }
         catch(IOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             return;
         }
         
-        Dataset expResult = new Dataset(dbConf);
+        Dataframe expResult = new Dataframe(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("city", "Athens");
@@ -119,7 +119,7 @@ public class DatasetTest extends BaseTest {
     }
     
     /**
-     * Test of copyCollection2Array method, of class Dataset.
+     * Test of copyCollection2Array method, of class Dataframe.
      */
     @Test
     public void testCopyCollection2Array() {
@@ -131,7 +131,7 @@ public class DatasetTest extends BaseTest {
     }
 
     /**
-     * Test of getColumns method, of class Dataset.
+     * Test of getColumns method, of class Dataframe.
      */
     @Test
     public void testGetColumns() {
@@ -139,7 +139,7 @@ public class DatasetTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataset = new Dataset(dbConf);
+        Dataframe dataset = new Dataframe(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
@@ -171,7 +171,7 @@ public class DatasetTest extends BaseTest {
     }
 
     /**
-     * Test of extractColumnValues method, of class Dataset.
+     * Test of extractColumnValues method, of class Dataframe.
      */
     @Test
     public void testExtractColumnValues() {
@@ -180,7 +180,7 @@ public class DatasetTest extends BaseTest {
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
-        Dataset dataset = new Dataset(dbConf);
+        Dataframe dataset = new Dataframe(dbConf);
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -207,7 +207,7 @@ public class DatasetTest extends BaseTest {
     }
 
     /**
-     * Test of extractColumnValuesByY method, of class Dataset.
+     * Test of extractColumnValuesByY method, of class Dataframe.
      */
     @Test
     public void testExtractColumnValuesByY() {
@@ -216,7 +216,7 @@ public class DatasetTest extends BaseTest {
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         Object column = "height";
-        Dataset dataset = new Dataset(dbConf);
+        Dataframe dataset = new Dataframe(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);

@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
@@ -32,8 +32,8 @@ import org.junit.Test;
  */
 public class BivariateTest extends BaseTest {
 
-    private Dataset generateDataset(DatabaseConfiguration dbConf) {
-        Dataset dataset = new Dataset(dbConf);
+    private Dataframe generateDataset(DatabaseConfiguration dbConf) {
+        Dataframe dataset = new Dataframe(dbConf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put(0, 6);
@@ -159,7 +159,7 @@ public class BivariateTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 4.5625);
         expResult.put2d(0, 1, 0.5875);
@@ -193,7 +193,7 @@ public class BivariateTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.18561229707779);
@@ -227,7 +227,7 @@ public class BivariateTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put(0, new AssociativeArray());
         expResult.put2d(0, 0, 1.0);
@@ -262,7 +262,7 @@ public class BivariateTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(dbConf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.066666666666667);

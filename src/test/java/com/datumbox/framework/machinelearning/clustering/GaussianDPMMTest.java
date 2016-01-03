@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.TestConfiguration;
@@ -44,10 +44,10 @@ public class GaussianDPMMTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset[] data = Datasets.gaussianClusters(dbConf);
+        Dataframe[] data = Datasets.gaussianClusters(dbConf);
         
-        Dataset trainingData = data[0];
-        Dataset validationData = data[1];
+        Dataframe trainingData = data[0];
+        Dataframe validationData = data[1];
 
         
         String dbName = this.getClass().getSimpleName();
@@ -105,8 +105,8 @@ public class GaussianDPMMTest extends BaseTest {
         
         int k = 5;
         
-        Dataset[] data = Datasets.gaussianClusters(dbConf);
-        Dataset trainingData = data[0];
+        Dataframe[] data = Datasets.gaussianClusters(dbConf);
+        Dataframe trainingData = data[0];
         data[1].delete();
         
         

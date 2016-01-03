@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.continuous;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -44,11 +44,11 @@ public class PCATest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset[] data = Datasets.featureTransformationPCA(dbConf);
+        Dataframe[] data = Datasets.featureTransformationPCA(dbConf);
         
-        Dataset originalData = data[0];
-        Dataset validationdata = data[0].copy();
-        Dataset expResult = data[1];
+        Dataframe originalData = data[0];
+        Dataframe validationdata = data[0].copy();
+        Dataframe expResult = data[1];
         
         String dbName = this.getClass().getSimpleName();
         PCA instance = new PCA(dbName, dbConf);

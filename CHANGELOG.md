@@ -6,6 +6,7 @@ Version 0.7.0-SNAPSHOT - Build 20160102
 
 - Rename the erase() method to delete() in all interfaces.
 - Major refactoring of the Dataset class:
+    - It now implements the Collection<Record> interface and it is renamed Dataframe.
     - Renamed methods:
         - getRecordNumber() -> size()
         - extractXColumnValues() -> getXColumn()
@@ -16,11 +17,12 @@ Version 0.7.0-SNAPSHOT - Build 20160102
     - Removed methods:
         - extractXColumnValuesByY()
     - New methods:
-        - clear()
         - index()
         - values()
+        - Plus all others required for the Collection interface.
     - Modified methods:
         - iterator() no longer returns Integers but Records.
+        - add() no longer returns the ID of the record but only a boolean instead.
         
 
 Version 0.6.1 - Build 20160102

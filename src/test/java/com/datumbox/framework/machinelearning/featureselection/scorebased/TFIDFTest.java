@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
@@ -42,10 +42,10 @@ public class TFIDFTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset[] data = Datasets.featureSelectionTFIDF(dbConf);
+        Dataframe[] data = Datasets.featureSelectionTFIDF(dbConf);
         
-        Dataset trainingData = data[0];
-        Dataset validationData = data[1];
+        Dataframe trainingData = data[0];
+        Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
         TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();

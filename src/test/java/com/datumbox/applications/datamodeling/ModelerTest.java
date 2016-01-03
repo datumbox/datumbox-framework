@@ -15,7 +15,7 @@
  */
 package com.datumbox.applications.datamodeling;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.TestConfiguration;
@@ -48,10 +48,10 @@ public class ModelerTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset[] data = Datasets.carsNumeric(dbConf);
-        Dataset trainingData = data[0];
+        Dataframe[] data = Datasets.carsNumeric(dbConf);
+        Dataframe trainingData = data[0];
         
-        Dataset validationData = data[1];
+        Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();

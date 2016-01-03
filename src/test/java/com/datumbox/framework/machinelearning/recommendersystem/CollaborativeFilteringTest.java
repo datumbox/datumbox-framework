@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.recommendersystem;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.configuration.TestConfiguration;
@@ -44,10 +44,10 @@ public class CollaborativeFilteringTest extends BaseTest {
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
-        Dataset[] data = Datasets.recommenderSystemFood(dbConf);
+        Dataframe[] data = Datasets.recommenderSystemFood(dbConf);
         
-        Dataset trainingData = data[0];
-        Dataset validationData = data[1];
+        Dataframe trainingData = data[0];
+        Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();

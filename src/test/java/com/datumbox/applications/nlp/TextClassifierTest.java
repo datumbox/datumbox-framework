@@ -15,7 +15,7 @@
  */
 package com.datumbox.applications.nlp;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.TestConfiguration;
@@ -108,7 +108,7 @@ public class TextClassifierTest extends BaseTest {
         
         
         instance = new TextClassifier(dbName, dbConf);
-        Dataset validationDataset = null;
+        Dataframe validationDataset = null;
         try {
             validationDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         }

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.topicmodeling;
 
-import com.datumbox.common.dataobjects.Dataset;
+import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.configuration.TestConfiguration;
@@ -67,7 +67,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         
-        Dataset trainingData = Dataset.Builder.parseTextFiles(dataset, wsExtractor, dbConf);
+        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, dbConf);
         
         
         LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, dbConf);
@@ -82,7 +82,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
         
         lda.validate(trainingData);
         
-        Dataset reducedTrainingData = new Dataset(dbConf);
+        Dataframe reducedTrainingData = new Dataframe(dbConf);
         for(Record r : trainingData) {
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));

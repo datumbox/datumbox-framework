@@ -1,9 +1,5 @@
 CODE IMPROVEMENTS
 =================
-- Rename erase() to delete()
-- Rename Dataset to Dataframe
-- Dataframe should implement Collection<>
-- Iterator of Dataframe should be record.
 
 - Improve Serialization by setting the serialVersionUID in every serializable class?
 - Create better Exceptions and Exception messages.
