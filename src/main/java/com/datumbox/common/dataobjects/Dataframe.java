@@ -191,7 +191,6 @@ public class Dataframe implements Serializable, Collection<Record> {
     
     private TypeInference.DataType yDataType; 
     private Map<Object, TypeInference.DataType> xDataTypes;
-    private List<Integer> index;
     private Map<Integer, Record> records;
     
     private String dbName;
@@ -210,8 +209,7 @@ public class Dataframe implements Serializable, Collection<Record> {
         
         this.dbConf = dbConf;
         dbc = this.dbConf.getConnector(dbName);
-        index = new LinkedList<>();
-        records = dbc.getBigMap("tmp_records", MapType.HASHMAP, true);
+        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, true);
         
         yDataType = null;
         xDataTypes = new HashMap<>();
@@ -240,7 +238,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public synchronized int size() {
-        return index.size();
+        return records.size();
     }
     
     /**
@@ -250,7 +248,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public synchronized boolean isEmpty() {
-        return index.isEmpty();
+        return records.isEmpty();
     }
     
     /**
@@ -262,7 +260,6 @@ public class Dataframe implements Serializable, Collection<Record> {
         yDataType = null;
         
         xDataTypes.clear();
-        index.clear();
         records.clear();
     }
 
@@ -450,10 +447,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     public synchronized Record remove(Integer id) {
-        if(index.remove(id)) {
-            return records.remove(id);
-        }
-        return null;
+        return records.remove(id);
     }
     
     /**
@@ -665,7 +659,6 @@ public class Dataframe implements Serializable, Collection<Record> {
         //Ensures that the Dataframe can't be used after delete() is called.
         yDataType = null;
         xDataTypes = null;
-        index = null;
         records = null;
     }
     
@@ -676,7 +669,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     public Iterable<Map.Entry<Integer, Record>> entries() {
         return () -> new Iterator<Map.Entry<Integer, Record>>() {
-            private final Iterator<Integer> it = index().iterator();
+            private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
             
             @Override
             public boolean hasNext() {
@@ -685,9 +678,7 @@ public class Dataframe implements Serializable, Collection<Record> {
             
             @Override
             public Map.Entry<Integer, Record> next() {
-                Integer rId = it.next();
-                return new AbstractMap.SimpleEntry<>(rId, get(rId));
-                
+                return it.next();
             }
             
             @Override
@@ -704,7 +695,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     public Iterable<Integer> index() {
         return () -> new Iterator<Integer>() {
-            private final Iterator<Integer> it = index.iterator();
+            private final Iterator<Integer> it = records.keySet().iterator();
             
             @Override
             public boolean hasNext() {
@@ -759,7 +750,6 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     private Integer _add(Record r) {
         Integer newId = size();
-        index.add(newId);
         records.put(newId, r);
         return newId;
     }
