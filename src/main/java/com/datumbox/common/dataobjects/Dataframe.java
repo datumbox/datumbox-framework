@@ -31,9 +31,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -357,20 +356,10 @@ public final class Dataframe implements Serializable, Collection<Record> {
     }
     
     
-    /*
-    None of the Remove operations are allowed on the Dataframe. This is because
-    a large number of methods use Matrixes and the current implementation assumes
-    a 1-to-1 mapping between the record ids and the rows of the Matrix. Removing
-    a record would cause a gap in the rows and this is not permitted.
-    
-    The classes that cause the problem are the following: 
-    MatrixDataframe, SupportVectorMachine, PCA, MatrixLinearRegression
-    
-    All problematic areas are marked with "CONTINUOUS_ID_ASSUMPTION".
-    */
+    //Optional Collection Methods
     
     /**
-     * NOT SUPPORTED: Removes the first occurrence of the specified element from this Dataframe, 
+     * Removes the first occurrence of the specified element from this Dataframe, 
      * if it is present and it does not update the metadata.
      * 
      * @param o
@@ -378,19 +367,16 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
-        /*
-        int id = indexOf((Record) o);
-        if(id == -1) {
+        Integer id = indexOf((Record) o);
+        if(id == null) {
             return false;
         }
         remove(id);
         return true;
-        */
     }
-
+    
     /**
-     * NOT SUPPORTED: Removes all of this collection's elements that are also contained in the
+     * Removes all of this collection's elements that are also contained in the
      * specified collection and updates the metadata.
      * 
      * @param c
@@ -398,8 +384,6 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-        /*
         boolean modified = false;
         for(Object o : c) {
             modified |= remove(o);
@@ -408,11 +392,10 @@ public final class Dataframe implements Serializable, Collection<Record> {
             recalculateMeta();
         }
         return modified;
-        */
     }
 
     /**
-     * NOT SUPPORTED: Retains only the elements in this collection that are contained in the
+     * Retains only the elements in this collection that are contained in the
      * specified collection and updates the meta data.
      * 
      * @param c
@@ -420,11 +403,8 @@ public final class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-        /*
         boolean modified = false;
-        for(Integer rId : index()) {
-            Record r = get(rId);
+        for(Record r : records.values()) {
             if(!c.contains(r)) {
                 remove(r);
                 modified = true;
@@ -434,40 +414,38 @@ public final class Dataframe implements Serializable, Collection<Record> {
             recalculateMeta();
         }
         return modified;
-        */
     }
     
+    
+    //Other methods
+
     /**
-     * NOT SUPPORTED: Removes a record with a particular id from the Dataframe but does not update
+     * Removes a record with a particular id from the Dataframe but does not update
      * the metadata.
      * 
      * @param id
      * @return 
      */
     public Record remove(Integer id) {
-        throw new UnsupportedOperationException();
-        //return records.remove(id);
+        return records.remove(id);
     }
-    
-    
-    //Other methods
     
     /**
      * Returns the index of the first occurrence of the specified element in this 
-     * Dataframe, or -1 if this Dataframe does not contain the element.
+     * Dataframe, or null if this Dataframe does not contain the element.
      * WARNING: The Recordsare checked only for their X and Y values, not for 
      * the yPredicted and yPredictedProbabilities values.
      * 
      * @param r
      * @return 
      */
-    public int indexOf(Record r) {
+    public Integer indexOf(Record r) {
         for(Map.Entry<Integer, Record> entry : records.entrySet()) {
             if(entry.getValue().equals(r)) {
                 return entry.getKey();
             }
         }
-        return -1;
+        return null;
     }
     
     /**

@@ -5,8 +5,10 @@ Version 0.7.0-SNAPSHOT - Build 20160102
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
+- Non of the ML methods relies on recordIds for any calculation. Even the algorithms that use Matrixes are now patched.
 - Major refactoring of the Dataset class:
     - It now implements the Collection<Record> interface and it is renamed as Dataframe.
+    - It allows remove operations.
     - Renamed methods:
         - getRecordNumber() -> size()
         - extractXColumnValues() -> getXColumn()
@@ -26,6 +28,7 @@ Version 0.7.0-SNAPSHOT - Build 20160102
     - Modified methods:
         - iterator() no longer returns Integers but Records.
         - add() no longer returns the ID of the record but boolean. To get the ID use addRecord().
+- Fixing a bug on Adaboost which resulted in mapping incorrectly the recordIds.
         
 
 Version 0.6.1 - Build 20160102

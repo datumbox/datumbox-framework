@@ -81,7 +81,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
     } 
 
     @Override
-    protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) {
+    protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights) {
         //no update on the observationWeights, all observations have equal probability 1/n
         
         //update classifier weights with equal weights

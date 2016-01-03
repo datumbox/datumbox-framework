@@ -155,8 +155,8 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
-        
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, featureIds);
+        Map<Integer, Integer> recordIdsReference = null; //this reference is not needed
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, featureIds, recordIdsReference);
         
         RealVector Y = matrixDataset.getY();
         RealMatrix X = matrixDataset.getX();
@@ -235,16 +235,19 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             coefficients.setEntry(featureId, entry.getValue());
         }
         
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds);
+        Map<Integer, Integer> recordIdsReference = new HashMap<>(); //use a mapping between recordIds and rowIds in Matrix
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds, recordIdsReference);
         
         RealMatrix X = matrixDataset.getX();
         
         RealVector Y = X.operate(coefficients);
-        for(Integer rId : newData.index()) { //CONTINUOUS_ID_ASSUMPTION
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
-            newData.set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rId), r.getYPredictedProbabilities()));
+            int rowId = recordIdsReference.get(rId);
+            newData.set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
         }
         
+        recordIdsReference = null;
         matrixDataset = null;
     }
 

@@ -24,6 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.DiagonalMatrix;
@@ -275,7 +276,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, featureIds);
+        Map<Integer, Integer> recordIdsReference = null;
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, featureIds, recordIdsReference);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -294,41 +296,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         RealMatrix components;
         double[] eigenValues;
-        /*
-        if(d>n) { //turned off because of the algorithm could not be validated
-            //Karhunen Lowe Transform to speed up calculations
-            
-            //nxn matrix
-            RealMatrix covarianceNN = (X.multiply(X.transpose())).scalarMultiply(1.0/(n-1.0)); 
-            
-            EigenDecomposition decomposition = new EigenDecomposition(covarianceNN);
-            eigenValues = decomposition.getRealEigenvalues();
-            
-            
-            RealMatrix eigenVectors = decomposition.getV();
-            
-            double[] sqrtInverseEigenValues = new double[eigenValues.length];
-            for(int i=0;i<eigenValues.length;++i) {
-                if(eigenValues[i]==0.0) {
-                    sqrtInverseEigenValues[i] = 0.0;
-                }
-                else {
-                    sqrtInverseEigenValues[i] = 1.0/Math.sqrt(eigenValues[i]);
-                }
-            }
-            
-            components = X.transpose().multiply(eigenVectors);
-            //Components = X'*V*L^-0.5; To whiten them we multiply with L^0.5 which 
-            //cancels out the previous multiplication. So below we multiply by
-            //L^-0.5 ONLY if we don't whiten.
-            if(!knowledgeBase.getTrainingParameters().isWhitened()) { 
-                components = components.multiply(new DiagonalMatrix(sqrtInverseEigenValues));
-            }
-        }
-        else {
-            //Normal PCA goes here
-        }
-        */
+        
         //dxd matrix
         RealMatrix covarianceDD = (X.transpose().multiply(X)).scalarMultiply(1.0/(n-1.0)); 
 
@@ -391,37 +359,33 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds);
+        
+        Map<Integer, Integer> recordIdsReference = new HashMap<>();
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds, recordIdsReference);
         RealMatrix X = matrixDataset.getX();
-        /*
-        //subtracting means
-        double[] meanValues = modelParameters.getMean();
-        int n = newdata.size();
-        int cols = featureIds.size();
-        for(int row=0;row<n;++row) {
-            for(int columnId=0;columnId<cols;++columnId) {
-                X.addToEntry(row, columnId, -meanValues[columnId]); //inplace subtraction!!!
-            }
-        }
-        */
+        
         RealMatrix components = new BlockRealMatrix(modelParameters.getComponents());
         
         
         //multiplying the data with components
         X = X.multiply(components);
         
-        for(Integer rId : newData.index()) { //CONTINUOUS_ID_ASSUMPTION
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
+            int rowId = recordIdsReference.get(rId);
             
             AssociativeArray xData = new AssociativeArray();
             int componentId=0;
-            for(double value : X.getRow(rId)) {
+            for(double value : X.getRow(rowId)) {
                 xData.put(componentId, value);
                 ++componentId;
             }
             
             newData._set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
         }
+        
+        recordIdsReference = null;
+        matrixDataset = null;
         
         newData.recalculateMeta();
     }

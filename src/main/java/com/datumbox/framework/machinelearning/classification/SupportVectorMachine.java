@@ -273,13 +273,14 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         prob.x = new svm_node[n][sparseD];
         
         //converting the dataset in the way that LibSVM can handle it
+        int rowId = 0;
         for(Integer rId : trainingData.index()) { //CONTINUOUS_ID_ASSUMPTION
             Record r = trainingData.get(rId);
             
             Object theClass=r.getY();
             
             int classId = classIds.get(theClass);
-            prob.y[rId] = classId;
+            prob.y[rowId] = classId;
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
@@ -293,18 +294,19 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
                 node.index=(featureId+1); //the indexes in the library start from 1!!!
                 node.value=value;
                 
-                prob.x[rId][featureId] = node;
+                prob.x[rowId][featureId] = node;
             }
             
             //fill with zeros the rest of the features
             for(int featureId = 0;featureId<sparseD; ++featureId) {
-                if(prob.x[rId][featureId]==null) {
+                if(prob.x[rowId][featureId]==null) {
                     svm_node node=new svm_node();
                     node.index=(featureId+1);
                     node.value=0.0;
-                    prob.x[rId][featureId] = node;
+                    prob.x[rowId][featureId] = node;
                 }
             }
+            ++rowId;
         }
         
         //get the parameters for svm

@@ -6,7 +6,6 @@ CODE IMPROVEMENTS
 - Add multithreading support.
 - Check out the Sparse Matrices/Vectors in Apache Math3 library. Use them in GaussianDPMM, MultinomialDPMM and MatrixLinearRegression.
 - Add the ability to call Machine Learning algorithms from command line like in Mahout.
-- Support the remove operations on the Dataframe. Look for "CONTINUOUS_ID_ASSUMPTION" within the code for problematic areas.
 
 - Update all maven plugins and dependencies to their latest versions.
 	- Add support for MapDB 2.0 once a stable version is released.

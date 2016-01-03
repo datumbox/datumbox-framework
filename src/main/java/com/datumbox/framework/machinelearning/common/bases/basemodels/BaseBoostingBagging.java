@@ -30,6 +30,7 @@ import com.datumbox.framework.machinelearning.ensemblelearning.FixedCombinationR
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -268,11 +269,6 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             //We construct a new Dataframe from the sampledIDs
             Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
             
-            //WARNING: The ids of the new sampledTrainingDataset are not the same
-            //as the ones on the original dataset.
-            //To link back the new ids to the old ones we must use the mapping
-            //as stored in the sampledIDs list.
-            
             BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
             
             mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
@@ -285,7 +281,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             mlclassifier.close();
             mlclassifier = null;
             
-            Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights, sampledIDs);
+            Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights);
             validationDataset = null;
             
             if(status==Status.STOP) {
@@ -337,10 +333,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      * 
      * @param validationDataset
      * @param observationWeights
-     * @param idMapping
      * @return 
      */
-    protected abstract Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights, FlatDataList idMapping);
+    protected abstract Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights);
     
     /**
      * Deletes the database of all the weak algorithms. 

@@ -82,14 +82,13 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     } 
 
     @Override
-    protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) { 
+    protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights) { 
         //calculate prediction error for this classifier
         double error = 0.0;
         for(Integer rId : validationDataset.index()) {
             Record r = validationDataset.get(rId);
             if(!r.getY().equals(r.getYPredicted())) {
-                Integer original_rId = (Integer) idMapping.get(rId);
-                error+= TypeInference.toDouble(observationWeights.get(original_rId));
+                error+= TypeInference.toDouble(observationWeights.get(rId));
             }
         }
         
@@ -118,9 +117,8 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             for(Integer rId : validationDataset.index()) {
                 Record r = validationDataset.get(rId);
                 if(!r.getY().equals(r.getYPredicted())) {
-                    Integer original_rId = (Integer) idMapping.get(rId);
-                    Double value = TypeInference.toDouble(observationWeights.get(original_rId));
-                    observationWeights.put(original_rId, value*Math.exp(weight)); //increase the weight for misclassified observations
+                    Double value = TypeInference.toDouble(observationWeights.get(rId));
+                    observationWeights.put(rId, value*Math.exp(weight)); //increase the weight for misclassified observations
                 }
             }
             

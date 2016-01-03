@@ -25,6 +25,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -103,12 +104,14 @@ public class DatasetTest extends BaseTest {
         xData4.put("name_of_port", null);
         expResult.add(new Record(xData4, null));
         
-        for(Integer rId : expResult.index()) {
-            Record r1 = expResult.get(rId);
-            Record r2 = dataset.get(rId);
-            
-            assertEquals(r1.equals(r2),true);
+        Iterator<Record> it1 = expResult.iterator();
+        Iterator<Record> it2 = dataset.iterator();
+        
+        while(it1.hasNext() && it2.hasNext()) {
+            assertEquals(it1.next().equals(it2.next()),true);
         }
+        
+        assertEquals(it1.hasNext(),it2.hasNext()); //check that both finished
         
         assertEquals(expResult.getYDataType(),dataset.getYDataType());
         

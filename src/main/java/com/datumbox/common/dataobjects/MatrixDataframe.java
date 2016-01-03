@@ -36,6 +36,7 @@ public class MatrixDataframe {
     private final RealVector Y;
     private final RealMatrix X;
     private final Map<Object, Integer> feature2ColumnId;
+    private final Map<Integer, Integer> recordId2RowId;
     
     /**
      * Getter for the Y vector with the values of the response variables.
@@ -65,11 +66,12 @@ public class MatrixDataframe {
      * @param X
      * @param feature2ColumnId 
      */
-    private MatrixDataframe(RealVector Y, RealMatrix X, Map<Object, Integer> feature2ColumnId) {
+    private MatrixDataframe(RealVector Y, RealMatrix X, Map<Object, Integer> feature2ColumnId, Map<Integer, Integer> recordId2RowId) {
         //this constructor must be private because it is used only internally
         this.Y = Y;
         this.X = X;
         this.feature2ColumnId = feature2ColumnId;
+        this.recordId2RowId = recordId2RowId;
     }
     
     /**
@@ -81,9 +83,10 @@ public class MatrixDataframe {
      * @param dataset
      * @param addConstantColumn
      * @param featureIdsReference
+     * @param recordIdsReference
      * @return 
      */
-    public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference) {
+    public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
         if(!featureIdsReference.isEmpty()) {
             throw new RuntimeException("The featureIdsReference map should be empty.");
         }
@@ -96,7 +99,7 @@ public class MatrixDataframe {
             ++d;
         }
         
-        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference, recordIdsReference);
         
         
         if(dataset.isEmpty()) {
@@ -113,12 +116,16 @@ public class MatrixDataframe {
             m.feature2ColumnId.put(Dataframe.constantColumnName, previousFeatureId);
             ++previousFeatureId; 
         }
-
-        for(Integer rId : dataset.index()) { //CONTINUOUS_ID_ASSUMPTION
+        
+        int rowId = 0;
+        for(Integer rId : dataset.index()) {
             Record r = dataset.get(rId);
+            if(recordIdsReference != null) {
+                recordIdsReference.put(rId, rowId);
+            }
             
             if(extractY) {
-                m.Y.setEntry(rId, TypeInference.toDouble(r.getY()));
+                m.Y.setEntry(rowId, TypeInference.toDouble(r.getY()));
             }
             
             
@@ -133,12 +140,13 @@ public class MatrixDataframe {
                 
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value != null) {
-                    m.X.setEntry(rId, featureId, value);
+                    m.X.setEntry(rowId, featureId, value);
                 }
                 else {
                     //else the X matrix maintains the 0.0 default value
                 }
             }
+            ++rowId;
         }
         
         return m;
@@ -151,9 +159,10 @@ public class MatrixDataframe {
      * 
      * @param newDataset
      * @param featureIdsReference
+     * @param recordIdsReference
      * @return 
      */
-    public static MatrixDataframe parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference) {
+    public static MatrixDataframe parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
         if(featureIdsReference.isEmpty()) {
             throw new RuntimeException("The featureIdsReference map should not be empty.");
         }
@@ -161,7 +170,7 @@ public class MatrixDataframe {
         int n = newDataset.size();
         int d = featureIdsReference.size();
         
-        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new BlockRealMatrix(n, d), featureIdsReference, recordIdsReference);
         
         if(newDataset.isEmpty()) {
             return m;
@@ -171,16 +180,19 @@ public class MatrixDataframe {
         
         boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataframe.constantColumnName);
         
-        //Assummes that the ids start from 0 and go up to n
-        for(Integer rId : newDataset.index()) { //CONTINUOUS_ID_ASSUMPTION
+        int rowId = 0;
+        for(Integer rId : newDataset.index()) {
             Record r = newDataset.get(rId);
+            if(recordIdsReference != null) {
+                recordIdsReference.put(rId, rowId);
+            }
             
             if(extractY) {
-                m.Y.setEntry(rId, TypeInference.toDouble(r.getY()));
+                m.Y.setEntry(rowId, TypeInference.toDouble(r.getY()));
             }
             
             if(addConstantColumn) {
-                m.X.setEntry(rId, 0, 1.0); //add the constant column
+                m.X.setEntry(rowId, 0, 1.0); //add the constant column
             }
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
@@ -188,13 +200,14 @@ public class MatrixDataframe {
                 if(value!=null) {
                     Integer featureId = m.feature2ColumnId.get(feature);
                     if(featureId!=null) {//if the feature exists in our database
-                        m.X.setEntry(rId, featureId, value);
+                        m.X.setEntry(rowId, featureId, value);
                     }
                 }
                 else {
                     //else the X matrix maintains the 0.0 default value
                 }
             }
+            ++rowId;
         }
         
         return m;
