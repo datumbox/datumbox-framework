@@ -30,7 +30,6 @@ import com.datumbox.framework.machinelearning.ensemblelearning.FixedCombinationR
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SRS;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
