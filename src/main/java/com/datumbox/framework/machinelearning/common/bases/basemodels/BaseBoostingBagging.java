@@ -347,11 +347,11 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      */
     @Override
     public void delete() {
-        eraseWeakClassifiers();
+        deleteWeakClassifiers();
         super.delete();
     }
     
-    private void eraseWeakClassifiers() {
+    private void deleteWeakClassifiers() {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         

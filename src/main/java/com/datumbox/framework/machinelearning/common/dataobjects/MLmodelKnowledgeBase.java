@@ -87,7 +87,7 @@ public final class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, 
     }
     
     /**
-     * Deletes and re-initializes KnowledgeBase object. It erases all data from 
+     * Deletes and re-initializes KnowledgeBase object. It deletes all data from 
      * storage, it releases all resources, reinitializes the internal objects and
      * opens new connection to the permanent storage.
      */

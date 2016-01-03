@@ -480,7 +480,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
 
     /**
-     * Erases the Dataset and removes all internal variables. Once you delete a
+     * Deletes the Dataset and removes all internal variables. Once you delete a
  dataset, the instance can no longer be used.
      */
     public void delete() {

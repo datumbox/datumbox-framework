@@ -260,7 +260,7 @@ public class CETR {
         instance.predict(dataset);
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
         
-        instance.delete(); //erase immediately the result
+        instance.delete(); //delete immediately the result
         instance = null;
     }
     
