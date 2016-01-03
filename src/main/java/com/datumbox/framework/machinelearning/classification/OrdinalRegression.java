@@ -232,8 +232,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         //mapping between the thita and the exact previous thita value
         Map<Object, Object> previousThitaMapping = getPreviousThitaMappings();
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             AssociativeArray predictionProbabilities = hypothesisFunction(r.getX(), previousThitaMapping, weights, thitas);
             
             Object theClass=getSelectedClassFromClassScores(predictionProbabilities);

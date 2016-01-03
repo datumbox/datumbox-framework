@@ -26,6 +26,7 @@ Version 0.7.0-SNAPSHOT - Build 20160103
         - indexOf()
         - index()
         - values()
+        - entries()
         - Plus all others required for the Collection interface.
     - Modified methods:
         - iterator() no longer returns Integers but Records.

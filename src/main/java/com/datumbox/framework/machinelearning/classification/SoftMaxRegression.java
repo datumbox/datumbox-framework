@@ -196,8 +196,9 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             AssociativeArray predictionScores = new AssociativeArray();
             for(Object theClass : classesSet) {
                 predictionScores.put(theClass, calculateClassScore(r.getX(), theClass, thitas));

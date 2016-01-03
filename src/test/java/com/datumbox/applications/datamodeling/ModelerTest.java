@@ -100,8 +100,9 @@ public class ModelerTest extends BaseTest {
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
-        for(Integer rId : validationData.index()) {
-            Record r = validationData.get(rId);
+        for(Map.Entry<Integer, Record> e : validationData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             expResult.put(rId, r.getY());
             result.put(rId, r.getYPredicted());
         }

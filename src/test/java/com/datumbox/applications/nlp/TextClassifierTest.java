@@ -106,9 +106,9 @@ public class TextClassifierTest extends BaseTest {
         
         
         instance = new TextClassifier(dbName, dbConf);
-        Dataframe validationDataset = null;
+        Dataframe validationData = null;
         try {
-            validationDataset = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
+            validationData = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
         }
         catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
@@ -117,14 +117,15 @@ public class TextClassifierTest extends BaseTest {
         
         List<Object> expResult = Arrays.asList("negative","positive");
         int i = 0;
-        for(Integer rId : validationDataset.index()) {
-            Record r = validationDataset.get(rId);
+        for(Map.Entry<Integer, Record> e : validationData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             assertEquals(expResult.get(i), r.getYPredicted());
             ++i;
         }
         
         instance.delete();
-        validationDataset.delete();
+        validationData.delete();
     }
 
 }

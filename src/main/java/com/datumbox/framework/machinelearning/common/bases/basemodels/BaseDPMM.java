@@ -319,8 +319,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         Integer newClusterId = tempClusterMap.size(); //start counting the Ids based on clusters in the list
 
         if(trainingParameters.getInitializationMethod()==TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD) {
-            for(Integer rId : dataset.index()) {
-                Record r = dataset.get(rId);
+            for(Map.Entry<Integer, Record> e : dataset.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
 
@@ -354,8 +355,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             }
             
             int clusterMapSize = newClusterId;
-            for(Integer rId : dataset.index()) {
-                Record r = dataset.get(rId);
+            for(Map.Entry<Integer, Record> e : dataset.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 
                 int assignedClusterId = PHPfunctions.mt_rand(0, clusterMapSize-1);
                 
@@ -378,8 +380,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             logger.debug("Iteration {}", iteration);
             
             noChangeMade=true;
-            for(Integer rId : dataset.index()) {
-                Record r = dataset.get(rId);
+            for(Map.Entry<Integer, Record> e : dataset.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 
                 Integer pointClusterId = (Integer) r.getYPredicted();
                 CL ci = tempClusterMap.get(pointClusterId);
@@ -485,8 +488,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             
             AssociativeArray clusterScores = new AssociativeArray();
             for(Cluster c : clusterList.values()) {

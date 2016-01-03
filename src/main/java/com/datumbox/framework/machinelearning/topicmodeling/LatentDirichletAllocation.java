@@ -412,8 +412,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         //initialize topic assignments of each word randomly and update the counters
-        for(Integer rId : trainingData.index()) { 
-            Record r = trainingData.get(rId);
+        for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             Integer documentId = rId;
             
             documentWordCounts.put(documentId, r.getX().size());
@@ -445,8 +446,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             
             int changedCounter = 0;
             //collapsed gibbs sampler
-            for(Integer rId : trainingData.index()) { 
-                Record r = trainingData.get(rId);
+            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 Integer documentId = rId;
                 
                 AssociativeArray topicAssignments = new AssociativeArray();
@@ -603,8 +605,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", true);
         
         //initialize topic assignments of each word randomly and update the counters
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             Integer documentId = rId;
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -637,8 +640,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             int changedCounter = 0;
             perplexity = 0.0;
             double totalDatasetWords = 0.0;
-            for(Integer rId : newData.index()) {
-                Record r = newData.get(rId);
+            for(Map.Entry<Integer, Record> e : newData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 Integer documentId = rId;
                 
                 

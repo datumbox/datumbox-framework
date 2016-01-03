@@ -136,8 +136,9 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     protected void predictDataset(Dataframe newData) { 
         Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
                 
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             AssociativeArray predictionScores = new AssociativeArray();
             for(Object theClass : classesSet) {
                 predictionScores.put(theClass, calculateClassScore(r.getX(),theClass));

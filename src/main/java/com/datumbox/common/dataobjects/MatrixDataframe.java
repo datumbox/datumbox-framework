@@ -118,8 +118,9 @@ public class MatrixDataframe {
         }
         
         int rowId = 0;
-        for(Integer rId : dataset.index()) {
-            Record r = dataset.get(rId);
+        for(Map.Entry<Integer, Record> e : dataset.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             if(recordIdsReference != null) {
                 recordIdsReference.put(rId, rowId);
             }
@@ -157,32 +158,33 @@ public class MatrixDataframe {
  existing mapping between feature names and column ids. Typically used
      * to parse the testing or validation dataset.
      * 
-     * @param newDataset
+     * @param newData
      * @param featureIdsReference
      * @param recordIdsReference
      * @return 
      */
-    public static MatrixDataframe parseDataset(Dataframe newDataset, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
+    public static MatrixDataframe parseDataset(Dataframe newData, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
         if(featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should not be empty.");
         }
         
-        int n = newDataset.size();
+        int n = newData.size();
         int d = featureIdsReference.size();
         
         MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new OpenMapRealMatrix(n, d), featureIdsReference, recordIdsReference);
         
-        if(newDataset.isEmpty()) {
+        if(newData.isEmpty()) {
             return m;
         }
         
-        boolean extractY=(newDataset.getYDataType()==TypeInference.DataType.NUMERICAL);
+        boolean extractY=(newData.getYDataType()==TypeInference.DataType.NUMERICAL);
         
         boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataframe.constantColumnName);
         
         int rowId = 0;
-        for(Integer rId : newDataset.index()) {
-            Record r = newDataset.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             if(recordIdsReference != null) {
                 recordIdsReference.put(rId, rowId);
             }

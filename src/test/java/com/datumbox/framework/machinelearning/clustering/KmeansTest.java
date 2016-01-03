@@ -89,8 +89,9 @@ public class KmeansTest extends BaseTest {
         Map<Integer, Object> result = new HashMap<>();
         
         Map<Integer, Kmeans.Cluster> clusters = instance.getClusters();
-        for(Integer rId : validationData.index()) {
-            Record r = validationData.get(rId);
+        for(Map.Entry<Integer, Record> e : validationData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             expResult.put(rId, r.getY());
             Integer clusterId = (Integer) r.getYPredicted();
             Object label = clusters.get(clusterId).getLabelY();

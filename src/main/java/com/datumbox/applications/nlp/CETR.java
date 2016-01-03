@@ -230,8 +230,9 @@ public class CETR {
         Integer nonContentClusterId = (Integer)entry.getKey();
         
         List<Integer> selectedRows = new ArrayList<>();
-        for(Integer rId : dataset.index()) {
-            Record r = dataset.get(rId);
+        for(Map.Entry<Integer, Record> e : dataset.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             Integer clusterId = (Integer)r.getYPredicted();
             //if the point is not classified as non-content add it in the selected list
             if(!Objects.equals(clusterId, nonContentClusterId)) { 

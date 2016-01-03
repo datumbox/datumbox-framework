@@ -244,8 +244,9 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         RealMatrix X = matrixDataset.getX();
         
         RealVector Y = X.operate(coefficients);
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);
             newData.set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
         }

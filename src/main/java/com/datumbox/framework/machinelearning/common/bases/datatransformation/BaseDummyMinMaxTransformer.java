@@ -180,8 +180,9 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param maxColumnValues 
      */
     protected static void normalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Integer rId : data.index()) {
-            Record r = data.get(rId);
+        for(Map.Entry<Integer, Record> e : data.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
@@ -223,8 +224,9 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param maxColumnValues 
      */
     protected static void denormalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Integer rId : data.index()) {
-            Record r = data.get(rId);
+        for(Map.Entry<Integer, Record> e : data.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
@@ -287,8 +289,9 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
-            for(Integer rId : data.index()) {
-                Record r = data.get(rId);
+            for(Map.Entry<Integer, Record> e : data.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 Double value = TypeInference.toDouble(r.getY());
                 if(value==null) { //if we have a missing value don't perform any normalization
                     continue;
@@ -328,9 +331,10 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         
         TypeInference.DataType dataType = data.getYDataType();
         if(dataType==TypeInference.DataType.NUMERICAL || dataType==null) {
-            
-            for(Integer rId : data.index()) {
-                Record r = data.get(rId);
+
+            for(Map.Entry<Integer, Record> e : data.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 
                 //do the same for the response variable Y
                 Double min = minColumnValues.get(Dataframe.yColumnName);
@@ -397,8 +401,9 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
         //Replace variables with dummy versions
-        for(Integer rId: data.index()) {
-            Record r = data.get(rId);
+        for(Map.Entry<Integer, Record> e : data.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             
             AssociativeArray xData = r.getX().copy();
             

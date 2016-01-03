@@ -202,8 +202,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             
             classifierWeightsArray.put(t, weakClassifierWeights.get(t));
             
-            for(Integer rId : newData.index()) {
-                Record r = newData.get(rId);
+            for(Map.Entry<Integer, Record> e : newData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
                 DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
@@ -213,8 +214,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //for each record find the combined classification by majority vote
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
             
             AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(currentRecordDecisions, classifierWeightsArray);

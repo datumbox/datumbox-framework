@@ -214,8 +214,9 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     
     @Override
     protected void predictDataset(Dataframe newData) { 
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             AssociativeArray predictionScores = calculateClassScores(r.getX());
             
             Object theClass=getSelectedClassFromClassScores(predictionScores);
@@ -278,9 +279,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
         //converting the dataset in the way that LibSVM can handle it
         int rowId = 0;
-        for(Integer rId : trainingData.index()) { //CONTINUOUS_ID_ASSUMPTION
-            Record r = trainingData.get(rId);
-            
+        for(Record r : trainingData.values()) { 
             Object theClass=r.getY();
             
             int classId = classIds.get(theClass);

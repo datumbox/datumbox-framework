@@ -330,8 +330,9 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             
             AssociativeArray clusterDistances = new AssociativeArray();
             for(Cluster c : clusterList.values()) {
@@ -410,8 +411,9 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         //initialize clusters, foreach point create a cluster
         Integer clusterId = 0;
-        for(Integer rId : trainingData.index()) { 
-            Record r = trainingData.get(rId);
+        for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             Cluster c = new Cluster(clusterId);
             
             c.add(rId, r);

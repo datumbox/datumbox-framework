@@ -426,8 +426,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             
             AssociativeArray clusterDistances = new AssociativeArray();
             for(Cluster c : clusterList.values()) {
@@ -609,8 +610,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         if(initializationMethod==TrainingParameters.Initialization.SET_FIRST_K || 
            initializationMethod==TrainingParameters.Initialization.FORGY) {
             int i = 0;
-            for(Integer rId : trainingData.index()) { 
-                Record r = trainingData.get(rId);
+            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 if(i>=k) {
                     break;
                 } 
@@ -626,8 +628,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         else if(initializationMethod==TrainingParameters.Initialization.RANDOM_PARTITION) {
             int i = 0;
             
-            for(Integer rId : trainingData.index()) { 
-                Record r = trainingData.get(rId);
+            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 Integer clusterId = i%k;
                 
                 Cluster c = clusterList.get(clusterId);
@@ -658,8 +661,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 double maxMinDistance = 0.0;
                 
                 int samplePointCounter = 0;
-                for(Integer rId : trainingData.index()) { 
-                    Record r = trainingData.get(rId);
+                for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                    Integer rId = e.getKey();
+                    Record r = e.getValue();
                     if(samplePointCounter>sampleSize) {
                         break; //we only check a small part of the trainingData. This is equivalent to samplying only few observations from, the dataset
                     }
@@ -701,9 +705,10 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             for(int i = 0; i < k; ++i) {
                 Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
-                
-                for(Integer rId : trainingData.index()) { 
-                    Record r = trainingData.get(rId);
+
+                for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                    Integer rId = e.getKey();
+                    Record r = e.getValue();
                     if(alreadyAddedPoints.contains(rId)) {
                         continue; //ignore points that are already selected
                     }
@@ -761,8 +766,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //assign records in clusters
-            for(Integer rId : trainingData.index()) { 
-                Record r = trainingData.get(rId);
+            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 //we are storing cluster references not clusterIds
                 for(Cluster c : clusterList.values()) {
                     clusterDistances.put(c, calculateDistance(r, c.getCentroid()));

@@ -179,8 +179,9 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     protected void predictDataset(Dataframe newData) {
         Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             newData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
         }
@@ -249,8 +250,9 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         //It is optimized for speed to reduce the amount of loops
         double error=0.0;
         
-        for(Integer rId : trainingData.index()) { 
-            Record r = trainingData.get(rId);
+        for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             trainingData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
             error+=Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);

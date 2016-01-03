@@ -374,8 +374,9 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         //multiplying the data with components
         X = X.multiply(components);
         
-        for(Integer rId : newData.index()) {
-            Record r = newData.get(rId);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);
             
             AssociativeArray xData = new AssociativeArray();
