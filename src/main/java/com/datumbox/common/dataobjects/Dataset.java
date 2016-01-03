@@ -220,32 +220,7 @@ public final class Dataset implements Serializable, Iterable<Record> {
         this.xDataTypes.putAll(xDataTypes);
     }
     
-    /**
-     * Returns the type of the response variable y.
-     * 
-     * @return 
-     */
-    public TypeInference.DataType getYDataType() {
-        return yDataType;
-    }
-    
-    /**
-     * Returns an Map with column names as index and DataTypes as values.
-     * 
-     * @return 
-     */
-    public Map<Object, TypeInference.DataType> getXDataTypes() {
-        return Collections.unmodifiableMap(xDataTypes);
-    }
-    
-    /**
-     * Returns the total number of columns on the Dataset.
-     * 
-     * @return 
-     */
-    public int xColumnSize() {
-        return xDataTypes.size();
-    }
+    //Mandatory Collection Methods
     
     /**
      * Returns the total number of Records of the Dataset.
@@ -263,6 +238,121 @@ public final class Dataset implements Serializable, Iterable<Record> {
      */
     public boolean isEmpty() {
         return recordList.isEmpty();
+    }
+    
+    /**
+     * Clears all the internal Records of the Dataset. The Dataset can be used
+     * after you clear it.
+     */
+    public void clear() {
+        yDataType = null;
+        
+        xDataTypes.clear();
+        recordList.clear();
+    }
+
+    /**
+     * Adds a record in the Dataset and updates the Meta data. The method returns 
+     * the id of the record.
+     * 
+     * @param r
+     * @return 
+     */
+    public Integer add(Record r) {
+        Integer newId=_add(r);
+        updateMeta(r);
+        return newId;
+    }
+    
+    /**
+     * Returns a read-only iterator on the values of the Dataset.
+     * 
+     * @return 
+     */
+    @Override
+    public Iterator<Record> iterator() {
+        return new Iterator<Record>() {
+            private final Iterator<Record> it = recordList.values().iterator();
+             
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public Record next() {
+                return it.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+    
+    
+    //Optional collection methods
+    
+    /**
+     * Returns a particular Record using its id.
+     * 
+     * @param id
+     * @return 
+     */
+    public Record get(Integer id) {
+        return recordList.get(id);
+    }
+    
+    /**
+     * Sets the record of a particular id in the dataset. The record must already
+     * exists within the dataset or an IndexOutOfBoundsException is thrown.
+     * 
+     * Note that the meta-data are partially updated. This means that if the replaced 
+     * Record contained a column which is now no longer available in the dataset,
+     * then the meta-data will not refect this update (the column will continue to exist
+     * in the meta data). If this is a problem, you should call the recalculateMeta()
+     * method to force them being recalculated.
+     * 
+     * @param rId
+     * @param r
+     * @return 
+     */
+    public Integer set(Integer rId, Record r) {
+        _set(rId, r);
+        updateMeta(r);
+        return rId;
+    }
+    
+    
+    
+    //Other methods
+    
+    /**
+     * Returns the total number of X columns in the Dataset.
+     * 
+     * @return 
+     */
+    public int xColumnSize() {
+        return xDataTypes.size();
+    }
+    
+    /**
+     * Returns the type of the response variable y.
+     * 
+     * @return 
+     */
+    public TypeInference.DataType getYDataType() {
+        return yDataType;
+    }
+    
+    /**
+     * Returns an Map with column names as index and DataTypes as values.
+     * 
+     * @return 
+     */
+    public Map<Object, TypeInference.DataType> getXDataTypes() {
+        return Collections.unmodifiableMap(xDataTypes);
     }
     
     /**
@@ -299,48 +389,6 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * It generates and returns a new Dataset which contains a subset of this Dataset. 
-     * All the Records of the returned Dataset are copies of the original Records. 
-     * The method is used for k-fold cross validation and sampling. Note that the 
-     * Records in the new Dataset have DIFFERENT ids from the original ones.
-     * 
-     * @param idsCollection
-     * @return 
-     */
-    public Dataset generateNewSubset(FlatDataList idsCollection) {
-        Dataset d = new Dataset(dbConf);
-        
-        for(Object id : idsCollection) {
-            d.add(recordList.get((Integer)id)); 
-        }        
-        return d;
-    }
-    
-    /**
-     * Returns a deep copy of the Dataset. 
-     * 
-     * @return 
-     */
-    public Dataset copy() {
-        Dataset d = new Dataset(dbConf);
-        
-        for(Record r : recordList.values()) {
-            d.add(r); 
-        }        
-        return d;
-    }
-    
-    /**
-     * Returns a particular Record using its id.
-     * 
-     * @param id
-     * @return 
-     */
-    public Record get(Integer id) {
-        return recordList.get(id);
-    }
-    
-    /**
      * Removes completely a list of columns from the dataset. The meta-data of the 
      * Dataset are updated.
      * 
@@ -373,24 +421,21 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Updates the meta data of the Dataset using the provided Record. 
-     * The Meta-data include the supported columns and their DataTypes.
+     * It generates and returns a new Dataset which contains a subset of this Dataset. 
+     * All the Records of the returned Dataset are copies of the original Records. 
+     * The method is used for k-fold cross validation and sampling. Note that the 
+     * Records in the new Dataset have DIFFERENT ids from the original ones.
      * 
-     * @param r 
+     * @param idsCollection
+     * @return 
      */
-    private void updateMeta(Record r) {
-        for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-            Object column = entry.getKey();
-            Object value = entry.getValue();
-            
-            if(xDataTypes.containsKey(column) == false) {
-                xDataTypes.put(column, TypeInference.getDataType(value));
-            }
-        }
+    public Dataset generateNewSubset(FlatDataList idsCollection) {
+        Dataset d = new Dataset(dbConf);
         
-        if(yDataType == null) {
-            yDataType = TypeInference.getDataType(r.getY());
-        }
+        for(Object id : idsCollection) {
+            d.add(recordList.get((Integer)id)); 
+        }        
+        return d;
     }
     
     /**
@@ -405,80 +450,19 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Adds a record in the Dataset and updates the Meta data. The method returns 
-     * the id of the record.
+     * Returns a deep copy of the Dataset. 
      * 
-     * @param r
      * @return 
      */
-    public Integer add(Record r) {
-        Integer newId=_add(r);
-        updateMeta(r);
-        return newId;
-    }
-    
-    /**
-     * Adds the record in the dataset without updating the Meta. The add method 
-     * returns the id of the new record.
-     * 
-     * @param r
-     * @return 
-     */
-    private Integer _add(Record r) {
-        Integer newId = recordList.size();
-        recordList.put(newId, r);
-        return newId;
-    }
-    
-    /**
-     * Sets the record of a particular id in the dataset. The record must already
-     * exists within the dataset or an IndexOutOfBoundsException is thrown.
-     * 
-     * Note that the meta-data are partially updated. This means that if the replaced 
-     * Record contained a column which is now no longer available in the dataset,
-     * then the meta-data will not refect this update (the column will continue to exist
-     * in the meta data). If this is a problem, you should call the recalculateMeta()
-     * method to force them being recalculated.
-     * 
-     * @param rId
-     * @param r
-     * @return 
-     */
-    public Integer set(Integer rId, Record r) {
-        _set(rId, r);
-        updateMeta(r);
-        return rId;
-    }
-    
-    /**
-     * Sets the record in a particular position in the dataset, WITHOUT updating
-     * the internal meta-info. This method is similar to set() and it allows quick updates 
-     * on the dataset. Nevertheless it is not advised to use this method because 
-     * unless you explicitly call the recalculateMeta() method, the meta data
-     * will be corrupted. If you do use this method, MAKE sure you perform the
-     * recalculation after you are done with the updates.
-     * 
-     * @param rId
-     * @param r 
-     */
-    public void _set(Integer rId, Record r) {
-        if(recordList.containsKey(rId)==false) {
-            throw new IndexOutOfBoundsException(); //ensure that the record has already be set with add()
-        }
-        recordList.put(rId, r);
-    }
-    
-    /**
-     * Clears all the internal Records of the Dataset. The Dataset can be used
-     * after you clear it.
-     */
-    public void clear() {
-        yDataType = null;
+    public Dataset copy() {
+        Dataset d = new Dataset(dbConf);
         
-        xDataTypes.clear();
-        recordList.clear();
+        for(Record r : recordList.values()) {
+            d.add(r); 
+        }        
+        return d;
     }
-
+    
     /**
      * Deletes the Dataset and removes all internal variables. Once you delete a
  dataset, the instance can no longer be used.
@@ -536,29 +520,55 @@ public final class Dataset implements Serializable, Iterable<Record> {
     }
     
     /**
-     * Returns a read-only iterator on the values of the Dataset.
+     * Sets the record in a particular position in the dataset, WITHOUT updating
+     * the internal meta-info. This method is similar to set() and it allows quick updates 
+     * on the dataset. Nevertheless it is not advised to use this method because 
+     * unless you explicitly call the recalculateMeta() method, the meta data
+     * will be corrupted. If you do use this method, MAKE sure you perform the
+     * recalculation after you are done with the updates.
      * 
+     * @param rId
+     * @param r 
+     */
+    public void _set(Integer rId, Record r) {
+        if(recordList.containsKey(rId)==false) {
+            throw new IndexOutOfBoundsException(); //ensure that the record has already be set with add()
+        }
+        recordList.put(rId, r);
+    }
+    
+    /**
+     * Adds the record in the dataset without updating the Meta. The add method 
+     * returns the id of the new record.
+     * 
+     * @param r
      * @return 
      */
-    @Override
-    public Iterator<Record> iterator() {
-        return new Iterator<Record>() {
-            private final Iterator<Record> it = recordList.values().iterator();
-             
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
-
-            @Override
-            public Record next() {
-                return it.next();
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+    private Integer _add(Record r) {
+        Integer newId = recordList.size();
+        recordList.put(newId, r);
+        return newId;
     }
+    
+    /**
+     * Updates the meta data of the Dataset using the provided Record. 
+     * The Meta-data include the supported columns and their DataTypes.
+     * 
+     * @param r 
+     */
+    private void updateMeta(Record r) {
+        for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+            Object column = entry.getKey();
+            Object value = entry.getValue();
+            
+            if(xDataTypes.containsKey(column) == false) {
+                xDataTypes.put(column, TypeInference.getDataType(value));
+            }
+        }
+        
+        if(yDataType == null) {
+            yDataType = TypeInference.getDataType(r.getY());
+        }
+    }
+    
 }
