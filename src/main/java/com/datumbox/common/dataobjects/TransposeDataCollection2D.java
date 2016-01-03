@@ -29,6 +29,7 @@ import java.util.Set;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TransposeDataCollection2D extends DataStructureMap<Map<Object, TransposeDataCollection>> {
+    private static final long serialVersionUID = 1L;
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.

@@ -62,6 +62,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
+        private static final long serialVersionUID = 1L;
+        
         private int totalIterations;
         
         @BigMap
@@ -228,7 +230,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseMLtopicmodeler.TrainingParameters {    
+    public static class TrainingParameters extends BaseMLtopicmodeler.TrainingParameters {  
+        private static final long serialVersionUID = 1L;
+        
         private int k = 2; //number of topics
         private int maxIterations = 50; //both for training and testing
         
@@ -315,6 +319,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
      * algorithm.
      */
     public static class ValidationMetrics extends BaseMLtopicmodeler.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
+        
         private double perplexity = 0.0;
         
         /**

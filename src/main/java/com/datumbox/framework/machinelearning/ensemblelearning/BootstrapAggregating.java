@@ -41,6 +41,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -57,7 +58,8 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters {      
+    public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters { 
+        private static final long serialVersionUID = 1L;
         
     } 
     
@@ -66,6 +68,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
      * algorithm.
      */
     public static class ValidationMetrics extends BaseBoostingBagging.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
 
     }
     

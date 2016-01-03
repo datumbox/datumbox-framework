@@ -43,6 +43,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
      * the training of the algorithm.
      */
     public static class ModelParameters extends ScoreBasedFeatureSelection.ModelParameters {
+        private static final long serialVersionUID = 1L;
         
         @BigMap
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
@@ -81,6 +82,8 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
      * before training the algorithm.
      */
     public static class TrainingParameters extends ScoreBasedFeatureSelection.TrainingParameters {
+        private static final long serialVersionUID = 1L;
+        
         private boolean binarized = false;
         private Integer maxFeatures=null;
         

@@ -56,6 +56,8 @@ public class CETR {
      * The object with the Parameters of the Algorithm.
      */
     public static class Parameters implements Parameterizable {
+        private static final long serialVersionUID = 1L;
+        
         private int numberOfClusters = 2;
         private int alphaWindowSizeFor2DModel = 3; //0 turns off the 2d Model. Suggested value from paper: 3
         private int smoothingAverageRadius = 2; //used by smoothing average method if selected

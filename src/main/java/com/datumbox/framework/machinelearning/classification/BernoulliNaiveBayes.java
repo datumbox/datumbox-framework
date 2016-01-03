@@ -47,6 +47,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+        private static final long serialVersionUID = 1L;
+        
         @BigMap
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
 
@@ -82,7 +84,8 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
+    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {   
+        private static final long serialVersionUID = 1L;
 
     } 
     
@@ -91,6 +94,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
      * algorithm.
      */
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
 
     }
 

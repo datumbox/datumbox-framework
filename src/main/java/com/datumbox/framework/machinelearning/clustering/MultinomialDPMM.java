@@ -44,6 +44,8 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
      * The Cluster class of the MultinomialDPMM model.
      */
     public static class Cluster extends BaseDPMM.Cluster {
+        private static final long serialVersionUID = 1L;
+        
         //informational fields
         private int dimensions;
         
@@ -251,6 +253,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseDPMM.ModelParameters<MultinomialDPMM.Cluster> {
+        private static final long serialVersionUID = 1L;
         
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -287,6 +290,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
      * before training the algorithm.
      */
     public static class TrainingParameters extends BaseDPMM.TrainingParameters {
+        private static final long serialVersionUID = 1L;
         
         private double alphaWords = 50.0; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
         
@@ -315,6 +319,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
      * algorithm.
      */
     public static class ValidationMetrics extends BaseDPMM.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
 

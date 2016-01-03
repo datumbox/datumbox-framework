@@ -43,6 +43,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLregressor.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -61,6 +62,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
      * before training the algorithm.
      */
     public static class TrainingParameters extends BaseMLregressor.TrainingParameters {
+        private static final long serialVersionUID = 1L;
         
         //primitives/wrappers
         private Integer maxIterations = null;

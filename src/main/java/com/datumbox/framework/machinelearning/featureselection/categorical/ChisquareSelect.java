@@ -43,6 +43,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
      * the training of the algorithm.
      */
     public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -60,6 +61,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
      * before training the algorithm.
      */
     public static class TrainingParameters extends CategoricalFeatureSelection.TrainingParameters {
+        private static final long serialVersionUID = 1L;
         
         private double aLevel = 0.05; 
         

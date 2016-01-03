@@ -37,7 +37,9 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
     /**
      * Parameters of the NgramsExtractor.
      */
-    public static class Parameters extends TextExtractor.Parameters {           
+    public static class Parameters extends TextExtractor.Parameters {  
+        private static final long serialVersionUID = 1L;
+        
         private int maxCombinations=3;
         
         private int minWordLength=1;

@@ -40,6 +40,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * Base class for the Model Parameters of the algorithm.
      */
     public static class ModelParameters extends DataTransformer.ModelParameters {
+        private static final long serialVersionUID = 1L;
+        
         /**
          * The reference levels of each categorical variable.
          */
@@ -127,6 +129,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * Base class for the Training Parameters of the algorithm.
      */
     public static class TrainingParameters extends DataTransformer.TrainingParameters {
+        private static final long serialVersionUID = 1L;
         
     }
     

@@ -49,6 +49,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      * The Cluster class of the HierarchicalAgglomerative model.
      */
     public static class Cluster extends BaseMLclusterer.Cluster {
+        private static final long serialVersionUID = 1L;
         
         private Record centroid;
         
@@ -156,6 +157,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
+        private static final long serialVersionUID = 1L;
           
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -172,7 +174,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {    
+    public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {  
+        private static final long serialVersionUID = 1L;
         
         /**
          * The Linkage method used in the calculations.
@@ -304,6 +307,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      * algorithm.
      */
     public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
     

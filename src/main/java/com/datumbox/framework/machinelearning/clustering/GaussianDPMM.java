@@ -52,6 +52,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
      * The Cluster class of the GaussianDPMM model.
      */
     public static class Cluster extends BaseDPMM.Cluster {
+        private static final long serialVersionUID = 1L;
+        
         //informational fields
         private int dimensions;
 
@@ -385,6 +387,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseDPMM.ModelParameters<GaussianDPMM.Cluster> {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -422,6 +425,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
      * before training the algorithm.
      */
     public static class TrainingParameters extends BaseDPMM.TrainingParameters {
+        private static final long serialVersionUID = 1L;
+        
         private int kappa0 = 0;
         private int nu0 = 1;
         private double[] mu0;
@@ -507,6 +512,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
      * algorithm.
      */
     public static class ValidationMetrics extends BaseDPMM.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
 

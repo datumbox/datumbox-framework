@@ -30,7 +30,8 @@ public class WordSequenceExtractor extends TextExtractor<WordSequenceExtractor.P
     /**
      * Parameters of the WordSequenceExtractor.
      */
-    public static class Parameters extends TextExtractor.Parameters {     
+    public static class Parameters extends TextExtractor.Parameters {   
+        private static final long serialVersionUID = 1L;
         
     }
     

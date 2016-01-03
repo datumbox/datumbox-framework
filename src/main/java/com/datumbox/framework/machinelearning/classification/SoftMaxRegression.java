@@ -49,6 +49,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         @BigMap
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
@@ -85,7 +86,9 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
+    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters { 
+        private static final long serialVersionUID = 1L;
+        
         private int totalIterations=100; 
         private double learningRate=0.1;
         
@@ -133,6 +136,8 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
      * algorithm.
      */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
+        
         private double SSE = 0.0; 
         private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
         

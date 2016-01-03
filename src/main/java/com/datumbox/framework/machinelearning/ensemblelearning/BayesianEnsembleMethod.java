@@ -37,6 +37,7 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -53,7 +54,8 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
+    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters { 
+        private static final long serialVersionUID = 1L;
 
     } 
         
@@ -62,6 +64,7 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
      * algorithm.
      */
     public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
 
     }
     

@@ -45,6 +45,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -60,7 +61,9 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {         
+    public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {  
+        private static final long serialVersionUID = 1L;
+        
         private int totalIterations=1000; 
         private double learningRate=0.1;
 
@@ -108,6 +111,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
      * algorithm.
      */
     public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
 

@@ -53,6 +53,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
      * the training of the algorithm.
      */
     public static class ModelParameters extends ContinuousFeatureSelection.ModelParameters {
+        private static final long serialVersionUID = 1L;
+        
         @BigMap
         private Map<Object, Integer> featureIds;
         
@@ -191,6 +193,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
      * before training the algorithm.
      */    
     public static class TrainingParameters extends ContinuousFeatureSelection.TrainingParameters {
+        private static final long serialVersionUID = 1L;
+        
         private boolean whitened = false;
         private Integer maxDimensions = null;
         private Double variancePercentageThreshold = null;

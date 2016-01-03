@@ -60,6 +60,7 @@ public abstract class BaseMLregressor<MP extends BaseMLregressor.ModelParameters
      * DO NOT DECLARE ABSTRACT!!!! IT IS INITIALIZED BY StepwiseRegression class
      */
     public static class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
     

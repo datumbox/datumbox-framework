@@ -38,6 +38,7 @@ import java.util.Objects;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Record implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     /* The X vector of the Record */
     private final AssociativeArray x;

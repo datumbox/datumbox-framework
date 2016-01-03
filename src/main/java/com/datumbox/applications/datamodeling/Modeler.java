@@ -36,6 +36,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
      * It contains all the Model Parameters which are learned during the training.
      */
     public static class ModelParameters extends BaseWrapper.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -52,6 +53,7 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
      * It contains the Training Parameters of the Modeler.
      */
     public static class TrainingParameters extends BaseWrapper.TrainingParameters<DataTransformer, FeatureSelection, BaseMLmodel> {
+        private static final long serialVersionUID = 1L;
 
     }
 

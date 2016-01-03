@@ -31,7 +31,7 @@ Version 0.7.0-SNAPSHOT - Build 20160103
         - iterator() no longer returns Integers but Records.
         - add() no longer returns the ID of the record but boolean. To get the ID use addRecord().
 - Fixing a bug on Adaboost which resulted in mapping incorrectly the recordIds.
-        
+- Added serialVersionUID in every serializable class.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

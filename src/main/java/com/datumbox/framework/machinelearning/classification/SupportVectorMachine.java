@@ -58,6 +58,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         @BigMap
         private Map<Object, Integer> featureIds; //list of all the supported features
@@ -141,7 +142,9 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
+    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {     
+        private static final long serialVersionUID = 1L;
+        
         private svm_parameter svmParameter = new svm_parameter();
         
         /**
@@ -194,6 +197,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
      * algorithm.
      */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
 
     }
         

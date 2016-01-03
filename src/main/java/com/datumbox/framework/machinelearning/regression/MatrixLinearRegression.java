@@ -48,6 +48,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Feature set
@@ -114,7 +115,8 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {    
+    public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {
+        private static final long serialVersionUID = 1L;
 
     } 
     
@@ -123,6 +125,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
      * algorithm.
      */
     public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
 

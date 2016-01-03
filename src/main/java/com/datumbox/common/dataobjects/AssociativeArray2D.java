@@ -27,6 +27,7 @@ import java.util.Set;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class AssociativeArray2D extends DataStructureMap<Map<Object, AssociativeArray>> {
+    private static final long serialVersionUID = 1L;
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.

@@ -34,6 +34,7 @@ public class UniqueWordSequenceExtractor extends TextExtractor<UniqueWordSequenc
      * Parameters of the UniqueWordSequenceExtractor.
      */
     public static class Parameters extends TextExtractor.Parameters {  
+        private static final long serialVersionUID = 1L;
         
     }
     

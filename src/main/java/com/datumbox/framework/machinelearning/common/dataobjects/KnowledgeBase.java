@@ -34,6 +34,8 @@ import java.lang.reflect.InvocationTargetException;
  * @param <TP>
  */
 public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     /**
      * The name of the database which is used by the Database Connector.
      */

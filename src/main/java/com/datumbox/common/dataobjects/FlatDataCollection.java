@@ -30,7 +30,8 @@ import java.util.List;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
-
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Converts to Object[] the original FlatDataCollection. The method is used to
      * generate a copy of the flatDataCollection and it is called in order to

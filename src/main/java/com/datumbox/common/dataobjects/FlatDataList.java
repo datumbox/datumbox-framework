@@ -28,6 +28,7 @@ import java.util.List;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object> {
+    private static final long serialVersionUID = 1L;
     
     /**
      * Default constructor which initializes the internal data with an ArrayList.

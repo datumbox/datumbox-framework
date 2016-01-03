@@ -43,6 +43,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
+        private static final long serialVersionUID = 1L;
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -59,7 +60,8 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters {      
+    public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters {    
+        private static final long serialVersionUID = 1L;
         
     } 
         
@@ -68,6 +70,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
      * algorithm.
      */
     public static class ValidationMetrics extends BaseBoostingBagging.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
 
     }
     

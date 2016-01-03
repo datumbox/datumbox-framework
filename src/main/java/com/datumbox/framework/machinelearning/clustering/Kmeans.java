@@ -57,6 +57,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      * The Cluster class of the Kmeans model.
      */
     public static class Cluster extends BaseMLclusterer.Cluster {
+        private static final long serialVersionUID = 1L;
         
         private Record centroid;
         
@@ -133,6 +134,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<Kmeans.Cluster> {
+        private static final long serialVersionUID = 1L;
         
         private int totalIterations;
         
@@ -191,6 +193,8 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      * before training the algorithm.
      */
     public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {    
+        private static final long serialVersionUID = 1L;
+        
         /**
          * The Initialization method that we use.
          */
@@ -400,6 +404,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      * algorithm.
      */
     public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
         
     }
     

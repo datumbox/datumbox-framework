@@ -28,6 +28,7 @@ import java.util.Set;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class DataTable2D extends AssociativeArray2D {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor.

@@ -49,6 +49,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
      * the training of the algorithm.
      */
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
+        private static final long serialVersionUID = 1L;
         
         @BigMap
         private Map<List<Object>, Double> similarities; //the similarity map among observations
@@ -89,6 +90,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
      * before training the algorithm.
      */
     public static class TrainingParameters extends BaseMLrecommender.TrainingParameters {
+        private static final long serialVersionUID = 1L;
+        
         /**
          * Enum with Similarity Measures.
          */
