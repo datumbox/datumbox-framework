@@ -508,6 +508,9 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     public synchronized Integer set(Integer rId, Record r) {
+        if(records.containsKey(rId)==false) {
+            throw new IllegalArgumentException("Setting an id which does not exist is not permitted.");
+        }
         _unsafe_set(rId, r);
         updateMeta(r);
         return rId;
@@ -598,8 +601,7 @@ public class Dataframe implements Serializable, Collection<Record> {
             xData.keySet().removeAll(columnSet);
             
             if(xData.size()!=d) {
-                r = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                _unsafe_set(rId, r);
+                _unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
             }
         }
         
@@ -729,16 +731,14 @@ public class Dataframe implements Serializable, Collection<Record> {
      * the internal meta-info. This method is similar to set() and it allows quick updates 
      * on the dataset. Nevertheless it is not advised to use this method because 
      * unless you explicitly call the recalculateMeta() method, the meta data
-     * will be corrupted. If you do use this method, MAKE sure you perform the
-     * recalculation after you are done with the updates.
+     * will be corrupted.Also it does not validate that the id already exists.  
+     * If you do use this method, MAKE sure you perform the recalculation after 
+     * you are done with the updates AND set rIds that already exist.
      * 
      * @param rId
      * @param r 
      */
     public synchronized void _unsafe_set(Integer rId, Record r) {
-        if(records.containsKey(rId)==false) {
-            throw new IllegalArgumentException("Setting an id which does not exist is not permitted.");
-        }
         records.put(rId, r);
     }
     
