@@ -187,7 +187,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //initialize array of recordDecisions
         AssociativeArray recordDecisionsArray = new AssociativeArray(tmp_recordDecisions);
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             recordDecisionsArray.put(rId, new DataTable2D());
         }
         
@@ -202,7 +202,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             
             classifierWeightsArray.put(t, weakClassifierWeights.get(t));
             
-            for(Integer rId : newData) {
+            for(Integer rId : newData.index()) {
                 Record r = newData.get(rId);
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
@@ -213,7 +213,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         }
         
         //for each record find the combined classification by majority vote
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
             
@@ -238,8 +238,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         Set<Object> classesSet = modelParameters.getClasses();
         
         //first we need to find all the classes
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             classesSet.add(theClass); 
@@ -250,7 +249,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         AssociativeArray observationWeights = new AssociativeArray();
         
         //calculate the training parameters of bagging
-        for(Integer rId : trainingData) { 
+        for(Integer rId : trainingData.index()) { 
             observationWeights.put(rId, 1.0/n); //initialize observation weights
         }
         

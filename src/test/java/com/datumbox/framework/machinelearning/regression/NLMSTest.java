@@ -78,8 +78,7 @@ public class NLMSTest extends BaseTest {
         df.denormalize(trainingData);
         df.denormalize(validationData);
         
-        for(Integer rId : validationData) {
-            Record r = validationData.get(rId);
+        for(Record r : validationData) {
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
         }
         

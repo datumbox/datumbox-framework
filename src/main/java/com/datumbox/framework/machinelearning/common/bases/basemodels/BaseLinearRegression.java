@@ -363,8 +363,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
         FlatDataList errorList = new FlatDataList();
         double Ybar = 0.0;
-        for(Integer rId : validationData) {
-            Record r = validationData.get(rId);
+        for(Record r : validationData) {
             Ybar += TypeInference.toDouble(r.getY())/n;
             errorList.add(TypeInference.toDouble(r.getY())-TypeInference.toDouble(r.getYPredicted()));
         }
@@ -384,8 +383,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         errorList = null;
         
         double SSR = 0.0;
-        for(Integer rId : validationData) {
-            Record r = validationData.get(rId);
+        for(Record r : validationData) {
             SSR += Math.pow(TypeInference.toDouble(r.getY()) - Ybar, 2);
         }
         validationMetrics.setSSR(SSR);
@@ -436,8 +434,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
      */
     protected double calculateSSE(Dataset validationData) {
         double SSE = 0.0;
-        for(Integer rId : validationData) {
-            Record r = validationData.get(rId);
+        for(Record r : validationData) {
             SSE += Math.pow(TypeInference.toDouble(r.getY())-TypeInference.toDouble(r.getYPredicted()), 2.0);
         }
         return SSE;

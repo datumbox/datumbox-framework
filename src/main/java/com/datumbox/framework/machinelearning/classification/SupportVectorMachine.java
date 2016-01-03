@@ -210,7 +210,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     
     @Override
     protected void predictDataset(Dataset newData) { 
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             AssociativeArray predictionScores = calculateClassScores(r.getX());
             
@@ -237,8 +237,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         //build the classIds and featureIds maps
         int previousClassId = 0;
         int previousFeatureId = 0;
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             if(!classIds.containsKey(theClass)) {
@@ -274,7 +273,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         prob.x = new svm_node[n][sparseD];
         
         //converting the dataset in the way that LibSVM can handle it
-        for(Integer rId : trainingData) { 
+        for(Integer rId : trainingData.index()) { 
             Record r = trainingData.get(rId);
             
             Object theClass=r.getY();

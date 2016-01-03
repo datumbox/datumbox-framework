@@ -85,7 +85,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     protected Status updateObservationAndClassifierWeights(Dataset validationDataset, AssociativeArray observationWeights, FlatDataList idMapping) { 
         //calculate prediction error for this classifier
         double error = 0.0;
-        for(Integer rId : validationDataset) {
+        for(Integer rId : validationDataset.index()) {
             Record r = validationDataset.get(rId);
             if(!r.getY().equals(r.getYPredicted())) {
                 Integer original_rId = (Integer) idMapping.get(rId);
@@ -115,7 +115,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             weakClassifierWeights.add(weight);
 
             //update the weights of observations
-            for(Integer rId : validationDataset) {
+            for(Integer rId : validationDataset.index()) {
                 Record r = validationDataset.get(rId);
                 if(!r.getY().equals(r.getYPredicted())) {
                     Integer original_rId = (Integer) idMapping.get(rId);

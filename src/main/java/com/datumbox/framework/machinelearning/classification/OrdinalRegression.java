@@ -227,7 +227,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         //mapping between the thita and the exact previous thita value
         Map<Object, Object> previousThitaMapping = getPreviousThitaMappings();
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             AssociativeArray predictionProbabilities = hypothesisFunction(r.getX(), previousThitaMapping, weights, thitas);
             
@@ -248,8 +248,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         //add classes in a sorted way (ordinal ascending order)
         Set<Object> sortedClasses = new TreeSet<>();
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             sortedClasses.add(theClass); 
@@ -261,8 +260,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         for(Object feature: trainingData.getXDataTypes().keySet()) {
             weights.put(feature, 0.0);
         }
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             thitas.put(r.getY(), 0.0);
         }
         
@@ -344,8 +342,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object rClass = r.getY();
             Object rPreviousClass = previousThitaMapping.get(rClass);
             
@@ -407,8 +404,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     private double calculateError(Dataset trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
         double error=0.0;
         
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             double xTw = xTw(r.getX(), weights);
             
             Object theClass = r.getY();

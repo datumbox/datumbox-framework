@@ -34,7 +34,7 @@ import java.util.Map;
  References:
  http://cs229.stanford.edu/notes/cs229-notes1.pdf
  http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
- https://class.coursera.org/ml-003/lecture/keys
+ https://class.coursera.org/ml-003/lecture/index
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -175,7 +175,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     protected void predictDataset(Dataset newData) {
         Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             newData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
@@ -191,8 +191,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         double multiplier = learningRate/modelParameters.getN();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), thitas);
             
@@ -218,8 +217,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     private void stochasticGradientDescent(Dataset trainingData, Map<Object, Double> newThitas, double learningRate) {
         double multiplier = learningRate/knowledgeBase.getModelParameters().getN();
         
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             //mind the fact that we use the new thitas to estimate the cost! 
             double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), newThitas);
             
@@ -247,7 +245,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         //It is optimized for speed to reduce the amount of loops
         double error=0.0;
         
-        for(Integer rId : trainingData) { 
+        for(Integer rId : trainingData.index()) { 
             Record r = trainingData.get(rId);
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             trainingData.set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));

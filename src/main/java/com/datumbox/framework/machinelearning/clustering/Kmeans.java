@@ -422,7 +422,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             
             AssociativeArray clusterDistances = new AssociativeArray();
@@ -446,8 +446,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
         //check if there are any gold standard classes
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             if(theClass!=null) {
                 goldStandardClasses.add(theClass); 
@@ -480,8 +479,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         if(trainingParameters.isWeighted()==false) {
             //the unweighted version of the algorithm
             double gammaWeight = trainingParameters.getCategoricalGamaMultiplier(); 
-            for(Integer rId : trainingData) { 
-                Record r = trainingData.get(rId);
+            for(Record r : trainingData) { 
                 for(Object feature : r.getX().keySet()) {
                     //standard kmeans has equal weights in all numeric features
                     //for categorical, dummy or ordinal feature, use the Gamma Multiplier of Kprototypes
@@ -503,8 +501,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", true);
         
             //calculate variance and frequencies
-            for(Integer rId : trainingData) { 
-                Record r = trainingData.get(rId);
+            for(Record r : trainingData) { 
                 for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                     Double value = TypeInference.toDouble(entry.getValue());
                     if(value==null || value==0.0) {
@@ -608,7 +605,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         if(initializationMethod==TrainingParameters.Initialization.SET_FIRST_K || 
            initializationMethod==TrainingParameters.Initialization.FORGY) {
             int i = 0;
-            for(Integer rId : trainingData) { 
+            for(Integer rId : trainingData.index()) { 
                 Record r = trainingData.get(rId);
                 if(i>=k) {
                     break;
@@ -625,7 +622,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
         else if(initializationMethod==TrainingParameters.Initialization.RANDOM_PARTITION) {
             int i = 0;
             
-            for(Integer rId : trainingData) { 
+            for(Integer rId : trainingData.index()) { 
                 Record r = trainingData.get(rId);
                 Integer clusterId = i%k;
                 
@@ -657,7 +654,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 double maxMinDistance = 0.0;
                 
                 int samplePointCounter = 0;
-                for(Integer rId : trainingData) { 
+                for(Integer rId : trainingData.index()) { 
                     Record r = trainingData.get(rId);
                     if(samplePointCounter>sampleSize) {
                         break; //we only check a small part of the trainingData. This is equivalent to samplying only few observations from, the dataset
@@ -701,7 +698,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
                 
-                for(Integer rId : trainingData) { 
+                for(Integer rId : trainingData.index()) { 
                     Record r = trainingData.get(rId);
                     if(alreadyAddedPoints.contains(rId)) {
                         continue; //ignore points that are already selected
@@ -760,7 +757,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             }
             
             //assign records in clusters
-            for(Integer rId : trainingData) { 
+            for(Integer rId : trainingData.index()) { 
                 Record r = trainingData.get(rId);
                 //we are storing cluster references not clusterIds
                 for(Cluster c : clusterList.values()) {

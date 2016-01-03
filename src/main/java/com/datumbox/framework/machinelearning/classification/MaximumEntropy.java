@@ -132,7 +132,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     protected void predictDataset(Dataset newData) { 
         Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
                 
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             AssociativeArray predictionScores = new AssociativeArray();
             for(Object theClass : classesSet) {
@@ -159,8 +159,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         Set<Object> classesSet = modelParameters.getClasses();
         
         //first we need to find all the classes
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             classesSet.add(theClass); 
@@ -174,8 +173,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
         
         //then we calculate the observed probabilities in training set
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             int activeFeatures=0; //counts the number of non-zero (active) features of the record
             
             //store the occurrances of the features
@@ -253,9 +251,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             }
             
             //calculate the model probabilities
-            for(Integer rId : trainingData) { 
-                Record r = trainingData.get(rId);
-                
+            for(Record r : trainingData) { 
                 AssociativeArray classScores = new AssociativeArray();
                 
                 for(Object theClass : classesSet) {

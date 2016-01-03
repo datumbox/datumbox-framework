@@ -406,7 +406,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         //initialize topic assignments of each word randomly and update the counters
-        for(Integer rId : trainingData) { 
+        for(Integer rId : trainingData.index()) { 
             Record r = trainingData.get(rId);
             Integer documentId = rId;
             
@@ -439,7 +439,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             
             int changedCounter = 0;
             //collapsed gibbs sampler
-            for(Integer rId : trainingData) { 
+            for(Integer rId : trainingData.index()) { 
                 Record r = trainingData.get(rId);
                 Integer documentId = rId;
                 
@@ -598,7 +598,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", true);
         
         //initialize topic assignments of each word randomly and update the counters
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             Integer documentId = rId;
             
@@ -632,7 +632,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
             int changedCounter = 0;
             perplexity = 0.0;
             double totalDatasetWords = 0.0;
-            for(Integer rId : newData) {
+            for(Integer rId : newData.index()) {
                 Record r = newData.get(rId);
                 Integer documentId = rId;
                 

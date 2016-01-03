@@ -103,7 +103,7 @@ public class DatasetTest extends BaseTest {
         xData4.put("name_of_port", null);
         expResult.add(new Record(xData4, null));
         
-        for(Integer rId : expResult) {
+        for(Integer rId : expResult.index()) {
             Record r1 = expResult.get(rId);
             Record r2 = dataset.get(rId);
             

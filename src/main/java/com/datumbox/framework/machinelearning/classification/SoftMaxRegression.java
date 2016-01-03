@@ -191,7 +191,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             AssociativeArray predictionScores = new AssociativeArray();
             for(Object theClass : classesSet) {
@@ -217,8 +217,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         Set<Object> classesSet = modelParameters.getClasses();
         
         //first we need to find all the classes
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             classesSet.add(theClass); 
@@ -228,8 +227,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         for(Object theClass : classesSet) {
             thitas.put(Arrays.<Object>asList(Dataset.constantColumnName, theClass), 0.0);
             
-            for(Integer rId : trainingData) { 
-                Record r = trainingData.get(rId);
+            for(Record r : trainingData) { 
                 for(Object feature : r.getX().keySet()) {
                     thitas.put(Arrays.<Object>asList(feature, theClass), 0.0);
                 }
@@ -292,8 +290,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         Set<Object> classesSet = modelParameters.getClasses();
         
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             AssociativeArray classProbabilities = hypothesisFunction(r.getX(), thitas);
             for(Object theClass : classesSet) {
@@ -355,8 +352,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         //It is optimized for speed to reduce the amount of loops
         double error=0.0;
         
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             AssociativeArray classProbabilities = hypothesisFunction(r.getX(), thitas);
             Double score = classProbabilities.getDouble(r.getY());
             error+=Math.log(score); //no need to loop through the categories. Just grab the one that we are interested in

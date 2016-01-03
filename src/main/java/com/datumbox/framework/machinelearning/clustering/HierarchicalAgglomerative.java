@@ -327,7 +327,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             
             AssociativeArray clusterDistances = new AssociativeArray();
@@ -351,8 +351,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
         //check if there are any gold standard classes
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             if(theClass!=null) {
                 goldStandardClasses.add(theClass); 
@@ -408,7 +407,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         //initialize clusters, foreach point create a cluster
         Integer clusterId = 0;
-        for(Integer rId : trainingData) { 
+        for(Integer rId : trainingData.index()) { 
             Record r = trainingData.get(rId);
             Cluster c = new Cluster(clusterId);
             

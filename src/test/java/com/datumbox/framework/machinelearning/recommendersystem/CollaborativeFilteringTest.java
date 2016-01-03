@@ -75,7 +75,7 @@ public class CollaborativeFilteringTest extends BaseTest {
         expResult.put("tea", 0.5);
         
         
-        AssociativeArray result = validationData.get(validationData.iterator().next()).getYPredictedProbabilities();
+        AssociativeArray result = validationData.iterator().next().getYPredictedProbabilities();
         for(Map.Entry<Object, Object> entry : result.entrySet()) {
             assertEquals(expResult.get(entry.getKey()), TypeInference.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }

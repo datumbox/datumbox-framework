@@ -72,7 +72,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         //shuffle the ids of the records
         Integer[] ids = new Integer[n];
         int j =0;
-        for(Integer rId : dataset) {
+        for(Integer rId : dataset.index()) {
             ids[j]=rId;
             ++j;
         }

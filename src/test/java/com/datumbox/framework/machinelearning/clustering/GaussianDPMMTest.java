@@ -75,7 +75,7 @@ public class GaussianDPMMTest extends BaseTest {
         Map<Integer, Object> result = new HashMap<>();
         
         Map<Integer, GaussianDPMM.Cluster> clusters = instance.getClusters();
-        for(Integer rId : validationData) {
+        for(Integer rId : validationData.index()) {
             Record r = validationData.get(rId);
             expResult.put(rId, r.getY());
             Integer clusterId = (Integer) r.getYPredicted();

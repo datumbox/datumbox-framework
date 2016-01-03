@@ -17,10 +17,10 @@ Version 0.7.0-SNAPSHOT - Build 20160102
         - extractXColumnValuesByY()
     - New methods:
         - clear()
-        - keys()
+        - index()
         - values()
     - Modified methods:
-        - 
+        - iterator() no longer returns Integers but Records.
         
 
 Version 0.6.1 - Build 20160102

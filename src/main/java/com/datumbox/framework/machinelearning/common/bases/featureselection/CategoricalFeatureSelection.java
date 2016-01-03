@@ -235,8 +235,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         //find the featureCounts
         
         logger.debug("Estimating featureCounts");
-        for(Integer rId : data) {
-            Record r = data.get(rId);
+        for(Record r : data) {
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
                 
@@ -292,8 +291,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         //now find the classCounts and the featureClassCounts
         logger.debug("Estimating classCounts and featureClassCounts");
-        for(Integer rId : data) {
-            Record r = data.get(rId);
+        for(Record r : data) {
             Object theClass = r.getY();
 
             //class counts

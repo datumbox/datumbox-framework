@@ -280,8 +280,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
         //check if there are any gold standard classes and buld the featureIds maps
         int previousFeatureId = 0;
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             if(theClass!=null) {
                 goldStandardClasses.add(theClass); 
@@ -320,7 +319,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         Integer newClusterId = tempClusterMap.size(); //start counting the Ids based on clusters in the list
 
         if(trainingParameters.getInitializationMethod()==TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD) {
-            for(Integer rId : dataset) {
+            for(Integer rId : dataset.index()) {
                 Record r = dataset.get(rId);
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
@@ -355,7 +354,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             }
             
             int clusterMapSize = newClusterId;
-            for(Integer rId : dataset) {
+            for(Integer rId : dataset.index()) {
                 Record r = dataset.get(rId);
                 
                 int assignedClusterId = PHPfunctions.mt_rand(0, clusterMapSize-1);
@@ -379,7 +378,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             logger.debug("Iteration {}", iteration);
             
             noChangeMade=true;
-            for(Integer rId : dataset) {
+            for(Integer rId : dataset.index()) {
                 Record r = dataset.get(rId);
                 
                 Integer pointClusterId = (Integer) r.getYPredicted();
@@ -486,7 +485,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             
             AssociativeArray clusterScores = new AssociativeArray();

@@ -177,7 +177,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param maxColumnValues 
      */
     protected static void normalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Integer rId : data) {
+        for(Integer rId : data.index()) {
             Record r = data.get(rId);
             AssociativeArray xData = r.getX().copy();
             
@@ -220,7 +220,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
      * @param maxColumnValues 
      */
     protected static void denormalizeX(Dataset data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Integer rId : data) {
+        for(Integer rId : data.index()) {
             Record r = data.get(rId);
             AssociativeArray xData = r.getX().copy();
             
@@ -284,7 +284,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
-            for(Integer rId : data) {
+            for(Integer rId : data.index()) {
                 Record r = data.get(rId);
                 Double value = TypeInference.toDouble(r.getY());
                 if(value==null) { //if we have a missing value don't perform any normalization
@@ -326,7 +326,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         TypeInference.DataType dataType = data.getYDataType();
         if(dataType==TypeInference.DataType.NUMERICAL || dataType==null) {
             
-            for(Integer rId : data) {
+            for(Integer rId : data.index()) {
                 Record r = data.get(rId);
                 
                 //do the same for the response variable Y
@@ -369,8 +369,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
 
         //find the referenceLevels for each categorical variable
-        for(Integer rId: data) {
-            Record r = data.get(rId);
+        for(Record r : data) {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 if(referenceLevels.containsKey(column)==false) { //already set?
@@ -395,7 +394,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
         //Replace variables with dummy versions
-        for(Integer rId: data) {
+        for(Integer rId: data.index()) {
             Record r = data.get(rId);
             
             AssociativeArray xData = r.getX().copy();

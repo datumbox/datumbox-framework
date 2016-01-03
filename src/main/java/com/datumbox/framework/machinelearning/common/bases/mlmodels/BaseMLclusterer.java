@@ -402,9 +402,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         
         //count the co-occurrences of ClusterId-GoldStanardClass
-        for(Integer rId : validationData) {
-            Record r = validationData.get(rId);
-            
+        for(Record r : validationData) {
             Integer clusterId = (Integer) r.getYPredicted(); //fetch cluster assignment
             Object goldStandardClass = r.getY(); //the original class of the objervation
             List<Object> tpk = Arrays.<Object>asList(clusterId, goldStandardClass);

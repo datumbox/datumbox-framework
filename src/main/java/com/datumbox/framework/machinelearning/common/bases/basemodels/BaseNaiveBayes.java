@@ -167,7 +167,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         Object someClass = classesSet.iterator().next();
         
         
-        for(Integer rId : newData) {
+        for(Integer rId : newData.index()) {
             Record r = newData.get(rId);
             //Build new map here! reinitialize the prediction scores with the scores of the classes
             AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(logPriors)); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
@@ -227,8 +227,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         
         //calculate first statistics about the classes
         AssociativeArray totalFeatureOccurrencesForEachClass = new AssociativeArray();
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             Double classCount = logPriors.get(theClass);
@@ -244,9 +243,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         
         
         //now calculate the statistics of features
-        for(Integer rId : trainingData) { 
-            Record r = trainingData.get(rId);
-            
+        for(Record r : trainingData) { 
             //store the occurrances of the features
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();

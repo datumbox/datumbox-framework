@@ -83,8 +83,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
         lda.validate(trainingData);
         
         Dataset reducedTrainingData = new Dataset(dbConf);
-        for(Integer rId : trainingData) {
-            Record r = trainingData.get(rId);
+        for(Record r : trainingData) {
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }

@@ -66,15 +66,15 @@ public class PCATest extends BaseTest {
         
         assertEquals(validationdata.size(), expResult.size());
         
-        Iterator<Integer> itResult = validationdata.iterator();
-        Iterator<Integer> itExpectedResult = expResult.iterator();
+        Iterator<Record> itResult = validationdata.iterator();
+        Iterator<Record> itExpectedResult = expResult.iterator();
         
         
         while(itResult.hasNext()) {
-            Record r= validationdata.get(itResult.next());
-            Record r2 = expResult.get(itExpectedResult.next());
+            Record r1 = itResult.next();
+            Record r2 = itExpectedResult.next();
             
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+            for(Map.Entry<Object, Object> entry : r1.getX().entrySet()) {
                 Object feature = entry.getKey();
                 Double value = TypeInference.toDouble(entry.getValue());
                 

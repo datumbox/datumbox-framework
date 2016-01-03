@@ -126,9 +126,9 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     /**
      * Trains a Machine Learning model using the provided dataset files. The data
-     * map should have as keys the names of each class and as values the URIs
-     * of the training files. The training files should contain one training example
-     * per row.
+ map should have as index the names of each class and as values the URIs
+ of the training files. The training files should contain one training example
+ per row.
      * 
      * @param datasets
      * @param trainingParameters 
@@ -207,7 +207,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         predict(testDataset);
         
-        Record r = testDataset.get(testDataset.iterator().next());
+        Record r = testDataset.iterator().next();
         
         testDataset.delete();
         
@@ -235,9 +235,9 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     /**
      * It validates the model using the provided dataset files. The data
-     * map should have as keys the names of each class and as values the URIs
-     * of the training files. The data files should contain one example
-     * per row.
+ map should have as index the names of each class and as values the URIs
+ of the training files. The data files should contain one example
+ per row.
      * 
      * @param datasets
      * @return 

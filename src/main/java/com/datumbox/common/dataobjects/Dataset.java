@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public final class Dataset implements Serializable, Iterable<Integer> {
+public final class Dataset implements Serializable, Iterable<Record> {
     /**
      * Internal name of the response variable.
      */
@@ -65,15 +65,15 @@ public final class Dataset implements Serializable, Iterable<Integer> {
         
         /**
          * It builds a Dataset object from a provided list of text files. The data
-         * map should have as keys the names of each class and as values the URIs
-         * of the training files. The files should contain one training example
-         * per row. If we want to parse a Text File of unknown category then
-         * pass a single URI with null as key.
-         * 
-         * The method requires as arguments a file with the category names and locations
-         * of the training files, an instance of a TextExtractor which is used
-         * to extract the keywords from the documents and the Database Configuration
-         * Object.
+ map should have as index the names of each class and as values the URIs
+ of the training files. The files should contain one training example
+ per row. If we want to parse a Text File of unknown category then
+ pass a single URI with null as key.
+ 
+ The method requires as arguments a file with the category names and locations
+ of the training files, an instance of a TextExtractor which is used
+ to extract the keywords from the documents and the Database Configuration
+ Object.
          * 
          * @param textFilesMap
          * @param textExtractor
@@ -230,7 +230,7 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns an Map with column names as keys and DataTypes as values.
+     * Returns an Map with column names as index and DataTypes as values.
      * 
      * @return 
      */
@@ -496,29 +496,43 @@ public final class Dataset implements Serializable, Iterable<Integer> {
     }
     
     /**
-     * Returns a read-only iterator on the keys of the Dataset.
+     * Returns a read-only Iterable on the keys of the Dataset.
      * 
      * @return 
      */
-    public Iterator<Integer> keys() {
-        return new Iterator<Integer>() {
-            private final Iterator<Integer> it = recordList.keySet().iterator();
-            
+    public Iterable<Integer> index() {
+        return new Iterable<Integer>(){
             @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
+            public Iterator<Integer> iterator() {
+                return new Iterator<Integer>() {
+                    private final Iterator<Integer> it = recordList.keySet().iterator();
 
-            @Override
-            public Integer next() {
-                return it.next();
-            }
+                    @Override
+                    public boolean hasNext() {
+                        return it.hasNext();
+                    }
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
+                    @Override
+                    public Integer next() {
+                        return it.next();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
             }
         };
+    }
+    
+    /**
+     * Returns a read-only Iterable on the values of the Dataset.
+     * 
+     * @return 
+     */
+    public Iterable<Record> values() {
+        return Dataset.this::iterator;
     }
     
     /**
@@ -526,7 +540,8 @@ public final class Dataset implements Serializable, Iterable<Integer> {
      * 
      * @return 
      */
-    public Iterator<Record> values() {
+    @Override
+    public Iterator<Record> iterator() {
         return new Iterator<Record>() {
             private final Iterator<Record> it = recordList.values().iterator();
              
@@ -545,15 +560,5 @@ public final class Dataset implements Serializable, Iterable<Integer> {
                 throw new UnsupportedOperationException();
             }
         };
-    }
-    
-    /**
-     * Returns a read-only iterator on the keys of the Dataset.
-     * 
-     * @return 
-     */
-    @Override
-    public Iterator<Integer> iterator() {
-        return keys();
     }
 }

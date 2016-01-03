@@ -114,7 +114,7 @@ public class MatrixDataset {
             ++previousFeatureId; 
         }
 
-        for(Integer rId : dataset) {
+        for(Integer rId : dataset.index()) {
             Record r = dataset.get(rId);
             
             if(extractY) {
@@ -172,7 +172,7 @@ public class MatrixDataset {
         boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataset.constantColumnName);
         
         //Assummes that the ids start from 0 and go up to n
-        for(Integer rId : newDataset) {
+        for(Integer rId : newDataset.index()) {
             Record r = newDataset.get(rId);
             
             if(extractY) {
