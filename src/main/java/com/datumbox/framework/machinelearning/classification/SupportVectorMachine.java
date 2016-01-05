@@ -23,6 +23,8 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassi
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.RandomGenerator;
 import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
 
@@ -60,7 +62,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         private Map<Object, Integer> classIds = new HashMap<>(); //this is small. Size equal to class numbers;

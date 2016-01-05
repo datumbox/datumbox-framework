@@ -19,6 +19,7 @@ import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -98,8 +99,8 @@ public abstract class BaseModelParameters implements Learnable {
                 field.setAccessible(true);
                 
                 try {
-                    //call the getBigMap method to load it
-                    field.set(this, dbc.getBigMap(field.getName(), MapType.HASHMAP, false));
+                    BigMap a = field.getAnnotation(BigMap.class);
+                    field.set(this, dbc.getBigMap(field.getName(), a.mapType(), a.storageHint(), false));
                 } 
                 catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new RuntimeException(ex);

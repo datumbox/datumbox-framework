@@ -17,9 +17,6 @@ package com.datumbox.configuration;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
-//import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
-
 /**
  * Configuration constants for the Tests.
  * 
@@ -49,7 +46,16 @@ public class TestConfiguration {
     /**
      * The class of the DatabaseConfiguration.
      */
-    public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = InMemoryConfiguration.class; 
-    //public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = MapDBConfiguration.class; 
+    public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = 
+        com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration.class
+        //com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration.class
+        ;
     
+    /**
+     * Turn on/off Hybridized Storage for MapDB.
+     */
+    public static final boolean HYBRIDIZED_STORAGE = 
+        false
+        //true
+        ;
 }

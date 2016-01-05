@@ -18,6 +18,7 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.TextExtractor;
 import java.io.BufferedReader;
@@ -206,10 +207,10 @@ public class Dataframe implements Serializable, Collection<Record> {
         
         this.dbConf = dbConf;
         dbc = this.dbConf.getConnector(dbName);
-        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, true);
+        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true);
         
         yDataType = null;
-        xDataTypes = new HashMap<>();
+        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
     }
     
     /**
@@ -656,6 +657,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     public synchronized void delete() {
         dbc.dropBigMap("tmp_records", records);
+        dbc.dropBigMap("tmp_xDataTypes", xDataTypes);
         dbc.dropDatabase();
         dbc.close();
         

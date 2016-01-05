@@ -28,9 +28,41 @@ import java.util.Map;
  */
 public interface DatabaseConnector {
     
+    /**
+     * The supported MapTypes.
+     */
     public enum MapType {
+        /**
+         * HashMap Type.
+         */
         HASHMAP,
+        
+        /**
+         * TreeMap Type.
+         */
         TREEMAP;
+    }
+    
+    /**
+     * A hint on where to ideally store the map. There are no guarantees over how
+     * the DatabaseConnector will actually store the data, but some engines will 
+     * use this info to keep as many important data in memory as possible.
+     */
+    public enum StorageHint {
+        /**
+         * This option will hint the storage engine that you wish to keep the 
+         * map in memory.
+         *//**
+         * This option will hint the storage engine that you wish to keep the 
+         * map in memory.
+         */
+        IN_MEMORY,
+        
+        /**
+         * This option will hint the storage engine that you wish to keep the 
+         * map in disk.
+         */
+        IN_DISK;
     }
     
     /**
@@ -85,10 +117,11 @@ public interface DatabaseConnector {
      * @param <V>
      * @param name
      * @param type
+     * @param storageHint
      * @param isTemporary
      * @return 
      */
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, boolean isTemporary);
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary);
     
     /**
      * Drops a particular Big Map.

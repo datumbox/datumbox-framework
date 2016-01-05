@@ -25,6 +25,8 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLrecommender;
 import com.datumbox.framework.machinelearning.common.validation.CollaborativeFilteringValidation;
 import com.datumbox.framework.mathematics.distances.Distance;
@@ -51,7 +53,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_DISK)
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
         /**

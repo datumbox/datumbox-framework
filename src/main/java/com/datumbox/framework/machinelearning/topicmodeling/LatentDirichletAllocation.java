@@ -26,6 +26,7 @@ import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
 import com.datumbox.framework.machinelearning.common.validation.LatentDirichletAllocationValidation;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -67,19 +68,19 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         private int totalIterations;
         
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_DISK)
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_DISK)
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Integer, Integer> documentWordCounts; //the n.(d) in the papers
         
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
 
         /**
@@ -600,10 +601,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, true);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", MapType.HASHMAP, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, true);
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", MapType.HASHMAP, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Map.Entry<Integer, Record> e : newData.entries()) {

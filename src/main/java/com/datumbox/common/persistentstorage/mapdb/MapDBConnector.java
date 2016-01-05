@@ -27,6 +27,7 @@ import java.util.Map;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
+import java.util.TreeMap;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -173,11 +174,12 @@ public class MapDBConnector extends AutoCloseConnector {
      * @param <V>
      * @param name
      * @param type
+     * @param storageHint
      * @param isTemporary
      * @return 
      */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
         ensureNotClosed();
         validateName(name, isTemporary);
         
@@ -185,15 +187,27 @@ public class MapDBConnector extends AutoCloseConnector {
 
         openDB(dbType);
         
+        boolean permitInMemory = StorageHint.IN_MEMORY.equals(storageHint) && dbConf.isHybridized();
+        
         if(MapType.HASHMAP.equals(type)) {
-            return dbRegistry.get(dbType).createHashMap(name)
-            .counterEnable()
-            .makeOrGet();
+            if(permitInMemory) {
+                return new HashMap<>();
+            }
+            else {
+                return dbRegistry.get(dbType).createHashMap(name)
+                .counterEnable()
+                .makeOrGet();
+            }
         }
         else if(MapType.TREEMAP.equals(type)) {
-            return dbRegistry.get(dbType).createTreeMap(name)
-            .counterEnable()
-            .makeOrGet();
+            if(permitInMemory) {
+                return new TreeMap<>();
+            }
+            else {
+                return dbRegistry.get(dbType).createTreeMap(name)
+                .counterEnable()
+                .makeOrGet();
+            }
         }
         else {
             throw new IllegalArgumentException("Unsupported MapType.");

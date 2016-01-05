@@ -37,6 +37,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Utility methods used only by the JUnit tests.
@@ -153,6 +154,7 @@ public class TestUtils {
         else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
             MapDBConfiguration dbConf = (MapDBConfiguration) ConfigurationFactory.MAPDB.getConfiguration();
             dbConf.setOutputFolder(tmpFolder);
+            dbConf.setHybridized(TestConfiguration.HYBRIDIZED_STORAGE);
             return dbConf;
         }
         return null;

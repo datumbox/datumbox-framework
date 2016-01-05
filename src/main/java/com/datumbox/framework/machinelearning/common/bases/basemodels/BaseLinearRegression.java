@@ -23,6 +23,8 @@ import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregres
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.validation.LinearRegressionValidation;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.onesample.Lilliefors;
@@ -45,7 +47,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
      */
     public static abstract class ModelParameters extends BaseMLregressor.ModelParameters {
 
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         /**

@@ -22,6 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 
 import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     public static class ModelParameters extends ScoreBasedFeatureSelection.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
 
         /**
@@ -149,7 +150,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         int n = modelParameters.getN();
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, true);
+        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -229,7 +230,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, true);
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
         
         for(Object feature: newData.getXDataTypes().keySet()) {
             if(!maxTFIDFfeatureScores.containsKey(feature)) {

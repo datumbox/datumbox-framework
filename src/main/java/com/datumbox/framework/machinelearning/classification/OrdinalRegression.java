@@ -23,6 +23,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 
 
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
@@ -59,13 +60,13 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> weights; //the W parameters of the model
 
         /**
          * Right-side limits of the class on the ordinal regression line. 
          */
-        @BigMap
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> thitas; 
 
         /**
@@ -290,9 +291,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, true);
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
             
-            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, true);
+            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);

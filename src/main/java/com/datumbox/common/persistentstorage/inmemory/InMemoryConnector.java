@@ -149,11 +149,12 @@ public class InMemoryConnector extends AutoCloseConnector {
      * @param <V>
      * @param name
      * @param type
+     * @param storageHint
      * @param isTemporary
      * @return 
      */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
         ensureNotClosed();
         
         if(MapType.HASHMAP.equals(type)) {

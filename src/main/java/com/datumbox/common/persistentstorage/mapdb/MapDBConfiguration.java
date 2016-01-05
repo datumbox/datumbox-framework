@@ -41,6 +41,8 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     
     private boolean transacted = false;
 
+    private boolean hybridized = false;
+    
     /**
      * It initializes a new connector to the Database.
      * 
@@ -73,6 +75,7 @@ public class MapDBConfiguration implements DatabaseConfiguration {
         cacheSize = Integer.valueOf(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
         compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
         transacted = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.transacted"));
+        hybridized = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.hybridized"));
     }
 
     /**
@@ -151,5 +154,25 @@ public class MapDBConfiguration implements DatabaseConfiguration {
         this.transacted = transacted;
     }
     
+    /**
+     * Getter for the Hybridized option. 
+     * 
+     * @return 
+     */
+    public boolean isHybridized() {
+        return hybridized;
+    }
+    
+    /**
+     * Setter for the Hybridized option. If turned on, it will take into 
+     * account the storage hints provided during Map initialization and it will 
+     * move more objects out of MapDB and into main Memory. This will lead to
+     * significantly improved speed but also higher memory utilization.
+     * 
+     * @param hybridized 
+     */
+    public void setHybridized(boolean hybridized) {
+        this.hybridized = hybridized;
+    }
     
 }
