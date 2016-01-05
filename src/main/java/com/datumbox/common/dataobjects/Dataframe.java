@@ -235,7 +235,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized int size() {
+    public int size() {
         return records.size();
     }
     
@@ -245,7 +245,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean isEmpty() {
+    public boolean isEmpty() {
         return records.isEmpty();
     }
     
@@ -254,7 +254,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * after you clear it.
      */
     @Override
-    public synchronized void clear() {
+    public void clear() {
         yDataType = null;
         
         xDataTypes.clear();
@@ -268,7 +268,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean add(Record r) {
+    public boolean add(Record r) {
         addRecord(r);
         return true;
     }
@@ -280,7 +280,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean contains(Object o) {
+    public boolean contains(Object o) {
         return records.containsValue((Record)o);
     }
     
@@ -291,7 +291,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean addAll(Collection<? extends Record> c) {
+    public boolean addAll(Collection<? extends Record> c) {
         for(Record r : c) {
             add(r);
         }
@@ -306,7 +306,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean containsAll(Collection<?> c) {
+    public boolean containsAll(Collection<?> c) {
         return records.values().containsAll(c);
     }
     
@@ -316,7 +316,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized Object[] toArray() {
+    public Object[] toArray() {
         Object[] array = new Object[size()];
         int i = 0;
         for(Record r : values()) {
@@ -334,7 +334,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public synchronized <T> T[] toArray(T[] a) {
+    public <T> T[] toArray(T[] a) {
         int size = size();
         if (a.length < size) {
             a = (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
@@ -384,7 +384,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean remove(Object o) {
+    public boolean remove(Object o) {
         Integer id = indexOf((Record) o);
         if(id == null) {
             return false;
@@ -401,7 +401,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c) {
         boolean modified = false;
         for(Object o : c) {
             modified |= remove((Record)o);
@@ -420,7 +420,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @return 
      */
     @Override
-    public synchronized boolean retainAll(Collection<?> c) {
+    public boolean retainAll(Collection<?> c) {
         boolean modified = false;
         for(Map.Entry<Integer, Record> e : entries()) {
             Integer rId = e.getKey();
@@ -446,7 +446,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param id
      * @return 
      */
-    public synchronized Record remove(Integer id) {
+    public Record remove(Integer id) {
         return records.remove(id);
     }
     
@@ -459,7 +459,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param o
      * @return 
      */
-    public synchronized Integer indexOf(Record o) {
+    public Integer indexOf(Record o) {
         if(o!=null) {
             for(Map.Entry<Integer, Record> e : entries()) {
                 Integer rId = e.getKey();
@@ -478,7 +478,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param id
      * @return 
      */
-    public synchronized Record get(Integer id) {
+    public Record get(Integer id) {
         return records.get(id);
     }
     
@@ -488,7 +488,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param r
      * @return 
      */
-    public synchronized Integer addRecord(Record r) {
+    public Integer addRecord(Record r) {
         Integer rId = _add(r);
         updateMeta(r);
         return rId;
@@ -508,7 +508,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param r
      * @return 
      */
-    public synchronized Integer set(Integer rId, Record r) {
+    public Integer set(Integer rId, Record r) {
         if(records.containsKey(rId)==false) {
             throw new IllegalArgumentException("Setting an id which does not exist is not permitted.");
         }
@@ -522,7 +522,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
-    public synchronized int xColumnSize() {
+    public int xColumnSize() {
         return xDataTypes.size();
     }
     
@@ -531,7 +531,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
-    public synchronized TypeInference.DataType getYDataType() {
+    public TypeInference.DataType getYDataType() {
         return yDataType;
     }
     
@@ -540,7 +540,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
-    public synchronized Map<Object, TypeInference.DataType> getXDataTypes() {
+    public Map<Object, TypeInference.DataType> getXDataTypes() {
         return Collections.unmodifiableMap(xDataTypes);
     }
     
@@ -551,7 +551,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param column
      * @return 
      */
-    public synchronized FlatDataList getXColumn(Object column) {
+    public FlatDataList getXColumn(Object column) {
         FlatDataList flatDataList = new FlatDataList();
         
         for(Record r : values()) {
@@ -567,7 +567,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
-    public synchronized FlatDataList getYColumn() {
+    public FlatDataList getYColumn() {
         FlatDataList flatDataList = new FlatDataList();
         
         for(Record r : values()) {
@@ -583,7 +583,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * 
      * @param columnSet
      */
-    public synchronized void dropXColumns(Set<Object> columnSet) {  
+    public void dropXColumns(Set<Object> columnSet) {  
         columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataframe
         
         if(columnSet.isEmpty()) {
@@ -617,7 +617,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param idsCollection
      * @return 
      */
-    public synchronized Dataframe getSubset(FlatDataList idsCollection) {
+    public Dataframe getSubset(FlatDataList idsCollection) {
         Dataframe d = new Dataframe(dbConf);
         
         for(Object id : idsCollection) {
@@ -629,7 +629,7 @@ public class Dataframe implements Serializable, Collection<Record> {
     /**
      * It forces the recalculation of Meta data using the Records of the dataset.
      */
-    public synchronized void recalculateMeta() {
+    public void recalculateMeta() {
         yDataType = null;
         xDataTypes.clear();
         for(Record r : values()) {
@@ -642,7 +642,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * 
      * @return 
      */
-    public synchronized Dataframe copy() {
+    public Dataframe copy() {
         Dataframe d = new Dataframe(dbConf);
         
         for(Record r : values()) {
@@ -655,7 +655,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * Deletes the Dataframe and removes all internal variables. Once you delete a
      * dataset, the instance can no longer be used.
      */
-    public synchronized void delete() {
+    public void delete() {
         dbc.dropBigMap("tmp_records", records);
         dbc.dropBigMap("tmp_xDataTypes", xDataTypes);
         dbc.dropDatabase();
@@ -740,7 +740,7 @@ public class Dataframe implements Serializable, Collection<Record> {
      * @param rId
      * @param r 
      */
-    public synchronized void _unsafe_set(Integer rId, Record r) {
+    public void _unsafe_set(Integer rId, Record r) {
         records.put(rId, r);
     }
     
