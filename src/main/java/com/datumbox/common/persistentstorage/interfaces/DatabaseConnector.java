@@ -52,9 +52,6 @@ public interface DatabaseConnector {
         /**
          * This option will hint the storage engine that you wish to keep the 
          * map in memory.
-         *//**
-         * This option will hint the storage engine that you wish to keep the 
-         * map in memory.
          */
         IN_MEMORY,
         
