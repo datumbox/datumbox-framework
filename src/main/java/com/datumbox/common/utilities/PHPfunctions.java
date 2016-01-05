@@ -88,9 +88,9 @@ public class PHPfunctions {
      */
     public static int substr_count(final String string, final char character) {
         int count = 0;
-        
-        for(char c : string.toCharArray()) {
-            if(c==character) {
+        int n = string.length();
+        for(int i=0;i<n;i++) {
+            if(string.charAt(i)==character) {
                 ++count;
             }
         }

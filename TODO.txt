@@ -1,9 +1,9 @@
 CODE IMPROVEMENTS
 =================
 
-- Do not include on macro averages classes that were not included on validation set
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
 - Add hybrid db approach: ability to store some objects in memory (model parameters) and some on the file (Dataframe).
+- Remove Validators and port this code into models instead?
 - Add multithreading support.
 - Update all maven plugins and dependencies to their latest versions.
     - Add support for MapDB 2.0 once a stable version is released.

@@ -340,7 +340,7 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         validationMetrics.setAccuracy(correctCount/(double)n);
         
         //Average Precision, Recall and F1: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.104.8244&rep=rep1&type=pdf
-        
+        int activeClasses = c;
         for(Object theClass : classesSet) {
 
             
@@ -358,10 +358,8 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
                 classF1 = 2.0*classPrecision*classRecall/(classPrecision+classRecall);                
             }
             else if(tp==0.0 && fp==0.0 && fn==0.0) {
-                //if this category did not appear in the dataset then set the metrics to 1
-                classPrecision=1.0;
-                classRecall=1.0;
-                classF1=1.0;
+                //if this category did not appear in the dataset reduce the number of classes
+                --activeClasses;
             }
         
             
@@ -369,10 +367,14 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
             validationMetrics.getMicroRecall().put(theClass, classRecall);
             validationMetrics.getMicroF1().put(theClass, classF1);
             
-            validationMetrics.setMacroPrecision(validationMetrics.getMacroPrecision() + classPrecision/c);
-            validationMetrics.setMacroRecall(validationMetrics.getMacroRecall() + classRecall/c);
-            validationMetrics.setMacroF1(validationMetrics.getMacroF1() + classF1/c);
-        }
+            validationMetrics.setMacroPrecision(validationMetrics.getMacroPrecision() + classPrecision);
+            validationMetrics.setMacroRecall(validationMetrics.getMacroRecall() + classRecall);
+            validationMetrics.setMacroF1(validationMetrics.getMacroF1() + classF1);
+        }        
+
+        validationMetrics.setMacroPrecision(validationMetrics.getMacroPrecision()/activeClasses);
+        validationMetrics.setMacroRecall(validationMetrics.getMacroRecall()/activeClasses);
+        validationMetrics.setMacroF1(validationMetrics.getMacroF1()/activeClasses);
         
         return validationMetrics;
     }
