@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Remove Validators and port this code into models instead?
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
 - Add multithreading support.
 - Update all maven plugins and dependencies to their latest versions.
