@@ -17,6 +17,7 @@ package com.datumbox.common.dataobjects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,19 @@ import java.util.Set;
  */
 public class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * Copies the provided AssociativeArray and builds a new which is unmodifiable.
+     * 
+     * @param original
+     * @return 
+     */
+    public static AssociativeArray copy2Unmodifiable(AssociativeArray original) {
+        AssociativeArray copy = new AssociativeArray();
+        copy.internalData.putAll(original.internalData);
+        copy.internalData = Collections.unmodifiableMap(copy.internalData);
+        return copy;
+    }
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.

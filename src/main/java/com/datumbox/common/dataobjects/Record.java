@@ -17,6 +17,7 @@ package com.datumbox.common.dataobjects;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 
 /**
@@ -76,11 +77,11 @@ public class Record implements Serializable {
      * @param yPredictedProbabilities 
      */
     public Record(AssociativeArray x, Object y, Object yPredicted, AssociativeArray yPredictedProbabilities) {
-        this.x = x.copy();
+        this.x = AssociativeArray.copy2Unmodifiable(x);
         this.y = y;
         this.yPredicted = yPredicted;
         if (yPredictedProbabilities != null) {
-            this.yPredictedProbabilities = yPredictedProbabilities.copy();
+            this.yPredictedProbabilities = AssociativeArray.copy2Unmodifiable(yPredictedProbabilities);
         }
         else {
             this.yPredictedProbabilities = null;
@@ -94,10 +95,7 @@ public class Record implements Serializable {
      * @return 
      */
     public AssociativeArray getX() {
-        if(x == null) {
-            return null;
-        }
-        return new AssociativeArray(Collections.unmodifiableMap(x.internalData));
+        return x;
     }
     
     /**
@@ -129,10 +127,7 @@ public class Record implements Serializable {
      * @return 
      */
     public AssociativeArray getYPredictedProbabilities() {
-        if(yPredictedProbabilities == null) {
-            return null;
-        }
-        return new AssociativeArray(Collections.unmodifiableMap(yPredictedProbabilities.internalData));
+        return yPredictedProbabilities;
     }
     
     /**
