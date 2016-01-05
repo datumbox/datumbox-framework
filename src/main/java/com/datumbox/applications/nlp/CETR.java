@@ -401,7 +401,7 @@ public class CETR {
     
     private String clearText(String text) {
         text = HTMLCleaner.removeNonTextTagsAndAttributes(text); //remove all the irrelevant HTML Tags that are not related to the text (such as forms, scripts etc)
-        if(PHPfunctions.substr_count(text, "\n")<=1) { //if the document is in a single line (no spaces), then break it in order for this algorithm to work
+        if(PHPfunctions.substr_count(text, '\n')<=1) { //if the document is in a single line (no spaces), then break it in order for this algorithm to work
             text = text.replace(">", ">\n");
         }
         

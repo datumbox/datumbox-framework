@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
@@ -194,7 +195,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         
     }
     
-    private static final String SEPARATOR = "_";
+    private static final char SEPARATOR = '_';
         
     private Map<Integer, String> ID2word; //ID=>Kwd
     private Map<Integer, Double> ID2occurrences; //ID=>counts/scores
@@ -278,7 +279,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
             if(proximityScore>=parameters.getMinWordOccurrence()) {
                 String IDcombinationReverse = entry.getKey();
                 
-                String[] listOfWordIDsReverse = IDcombinationReverse.split(SEPARATOR);
+                String[] listOfWordIDsReverse = StringUtils.split(IDcombinationReverse, SEPARATOR);
                 
                 StringBuilder sb = new StringBuilder(listOfWordIDsReverse.length*6);
                 for(int i=listOfWordIDsReverse.length-1;i>=0;--i) {
@@ -401,14 +402,14 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         
         int maxDistanceBetweenKwds=parameters.getMaxDistanceBetweenKwds()+2; //the method below substracts the current minus the last occurence. As a result it counts also the first and last word and NOT the words between them. That is why we add 2 on the distance.
         
-        
+        String separator = String.valueOf(SEPARATOR);
         for(int i=windowStart+1;i<windowLength;++i) {
             Integer ID = position2ID.get(i);
             if(ID==null || useThisWord(ID)==false || (isfirstWordNumber && NumberUtils.isNumber(ID2word.get(ID)))) {
                 continue;
             }
 
-            String tokenizedID = SEPARATOR + ID + SEPARATOR;
+            String tokenizedID = separator + ID + separator;
 
             Map<String, Integer> newWordCombinations = new HashMap<>();
             
@@ -501,5 +502,5 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
 
         word2ID = null;
     }
-   
+    
 }

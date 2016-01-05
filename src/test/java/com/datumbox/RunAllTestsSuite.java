@@ -15,6 +15,7 @@
  */
 package com.datumbox;
 
+import java.io.IOException;
 import org.junit.extensions.cpsuite.ClasspathSuite;
 import org.junit.extensions.cpsuite.ClasspathSuite.SuiteTypes;
 import org.junit.extensions.cpsuite.SuiteType;
@@ -35,9 +36,11 @@ public class RunAllTestsSuite {
      * 
      * @param args
      * @throws InterruptedException 
+     * @throws java.io.IOException 
      */
-    public static void main(String[] args) throws InterruptedException {
-        //Thread.sleep(30000);
+    public static void main(String[] args) throws InterruptedException, IOException {
+        System.out.println("Press any key to continue...");
+        System.in.read();  
         JUnitCore.runClasses(RunAllTestsSuite.class);
     }
 }
