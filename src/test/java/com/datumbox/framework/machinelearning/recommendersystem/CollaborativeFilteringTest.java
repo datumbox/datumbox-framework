@@ -36,11 +36,11 @@ import static org.junit.Assert.*;
 public class CollaborativeFilteringTest extends BaseTest {
 
     /**
-     * Test of predict method, of class MaximumEntropy.
+     * Test of validate method, of class CollaborativeFiltering.
      */
     @Test
-    public void testPredict() {
-        logger.info("predict");
+    public void testValidate() {
+        logger.info("validate");
         
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         

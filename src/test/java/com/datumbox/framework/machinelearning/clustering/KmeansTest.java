@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 public class KmeansTest extends BaseTest {
 
     /**
-     * Test of predict method, of class MaximumEntropy.
+     * Test of validate method, of class Kmeans.
      */
     @Test
     public void testValidate() {

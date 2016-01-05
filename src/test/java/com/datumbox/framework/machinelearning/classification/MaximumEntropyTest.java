@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class MaximumEntropyTest extends BaseTest {
 
     /**
-     * Test of predict method, of class MaximumEntropy.
+     * Test of validate method, of class MaximumEntropy.
      */
     @Test
     public void testValidate() {

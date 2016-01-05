@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 public class HierarchicalAgglomerativeTest extends BaseTest {
 
     /**
-     * Test of predict method, of class MaximumEntropy.
+     * Test of validate method, of class HierarchicalAgglomerative.
      */
     @Test
     public void testValidate() {
