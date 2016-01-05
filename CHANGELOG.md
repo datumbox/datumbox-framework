@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160103
+Version 0.7.0-SNAPSHOT - Build 20160105
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -38,6 +38,9 @@ Version 0.7.0-SNAPSHOT - Build 20160103
 - Improved Exceptions and Exception messages.
 - Add support of Treemaps in the DatabaseConnector. Dataframe stores the records in TreeMap.
 - Use _unsafe_set() where possible to speed up the calculations.
+- BaseMLrecommender now inherits from BaseMLmodel.
+- CollaborativeFiltering algorithm modified to support more generic User-user CF and to return Validation Metrics.
+- Tests will now fail if the external datasets can't be downloaded.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

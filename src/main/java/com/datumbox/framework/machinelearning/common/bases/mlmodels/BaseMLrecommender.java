@@ -15,13 +15,9 @@
  */
 package com.datumbox.framework.machinelearning.common.bases.mlmodels;
 
-import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
-import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
-import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 
 /**
  * Abstract Class for recommender algorithms.
@@ -29,14 +25,15 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
+ * @param <VM>
  */
-public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParameters, TP extends BaseMLrecommender.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
+public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParameters, TP extends BaseMLrecommender.TrainingParameters, VM extends BaseMLrecommender.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
     /**
      * The ModelParameters class stores the coefficients that were learned during
      * the training of the algorithm.
      */
-    public static abstract class ModelParameters extends BaseModelParameters {
+    public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -53,9 +50,17 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * The TrainingParameters class stores the parameters that can be changed
      * before training the algorithm.
      */
-    public static abstract class TrainingParameters extends BaseTrainingParameters {
+    public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {
         
     } 
+    
+    /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
+    public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
+  
+    }
     
     /**
      * Protected constructor of the recommender.
@@ -64,31 +69,11 @@ public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParame
      * @param dbConf
      * @param mpClass
      * @param tpClass 
+     * @param vmClass 
+     * @param modelValidator 
      */
-    protected BaseMLrecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+    protected BaseMLrecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
+        super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
-    /**
-     * Calculates the predictions for the newData and stores the predictions
-     * inside the object.
-     * 
-     * @param newData 
-     */
-    public void predict(Dataframe newData) { 
-        logger.info("predict()");
-        
-        knowledgeBase.load();
-        
-        predictDataset(newData);
-
-    } 
-    
-    /**
-     * Estimates the predictions for a new Dataframe.
-     * 
-     * @param newData 
-     */
-    protected abstract void predictDataset(Dataframe newData);
-
 }

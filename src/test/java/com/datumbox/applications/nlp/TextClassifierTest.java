@@ -62,7 +62,7 @@ public class TextClassifierTest extends BaseTest {
         }
         catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
-            return;
+            throw new RuntimeException(ex);
         }
         
         TextClassifier instance = new TextClassifier(dbName, dbConf);
@@ -112,7 +112,7 @@ public class TextClassifierTest extends BaseTest {
         }
         catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
-            return;
+            throw new RuntimeException(ex);
         }
         
         List<Object> expResult = Arrays.asList("negative","positive");

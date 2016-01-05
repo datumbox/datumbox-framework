@@ -60,7 +60,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
         }
         catch(UncheckedIOException | MalformedURLException ex) {
             logger.warn("Unable to download datasets, skipping test.");
-            return;
+            throw new RuntimeException(ex);
         }
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());

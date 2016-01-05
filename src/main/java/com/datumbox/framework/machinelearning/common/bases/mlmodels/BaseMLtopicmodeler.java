@@ -55,8 +55,8 @@ public abstract class BaseMLtopicmodeler<MP extends BaseMLtopicmodeler.ModelPara
     } 
     
     /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
      */
     public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
   

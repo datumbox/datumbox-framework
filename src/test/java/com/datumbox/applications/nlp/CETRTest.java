@@ -46,7 +46,7 @@ public class CETRTest extends BaseTest {
         }
         catch(UncheckedIOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
-            return;
+            throw new RuntimeException(ex);
         }
         
         CETR.Parameters parameters = new CETR.Parameters();

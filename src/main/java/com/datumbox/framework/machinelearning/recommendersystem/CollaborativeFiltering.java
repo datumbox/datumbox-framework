@@ -26,6 +26,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapFunctions;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLrecommender;
+import com.datumbox.framework.machinelearning.common.validation.CollaborativeFilteringValidation;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.parametrics.relatedsamples.PearsonCorrelation;
 import java.util.Arrays;
@@ -33,7 +34,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -42,7 +42,7 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters> {
+public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters, CollaborativeFiltering.ValidationMetrics> {
 
     /**
      * The ModelParameters class stores the coefficients that were learned during
@@ -135,13 +135,41 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     }
     
     /**
+     * The ValidationMetrics class stores information about the performance of the
+     * algorithm.
+     */
+    public static class ValidationMetrics extends BaseMLrecommender.ValidationMetrics {
+        private static final long serialVersionUID = 1L;
+        
+        private double RMSE = 0.0; 
+        
+        /**
+         * Getter for Root-mean-square deviation.
+         * 
+         * @return 
+         */
+        public double getRMSE() {
+            return RMSE;
+        }
+
+        /**
+         * Setter for Root-mean-square deviation.
+         * 
+         * @param RMSE
+         */
+        public void setRMSE(double RMSE) {
+            this.RMSE = RMSE;
+        }
+    }
+    
+    /**
      * Public constructor of the algorithm.
      * 
      * @param dbName
      * @param dbConf 
      */
     public CollaborativeFiltering(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
+        super(dbName, dbConf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class, CollaborativeFiltering.ValidationMetrics.class, new CollaborativeFilteringValidation<>());
     } 
     
     @Override
@@ -151,13 +179,9 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         //calculate similarity matrix
         Map<List<Object>, Double> similarities = modelParameters.getSimilarities();
         for(Record r1 : trainingData) {
+            Object y1 = r1.getY();
             for(Record r2: trainingData) {
-                Object y1 = r1.getY();
                 Object y2 = r2.getY();
-                
-                if(Objects.equals(y1, y2)) {
-                    continue;
-                }
                 
                 List<Object> tkp = Arrays.asList(y1, y2);
                 if(similarities.containsKey(tkp)) {
@@ -165,16 +189,19 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
                 }
                 
                 double similarity = calculateSimilarity(r1, r2);
-                if(similarity>0) {
-                    similarities.put(tkp, similarity);
-                    similarities.put(Arrays.asList(y2, y1), similarity); //add also for the reverse key because similarity is symmetric
-                }
+                
+                similarities.put(tkp, similarity);
+                similarities.put(Arrays.asList(y2, y1), similarity); //add also for the reverse key because similarity is symmetric
             }
         }
     }
 
     @Override
     protected void predictDataset(Dataframe newData) {
+        _predictDataset(newData, false);
+    }
+    
+    private void _predictDataset(Dataframe newData, boolean includeRated) {
         Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list
@@ -188,8 +215,6 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
                 Object row = entry.getKey();
                 Double score = TypeInference.toDouble(entry.getValue());
                 
-                //Since we can't use 2D Maps due to mongo, we are forced to loop
-                //the whole similarities map which is very inefficient.
                 for(Map.Entry<List<Object>, Double> entry2 : similarities.entrySet()) {
                     List<Object> tpk = entry2.getKey();
                     if(!tpk.get(0).equals(row)) {
@@ -197,9 +222,6 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
                     }
                     
                     Object column = tpk.get(1);
-                    if(r.getX().containsKey(column)) {
-                        continue; // they already rated this
-                    }
                     
                     Double previousRecValue = TypeInference.toDouble(recommendations.get(column));
                     Double previousSimsumValue = simSums.get(column);
@@ -210,7 +232,9 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
                     
                     Double similarity = entry2.getValue();
                     
-                    recommendations.put(column, previousRecValue+similarity*score);
+                    if(includeRated == true || !r.getX().containsKey(column)) {
+                        recommendations.put(column, previousRecValue+similarity*score);
+                    }
                     simSums.put(column, previousSimsumValue+similarity);
                 }
             }
@@ -223,11 +247,8 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             }
             simSums = null;
             
-            if(!recommendations.isEmpty()) {
-                //sort recommendation by popularity
-                recommendations = MapFunctions.sortNumberMapByValueDescending(recommendations);
-                newData._unsafe_set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray(recommendations)));
-            }
+            recommendations = MapFunctions.sortNumberMapByValueDescending(recommendations);
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray(recommendations)));
         }
     }
 
@@ -267,6 +288,10 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
             
             //estimate the pearson's correlation
             similarity = PearsonCorrelation.calculateCorrelation(transposeDataList);
+            
+            //Pearson's correlation goes from -1 to 1. This will mess up the 
+            //scaling of the rates. As a result we need to rescale it rescale it to 0-1 range.
+            similarity = (similarity+1.0)/2.0;
         }
         else { 
             throw new IllegalArgumentException("Unsupported Distance method.");
@@ -275,4 +300,28 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         return similarity;
     } 
     
+    @Override
+    protected ValidationMetrics validateModel(Dataframe validationData) {
+        _predictDataset(validationData, true);
+        
+        //create new validation metrics object
+        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
+        
+        double RMSE = 0.0;
+        int i = 0;
+        for(Record r : validationData) {
+            AssociativeArray predictions = r.getYPredictedProbabilities();
+            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                Object column = entry.getKey();
+                Object value = entry.getValue();
+                RMSE += Math.pow(TypeInference.toDouble(value)-TypeInference.toDouble(predictions.get(column)), 2.0);
+                ++i;
+            }           
+        }
+        
+        RMSE = Math.sqrt(RMSE/i);
+        validationMetrics.setRMSE(RMSE);
+        
+        return validationMetrics;
+    }
 }

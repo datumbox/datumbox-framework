@@ -64,7 +64,7 @@ public class DataframeTest extends BaseTest {
         }
         catch(UncheckedIOException | IOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
-            return;
+            throw new RuntimeException(ex);
         }
         
         Dataframe expResult = new Dataframe(dbConf);
