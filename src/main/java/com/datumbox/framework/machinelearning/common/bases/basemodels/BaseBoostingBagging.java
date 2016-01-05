@@ -46,7 +46,7 @@ import java.util.Set;
 public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelParameters, TP extends BaseBoostingBagging.TrainingParameters, VM extends BaseBoostingBagging.ValidationMetrics> extends BaseMLclassifier<MP, TP, VM> {
 
     private static final String DB_INDICATOR = "Cmp";
-    private static final int maxNumberOfRetries = 2;
+    private static final int MAX_NUM_OF_RETRIES = 2;
     
     /**
      * The ModelParameters class stores the coefficients that were learned during
@@ -208,9 +208,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 Record r = e.getValue();
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
-                DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
-                
-                currentRecordDecisions.put(t, classProbabilities);
+                ((DataTable2D) recordDecisionsArray.get(rId)).put(t, classProbabilities);
             }
         }
         
@@ -218,9 +216,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         for(Map.Entry<Integer, Record> e : newData.entries()) {
             Integer rId = e.getKey();
             Record r = e.getValue();
-            DataTable2D currentRecordDecisions = (DataTable2D) recordDecisionsArray.get(rId);
             
-            AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(currentRecordDecisions, classifierWeightsArray);
+            AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage((DataTable2D)recordDecisionsArray.get(rId), classifierWeightsArray);
             Descriptives.normalize(combinedClassVotes);
             
             newData._unsafe_set(rId, new Record(r.getX(), r.getY(), MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey(), combinedClassVotes));
@@ -291,7 +288,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 break;
             }
             else if(status==Status.IGNORE) {
-                if(retryCounter<maxNumberOfRetries) {
+                if(retryCounter<MAX_NUM_OF_RETRIES) {
                     logger.debug("Ignoring last weak learner due to high error");
                     ++retryCounter;
                     continue; 
