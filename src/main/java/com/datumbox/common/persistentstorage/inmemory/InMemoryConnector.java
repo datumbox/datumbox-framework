@@ -67,7 +67,7 @@ public class InMemoryConnector extends AutoCloseConnector {
      */
     @Override
     public <T extends Serializable> void save(String name, T serializableObject) {
-        ensureNotClosed();
+        assertConnectionOpen();
         try { 
             Files.write(getDefaultPath(), DeepCopy.serialize(serializableObject));
         } 
@@ -87,7 +87,7 @@ public class InMemoryConnector extends AutoCloseConnector {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T load(String name, Class<T> klass) {
-        ensureNotClosed();
+        assertConnectionOpen();
         try { 
             //read the stored serialized object
             T serializableObject = (T)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
@@ -119,7 +119,7 @@ public class InMemoryConnector extends AutoCloseConnector {
      */
     @Override
     public boolean existsDatabase() {
-        ensureNotClosed();
+        assertConnectionOpen();
         return Files.exists(getDefaultPath());
     }
     
@@ -128,7 +128,7 @@ public class InMemoryConnector extends AutoCloseConnector {
      */
     @Override
     public void dropDatabase() {
-        ensureNotClosed();
+        assertConnectionOpen();
         if(!existsDatabase()) {
             return;
         }
@@ -155,7 +155,7 @@ public class InMemoryConnector extends AutoCloseConnector {
      */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
-        ensureNotClosed();
+        assertConnectionOpen();
         
         if(MapType.HASHMAP.equals(type)) {
             return new HashMap<>();
@@ -177,7 +177,7 @@ public class InMemoryConnector extends AutoCloseConnector {
      */
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
-        ensureNotClosed();
+        assertConnectionOpen();
         map.clear();
     } 
 

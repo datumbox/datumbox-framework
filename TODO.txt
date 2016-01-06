@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Create a 3rd option on StorageHint for IN_CACHE where we use LRU and for the IN_DISK option turn LRU off.
 - Create a sparse matrix obj on top of Dataframe by using AbstractRealMatrix.
 - Use {@inheritDoc} in the methods that have the same description as interfaces. Remove duplicate javadocs.
 - Do we need LinkedHashMap for Records? Maybe make the hashmap where necessary.

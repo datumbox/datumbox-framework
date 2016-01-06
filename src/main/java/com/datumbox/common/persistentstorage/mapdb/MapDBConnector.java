@@ -47,8 +47,9 @@ public class MapDBConnector extends AutoCloseConnector {
      * Enum class which stores the Database Type used for every collection.
      */
     private enum DatabaseType {
-        DEFAULT_DB,
-        TEMP_DB;
+        PRIMARY_DB,
+        TEMP_DB_CACHED,
+        TEMP_DB_UNCACHED;
     }
     
     private final MapDBConfiguration dbConf;
@@ -83,9 +84,8 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     @Override
     public <T extends Serializable> void save(String name, T serializableObject) {
-        ensureNotClosed();
-        openDB(DatabaseType.DEFAULT_DB);
-        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
+        assertConnectionOpen();
+        DB db = openDatabase(DatabaseType.PRIMARY_DB);
         Atomic.Var<T> knowledgeBaseVar = db.getAtomicVar(name);
         knowledgeBaseVar.set(serializableObject);
         db.commit();
@@ -103,9 +103,8 @@ public class MapDBConnector extends AutoCloseConnector {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T load(String name, Class<T> klass) {
-        ensureNotClosed();
-        openDB(DatabaseType.DEFAULT_DB);
-        DB db = dbRegistry.get(DatabaseType.DEFAULT_DB);
+        assertConnectionOpen();
+        DB db = openDatabase(DatabaseType.PRIMARY_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
         return atomicVar.get();
     }
@@ -115,11 +114,15 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     @Override
     public void close() {
-        if(isClosed()){
-            return; 
-        }
         super.close();
-        closeAllDBs();
+        
+        //close all dbs stored in dbRegistry
+        for(DB db : dbRegistry.values()) {
+            if(isOpenDatabase(db)) {
+                db.close();
+            }
+        }
+        dbRegistry.clear();
     }
     
     /**
@@ -129,7 +132,7 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     @Override
     public boolean existsDatabase() {
-        ensureNotClosed();
+        assertConnectionOpen();
         if(Files.exists(getDefaultPath())) {
             return true;
         }
@@ -148,18 +151,22 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     @Override
     public void dropDatabase() {
-        ensureNotClosed();
+        assertConnectionOpen();
         if(!existsDatabase()) {
             return;
         }
         
-        closeAllDBs();
-            
+        close();
+        
+        
+        
+        
         try {
             dbRegistry.clear();
-            Files.deleteIfExists(getDefaultPath());
-            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".p"));
-            Files.deleteIfExists(Paths.get(getDefaultPath().toString()+".t"));
+            Path defaultPath = getDefaultPath();
+            Files.deleteIfExists(defaultPath);
+            Files.deleteIfExists(Paths.get(defaultPath.toString()+".p"));
+            Files.deleteIfExists(Paths.get(defaultPath.toString()+".t"));
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -180,37 +187,63 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
-        ensureNotClosed();
-        validateName(name, isTemporary);
+        assertConnectionOpen();
         
-        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
-
-        openDB(dbType);
-        
-        boolean permitInMemory = StorageHint.IN_MEMORY.equals(storageHint) && dbConf.isHybridized();
-        
-        if(MapType.HASHMAP.equals(type)) {
-            if(permitInMemory) {
+        if(storageHint == StorageHint.IN_MEMORY && dbConf.isHybridized()) {
+            //store in memory
+            if(MapType.HASHMAP.equals(type)) {
                 return new HashMap<>();
             }
-            else {
-                return dbRegistry.get(dbType).createHashMap(name)
-                .counterEnable()
-                .makeOrGet();
-            }
-        }
-        else if(MapType.TREEMAP.equals(type)) {
-            if(permitInMemory) {
+            else if(MapType.TREEMAP.equals(type)) {
                 return new TreeMap<>();
             }
             else {
-                return dbRegistry.get(dbType).createTreeMap(name)
-                .counterEnable()
-                .makeOrGet();
+                throw new IllegalArgumentException("Unsupported MapType.");
             }
         }
         else {
-            throw new IllegalArgumentException("Unsupported MapType.");
+            //store in disk with optional LRU cache
+            
+            //first find if the particular collection exists and retrieve its dbType
+            DatabaseType dbType = getDatabaseTypeFromName(name);
+            
+            if(dbType == null) {
+                //the map does not exist. Find where it should be created.
+                if(isTemporary == false) {
+                    dbType = DatabaseType.PRIMARY_DB;
+                }
+                else {
+                    if(storageHint == StorageHint.IN_MEMORY || storageHint == StorageHint.IN_CACHE) {
+                        //we will use the LRU cache option
+                        dbType = DatabaseType.TEMP_DB_CACHED;
+                    }
+                    else if(storageHint == StorageHint.IN_DISK) {
+                        //no cache at all
+                        dbType = DatabaseType.TEMP_DB_UNCACHED;
+                    }
+                    else {
+                        throw new IllegalArgumentException("Unsupported StorageHint.");
+                    }
+                }
+            }
+
+            //ensure the DB is open 
+            DB db = openDatabase(dbType);
+            
+            //return the appropriate type
+            if(MapType.HASHMAP.equals(type)) {
+                return db.createHashMap(name)
+                .counterEnable()
+                .makeOrGet();
+            }
+            else if(MapType.TREEMAP.equals(type)) {
+                return db.createTreeMap(name)
+                .counterEnable()
+                .makeOrGet();
+            }
+            else {
+                throw new IllegalArgumentException("Unsupported MapType.");
+            }
         }
     }   
     
@@ -223,37 +256,57 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
-        ensureNotClosed();
-        boolean isTemporary = existsInDB(dbRegistry.get(DatabaseType.TEMP_DB), name); 
+        assertConnectionOpen();
         
-        DatabaseType dbType = isTemporary?DatabaseType.TEMP_DB:DatabaseType.DEFAULT_DB;
+        DatabaseType dbType = getDatabaseTypeFromName(name);
         
-        DB db = dbRegistry.get(dbType);
-        if(isOpenDB(db)) {
-            db.delete(name);
+        if(dbType != null) {
+            DB db = dbRegistry.get(dbType);
+            if(isOpenDatabase(db)) {
+                db.delete(name);
+            }
+        }
+        else {
+            //The dbType can be null in two cases: a) the map was never created 
+            //or b) it was stored in memory. In either case just clear the map.
+            map.clear();
         }
     }
     
     //private methods of connector class
     
-    private void closeAllDBs() {
-        //close all dbs stored in dbRegistry
-        for(DB db : dbRegistry.values()) {
-            if(isOpenDB(db)) {
-                db.close();
-            }
-        }
-    }
-    
-    private boolean isOpenDB(DB db) {
+    private boolean isOpenDatabase(DB db) {
         return !(db == null || db.isClosed());
     }
     
-    private DB openDB(DatabaseType dbType) {
+    /**
+     * Opens the database (if not already open) and returns the DB object.
+     * 
+     * @param dbType
+     * @return 
+     */
+    private DB openDatabase(DatabaseType dbType) {
         DB db = dbRegistry.get(dbType);
-        if(!isOpenDB(db)) {
-            boolean isTemporary = dbType==DatabaseType.TEMP_DB;
-            DBMaker m = (isTemporary==true)?DBMaker.newTempFileDB().deleteFilesAfterClose():DBMaker.newFileDB(getDefaultPath().toFile());
+        if(!isOpenDatabase(db)) {
+            DBMaker m;
+            
+            boolean permitCaching = true;
+            if(dbType == DatabaseType.PRIMARY_DB) {
+                //main storage
+                m = DBMaker.newFileDB(getDefaultPath().toFile());
+            }
+            else if(dbType == DatabaseType.TEMP_DB_CACHED || dbType == DatabaseType.TEMP_DB_UNCACHED) {
+                //temporary storage
+                m = DBMaker.newTempFileDB().deleteFilesAfterClose();
+                
+                if(dbType == DatabaseType.TEMP_DB_UNCACHED) {
+                    permitCaching = false;
+                }
+            }
+            else {
+                throw new IllegalArgumentException("Unsupported DatabaseType.");
+            }
+            
             
             if(dbConf.isTransacted()==false) {
                 m = m.transactionDisable();
@@ -263,7 +316,7 @@ public class MapDBConnector extends AutoCloseConnector {
                 m = m.compressionEnable();
             }
             
-            if(dbConf.getCacheSize()>0) {
+            if(permitCaching && dbConf.getCacheSize()>0) {
                 m = m.cacheLRUEnable().cacheSize(dbConf.getCacheSize()) ;
             }
             else {
@@ -279,29 +332,29 @@ public class MapDBConnector extends AutoCloseConnector {
         return db;
     }
     
-    private boolean existsInDB(DB db, String name) {
-        return isOpenDB(db) && db.exists(name);
-    }
-    
-    private void validateName(String name, boolean isTemporary) {
-        DB db = dbRegistry.get(DatabaseType.TEMP_DB);
-        if (existsInDB(db, name)) {
-            //try to find a map in temporary db with the same name
-            throw new IllegalArgumentException("A temporary map already exists with the same name.");
+    /**
+     * Returns the DatabaseType using the name of the map. It assumes that names 
+     * are unique across all DatabaseType. If not found null is returned.
+     * 
+     * @param name
+     * @return 
+     */
+    private DatabaseType getDatabaseTypeFromName(String name) {
+        for(Map.Entry<DatabaseType, DB> entry : dbRegistry.entrySet()) {
+            DB db = entry.getValue();
+            if(isOpenDatabase(db) && db.exists(name)) {
+                return entry.getKey();
+            }
         }
         
-        db = dbRegistry.get(DatabaseType.DEFAULT_DB);
-        if (isTemporary && existsInDB(db, name)) {
-            //try to find if a permanent map exists and we want to declare a new temporary with the same name
-            throw new IllegalArgumentException("A BigMap already exists with the same name.");
-        }
+        return null; //either the Map has not created yet OR it is in memory
     }
     
     private Path getDefaultPath() {
         //get the default filepath of the permanet db file
         String outputFolder = this.dbConf.getOutputFolder();
         
-        Path filepath = null;
+        Path filepath;
         if(outputFolder == null || outputFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }

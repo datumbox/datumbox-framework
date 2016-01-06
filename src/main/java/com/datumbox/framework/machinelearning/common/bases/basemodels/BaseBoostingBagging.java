@@ -185,12 +185,11 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Object> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", MapType.HASHMAP, StorageHint.IN_DISK, true);
+        Map<Object, DataTable2D> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", MapType.HASHMAP, StorageHint.IN_DISK, true);
         
         //initialize array of recordDecisions
-        AssociativeArray recordDecisionsArray = new AssociativeArray(tmp_recordDecisions);
         for(Integer rId : newData.index()) {
-            recordDecisionsArray.put(rId, new DataTable2D());
+            tmp_recordDecisions.put(rId, new DataTable2D());
         }
         
         //using the weak classifiers
@@ -209,7 +208,10 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
                 Record r = e.getValue();
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
-                ((DataTable2D) recordDecisionsArray.get(rId)).put(t, classProbabilities);
+                DataTable2D rDecisions = tmp_recordDecisions.get(rId);
+                rDecisions.put(t, classProbabilities);
+                
+                tmp_recordDecisions.put(rId, rDecisions); //WARNING: Do not remove this! We must put it back to the Map to persist it on Disk-backed maps
             }
         }
         
@@ -218,7 +220,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             Integer rId = e.getKey();
             Record r = e.getValue();
             
-            AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage((DataTable2D)recordDecisionsArray.get(rId), classifierWeightsArray);
+            AssociativeArray combinedClassVotes = FixedCombinationRules.weightedAverage(tmp_recordDecisions.get(rId), classifierWeightsArray);
             Descriptives.normalize(combinedClassVotes);
             
             newData._unsafe_set(rId, new Record(r.getX(), r.getY(), MapFunctions.selectMaxKeyValue(combinedClassVotes).getKey(), combinedClassVotes));

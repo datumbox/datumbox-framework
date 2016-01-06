@@ -42,7 +42,7 @@ Version 0.7.0-SNAPSHOT - Build 20160106
 - CollaborativeFiltering algorithm modified to support more generic User-user CF and to return Validation Metrics.
 - Tests will now fail if the external datasets can't be downloaded.
 - Changed the Validation Metrics policy to exclude from macro averages the classes that did not exist in validation set.
-- Implemented StorageHints on the DatabaseConnectors and MapDB can use a hybrid approach of storing some data in memory and some in disk.
+- Implemented StorageHints on the DatabaseConnectors and MapDB can use a hybrid approach of storing some data IN_MEMORY and some IN_DISK. Also support IN_CACHE for LRU cached maps.
 - The AutoCloseable interface is implemented in all close() methods.
 
 Version 0.6.1 - Build 20160102

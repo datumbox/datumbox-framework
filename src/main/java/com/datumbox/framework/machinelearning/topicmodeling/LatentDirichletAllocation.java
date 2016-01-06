@@ -68,13 +68,13 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         private int totalIterations;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_DISK)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_DISK)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
@@ -601,9 +601,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_CACHE, true);
         Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, StorageHint.IN_CACHE, true);
         Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
         
         //initialize topic assignments of each word randomly and update the counters

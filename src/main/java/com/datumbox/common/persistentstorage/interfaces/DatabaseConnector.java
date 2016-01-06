@@ -56,6 +56,12 @@ public interface DatabaseConnector extends AutoCloseable {
         IN_MEMORY,
         
         /**
+         * This option will hint the storage engine that you wish to keep part 
+         * of the map in the cache and the rest in the disk.
+         */
+        IN_CACHE,
+        
+        /**
          * This option will hint the storage engine that you wish to keep the 
          * map in disk.
          */

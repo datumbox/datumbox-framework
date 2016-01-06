@@ -53,7 +53,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_DISK)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
         private Map<List<Object>, Double> similarities; //the similarity map among observations
 
         /**
