@@ -283,7 +283,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
         Map<Integer, Integer> recordIdsReference = null;
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, featureIds, recordIdsReference);
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, recordIdsReference, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -367,7 +367,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds, recordIdsReference);
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         RealMatrix components = new BlockRealMatrix(modelParameters.getComponents());

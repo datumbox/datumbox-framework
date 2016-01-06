@@ -33,20 +33,11 @@ import org.apache.commons.math3.linear.RealVector;
  */
 public class MatrixDataframe {
     
-    private final RealVector Y;
     private final RealMatrix X;
-    private final Map<Object, Integer> feature2ColumnId;
+    private final RealVector Y;
     private final Map<Integer, Integer> recordId2RowId;
-    
-    /**
-     * Getter for the Y vector with the values of the response variables.
-     * 
-     * @return 
-     */
-    public RealVector getY() {
-        return Y;
-    }
-    
+    private final Map<Object, Integer> feature2ColumnId;
+     
     /**
      * Getter for the X Matrix which contains the data of the Dataframe.
      * 
@@ -57,12 +48,12 @@ public class MatrixDataframe {
     }
 
     /**
-     * Getter for the Map that stores the mapping between Feature and Column Id.
+     * Getter for the Y vector with the values of the response variables.
      * 
      * @return 
      */
-    public Map<Object, Integer> getFeature2ColumnId() {
-        return feature2ColumnId;
+    public RealVector getY() {
+        return Y;
     }
     
     /**
@@ -74,6 +65,14 @@ public class MatrixDataframe {
         return recordId2RowId;
     }
     
+    /**
+     * Getter for the Map that stores the mapping between Feature and Column Id.
+     * 
+     * @return 
+     */
+    public Map<Object, Integer> getFeature2ColumnId() {
+        return feature2ColumnId;
+    }
     
     
     /**
@@ -86,7 +85,7 @@ public class MatrixDataframe {
      * @param X
      * @param feature2ColumnId 
      */
-    private MatrixDataframe(RealVector Y, RealMatrix X, Map<Object, Integer> feature2ColumnId, Map<Integer, Integer> recordId2RowId) {
+    private MatrixDataframe(RealMatrix X, RealVector Y, Map<Integer, Integer> recordId2RowId, Map<Object, Integer> feature2ColumnId) {
         //this constructor must be private because it is used only internally
         this.Y = Y;
         this.X = X;
@@ -102,11 +101,11 @@ public class MatrixDataframe {
      * 
      * @param dataset
      * @param addConstantColumn
-     * @param featureIdsReference
      * @param recordIdsReference
+     * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
+    public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Integer, Integer> recordIdsReference, Map<Object, Integer> featureIdsReference) {
         if(!featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should be empty.");
         }
@@ -119,7 +118,7 @@ public class MatrixDataframe {
             ++d;
         }
         
-        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new OpenMapRealMatrix(n, d), featureIdsReference, recordIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n), recordIdsReference, featureIdsReference);
         
         
         if(dataset.isEmpty()) {
@@ -179,11 +178,11 @@ public class MatrixDataframe {
      * to parse the testing or validation dataset.
      * 
      * @param newData
-     * @param featureIdsReference
      * @param recordIdsReference
+     * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataframe parseDataset(Dataframe newData, Map<Object, Integer> featureIdsReference, Map<Integer, Integer> recordIdsReference) {
+    public static MatrixDataframe parseDataset(Dataframe newData, Map<Integer, Integer> recordIdsReference, Map<Object, Integer> featureIdsReference) {
         if(featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should not be empty.");
         }
@@ -191,7 +190,7 @@ public class MatrixDataframe {
         int n = newData.size();
         int d = featureIdsReference.size();
         
-        MatrixDataframe m = new MatrixDataframe(new ArrayRealVector(n), new OpenMapRealMatrix(n, d), featureIdsReference, recordIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n), recordIdsReference, featureIdsReference);
         
         if(newData.isEmpty()) {
             return m;

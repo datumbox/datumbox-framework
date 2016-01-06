@@ -750,6 +750,16 @@ public class Dataframe implements Serializable, Collection<Record> {
     }
     
     /**
+     * Protected getter for the DatabaseConnector of the Dataframe. It is used
+     * by the DataframeMatrix.
+     * 
+     * @return 
+     */
+    public DatabaseConnector getDbc() {
+        return dbc;
+    }
+    
+    /**
      * Adds the record in the dataset without updating the Meta. The add method 
      * returns the id of the new record.
      * 

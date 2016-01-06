@@ -161,7 +161,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Integer, Integer> recordIdsReference = null; //this reference is not needed
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, featureIds, recordIdsReference);
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, recordIdsReference, featureIds);
         
         RealVector Y = matrixDataset.getY();
         RealMatrix X = matrixDataset.getX();
@@ -241,7 +241,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         }
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>(); //use a mapping between recordIds and rowIds in Matrix
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, featureIds, recordIdsReference);
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
         
         RealMatrix X = matrixDataset.getX();
         

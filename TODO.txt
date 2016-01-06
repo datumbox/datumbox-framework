@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Create a sparse matrix obj on top of Dataframe by using AbstractRealMatrix.
 - Use {@inheritDoc} in the methods that have the same description as interfaces. Remove duplicate javadocs.
 - Do we need LinkedHashMap for Records? Maybe make the hashmap where necessary.
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.

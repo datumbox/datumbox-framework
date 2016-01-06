@@ -158,9 +158,6 @@ public class MapDBConnector extends AutoCloseConnector {
         
         close();
         
-        
-        
-        
         try {
             dbRegistry.clear();
             Path defaultPath = getDefaultPath();
