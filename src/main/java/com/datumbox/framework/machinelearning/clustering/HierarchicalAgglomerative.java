@@ -369,8 +369,6 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         calculateClusters(trainingData);
         
         
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
-        
     }
     
     private double calculateDistance(Record r1, Record r2) {        

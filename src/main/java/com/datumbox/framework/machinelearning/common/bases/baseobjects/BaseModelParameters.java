@@ -18,8 +18,6 @@ package com.datumbox.framework.machinelearning.common.bases.baseobjects;
 import com.datumbox.common.objecttypes.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;

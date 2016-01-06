@@ -322,6 +322,9 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          */
         @Override
         protected boolean remove(Integer rId, Record r) {
+            if(xi_sum==null || xi_square_sum==null) {
+                return false; //The cluster is empty or uninitialized
+            }
             if(recordIdSet.remove(rId)==false) {
                 return false;
             }
@@ -354,6 +357,9 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          */
         @Override
         protected void updateClusterParameters() {
+            if(xi_sum==null || xi_square_sum==null || psi0==null || mu0==null) {
+                return; //The cluster is empty or uninitialized
+            }
             int n = recordIdSet.size();
 
             //fetch hyperparameters

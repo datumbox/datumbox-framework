@@ -221,6 +221,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         }
     }
     
+    /*
     private void stochasticGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
         double multiplier = learningRate/knowledgeBase.getModelParameters().getN();
         
@@ -246,6 +247,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             }
         }
     }
+    */
     
     private double calculateError(Dataframe trainingData, Map<Object, Double> thitas) {
         //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression

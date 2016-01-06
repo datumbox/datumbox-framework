@@ -375,7 +375,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         svm.svm_get_labels(model,labels);
         
         double[] prob_estimates = new double[c];
-        double v = svm.svm_predict_probability(model, xSVM, prob_estimates);
+        svm.svm_predict_probability(model, xSVM, prob_estimates);
         
         AssociativeArray classScores = new AssociativeArray();
         for(Map.Entry<Object, Integer> entry : classIds.entrySet()) {

@@ -24,13 +24,8 @@ import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNor
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
-
 import java.util.HashMap;
 import java.util.Map;
-
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

@@ -311,7 +311,7 @@ public class CETR {
         double std = Descriptives.std(new FlatDataCollection((List)list), false); 
         double variance = std*std;
         
-        int sygma = (int)Math.min(Math.ceil(std), (n-1)/2);
+        int sygma = (int)Math.min(Math.ceil(std), (n-1.0)/2.0);
         
         
         List<Double> gaussianKernel = new ArrayList<>(2*sygma+1);

@@ -223,8 +223,8 @@ public class ShapiroWilk {
         /* Calculate significance level for W */
 
         if (n == 3) {/* exact P value : */
-            double pi6 = 1.90985931710274; /* = 6/pi */ 
-            double stqr = 1.04719755119660; /* = asin(sqrt(3/4)) */
+            double pi6 = 6.0/Math.PI; /* 1.90985931710274 = 6/pi */ 
+            double stqr = Math.PI/3.0; /* 1.04719755119660 = asin(sqrt(3/4)) */
             pw = pi6 * (Math.asin(Math.sqrt(w)) - stqr);
             if (pw < 0.) {
                 pw = 0;

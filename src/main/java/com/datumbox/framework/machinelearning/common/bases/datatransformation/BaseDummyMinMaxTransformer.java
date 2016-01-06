@@ -188,13 +188,14 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
-            for(Object column : minColumnValues.keySet()) {
+            for(Map.Entry<Object,Double> entry : minColumnValues.entrySet()) {
+                Object column = entry.getKey();
                 Double value = xData.getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any normalization
                     continue;
                 }
                 
-                Double min = minColumnValues.get(column);
+                Double min = entry.getValue();
                 Double max = maxColumnValues.get(column);
                 
                 //it is important how we will handle 0 normalized values because
@@ -231,13 +232,14 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             AssociativeArray xData = r.getX().copy();
             
             boolean modified = false;
-            for(Object column : minColumnValues.keySet()) {
+            for(Map.Entry<Object,Double> entry : minColumnValues.entrySet()) {
+                Object column = entry.getKey();
                 Double value = xData.getDouble(column);
                 if(value==null) { //if we have a missing value don't perform any denormalization
                     continue;
                 }
                 
-                Double min = minColumnValues.get(column);
+                Double min = entry.getValue();
                 Double max = maxColumnValues.get(column);
                 
                 if(min.equals(max)) {

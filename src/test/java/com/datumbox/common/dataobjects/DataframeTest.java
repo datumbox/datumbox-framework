@@ -18,8 +18,9 @@ package com.datumbox.common.dataobjects;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.bases.BaseTest;
 import com.datumbox.tests.utilities.TestUtils;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.net.URL;
@@ -59,7 +60,8 @@ public class DataframeTest extends BaseTest {
         headerDataTypes.put("metro_population", TypeInference.DataType.NUMERICAL);
         
         Dataframe dataset;
-        try (Reader fileReader = new FileReader(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile())) {
+        
+        try (Reader fileReader = new InputStreamReader(new FileInputStream(Paths.get(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/cities.csv"))).toFile()), "UTF-8")) {
             dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
         }
         catch(UncheckedIOException | IOException ex) {

@@ -160,8 +160,9 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
      */
     @Override
     public boolean equals(Object o) {
+        if(o == null) return false;
         if ( this == o ) return true;
-        if ( !(o instanceof AssociativeArray2D) ) return false;
+        if ( !(o.getClass().equals(this.getClass())) ) return false;
         return internalData.equals(((AssociativeArray2D)o).internalData);
     }
     

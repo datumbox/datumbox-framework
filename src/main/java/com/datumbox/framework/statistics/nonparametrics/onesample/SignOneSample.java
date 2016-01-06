@@ -43,7 +43,7 @@ public class SignOneSample {
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             double v = it.next();
-            if(v==median) {
+            if(Math.abs(v-median) < 0.0000001) {
                 continue; //don't count it at all
             }
             if(v>median) {

@@ -415,7 +415,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
         Double StdErrorOfEstimate = null;
         if(dfResidual>0) {
-            Math.sqrt(SSE/dfResidual);
+            StdErrorOfEstimate = Math.sqrt(SSE/dfResidual);
         }
         validationMetrics.setStdErrorOfEstimate(StdErrorOfEstimate);
         

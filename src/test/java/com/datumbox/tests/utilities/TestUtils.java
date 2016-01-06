@@ -37,7 +37,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Utility methods used only by the JUnit tests.
@@ -124,7 +123,7 @@ public class TestUtils {
             URLConnection con = url.openConnection();
             con.setConnectTimeout(3000);
             con.setReadTimeout(5000);
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF8"))) {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     sb.append(inputLine);

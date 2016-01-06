@@ -96,10 +96,9 @@ public class LevenesIndependentSamples {
             FlatDataCollection flatDataCollection =  entry.getValue();
             
             numerator+=nj.get(j)*Math.pow(zjdot.get(j)-zdotdot, 2);
-            int i = 0;
-            for(Object Yji : flatDataCollection) {
+            int len = flatDataCollection.size();
+            for(int i = 0; i < len; i++) {
                 denominator+= Math.pow(zji.get(j).get(i)-zjdot.get(j), 2);
-                ++i;
             }   
         }
         zjdot = null;

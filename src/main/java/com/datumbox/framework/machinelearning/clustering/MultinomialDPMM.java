@@ -123,6 +123,9 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          */
         @Override
         protected double posteriorLogPdf(Record r) {
+            if(wordCounts==null) {
+                throw new RuntimeException("The cluster is empty or uninitialized.");
+            }
             RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);    
 
             RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
@@ -198,6 +201,9 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
          */
         @Override
         protected boolean remove(Integer rId, Record r) {
+            if(wordCounts==null) {
+                return false; //The cluster is empty or uninitialized.
+            }
             if(recordIdSet.remove(rId)==false) {
                 return false;
             }

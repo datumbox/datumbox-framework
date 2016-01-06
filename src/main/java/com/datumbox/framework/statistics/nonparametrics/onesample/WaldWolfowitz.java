@@ -117,10 +117,10 @@ public class WaldWolfowitz {
 
                     String[] lowuplimit=String.valueOf(value).split(",");
 
-                    int low = Integer.valueOf(lowuplimit[0]);
+                    int low = Integer.parseInt(lowuplimit[0]);
                     int high = n;
                     if(lowuplimit.length==2) {
-                        high = Integer.valueOf(lowuplimit[1]);
+                        high = Integer.parseInt(lowuplimit[1]);
                     }
 
                     if(score<=low || score>=high) { //if the score is outside the confidence intervals reject null hypothesis

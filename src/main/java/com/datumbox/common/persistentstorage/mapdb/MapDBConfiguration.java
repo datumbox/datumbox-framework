@@ -72,7 +72,7 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     @Override
     public void load(Properties properties) {
         outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
-        cacheSize = Integer.valueOf(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
+        cacheSize = Integer.parseInt(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
         compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
         transacted = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.transacted"));
         hybridized = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.hybridized"));

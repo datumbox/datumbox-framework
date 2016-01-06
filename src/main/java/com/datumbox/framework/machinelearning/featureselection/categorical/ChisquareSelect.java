@@ -126,7 +126,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
                 Object theClass = classCount.getKey();
                 
                 Integer featureClassC = featureClassCounts.get(Arrays.<Object>asList(feature, theClass));                
-                double N11 = (featureClassC!=null)?featureClassC:0.0; //N11 is the number of records that have the feature and belong on the specific class
+                double N11 = (featureClassC!=null)?featureClassC.doubleValue():0.0; //N11 is the number of records that have the feature and belong on the specific class
                 double N01 = classCount.getValue() - N11; //N01 is the total number of records that do not have the particular feature BUT they belong to the specific class
                 
                 double N00 = N0_ - N01;

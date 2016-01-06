@@ -1,6 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
+- Do we need LinkedHashMap for Records? Maybe make the hashmap where necessary.
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
 - Add multithreading support.
 - Update all maven plugins and dependencies to their latest versions.

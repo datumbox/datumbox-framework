@@ -163,7 +163,7 @@ public class CensoredDescriptives {
             }
             
             Double point = Double.valueOf(ti.toString());
-            if(Sti==0.5) {
+            if(Math.abs(Sti-0.5) < 0.0000001) {
                 return point; //we found extactly the point
             }
             else if(Sti>0.5) {

@@ -94,7 +94,7 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
                 double N_1 = classCount.getValue();
                 double N_0 = N - N_1;
                 Integer featureClassC = featureClassCounts.get(Arrays.<Object>asList(feature, theClass));                
-                double N11 = (featureClassC!=null)?featureClassC:0.0; //N11 is the number of records that have the feature and belong on the specific class
+                double N11 = (featureClassC!=null)?featureClassC.doubleValue():0.0; //N11 is the number of records that have the feature and belong on the specific class
                 
                 double N01 = N_1 - N11; //N01 is the total number of records that do not have the particular feature BUT they belong to the specific class
                 

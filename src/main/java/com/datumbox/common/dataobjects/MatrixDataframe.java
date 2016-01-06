@@ -55,6 +55,26 @@ public class MatrixDataframe {
     public RealMatrix getX() {
         return X;
     }
+
+    /**
+     * Getter for the Map that stores the mapping between Feature and Column Id.
+     * 
+     * @return 
+     */
+    public Map<Object, Integer> getFeature2ColumnId() {
+        return feature2ColumnId;
+    }
+    
+    /**
+     * Getter for the Map that stores the mapping between Record and Row Id.
+     * 
+     * @return 
+     */
+    public Map<Integer, Integer> getRecordId2RowId() {
+        return recordId2RowId;
+    }
+    
+    
     
     /**
      * Private constructor which accepts as arguments the Y Vector with the values

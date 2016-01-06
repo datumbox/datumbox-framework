@@ -117,9 +117,7 @@ public class TextClassifierTest extends BaseTest {
         
         List<Object> expResult = Arrays.asList("negative","positive");
         int i = 0;
-        for(Map.Entry<Integer, Record> e : validationData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
+        for(Record r : validationData.values()) {
             assertEquals(expResult.get(i), r.getYPredicted());
             ++i;
         }

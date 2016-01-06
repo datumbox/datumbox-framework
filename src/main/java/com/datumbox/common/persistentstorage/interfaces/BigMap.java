@@ -34,6 +34,17 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BigMap {
+    /**
+     * Parameter that passes the MapType of the BigMap.
+     * 
+     * @return 
+     */
     public MapType mapType();
+    
+    /**
+     * Parameter that passes the StorageHint of the BigMap.
+     * 
+     * @return 
+     */
     public StorageHint storageHint();
 }

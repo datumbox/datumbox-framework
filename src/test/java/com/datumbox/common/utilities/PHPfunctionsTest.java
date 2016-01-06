@@ -111,9 +111,9 @@ public class PHPfunctionsTest extends BaseTest {
     @Test
     public void testRound() {
         logger.info("round");
-        double d = 3.1415;
+        double d = 42.4242;
         int i = 2;
-        double expResult = 3.14;
+        double expResult = 42.42;
         double result = PHPfunctions.round(d, i);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }

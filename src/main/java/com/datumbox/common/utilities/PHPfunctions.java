@@ -332,7 +332,7 @@ class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Intege
 }
 
 class ArrayIndexReverseComparator<T extends Comparable<T>> extends ArrayIndexComparator<T> {
-
+    
     protected ArrayIndexReverseComparator(T[] array) {
         super(array);
     }

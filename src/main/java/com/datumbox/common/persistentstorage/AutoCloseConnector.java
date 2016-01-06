@@ -36,15 +36,12 @@ public abstract class AutoCloseConnector implements DatabaseConnector, AutoClose
      * Protected Constructor which is responsible for adding the Shutdown hook.
      */
     protected AutoCloseConnector() {
-        hook = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AutoCloseConnector.this.hook = null;
-                if(AutoCloseConnector.this.isClosed()) {
-                    return;
-                }
-                AutoCloseConnector.this.close();
+        hook = new Thread(() -> {
+            AutoCloseConnector.this.hook = null;
+            if(AutoCloseConnector.this.isClosed()) {
+                return;
             }
+            AutoCloseConnector.this.close();
         });
         Runtime.getRuntime().addShutdownHook(hook);
     }
