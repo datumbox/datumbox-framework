@@ -25,7 +25,7 @@ import com.datumbox.common.dataobjects.Dataframe;
  * @param <MP>
  * @param <TP>
  */
-public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
+public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends AutoCloseable {
     
     /**
      * Returns the model parameters that were estimated after training.
@@ -53,9 +53,5 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> {
      * Deletes the database of the algorithm. 
      */
     public void delete();
-            
-    /**
-     * Closes all the resources of the algorithm. 
-     */
-    public void close();
+    
 }

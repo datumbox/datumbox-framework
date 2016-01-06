@@ -26,7 +26,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface DatabaseConnector {
+public interface DatabaseConnector extends AutoCloseable {
     
     /**
      * The supported MapTypes.
@@ -81,11 +81,6 @@ public interface DatabaseConnector {
      * @return 
      */
     public <T extends Serializable> T load(String name, Class<T> klass);
-    
-    /**
-     * Closes the connection and clean ups the resources.
-     */
-    public void close();
     
     /**
      * Checks if the connector is closed.

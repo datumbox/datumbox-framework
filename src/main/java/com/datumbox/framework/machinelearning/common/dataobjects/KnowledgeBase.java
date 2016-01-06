@@ -33,7 +33,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements Serializable {
+public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements Serializable, AutoCloseable {
     private static final long serialVersionUID = 1L;
     
     /**
@@ -138,7 +138,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
      */
     public void delete() {
     	dbc.dropDatabase();
-        dbc.close();
+        close();
         
         modelParameters = null;
         trainingParameters = null;
@@ -147,8 +147,14 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     /**
      * Closes all the resources of the algorithm. 
      */
+    @Override
     public void close() {
-        dbc.close();
+        try {
+            dbc.close();
+        } 
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**

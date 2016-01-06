@@ -1,6 +1,9 @@
 CODE IMPROVEMENTS
 =================
 
+- Create a 3rd option on StorageHint for IN_CACHE where we use LRU and for the IN_DISK option turn LRU off.
+- Create a sparse matrix obj on top of Dataframe by using AbstractRealMatrix.
+- Use {@inheritDoc} in the methods that have the same description as interfaces. Remove duplicate javadocs.
 - Do we need LinkedHashMap for Records? Maybe make the hashmap where necessary.
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
 - Add multithreading support.
@@ -45,4 +48,8 @@ CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE
 - Joafip:
     http://joafip.sourceforge.net/javadoc/net/sf/joafip/java/util/PHashMap.html
 
+- Chronicle Map:
+    https://github.com/OpenHFT/Chronicle-Map/
 
+- H2 Database:
+    http://www.h2database.com/html/main.html

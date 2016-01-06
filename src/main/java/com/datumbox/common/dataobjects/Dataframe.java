@@ -659,7 +659,12 @@ public class Dataframe implements Serializable, Collection<Record> {
         dbc.dropBigMap("tmp_records", records);
         dbc.dropBigMap("tmp_xDataTypes", xDataTypes);
         dbc.dropDatabase();
-        dbc.close();
+        try {
+            dbc.close();
+        } 
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
         
         //Ensures that the Dataframe can't be used after delete() is called.
         yDataType = null;

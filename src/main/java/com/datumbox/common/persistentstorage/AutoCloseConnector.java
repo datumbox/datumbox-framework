@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public abstract class AutoCloseConnector implements DatabaseConnector, AutoCloseable {
+public abstract class AutoCloseConnector implements DatabaseConnector {
     
     private final AtomicBoolean isClosed = new AtomicBoolean(false);
     
