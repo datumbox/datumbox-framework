@@ -34,32 +34,19 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     //DB specific properties
     private String outputFolder = "./";
     
-    /**
-     * It initializes a new connector to the Database.
-     * 
-     * @param database
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public DatabaseConnector getConnector(String database) {
         return new InMemoryConnector(database, this);
     }
     
-    /**
-     * Returns the separator that is used in the DB names.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDBnameSeparator() {
         return DBNAME_SEPARATOR;
     }
     
-    /**
-     * Initializes the InMemoryConfiguration object by using a property file.
-     * 
-     * @param properties 
-     */
+    /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
         outputFolder = properties.getProperty("dbConfig.InMemoryConfiguration.outputFolder");

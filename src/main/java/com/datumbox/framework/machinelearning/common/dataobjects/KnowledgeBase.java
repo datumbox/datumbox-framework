@@ -42,7 +42,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     protected String dbName; 
     
     /**
-     * Connection to the Permanent Storage Engine driver.
+     * The connector to the Permanent Storage Engine driver.
      */
     protected transient DatabaseConnector dbc;
     
@@ -144,9 +144,7 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         trainingParameters = null;
     }
     
-    /**
-     * Closes all the resources of the algorithm. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         try {

@@ -152,12 +152,7 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
         return internalData.get(key1).internalData.put(key2, value);
     }
     
-    /**
-     * Checks whether the provided object is equal to the current object.
-     * 
-     * @param o
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if(o == null) return false;
@@ -166,11 +161,7 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
         return internalData.equals(((AssociativeArray2D)o).internalData);
     }
     
-    /**
-     * Returns the hash code of the object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return internalData.hashCode();

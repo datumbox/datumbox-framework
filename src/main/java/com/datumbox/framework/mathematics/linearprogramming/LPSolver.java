@@ -36,7 +36,7 @@ public class LPSolver {
         private double[] dualSolution;
         
         /**
-         * Protected Constructor.
+         * The constructor of LP Result.
          * 
          * @param numberOfVariables
          * @param numberOfConstraints 

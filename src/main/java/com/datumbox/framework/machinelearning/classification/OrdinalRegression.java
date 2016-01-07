@@ -53,10 +53,7 @@ import java.util.TreeSet;
  */
 public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> {
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
         
@@ -69,11 +66,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> thitas; 
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -116,10 +109,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
     } 
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {    
         private static final long serialVersionUID = 1L;
         
@@ -165,10 +155,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
 
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         

@@ -122,11 +122,7 @@ public class FlatDataList extends DataStructureList<List<Object>> implements Ite
         return internalData.addAll(c);
     }
     
-    /**
-     * It returns an iterator on the internal data collection.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public final Iterator<Object> iterator() {
         return internalData.iterator();
@@ -156,12 +152,7 @@ public class FlatDataList extends DataStructureList<List<Object>> implements Ite
     }
     */
     
-    /**
-     * Checks whether the provided object is equal to the current object.
-     * 
-     * @param o
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -169,11 +160,7 @@ public class FlatDataList extends DataStructureList<List<Object>> implements Ite
         return internalData.equals( ((FlatDataList)o).internalData );
     }
 
-    /**
-     * Returns the hash code of the object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return internalData.hashCode();

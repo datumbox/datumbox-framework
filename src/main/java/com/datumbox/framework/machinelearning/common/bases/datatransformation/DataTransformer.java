@@ -34,15 +34,12 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 public abstract class DataTransformer<MP extends DataTransformer.ModelParameters, TP extends DataTransformer.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
 
     /**
-     * Base class for the Model Parameters of the algorithm.
+     * The ModelParameters class stores the coefficients that were learned during
+     * the training of the algorithm.
      */
     public static abstract class ModelParameters extends BaseModelParameters {
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -50,20 +47,14 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     }
     
     /**
-     * Base class for the Training Parameters of the algorithm.
+     * The TrainingParameters class stores the parameters that can be changed
+     * before training the algorithm.
      */
     public static abstract class TrainingParameters extends BaseTrainingParameters {
                      
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass 
-     */
+    /** {@inheritDoc} */
     protected DataTransformer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }

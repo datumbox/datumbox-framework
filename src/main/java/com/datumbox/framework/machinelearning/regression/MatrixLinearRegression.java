@@ -45,10 +45,7 @@ import org.apache.commons.math3.linear.RealVector;
  */
 public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {
 
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseLinearRegression.ModelParameters {
         private static final long serialVersionUID = 1L;
 
@@ -60,11 +57,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
     
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -113,19 +106,13 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         } 
     } 
 
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {
         private static final long serialVersionUID = 1L;
 
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
@@ -141,12 +128,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         super(dbName, dbConf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
     }
 
-    /**
-     * Getter for the p-values of the variables which are estimated during the regression.
-     * This method is required by the StepwiseCompatible Interface.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public Map<Object, Double> getFeaturePvalues() {
         return knowledgeBase.getModelParameters().getFeaturePvalues();

@@ -79,11 +79,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private transient Double cache_covariance_determinant; //Cached value of Covariance determinant used only for speed optimization
         private transient RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
         
-        /**
-         * Protected constructor of Cluster which takes as argument a unique id.
-         * 
-         * @param clusterId 
-         */
+        /** {@inheritDoc} */
         protected Cluster(Integer clusterId) {
             super(clusterId);
         }
@@ -218,12 +214,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return meanDf;
         }
         
-        /**
-         * Estimates the posterior LogPdf of a Record belonging to the cluster.
-         * 
-         * @param r
-         * @return 
-         */
         @Override
         protected double posteriorLogPdf(Record r) {
             RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);    
@@ -252,9 +242,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return logPdf;
         }
 
-        /**
-         * Initializes the cluster's internal parameters: mean, covariance, meanError and meanDf.
-         */
         @Override
         protected void initializeClusterParameters() {
             //Set default hyperparameters if not set
@@ -281,13 +268,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             cache_covariance_inverse=null;
         }
     
-        /**
-         * Internal method that adds the record in cluster and updates clusterParams.
-         * 
-         * @param rId  The id of the record in the dataset.
-         * @param r    The point that we wish to add in the cluster.
-         * @return 
-         */
         @Override
         protected boolean add(Integer rId, Record r) {
             int size= recordIdSet.size();
@@ -313,13 +293,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return true;
         }
         
-        /**
-         * Internal method that removes the record from cluster and updates clusterParams.
-         * 
-         * @param rId  The id of the record in the dataset.
-         * @param r    The point that we wish to add in the cluster.
-         * @return 
-         */
         @Override
         protected boolean remove(Integer rId, Record r) {
             if(xi_sum==null || xi_square_sum==null) {
@@ -352,9 +325,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             xi_square_sum = null;
         }
         
-        /**
-         * Updates the cluster parameters by using the assigned points.
-         */
         @Override
         protected void updateClusterParameters() {
             if(xi_sum==null || xi_square_sum==null || psi0==null || mu0==null) {
@@ -388,27 +358,16 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         }
     }
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseDPMM.ModelParameters<GaussianDPMM.Cluster> {
         private static final long serialVersionUID = 1L;
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
-        /**
-         * Getter for the List of Clusters.
-         * 
-         * @return 
-         */
+        /** {@inheritDoc} */
         @Override
         public Map<Integer, Cluster> getClusterList() {
             Map<Integer, Cluster> clusterList = super.getClusterList();
@@ -426,10 +385,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     
     }
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseDPMM.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
@@ -513,10 +469,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         
     }
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseDPMM.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
@@ -532,13 +485,6 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         super(dbName, dbConf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class, GaussianDPMM.ValidationMetrics.class);
     }
     
-    /**
-     * Creates a new cluster with the provided clusterId and it initializes it
-     * accordingly.
-     * 
-     * @param clusterId
-     * @return 
-     */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();

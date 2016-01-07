@@ -61,27 +61,14 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     private final Map<DatabaseType, DB> dbRegistry = new HashMap<>(); 
     
-    /**
-     * Non-public constructor used by MapDBConfiguration class to generate
-     * new connections.
-     * 
-     * @param database
-     * @param dbConf 
-     */
+    /** {@inheritDoc} */
     protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
         super();
         this.dbConf = dbConf;
         this.database = database;
     }
 
-    /**
-     * This method is responsible for storing serializable objects in the
-     * database.
-     * 
-     * @param <T>
-     * @param name
-     * @param serializableObject 
-     */
+    /** {@inheritDoc} */
     @Override
     public <T extends Serializable> void save(String name, T serializableObject) {
         assertConnectionOpen();
@@ -92,14 +79,7 @@ public class MapDBConnector extends AutoCloseConnector {
         db.compact();
     }
 
-    /**
-     * Loads serializable objects from the database.
-     * 
-     * @param <T>
-     * @param name
-     * @param klass
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T load(String name, Class<T> klass) {
@@ -109,9 +89,7 @@ public class MapDBConnector extends AutoCloseConnector {
         return atomicVar.get();
     }
     
-    /**
-     * Closes the connection and clean ups the resources.
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         super.close();
@@ -125,11 +103,7 @@ public class MapDBConnector extends AutoCloseConnector {
         dbRegistry.clear();
     }
     
-    /**
-     * Checks if a particular database exists.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean existsDatabase() {
         assertConnectionOpen();
@@ -146,9 +120,7 @@ public class MapDBConnector extends AutoCloseConnector {
         return false;
     }
     
-    /**
-     * Drops the particular database.
-     */
+    /** {@inheritDoc} */
     @Override
     public void dropDatabase() {
         assertConnectionOpen();
@@ -170,18 +142,7 @@ public class MapDBConnector extends AutoCloseConnector {
         }
     }
     
-    /**
-     * Creates or loads a Big Map which is capable of storing large number of 
-     * records. 
-     * 
-     * @param <K>
-     * @param <V>
-     * @param name
-     * @param type
-     * @param storageHint
-     * @param isTemporary
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
         assertConnectionOpen();
@@ -244,13 +205,7 @@ public class MapDBConnector extends AutoCloseConnector {
         }
     }   
     
-    /**
-     * Drops a particular Big Map.
-     * 
-     * @param <T>
-     * @param name
-     * @param map 
-     */
+    /** {@inheritDoc} */
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
         assertConnectionOpen();

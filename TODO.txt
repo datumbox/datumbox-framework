@@ -1,8 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Use {@inheritDoc} in the methods that have the same description as interfaces. Remove duplicate javadocs.
-- Do we need LinkedHashMap for Records? Maybe make the hashmap where necessary.
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
 - Add multithreading support.
 - Update all maven plugins and dependencies to their latest versions.

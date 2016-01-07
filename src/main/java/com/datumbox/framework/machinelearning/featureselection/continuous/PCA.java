@@ -50,10 +50,7 @@ import org.apache.commons.math3.stat.StatUtils;
  */
 public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.TrainingParameters> {
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends ContinuousFeatureSelection.ModelParameters {
         private static final long serialVersionUID = 1L;
         
@@ -67,12 +64,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         private double[] eigenValues; //eigenvalues
         
         private double[][] components; //components weights 
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -190,10 +183,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
     
     }
 
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */    
+    /** {@inheritDoc} */  
     public static class TrainingParameters extends ContinuousFeatureSelection.TrainingParameters {
         private static final long serialVersionUID = 1L;
         

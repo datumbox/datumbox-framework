@@ -49,9 +49,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
      */
     protected boolean isBinarized;
     
-    /**
-     * Base class for the Model Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
@@ -59,12 +57,8 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -106,9 +100,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         }
     } 
 
-    /**
-     * Base class for the Training Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLclassifier.TrainingParameters {         
         private boolean multiProbabilityWeighted=false; //whether the classifier weights the probabilities based on the number of occurences. (multiple occurences are taken into account when we estimate the classification scores) 
         
@@ -133,22 +125,12 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         }
     } 
     
-    /**
-     * Base class for the Validation Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
 
     }
 
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass 
-     */
+    /** {@inheritDoc} */
     protected BaseNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
         isBinarized = false;

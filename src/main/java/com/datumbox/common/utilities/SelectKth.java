@@ -38,11 +38,13 @@ public class SelectKth {
      */
     public static Double largest(Iterator<Double> elements, int k) {
         Iterator<Double> oppositeElements = new Iterator<Double>() {
+            /** {@inheritDoc} */
             @Override
             public boolean hasNext() {
                 return elements.hasNext();
             }
-
+            
+            /** {@inheritDoc} */
             @Override
             public Double next() {
                 return -elements.next(); //reverse the sign of every value

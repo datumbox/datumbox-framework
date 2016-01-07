@@ -44,27 +44,14 @@ public class InMemoryConnector extends AutoCloseConnector {
     private final InMemoryConfiguration dbConf;
     private final String database;
     
-    /**
-     * Non-public constructor used by InMemoryConfiguration class to generate
-     * new connections.
-     * 
-     * @param database
-     * @param dbConf 
-     */
+    /** {@inheritDoc} */
     protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         super();
         this.dbConf = dbConf;
         this.database = database;
     }
     
-    /**
-     * This method is responsible for storing serializable objects in the
-     * database.
-     * 
-     * @param <T>
-     * @param name
-     * @param serializableObject 
-     */
+    /** {@inheritDoc} */
     @Override
     public <T extends Serializable> void save(String name, T serializableObject) {
         assertConnectionOpen();
@@ -76,14 +63,7 @@ public class InMemoryConnector extends AutoCloseConnector {
         }
     }
 
-    /**
-     * Loads serializable objects from the database.
-     * 
-     * @param <T>
-     * @param name
-     * @param klass
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T load(String name, Class<T> klass) {
@@ -101,9 +81,7 @@ public class InMemoryConnector extends AutoCloseConnector {
         }
     }
     
-    /**
-     * Closes the connection and clean ups the resources.
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         if(isClosed()){
@@ -112,20 +90,14 @@ public class InMemoryConnector extends AutoCloseConnector {
         super.close();
     }
     
-    /**
-     * Checks if a particular database exists.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean existsDatabase() {
         assertConnectionOpen();
         return Files.exists(getDefaultPath());
     }
     
-    /**
-     * Drops the particular database.
-     */
+    /** {@inheritDoc} */
     @Override
     public void dropDatabase() {
         assertConnectionOpen();
@@ -141,18 +113,7 @@ public class InMemoryConnector extends AutoCloseConnector {
         }
     }
     
-    /**
-     * Creates or loads a Big Map which is capable of storing large number of 
-     * records. 
-     * 
-     * @param <K>
-     * @param <V>
-     * @param name
-     * @param type
-     * @param storageHint
-     * @param isTemporary
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
         assertConnectionOpen();
@@ -168,13 +129,7 @@ public class InMemoryConnector extends AutoCloseConnector {
         }
     }  
     
-    /**
-     * Drops a particular Big Map.
-     * 
-     * @param <T>
-     * @param name
-     * @param map 
-     */
+    /** {@inheritDoc} */
     @Override
     public <T extends Map> void dropBigMap(String name, T map) {
         assertConnectionOpen();

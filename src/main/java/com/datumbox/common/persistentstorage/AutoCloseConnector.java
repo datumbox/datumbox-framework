@@ -46,19 +46,13 @@ public abstract class AutoCloseConnector implements DatabaseConnector {
         Runtime.getRuntime().addShutdownHook(hook);
     }
     
-    /**
-     * Checks if the connector is closed.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean isClosed() {
         return isClosed.get();
     }
     
-    /**
-     * Marks the connector as closed.
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         if(isClosed() == false && hook != null) {

@@ -38,18 +38,11 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     
     private transient BaseMLregressor mlregressor = null;
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseMLregressor.ModelParameters {
         private static final long serialVersionUID = 1L;
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -57,10 +50,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         //EMPTY Model parameters. It relies on the mlregressor DB instead        
     } 
 
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseMLregressor.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
@@ -183,9 +173,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         super(dbName, dbConf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
     } 
      
-    /**
-     * Deletes the database of the algorithm. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void delete() {
         loadRegressor();
@@ -195,9 +183,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         super.delete();
     }
          
-    /**
-     * Closes all the resources of the algorithm. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         loadRegressor();

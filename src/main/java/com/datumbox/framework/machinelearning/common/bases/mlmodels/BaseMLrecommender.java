@@ -29,49 +29,27 @@ import com.datumbox.framework.machinelearning.common.bases.validation.ModelValid
  */
 public abstract class BaseMLrecommender<MP extends BaseMLrecommender.ModelParameters, TP extends BaseMLrecommender.TrainingParameters, VM extends BaseMLrecommender.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     }
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {
         
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
   
     }
     
-    /**
-     * Protected constructor of the recommender.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass 
-     * @param vmClass 
-     * @param modelValidator 
-     */
+    /** {@inheritDoc} */
     protected BaseMLrecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 

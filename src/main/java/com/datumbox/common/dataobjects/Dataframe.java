@@ -274,7 +274,8 @@ public class Dataframe implements Serializable, Collection<Record> {
     }
     
     /**
-     * Checks if the object exists in the Dataframe.
+     * Checks if the Record exists in the Dataframe. Note that the Record is checked only
+     * for its x and y components.
      * 
      * @param o
      * @return 
@@ -284,12 +285,7 @@ public class Dataframe implements Serializable, Collection<Record> {
         return records.containsValue((Record)o);
     }
     
-    /**
-     * Adds all of the elements in the specified collection to this collection.
-     * 
-     * @param c
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean addAll(Collection<? extends Record> c) {
         for(Record r : c) {
@@ -298,23 +294,13 @@ public class Dataframe implements Serializable, Collection<Record> {
         return true;
     }
     
-    /**
-     * Returns true if this collection contains all of the elements
-     * in the specified collection.
-     * 
-     * @param c
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean containsAll(Collection<?> c) {
         return records.values().containsAll(c);
     }
     
-    /**
-     * Returns the Records of the Dataframe in an Object Array.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public Object[] toArray() {
         Object[] array = new Object[size()];
@@ -325,13 +311,8 @@ public class Dataframe implements Serializable, Collection<Record> {
         return array;
     }
     
-    /**
-     * Returns the Records of the Dataframe in an Array of specific type.
-     * 
-     * @param <T>
-     * @param a
-     * @return 
-     */
+    
+    /** {@inheritDoc} */      
     @Override
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
@@ -355,17 +336,20 @@ public class Dataframe implements Serializable, Collection<Record> {
     public Iterator<Record> iterator() {
         return new Iterator<Record>() {
             private final Iterator<Record> it = records.values().iterator();
-             
+            
+            /** {@inheritDoc} */
             @Override
             public boolean hasNext() {
                 return it.hasNext();
             }
-
+            
+            /** {@inheritDoc} */
             @Override
             public Record next() {
                 return it.next();
             }
-
+            
+            /** {@inheritDoc} */
             @Override
             public void remove() {
                 throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
@@ -681,16 +665,19 @@ public class Dataframe implements Serializable, Collection<Record> {
         return () -> new Iterator<Map.Entry<Integer, Record>>() {
             private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
             
+            /** {@inheritDoc} */
             @Override
             public boolean hasNext() {
                 return it.hasNext();
             }
             
+            /** {@inheritDoc} */
             @Override
             public Map.Entry<Integer, Record> next() {
                 return it.next();
             }
             
+            /** {@inheritDoc} */
             @Override
             public void remove() {
                 throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
@@ -707,16 +694,19 @@ public class Dataframe implements Serializable, Collection<Record> {
         return () -> new Iterator<Integer>() {
             private final Iterator<Integer> it = records.keySet().iterator();
             
+            /** {@inheritDoc} */
             @Override
             public boolean hasNext() {
                 return it.hasNext();
             }
             
+            /** {@inheritDoc} */
             @Override
             public Integer next() {
                 return it.next();
             }
             
+            /** {@inheritDoc} */
             @Override
             public void remove() {
                 throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");

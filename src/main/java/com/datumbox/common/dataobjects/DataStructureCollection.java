@@ -99,16 +99,20 @@ public abstract class DataStructureCollection<T extends Collection<?>> extends D
     public final Iterator<Double> iteratorDouble() {
         return new Iterator<Double>() {
             private final Iterator<Object> objectIterator = (Iterator<Object>) internalData.iterator();
+            
+            /** {@inheritDoc} */
             @Override
             public boolean hasNext() {
                 return objectIterator.hasNext();
             }
-
+            
+            /** {@inheritDoc} */
             @Override
             public Double next() {
                 return TypeInference.toDouble(objectIterator.next());
             }
-
+            
+            /** {@inheritDoc} */
             @Override
             public void remove() {
                 objectIterator.remove();

@@ -46,21 +46,14 @@ import java.util.Set;
  */
 public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters, CollaborativeFiltering.ValidationMetrics> {
 
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseMLrecommender.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
         private Map<List<Object>, Double> similarities; //the similarity map among observations
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -87,10 +80,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
    
     }
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseMLrecommender.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
@@ -136,10 +126,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
 
     }
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseMLrecommender.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         

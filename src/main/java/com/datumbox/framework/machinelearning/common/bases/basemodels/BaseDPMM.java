@@ -60,11 +60,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
          */
         protected transient Map<Object, Integer> featureIds;
         
-        /**
-         * Public constructor.
-         * 
-         * @param clusterId 
-         */
+        /** {@inheritDoc} */
         protected Cluster(Integer clusterId) {
             super(clusterId);
         }
@@ -104,9 +100,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         protected abstract boolean remove(Integer rId, Record r);
     }
     
-    /**
-     * Base class for the Model Parameters of the algorithm.
-     * 
+    /** 
+     * {@inheritDoc}
      * @param <CL> 
      */
     public static abstract class ModelParameters<CL extends BaseDPMM.Cluster> extends BaseMLclusterer.ModelParameters<CL> {
@@ -115,12 +110,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Integer> featureIds; //list of all the supported features
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -165,9 +156,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
     }
     
-    /**
-     * Base class for the Training Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLclusterer.TrainingParameters {   
         /**
          * Alpha value of Dirichlet process
@@ -252,22 +241,12 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
         
     }
     
-    /**
-     * Base class for the Validation Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
         
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass 
-     */
+    /** {@inheritDoc} */
     protected BaseDPMM(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClustererValidation<>());
     } 
@@ -515,8 +494,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
     }
     
     /**
-     * Creates a new cluster, sets the ID, initializes it and passes it the
-     * featureIds variable, WITHOUT adding it in the clusterList.
+     * Creates a new cluster with the provided clusterId and it initializes it
+     * accordingly.
      * 
      * @param clusterId
      * @return 

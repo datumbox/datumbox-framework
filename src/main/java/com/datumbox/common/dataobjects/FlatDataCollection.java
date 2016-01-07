@@ -111,11 +111,7 @@ public class FlatDataCollection extends DataStructureCollection<Collection<Objec
         return internalData.addAll(c);
     }
     
-    /**
-     * It returns an iterator on the internal data collection.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public final Iterator<Object> iterator() {
         return internalData.iterator();
@@ -139,12 +135,7 @@ public class FlatDataCollection extends DataStructureCollection<Collection<Objec
         return new FlatDataList(list);
     }
     
-    /**
-     * Checks whether the provided object is equal to this object.
-     * 
-     * @param o
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -152,11 +143,7 @@ public class FlatDataCollection extends DataStructureCollection<Collection<Objec
         return internalData.equals(((FlatDataCollection)o).internalData);
     }
 
-    /**
-     * Returns the hash code of the object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return internalData.hashCode();

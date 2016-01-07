@@ -55,10 +55,7 @@ import libsvm.svm_problem;
  */
 public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> {
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseMLclassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
 
@@ -69,11 +66,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
         private svm_model svmModel; //the parameters of the svm model
         
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -140,17 +133,14 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         
     } 
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {     
         private static final long serialVersionUID = 1L;
         
         private svm_parameter svmParameter = new svm_parameter();
         
         /**
-         * Default constructor
+         * Default constructor.
          */
         public TrainingParameters() {
             super();
@@ -194,10 +184,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         }
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 

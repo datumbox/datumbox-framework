@@ -43,12 +43,8 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * the training of the algorithm.
      */
     public static abstract class ModelParameters extends BaseModelParameters {
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -71,16 +67,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
         
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf 
-     * @param mpClass 
-     * @param tpClass 
-     * @param vmClass 
-     * @param modelValidator 
-     */
+    /** {@inheritDoc} */
     protected BaseMLmodel(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf);
         

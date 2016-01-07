@@ -65,7 +65,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         protected Object labelY;
         
         /**
-         * Protected Constructor.
+         * Protected constructor of Cluster which takes as argument a unique id.
          * 
          * @param clusterId 
          */
@@ -122,26 +122,25 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             return recordIdSet.size();
         }
         
-        /**
-         * Implements a read-only iterator on recordIdSet to use it in loops.
-         * 
-         * @return 
-         */
+        /** {@inheritDoc} */
         @Override
         public Iterator<Integer> iterator() {
             return new Iterator<Integer>() {
                 private final Iterator<Integer> it = recordIdSet.iterator();
-
+                
+                /** {@inheritDoc} */
                 @Override
                 public boolean hasNext() {
                     return it.hasNext();
                 }
-
+                
+                /** {@inheritDoc} */
                 @Override
                 public Integer next() {
                     return it.next();
                 }
-
+                
+                /** {@inheritDoc} */
                 @Override
                 public void remove() {
                     throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
@@ -158,11 +157,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             }
         }
         
-        /**
-         * Returns the hash of the cluster.
-         * 
-         * @return 
-         */
+        /** {@inheritDoc} */
         @Override
         public int hashCode() {
             int hash = 7;
@@ -170,12 +165,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             return hash;
         }
         
-        /**
-         * Checks if another object is equal to the current object.
-         * 
-         * @param obj
-         * @return 
-         */
+        /** {@inheritDoc} */
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -213,8 +203,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
     }
     
     /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
+     * {@inheritDoc}
      * @param <CL>
      */
     public static abstract class ModelParameters<CL extends BaseMLclusterer.Cluster> extends BaseMLmodel.ModelParameters {
@@ -224,11 +213,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         private Map<Integer, CL> clusterList = new HashMap<>(); //the cluster objects of the model
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -280,17 +265,14 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
     } 
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {    
 
     } 
 
     /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
+     * 
+     * {@inheritDoc}
      * 
      * References: 
      * http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html
@@ -339,27 +321,11 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
     }
     
-    /**
-     * Protected constructor of the clusterer.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass
-     * @param modelValidator 
-     */
+    /** {@inheritDoc} */
     protected BaseMLclusterer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
-    /**
-     * Validates the model with the provided dataset and returns the validation
-     * metrics.
-     * 
-     * @param validationData
-     * @return 
-     */
     @Override
     protected VM validateModel(Dataframe validationData) {
         predictDataset(validationData);

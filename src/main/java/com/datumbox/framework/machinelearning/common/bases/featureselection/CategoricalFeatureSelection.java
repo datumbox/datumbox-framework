@@ -42,19 +42,13 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureSelection.ModelParameters, TP extends CategoricalFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
     
-    /**
-     * Base class for the Model Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -79,9 +73,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
     }
     
-    /**
-     * Base class for the Training Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends FeatureSelection.TrainingParameters {
         
         private Integer rareFeatureThreshold = null;
@@ -150,14 +142,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass 
-     */
+    /** {@inheritDoc} */
     protected CategoricalFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }

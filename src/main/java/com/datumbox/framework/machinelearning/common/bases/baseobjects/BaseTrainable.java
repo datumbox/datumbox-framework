@@ -104,35 +104,20 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         knowledgeBase = (KB) new KnowledgeBase(this.dbName, dbConf, mpClass, tpClass);
     }
     
-    /**
-     * Returns the model parameters that were estimated after training.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
      public MP getModelParameters() {
        return knowledgeBase.getModelParameters();
 
     } 
     
-    /**
-     * It returns the training parameters that configure the algorithm.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public TP getTrainingParameters() {
         return knowledgeBase.getTrainingParameters();
     }
     
-    /**
-     * Trains a Machine Learning model using the provided training data. This
-     * method is responsible for initializing appropriately the algorithm and then
-     * calling the _fit() method which performs the learning.
-     * 
-     * @param trainingData
-     * @param trainingParameters 
-     */
+    /** {@inheritDoc} */
     @Override
     public void fit(Dataframe trainingData, TP trainingParameters) {
         logger.info("fit()");
@@ -151,17 +136,13 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         knowledgeBase.save();
     }
       
-    /**
-     * Deletes the database of the algorithm. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void delete() {
         knowledgeBase.delete();
     }
             
-    /**
-     * Closes all the resources of the algorithm. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         knowledgeBase.close();

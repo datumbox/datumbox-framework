@@ -25,13 +25,6 @@ import java.util.List;
  */
 public class SoftMaxRegressionValidation extends ClassifierValidation<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> {
     
-    /**
-     * Calculates the average validation metrics by combining the results of the
-     * provided list.
-     * 
-     * @param validationMetricsList
-     * @return 
-     */        
     @Override
     protected SoftMaxRegression.ValidationMetrics calculateAverageValidationMetrics(List<SoftMaxRegression.ValidationMetrics> validationMetricsList) {
         SoftMaxRegression.ValidationMetrics avgValidationMetrics = super.calculateAverageValidationMetrics(validationMetricsList);

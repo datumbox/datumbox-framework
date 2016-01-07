@@ -112,13 +112,6 @@ public class DiscreteDistributions {
         
         double probabilitySum=0.0;
         
-        /*
-        //slow!
-        for($i=0;$i<=$k;++$i) {
-            $probabilitySum+=self::Binomial($i,$p,$n);
-        }
-        */
-
         probabilitySum = approxBinomialCdf(k,p,n); 
         
         return probabilitySum;

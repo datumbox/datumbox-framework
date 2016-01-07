@@ -29,13 +29,6 @@ import java.util.List;
  */
 public class LinearRegressionValidation<MP extends BaseLinearRegression.ModelParameters, TP extends BaseLinearRegression.TrainingParameters, VM extends BaseLinearRegression.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
 
-    /**
-     * Calculates the average validation metrics by combining the results of the
-     * provided list.
-     * 
-     * @param validationMetricsList
-     * @return 
-     */        
     @Override
     protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         

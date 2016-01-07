@@ -59,11 +59,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         private final transient AssociativeArray xi_sum;
         
-        /**
-         * Protected constructor of Cluster which takes as argument a unique id.
-         * 
-         * @param clusterId 
-         */
+        /** {@inheritDoc} */
         protected Cluster(int clusterId) {
             super(clusterId);
             centroid = new Record(new AssociativeArray(), null);
@@ -91,7 +87,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
         
         /**
-         * Updates the cluster parameters by estimating again the centroid.
+         * Updates the cluster parameters.
          * 
          * @return 
          */
@@ -153,28 +149,18 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         }
     }
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
         private static final long serialVersionUID = 1L;
           
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     } 
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {  
         private static final long serialVersionUID = 1L;
         
@@ -303,10 +289,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         

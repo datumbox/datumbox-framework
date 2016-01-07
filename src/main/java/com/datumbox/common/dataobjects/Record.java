@@ -39,16 +39,24 @@ import java.util.Objects;
 public class Record implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    /* The X vector of the Record */
+    /** 
+     * The X vector of the Record 
+     */
     private final AssociativeArray x;
     
-    /* The Y response variable of the Record */
+    /** 
+     * The Y response variable of the Record 
+     */
     private final Object y;
     
-    /* The Y predicted response variable of the Record */
+    /** 
+     * The Y predicted response variable of the Record 
+     */
     private final Object yPredicted;
     
-    /* The probabilities of yPredicted values (applicable only in classifiers and some clustering algorithms) */
+    /** 
+     * The probabilities of yPredicted values (applicable only in classifiers and some clustering algorithms) 
+     */
     private final AssociativeArray yPredictedProbabilities;
     
     

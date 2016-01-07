@@ -42,19 +42,13 @@ import java.util.Map;
  */
 public abstract class BaseLinearRegression<MP extends BaseLinearRegression.ModelParameters, TP extends BaseLinearRegression.TrainingParameters, VM extends BaseLinearRegression.ValidationMetrics> extends BaseMLregressor<MP, TP, VM> {
     
-    /**
-     * Base class for the Model Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends BaseMLregressor.ModelParameters {
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> thitas; //the thita parameters of the model
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -78,16 +72,12 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         }
     } 
 
-    /**
-     * Base class for the Training Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLregressor.TrainingParameters {     
 
     } 
     
-    /**
-     * Base class for the Validation Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ValidationMetrics extends BaseMLregressor.ValidationMetrics {
         private double RSquare = 0.0; 
         private double RSquareAdjusted = 0.0; 
@@ -339,15 +329,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass 
-     */
+    /** {@inheritDoc} */
     protected BaseLinearRegression(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new LinearRegressionValidation<>());
     } 

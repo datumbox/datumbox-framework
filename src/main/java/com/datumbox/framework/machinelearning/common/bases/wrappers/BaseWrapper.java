@@ -57,12 +57,8 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
      * the training of the algorithm.
      */
     public static abstract class ModelParameters extends BaseModelParameters {
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -206,22 +202,13 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         }
         
     }
-
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf 
-     * @param mpClass 
-     * @param tpClass 
-     */
+    
+    /** {@inheritDoc} */
     protected BaseWrapper(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }
       
-    /**
-     * Deletes the database of all the internal algorithms. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void delete() {
         if(dataTransformer!=null) {
@@ -236,9 +223,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         knowledgeBase.delete();
     }
       
-    /**
-     * Closes all the resources of all the internal algorithms.  
-     */
+    /** {@inheritDoc} */
     @Override
     public void close() {
         if(dataTransformer!=null) {

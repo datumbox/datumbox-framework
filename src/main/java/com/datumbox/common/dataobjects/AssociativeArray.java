@@ -245,12 +245,7 @@ public class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
         return new FlatDataList(list);
     }
     
-    /**
-     * Checks whether the provided object is equal to the current object.
-     * 
-     * @param o
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -258,21 +253,13 @@ public class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
         return internalData.equals(((AssociativeArray)o).internalData);
     }
     
-    /**
-     * Returns the hash code of the object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return internalData.hashCode();
     }
     
-    /**
-     * Returns a string representation of the object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return internalData.toString();

@@ -56,9 +56,7 @@ public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP ext
         this.vmClass = vmClass;
     }
     
-    /**
-     * Loads a KnowledgeBase from the permanent storage.
-     */
+    /** {@inheritDoc} */
     @Override
     public void load() {
         if(trainingParameters==null) {
@@ -78,20 +76,14 @@ public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP ext
         }
     }
     
-    /**
-     * Deletes the database of the algorithm. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void delete() {
         super.delete();
         validationMetrics = null;
     }
     
-    /**
-     * Deletes and re-initializes KnowledgeBase object. It deletes all data from 
-     * storage, it releases all resources, reinitializes the internal objects and
-     * opens new connection to the permanent storage.
-     */
+    /** {@inheritDoc} */
     @Override
     public void reinitialize() {
         super.reinitialize();

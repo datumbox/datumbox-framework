@@ -29,13 +29,6 @@ import java.util.List;
  */
 public class ClustererValidation<MP extends BaseMLclusterer.ModelParameters, TP extends BaseMLclusterer.TrainingParameters, VM extends BaseMLclusterer.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
     
-    /**
-     * Calculates the average validation metrics by combining the results of the
-     * provided list.
-     * 
-     * @param validationMetricsList
-     * @return 
-     */
     @Override
     protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         

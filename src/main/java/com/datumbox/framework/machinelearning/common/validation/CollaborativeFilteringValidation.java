@@ -28,14 +28,7 @@ import java.util.List;
  * @param <VM>
  */
 public class CollaborativeFilteringValidation<MP extends CollaborativeFiltering.ModelParameters, TP extends CollaborativeFiltering.TrainingParameters, VM extends CollaborativeFiltering.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
-
-    /**
-     * Calculates the average validation metrics by combining the results of the
-     * provided list.
-     * 
-     * @param validationMetricsList
-     * @return 
-     */        
+ 
     @Override
     protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         

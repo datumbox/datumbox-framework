@@ -33,13 +33,6 @@ import java.util.Set;
  */
 public class ClassifierValidation<MP extends BaseMLclassifier.ModelParameters, TP extends BaseMLclassifier.TrainingParameters, VM extends BaseMLclassifier.ValidationMetrics> extends ModelValidation<MP, TP, VM> {
     
-    /**
-     * Calculates the average validation metrics by combining the results of the
-     * provided list.
-     * 
-     * @param validationMetricsList
-     * @return 
-     */
     @Override
     protected VM calculateAverageValidationMetrics(List<VM> validationMetricsList) {
         

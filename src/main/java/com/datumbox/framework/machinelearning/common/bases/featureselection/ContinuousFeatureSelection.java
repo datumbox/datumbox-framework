@@ -27,37 +27,22 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  */
 public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSelection.ModelParameters, TP extends ContinuousFeatureSelection.TrainingParameters> extends FeatureSelection<MP, TP> {
 
-    /**
-     * Base class for the Model Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
     }
     
-    /**
-     * Base class for the Training Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends FeatureSelection.TrainingParameters {
         
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass 
-     */
+    /** {@inheritDoc} */
     protected ContinuousFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, mpClass, tpClass);
     }

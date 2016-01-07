@@ -59,10 +59,7 @@ import java.util.Map;
  */
 public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
         private static final long serialVersionUID = 1L;
         
@@ -82,12 +79,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -228,10 +221,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
     }  
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends BaseMLtopicmodeler.TrainingParameters {  
         private static final long serialVersionUID = 1L;
         
@@ -316,10 +306,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ValidationMetrics extends BaseMLtopicmodeler.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         

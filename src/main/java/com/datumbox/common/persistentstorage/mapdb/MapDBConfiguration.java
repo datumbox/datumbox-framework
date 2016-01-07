@@ -43,32 +43,19 @@ public class MapDBConfiguration implements DatabaseConfiguration {
 
     private boolean hybridized = false;
     
-    /**
-     * It initializes a new connector to the Database.
-     * 
-     * @param database
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public DatabaseConnector getConnector(String database) {
         return new MapDBConnector(database, this);
     }
     
-    /**
-     * Returns the separator that is used in the DB names.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDBnameSeparator() {
         return DBNAME_SEPARATOR;
     }
     
-    /**
-     * Initializes the MapDBConfiguration object by using a property file.
-     * 
-     * @param properties 
-     */
+    /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
         outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");

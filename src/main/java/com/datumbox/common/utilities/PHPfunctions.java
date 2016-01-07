@@ -324,7 +324,8 @@ class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Intege
         }
         return indexes;
     }
-
+    
+    /** {@inheritDoc} */
     @Override
     public int compare(Integer index1, Integer index2) {
         return array[index1].compareTo(array[index2]);
@@ -337,6 +338,7 @@ class ArrayIndexReverseComparator<T extends Comparable<T>> extends ArrayIndexCom
         super(array);
     }
     
+    /** {@inheritDoc} */
     @Override
     public int compare(Integer index1, Integer index2) {
         return array[index2].compareTo(array[index1]);

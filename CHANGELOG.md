@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160106
+Version 0.7.0-SNAPSHOT - Build 20160107
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -44,6 +44,7 @@ Version 0.7.0-SNAPSHOT - Build 20160106
 - Changed the Validation Metrics policy to exclude from macro averages the classes that did not exist in validation set.
 - Implemented StorageHints on the DatabaseConnectors and MapDB can use a hybrid approach of storing some data IN_MEMORY and some IN_DISK. Also support IN_CACHE for LRU cached maps.
 - The AutoCloseable interface is implemented in all close() methods.
+- Remove duplicate Javadocs.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

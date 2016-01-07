@@ -38,9 +38,7 @@ import java.util.Map;
  */
 public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDummyMinMaxTransformer.ModelParameters, BaseDummyMinMaxTransformer.TrainingParameters> {
     
-    /**
-     * Base class for the Model Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class ModelParameters extends DataTransformer.ModelParameters {
         private static final long serialVersionUID = 1L;
         
@@ -62,11 +60,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Object, Double> maxColumnValues;
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -127,20 +121,13 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         
     }
     
-    /**
-     * Base class for the Training Parameters of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static class TrainingParameters extends DataTransformer.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
     }
     
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf 
-     */
+    /** {@inheritDoc} */
     protected BaseDummyMinMaxTransformer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, BaseDummyMinMaxTransformer.ModelParameters.class, BaseDummyMinMaxTransformer.TrainingParameters.class);
     }

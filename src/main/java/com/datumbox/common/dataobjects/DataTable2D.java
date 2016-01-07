@@ -81,12 +81,7 @@ public class DataTable2D extends AssociativeArray2D {
         return true;
     }
     
-    /**
-     * Checks whether the provided object is equal to the current object.
-     * 
-     * @param o
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
@@ -94,11 +89,7 @@ public class DataTable2D extends AssociativeArray2D {
         return internalData.equals(((DataTable2D)o).internalData);
     }
 
-    /**
-     * Returns the hash code of the object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return internalData.hashCode();

@@ -40,20 +40,13 @@ import java.util.Set;
  */
 public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParameters, TP extends BaseMLclassifier.TrainingParameters, VM extends BaseMLclassifier.ValidationMetrics> extends BaseMLmodel<MP, TP, VM> {
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends BaseMLmodel.ModelParameters {
         
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>();
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -87,18 +80,12 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         
     } 
     
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLmodel.TrainingParameters {    
 
     } 
 
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ValidationMetrics extends BaseMLmodel.ValidationMetrics {
         
         //validation metrics
@@ -261,27 +248,11 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         }
     }
         
-    /**
-     * Protected constructor of the classifier.
-     * 
-     * @param dbName
-     * @param dbConf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass
-     * @param modelValidator 
-     */
+    /** {@inheritDoc} */
     protected BaseMLclassifier(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
-    /**
-     * Validates the model with the provided dataset and returns the validation
-     * metrics.
-     * 
-     * @param validationData
-     * @return 
-     */
     @Override
     protected VM validateModel(Dataframe validationData) {
         predictDataset(validationData);

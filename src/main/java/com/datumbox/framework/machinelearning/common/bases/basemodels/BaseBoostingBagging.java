@@ -49,19 +49,12 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     private static final String DB_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
     
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ModelParameters extends BaseMLclassifier.ModelParameters {
         
         private List<Double> weakClassifierWeights = new ArrayList<>();
 
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -86,10 +79,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
     } 
 
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class TrainingParameters extends BaseMLclassifier.TrainingParameters {      
         
         //primitives/wrappers
@@ -157,23 +147,12 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         
     } 
     
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
+    /** {@inheritDoc} */
     public static abstract class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
 
     }
 
-    /**
-     * Protected constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param dbConf 
-     * @param mpClass 
-     * @param tpClass 
-     * @param vmClass 
-     */
+    /** {@inheritDoc} */
     protected BaseBoostingBagging(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
     } 
@@ -196,10 +175,12 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
-            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
-            mlclassifier.predict(newData);
-            mlclassifier.close();
-            mlclassifier = null;
+            try (BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(
+                    weakClassifierClass, 
+                    dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    knowledgeBase.getDbConf())) {
+                mlclassifier.predict(newData);
+            }
             
             classifierWeightsArray.put(t, weakClassifierWeights.get(t));
             
@@ -271,17 +252,17 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             //We construct a new Dataframe from the sampledIDs
             Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
             
-            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
-            
-            mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters); 
-            sampledTrainingDataset.delete();
-            sampledTrainingDataset = null;
-            
-            
-            Dataframe validationDataset = trainingData;
-            mlclassifier.predict(validationDataset);
-            mlclassifier.close();
-            mlclassifier = null;
+            Dataframe validationDataset;
+            try (BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(
+                    weakClassifierClass, 
+                    dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    knowledgeBase.getDbConf())) {
+                mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters);
+                sampledTrainingDataset.delete();
+                sampledTrainingDataset = null;
+                validationDataset = trainingData;
+                mlclassifier.predict(validationDataset);
+            }
             
             Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights);
             validationDataset = null;
@@ -339,9 +320,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
      */
     protected abstract Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights);
     
-    /**
-     * Deletes the database of all the weak algorithms. 
-     */
+    /** {@inheritDoc} */
     @Override
     public void delete() {
         deleteWeakClassifiers();

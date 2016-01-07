@@ -37,12 +37,8 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
      */
     public static class ModelParameters extends BaseWrapper.ModelParameters {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
-         * 
-         * @param dbc 
-         */
+        
+        /** {@inheritDoc} */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
