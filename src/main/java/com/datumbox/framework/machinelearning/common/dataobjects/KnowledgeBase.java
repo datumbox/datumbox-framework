@@ -19,7 +19,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -33,28 +32,27 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements Serializable, AutoCloseable {
-    private static final long serialVersionUID = 1L;
+public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTrainingParameters> implements AutoCloseable {
     
     /**
      * The database configuration of the Permanent Storage.
      */
-    protected transient DatabaseConfiguration dbConf;
+    protected final DatabaseConfiguration dbConf;
     
     /**
      * The connector to the Permanent Storage.
      */
-    protected transient DatabaseConnector dbc;
+    protected final DatabaseConnector dbc;
     
     /**
      * The class of the ModelParameters class of the algorithm.
      */
-    protected Class<MP> mpClass;
+    protected final Class<MP> mpClass;
     
     /**
      * The class of the TrainingParameters class of the algorithm.
      */
-    protected Class<TP> tpClass;
+    protected final Class<TP> tpClass;
     
     /**
      * The ModelParameters object of the algorithm.
@@ -105,28 +103,21 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
      * Saves the KnowledgeBase to the permanent storage.
      */
     public void save() {
-        if(modelParameters==null) {
+        if(isInitialized()==false) {
             throw new IllegalArgumentException("Can't save an empty KnowledgeBase.");
         }
         
-        dbc.saveObject("KnowledgeBase", this);
+        dbc.saveObject("modelParameters", modelParameters);
+        dbc.saveObject("trainingParameters", trainingParameters);
     }
     
     /**
      * Loads the KnowledgeBase from the permanent storage.
      */
     public void load() {
-        if(modelParameters==null) {
-            KnowledgeBase kbObject = dbc.loadObject("KnowledgeBase", this.getClass());
-            if(kbObject==null) {
-                throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
-            }
-            
-            mpClass = kbObject.mpClass;
-            tpClass = kbObject.tpClass;
-            
-            trainingParameters = (TP) kbObject.trainingParameters;
-            modelParameters = (MP) kbObject.modelParameters;
+        if(!isInitialized()) {
+            modelParameters = dbc.loadObject("modelParameters", mpClass);
+            trainingParameters = dbc.loadObject("trainingParameters", tpClass);
         }
     }
     
@@ -154,10 +145,10 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     }
     
     /**
-     * Re-initializes the KnowledgeBase object by deleting all its data, while keeping 
+     * Clears the KnowledgeBase object by deleting all its data, while keeping 
      * open the connection to the permanent storage. 
      */
-    public void reinitialize() {
+    public void clear() {
         dbc.clear();
         modelParameters = null;
         trainingParameters = null;
@@ -210,4 +201,12 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
         this.modelParameters = modelParameters;
     }
     
+    /**
+     * Checks if the KnowledgeBase has not been initialized.
+     * 
+     * @return 
+     */
+    protected boolean isInitialized() {
+        return modelParameters != null && trainingParameters != null;
+    }
 }

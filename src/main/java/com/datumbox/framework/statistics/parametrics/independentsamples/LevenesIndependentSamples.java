@@ -86,7 +86,7 @@ public class LevenesIndependentSamples {
             zjdot.put(j, zjdotSum/nj.get(j));
         }
         zdotdot/=n;
-        Yjmean = null;
+        //Yjmean = null;
 
         //W = [(N-k)*SUM(i=1 to k)(N(i)*(ZBAR(i.) - ZBAR(..))**2]/[(k-1)*SUM(i=1 to k)(SUM(j=1 to N(i))(Z(ij) - ZBAR(i.))**2]
         double numerator=0;
@@ -101,9 +101,9 @@ public class LevenesIndependentSamples {
                 denominator+= Math.pow(zji.get(j).get(i)-zjdot.get(j), 2);
             }   
         }
-        zjdot = null;
-        zji = null;
-        nj = null;
+        //zjdot = null;
+        //zji = null;
+        //nj = null;
 
         if(denominator==0) {
             throw new IllegalArgumentException("The values of the input collection are invalid.");

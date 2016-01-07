@@ -102,13 +102,12 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     }
     
     @Override
-        @SuppressWarnings("unchecked")
     protected void predictDataset(Dataframe newData) { 
         if(newData.isEmpty()) {
             return;
         }
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
@@ -123,7 +122,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         for(Map.Entry<Integer, Record> e : newData.entries()) {
             Integer rId = e.getKey();
             Record r = e.getValue();
-            //Build new map here! reinitialize the prediction scores with the scores of the classes
+            //Build new map here! clear the prediction scores with the scores of the classes
             AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(cachedLogPriors)); 
             
             //in order to avoid looping throug all available features for each record, we have already calculated the Sum of log(1-prob). So we know the score of a record that has no feature activated. We add this score on the initial score below:
@@ -170,7 +169,7 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
                     Double previousValue = predictionScores.getDouble(theClass);
                     predictionScores.put(theClass, previousValue + Math.log(probability)-Math.log(1.0-probability));
                 }
-                classLogScoresForThisFeature=null;
+                //classLogScoresForThisFeature=null;
             }
             
             Object theClass=getSelectedClassFromClassScores(predictionScores);
@@ -184,11 +183,11 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
-        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
+        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
         
         
         Map<List<Object>, Double> likelihoods = modelParameters.getLogLikelihoods();
@@ -280,6 +279,6 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
             sumOfLog1minusProb.put(theClass, sumOfLog1minusProb.get(theClass) + Math.log( 1.0-smoothedProbability )); 
         }
         
-        totalFeatureOccurrencesForEachClass=null;
+        //totalFeatureOccurrencesForEachClass=null;
     }
 }

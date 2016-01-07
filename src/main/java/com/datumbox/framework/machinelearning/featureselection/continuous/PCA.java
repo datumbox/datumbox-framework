@@ -269,15 +269,15 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
 
     @Override
     protected void _fit(Dataframe originalData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        Map<Integer, Integer> recordIdsReference = null;
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, recordIdsReference, featureIds);
+        //Map<Integer, Integer> recordIdsReference = null;
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, null, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -306,7 +306,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         components = decomposition.getV();
         
         //Whiten Components W = U*L^0.5; To whiten them we multiply with L^0.5.
-        if(knowledgeBase.getTrainingParameters().isWhitened()) { 
+        if(kb().getTrainingParameters().isWhitened()) { 
 
             double[] sqrtEigenValues = new double[eigenValues.length];
             for(int i=0;i<eigenValues.length;++i) {
@@ -317,8 +317,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         }
         
         //the eigenvalues and their components are sorted by descending order no need to resort them
-        Integer maxDimensions = knowledgeBase.getTrainingParameters().getMaxDimensions();
-        Double variancePercentageThreshold = knowledgeBase.getTrainingParameters().getVariancePercentageThreshold();
+        Integer maxDimensions = kb().getTrainingParameters().getMaxDimensions();
+        Double variancePercentageThreshold = kb().getTrainingParameters().getVariancePercentageThreshold();
         if(variancePercentageThreshold!=null && variancePercentageThreshold<=1) {
             double sum=0.0;
             double totalVariance = StatUtils.sum(eigenValues);
@@ -355,7 +355,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
 
     @Override
     protected void filterFeatures(Dataframe newData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
@@ -385,8 +385,8 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
             newData._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
         }
         
-        recordIdsReference = null;
-        matrixDataset = null;
+        //recordIdsReference = null;
+        //matrixDataset = null;
         
         newData.recalculateMeta(); //call the recalculate because we used _unsafe_set()
     }

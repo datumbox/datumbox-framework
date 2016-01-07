@@ -90,7 +90,7 @@ public class MapDBConnector extends AutoCloseConnector {
         assertConnectionOpen();
         DB db = openDB(DatabaseType.PRIMARY_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
-        return atomicVar.get();
+        return klass.cast(atomicVar.get());
     }
     
     /** {@inheritDoc} */

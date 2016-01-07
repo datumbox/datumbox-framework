@@ -269,7 +269,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
             }
             
             
-            wordCombinations = null;
+            //wordCombinations = null;
         }
         
         //initialize keyword map
@@ -291,10 +291,10 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
                     keywordsMap.put(sb.toString().trim(), proximityScore);
                 }
                 
-                sb=null;
+                //sb=null;
             }
         }
-        keywordProximityScores=null;
+        //keywordProximityScores=null;
         
         return keywordsMap;
     }
@@ -452,7 +452,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
             }
             
             
-            newWordCombinations=null;
+            //newWordCombinations=null;
         }
         
         
@@ -498,9 +498,9 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
             position2ID.put(position, id);
         }
         
-        keywordList = null;
+        //keywordList = null;
 
-        word2ID = null;
+        //word2ID = null;
     }
     
 }

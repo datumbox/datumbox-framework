@@ -134,15 +134,15 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         boolean binarized = trainingParameters.isBinarized();
         
         
         int n = modelParameters.getN();
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
@@ -220,8 +220,8 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
 
     @Override
     protected void filterFeatures(Dataframe newData) {
-        DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Object, Double> maxTFIDFfeatureScores = kb().getModelParameters().getMaxTFIDFfeatureScores();
         
         Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
         

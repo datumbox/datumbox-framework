@@ -30,12 +30,11 @@ import java.lang.reflect.InvocationTargetException;
  * @param <VM>
  */
 public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> extends KnowledgeBase<MP, TP> {
-    private static final long serialVersionUID = 1L;
-
+    
     /**
      * The class of the ValidationMetrics class of the algorithm.
      */
-    protected Class<VM> vmClass;
+    protected final Class<VM> vmClass;
     
     /**
      * The ValidationMetrics object of the algorithm.
@@ -58,21 +57,17 @@ public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP ext
     
     /** {@inheritDoc} */
     @Override
+    public void save() {
+        super.save();
+        dbc.saveObject("validationMetrics", validationMetrics);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
     public void load() {
-        if(trainingParameters==null) {
-            MLmodelKnowledgeBase kbObject = dbc.loadObject("KnowledgeBase", MLmodelKnowledgeBase.class);
-            if(kbObject==null) {
-                throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
-            }
-            
-            mpClass = kbObject.mpClass;
-            tpClass = kbObject.tpClass;
-            vmClass = kbObject.vmClass;
-            
-            modelParameters = (MP) kbObject.modelParameters; 
-            trainingParameters = (TP) kbObject.trainingParameters;
-            validationMetrics = (VM) kbObject.validationMetrics;
-            
+        if(!isInitialized()) {
+            super.load();
+            validationMetrics = dbc.loadObject("validationMetrics", vmClass);
         }
     }
     
@@ -85,8 +80,8 @@ public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP ext
     
     /** {@inheritDoc} */
     @Override
-    public void reinitialize() {
-        super.reinitialize();
+    public void clear() {
+        super.clear();
         validationMetrics = getEmptyValidationMetricsObject();
     }
     
@@ -122,4 +117,9 @@ public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP ext
         this.validationMetrics = validationMetrics;
     }
     
+    /** {@inheritDoc} */
+    @Override
+    protected boolean isInitialized() {
+        return super.isInitialized() && validationMetrics != null;
+    }
 }

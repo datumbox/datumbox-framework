@@ -88,8 +88,8 @@ public class TextSimilarity {
         filterKeywordCombinations(keywords1, w); 
         filterKeywordCombinations(keywords2, w);
         
-        ngrams=null;
-        parameters=null;
+        //ngrams=null;
+        //parameters=null;
         
         double totalKeywords=0.0;
         double commonKeywords=0.0;
@@ -97,18 +97,18 @@ public class TextSimilarity {
         Set<String> union = new HashSet<>(keywords1.keySet());
         union.addAll(keywords2.keySet());
         totalKeywords+=union.size();
-        union=null;
+        //union=null;
 
 
         Set<String> intersect = new HashSet<>(keywords1.keySet());
         intersect.retainAll(keywords2.keySet());
         commonKeywords+=intersect.size();
-        intersect=null;
+        //intersect=null;
         
         double resemblance=commonKeywords/totalKeywords;
 
-        keywords1=null;
-        keywords2=null;
+        //keywords1=null;
+        //keywords2=null;
 
         return resemblance;
     }

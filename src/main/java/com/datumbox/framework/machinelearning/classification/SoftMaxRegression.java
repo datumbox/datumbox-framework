@@ -183,7 +183,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     
     @Override
     protected void predictDataset(Dataframe newData) { 
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
@@ -205,10 +205,9 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
@@ -236,7 +235,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -272,7 +271,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
         
-        double SSE = calculateError(validationData,knowledgeBase.getModelParameters().getThitas());
+        double SSE = calculateError(validationData,kb().getModelParameters().getThitas());
         validationMetrics.setSSE(SSE);
         
         return validationMetrics;
@@ -282,7 +281,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
 
         double multiplier = learningRate/modelParameters.getN();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
@@ -356,11 +355,11 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             error+=Math.log(score); //no need to loop through the categories. Just grab the one that we are interested in
         }
         
-        return -error/knowledgeBase.getModelParameters().getN();
+        return -error/kb().getModelParameters().getN();
     }
     
     private AssociativeArray hypothesisFunction(AssociativeArray x, Map<List<Object>, Double> thitas) {
-        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
+        Set<Object> classesSet = kb().getModelParameters().getClasses();
         AssociativeArray predictionProbabilities = new AssociativeArray(); 
         
         for(Object theClass : classesSet) {

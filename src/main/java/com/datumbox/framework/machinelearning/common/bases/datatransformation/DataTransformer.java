@@ -89,7 +89,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        knowledgeBase.load();
+        kb().load();
         
         _convert(newData); 
         _normalize(newData);
@@ -104,7 +104,7 @@ public abstract class DataTransformer<MP extends DataTransformer.ModelParameters
     public void denormalize(Dataframe data) {
         logger.info("denormalize()");
         
-        knowledgeBase.load();
+        kb().load();
         
         _denormalize(data);
     }

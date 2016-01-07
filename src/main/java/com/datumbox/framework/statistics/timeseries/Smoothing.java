@@ -175,7 +175,7 @@ public class Smoothing {
             season[i] = (index[i] + index[i+season_length]) / 2;
             sum+=season[i];
         }
-        index=null;
+        //index=null;
 
         // Normalise season
         double season_factor = season_length / sum;

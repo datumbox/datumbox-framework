@@ -231,7 +231,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
                 LUDecomposition lud = new LUDecomposition(covariance);
                 cache_covariance_determinant = lud.getDeterminant();
                 cache_covariance_inverse = lud.getSolver().getInverse();
-                lud =null;
+                //lud =null;
             }
             determinant=cache_covariance_determinant;
             invCovariance=cache_covariance_inverse;
@@ -347,8 +347,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             RealMatrix C = xi_square_sum.subtract( ( mu.outerProduct(mu) ).scalarMultiply(n) );
 
             RealMatrix psi = psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*n/(double)kappa_n) ));
-            C = null;
-            mu_mu0 = null;
+            //C = null;
+            //mu_mu0 = null;
 
             mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(n) ).mapDivide(kappa_n);
             covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
@@ -494,8 +494,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         Cluster c = new Cluster(clusterId);
         
         c.setDimensions(modelParameters.getD());

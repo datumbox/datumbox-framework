@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -86,10 +85,7 @@ public class InMemoryConnector extends AutoCloseConnector {
         try { 
             //read the stored serialized object
             Map<String, Object> storedObjects = (Map<String, Object>)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
-            return (T) storedObjects.get(name);
-        } 
-        catch (NoSuchFileException ex) {
-            return null;
+            return klass.cast(storedObjects.get(name));
         }
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -150,7 +146,7 @@ public class InMemoryConnector extends AutoCloseConnector {
         //get the default filepath of the permanet db file
         String outputFolder = this.dbConf.getOutputFolder();
         
-        Path filepath = null;
+        Path filepath;
         if(outputFolder == null || outputFolder.isEmpty()) {
             filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
         }

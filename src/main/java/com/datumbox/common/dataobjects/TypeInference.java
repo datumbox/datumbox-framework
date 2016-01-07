@@ -15,6 +15,8 @@
  */
 package com.datumbox.common.dataobjects;
 
+import java.util.Locale;
+
 /**
  * This class is responsible for inferring the internal DataType of the objects
  * and for converting safely their values to a specified type.
@@ -65,7 +67,7 @@ public class TypeInference {
             }
 
             if(dataType == DataType.BOOLEAN) {
-                switch (s.toLowerCase()) {
+                switch (s.toLowerCase(Locale.ENGLISH)) {
                     case "1":
                     case "true":
                     case "yes":

@@ -126,7 +126,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     
     @Override
     protected void predictDataset(Dataframe newData) { 
-        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
+        Set<Object> classesSet = kb().getModelParameters().getClasses();
                 
         for(Map.Entry<Integer, Record> e : newData.entries()) {
             Integer rId = e.getKey();
@@ -146,9 +146,8 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         int n = modelParameters.getN();
         
         
@@ -163,7 +162,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         }
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
         
         double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
@@ -225,15 +224,15 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     
     private void IIS(Dataframe trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
 
-        int totalIterations = knowledgeBase.getTrainingParameters().getTotalIterations();
+        int totalIterations = kb().getTrainingParameters().getTotalIterations();
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> lambdas = modelParameters.getLambdas();
         
         int n = modelParameters.getN();
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -278,7 +277,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
                     }
                 }
                 
-                classScores=null;
+                //classScores=null;
             }
             
             Double minimumNonInfiniteLambdaWeight = null;
@@ -386,7 +385,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
             
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
-            infiniteLambdaWeights = null; //dbc.dropTable("infiniteLambdaWeights", infiniteLambdaWeights);
+            //infiniteLambdaWeights = null; //dbc.dropTable("infiniteLambdaWeights", infiniteLambdaWeights);
         }
         
     }
@@ -394,7 +393,7 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
     private Double calculateClassScore(AssociativeArray x, Object theClass) {
         double score = 0;
         
-        Map<List<Object>, Double> lambdas = knowledgeBase.getModelParameters().getLambdas();
+        Map<List<Object>, Double> lambdas = kb().getModelParameters().getLambdas();
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Double value = TypeInference.toDouble(entry.getValue());

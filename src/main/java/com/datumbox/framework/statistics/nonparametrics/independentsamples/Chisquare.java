@@ -117,8 +117,8 @@ public class Chisquare {
                 }
             }
         }
-        XdotJ = null;
-        XIdot = null;
+        //XdotJ = null;
+        //XIdot = null;
 
         AssociativeArray result = new AssociativeArray();
         result.put("k", k);

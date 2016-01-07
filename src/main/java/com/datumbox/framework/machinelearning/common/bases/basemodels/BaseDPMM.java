@@ -265,9 +265,8 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
     } 
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
@@ -303,9 +302,9 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
      * @param maxIterations The maximum number of iterations
      */
     private int collapsedGibbsSampling(Dataframe dataset) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         Map<Integer, CL> tempClusterMap = new HashMap<>(modelParameters.getClusterList());
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double alpha = trainingParameters.getAlpha();
         
@@ -407,7 +406,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
                 Descriptives.normalizeExp(condProbCiGivenXiAndOtherCi);
                 
                 Integer sampledClusterId = (Integer)SRS.weightedSampling(condProbCiGivenXiAndOtherCi, 1, true).iterator().next();
-                condProbCiGivenXiAndOtherCi=null;
+                //condProbCiGivenXiAndOtherCi=null;
                 
                 //Add Xi back to the sampled Cluster
                 if(Objects.equals(sampledClusterId, newClusterId)) { //if new cluster
@@ -447,14 +446,14 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             clusterList.put(newClusterId, cluster);
             ++newClusterId;
         }
-        tempClusterMap = null;
+        //tempClusterMap = null;
         
         return iteration;
     }
     
     private AssociativeArray clusterProbabilities(Record r, int n, Map<Integer, CL> clusterMap) {
         AssociativeArray condProbCiGivenXiAndOtherCi = new AssociativeArray();
-        double alpha = knowledgeBase.getTrainingParameters().getAlpha();
+        double alpha = kb().getTrainingParameters().getAlpha();
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.posteriorLogPdf
         //Calculate the probabilities of assigning the point for every cluster
@@ -478,7 +477,7 @@ public abstract class BaseDPMM<CL extends BaseDPMM.Cluster, MP extends BaseDPMM.
             return;
         }
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
         

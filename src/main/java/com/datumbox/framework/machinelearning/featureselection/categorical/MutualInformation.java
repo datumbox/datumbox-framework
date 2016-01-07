@@ -70,8 +70,8 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         

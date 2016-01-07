@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -246,7 +247,7 @@ public class ReadabilityStatistics {
      */
     protected static String cleanText(String strText) {
         strText = HTMLCleaner.unsafeRemoveAllTags(strText);
-        strText = strText.toLowerCase();
+        strText = strText.toLowerCase(Locale.ENGLISH);
         
         strText = StringCleaner.unifyTerminators(strText);
         
@@ -342,10 +343,8 @@ public class ReadabilityStatistics {
      */
     protected static int syllableCount(String strWord) {
 
-        int intSyllableCount = 0;
-        
         // Should be no non-alpha characters
-        strWord = StringCleaner.removeSymbols(strWord).toLowerCase();
+        strWord = StringCleaner.removeSymbols(strWord).toLowerCase(Locale.ENGLISH);
 
 
         // Specific common exceptions that don't follow the rule set below are handled individually
@@ -386,7 +385,7 @@ public class ReadabilityStatistics {
 
         // Some syllables do not follow normal rules - check for them
         // Thanks to Joe Kovar for correcting a bug in the following lines
-        intSyllableCount = intWordPartCount + intPrefixSuffixCount;
+        int intSyllableCount = intWordPartCount + intPrefixSuffixCount;
         for(String strSyllable : SUB_SYLLABLES) {
             intSyllableCount -= PHPfunctions.preg_match(strSyllable, strWord);
         }

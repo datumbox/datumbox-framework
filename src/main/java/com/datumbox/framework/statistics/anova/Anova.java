@@ -344,16 +344,15 @@ public class Anova {
                 Yijdot.get(i).put(j, value/nijdot.get(i).get(j));
             }
         }
-        nidotdot = null;
-        ndotjdot = null;
-        nijdot = null;
+        //nidotdot = null;
+        //ndotjdot = null;
+        //nijdot = null;
 
 
         //Caclulate ANOVA SSq
         double SSA=0;
         double SSB=0;
         double SSAB=0;
-        double SSE=0;
         double SST=0;
 
         for(Map.Entry<Object, TransposeDataCollection> entry1 : twoFactorDataCollection.entrySet()) {
@@ -380,11 +379,11 @@ public class Anova {
 	    }
 	}
 
-        Yidotdot = null;
-        Ydotjdot = null;
-        Yijdot = null;
+        //Yidotdot = null;
+        //Ydotjdot = null;
+        //Yijdot = null;
 
-        SSE=SST-SSA-SSB-SSAB;
+        double SSE=SST-SSA-SSB-SSAB;
         double SSR=SSA+SSB+SSAB;
 
         int dfA=(Itotal-1);

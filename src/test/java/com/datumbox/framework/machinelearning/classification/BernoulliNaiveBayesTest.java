@@ -58,7 +58,7 @@ public class BernoulliNaiveBayesTest extends BaseTest {
         instance.fit(trainingData, param);
         
         instance.close();
-        instance = null;
+        //instance = null;
         instance = new BernoulliNaiveBayes(dbName, dbConf);
         
         

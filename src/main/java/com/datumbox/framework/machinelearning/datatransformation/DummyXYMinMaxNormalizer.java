@@ -41,24 +41,24 @@ public class DummyXYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
 
     @Override
     protected void _fit(Dataframe data) {
-        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
-        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
+        Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
         
         BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
         BaseDummyMinMaxTransformer.fitY(data, minColumnValues, maxColumnValues);
         
-        BaseDummyMinMaxTransformer.fitDummy(data, knowledgeBase.getModelParameters().getReferenceLevels());
+        BaseDummyMinMaxTransformer.fitDummy(data, kb().getModelParameters().getReferenceLevels());
     }
 
     @Override
     protected void _convert(Dataframe data) {
-        BaseDummyMinMaxTransformer.transformDummy(data, knowledgeBase.getModelParameters().getReferenceLevels());
+        BaseDummyMinMaxTransformer.transformDummy(data, kb().getModelParameters().getReferenceLevels());
     }
     
     @Override
     protected void _normalize(Dataframe data) {
-        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
-        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
+        Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
         BaseDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
         BaseDummyMinMaxTransformer.normalizeY(data, minColumnValues, maxColumnValues);
@@ -66,8 +66,8 @@ public class DummyXYMinMaxNormalizer extends BaseDummyMinMaxTransformer {
     
     @Override
     protected void _denormalize(Dataframe data) {
-        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
-        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
+        Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
         BaseDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
         BaseDummyMinMaxTransformer.denormalizeY(data, minColumnValues, maxColumnValues);

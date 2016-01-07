@@ -66,8 +66,8 @@ public class OrdinalRegressionTest extends BaseTest {
         
         instance.close();
         df.close();
-        instance = null;
-        df = null;
+        //instance = null;
+        //df = null;
         
         df = new DummyXMinMaxNormalizer(dbName, dbConf);
         instance = new OrdinalRegression(dbName, dbConf);

@@ -82,7 +82,7 @@ public class CochranQ {
         for(Double value : XdotJ.values()) {
             SumOfSquaredXdotJ+=value*value;
         }
-        XdotJ=null;
+        //XdotJ=null;
 
         double SumOfSquaredXIdot=0;
         double SumOfXIdot=0;
@@ -90,7 +90,7 @@ public class CochranQ {
             SumOfSquaredXIdot+=value*value;
             SumOfXIdot+=value;
         }
-        XIdot=null;
+        //XIdot=null;
 
         double Qscore=(k-1.0)*(k*SumOfSquaredXdotJ-Xdotdot*Xdotdot)/(k*SumOfXIdot-SumOfSquaredXIdot);
 
@@ -126,10 +126,11 @@ public class CochranQ {
      * @return 
      */
     protected static double scoreToPvalue(double score, int n, int k) {
+        /*
         if(n<4 || n*k<24) {
             //calculate it from tables too small values
-            //EXPAND: waiting for tables from Dimaki
         }
+        */
         return 1.0-ContinuousDistributions.chisquareCdf(score, k-1);
     }
 }

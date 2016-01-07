@@ -137,7 +137,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     public void fit(Map<Object, URI> datasets, TrainingParameters trainingParameters) { 
         //build trainingDataset
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
-        Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets, textExtractor, knowledgeBase.getDbConf());
+        Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets, textExtractor, kb().getDbConf());
         
         fit(trainingData, trainingParameters);
         
@@ -153,7 +153,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         logger.info("predict()");
         
         //ensure db loaded
-        knowledgeBase.load();
+        kb().load();
         
         preprocessTestDataset(testDataset);
         mlmodel.predict(testDataset);
@@ -168,18 +168,18 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public Dataframe predict(URI datasetURI) {        
         //ensure db loaded
-        knowledgeBase.load();
+        kb().load();
         
         //create a dummy dataset map
         Map<Object, URI> dataset = new HashMap<>();
         dataset.put(null, datasetURI);
         
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         
         //build the testDataset
-        Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, textExtractor, knowledgeBase.getDbConf());
+        Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, textExtractor, kb().getDbConf());
         
         predict(testDataset);
         
@@ -196,13 +196,13 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public Record predict(String text) {         
         //ensure db loaded
-        knowledgeBase.load();
+        kb().load();
         
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         
-        Dataframe testDataset = new Dataframe(knowledgeBase.getDbConf());
+        Dataframe testDataset = new Dataframe(kb().getDbConf());
         
         testDataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(text))), null));
         
@@ -226,7 +226,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         logger.info("validate()");
         
         //ensure db loaded
-        knowledgeBase.load();
+        kb().load();
         
         preprocessTestDataset(testDataset);
         BaseMLmodel.ValidationMetrics vm = mlmodel.validate(testDataset);
@@ -245,14 +245,14 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> datasets) {
         //ensure db loaded
-        knowledgeBase.load();
+        kb().load();
         
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         
         //build the testDataset
-        Dataframe testDataset = Dataframe.Builder.parseTextFiles(datasets, textExtractor, knowledgeBase.getDbConf());
+        Dataframe testDataset = Dataframe.Builder.parseTextFiles(datasets, textExtractor, kb().getDbConf());
         
         BaseMLmodel.ValidationMetrics vm = validate(testDataset);
         
@@ -263,8 +263,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     
     @Override
     protected void _fit(Dataframe trainingDataset) {
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
+        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
+        DatabaseConfiguration dbConf = kb().getDbConf();
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
@@ -298,8 +298,8 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     }
     
     private void preprocessTestDataset(Dataframe testDataset) {
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
+        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
+        DatabaseConfiguration dbConf = kb().getDbConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         

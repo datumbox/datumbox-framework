@@ -110,9 +110,7 @@ public class DiscreteDistributions {
         
         k = Math.min(k, n);
         
-        double probabilitySum=0.0;
-        
-        probabilitySum = approxBinomialCdf(k,p,n); 
+        double probabilitySum = approxBinomialCdf(k,p,n); 
         
         return probabilitySum;
     }
@@ -133,7 +131,7 @@ public class DiscreteDistributions {
         double S=A+B;
         double BT=Math.exp(ContinuousDistributions.logGamma(S)-ContinuousDistributions.logGamma(B)-ContinuousDistributions.logGamma(A)+A*Math.log(Z)+B*Math.log(1-Z));
         
-        double probabilitySum=0.0;
+        double probabilitySum;
         if (Z<(A+1)/(S+2)) {
             probabilitySum=BT*ContinuousDistributions.betinc(Z,A,B);
         } 
@@ -323,7 +321,7 @@ public class DiscreteDistributions {
     
     private static double approxHypergeometricCdf(double x,double n,double m,double nn) {
         //Approximate estimation as described at http://www.math.ucla.edu/~tom/distributions/Hypergeometric.html?
-        double Prob=0;
+        double Prob;
         if (2*m>nn) {
             if (2*n>nn) {
                 Prob=hyp(nn-m-n+x,nn-n,nn-m,nn);
@@ -342,8 +340,8 @@ public class DiscreteDistributions {
     }
 
     private static double hyp(double x, double n, double m, double nn) {
-        double nz=0;
-        double mz=0;
+        double nz;
+        double mz;
         if (m<n) {         //best to have n<m
             nz=m;
             mz=n;

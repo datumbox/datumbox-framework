@@ -220,11 +220,10 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        knowledgeBase.getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
+        kb().getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
@@ -255,7 +254,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     }
     
     private void libSVMTrainer(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();
@@ -305,7 +304,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         }
         
         //get the parameters for svm
-        svm_parameter params = knowledgeBase.getTrainingParameters().getSvmParameter();
+        svm_parameter params = kb().getTrainingParameters().getSvmParameter();
         
         //train the model
         svm.svm_set_print_string_function((String s) -> {
@@ -318,7 +317,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     }
     
     private AssociativeArray calculateClassScores(AssociativeArray x) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();

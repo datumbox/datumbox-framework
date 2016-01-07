@@ -219,7 +219,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
 
     @Override
     protected void _fit(Dataframe trainingData) {
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         Integer maxIterations = trainingParameters.getMaxIterations();
         if(maxIterations==null) {
@@ -242,7 +242,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             //fetch the feature with highest pvalue, excluding constant
             pvalues.remove(Dataframe.COLUMN_NAME_CONSTANT);
             Map.Entry<Object, Double> maxPvalueEntry = MapFunctions.selectMaxKeyValue(pvalues);
-            pvalues=null;
+            //pvalues=null;
             
             if(maxPvalueEntry.getValue()<=aOut) {
                 break; //nothing to remove, the highest pvalue is less than the aOut
@@ -252,7 +252,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             Set<Object> removedFeatures = new HashSet<>();
             removedFeatures.add(maxPvalueEntry.getKey());
             copiedTrainingData.dropXColumns(removedFeatures);
-            removedFeatures = null;
+            //removedFeatures = null;
             
             if(copiedTrainingData.xColumnSize()==0) {
                 break; //if no more features exit
@@ -260,11 +260,11 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
+        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
         
         mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
         copiedTrainingData.delete();
-        copiedTrainingData = null;
+        //copiedTrainingData = null;
     }
 
     @Override
@@ -277,15 +277,15 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     private void loadRegressor() {
         if(mlregressor==null) {
             //initialize algorithm
-            mlregressor = BaseMLmodel.newInstance(knowledgeBase.getTrainingParameters().getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
+            mlregressor = BaseMLmodel.newInstance(kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf()); 
         }
     }
     
     private Map<Object, Double> runRegression(Dataframe trainingData) {
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         //initialize algorithm
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, knowledgeBase.getDbConf()); 
+        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
 
         //train the regressor
         mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());

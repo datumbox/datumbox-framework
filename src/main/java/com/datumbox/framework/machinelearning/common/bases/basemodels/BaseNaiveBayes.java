@@ -152,7 +152,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             return;
         }
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
@@ -164,7 +164,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         for(Map.Entry<Integer, Record> e : newData.entries()) {
             Integer rId = e.getKey();
             Record r = e.getValue();
-            //Build new map here! reinitialize the prediction scores with the scores of the classes
+            //Build new map here! clear the prediction scores with the scores of the classes
             AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(logPriors)); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -189,7 +189,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
                 
                 
                 Double occurrences=TypeInference.toDouble(entry.getValue());
-                if((!knowledgeBase.getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
+                if((!kb().getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
                     occurrences=1.0;
                 }
                 
@@ -199,7 +199,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
                     Double previousValue = predictionScores.getDouble(theClass);
                     predictionScores.put(theClass, previousValue+occurrences*logScore);
                 }
-                classLogScoresForThisFeature=null;
+                //classLogScoresForThisFeature=null;
             }
             
             Object theClass=getSelectedClassFromClassScores(predictionScores);
@@ -210,9 +210,8 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
@@ -297,7 +296,7 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
             logLikelihoods.put(featureClassCounts.getKey(), Math.log( smoothedProbability )); //calculate the logScore
         }
         
-        totalFeatureOccurrencesForEachClass=null;
+        //totalFeatureOccurrencesForEachClass=null;
     }
     
 }

@@ -18,6 +18,7 @@ package com.datumbox.framework.utilities.text.cleaners;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -233,7 +234,7 @@ public class HTMLCleaner {
         Matcher m = HX_PATTERN.matcher(html);
         while (m.find()) {
             if(m.groupCount()==2) {
-                String tagType = m.group(1).toUpperCase();
+                String tagType = m.group(1).toUpperCase(Locale.ENGLISH);
                 String content = m.group(2);
                 hxtagsMap.get(tagType).add(clear(content));
             }

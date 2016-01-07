@@ -159,7 +159,7 @@ public class FixedCombinationRules {
                 }
             }
             combinedClassProbabilities.put(theClass, Descriptives.median(listOfProbabilities));
-            listOfProbabilities=null;
+            //listOfProbabilities=null;
         }
                 
         return combinedClassProbabilities;

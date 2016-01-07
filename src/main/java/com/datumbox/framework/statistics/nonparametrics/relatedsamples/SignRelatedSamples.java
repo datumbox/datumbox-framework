@@ -102,10 +102,11 @@ public class SignRelatedSamples {
      * @return 
      */
     protected static double scoreToPvalue(double score, int n) {
+        /*
         if(n<10) {
             //calculate it from binomial distribution
-            //EXPAND: implement binomial
         }
+        */
 
         double mean=n/2.0;
         double variable=n/4.0;

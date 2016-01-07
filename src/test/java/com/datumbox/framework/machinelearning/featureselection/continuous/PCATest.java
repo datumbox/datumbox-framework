@@ -58,7 +58,7 @@ public class PCATest extends BaseTest {
         
         instance.fit_transform(originalData, param);
         instance.close();
-        instance=null;
+        //instance = null;
         
         instance = new PCA(dbName, dbConf);
         

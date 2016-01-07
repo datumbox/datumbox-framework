@@ -159,7 +159,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     @Override
     protected void _fit(Dataframe data) {
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         
         Map<Object, Integer> tmp_classCounts = dbc.getBigMap("tmp_classCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true); //map which stores the counts of the classes
         Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true); //map which stores the counts of feature-class combinations.
@@ -186,7 +186,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     @Override
     protected void filterFeatures(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
-        filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
+        filterData(newdata, kb().getDbc(), kb().getModelParameters().getFeatureScores(), kb().getTrainingParameters().isIgnoringNumericalFeatures());
     }
     
     private static void filterData(Dataframe data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
@@ -221,8 +221,8 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     
     private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
-        DatabaseConnector dbc = knowledgeBase.getDbc();
-        TP trainingParameters = knowledgeBase.getTrainingParameters();
+        DatabaseConnector dbc = kb().getDbc();
+        TP trainingParameters = kb().getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
@@ -277,7 +277,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     
     private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         logger.debug("buildFeatureStatistics()");
-        TP trainingParameters = knowledgeBase.getTrainingParameters();
+        TP trainingParameters = kb().getTrainingParameters();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         //the method below does not only removes the rare features but also

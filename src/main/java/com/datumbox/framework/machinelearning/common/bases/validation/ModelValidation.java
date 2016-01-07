@@ -78,7 +78,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
         }
         PHPfunctions.shuffle(ids);
         
-        BaseMLmodel<MP, TP, VM> mlmodel = null;
+        BaseMLmodel<MP, TP, VM> mlmodel;
         
         String foldDBname=dbName+dbConf.getDBnameSeparator()+DB_INDICATOR;
         
@@ -122,7 +122,7 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
             mlmodel.fit(trainingData, trainingParameters); 
             trainingData.delete();
-            trainingData = null;
+            //trainingData = null;
                         
             
             Dataframe validationData = dataset.getSubset(foldValidationIds);
@@ -130,11 +130,11 @@ public abstract class ModelValidation<MP extends BaseMLmodel.ModelParameters, TP
             //fetch validation metrics
             VM entrySample = mlmodel.validate(validationData);
             validationData.delete();
-            validationData = null;
+            //validationData = null;
             
             //delete algorithm
             mlmodel.delete();
-            mlmodel = null;
+            //mlmodel = null;
             
             //add the validationMetrics in the list
             validationMetricsList.add(entrySample);

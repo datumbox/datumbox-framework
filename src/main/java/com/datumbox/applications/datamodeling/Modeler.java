@@ -95,9 +95,9 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     protected void _fit(Dataframe trainingData) { 
         
         //get the training parameters
-        Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
+        DatabaseConfiguration dbConf = kb().getDbConf();
         
         //transform the training dataset
         Class dtClass = trainingParameters.getDataTransformerClass();
@@ -135,10 +135,10 @@ public class Modeler extends BaseWrapper<Modeler.ModelParameters, Modeler.Traini
     
     private BaseMLmodel.ValidationMetrics evaluateData(Dataframe data, boolean estimateValidationMetrics) {
         //ensure db loaded
-        knowledgeBase.load();
-        Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        kb().load();
+        Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        DatabaseConfiguration dbConf = knowledgeBase.getDbConf();
+        DatabaseConfiguration dbConf = kb().getDbConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         

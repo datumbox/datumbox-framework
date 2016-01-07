@@ -120,7 +120,7 @@ public class CoxMantel {
                 }
             }
         }
-        mergedUncensoredData = null;
+        //mergedUncensoredData = null;
 
         double U = (double)r.get(keys[1]);
         double VarU =0.0;
@@ -137,7 +137,7 @@ public class CoxMantel {
 
             VarU+=((mi*(rti-mi))/(rti-1.0))*Ai*(1.0-Ai);
         }
-        testTable = null;
+        //testTable = null;
 
         double Z=U/Math.sqrt(VarU);
 

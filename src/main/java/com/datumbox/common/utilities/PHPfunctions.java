@@ -272,16 +272,7 @@ public class PHPfunctions {
      * @return 
      */
     public static <T extends Comparable<T>> Integer[] asort(T[] array) {
-        //sort the indexes first
-        ArrayIndexComparator<T> comparator = new ArrayIndexComparator<>(array);
-        Integer[] indexes = comparator.createIndexArray();
-        Arrays.sort(indexes, comparator);
-        
-        //sort the array based on the indexes
-        //sortArrayBasedOnIndex(array, indexes);
-        Arrays.sort(array);
-        
-        return indexes;
+        return _asort(array, false);
     }
     
     /**
@@ -293,15 +284,48 @@ public class PHPfunctions {
      * @return 
      */
     public static <T extends Comparable<T>> Integer[] arsort(T[] array) {
-        //sort the indexes first
-        ArrayIndexReverseComparator<T> comparator = new ArrayIndexReverseComparator<>(array);
-        Integer[] indexes = comparator.createIndexArray();
-        Arrays.sort(indexes, comparator);
+        return _asort(array, true);
+    }
+    
+    private static <T extends Comparable<T>> Integer[] _asort(T[] array, boolean reverse) {
+        //create an array with the indexes
+        Integer[] indexes = new Integer[array.length];
+        for (int i = 0; i < array.length; ++i) {
+            indexes[i] = i;
+        }
         
-        //sort the array based on the indexes
-        Arrays.sort(array,Collections.reverseOrder());
+        //sort the indexes first
+        Comparator<Integer> c = (Integer index1, Integer index2) -> array[index1].compareTo(array[index2]);
+        c = reverse?Collections.reverseOrder(c):c;
+        Arrays.sort(indexes, c);
+        
+        //rearrenage the array based on the order of indexes
+        arrangeByIndex(array, indexes);
         
         return indexes;
+    }
+    
+    /**
+     * Rearranges the array based on the order of the provided indexes.
+     * 
+     * @param <T>
+     * @param array
+     * @param indexes 
+     */
+    public static <T> void arrangeByIndex(T[] array, Integer[] indexes) {
+        if(array.length != indexes.length) {
+            throw new IllegalArgumentException("The length of the two arrays must match.");
+        }
+        
+        //sort the array based on the indexes
+        for(int i=0;i<array.length;i++) {
+            int index = indexes[i];
+            
+            //swap
+            T tmp = array[i];
+            array[i] = array[index];
+            array[index] = tmp;
+        }
     }
     
     /**
@@ -334,43 +358,4 @@ public class PHPfunctions {
         return copy;
     }
     
-}
-
-/*
- * Modified code found at:
- * http://stackoverflow.com/questions/4859261/get-the-indices-of-an-array-after-sorting
- */
-class ArrayIndexComparator<T extends Comparable<T>> implements Comparator<Integer> {
-    protected final T[] array;
-
-    protected ArrayIndexComparator(T[] array) {
-        this.array = array;
-    }
-
-    protected Integer[] createIndexArray() {
-        Integer[] indexes = new Integer[array.length];
-        for (int i = 0; i < array.length; ++i) {
-            indexes[i] = i;
-        }
-        return indexes;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public int compare(Integer index1, Integer index2) {
-        return array[index1].compareTo(array[index2]);
-    }
-}
-
-class ArrayIndexReverseComparator<T extends Comparable<T>> extends ArrayIndexComparator<T> {
-    
-    protected ArrayIndexReverseComparator(T[] array) {
-        super(array);
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public int compare(Integer index1, Integer index2) {
-        return array[index2].compareTo(array[index1]);
-    }
 }

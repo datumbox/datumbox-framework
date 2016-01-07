@@ -131,8 +131,8 @@ public class CensoredDescriptives {
         while(currentCensored!=null || currentUncensored!=null || 
               !censoredData.isEmpty() || !uncensoredData.isEmpty());
         
-        censoredData=null;
-        uncensoredData=null;
+        //censoredData=null;
+        //uncensoredData=null;
         
         return survivalFunction;
     }

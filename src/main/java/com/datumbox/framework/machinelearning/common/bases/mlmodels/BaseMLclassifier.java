@@ -268,10 +268,10 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
     protected VM validateModel(Dataframe validationData) {
         predictDataset(validationData);
         
-        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
+        Set<Object> classesSet = kb().getModelParameters().getClasses();
         
         //create new validation metrics object
-        VM validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
+        VM validationMetrics = kb().getEmptyValidationMetricsObject();
         
         //short notation
         Map<List<Object>, Double> ctMap = validationMetrics.getContingencyTable();

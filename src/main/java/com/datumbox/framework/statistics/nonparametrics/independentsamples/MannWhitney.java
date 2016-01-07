@@ -56,7 +56,7 @@ public class MannWhitney {
             n1 = n2;
             n2 = tmp;
             smallIndex=1;
-            largeIndex=0;
+            //largeIndex=0;
         }
         
         //flatten the original internalData table
@@ -90,7 +90,7 @@ public class MannWhitney {
                 MWscore+=rank; //add the score
             }
         }
-        associativeArray=null;
+        //associativeArray=null;
 
         double pvalue= scoreToPvalue(MWscore, n1, n2);
 
@@ -130,11 +130,11 @@ public class MannWhitney {
      * @return 
      */
     protected static double scoreToPvalue(double score, int n1, int n2) {
+        /*
         if(n1<=10 && n2<=10) {
             //calculate it from tables too small values
-            //EXPAND: waiting for tables from Dimaki
         }
-
+        */
         double mean=n1*(n1+n2+1.0)/2.0;
         double variable=n1*n2*(n1+n2+1.0)/12.0;
 

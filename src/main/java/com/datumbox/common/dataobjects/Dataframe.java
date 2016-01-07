@@ -189,8 +189,8 @@ public class Dataframe implements Collection<Record> {
     private Map<Object, TypeInference.DataType> xDataTypes;
     private Map<Integer, Record> records;
     
-    private final DatabaseConnector dbc; //declare transient and remove final if serializable
-    private final DatabaseConfiguration dbConf; //declare transient and remove final  if serializable
+    private final DatabaseConnector dbc; 
+    private final DatabaseConfiguration dbConf; 
     
     /**
      * Public constructor of Dataframe.

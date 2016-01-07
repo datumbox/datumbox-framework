@@ -34,8 +34,6 @@ public class PearsonCorrelation {
      * @return
      */
     public static double calculateCorrelation(TransposeDataList transposeDataList) {
-        double pearson = 0.0;
-        
         Object[] keys = transposeDataList.keySet().toArray();
         if(keys.length!=2) {
             throw new IllegalArgumentException("The collection must contain observations from 2 groups.");
@@ -57,7 +55,7 @@ public class PearsonCorrelation {
 
         double covariance=Descriptives.covariance(transposeDataList,true);
 
-        pearson=covariance/(stdX*stdY);
+        double pearson=covariance/(stdX*stdY);
 
         return pearson;
     }

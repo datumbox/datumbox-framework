@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -141,7 +142,7 @@ public class URLParser {
             return absolute;
         }
         
-        String rel2lowercase = relative.toLowerCase();
+        String rel2lowercase = relative.toLowerCase(Locale.ENGLISH);
         
         if(rel2lowercase.startsWith("mailto:") || rel2lowercase.startsWith("javascript:")) {
             return absolute;
@@ -225,7 +226,7 @@ public class URLParser {
     public static Map<DomainParts, String> splitDomain(String domain) {
         Map<DomainParts, String> domainParts = null;
         
-        String[] dottedParts = domain.trim().toLowerCase().split("\\.");
+        String[] dottedParts = domain.trim().toLowerCase(Locale.ENGLISH).split("\\.");
         
         if(dottedParts.length==2) {
             domainParts = new HashMap<>();

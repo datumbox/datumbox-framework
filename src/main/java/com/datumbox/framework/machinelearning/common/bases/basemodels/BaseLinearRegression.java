@@ -350,7 +350,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
         
         //create new validation metrics object
-        VM validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
+        VM validationMetrics = kb().getEmptyValidationMetricsObject();
         
         int n = validationData.size();
         
@@ -368,7 +368,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
         boolean normalResiduals = Lilliefors.test(errorList.toFlatDataCollection(), "normalDistribution", 0.05);
         validationMetrics.setNormalResiduals( (normalResiduals)?0.0:1.0 ); //if the Lilliefors validate rejects the H0 means that the normality hypothesis is rejected thus the residuals are not normal
-        errorList = null;
+        //errorList = null;
         
         double SSR = 0.0;
         for(Record r : validationData) {
@@ -382,7 +382,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         double RSquare = SSR/SST;
         validationMetrics.setRSquare(RSquare);
         
-        int d = knowledgeBase.getModelParameters().getD()+1;//add one for the constant
+        int d = kb().getModelParameters().getD()+1;//add one for the constant
         int p = d - 1; //exclude constant
         
         double RSquareAdjusted = 1.0 - ((n-1.0)/(n-p-1.0))*(1.0-RSquare);

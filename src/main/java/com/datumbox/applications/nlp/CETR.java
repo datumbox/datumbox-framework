@@ -183,7 +183,7 @@ public class CETR {
                 dataset.add(new Record(xData, null));
             }
             
-            G = null;
+            //G = null;
         }
         else {
             //build dataset for Cluster Analysis by using only TTRlist info
@@ -262,7 +262,7 @@ public class CETR {
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
         
         instance.delete(); //delete immediately the result
-        instance = null;
+        //instance = null;
     }
     
     private List<Double> calculateTTRlist(List<String> rows) {

@@ -51,7 +51,7 @@ public class Bivariate {
         Object[] allVariables = columnTypes.keySet().toArray();
         int numberOfVariables = allVariables.length;
         
-        TransposeDataList transposeDataList = null;
+        TransposeDataList transposeDataList;
         for(int i=0;i<numberOfVariables;++i) {
             Object variable0 = allVariables[i];
             if(columnTypes.get(variable0)==TypeInference.DataType.CATEGORICAL) {
@@ -113,7 +113,7 @@ public class Bivariate {
                     bivariateMatrix.put2d(variable1, variable0, value);
                 }
             }
-            transposeDataList = null;
+            //transposeDataList = null;
         }
         
         return bivariateMatrix;

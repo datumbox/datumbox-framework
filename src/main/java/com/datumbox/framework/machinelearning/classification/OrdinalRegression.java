@@ -215,7 +215,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     
     @Override
     protected void predictDataset(Dataframe newData) { 
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
@@ -236,10 +236,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
                 
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
@@ -276,7 +275,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -324,7 +323,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         
         validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
         
-        double SSE = calculateError(validationData, previousThitaMapping, knowledgeBase.getModelParameters().getWeights(), knowledgeBase.getModelParameters().getThitas());
+        double SSE = calculateError(validationData, previousThitaMapping, kb().getModelParameters().getWeights(), kb().getModelParameters().getThitas());
         validationMetrics.setSSE(SSE);
         
         return validationMetrics;
@@ -334,7 +333,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
 
         double multiplier = -learningRate/modelParameters.getN(); 
         Map<Object, Double> weights = modelParameters.getWeights();
@@ -381,7 +380,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         //first calculate the commonly used dot product between weights and x
         double xTw = xTw(x, weights);
         
-        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
+        Set<Object> classesSet = kb().getModelParameters().getClasses();
         
         for(Object theClass : classesSet) {
             Object previousClass = previousThitaMapping.get(theClass);
@@ -416,7 +415,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             error += h(xTw-thitas.get(theClass));
         }
         
-        return error/knowledgeBase.getModelParameters().getN();
+        return error/kb().getModelParameters().getN();
     }
     
     private double h(double z) {
@@ -460,7 +459,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     private Map<Object, Object> getPreviousThitaMappings() {
         Map<Object, Object> previousThitaMapping = new HashMap<>();
         Object previousThita = null; //null = the left bound thita0 which has thita equal to -inf
-        for(Object thita : knowledgeBase.getModelParameters().getClasses()) {
+        for(Object thita : kb().getModelParameters().getClasses()) {
             previousThitaMapping.put(thita, previousThita);
             previousThita = thita;
         }

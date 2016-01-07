@@ -71,7 +71,7 @@ public class Fisher {
                 Psum+=pvalue;
             }
         }
-        combinations = null;    
+        //combinations = null;    
 
         return Psum;
     }

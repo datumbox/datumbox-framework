@@ -86,8 +86,8 @@ public class WaldWolfowitz {
             Object[] keys = Ni.keySet().toArray();
             int n1= Ni.get(keys[0]);
             int n2= Ni.get(keys[1]);
-            keys = null;
-            Ni = null;
+            //keys = null;
+            //Ni = null;
 
             boolean rejectH0= checkCriticalValue((double)U, n1, n2, aLevel);
 

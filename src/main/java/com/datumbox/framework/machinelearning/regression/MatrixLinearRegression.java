@@ -134,19 +134,19 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     /** {@inheritDoc} */
     @Override
     public Map<Object, Double> getFeaturePvalues() {
-        return knowledgeBase.getModelParameters().getFeaturePvalues();
+        return kb().getModelParameters().getFeaturePvalues();
     }
     
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
-        Map<Integer, Integer> recordIdsReference = null; //this reference is not needed
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, recordIdsReference, featureIds);
+        //Map<Integer, Integer> recordIdsReference = null;
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, null, featureIds);
         
         RealVector Y = matrixDataset.getY();
         RealMatrix X = matrixDataset.getX();
@@ -155,11 +155,11 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         RealMatrix Xt = X.transpose();
         LUDecomposition lud = new LUDecomposition(Xt.multiply(X));
         RealMatrix XtXinv = lud.getSolver().getInverse();
-        lud =null;
+        //lud =null;
         
         //(X'X)^-1 * X'Y
         RealVector coefficients = XtXinv.multiply(Xt).operate(Y);
-        Xt = null;
+        //Xt = null;
         
         //put the features coefficients in the thita map
         thitas.put(Dataframe.COLUMN_NAME_CONSTANT, coefficients.getEntry(0));
@@ -176,12 +176,12 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         for(double v : X.operate(coefficients).subtract(Y).toArray()) {
             SSE += v*v;
         }
-        Y = null;
+        //Y = null;
 
         //standard error matrix
         double MSE = SSE/(n-(d+1)); //mean square error = SSE / dfResidual
         RealMatrix SE = XtXinv.scalarMultiply(MSE);
-        XtXinv = null;
+        //XtXinv = null;
 
         //creating a flipped map of ids to features
         Map<Integer, Object> idsFeatures = PHPfunctions.array_flip(featureIds);
@@ -200,10 +200,10 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
                 pvalues.put(feature, 1.0-ContinuousDistributions.studentsCdf(tstat, n-(d+1))); //n-d degrees of freedom
             }
         }
-        SE=null;
-        coefficients=null;
-        idsFeatures=null;
-        matrixDataset = null;
+        //SE=null;
+        //coefficients=null;
+        //idsFeatures=null;
+        //matrixDataset = null;
 
         modelParameters.setFeaturePvalues(pvalues);
 
@@ -212,7 +212,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     @Override
     protected void predictDataset(Dataframe newData) {
         //read model params
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
 
         int d = modelParameters.getD()+1; //plus one for the constant
         
@@ -238,8 +238,8 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             newData._unsafe_set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
         }
         
-        recordIdsReference = null;
-        matrixDataset = null;
+        //recordIdsReference = null;
+        //matrixDataset = null;
     }
 
     

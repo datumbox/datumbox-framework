@@ -85,7 +85,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
             }
         }
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
 
         Status status;
         int c = modelParameters.getC();

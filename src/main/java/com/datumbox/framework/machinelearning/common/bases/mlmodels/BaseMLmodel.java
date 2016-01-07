@@ -24,6 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseValidationMetrics;
+import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.MLmodelKnowledgeBase;
 
 /**
@@ -35,7 +36,7 @@ import com.datumbox.framework.machinelearning.common.dataobjects.MLmodelKnowledg
  * @param <VM>
  */
 public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP extends BaseMLmodel.TrainingParameters, VM extends BaseMLmodel.ValidationMetrics> extends BaseTrainable<MP, TP, MLmodelKnowledgeBase<MP, TP, VM>> {
-
+    
     private final ModelValidation<MP, TP, VM> modelValidator;
     
     /**
@@ -81,8 +82,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      */
     protected BaseMLmodel(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf);
-        
-        knowledgeBase = new MLmodelKnowledgeBase<>(this.dbName, dbConf, mpClass, tpClass, vmClass);
+        this.knowledgeBase = new MLmodelKnowledgeBase<>(this.dbName, dbConf, mpClass, tpClass, vmClass);
         this.modelValidator = modelValidator;
     } 
     
@@ -95,11 +95,10 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param k
      * @return  
      */
-    @SuppressWarnings("unchecked")
     public VM kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("kFoldCrossValidation()");
         
-        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getDbConf(), this.getClass(), trainingParameters);
+        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, kb().getDbConf(), this.getClass(), trainingParameters);
     }
     
     /**
@@ -111,7 +110,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     public void predict(Dataframe newData) { 
         logger.info("predict()");
         
-        knowledgeBase.load();
+        kb().load();
         
         predictDataset(newData);
 
@@ -127,7 +126,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      public VM validate(Dataframe testingData) {  
         logger.info("validate()");
         
-        knowledgeBase.load();
+        kb().load();
 
         //validate the model with the testing data and update the validationMetrics
         VM validationMetrics = validateModel(testingData);
@@ -143,10 +142,10 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param validationMetrics 
      */
     public void setValidationMetrics(VM validationMetrics) {
-        knowledgeBase.setValidationMetrics(validationMetrics);
+        kb().setValidationMetrics(validationMetrics);
         
         logger.info("Updating model");
-        knowledgeBase.save();
+        kb().save();
     }
     
     /**
@@ -155,7 +154,25 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @return 
      */
     public VM getValidationMetrics() {
-        return knowledgeBase.getValidationMetrics();
+        return kb().getValidationMetrics();
+    }
+    
+    /**
+     * Getter for KnowledgeBase; this version returns the object explicitly casted to 
+     * MLmodelKnowledgeBase. This method exists to resolve any Unchecked/unconfirmed 
+     * cast messages.
+     * 
+     * @return 
+     */
+    @Override
+    protected MLmodelKnowledgeBase<MP, TP, VM> kb() {
+        KnowledgeBase kbObj = super.kb();
+        if(kbObj instanceof MLmodelKnowledgeBase) {
+            return (MLmodelKnowledgeBase<MP, TP, VM>) kbObj;
+        }
+        else {
+            throw new ClassCastException(); //we will never get here
+        }
     }
     
     /**

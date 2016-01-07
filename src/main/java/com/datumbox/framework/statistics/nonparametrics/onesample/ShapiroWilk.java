@@ -132,7 +132,7 @@ public class ShapiroWilk {
         double a1, a2, an, m, s, sa, xi, sx, xx, y, w1;
         double fac, asa, an25, ssa, sax, rsn, ssx, xsx;
 
-        double pw = 1.0;
+        double pw;
         an = (double)n;
 
         if (n == 3) {

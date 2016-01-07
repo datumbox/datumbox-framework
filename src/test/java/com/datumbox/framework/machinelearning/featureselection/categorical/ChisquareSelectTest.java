@@ -58,7 +58,7 @@ public class ChisquareSelectTest extends BaseTest {
         
         instance.fit_transform(trainingData, param);
         instance.close();
-        instance = null;
+        //instance = null;
         
         
         instance = new ChisquareSelect(dbName, dbConf);

@@ -41,14 +41,15 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     /**
-     * The KnowledgeBase instance of the algorithm.
-     */
-    protected KB knowledgeBase;
-    
-    /**
      * The name of the Database where we persist our data.
      */
     protected String dbName;
+    
+    /**
+     * The KnowledgeBase instance of the algorithm. Do NOT access it directly,
+     * use the kb() getter instead.
+     */
+    protected KB knowledgeBase;
     
     /**
      * Generates a new instance of a BaseTrainable by providing the Class of the
@@ -100,21 +101,20 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
      */
     protected BaseTrainable(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         this(dbName, dbConf);
-        
-        knowledgeBase = (KB) new KnowledgeBase(this.dbName, dbConf, mpClass, tpClass);
+        this.knowledgeBase = (KB) new KnowledgeBase(this.dbName, dbConf, mpClass, tpClass);
     }
     
     /** {@inheritDoc} */
     @Override
      public MP getModelParameters() {
-       return knowledgeBase.getModelParameters();
+       return kb().getModelParameters();
 
     } 
     
     /** {@inheritDoc} */
     @Override
     public TP getTrainingParameters() {
-        return knowledgeBase.getTrainingParameters();
+        return kb().getTrainingParameters();
     }
     
     /** {@inheritDoc} */
@@ -123,29 +123,38 @@ public abstract class BaseTrainable<MP extends BaseModelParameters, TP extends B
         logger.info("fit()");
         
         //reset knowledge base
-        knowledgeBase.reinitialize();
-        knowledgeBase.setTrainingParameters(trainingParameters);
+        kb().clear();
+        kb().setTrainingParameters(trainingParameters);
         
-        MP modelParameters = knowledgeBase.getModelParameters();
+        MP modelParameters = kb().getModelParameters();
         modelParameters.setN(trainingData.size());
         modelParameters.setD(trainingData.xColumnSize());
         
         _fit(trainingData);
         
         logger.info("Saving model");
-        knowledgeBase.save();
+        kb().save();
     }
       
     /** {@inheritDoc} */
     @Override
     public void delete() {
-        knowledgeBase.delete();
+        kb().delete();
     }
             
     /** {@inheritDoc} */
     @Override
     public void close() {
-        knowledgeBase.close();
+        kb().close();
+    }
+    
+    /**
+     * Getter for the KnowledgeBase instance.
+     * 
+     * @return 
+     */
+    protected KB kb() {
+        return knowledgeBase;
     }
     
     /**

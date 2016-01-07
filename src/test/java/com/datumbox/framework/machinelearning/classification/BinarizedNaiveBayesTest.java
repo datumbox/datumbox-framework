@@ -59,7 +59,7 @@ public class BinarizedNaiveBayesTest extends BaseTest {
         instance.fit(trainingData, param);
         
         instance.close();
-        instance = null;
+        //instance = null;
         instance = new BinarizedNaiveBayes(dbName, dbConf);
         
         instance.validate(validationData);

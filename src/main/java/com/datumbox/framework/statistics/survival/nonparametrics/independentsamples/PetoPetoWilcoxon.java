@@ -76,7 +76,7 @@ public class PetoPetoWilcoxon {
         }
 
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(singleSample);
-        singleSample=null;
+        //singleSample=null;
         
         Double currentCensored = null;
         Double currentUncensored = null;
@@ -126,8 +126,8 @@ public class PetoPetoWilcoxon {
         while(currentCensored!=null || currentUncensored!=null || 
               !censoredData.isEmpty() || !uncensoredData.isEmpty());
         
-        censoredData=null;
-        uncensoredData=null;
+        //censoredData=null;
+        //uncensoredData=null;
         
 
         double VarS=0.0;
@@ -177,7 +177,7 @@ public class PetoPetoWilcoxon {
             double ui = TypeInference.toDouble(testTable.get2d(key, "ui"));
             S+= ui;
         }
-        testTable = null;
+        //testTable = null;
         
         double n0 = n.get(keys[0]).doubleValue();
         double n1 = n.get(keys[1]).doubleValue();

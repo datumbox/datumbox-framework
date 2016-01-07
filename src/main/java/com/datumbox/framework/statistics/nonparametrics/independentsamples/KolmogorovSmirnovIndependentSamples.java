@@ -76,7 +76,7 @@ public class KolmogorovSmirnovIndependentSamples {
                 ++rank;
             }
         }
-        allUniqueValues=null;
+        //allUniqueValues=null;
         
         double maxDelta=0.0;
         for(Object key : distributionAndValue2Probability.get(keys[0]).keySet()) {
@@ -90,11 +90,11 @@ public class KolmogorovSmirnovIndependentSamples {
                 maxDelta=delta;
             }   
         }
-        distributionAndValue2Probability = null;
+        //distributionAndValue2Probability = null;
 
         int n1 = transposeDataList.get(keys[0]).size();
         int n2 = transposeDataList.get(keys[1]).size();
-        keys = null;
+        //keys = null;
         
         boolean rejectH0 = checkCriticalValue(maxDelta, is_twoTailed, n1, n2, aLevel);
         

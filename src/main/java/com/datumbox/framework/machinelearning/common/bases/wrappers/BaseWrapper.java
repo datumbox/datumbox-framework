@@ -229,7 +229,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         if(mlmodel!=null) {
             mlmodel.delete();
         }
-        knowledgeBase.delete();
+        kb().delete();
     }
       
     /** {@inheritDoc} */
@@ -244,7 +244,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
         if(mlmodel!=null) {
             mlmodel.close();
         }
-        knowledgeBase.close();
+        kb().close();
     }
 
     /**

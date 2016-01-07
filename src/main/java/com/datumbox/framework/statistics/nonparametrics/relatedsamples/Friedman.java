@@ -71,8 +71,8 @@ public class Friedman {
                 }
             }
 
-            tiedValuesArray = null;
-            row = null;
+            //tiedValuesArray = null;
+            //row = null;
         }
 
         int n=dataTable.size();
@@ -82,7 +82,7 @@ public class Friedman {
         for(Double value : columnSum.values()) {
             Fscore+=value*value;
         }
-        columnSum = null;
+        //columnSum = null;
         Fscore=(12.0/(n*k*(k+1.0)))*Fscore - 3.0*n*(k+1.0);
 
         //Correct for ties
@@ -125,10 +125,11 @@ public class Friedman {
      * @return 
      */
     protected static double scoreToPvalue(double score, int k) {
+        /*
         if(k<=5) {
             //calculate it from tables too small values
-            //EXPAND: waiting for tables from Dimaki
         }
+        */
         return 1-ContinuousDistributions.chisquareCdf(score, k-1);
     }    
 }

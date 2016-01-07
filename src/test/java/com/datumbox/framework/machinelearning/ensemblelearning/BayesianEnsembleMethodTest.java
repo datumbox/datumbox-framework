@@ -65,8 +65,8 @@ public class BayesianEnsembleMethodTest extends BaseTest {
         
         instance.close();
         df.close();
-        instance = null;
-        df = null;
+        //instance = null;
+        //df = null;
         
         df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         instance = new BayesianEnsembleMethod(dbName, dbConf);

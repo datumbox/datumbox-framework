@@ -317,7 +317,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             return;
         }
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
@@ -339,9 +339,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
@@ -361,7 +360,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     }
     
     private double calculateDistance(Record r1, Record r2) {        
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double distance = 0.0;
         TrainingParameters.Distance distanceMethod = trainingParameters.getDistanceMethod();
@@ -388,11 +387,11 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     }
     
     private void calculateClusters(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
 
         Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_MEMORY, true); //it holds the distances between clusters
         Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_MEMORY, true); //it holds the ids of the min distances
@@ -474,8 +473,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
         //find the two closest clusters 

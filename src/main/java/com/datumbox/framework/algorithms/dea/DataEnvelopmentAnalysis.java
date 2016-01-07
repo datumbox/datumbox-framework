@@ -175,8 +175,8 @@ public class DataEnvelopmentAnalysis {
                 for(int i=0;i<conInput.length;++i) {
                     currentConstraintBody[conOutput.length+i]=-conInput[i];
                 }
-                conOutput=null;
-                conInput=null;
+                //conOutput=null;
+                //conInput=null;
                 
                 //add the constrain on the list
                 constraints.add(new LPSolver.LPConstraint(currentConstraintBody, LpSolve.LE, 0.0)); //less than 0
@@ -211,18 +211,18 @@ public class DataEnvelopmentAnalysis {
                     objectiveFunction[conOutput.length+i]=0.0; //set zeros on objective function for input
                     denominatorConstraintBody[conOutput.length+i]=conInput[i]; //set the input to the constraint
                 }
-                conInput=null;
-                conOutput=null;
+                //conInput=null;
+                //conOutput=null;
                 
                 //set the denominator equal to 1
                 constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, LpSolve.EQ, 1.0));                
             }
             
+            
+            /*
             double[] lowBoundsOfVariables = null;
             double[] upBoundsOfVariables = null;
             boolean[] strictlyIntegerVariables = null;
-            
-            /*
             lowBoundsOfVariables = new double[totalColumns];
             upBoundsOfVariables = new double[totalColumns];
             strictlyIntegerVariables = new boolean[totalColumns];
@@ -236,7 +236,7 @@ public class DataEnvelopmentAnalysis {
             Integer scalingMode = LpSolve.SCALE_GEOMETRIC;
             
             //RUN SOLVE
-            LPSolver.LPResult result = LPSolver.solve(objectiveFunction, constraints, lowBoundsOfVariables, upBoundsOfVariables, strictlyIntegerVariables, scalingMode);
+            LPSolver.LPResult result = LPSolver.solve(objectiveFunction, constraints, null, null, null, scalingMode);
             Double objectiveValue = result.getObjectiveValue();
             
             if(hasInput) {

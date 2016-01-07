@@ -169,11 +169,11 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     
     @Override
     protected void predictDataset(Dataframe newData) { 
-        Class<? extends BaseMLclassifier> weakClassifierClass = knowledgeBase.getTrainingParameters().getWeakClassifierClass();
-        List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
+        Class<? extends BaseMLclassifier> weakClassifierClass = kb().getTrainingParameters().getWeakClassifierClass();
+        List<Double> weakClassifierWeights = kb().getModelParameters().getWeakClassifierWeights();
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         Map<Object, DataTable2D> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", MapType.HASHMAP, StorageHint.IN_DISK, true);
         
         //initialize array of recordDecisions
@@ -187,8 +187,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         for(int t=0;t<totalWeakClassifiers;++t) {
             try (BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(
                     weakClassifierClass, 
-                    dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    knowledgeBase.getDbConf())) {
+                    dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    kb().getDbConf())) {
                 mlclassifier.predict(newData);
             }
             
@@ -222,10 +222,9 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         int n = modelParameters.getN();
         
@@ -265,17 +264,17 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
             Dataframe validationDataset;
             try (BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(
                     weakClassifierClass, 
-                    dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    knowledgeBase.getDbConf())) {
+                    dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    kb().getDbConf())) {
                 mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters);
                 sampledTrainingDataset.delete();
-                sampledTrainingDataset = null;
+                //sampledTrainingDataset = null;
                 validationDataset = trainingData;
                 mlclassifier.predict(validationDataset);
             }
             
             Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights);
-            validationDataset = null;
+            //validationDataset = null;
             
             if(status==Status.STOP) {
                 logger.debug("Skipping further training due to low error");
@@ -338,8 +337,8 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
     }
     
     private void deleteWeakClassifiers() {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         if(modelParameters==null) {
             return;
@@ -349,7 +348,7 @@ public abstract class BaseBoostingBagging<MP extends BaseBoostingBagging.ModelPa
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {
-            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+knowledgeBase.getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), knowledgeBase.getDbConf());
+            BaseMLclassifier mlclassifier = BaseMLmodel.newInstance(weakClassifierClass, dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), kb().getDbConf());
             mlclassifier.delete();
         }
     }

@@ -343,12 +343,12 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
         
         int n = validationData.size();
         
-        MP modelParameters = knowledgeBase.getModelParameters();
+        MP modelParameters = kb().getModelParameters();
         Map<Integer, CL> clusterList = modelParameters.getClusterList();
         Set<Object> goldStandardClassesSet = modelParameters.getGoldStandardClasses();
         
         //create new validation metrics object
-        VM validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
+        VM validationMetrics = kb().getEmptyValidationMetricsObject();
         
         if(goldStandardClassesSet.isEmpty()) {
             return validationMetrics;
@@ -413,7 +413,7 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
             }
             purity += maxCounts;
         }
-        ctMap = null;
+        //ctMap = null;
         purity/=n;
         
         validationMetrics.setPurity(purity);
@@ -439,10 +439,6 @@ public abstract class BaseMLclusterer<CL extends BaseMLclusterer.Cluster, MP ext
      * @return 
      */
     public Map<Integer, CL> getClusters() {
-        if(knowledgeBase==null) {
-            return null;
-        }
-        
-        return knowledgeBase.getModelParameters().getClusterList();
+        return kb().getModelParameters().getClusterList();
     }
 }

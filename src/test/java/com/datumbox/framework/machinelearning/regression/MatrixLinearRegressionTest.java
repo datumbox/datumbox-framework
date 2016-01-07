@@ -64,8 +64,8 @@ public class MatrixLinearRegressionTest extends BaseTest {
         
         instance.close();
         df.close();
-        instance = null;
-        df = null;
+        //instance = null;
+        //df = null;
         
         df = new XYMinMaxNormalizer(dbName, dbConf);
         instance = new MatrixLinearRegression(dbName, dbConf);

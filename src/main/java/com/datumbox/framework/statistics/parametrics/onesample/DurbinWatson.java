@@ -84,10 +84,13 @@ public class DurbinWatson {
      * @return 
      */
     public static boolean checkCriticalValue(double score, int n, int k, boolean is_twoTailed, double aLevel) {
+        /*
         if(n<=200 && k<=20) {
             //Calculate it from tables
             //http://www3.nd.edu/~wevans1/econ30331/Durbin_Watson_tables.pdf
         }
+        */
+        
         //Follows normal distribution for large samples
         //References: http://econometrics.com/guide/dwdist.htm
         double z=(score-2.0)/Math.sqrt(4.0/n);

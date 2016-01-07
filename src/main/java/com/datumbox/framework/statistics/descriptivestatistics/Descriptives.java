@@ -69,9 +69,7 @@ public class Descriptives {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
-        double mean = 0.0;
-        
-        mean = sum(flatDataCollection)/n;
+        double mean = sum(flatDataCollection)/n;
         
         return mean;
     }
@@ -101,11 +99,11 @@ public class Descriptives {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
-        double median=0.0;
-                
+            
         Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
         
+        double median;
         if(n%2==0) {
             median = (doubleArray[n/2 - 1] + doubleArray[n/2])/2.0;
         }
@@ -249,7 +247,6 @@ public class Descriptives {
             throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
         
-        double variance=0.0;
         
         /* Uses the formal Variance = E(X^2) - mean^2 */
         
@@ -265,7 +262,7 @@ public class Descriptives {
         mean/=n;
         squaredMean/=n;
         
-        variance = squaredMean - mean*mean;
+        double variance = squaredMean - mean*mean;
         
         /* Unbiased for sample */
         if(isSample) {
@@ -356,8 +353,6 @@ public class Descriptives {
             throw new IllegalArgumentException("The provided collection must have more than 3 elements.");
         }
         
-        double kurtosis = 0.0;
-        
         double mean = mean(flatDataCollection);
         
         double m4 = moment(flatDataCollection, 4, mean);
@@ -375,7 +370,7 @@ public class Descriptives {
         
         double Mcapital4=n*m4;
         double Mcapital2=n*m2;
-        kurtosis=(n*(n+1.0)*Mcapital4-3*Mcapital2*Mcapital2*(n-1.0))/((n-1.0)*(n-2.0)*(n-3.0)*s*s);
+        double kurtosis=(n*(n+1.0)*Mcapital4-3*Mcapital2*Mcapital2*(n-1.0))/((n-1.0)*(n-2.0)*(n-3.0)*s*s);
         
         return kurtosis;
     }

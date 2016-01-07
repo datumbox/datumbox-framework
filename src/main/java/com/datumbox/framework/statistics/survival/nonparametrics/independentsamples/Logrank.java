@@ -144,8 +144,8 @@ public class Logrank {
         while(currentCensored!=null || currentUncensored!=null || 
               !censoredData.isEmpty() || !uncensoredData.isEmpty());
         
-        censoredData=null;
-        uncensoredData=null;
+        //censoredData=null;
+        //uncensoredData=null;
         
 
         double VarS=0.0;
@@ -197,7 +197,7 @@ public class Logrank {
             double wi = TypeInference.toDouble(testTable.get2d(key, "wi"));
             S+= wi;
         }
-        testTable = null;
+        //testTable = null;
         
         double n0 = n.get(keys[0]).doubleValue();
         double n1 = n.get(keys[1]).doubleValue();

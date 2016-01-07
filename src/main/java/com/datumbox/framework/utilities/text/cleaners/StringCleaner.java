@@ -18,6 +18,7 @@ package com.datumbox.framework.utilities.text.cleaners;
 import com.datumbox.common.utilities.PHPfunctions;
 import java.text.Normalizer;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -144,6 +145,6 @@ public class StringCleaner {
         text = StringCleaner.removeSymbols(text);
         text = StringCleaner.removeExtraSpaces(text);
         
-        return text.toLowerCase();
+        return text.toLowerCase(Locale.ENGLISH);
     }
 }

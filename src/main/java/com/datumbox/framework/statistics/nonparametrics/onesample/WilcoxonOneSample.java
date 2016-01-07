@@ -110,11 +110,12 @@ public class WilcoxonOneSample {
      * @return 
      */
     protected static double scoreToPvalue(double score, int n) {
+        /*
         if(n<=20) {
             //calculate it from binomial distribution
-            //EXPAND: waiting for tables from Dimaki
         }
-
+        */
+        
         double mean=n*(n+1.0)/4.0;
         double variable=n*(n+1.0)*(2.0*n+1.0)/24.0;
 

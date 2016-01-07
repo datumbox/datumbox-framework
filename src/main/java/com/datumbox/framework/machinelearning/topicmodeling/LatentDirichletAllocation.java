@@ -353,8 +353,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     public AssociativeArray2D getWordProbabilitiesPerTopic() {
         AssociativeArray2D ptw = new AssociativeArray2D();
         
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         //initialize a probability list for every topic
         int k = trainingParameters.getK();
@@ -389,10 +389,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         int d = modelParameters.getD();
         
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         
         //get model parameters
@@ -467,8 +467,8 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     //compute the posteriors of the topics and sample from it
                     AssociativeArray topicProbabilities = new AssociativeArray();
                     for(int j=0;j<k;++j) {
-                        double enumerator = 0.0;
                         Integer njw = topicWordCounts.get(Arrays.asList(j,word));
+                        double enumerator;
                         if(njw !=null) {
                             enumerator = njw + beta;
                         }
@@ -572,12 +572,12 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         //as a result we need to modify the code to use additional temporary
         //counts for the testing data and merge them with the parameters from the
         //training data in order to make a decision
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         
         //create new validation metrics object
-        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
+        ValidationMetrics validationMetrics = kb().getEmptyValidationMetricsObject();
         
         //get model parameters
         int d = modelParameters.getD();
@@ -588,7 +588,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
         Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_CACHE, true);
@@ -661,11 +661,11 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     //compute the posteriors of the topics and sample from it
                     AssociativeArray topicProbabilities = new AssociativeArray();
                     for(int j=0;j<k;++j) {
-                        double enumerator = 0.0;
-                        
                         //get the counts from the current testing data
                         List<Object> topicWordKey = Arrays.asList(j,word);
                         Integer njw = tmp_topicWordCounts.get(topicWordKey);
+                        
+                        double enumerator;
                         if(njw !=null) {
                             enumerator = njw + beta;
                         }

@@ -63,7 +63,7 @@ public class SpearmanCorrelation {
             Sum_Rx_square-=((Ti*Ti-1.0)*Ti); //faster than using pow()
         }
         Sum_Rx_square/=12.0;
-        tiesCounter = null;
+        //tiesCounter = null;
 
 
 
@@ -77,7 +77,7 @@ public class SpearmanCorrelation {
             Sum_Ry_square-=((Ti*Ti-1.0)*Ti); //faster than using pow()
         }
         Sum_Ry_square/=12.0;
-        tiesCounter = null;
+        //tiesCounter = null;
         
         
         //calculate the sum of Di^2

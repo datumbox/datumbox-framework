@@ -97,8 +97,8 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         
@@ -139,7 +139,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
                 }
             }
         }
-        contingencyTable = null;
+        //contingencyTable = null;
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {

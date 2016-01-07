@@ -166,7 +166,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         //calculate similarity matrix
         Map<List<Object>, Double> similarities = modelParameters.getSimilarities();
@@ -194,7 +194,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     }
     
     private void _predictDataset(Dataframe newData, boolean includeRated) {
-        Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
+        Map<List<Object>, Double> similarities = kb().getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -237,7 +237,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
                 
                 recommendations.put(column, score/simSums.get(column));
             }
-            simSums = null;
+            //simSums = null;
             
             recommendations = MapFunctions.sortNumberMapByValueDescending(recommendations);
             newData._unsafe_set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray(recommendations)));
@@ -245,7 +245,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
     }
 
     private double calculateSimilarity(Record r1, Record r2) {        
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double similarity = 0.0;
         TrainingParameters.SimilarityMeasure similarityMethod = trainingParameters.getSimilarityMethod();
@@ -297,7 +297,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         _predictDataset(validationData, true);
         
         //create new validation metrics object
-        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
+        ValidationMetrics validationMetrics = kb().getEmptyValidationMetricsObject();
         
         double RMSE = 0.0;
         int i = 0;

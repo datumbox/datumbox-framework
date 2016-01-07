@@ -88,7 +88,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        knowledgeBase.load();
+        kb().load();
         
         filterFeatures(newData);
     }

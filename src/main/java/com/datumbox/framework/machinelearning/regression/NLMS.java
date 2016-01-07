@@ -120,7 +120,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
 
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -130,13 +130,13 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             thitas.put(feature, 0.0);
         }
         
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = kb().getTrainingParameters();
 
         double minError = Double.POSITIVE_INFINITY;
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        DatabaseConnector dbc = kb().getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -170,7 +170,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
 
     @Override
     protected void predictDataset(Dataframe newData) {
-        Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
+        Map<Object, Double> thitas = kb().getModelParameters().getThitas();
         
         for(Map.Entry<Integer, Record> e : newData.entries()) {
             Integer rId = e.getKey();
@@ -184,7 +184,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        ModelParameters modelParameters = kb().getModelParameters();
         
         double multiplier = learningRate/modelParameters.getN();
         Map<Object, Double> thitas = modelParameters.getThitas();
@@ -214,7 +214,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     
     /*
     private void stochasticGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
-        double multiplier = learningRate/knowledgeBase.getModelParameters().getN();
+        double multiplier = learningRate/kb().getModelParameters().getN();
         
         for(Record r : trainingData) { 
             //mind the fact that we use the new thitas to estimate the cost! 

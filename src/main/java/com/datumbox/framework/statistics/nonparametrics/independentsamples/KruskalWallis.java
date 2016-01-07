@@ -67,7 +67,7 @@ public class KruskalWallis {
             }
             C/=((n*n-1.0)*n); //faster than using pow()
         }
-        tiesCounter = null;
+        //tiesCounter = null;
 
         //Important note! Remember that the "i" value is the number of the group while the j is the number of observation within the group and NOT the other way around.
         Map<Object, Integer> ni = new HashMap<>(); //stores the total number of observations in each group
@@ -89,7 +89,7 @@ public class KruskalWallis {
                 ni.put(i, ni.get(i)+1);
             }
         }
-        associativeArray=null;
+        //associativeArray=null;
 
         int k=ni.size();
 
@@ -102,8 +102,8 @@ public class KruskalWallis {
             
             KWscore+=value*value/ni.get(i);
         }
-        Ridot=null;
-        ni=null;
+        //Ridot=null;
+        //ni=null;
 
 
         KWscore=(12.0/(n*(n+1.0)))*KWscore - 3.0*(n+1.0);
@@ -141,10 +141,11 @@ public class KruskalWallis {
      * @return 
      */
     protected static double scoreToPvalue(double score, int k) {
+        /*
         if(k<=3) {
             //calculate it from tables too small values
-            //EXPAND: waiting for tables from Dimaki
         }
+        */
         return 1.0-ContinuousDistributions.chisquareCdf(score, k-1);
     }
 }

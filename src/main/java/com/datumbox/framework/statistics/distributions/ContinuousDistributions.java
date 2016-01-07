@@ -132,10 +132,9 @@ public class ContinuousDistributions {
         double B1=1.0;
         double M9=0.0;
         double A2=0.0;
-        double C9=0.0;
         while (Math.abs((A1-A2)/A1)>0.00001) {
             A2=A1;
-            C9=-(A+M9)*(A+B+M9)*x/(A+2.0*M9)/(A+2.0*M9+1.0);
+            double C9=-(A+M9)*(A+B+M9)*x/(A+2.0*M9)/(A+2.0*M9+1.0);
             A0=A1+C9*A0;
             B0=B1+C9*B0;
             M9=M9+1;
@@ -162,20 +161,20 @@ public class ContinuousDistributions {
         if(df<=0) {
             throw new IllegalArgumentException("The degrees of freedom need to be positive.");
         }
-        
-        double tcdf = 0.0;
 
         double A = df/2.0;
         double S = A+0.5;
         double Z = df/(df + x*x);
         double BT = Math.exp(logGamma(S)-logGamma(0.5)-logGamma(A)+A*Math.log(Z)+0.5*Math.log(1.0-Z));
-        double betacdf = 0.0;
+        double betacdf;
         if (Z<(A+1.0)/(S+2.0)) {
             betacdf = BT*betinc(Z,A,0.5);
         } 
         else {
             betacdf=1-BT*betinc(1.0-Z,0.5,A);
         }
+        
+        double tcdf;
         if (x<0) {
             tcdf=betacdf/2.0;
         } 
@@ -252,10 +251,8 @@ public class ContinuousDistributions {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
-        double FCdf=0.0;
-        
         double Z = x/(x + (double)f2/f1);
-        FCdf = betaCdf(Z,f1/2.0,f2/2.0);
+        double FCdf = betaCdf(Z,f1/2.0,f2/2.0);
         
         return FCdf;
     }
@@ -326,7 +323,7 @@ public class ContinuousDistributions {
             throw new IllegalArgumentException("The x parameter must be positive.");
         }
         
-        double GI=0;
+        double GI;
         if (a>200) {
             double z=(x-a)/Math.sqrt(a);
             double y=gaussCdf(z);
@@ -379,9 +376,9 @@ public class ContinuousDistributions {
             throw new IllegalArgumentException("The a must be smaller than b.");
         }
         
-        double probabilitySum=0;
+        double probabilitySum;
         if(x<a) {
-            probabilitySum=0;
+            probabilitySum=0.0;
         }
         else if(x<b) {
             probabilitySum=(x-a)/(b-a);
@@ -449,7 +446,7 @@ public class ContinuousDistributions {
         
         // Define break-points.
         // variable for result
-        double z = 0;
+        double z;
 
         if(p == 0) {
             z = Double.NEGATIVE_INFINITY;
@@ -490,7 +487,6 @@ public class ContinuousDistributions {
         final double CHI_MAX = 99999.0;        /* Maximum chi-square value */
         double minchisq = 0.0;
         double maxchisq = CHI_MAX;
-        double chisqval = 0.0;
 
         if (p <= 0.0) {
             return CHI_MAX;
@@ -499,7 +495,7 @@ public class ContinuousDistributions {
             return 0.0;
         }
 
-        chisqval = df/Math.sqrt(p);    /* fair first value */
+        double chisqval = df/Math.sqrt(p);    /* fair first value */
         while ((maxchisq - minchisq) > CHI_EPSILON) {
             if (1-chisquareCdf(chisqval, df) < p) {
                 maxchisq = chisqval;
@@ -539,8 +535,8 @@ public class ContinuousDistributions {
             return mu;
         }
         
-        double r=0;
-        double val=0;
+        double r;
+        double val;
             
         double q=p - 0.5;
 

@@ -69,8 +69,8 @@ public class StepwiseRegressionTest extends BaseTest {
         
         instance.close();
         df.close();
-        instance = null;
-        df = null;
+        //instance = null;
+        //df = null;
         
         df = new DummyXYMinMaxNormalizer(dbName, dbConf);
         df.transform(validationData);
