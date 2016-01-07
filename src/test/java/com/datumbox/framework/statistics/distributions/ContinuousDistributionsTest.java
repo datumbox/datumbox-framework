@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class ContinuousDistributionsTest extends BaseTest {
     
     /**
-     * Test of ChisquareCdf method, of class ContinuousDistributions.
+     * Test of chisquareCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testChisquareCdf() {
@@ -36,36 +36,36 @@ public class ContinuousDistributionsTest extends BaseTest {
         double x = 3.0;
         int df = 10;
         double expResult = 0.018575928421771;
-        double result = ContinuousDistributions.ChisquareCdf(x, df);
+        double result = ContinuousDistributions.chisquareCdf(x, df);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of GaussCdf method, of class ContinuousDistributions.
+     * Test of gaussCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testGaussCdf() {
         logger.info("GaussCdf");
         double z = 3.0;
         double expResult = 0.9986501025724;
-        double result = ContinuousDistributions.GaussCdf(z);
+        double result = ContinuousDistributions.gaussCdf(z);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of LogGamma method, of class ContinuousDistributions.
+     * Test of logGamma method, of class ContinuousDistributions.
      */
     @Test
     public void testLogGamma() {
         logger.info("LogGamma");
         double Z = 3.0;
         double expResult = 0.69314718044741;
-        double result = ContinuousDistributions.LogGamma(Z);
+        double result = ContinuousDistributions.logGamma(Z);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of StudentsCdf method, of class ContinuousDistributions.
+     * Test of studentsCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testStudentsCdf() {
@@ -73,12 +73,12 @@ public class ContinuousDistributionsTest extends BaseTest {
         double x = 3.0;
         int df = 10;
         double expResult = 0.99332817273466;
-        double result = ContinuousDistributions.StudentsCdf(x, df);
+        double result = ContinuousDistributions.studentsCdf(x, df);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of ExponentialCdf method, of class ContinuousDistributions.
+     * Test of exponentialCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testExponentialCdf() {
@@ -86,12 +86,12 @@ public class ContinuousDistributionsTest extends BaseTest {
         double x = 3.0;
         double lamda = 10.0;
         double expResult = 0.99999999999991;
-        double result = ContinuousDistributions.ExponentialCdf(x, lamda);
+        double result = ContinuousDistributions.exponentialCdf(x, lamda);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of BetaCdf method, of class ContinuousDistributions.
+     * Test of betaCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testBetaCdf() {
@@ -100,12 +100,12 @@ public class ContinuousDistributionsTest extends BaseTest {
         double a = 10.0;
         double b = 2.0;
         double expResult = 0.69735688048532;
-        double result = ContinuousDistributions.BetaCdf(x, a, b);
+        double result = ContinuousDistributions.betaCdf(x, a, b);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of FCdf method, of class ContinuousDistributions.
+     * Test of fCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testFCdf() {
@@ -114,12 +114,12 @@ public class ContinuousDistributionsTest extends BaseTest {
         int f1 = 10;
         int f2 = 2;
         double expResult = 0.7241964339413;
-        double result = ContinuousDistributions.FCdf(x, f1, f2);
+        double result = ContinuousDistributions.fCdf(x, f1, f2);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of GammaCdf method, of class ContinuousDistributions.
+     * Test of gammaCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testGammaCdf() {
@@ -128,12 +128,12 @@ public class ContinuousDistributionsTest extends BaseTest {
         double a = 10.0;
         double b = 2.0;
         double expResult = 0.017092718679951;
-        double result = ContinuousDistributions.GammaCdf(x, a, b);
+        double result = ContinuousDistributions.gammaCdf(x, a, b);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of UniformCdf method, of class ContinuousDistributions.
+     * Test of uniformCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testUniformCdf() {
@@ -142,36 +142,36 @@ public class ContinuousDistributionsTest extends BaseTest {
         double a = 2.0;
         double b = 10.0;
         double expResult = 0.125;
-        double result = ContinuousDistributions.UniformCdf(x, a, b);
+        double result = ContinuousDistributions.uniformCdf(x, a, b);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of Kolmogorov method, of class ContinuousDistributions.
+     * Test of kolmogorov method, of class ContinuousDistributions.
      */
     @Test
     public void testKolmogorov() {
         logger.info("Kolmogorov");
         double z = 2.0;
         double expResult = 0.99932907474422;
-        double result = ContinuousDistributions.Kolmogorov(z);
+        double result = ContinuousDistributions.kolmogorov(z);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of GaussInverseCdf method, of class ContinuousDistributions.
+     * Test of gaussInverseCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testGaussInverseCdf() {
         logger.info("GaussInverseCdf");
         double p = 0.32;
         double expResult = -0.46769879942903;
-        double result = ContinuousDistributions.GaussInverseCdf(p);
+        double result = ContinuousDistributions.gaussInverseCdf(p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of ChisquareInverseCdf method, of class ContinuousDistributions.
+     * Test of chisquareInverseCdf method, of class ContinuousDistributions.
      */
     @Test
     public void testChisquareInverseCdf() {
@@ -179,7 +179,7 @@ public class ContinuousDistributionsTest extends BaseTest {
         double p = 0.32;
         int df = 10;
         double expResult = 11.498788492223;
-        double result = ContinuousDistributions.ChisquareInverseCdf(p, df);
+        double result = ContinuousDistributions.chisquareInverseCdf(p, df);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 

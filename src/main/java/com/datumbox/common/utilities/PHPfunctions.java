@@ -304,6 +304,36 @@ public class PHPfunctions {
         return indexes;
     }
     
+    /**
+     * Copies the elements of double array.
+     * 
+     * @param a
+     * @return 
+     */
+    public static double[] array_clone(double[] a) {
+        if(a == null) {
+            return a;
+        }
+        return Arrays.copyOf(a, a.length);
+    }
+    
+    /**
+     * Copies the elements of double 2D array.
+     * 
+     * @param a
+     * @return 
+     */
+    public static double[][] array_clone(double[][] a) {
+        if(a == null) {
+            return a;
+        }
+        double[][] copy = new double[a.length][];
+        for(int i=0;i<a.length;i++) {
+            copy[i] = Arrays.copyOf(a[i], a[i].length);
+        }
+        return copy;
+    }
+    
 }
 
 /*

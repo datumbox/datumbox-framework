@@ -43,6 +43,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         private static final long serialVersionUID = 1L;
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -239,7 +240,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             }
             
             //fetch the feature with highest pvalue, excluding constant
-            pvalues.remove(Dataframe.constantColumnName);
+            pvalues.remove(Dataframe.COLUMN_NAME_CONSTANT);
             Map.Entry<Object, Double> maxPvalueEntry = MapFunctions.selectMaxKeyValue(pvalues);
             pvalues=null;
             

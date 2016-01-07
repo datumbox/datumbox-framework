@@ -128,6 +128,6 @@ public class WilcoxonRelatedSamples {
 
         double z=(score-mean)/Math.sqrt(variable);
 
-        return ContinuousDistributions.GaussCdf(z);
+        return ContinuousDistributions.gaussCdf(z);
     }
 }

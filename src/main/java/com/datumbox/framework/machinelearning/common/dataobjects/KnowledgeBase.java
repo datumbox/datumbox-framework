@@ -37,19 +37,14 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     private static final long serialVersionUID = 1L;
     
     /**
-     * The name of the database which is used by the Database Connector.
-     */
-    protected String dbName; 
-    
-    /**
-     * The connector to the Permanent Storage Engine driver.
-     */
-    protected transient DatabaseConnector dbc;
-    
-    /**
-     * The database configuration of the permanent storage.
+     * The database configuration of the Permanent Storage.
      */
     protected transient DatabaseConfiguration dbConf;
+    
+    /**
+     * The connector to the Permanent Storage.
+     */
+    protected transient DatabaseConnector dbc;
     
     /**
      * The class of the ModelParameters class of the algorithm.
@@ -80,7 +75,6 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
      * @param tpClass 
      */
     public KnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        this.dbName = dbName;
         this.dbConf = dbConf;
         
         dbc = dbConf.getConnector(dbName);
@@ -108,25 +102,28 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     }
 
     /**
-     * Saves a KnowledgeBase to the permanent storage.
+     * Saves the KnowledgeBase to the permanent storage.
      */
     public void save() {
         if(modelParameters==null) {
             throw new IllegalArgumentException("Can't save an empty KnowledgeBase.");
         }
         
-        dbc.save("KnowledgeBase", this);
+        dbc.saveObject("KnowledgeBase", this);
     }
     
     /**
-     * Loads a KnowledgeBase from the permanent storage.
+     * Loads the KnowledgeBase from the permanent storage.
      */
     public void load() {
         if(modelParameters==null) {
-            KnowledgeBase kbObject = dbc.load("KnowledgeBase", this.getClass());
+            KnowledgeBase kbObject = dbc.loadObject("KnowledgeBase", this.getClass());
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }
+            
+            mpClass = kbObject.mpClass;
+            tpClass = kbObject.tpClass;
             
             trainingParameters = (TP) kbObject.trainingParameters;
             modelParameters = (MP) kbObject.modelParameters;
@@ -134,10 +131,11 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     }
     
     /**
-     * Deletes the database of the algorithm. 
+     * Deletes the database of the algorithm and closes the connection to the
+     * permanent storage. 
      */
     public void delete() {
-    	dbc.dropDatabase();
+    	dbc.clear();
         close();
         
         modelParameters = null;
@@ -156,13 +154,13 @@ public class KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTraini
     }
     
     /**
-     * Deletes and re-initializes KnowledgeBase object. It deletes all data from 
-     * storage, it releases all resources, reinitializes the internal objects and
-     * opens new connection to the permanent storage.
+     * Re-initializes the KnowledgeBase object by deleting all its data, while keeping 
+     * open the connection to the permanent storage. 
      */
     public void reinitialize() {
-        delete();
-        dbc = dbConf.getConnector(dbName); //re-open connector
+        dbc.clear();
+        modelParameters = null;
+        trainingParameters = null;
         
         try {
             Constructor<MP> c = mpClass.getDeclaredConstructor(DatabaseConnector.class);

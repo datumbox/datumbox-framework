@@ -98,7 +98,7 @@ public class StudentsIndependentSamples {
      * @return 
      */
     protected static boolean checkCriticalValue(double score, int df, boolean is_twoTailed, double aLevel) {
-        double probability=ContinuousDistributions.StudentsCdf(score,df);
+        double probability=ContinuousDistributions.studentsCdf(score,df);
 
         boolean rejectH0=false;
 

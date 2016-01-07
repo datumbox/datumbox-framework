@@ -41,24 +41,37 @@ import java.util.TreeMap;
  */
 public class InMemoryConnector extends AutoCloseConnector {
         
-    private final InMemoryConfiguration dbConf;
     private final String database;
+    private final InMemoryConfiguration dbConf;
     
     /** 
+     * @param database
+     * @param dbConf
      * @see com.datumbox.common.persistentstorage.AutoCloseConnector#AutoCloseConnector()   
      */
     protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         super();
-        this.dbConf = dbConf;
         this.database = database;
+        this.dbConf = dbConf;
     }
     
     /** {@inheritDoc} */
     @Override
-    public <T extends Serializable> void save(String name, T serializableObject) {
+    public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         try { 
-            Files.write(getDefaultPath(), DeepCopy.serialize(serializableObject));
+            Path defaultPath = getDefaultPath();
+            
+            Map<String, Object> storedObjects;
+            if(Files.exists(defaultPath)) {
+                storedObjects = (Map<String, Object>) DeepCopy.deserialize(Files.readAllBytes(defaultPath));
+            }
+            else {
+                storedObjects = new HashMap<>();
+            }
+            storedObjects.put(name, serializableObject);
+            
+            Files.write(defaultPath, DeepCopy.serialize(storedObjects));
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -68,12 +81,12 @@ public class InMemoryConnector extends AutoCloseConnector {
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Serializable> T load(String name, Class<T> klass) {
+    public <T extends Serializable> T loadObject(String name, Class<T> klass) {
         assertConnectionOpen();
         try { 
             //read the stored serialized object
-            T serializableObject = (T)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
-            return serializableObject;
+            Map<String, Object> storedObjects = (Map<String, Object>)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
+            return (T) storedObjects.get(name);
         } 
         catch (NoSuchFileException ex) {
             return null;
@@ -91,22 +104,11 @@ public class InMemoryConnector extends AutoCloseConnector {
         }
         super.close();
     }
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean existsDatabase() {
-        assertConnectionOpen();
-        return Files.exists(getDefaultPath());
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public void dropDatabase() {
-        assertConnectionOpen();
-        if(!existsDatabase()) {
-            return;
-        }
         
+    /** {@inheritDoc} */
+    @Override
+    public void clear() {
+        assertConnectionOpen();
         try {
             Files.deleteIfExists(getDefaultPath());
         } 
@@ -138,6 +140,12 @@ public class InMemoryConnector extends AutoCloseConnector {
         map.clear();
     } 
 
+    /** {@inheritDoc} */
+    @Override
+    public String getDatabaseName() {
+        return database;
+    }
+    
     private Path getDefaultPath() {
         //get the default filepath of the permanet db file
         String outputFolder = this.dbConf.getOutputFolder();

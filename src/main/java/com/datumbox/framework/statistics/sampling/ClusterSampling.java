@@ -32,20 +32,20 @@ import java.util.Map;
 public class ClusterSampling {
     
     /**
-     * Returns the mean cluster size
+     * Returns the mean cluster size.
      * 
      * @param clusterIdList
      * @return 
      */
-    public static double Nbar(TransposeDataList clusterIdList) {
+    public static double nBar(TransposeDataList clusterIdList) {
         int populationM = clusterIdList.size();
         
-        double Nbar = 0.0;
+        double nBar = 0.0;
         for(Map.Entry<Object, FlatDataList> entry : clusterIdList.entrySet()) {
-            Nbar += (double)entry.getValue().size()/populationM;
+            nBar += (double)entry.getValue().size()/populationM;
         }
 
-        return Nbar;
+        return nBar;
     }
     
     /**

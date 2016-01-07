@@ -200,7 +200,7 @@ public class CensoredDescriptives {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         } 
         
-        return Ar(survivalFunction, 0);
+        return ar(survivalFunction, 0);
     }
     
     /**
@@ -210,7 +210,7 @@ public class CensoredDescriptives {
      * @param r
      * @return
      */
-    private static double Ar(AssociativeArray2D survivalFunction, int r) {
+    private static double ar(AssociativeArray2D survivalFunction, int r) {
         if(survivalFunction.isEmpty()) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
@@ -303,7 +303,7 @@ public class CensoredDescriptives {
             Number mi = (Number)row.get("mi");
             Number r = (Number)row.get("r");
      
-            double Ar = Ar(survivalFunction,r.intValue());
+            double Ar = ar(survivalFunction,r.intValue());
             if(n-r.intValue()>0) {
                 meanVariance+=mi.intValue()*(Ar*Ar)/((n-r.intValue())*(n-r.intValue()+1.0));
             }

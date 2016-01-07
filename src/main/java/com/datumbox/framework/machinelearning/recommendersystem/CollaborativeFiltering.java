@@ -54,6 +54,7 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         private Map<List<Object>, Double> similarities; //the similarity map among observations
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {

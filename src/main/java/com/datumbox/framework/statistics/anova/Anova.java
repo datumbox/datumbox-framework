@@ -90,7 +90,7 @@ public class Anova {
         
         double F = (BSS/(k-1))/(RSS/(n-k));
         
-        double pvalue = ContinuousDistributions.FCdf(F, k-1, n-k);
+        double pvalue = ContinuousDistributions.fCdf(F, k-1, n-k);
         
         boolean rejectH0=false;
             
@@ -200,7 +200,7 @@ public class Anova {
         
         double Fstar = BSS/mjSum;
         
-        double pvalue = ContinuousDistributions.FCdf(Fstar, k-1, df);
+        double pvalue = ContinuousDistributions.fCdf(Fstar, k-1, df);
         
         boolean rejectH0=false;
             
@@ -403,16 +403,16 @@ public class Anova {
         double MSR=SSR/dfR;
 
         double FA=MSA/MSE;
-        double Apvalue=ContinuousDistributions.FCdf(FA,dfA,dfE);
+        double Apvalue=ContinuousDistributions.fCdf(FA,dfA,dfE);
 
         double FB=MSB/MSE;
-        double Bpvalue=ContinuousDistributions.FCdf(FB,dfB,dfE);
+        double Bpvalue=ContinuousDistributions.fCdf(FB,dfB,dfE);
 
         double FAB=MSAB/MSE;
-        double ABpvalue=ContinuousDistributions.FCdf(FAB,dfAB,dfE);
+        double ABpvalue=ContinuousDistributions.fCdf(FAB,dfAB,dfE);
 
         double FR=MSR/MSE;
-        double Rpvalue=ContinuousDistributions.FCdf(FR,dfR,dfE);
+        double Rpvalue=ContinuousDistributions.fCdf(FR,dfR,dfE);
 
 
         boolean rejectH0=false;

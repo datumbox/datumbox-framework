@@ -92,7 +92,7 @@ public class DurbinWatson {
         //References: http://econometrics.com/guide/dwdist.htm
         double z=(score-2.0)/Math.sqrt(4.0/n);
 
-        double probability=ContinuousDistributions.GaussCdf(z);
+        double probability=ContinuousDistributions.gaussCdf(z);
 
         boolean rejectH0=false;
 

@@ -43,6 +43,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         private static final long serialVersionUID = 1L;
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -105,7 +106,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         contingencyTable.put(0, new AssociativeArray());
         contingencyTable.put(1, new AssociativeArray());
         
-        double criticalValue = ContinuousDistributions.ChisquareInverseCdf(trainingParameters.getALevel(), 1); //one degree of freedom because the tables below are 2x2
+        double criticalValue = ContinuousDistributions.chisquareInverseCdf(trainingParameters.getALevel(), 1); //one degree of freedom because the tables below are 2x2
         
         
         double N = modelParameters.getN();

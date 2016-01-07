@@ -75,7 +75,7 @@ public class McNemar {
      * @return 
      */
     protected static double scoreToPvalue(double score) {
-        return 1.0-ContinuousDistributions.ChisquareCdf(score, 1);
+        return 1.0-ContinuousDistributions.chisquareCdf(score, 1);
     }
     
 }

@@ -67,6 +67,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         private Map<Object, Double> thitas; 
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {

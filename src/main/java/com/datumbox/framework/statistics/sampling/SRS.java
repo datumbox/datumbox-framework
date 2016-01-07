@@ -305,7 +305,7 @@ public class SRS {
         
         double a = 1.0 - aLevel/2.0;
         
-        double Za = ContinuousDistributions.GaussInverseCdf(a);
+        double Za = ContinuousDistributions.gaussInverseCdf(a);
         
         double V = Math.pow(d/Za,2);
         double Ssquare = populationStd*populationStd;

@@ -61,6 +61,7 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
         private Map<Object, Double> maxColumnValues;
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -130,6 +131,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
     }
     
     /** 
+     * @param dbName
+     * @param dbConf
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
     protected BaseDummyMinMaxTransformer(String dbName, DatabaseConfiguration dbConf) {
@@ -263,8 +266,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
             Double max = Descriptives.max(columnValues.toFlatDataCollection());
             Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
-            minColumnValues.put(Dataframe.yColumnName, min);
-            maxColumnValues.put(Dataframe.yColumnName, max);
+            minColumnValues.put(Dataframe.COLUMN_NAME_Y, min);
+            maxColumnValues.put(Dataframe.COLUMN_NAME_Y, max);
         }
     }
     
@@ -291,8 +294,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 }
                 
                 //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataframe.yColumnName);
-                Double max = maxColumnValues.get(Dataframe.yColumnName);
+                Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
+                Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
                 
                 //it is important how we will handle 0 normalized values because
                 //0-valued features are considered inactive.
@@ -330,8 +333,8 @@ public abstract class BaseDummyMinMaxTransformer extends DataTransformer<BaseDum
                 Record r = e.getValue();
                 
                 //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataframe.yColumnName);
-                Double max = maxColumnValues.get(Dataframe.yColumnName);
+                Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
+                Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
                 
                 Object denormalizedY = null;
                 Object denormalizedYPredicted = null;

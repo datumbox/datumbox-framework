@@ -59,6 +59,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         private transient Double cache_wordcounts_plusalpha; //Cached value of WordCountsPlusAlpha used only for speed optimization
         
         /** 
+         * @param clusterId
          * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster 
          */
         protected Cluster(Integer clusterId) {
@@ -216,11 +217,11 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
                 tmp=alphaVector.getEntry(i);
                 sumAi+= tmp;
                 //productGammaAi*=ContinuousDistributions.gamma(tmp);
-                sumLogGammaAi+=ContinuousDistributions.LogGamma(tmp);
+                sumLogGammaAi+=ContinuousDistributions.logGamma(tmp);
             }
 
             //Cvalue = productGammaAi/Gamma.gamma(sumAi);
-            Cvalue = sumLogGammaAi-ContinuousDistributions.LogGamma(sumAi);
+            Cvalue = sumLogGammaAi-ContinuousDistributions.logGamma(sumAi);
 
             return Cvalue;
         }
@@ -231,6 +232,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         private static final long serialVersionUID = 1L;
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {

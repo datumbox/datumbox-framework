@@ -54,6 +54,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -222,7 +223,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         
         //we initialize the thitas to zero for all features and all classes compinations
         for(Object theClass : classesSet) {
-            thitas.put(Arrays.<Object>asList(Dataframe.constantColumnName, theClass), 0.0);
+            thitas.put(Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass), 0.0);
             
             for(Record r : trainingData) { 
                 for(Object feature : r.getX().keySet()) {
@@ -305,7 +306,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
                 
                 
                 //update the weight of constant
-                List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.constantColumnName, theClass);
+                List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
                 newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier);
                 
                 //update the rest of the weights
@@ -327,7 +328,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     }
     
     private Double calculateClassScore(AssociativeArray x, Object theClass, Map<List<Object>, Double> thitas) {
-        double score = thitas.get(Arrays.<Object>asList(Dataframe.constantColumnName, theClass));
+        double score = thitas.get(Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass));
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Double value = TypeInference.toDouble(entry.getValue());

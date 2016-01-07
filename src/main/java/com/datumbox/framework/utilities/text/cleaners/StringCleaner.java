@@ -36,25 +36,25 @@ public class StringCleaner {
     public static final String TOKENIZED_URL = " PREPROCESSDOC_URL ";
     
     /**
-     * Mapping between smileys and their tokenized representation.
+     * Mapping between SMILEYS_MAPPING and their tokenized representation.
      */
-    public static final Map<String, String> smileys = new HashMap<>();
+    public static final Map<String, String> SMILEYS_MAPPING = new HashMap<>();
     
     static {
-        smileys.put(":\\)", " PREPROCESSDOC_EM1 ");
-        smileys.put(":-\\)", " PREPROCESSDOC_EM2 ");
-        smileys.put(":\\(", " PREPROCESSDOC_EM3 ");
-        smileys.put(":-\\(", " PREPROCESSDOC_EM4 ");
-        smileys.put(":d", " PREPROCESSDOC_EM5 ");
-        smileys.put(";\\)", " PREPROCESSDOC_EM6 ");
-        smileys.put(":o\\)", " PREPROCESSDOC_EM7 ");
-        smileys.put(":\\]", " PREPROCESSDOC_EM8 ");
-        smileys.put(":\\[", " PREPROCESSDOC_EM9 ");
-        smileys.put(":p", " PREPROCESSDO,C_EM10 ");
-        smileys.put(":-p", " PREPROCESSDOC_EM11 ");
-        smileys.put("8-\\)", " PREPROCESSDOC_EM12 ");
-        smileys.put("=\\)", " PREPROCESSDOC_EM13 ");
-        smileys.put("=\\(", " PREPROCESSDOC_EM14 ");
+        SMILEYS_MAPPING.put(":\\)", " PREPROCESSDOC_EM1 ");
+        SMILEYS_MAPPING.put(":-\\)", " PREPROCESSDOC_EM2 ");
+        SMILEYS_MAPPING.put(":\\(", " PREPROCESSDOC_EM3 ");
+        SMILEYS_MAPPING.put(":-\\(", " PREPROCESSDOC_EM4 ");
+        SMILEYS_MAPPING.put(":d", " PREPROCESSDOC_EM5 ");
+        SMILEYS_MAPPING.put(";\\)", " PREPROCESSDOC_EM6 ");
+        SMILEYS_MAPPING.put(":o\\)", " PREPROCESSDOC_EM7 ");
+        SMILEYS_MAPPING.put(":\\]", " PREPROCESSDOC_EM8 ");
+        SMILEYS_MAPPING.put(":\\[", " PREPROCESSDOC_EM9 ");
+        SMILEYS_MAPPING.put(":p", " PREPROCESSDO,C_EM10 ");
+        SMILEYS_MAPPING.put(":-p", " PREPROCESSDOC_EM11 ");
+        SMILEYS_MAPPING.put("8-\\)", " PREPROCESSDOC_EM12 ");
+        SMILEYS_MAPPING.put("=\\)", " PREPROCESSDOC_EM13 ");
+        SMILEYS_MAPPING.put("=\\(", " PREPROCESSDOC_EM14 ");
     }
     
     /**
@@ -68,13 +68,13 @@ public class StringCleaner {
     }
     
     /**
-     * Replaces all the smileys within the text with their tokens.
+     * Replaces all the SMILEYS_MAPPING within the text with their tokens.
      * 
      * @param text
      * @return 
      */
     public static String tokenizeSmileys(String text) {
-        for(Map.Entry<String, String> smiley : smileys.entrySet()) {
+        for(Map.Entry<String, String> smiley : SMILEYS_MAPPING.entrySet()) {
             text = text.replaceAll(smiley.getKey(), smiley.getValue());
         }
         return text;
@@ -131,8 +131,8 @@ public class StringCleaner {
     }
     
     /**
-     * Convenience method which tokenizes the URLs and the smileys, removes accents 
-     * and symbols and eliminates the extra spaces from the provided text.
+     * Convenience method which tokenizes the URLs and the SMILEYS_MAPPING, removes accents 
+ and symbols and eliminates the extra spaces from the provided text.
      * 
      * @param text
      * @return 

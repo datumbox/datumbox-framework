@@ -49,6 +49,7 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -145,6 +146,10 @@ public abstract class CategoricalFeatureSelection<MP extends CategoricalFeatureS
     }
     
     /** 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
     protected CategoricalFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {

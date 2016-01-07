@@ -60,7 +60,7 @@ public class FIndependentSamples {
      * @return 
      */
     protected static boolean checkCriticalValue(double score, int n, int m, boolean is_twoTailed, double aLevel) {
-        double probability=ContinuousDistributions.FCdf(score,n-1,m-1);
+        double probability=ContinuousDistributions.fCdf(score,n-1,m-1);
 
         boolean rejectH0=false;
 

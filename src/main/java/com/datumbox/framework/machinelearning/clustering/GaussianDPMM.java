@@ -19,6 +19,7 @@ import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
@@ -80,6 +81,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private transient RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
         
         /**
+         * @param clusterId
          * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster
          */
         protected Cluster(Integer clusterId) {
@@ -365,6 +367,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private static final long serialVersionUID = 1L;
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -441,7 +444,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @return 
          */
         public double[] getMu0() {
-            return mu0;
+            return PHPfunctions.array_clone(mu0);
         }
 
         /**
@@ -450,7 +453,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @param mu0 
          */
         public void setMu0(double[] mu0) {
-            this.mu0 = mu0;
+            this.mu0 = PHPfunctions.array_clone(mu0);
         }
 
         /**
@@ -459,7 +462,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @return 
          */
         public double[][] getPsi0() {
-            return psi0;
+            return PHPfunctions.array_clone(psi0);
         }
 
         /**
@@ -468,7 +471,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @param psi0 
          */
         public void setPsi0(double[][] psi0) {
-            this.psi0 = psi0;
+            this.psi0 = PHPfunctions.array_clone(psi0);
         }
         
     }

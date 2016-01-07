@@ -31,6 +31,7 @@ public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSel
     public static abstract class ModelParameters extends FeatureSelection.ModelParameters {
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -45,6 +46,10 @@ public abstract class ContinuousFeatureSelection<MP extends ContinuousFeatureSel
     }
     
     /** 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
     protected ContinuousFeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {

@@ -67,6 +67,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         private svm_model svmModel; //the parameters of the svm model
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -250,10 +251,10 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
         }
         
         //calling the method that handles the training with LibSVM library
-        LibSVMTrainer(trainingData);
+        libSVMTrainer(trainingData);
     }
     
-    private void LibSVMTrainer(Dataframe trainingData) {
+    private void libSVMTrainer(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();

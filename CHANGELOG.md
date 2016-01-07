@@ -44,7 +44,10 @@ Version 0.7.0-SNAPSHOT - Build 20160107
 - Changed the Validation Metrics policy to exclude from macro averages the classes that did not exist in validation set.
 - Implemented StorageHints on the DatabaseConnectors and MapDB can use a hybrid approach of storing some data IN_MEMORY and some IN_DISK. Also support IN_CACHE for LRU cached maps.
 - The AutoCloseable interface is implemented in all close() methods.
-- Remove duplicate Javadocs.
+- Remove duplicate Javadocs comments.
+- Changed the way that single vars are stored with DatabaseConnectors. Multiple vars can now be stored. Also the save() and load() methods were renamed to saveObject() and loadObject().
+- Changed names of constants and methods that were not compatible with Java's naming conventions.
+- Changed the behaviour and the public methods of the DatabaseConnector interface. The dropDatabase() is replaced with a clear() method that deletes all the data but does not close the connection with the database.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

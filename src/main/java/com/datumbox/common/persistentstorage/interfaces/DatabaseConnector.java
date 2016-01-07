@@ -19,10 +19,10 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * DB connectors that permanently store the parameters of the models should 
- * implement this interface. This interface defines the methods which are 
- * required to initialize db-backed collections. It is also responsible for 
- * connecting, clearing and managing the databases.
+ * DatabaseConnectors that give access to a permanent storage should 
+ * implement this interface. The connector should open the connection on its
+ * constructor and be responsible for managing and storing the data on the
+ * permanent storage.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -69,26 +69,6 @@ public interface DatabaseConnector extends AutoCloseable {
     }
     
     /**
-     * This method is responsible for storing serializable objects in the
-     * database.
-     * 
-     * @param <T>
-     * @param name
-     * @param serializableObject 
-     */
-    public <T extends Serializable> void save(String name, T serializableObject);
-    
-    /**
-     * Loads serializable objects from the database.
-     * 
-     * @param <T>
-     * @param name
-     * @param klass
-     * @return 
-     */
-    public <T extends Serializable> T load(String name, Class<T> klass);
-    
-    /**
      * Checks if the connector is closed.
      * 
      * @return 
@@ -96,20 +76,31 @@ public interface DatabaseConnector extends AutoCloseable {
     public boolean isClosed();
     
     /**
-     * Checks if a particular database exists.
+     * Clears all the data stored in the database while keeping the connection open.
+     */
+    public void clear();
+    
+    /**
+     * Stores a serializable object in the database.
      * 
+     * @param <T>
+     * @param name
+     * @param serializableObject 
+     */
+    public <T extends Serializable> void saveObject(String name, T serializableObject);
+    
+    /**
+     * Loads a serializable object from the database.
+     * 
+     * @param <T>
+     * @param name
+     * @param klass
      * @return 
      */
-    public boolean existsDatabase();
+    public <T extends Serializable> T loadObject(String name, Class<T> klass);
     
     /**
-     * Drops the particular database.
-     */
-    public void dropDatabase();
-    
-    /**
-     * Creates or loads a Big Map which is capable of storing large number of 
-     * records. 
+     * Creates or loads a Big Map collection. 
      * 
      * @param <K>
      * @param <V>
@@ -122,7 +113,7 @@ public interface DatabaseConnector extends AutoCloseable {
     public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary);
     
     /**
-     * Drops a particular Big Map.
+     * Drops the Big Map.
      * 
      * @param <T>
      * @param name
@@ -130,4 +121,10 @@ public interface DatabaseConnector extends AutoCloseable {
      */
     public <T extends Map> void dropBigMap(String name, T map);
     
+    /**
+     * Returns the name of the database.
+     * 
+     * @return 
+     */
+    public String getDatabaseName();
 }

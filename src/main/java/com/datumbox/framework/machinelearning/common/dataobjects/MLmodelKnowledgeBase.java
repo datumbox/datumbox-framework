@@ -60,7 +60,7 @@ public class MLmodelKnowledgeBase<MP extends BaseMLmodel.ModelParameters, TP ext
     @Override
     public void load() {
         if(trainingParameters==null) {
-            MLmodelKnowledgeBase kbObject = dbc.load("KnowledgeBase", MLmodelKnowledgeBase.class);
+            MLmodelKnowledgeBase kbObject = dbc.loadObject("KnowledgeBase", MLmodelKnowledgeBase.class);
             if(kbObject==null) {
                 throw new IllegalArgumentException("The KnowledgeBase could not be loaded.");
             }

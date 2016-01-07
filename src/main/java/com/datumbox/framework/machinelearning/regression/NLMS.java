@@ -47,6 +47,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         private static final long serialVersionUID = 1L;
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -124,7 +125,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         Map<Object, Double> thitas = modelParameters.getThitas();
         
         //we initialize the thitas to zero for all features
-        thitas.put(Dataframe.constantColumnName, 0.0);
+        thitas.put(Dataframe.COLUMN_NAME_CONSTANT, 0.0);
         for(Object feature : trainingData.getXDataTypes().keySet()) {
             thitas.put(feature, 0.0);
         }
@@ -196,7 +197,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             
             //update the weight of constant
-            newThitas.put(Dataframe.constantColumnName, newThitas.get(Dataframe.constantColumnName)+errorMultiplier);
+            newThitas.put(Dataframe.COLUMN_NAME_CONSTANT, newThitas.get(Dataframe.COLUMN_NAME_CONSTANT)+errorMultiplier);
 
             //update the rest of the weights
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -223,7 +224,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             
             //update the weight of constant
-            newThitas.put(Dataframe.constantColumnName, newThitas.get(Dataframe.constantColumnName)+errorMultiplier);
+            newThitas.put(Dataframe.COLUMN_NAME_CONSTANT, newThitas.get(Dataframe.COLUMN_NAME_CONSTANT)+errorMultiplier);
 
             //update the rest of the weights
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -256,7 +257,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     }
     
     private double hypothesisFunction(AssociativeArray x, Map<Object, Double> thitas) {
-        double sum = thitas.get(Dataframe.constantColumnName);
+        double sum = thitas.get(Dataframe.COLUMN_NAME_CONSTANT);
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Object feature = entry.getKey();

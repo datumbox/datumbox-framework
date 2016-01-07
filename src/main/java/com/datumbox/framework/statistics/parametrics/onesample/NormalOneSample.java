@@ -104,7 +104,7 @@ public class NormalOneSample {
      * @return 
      */
     private static boolean checkCriticalValue(double score, boolean is_twoTailed, double aLevel) {
-        double probability = ContinuousDistributions.GaussCdf(score);
+        double probability = ContinuousDistributions.gaussCdf(score);
         
         boolean rejectH0=false;
         

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.mathematics.linearprogramming;
 
+import com.datumbox.common.utilities.PHPfunctions;
 import java.util.List;
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
@@ -71,7 +72,7 @@ public class LPSolver {
          * @return 
          */
         public double[] getVariableValues() {
-            return variableValues;
+            return PHPfunctions.array_clone(variableValues);
         }
         
         /**
@@ -80,7 +81,7 @@ public class LPSolver {
          * @param variableValues 
          */
         public void setVariableValues(double[] variableValues) {
-            this.variableValues = variableValues;
+            this.variableValues = PHPfunctions.array_clone(variableValues);
         }
 
         /**
@@ -89,7 +90,7 @@ public class LPSolver {
          * @return 
          */
         public double[] getDualSolution() {
-            return dualSolution;
+            return PHPfunctions.array_clone(dualSolution);
         }
         
         /**
@@ -98,7 +99,7 @@ public class LPSolver {
          * @param dualSolution 
          */
         public void setDualSolution(double[] dualSolution) {
-            this.dualSolution = dualSolution;
+            this.dualSolution = PHPfunctions.array_clone(dualSolution);
         }
     }
     
@@ -130,7 +131,7 @@ public class LPSolver {
          * @param value             The right part value of the constrain
          */
         public LPConstraint(double[] constraintBody, int sign, double value) {
-            this.contraintBody=constraintBody;
+            this.contraintBody=PHPfunctions.array_clone(constraintBody);
             this.sign=sign;
             this.value=value;
         }
@@ -141,7 +142,7 @@ public class LPSolver {
          * @return 
          */
         public double[] getContraintBody() {
-            return contraintBody;
+            return PHPfunctions.array_clone(contraintBody);
         }
         
         /**
@@ -263,8 +264,14 @@ public class LPSolver {
                 
         
         result.setObjectiveValue((Double) solver.getObjective());
-        solver.getVariables(result.getVariableValues());
-        solver.getDualSolution(result.getDualSolution());
+        
+        double[] variables = result.getVariableValues(); //returns a copy
+        solver.getVariables(variables); //modifies values
+        result.setVariableValues(variables); //sets them back
+        
+        double[] solution = result.getDualSolution();
+        solver.getDualSolution(solution);
+        result.setDualSolution(solution);
         
         //delete problem and free the memory
         solver.deleteLp();

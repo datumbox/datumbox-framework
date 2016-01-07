@@ -31,7 +31,7 @@ public class DiscreteDistributions {
      * @param p
      * @return
      */
-    public static double Bernoulli(boolean k, double p) {
+    public static double bernoulli(boolean k, double p) {
         if(p<0) {
             throw new IllegalArgumentException("The probability p can't be negative.");
         }
@@ -40,13 +40,13 @@ public class DiscreteDistributions {
     }
     
     /**
-     * Returns the cumulative probability under Bernoulli
+     * Returns the cumulative probability under bernoulli
      * 
      * @param k
      * @param p
      * @return
      */
-    public static double BernoulliCdf(int k, double p) {
+    public static double bernoulliCdf(int k, double p) {
         if(p<0) {
             throw new IllegalArgumentException("The probability p can't be negative.");
         }
@@ -73,7 +73,7 @@ public class DiscreteDistributions {
      * @param n
      * @return
      */
-    public static double Binomial(int k, double p, int n) {
+    public static double binomial(int k, double p, int n) {
         if(k<0 ||  p<0 || n<1) {
             throw new IllegalArgumentException("All the parameters must be positive and n larger than 1.");
         }
@@ -103,7 +103,7 @@ public class DiscreteDistributions {
      * @param n
      * @return
      */
-    public static double BinomialCdf(int k, double p, int n) {
+    public static double binomialCdf(int k, double p, int n) {
         if(k<0 ||  p<0 || n<1) {
             throw new IllegalArgumentException("All the parameters must be positive and n larger than 1.");
         }
@@ -131,14 +131,14 @@ public class DiscreteDistributions {
         double A=k+1;
         double B=n-k;
         double S=A+B;
-        double BT=Math.exp(ContinuousDistributions.LogGamma(S)-ContinuousDistributions.LogGamma(B)-ContinuousDistributions.LogGamma(A)+A*Math.log(Z)+B*Math.log(1-Z));
+        double BT=Math.exp(ContinuousDistributions.logGamma(S)-ContinuousDistributions.logGamma(B)-ContinuousDistributions.logGamma(A)+A*Math.log(Z)+B*Math.log(1-Z));
         
         double probabilitySum=0.0;
         if (Z<(A+1)/(S+2)) {
-            probabilitySum=BT*ContinuousDistributions.Betinc(Z,A,B);
+            probabilitySum=BT*ContinuousDistributions.betinc(Z,A,B);
         } 
         else {
-            probabilitySum=1.0-BT*ContinuousDistributions.Betinc(1.0-Z,B,A);
+            probabilitySum=1.0-BT*ContinuousDistributions.betinc(1.0-Z,B,A);
         }
         probabilitySum=1.0-probabilitySum;
 
@@ -152,7 +152,7 @@ public class DiscreteDistributions {
      * @param p
      * @return
      */
-    public static double Geometric(int k, double p) {
+    public static double geometric(int k, double p) {
         if(k<=0 || p<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -163,20 +163,20 @@ public class DiscreteDistributions {
     }
     
     /**
-     * Returns the cumulative probability of Geometric
+     * Returns the cumulative probability of geometric
      * 
      * @param k
      * @param p
      * @return
      */
-    public static double GeometricCdf(int k, double p) {
+    public static double geometricCdf(int k, double p) {
         if(k<=0 || p<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
         double probabilitySum = 0.0;
         for(int i=1;i<=k;++i) {
-            probabilitySum += Geometric(i, p);
+            probabilitySum += geometric(i, p);
         }
         
         return probabilitySum;
@@ -190,7 +190,7 @@ public class DiscreteDistributions {
      * @param p
      * @return
      */
-    public static double NegativeBinomial(int n, int r, double p) {
+    public static double negativeBinomial(int n, int r, double p) {
         //tested its validity with http://www.mathcelebrity.com/binomialneg.php
         if(n<0 || r<0 || p<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
@@ -203,14 +203,14 @@ public class DiscreteDistributions {
     }
     
     /**
-     * Returns the cumulative probability of NegativeBinomial
+     * Returns the cumulative probability of negativeBinomial
      * 
      * @param n
      * @param r
      * @param p
      * @return
      */
-    public static double NegativeBinomialCdf(int n, int r, double p) {
+    public static double negativeBinomialCdf(int n, int r, double p) {
         if(n<0 || r<0 || p<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -218,7 +218,7 @@ public class DiscreteDistributions {
         
         double probabilitySum = 0.0;
         for(int i=0;i<=r;++i) {
-            probabilitySum += NegativeBinomial(n, i, p);
+            probabilitySum += negativeBinomial(n, i, p);
         }
         
         return probabilitySum;
@@ -230,7 +230,7 @@ public class DiscreteDistributions {
      * @param n
      * @return
      */
-    public static double Uniform(int n) {
+    public static double uniform(int n) {
         if(n<1) {
             throw new IllegalArgumentException("The n must be larger than 1.");
         }
@@ -241,19 +241,19 @@ public class DiscreteDistributions {
     }
     
     /**
-     * Returns the cumulative probability of Uniform
+     * Returns the cumulative probability of uniform
      * 
      * @param k
      * @param n
      * @return
      */
-    public static double UniformCdf(int k, int n) {
+    public static double uniformCdf(int k, int n) {
         if(k<0 || n<1) {
             throw new IllegalArgumentException("All the parameters must be positive and n larger than 1.");
         }
         k = Math.min(k, n);
         
-        double probabilitySum = k*Uniform(n);
+        double probabilitySum = k*uniform(n);
         
         return probabilitySum;
     }
@@ -267,7 +267,7 @@ public class DiscreteDistributions {
      * @param Np
      * @return
      */
-    public static double Hypergeometric(int k, int n, int Kp, int Np) {
+    public static double hypergeometric(int k, int n, int Kp, int Np) {
         if(k<0 || n<0 || Kp<0 || Np<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -291,7 +291,7 @@ public class DiscreteDistributions {
     }
     
     /**
-     * Returns the cumulative probability of Hypergeometric
+     * Returns the cumulative probability of hypergeometric
      * 
      * @param k
      * @param n
@@ -299,7 +299,7 @@ public class DiscreteDistributions {
      * @param Np
      * @return
      */
-    public static double HypergeometricCdf(int k, int n, int Kp, int Np) {
+    public static double hypergeometricCdf(int k, int n, int Kp, int Np) {
         if(k<0 || n<0 || Kp<0 || Np<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -310,7 +310,7 @@ public class DiscreteDistributions {
         //slow!
         $probabilitySum=0;
         for($i=0;$i<=$k;++$i) {
-            $probabilitySum+=self::Hypergeometric($i,$n,$Kp,$Np);
+            $probabilitySum+=self::hypergeometric($i,$n,$Kp,$Np);
         }
         */
 
@@ -380,7 +380,7 @@ public class DiscreteDistributions {
      * @param lamda
      * @return
      */
-    public static double Poisson(int k, double lamda) {
+    public static double poisson(int k, double lamda) {
         if(k<0 || lamda<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -392,22 +392,22 @@ public class DiscreteDistributions {
 
         //fast and can handle large numbers
         //Cdf(k)-Cdf(k-1)
-        double probability = PoissonCdf(k,lamda);
+        double probability = poissonCdf(k,lamda);
         if(k>0) {
-            probability -= PoissonCdf(k-1,lamda);
+            probability -= poissonCdf(k-1,lamda);
         }
         
         return probability;
     }
     
     /**
-     * Returns the cumulative probability of Poisson
+     * Returns the cumulative probability of poisson
      * 
      * @param k
      * @param lamda
      * @return
      */
-    public static double PoissonCdf(int k, double lamda) {
+    public static double poissonCdf(int k, double lamda) {
         if(k<0 || lamda<0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -416,12 +416,12 @@ public class DiscreteDistributions {
         //Slow!
         $probabilitySum=0;
         for($i=0;$i<=$k;++$i) {
-            $probabilitySum+=self::Poisson($i,$lamda);
+            $probabilitySum+=self::poisson($i,$lamda);
         }
         */
 
         //Faster solution as described at: http://www.math.ucla.edu/~tom/distributions/poisson.html?
-        double probabilitySum = 1.0 - ContinuousDistributions.GammaCdf(lamda,k+1);
+        double probabilitySum = 1.0 - ContinuousDistributions.gammaCdf(lamda,k+1);
         
         return probabilitySum;
     }

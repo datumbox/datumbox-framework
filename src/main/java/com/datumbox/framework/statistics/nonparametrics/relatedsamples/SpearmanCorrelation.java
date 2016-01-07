@@ -137,6 +137,6 @@ public class SpearmanCorrelation {
     protected static double scoreToPvalue(double score, int n) {
         double Zs= score*Math.sqrt(n-1.0);
         double Ts= score*Math.sqrt((n-Zs)/(1.0-score*score));
-        return ContinuousDistributions.StudentsCdf(Ts, n-2);
+        return ContinuousDistributions.studentsCdf(Ts, n-2);
     }   
 }

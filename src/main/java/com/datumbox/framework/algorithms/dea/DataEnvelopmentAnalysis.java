@@ -17,6 +17,7 @@ package com.datumbox.framework.algorithms.dea;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
+import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.mathematics.linearprogramming.LPSolver;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -98,21 +99,21 @@ public class DataEnvelopmentAnalysis {
         }
 
         /**
-         * Getter for input
+         * Getter for input.
          * 
          * @return  Returns the input part of our data.
          */
         public double[] getInput() {
-            return input;
+            return PHPfunctions.array_clone(input);
         }
 
         /**
-         * Getter for output
+         * Getter for output.
          * 
          * @return  Returns the output part of our data.
          */
         public double[] getOutput() {
-            return output;
+            return PHPfunctions.array_clone(output);
         }
     }
     

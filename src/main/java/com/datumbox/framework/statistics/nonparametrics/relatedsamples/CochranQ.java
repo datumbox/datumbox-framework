@@ -130,6 +130,6 @@ public class CochranQ {
             //calculate it from tables too small values
             //EXPAND: waiting for tables from Dimaki
         }
-        return 1.0-ContinuousDistributions.ChisquareCdf(score, k-1);
+        return 1.0-ContinuousDistributions.chisquareCdf(score, k-1);
     }
 }

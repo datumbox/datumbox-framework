@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * Kolmogorov–Smirnov's test for equality of distributions.
+ * kolmogorov–Smirnov's test for equality of distributions.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -111,7 +111,7 @@ public class KolmogorovSmirnovOneSample {
         //standardize the x value
         double z=(x-mean)/Math.sqrt(variance);
 
-        return ContinuousDistributions.GaussCdf(z);
+        return ContinuousDistributions.gaussCdf(z);
     }
     
     /**
@@ -139,7 +139,7 @@ public class KolmogorovSmirnovOneSample {
             }
         }
         else {
-            //estimate dynamically the critical value from the Kolmogorov distribution
+            //estimate dynamically the critical value from the kolmogorov distribution
             criticalValue=calculateCriticalValue(is_twoTailed,n,aLevel);
         }
 
@@ -169,13 +169,13 @@ public class KolmogorovSmirnovOneSample {
         double Ka=1.36;//start by this value and go either up or down until you pass the desired level of significance
 
         int direction=1;//go up
-        if(ContinuousDistributions.Kolmogorov(Ka)>one_minus_a) {
+        if(ContinuousDistributions.kolmogorov(Ka)>one_minus_a) {
             direction=-1;//go down
         }
-        for(int i=0;i<110;++i) { //Why maximum 110 steps? Because the minimum value before Kolmogorov goes to 0 is 0.27 and the maximum (empirically) is about 2.5. Both of them are about 110 steps of 0.01 distance away 
+        for(int i=0;i<110;++i) { //Why maximum 110 steps? Because the minimum value before kolmogorov goes to 0 is 0.27 and the maximum (empirically) is about 2.5. Both of them are about 110 steps of 0.01 distance away 
             Ka+=(direction*0.01);
 
-            double sign=(one_minus_a-ContinuousDistributions.Kolmogorov(Ka))*direction;
+            double sign=(one_minus_a-ContinuousDistributions.kolmogorov(Ka))*direction;
             //this changes sign ONLY when we just passed the value
             if(sign<=0) {
                 break;

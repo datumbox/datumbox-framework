@@ -132,7 +132,7 @@ public class MatrixDataframe {
             for(int row=0;row<n;++row) {
                 m.X.setEntry(row, previousFeatureId, 1.0); //put the constant in evey row
             }
-            m.feature2ColumnId.put(Dataframe.constantColumnName, previousFeatureId);
+            m.feature2ColumnId.put(Dataframe.COLUMN_NAME_CONSTANT, previousFeatureId);
             ++previousFeatureId; 
         }
         
@@ -198,7 +198,7 @@ public class MatrixDataframe {
         
         boolean extractY=(newData.getYDataType()==TypeInference.DataType.NUMERICAL);
         
-        boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataframe.constantColumnName);
+        boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         
         int rowId = 0;
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -251,7 +251,7 @@ public class MatrixDataframe {
         
         RealVector v = new ArrayRealVector(d);
         
-        boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.constantColumnName);
+        boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         
 
         if(addConstantColumn) {

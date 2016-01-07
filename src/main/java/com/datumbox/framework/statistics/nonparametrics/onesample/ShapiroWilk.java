@@ -36,7 +36,7 @@ public class ShapiroWilk {
     public static boolean test(FlatDataCollection flatDataCollection, double aLevel) {
         boolean rejectH0=false;
 
-        double probability = ShapiroWilkW(flatDataCollection.copyCollection2DoubleArray());
+        double probability = shapiroWilkW(flatDataCollection.copyCollection2DoubleArray());
 
         double a=aLevel;
         if(probability<=a || probability>=(1.0-a)) {
@@ -96,7 +96,7 @@ public class ShapiroWilk {
      * @param x
      * @return
      */
-    private static double ShapiroWilkW(Double[] x) {
+    private static double shapiroWilkW(Double[] x) {
         Arrays.sort(x);
         
         int n = x.length;
@@ -252,7 +252,7 @@ public class ShapiroWilk {
 
         // Oops, we don't have pnorm
         // pw = pnorm(y, m, s, 0/* upper tail */, 0);
-        pw=ContinuousDistributions.GaussCdf((y-m)/s);
+        pw=ContinuousDistributions.gaussCdf((y-m)/s);
 
         //return w;
         return pw;

@@ -53,7 +53,7 @@ public class ClusterSamplingTest extends BaseTest {
     }
     
     /**
-     * Test of Nbar method, of class ClusterSampling.
+     * Test of nBar method, of class ClusterSampling.
      */
     @Test
     public void testNbar() {
@@ -61,7 +61,7 @@ public class ClusterSamplingTest extends BaseTest {
         TransposeDataList clusterIdList = generateClusterIdList();
         
         double expResult = 10.0;
-        double result = ClusterSampling.Nbar(clusterIdList);
+        double result = ClusterSampling.nBar(clusterIdList);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 

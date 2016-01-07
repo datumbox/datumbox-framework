@@ -49,6 +49,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -332,6 +333,11 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
     }
     
     /** 
+     * @param dbName
+     * @param dbConf
+     * @param mpClass
+     * @param tpClass
+     * @param vmClass
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
     protected BaseLinearRegression(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
@@ -395,7 +401,7 @@ public abstract class BaseLinearRegression<MP extends BaseLinearRegression.Model
         
         double FPValue = 1.0;
         if(n>d) {
-            FPValue = ContinuousDistributions.FCdf(F, (int)dfRegression, (int)dfResidual);
+            FPValue = ContinuousDistributions.fCdf(F, (int)dfRegression, (int)dfResidual);
         }
         validationMetrics.setFPValue(FPValue);
         

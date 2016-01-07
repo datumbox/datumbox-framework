@@ -33,12 +33,12 @@ public class ContinuousDistributions {
      * @param df
      * @return 
      */
-    public static double ChisquareCdf(double x, int df) {
+    public static double chisquareCdf(double x, int df) {
         if(df<=0) {
             throw new IllegalArgumentException("The degrees of freedom need to be positive.");
         }
         
-        return GammaCdf(x/2.0, df/2.0);
+        return ContinuousDistributions.gammaCdf(x/2.0, df/2.0);
     }
     
     /**
@@ -48,7 +48,7 @@ public class ContinuousDistributions {
      * @param z
      * @return 
      */
-    public static double GaussCdf(double z) {
+    public static double gaussCdf(double z) {
         // input = z-value (-inf to +inf)
         // output = p under Normal curve from -inf to z
         // e.g., if z = 0.0, function returns 0.5000
@@ -101,7 +101,7 @@ public class ContinuousDistributions {
      * @return      The value of gamma(x)
      */
     public static double gamma(double x) { 
-        return Math.exp(LogGamma(x)); 
+        return Math.exp(logGamma(x)); 
     }
     
     /**
@@ -110,7 +110,7 @@ public class ContinuousDistributions {
      * @param Z
      * @return 
      */
-    public static double LogGamma(double Z) {
+    public static double logGamma(double Z) {
         double S = 1.0 + 76.18009173/Z-86.50532033/(Z+1.0)+24.01409822/(Z+2.0)-1.231739516/(Z+3.0)+0.00120858003/(Z+4.0)-0.00000536382/(Z+5.0);
         double LG = (Z-0.5)*Math.log(Z+4.5)-(Z+4.5)+Math.log(S*2.50662827465);
         
@@ -125,7 +125,7 @@ public class ContinuousDistributions {
      * @param B
      * @return 
      */
-    protected static double Betinc(double x, double A, double B) {
+    protected static double betinc(double x, double A, double B) {
         double A0=0.0;
         double B0=1.0;
         double A1=1.0;
@@ -158,7 +158,7 @@ public class ContinuousDistributions {
      * @param df
      * @return 
      */
-    public static double StudentsCdf(double x, int df) {
+    public static double studentsCdf(double x, int df) {
         if(df<=0) {
             throw new IllegalArgumentException("The degrees of freedom need to be positive.");
         }
@@ -168,13 +168,13 @@ public class ContinuousDistributions {
         double A = df/2.0;
         double S = A+0.5;
         double Z = df/(df + x*x);
-        double BT = Math.exp(LogGamma(S)-LogGamma(0.5)-LogGamma(A)+A*Math.log(Z)+0.5*Math.log(1.0-Z));
+        double BT = Math.exp(logGamma(S)-logGamma(0.5)-logGamma(A)+A*Math.log(Z)+0.5*Math.log(1.0-Z));
         double betacdf = 0.0;
         if (Z<(A+1.0)/(S+2.0)) {
-            betacdf = BT*Betinc(Z,A,0.5);
+            betacdf = BT*betinc(Z,A,0.5);
         } 
         else {
-            betacdf=1-BT*Betinc(1.0-Z,0.5,A);
+            betacdf=1-BT*betinc(1.0-Z,0.5,A);
         }
         if (x<0) {
             tcdf=betacdf/2.0;
@@ -193,7 +193,7 @@ public class ContinuousDistributions {
      * @param lamda
      * @return
      */
-    public static double ExponentialCdf(double x, double lamda) {
+    public static double exponentialCdf(double x, double lamda) {
         if(x<0 || lamda<=0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -211,7 +211,7 @@ public class ContinuousDistributions {
      * @param b
      * @return 
      */
-    public static double BetaCdf(double x, double a, double b) {
+    public static double betaCdf(double x, double a, double b) {
         if(x<0 || a<=0 || b<=0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -228,12 +228,12 @@ public class ContinuousDistributions {
         
         double S= a + b;
 
-        double BT = Math.exp(LogGamma(S)-LogGamma(b)-LogGamma(a)+a*Math.log(x)+b*Math.log(1-x));
+        double BT = Math.exp(logGamma(S)-logGamma(b)-logGamma(a)+a*Math.log(x)+b*Math.log(1-x));
         if (x<(a+1.0)/(S+2.0)) {
-            Bcdf=BT*Betinc(x,a,b);
+            Bcdf=BT*betinc(x,a,b);
         } 
         else {
-            Bcdf=1.0-BT*Betinc(1.0-x,b,a);
+            Bcdf=1.0-BT*betinc(1.0-x,b,a);
         }
 
         return Bcdf;
@@ -247,7 +247,7 @@ public class ContinuousDistributions {
      * @param f2
      * @return
      */
-    public static double FCdf(double x, int f1, int f2) {
+    public static double fCdf(double x, int f1, int f2) {
         if(x<0 || f1<=0 || f2<=0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
@@ -255,19 +255,19 @@ public class ContinuousDistributions {
         double FCdf=0.0;
         
         double Z = x/(x + (double)f2/f1);
-        FCdf = BetaCdf(Z,f1/2.0,f2/2.0);
+        FCdf = betaCdf(Z,f1/2.0,f2/2.0);
         
         return FCdf;
     }
     
     /**
-     * Internal function used by GammaCdf
+     * Internal function used by gammaCdf
      * 
      * @param x
      * @param A
      * @return 
      */
-    protected static double Gcf(double x, double A) {
+    protected static double gCf(double x, double A) {
        // Good for X>A+1
        double A0=0;
        double B0=1;
@@ -287,19 +287,19 @@ public class ContinuousDistributions {
            A1=A1/B1;
            B1=1;
        }
-       double Prob=Math.exp(A*Math.log(x)-x-LogGamma(A))*A1;
+       double Prob=Math.exp(A*Math.log(x)-x-logGamma(A))*A1;
 
        return 1.0-Prob;
     }
     
     /**
-     * Internal function used by GammaCdf
+     * Internal function used by gammaCdf
      * 
      * @param x
      * @param A
      * @return 
      */
-    protected static double Gser(double x, double A) {
+    protected static double gSer(double x, double A) {
         // Good for X<A+1.
         double T9=1/A;
         double G=T9;
@@ -309,19 +309,19 @@ public class ContinuousDistributions {
             G=G+T9;
             ++I;
         }
-        G=G*Math.exp(A*Math.log(x)-x-LogGamma(A));
+        G=G*Math.exp(A*Math.log(x)-x-logGamma(A));
 
         return G;
     }
     
     /**
-     * Internal function used by GammaCdf
+     * Internal function used by gammaCdf
      * 
      * @param x
      * @param a
      * @return
      */
-    protected static double GammaCdf(double x, double a) {
+    protected static double gammaCdf(double x, double a) {
         if(x<0) {
             throw new IllegalArgumentException("The x parameter must be positive.");
         }
@@ -329,7 +329,7 @@ public class ContinuousDistributions {
         double GI=0;
         if (a>200) {
             double z=(x-a)/Math.sqrt(a);
-            double y=GaussCdf(z);
+            double y=gaussCdf(z);
             double b1=2/Math.sqrt(a);
             double phiz=0.39894228*Math.exp(-z*z/2);
             double w=y-b1*(z*z-1)*phiz/6;  //Edgeworth1
@@ -339,10 +339,10 @@ public class ContinuousDistributions {
             GI=w-phiz*z*u/72;        //Edgeworth2
         } 
         else if (x<a+1) {
-            GI=Gser(x,a);
+            GI=gSer(x,a);
         } 
         else {
-            GI=Gcf(x,a);
+            GI=gCf(x,a);
         }
         
         return GI;
@@ -356,12 +356,12 @@ public class ContinuousDistributions {
      * @param b
      * @return
      */
-    public static double GammaCdf(double x, double a, double b) {
+    public static double gammaCdf(double x, double a, double b) {
         if(a<=0 || b<=0) {
             throw new IllegalArgumentException("All the parameters must be positive.");
         }
         
-        double GammaCdf = GammaCdf(x/b, a);
+        double GammaCdf = ContinuousDistributions.gammaCdf(x/b, a);
         
         return GammaCdf;
     }
@@ -374,7 +374,7 @@ public class ContinuousDistributions {
      * @param b
      * @return
      */
-    public static double UniformCdf(double x, double a, double b) {
+    public static double uniformCdf(double x, double a, double b) {
         if(a>=b) {
             throw new IllegalArgumentException("The a must be smaller than b.");
         }
@@ -394,12 +394,12 @@ public class ContinuousDistributions {
     } 
     
     /**
-     * Returns the cumulative probability of Kolmogorov
+     * Returns the cumulative probability of kolmogorov
      * 
      * @param z
      * @return 
      */
-    public static double Kolmogorov(double z) {
+    public static double kolmogorov(double z) {
         //Kolmogorov distribution. Error<.0000001
         if (z<0.27) {
             return 0.0;
@@ -428,7 +428,7 @@ public class ContinuousDistributions {
      * @param p
      * @return 
      */
-    public static double GaussInverseCdf(double p) {
+    public static double gaussInverseCdf(double p) {
         final double P_LOW  = 0.02425D;
         final double P_HIGH = 1.0D - P_LOW;
         final double ICDF_A[] =
@@ -478,14 +478,14 @@ public class ContinuousDistributions {
     }
     
     /**
-     * Returns the x score of a specific pvalue and degrees of freedom for Chisquare. It We just do a bisectionsearch for a value within CHI_EPSILON, relying on the monotonicity of ChisquareCdf().
-     * Ported from Javascript code posted at http://www.fourmilab.ch/rpkp/experiments/analysis/chiCalc.js
+     * Returns the x score of a specific pvalue and degrees of freedom for Chisquare. It We just do a bisectionsearch for a value within CHI_EPSILON, relying on the monotonicity of chisquareCdf().
+ Ported from Javascript code posted at http://www.fourmilab.ch/rpkp/experiments/analysis/chiCalc.js
      * 
      * @param p
      * @param df
      * @return 
      */
-    public static double ChisquareInverseCdf(double p, int df) {
+    public static double chisquareInverseCdf(double p, int df) {
         final double CHI_EPSILON = 0.000001;   /* Accuracy of critchi approximation */
         final double CHI_MAX = 99999.0;        /* Maximum chi-square value */
         double minchisq = 0.0;
@@ -501,7 +501,7 @@ public class ContinuousDistributions {
 
         chisqval = df/Math.sqrt(p);    /* fair first value */
         while ((maxchisq - minchisq) > CHI_EPSILON) {
-            if (1-ChisquareCdf(chisqval, df) < p) {
+            if (1-chisquareCdf(chisqval, df) < p) {
                 maxchisq = chisqval;
             } 
             else {

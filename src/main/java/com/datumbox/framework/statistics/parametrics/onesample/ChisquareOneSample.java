@@ -58,7 +58,7 @@ public class ChisquareOneSample {
      * @return 
      */
     protected static boolean checkCriticalValue(double score, int n, boolean is_twoTailed, double aLevel) {
-        double probability=ContinuousDistributions.ChisquareCdf(score,n-1);
+        double probability=ContinuousDistributions.chisquareCdf(score,n-1);
 
         boolean rejectH0=false;
         

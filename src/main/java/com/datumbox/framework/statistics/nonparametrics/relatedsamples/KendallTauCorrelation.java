@@ -129,7 +129,7 @@ public class KendallTauCorrelation {
 
         double Z=score/Math.sqrt(variance); //follows approximately Normal with 0 mean and variance as calculated above
 
-        return ContinuousDistributions.GaussCdf(Z);
+        return ContinuousDistributions.gaussCdf(Z);
     }       
 
 }

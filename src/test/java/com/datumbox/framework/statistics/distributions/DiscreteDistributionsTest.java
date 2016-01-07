@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class DiscreteDistributionsTest extends BaseTest {
     
     /**
-     * Test of Bernoulli method, of class DiscreteDistributions.
+     * Test of bernoulli method, of class DiscreteDistributions.
      */
     @Test
     public void testBernoulli() {
@@ -36,12 +36,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         boolean k = true;
         double p = 0.5;
         double expResult = 0.5;
-        double result = DiscreteDistributions.Bernoulli(k, p);
+        double result = DiscreteDistributions.bernoulli(k, p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of BernoulliCdf method, of class DiscreteDistributions.
+     * Test of bernoulliCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testBernoulliCdf() {
@@ -49,12 +49,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int k = 1;
         double p = 0.5;
         double expResult = 1.0;
-        double result = DiscreteDistributions.BernoulliCdf(k, p);
+        double result = DiscreteDistributions.bernoulliCdf(k, p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of Binomial method, of class DiscreteDistributions.
+     * Test of binomial method, of class DiscreteDistributions.
      */
     @Test
     public void testBinomial() {
@@ -63,12 +63,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         double p = 0.5;
         int n = 10;
         double expResult = 0.11718750001462;
-        double result = DiscreteDistributions.Binomial(k, p, n);
+        double result = DiscreteDistributions.binomial(k, p, n);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of BinomialCdf method, of class DiscreteDistributions.
+     * Test of binomialCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testBinomialCdf() {
@@ -77,12 +77,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         double p = 0.5;
         int n = 10;
         double expResult = 0.17187500002003;
-        double result = DiscreteDistributions.BinomialCdf(k, p, n);
+        double result = DiscreteDistributions.binomialCdf(k, p, n);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of Geometric method, of class DiscreteDistributions.
+     * Test of geometric method, of class DiscreteDistributions.
      */
     @Test
     public void testGeometric() {
@@ -90,12 +90,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int k = 3;
         double p = 0.5;
         double expResult = 0.125;
-        double result = DiscreteDistributions.Geometric(k, p);
+        double result = DiscreteDistributions.geometric(k, p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of GeometricCdf method, of class DiscreteDistributions.
+     * Test of geometricCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testGeometricCdf() {
@@ -103,12 +103,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int k = 3;
         double p = 0.5;
         double expResult = 0.875;
-        double result = DiscreteDistributions.GeometricCdf(k, p);
+        double result = DiscreteDistributions.geometricCdf(k, p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of NegativeBinomial method, of class DiscreteDistributions.
+     * Test of negativeBinomial method, of class DiscreteDistributions.
      */
     @Test
     public void testNegativeBinomial() {
@@ -117,12 +117,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int r = 4;
         double p = 0.5;
         double expResult = 0.08203125;
-        double result = DiscreteDistributions.NegativeBinomial(n, r, p);
+        double result = DiscreteDistributions.negativeBinomial(n, r, p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of NegativeBinomialCdf method, of class DiscreteDistributions.
+     * Test of negativeBinomialCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testNegativeBinomialCdf() {
@@ -131,24 +131,24 @@ public class DiscreteDistributionsTest extends BaseTest {
         int r = 4;
         double p = 0.5;
         double expResult = 0.12705078125;
-        double result = DiscreteDistributions.NegativeBinomialCdf(n, r, p);
+        double result = DiscreteDistributions.negativeBinomialCdf(n, r, p);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of Uniform method, of class DiscreteDistributions.
+     * Test of uniform method, of class DiscreteDistributions.
      */
     @Test
     public void testUniform() {
         logger.info("Uniform");
         int n = 10;
         double expResult = 0.1;
-        double result = DiscreteDistributions.Uniform(n);
+        double result = DiscreteDistributions.uniform(n);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of UniformCdf method, of class DiscreteDistributions.
+     * Test of uniformCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testUniformCdf() {
@@ -156,12 +156,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int k = 3;
         int n = 10;
         double expResult = 0.3;
-        double result = DiscreteDistributions.UniformCdf(k, n);
+        double result = DiscreteDistributions.uniformCdf(k, n);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of Hypergeometric method, of class DiscreteDistributions.
+     * Test of hypergeometric method, of class DiscreteDistributions.
      */
     @Test
     public void testHypergeometric() {
@@ -171,12 +171,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int Kp = 30;
         int Np = 100;
         double expResult = 0.28116339430254;
-        double result = DiscreteDistributions.Hypergeometric(k, n, Kp, Np);
+        double result = DiscreteDistributions.hypergeometric(k, n, Kp, Np);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of HypergeometricCdf method, of class DiscreteDistributions.
+     * Test of hypergeometricCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testHypergeometricCdf() {
@@ -186,12 +186,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int Kp = 30;
         int Np = 100;
         double expResult = 0.65401998866081;
-        double result = DiscreteDistributions.HypergeometricCdf(k, n, Kp, Np);
+        double result = DiscreteDistributions.hypergeometricCdf(k, n, Kp, Np);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of Poisson method, of class DiscreteDistributions.
+     * Test of poisson method, of class DiscreteDistributions.
      */
     @Test
     public void testPoisson() {
@@ -199,12 +199,12 @@ public class DiscreteDistributionsTest extends BaseTest {
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.14037389583692;
-        double result = DiscreteDistributions.Poisson(k, lamda);
+        double result = DiscreteDistributions.poisson(k, lamda);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
-     * Test of PoissonCdf method, of class DiscreteDistributions.
+     * Test of poissonCdf method, of class DiscreteDistributions.
      */
     @Test
     public void testPoissonCdf() {
@@ -212,7 +212,7 @@ public class DiscreteDistributionsTest extends BaseTest {
         int k = 3;
         double lamda = 5.0;
         double expResult = 0.26502591533403;
-        double result = DiscreteDistributions.PoissonCdf(k, lamda);
+        double result = DiscreteDistributions.poissonCdf(k, lamda);
         assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
     

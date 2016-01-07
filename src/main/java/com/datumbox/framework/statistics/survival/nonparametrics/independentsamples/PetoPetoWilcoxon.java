@@ -222,7 +222,7 @@ public class PetoPetoWilcoxon {
      * @return 
      */
     protected static double scoreToPvalue(double score) {
-        return ContinuousDistributions.GaussCdf(score);
+        return ContinuousDistributions.gaussCdf(score);
     }
     
 }

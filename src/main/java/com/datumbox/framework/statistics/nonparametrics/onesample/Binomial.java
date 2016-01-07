@@ -69,7 +69,7 @@ public class Binomial {
 
         double z=(score+0.5-n*p)/Math.sqrt(n*p*(1.0-p));
 
-        return ContinuousDistributions.GaussCdf(z);
+        return ContinuousDistributions.gaussCdf(z);
     }
     
 }

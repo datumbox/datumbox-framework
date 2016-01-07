@@ -140,7 +140,7 @@ public class WaldWolfowitz {
             double z=(score-mean)/Math.sqrt(variance);
 
             //Get its pvalue
-            double pvalue=ContinuousDistributions.GaussCdf(z);
+            double pvalue=ContinuousDistributions.gaussCdf(z);
 
             double a=aLevel/2; //always tailed test, so split the statistical significance in half
             if(pvalue<=a || pvalue>=(1-a)) {

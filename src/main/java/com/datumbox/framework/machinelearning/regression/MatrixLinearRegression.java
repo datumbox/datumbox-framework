@@ -58,6 +58,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
     
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -161,7 +162,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         Xt = null;
         
         //put the features coefficients in the thita map
-        thitas.put(Dataframe.constantColumnName, coefficients.getEntry(0));
+        thitas.put(Dataframe.COLUMN_NAME_CONSTANT, coefficients.getEntry(0));
         for(Map.Entry<Object, Integer> entry : featureIds.entrySet()) {
             Object feature = entry.getKey();
             Integer featureId = entry.getValue();
@@ -196,7 +197,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
             }
             else {
                 double tstat = coefficients.getEntry(i)/Math.sqrt(error);
-                pvalues.put(feature, 1.0-ContinuousDistributions.StudentsCdf(tstat, n-(d+1))); //n-d degrees of freedom
+                pvalues.put(feature, 1.0-ContinuousDistributions.studentsCdf(tstat, n-(d+1))); //n-d degrees of freedom
             }
         }
         SE=null;

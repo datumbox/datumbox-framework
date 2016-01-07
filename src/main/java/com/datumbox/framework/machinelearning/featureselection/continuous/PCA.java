@@ -25,6 +25,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.common.utilities.PHPfunctions;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         private double[][] components; //components weights 
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
@@ -135,7 +137,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @return 
          */
         public double[] getMean() {
-            return mean;
+            return PHPfunctions.array_clone(mean);
         }
         
         /**
@@ -144,7 +146,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @param mean 
          */
         protected void setMean(double[] mean) {
-            this.mean = mean;
+            this.mean = PHPfunctions.array_clone(mean);
         }
         
         /**
@@ -153,7 +155,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @return 
          */
         public double[] getEigenValues() {
-            return eigenValues;
+            return PHPfunctions.array_clone(eigenValues);
         }
         
         /**
@@ -162,7 +164,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @param eigenValues 
          */
         protected void setEigenValues(double[] eigenValues) {
-            this.eigenValues = eigenValues;
+            this.eigenValues = PHPfunctions.array_clone(eigenValues);
         }
         
         /**
@@ -171,7 +173,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @return 
          */
         public double[][] getComponents() {
-            return components;
+            return PHPfunctions.array_clone(components);
         }
         
         /**
@@ -180,7 +182,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @param components 
          */
         protected void setComponents(double[][] components) {
-            this.components = components;
+            this.components = PHPfunctions.array_clone(components);
         }
     
     }

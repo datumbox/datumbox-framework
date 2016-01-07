@@ -129,6 +129,6 @@ public class Friedman {
             //calculate it from tables too small values
             //EXPAND: waiting for tables from Dimaki
         }
-        return 1-ContinuousDistributions.ChisquareCdf(score, k-1);
+        return 1-ContinuousDistributions.chisquareCdf(score, k-1);
     }    
 }

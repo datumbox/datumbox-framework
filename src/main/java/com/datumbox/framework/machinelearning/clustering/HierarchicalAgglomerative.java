@@ -60,6 +60,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         private final transient AssociativeArray xi_sum;
         
         /** 
+         * @param clusterId
          * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster 
          */
         protected Cluster(int clusterId) {
@@ -156,6 +157,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         private static final long serialVersionUID = 1L;
           
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {

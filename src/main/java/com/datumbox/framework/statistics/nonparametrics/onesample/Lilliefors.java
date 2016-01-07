@@ -130,7 +130,7 @@ public class Lilliefors {
         //standardize the x value
         double z=(x-mean)/Math.sqrt(variance);
 
-        return ContinuousDistributions.GaussCdf(z);
+        return ContinuousDistributions.gaussCdf(z);
     }
     
     /**

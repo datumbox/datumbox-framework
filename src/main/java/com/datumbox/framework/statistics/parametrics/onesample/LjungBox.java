@@ -80,7 +80,7 @@ public class LjungBox {
      * @return 
      */
     protected static boolean checkCriticalValue(double score, int h, double aLevel, int p, int q) { //p and q are used only in ARIMA Models (p,0,q).
-        double probability=ContinuousDistributions.ChisquareCdf(score,h - p - q);
+        double probability=ContinuousDistributions.chisquareCdf(score,h - p - q);
 
         boolean rejectH0=false;
 

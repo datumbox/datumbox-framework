@@ -27,7 +27,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.util.Collection;
@@ -50,18 +49,17 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Dataframe implements Serializable, Collection<Record> {
-    private static final long serialVersionUID = 1L;
+public class Dataframe implements Collection<Record> {
     
     /**
      * Internal name of the response variable.
      */
-    public static final String yColumnName = "~Y";
+    public static final String COLUMN_NAME_Y = "~Y";
     
     /**
      * Internal name of the constant.
      */
-    public static final String constantColumnName = "~CONSTANT";
+    public static final String COLUMN_NAME_CONSTANT = "~CONSTANT";
     
     /**
      * The Builder is a utility class which can help you build Dataframe from
@@ -191,22 +189,22 @@ public class Dataframe implements Serializable, Collection<Record> {
     private Map<Object, TypeInference.DataType> xDataTypes;
     private Map<Integer, Record> records;
     
-    private String dbName;
-    private transient DatabaseConnector dbc;
-    private transient DatabaseConfiguration dbConf;
+    private final DatabaseConnector dbc; //declare transient and remove final if serializable
+    private final DatabaseConfiguration dbConf; //declare transient and remove final  if serializable
     
     /**
-     * Public constructor.
+     * Public constructor of Dataframe.
      * 
      * @param dbConf 
      */
     public Dataframe(DatabaseConfiguration dbConf) {
-        //we dont need to have a unique name, because it is not used by the connector on the current implementations
-        //dbName = "dts_"+new BigInteger(130, RandomGenerator.getThreadLocalRandom()).toString(32);
-        dbName = "dts";
-        
         this.dbConf = dbConf;
+        
+        //we dont need to have a unique name, because it is not used by the connector on the current implementations
+        //String dbName = "dts_"+new BigInteger(130, RandomGenerator.getThreadLocalRandom()).toString(32);
+        String dbName = "dts";
         dbc = this.dbConf.getConnector(dbName);
+        
         records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true);
         
         yDataType = null;
@@ -642,7 +640,7 @@ public class Dataframe implements Serializable, Collection<Record> {
     public void delete() {
         dbc.dropBigMap("tmp_records", records);
         dbc.dropBigMap("tmp_xDataTypes", xDataTypes);
-        dbc.dropDatabase();
+        dbc.clear();
         try {
             dbc.close();
         } 

@@ -81,6 +81,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         /** 
+         * @param dbc
          * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {

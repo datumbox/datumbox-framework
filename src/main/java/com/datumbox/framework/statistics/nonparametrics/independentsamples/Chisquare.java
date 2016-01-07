@@ -186,7 +186,7 @@ public class Chisquare {
      * @return 
      */
     protected static double scoreToPvalue(double score, int n, int k) {
-        return 1.0-ContinuousDistributions.ChisquareCdf(score, (n-1)*(k-1));
+        return 1.0-ContinuousDistributions.chisquareCdf(score, (n-1)*(k-1));
     }
     
 }
