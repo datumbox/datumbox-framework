@@ -53,7 +53,9 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

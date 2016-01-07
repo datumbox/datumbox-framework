@@ -54,7 +54,9 @@ public class MaximumEntropy extends BaseMLclassifier<MaximumEntropy.ModelParamet
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

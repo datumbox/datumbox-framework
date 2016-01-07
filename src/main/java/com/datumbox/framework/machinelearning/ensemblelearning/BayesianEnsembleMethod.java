@@ -36,7 +36,9 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
     public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

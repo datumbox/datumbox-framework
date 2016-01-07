@@ -46,7 +46,9 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>();
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -248,7 +250,9 @@ public abstract class BaseMLclassifier<MP extends BaseMLclassifier.ModelParamete
         }
     }
         
-    /** {@inheritDoc} */
+    /** 
+     * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
+     */
     protected BaseMLclassifier(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 

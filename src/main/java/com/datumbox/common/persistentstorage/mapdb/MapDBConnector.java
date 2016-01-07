@@ -61,7 +61,9 @@ public class MapDBConnector extends AutoCloseConnector {
      */
     private final Map<DatabaseType, DB> dbRegistry = new HashMap<>(); 
     
-    /** {@inheritDoc} */
+    /** 
+     * @see com.datumbox.common.persistentstorage.AutoCloseConnector#AutoCloseConnector()   
+     */
     protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
         super();
         this.dbConf = dbConf;

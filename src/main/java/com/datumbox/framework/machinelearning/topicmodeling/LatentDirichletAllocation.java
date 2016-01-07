@@ -80,7 +80,9 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

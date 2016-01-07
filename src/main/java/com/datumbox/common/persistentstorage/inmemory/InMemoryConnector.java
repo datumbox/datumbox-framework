@@ -44,7 +44,9 @@ public class InMemoryConnector extends AutoCloseConnector {
     private final InMemoryConfiguration dbConf;
     private final String database;
     
-    /** {@inheritDoc} */
+    /** 
+     * @see com.datumbox.common.persistentstorage.AutoCloseConnector#AutoCloseConnector()   
+     */
     protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         super();
         this.dbConf = dbConf;

@@ -58,7 +58,9 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
@@ -130,7 +132,9 @@ public abstract class BaseNaiveBayes<MP extends BaseNaiveBayes.ModelParameters, 
 
     }
 
-    /** {@inheritDoc} */
+    /** 
+     * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
+     */
     protected BaseNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidation<>());
         isBinarized = false;

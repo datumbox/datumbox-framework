@@ -57,7 +57,9 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
     
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

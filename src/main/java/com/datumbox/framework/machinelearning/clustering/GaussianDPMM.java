@@ -79,7 +79,9 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         private transient Double cache_covariance_determinant; //Cached value of Covariance determinant used only for speed optimization
         private transient RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
         
-        /** {@inheritDoc} */
+        /**
+         * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster
+         */
         protected Cluster(Integer clusterId) {
             super(clusterId);
         }
@@ -362,7 +364,9 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     public static class ModelParameters extends BaseDPMM.ModelParameters<GaussianDPMM.Cluster> {
         private static final long serialVersionUID = 1L;
 
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }

@@ -53,7 +53,9 @@ public class CollaborativeFiltering extends BaseMLrecommender<CollaborativeFilte
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
         private Map<List<Object>, Double> similarities; //the similarity map among observations
         
-        /** {@inheritDoc} */
+        /** 
+         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
