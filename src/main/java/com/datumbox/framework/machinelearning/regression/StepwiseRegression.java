@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
-import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
+import com.datumbox.framework.machinelearning.common.StepwiseCompatible;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;

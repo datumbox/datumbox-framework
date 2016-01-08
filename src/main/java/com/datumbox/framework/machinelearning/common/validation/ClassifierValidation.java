@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.validation;
 
-import com.datumbox.framework.machinelearning.common.enums.SensitivityRates;
+import com.datumbox.framework.machinelearning.common.SensitivityRates;
 import com.datumbox.framework.machinelearning.common.bases.validation.ModelValidation;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
 import java.util.Arrays;

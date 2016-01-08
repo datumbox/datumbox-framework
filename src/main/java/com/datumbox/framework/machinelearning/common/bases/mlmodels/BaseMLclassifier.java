@@ -22,7 +22,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.framework.machinelearning.common.enums.SensitivityRates;
+import com.datumbox.framework.machinelearning.common.SensitivityRates;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;

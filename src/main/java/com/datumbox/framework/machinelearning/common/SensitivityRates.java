@@ -13,22 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.machinelearning.common.interfaces;
-
-import java.util.Map;
+package com.datumbox.framework.machinelearning.common;
 
 /**
- * Stepwise regression requires the estimation of p-values for each parameter. 
- * The regression models that support this estimation is marked with this interface.
+ * Enum that stores the 4 possible Sensitivity Rates.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface StepwiseCompatible {
+public enum SensitivityRates {
+    /**
+     * True Positive.
+     */
+    TP,
     
     /**
-     * Getter for the p-values of the Features.
-     * 
-     * @return 
+     * True Negative.
      */
-    public Map<Object, Double> getFeaturePvalues();
+    TN, 
+    
+    /**
+     * False Positive.
+     */
+    FP,
+    
+    /**
+     * False Negative.
+     */
+    FN; 
 }
