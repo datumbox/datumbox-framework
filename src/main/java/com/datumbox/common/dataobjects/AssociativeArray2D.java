@@ -27,7 +27,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class AssociativeArray2D extends DataStructureMap<Map<Object, AssociativeArray>> implements Copyable<AssociativeArray2D> {
+public class AssociativeArray2D extends AbstractDataStructureMap<Map<Object, AssociativeArray>> implements Copyable<AssociativeArray2D> {
     private static final long serialVersionUID = 1L;
     
     /**

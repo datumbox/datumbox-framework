@@ -29,7 +29,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
+public class AssociativeArray extends AbstractDataStructureMap<Map<Object, Object>> {
     private static final long serialVersionUID = 1L;
     
     /**

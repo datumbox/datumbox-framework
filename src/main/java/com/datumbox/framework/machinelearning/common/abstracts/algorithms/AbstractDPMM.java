@@ -50,9 +50,7 @@ import java.util.Set;
 
 public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends AbstractDPMM.ModelParameters, TP extends AbstractDPMM.TrainingParameters, VM extends AbstractDPMM.ValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable {
     
-    /**
-     * Base class for the Cluster class of the DPMM.
-     */
+    /** {@inheritDoc} */
     public static abstract class Cluster extends AbstractClusterer.Cluster {
         /**
          * The featureIds provides a mapping between the column names
@@ -64,7 +62,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
         
         /** 
          * @param clusterId
-         * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster 
          */
         protected Cluster(Integer clusterId) {
             super(clusterId);
@@ -120,7 +118,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -262,7 +260,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
      * @param mpClass
      * @param tpClass
      * @param vmClass
-     * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
      */
     protected AbstractDPMM(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClustererValidator<>());

@@ -15,21 +15,21 @@
  */
 package com.datumbox.common.dataobjects;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * Abstract class for every DataStructure which internally uses a Map
+ * Abstract class for every DataStructure which internally uses a List
  * Object.
- *
+ * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <T>
  */
-public abstract class DataStructureMap<T extends Map<?,?>> extends DataStructure<T> {
+public abstract class AbstractDataStructureList<T extends List<?>> extends AbstractDataStructureCollection<T> {
     
     /**
      * Default public constructor
      */
-    public DataStructureMap() {
+    public AbstractDataStructureList() {
         super();
     }
     
@@ -38,42 +38,8 @@ public abstract class DataStructureMap<T extends Map<?,?>> extends DataStructure
      * 
      * @param data 
      */
-    public DataStructureMap(T data) {
+    public AbstractDataStructureList(T data) {
         super(data);
     }
     
-    /**
-     * Returns the size of the map.
-     * 
-     * @return 
-     */
-    public final int size() {
-        return internalData.size();
-    }
-    
-    /**
-     * Clears the internal data.
-     */
-    public final void clear() {
-        internalData.clear();
-    }
-    
-    /**
-     * Checks if the internal data are empty.
-     * 
-     * @return 
-     */
-    public final boolean isEmpty() {
-        return internalData.isEmpty();
-    }
-    
-    /**
-     * Checks if the provided key exists in the map.
-     * 
-     * @param key
-     * @return 
-     */
-    public final boolean containsKey(Object key) {
-        return internalData.containsKey(key);
-    }
 }

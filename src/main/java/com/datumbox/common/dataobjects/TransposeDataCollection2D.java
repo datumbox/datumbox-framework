@@ -28,7 +28,7 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TransposeDataCollection2D extends DataStructureMap<Map<Object, TransposeDataCollection>> {
+public class TransposeDataCollection2D extends AbstractDataStructureMap<Map<Object, TransposeDataCollection>> {
     private static final long serialVersionUID = 1L;
     
     /**

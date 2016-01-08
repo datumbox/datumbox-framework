@@ -19,18 +19,18 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Abstract class for every DataStructure which internally uses a Collection
- * Object.
+ * Abstract class for every AbstractDataStructure which internally uses a Collection
+ Object.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <T>
  */
-public abstract class DataStructureCollection<T extends Collection<?>> extends DataStructure<T> {
+public abstract class AbstractDataStructureCollection<T extends Collection<?>> extends AbstractDataStructure<T> {
     
     /**
      * Default public constructor
      */
-    public DataStructureCollection() {
+    public AbstractDataStructureCollection() {
         super();
     }
     
@@ -39,7 +39,7 @@ public abstract class DataStructureCollection<T extends Collection<?>> extends D
      * 
      * @param data 
      */
-    public DataStructureCollection(T data) {
+    public AbstractDataStructureCollection(T data) {
         super(data);
     }
     

@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.persistentstorage.mapdb;
 
-import com.datumbox.common.persistentstorage.abstracts.AutoCloseConnector;
+import com.datumbox.common.persistentstorage.abstracts.AbstractAutoCloseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -43,7 +43,7 @@ import org.mapdb.DBMaker;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConnector extends AutoCloseConnector {
+public class MapDBConnector extends AbstractAutoCloseConnector {
     
     private final String database;
     private final MapDBConfiguration dbConf;
@@ -83,7 +83,7 @@ public class MapDBConnector extends AutoCloseConnector {
     /** 
      * @param database
      * @param dbConf
-     * @see com.datumbox.common.persistentstorage.AutoCloseConnector#AutoCloseConnector()   
+     * @see com.datumbox.common.persistentstorage.abstracts.AbstractAutoCloseConnector#AbstractAutoCloseConnector()   
      */
     protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
         super();

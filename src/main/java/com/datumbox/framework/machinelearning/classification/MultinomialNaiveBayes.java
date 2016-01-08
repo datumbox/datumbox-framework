@@ -37,7 +37,7 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);

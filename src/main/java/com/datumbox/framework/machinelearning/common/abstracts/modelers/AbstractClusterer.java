@@ -17,9 +17,9 @@ package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.interfaces.Learnable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,26 +44,24 @@ import java.util.Set;
  */
 public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP extends AbstractClusterer.ModelParameters, TP extends AbstractClusterer.TrainingParameters, VM extends AbstractClusterer.ValidationMetrics> extends AbstractAlgorithm<MP, TP, VM> {
 
-    /**
-     * The Cluster class stores all the information of the cluster, including the
-     * assigned points, the parameters and the label.
-     */
-    public static abstract class Cluster implements Learnable, Iterable<Integer> {
+    /** {@inheritDoc} */
+    public static abstract class Cluster extends AbstractCluster {
+
         /**
          * The id of the cluster.
          */
         protected Integer clusterId;
-        
+
         /**
          * The set which contains the id of the records included in the cluster.
          */
         protected Set<Integer> recordIdSet; 
-        
+
         /**
          * The Y label of the cluster is the "gold standard class" (if available).
          */
         protected Object labelY;
-        
+
         /**
          * Protected constructor of Cluster which takes as argument a unique id.
          * 
@@ -74,72 +72,57 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
             recordIdSet = new HashSet<>(); //This is large but it should store only references of the Records not the actualy objects
         }
 
-        /**
-         * Getter for cluster id.
-         * 
-         * @return 
-         */
+        /** {@inheritDoc} */
+        @Override
         public Integer getClusterId() {
             return clusterId;
         }
-        
-        /**
-         * Getter for the set of Record Ids assigned to this cluster.
-         * 
-         * @return 
-         */
+
+        /** {@inheritDoc} */
+        @Override
         public Set<Integer> getRecordIdSet() {
             return Collections.unmodifiableSet(recordIdSet);
         }
-        
-        /**
-         * Getter for the label Y of the cluster.
-         * 
-         * @return 
-         */
+
+        /** {@inheritDoc} */
+        @Override
         public Object getLabelY() {
             return labelY;
         }
-        
-        /**
-         * Setter for the label Y of the cluster.
-         * 
-         * @param labelY 
-         */
+
+        /** {@inheritDoc} */
+        @Override
         protected void setLabelY(Object labelY) {
             this.labelY = labelY;
         }
-        
-        /**
-         * Returns the number of records assigned to this cluster.
-         * 
-         * @return 
-         */
+
+        /** {@inheritDoc} */
+        @Override
         public int size() {
             if(recordIdSet == null) {
                 return 0;
             }
             return recordIdSet.size();
         }
-        
+
         /** {@inheritDoc} */
         @Override
         public Iterator<Integer> iterator() {
             return new Iterator<Integer>() {
                 private final Iterator<Integer> it = recordIdSet.iterator();
-                
+
                 /** {@inheritDoc} */
                 @Override
                 public boolean hasNext() {
                     return it.hasNext();
                 }
-                
+
                 /** {@inheritDoc} */
                 @Override
                 public Integer next() {
                     return it.next();
                 }
-                
+
                 /** {@inheritDoc} */
                 @Override
                 public void remove() {
@@ -147,16 +130,15 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
                 }
             };
         }
-        
-        /**
-         * Clears all the assignments and internal parameters of the cluster.
-         */
+
+        /** {@inheritDoc} */
+        @Override
         protected void clear() {
             if(recordIdSet!=null) {
                 recordIdSet.clear();
             }
         }
-        
+
         /** {@inheritDoc} */
         @Override
         public int hashCode() {
@@ -164,7 +146,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
             hash = 89 * hash + this.clusterId;
             return hash;
         }
-        
+
         /** {@inheritDoc} */
         @Override
         public boolean equals(Object obj) {
@@ -179,28 +161,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
             }
             return true;
         }
-        
-        //abstract methods that modify the cluster set and should update its statistics in each implementation
-        
-        /**
-         * Adds the Record r with unique identified rId in the cluster and
-         * updates the cluster's parameters.
-         * 
-         * @param rId
-         * @param r
-         * @return 
-         */
-        protected abstract boolean add(Integer rId, Record r);
-        
-        /**
-         * Removes the Record r with unique identified rId from the cluster and
-         * updates the cluster's parameters
-         * 
-         * @param rId
-         * @param r
-         * @return 
-         */
-        protected abstract boolean remove(Integer rId, Record r);
 
     }
     
@@ -217,7 +177,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -333,7 +293,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
      * @param tpClass
      * @param vmClass
      * @param modelValidator
-     * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
      */
     protected AbstractClusterer(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);

@@ -82,7 +82,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         
         /**
          * @param clusterId
-         * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster
          */
         protected Cluster(Integer clusterId) {
             super(clusterId);
@@ -374,7 +374,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);

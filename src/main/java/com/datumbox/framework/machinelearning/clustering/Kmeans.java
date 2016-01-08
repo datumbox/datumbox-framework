@@ -56,9 +56,7 @@ import java.util.Set;
  */
 public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> implements PredictParallelizable {
 
-    /**
-     * The Cluster class of the Kmeans model.
-     */
+    /** {@inheritDoc} */
     public static class Cluster extends AbstractClusterer.Cluster {
         private static final long serialVersionUID = 1L;
         
@@ -68,7 +66,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         /** 
          * @param clusterId
-         * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster 
          */
         protected Cluster(int clusterId) {
             super(clusterId);
@@ -144,7 +142,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);

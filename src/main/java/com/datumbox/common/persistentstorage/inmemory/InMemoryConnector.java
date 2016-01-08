@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.persistentstorage.inmemory;
 
-import com.datumbox.common.persistentstorage.abstracts.AutoCloseConnector;
+import com.datumbox.common.persistentstorage.abstracts.AbstractAutoCloseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class InMemoryConnector extends AutoCloseConnector {
+public class InMemoryConnector extends AbstractAutoCloseConnector {
         
     private final String database;
     private final InMemoryConfiguration dbConf;
@@ -48,7 +48,7 @@ public class InMemoryConnector extends AutoCloseConnector {
     /** 
      * @param database
      * @param dbConf
-     * @see com.datumbox.common.persistentstorage.AutoCloseConnector#AutoCloseConnector()   
+     * @see com.datumbox.common.persistentstorage.abstracts.AbstractAutoCloseConnector#AbstractAutoCloseConnector()   
      */
     protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
         super();

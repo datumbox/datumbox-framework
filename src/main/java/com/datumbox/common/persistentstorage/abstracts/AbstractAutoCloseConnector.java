@@ -19,14 +19,14 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Any class that inherits from the abstract AutoCloseConnector class can be used
+ * Any class that inherits from the abstract AbstractAutoCloseConnector class can be used
  * in a try-with-resources statement block. Moreover this class setups a shutdown
  * hook which ensures that the Connector will automatically call close() before the
  * JVM is terminated.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public abstract class AutoCloseConnector implements DatabaseConnector {
+public abstract class AbstractAutoCloseConnector implements DatabaseConnector {
     
     private final AtomicBoolean isClosed = new AtomicBoolean(false);
     
@@ -35,13 +35,13 @@ public abstract class AutoCloseConnector implements DatabaseConnector {
     /**
      * Protected Constructor which is responsible for adding the Shutdown hook.
      */
-    protected AutoCloseConnector() {
+    protected AbstractAutoCloseConnector() {
         hook = new Thread(() -> {
-            AutoCloseConnector.this.hook = null;
-            if(AutoCloseConnector.this.isClosed()) {
+            AbstractAutoCloseConnector.this.hook = null;
+            if(AbstractAutoCloseConnector.this.isClosed()) {
                 return;
             }
-            AutoCloseConnector.this.close();
+            AbstractAutoCloseConnector.this.close();
         });
         Runtime.getRuntime().addShutdownHook(hook);
     }

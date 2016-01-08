@@ -48,9 +48,7 @@ import java.util.Set;
  */
 public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> implements PredictParallelizable {
 
-    /**
-     * The Cluster class of the HierarchicalAgglomerative model.
-     */
+    /** {@inheritDoc} */
     public static class Cluster extends AbstractClusterer.Cluster {
         private static final long serialVersionUID = 1L;
         
@@ -62,7 +60,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         
         /** 
          * @param clusterId
-         * @see com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer.Cluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster 
          */
         protected Cluster(int clusterId) {
             super(clusterId);
@@ -162,7 +160,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
           
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters#BaseModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);

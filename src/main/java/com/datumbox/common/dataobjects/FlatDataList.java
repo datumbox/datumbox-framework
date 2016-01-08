@@ -28,7 +28,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object>, Copyable<FlatDataList> {
+public class FlatDataList extends AbstractDataStructureList<List<Object>> implements Iterable<Object>, Copyable<FlatDataList> {
     private static final long serialVersionUID = 1L;
     
     /**

@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FlatDataCollection extends DataStructureCollection<Collection<Object>> implements Iterable<Object> {
+public class FlatDataCollection extends AbstractDataStructureCollection<Collection<Object>> implements Iterable<Object> {
     private static final long serialVersionUID = 1L;
     
     /**
