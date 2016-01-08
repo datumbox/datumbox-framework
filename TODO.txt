@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Validate that calling compact on MapDB is not reducing the speed too much.
 - See of we can make LatentDirichletAllocation use the parallel prediction.
 - Add multithreading support on the training part and on some parts of DataTransformation, FeatureSelection.
 

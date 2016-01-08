@@ -99,7 +99,6 @@ public class MapDBConnector extends AutoCloseConnector {
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
         atomicVar.set(serializableObject);
         db.commit();
-        db.compact();
     }
 
     /** {@inheritDoc} */
