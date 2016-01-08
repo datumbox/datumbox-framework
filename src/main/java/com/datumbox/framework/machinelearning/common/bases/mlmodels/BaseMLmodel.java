@@ -159,7 +159,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     /**
      * Getter for KnowledgeBase; this version returns the object explicitly casted to 
      * MLmodelKnowledgeBase. This method exists to resolve any Unchecked/unconfirmed 
-     * cast messages.
+     * cast warnings.
      * 
      * @return 
      */
@@ -170,7 +170,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
             return (MLmodelKnowledgeBase<MP, TP, VM>) kbObj;
         }
         else {
-            throw new ClassCastException(); //we will never get here
+            throw new ClassCastException("Invalid KnowledgeBase type."); //we will never get here
         }
     }
     

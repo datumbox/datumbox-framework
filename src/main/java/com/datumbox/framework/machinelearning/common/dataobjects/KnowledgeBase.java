@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 
 /**
- * The KnowledgeBase represents the "database" that the algorithm learned during  
+ * The KnowledgeBase stores internally everything that the algorithm learned during  
  * training. This interface is implemented by any KnowledgeBase object.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
@@ -50,7 +50,7 @@ public interface KnowledgeBase<MP extends BaseModelParameters, TP extends BaseTr
             return (KB) new MLmodelKnowledgeBase(dbName, dbConf, kbSubtypeClasses[0], kbSubtypeClasses[1], kbSubtypeClasses[2]);
         }
         else {
-            throw new IllegalArgumentException("Unsupported KnowledgeBase.");
+            throw new IllegalArgumentException("Unsupported KnowledgeBase class.");
         }
     }
     

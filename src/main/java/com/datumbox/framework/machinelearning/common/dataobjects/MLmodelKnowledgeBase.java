@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * The MLmodelKnowledgeBase is the Knowledge Base object which is used by most Machine 
- * Learning models. It extends the KnowledgeBase class and includes an extra field
+ * Learning models. It extends the StandardKnowledgeBase class and includes an extra field
  * to store the validation metrics of the algorithm.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
