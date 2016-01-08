@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -31,10 +31,10 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters, BinarizedNaiveBayes.ValidationMetrics> {
+public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters, BinarizedNaiveBayes.ValidationMetrics> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+    public static class ModelParameters extends AbstractNaiveBayes.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -48,13 +48,13 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
+    public static class TrainingParameters extends AbstractNaiveBayes.TrainingParameters {    
         private static final long serialVersionUID = 1L;
 
     }
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractNaiveBayes.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }
@@ -70,6 +70,7 @@ public class BinarizedNaiveBayes extends BaseNaiveBayes<BinarizedNaiveBayes.Mode
         isBinarized = true;
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         kb().getTrainingParameters().setMultiProbabilityWeighted(false);

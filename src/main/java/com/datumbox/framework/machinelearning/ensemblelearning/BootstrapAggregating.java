@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -34,10 +34,10 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters, BootstrapAggregating.ValidationMetrics> {
+public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters, BootstrapAggregating.ValidationMetrics> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
+    public static class ModelParameters extends AbstractBoostingBagging.ModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -51,13 +51,13 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters { 
+    public static class TrainingParameters extends AbstractBoostingBagging.TrainingParameters { 
         private static final long serialVersionUID = 1L;
         
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseBoostingBagging.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractBoostingBagging.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }
@@ -72,6 +72,7 @@ public class BootstrapAggregating extends BaseBoostingBagging<BootstrapAggregati
         super(dbName, dbConf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
     } 
 
+    /** {@inheritDoc} */
     @Override
     protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights) {
         //no update on the observationWeights, all observations have equal probability 1/n

@@ -16,17 +16,18 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for SignOneSample.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SignOneSampleTest extends BaseTest {
+public class SignOneSampleTest extends AbstractTest {
 
     /**
      * Test of test method, of class SignOneSample.

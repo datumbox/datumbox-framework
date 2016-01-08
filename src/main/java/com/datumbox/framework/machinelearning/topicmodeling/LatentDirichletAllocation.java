@@ -22,15 +22,15 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.MapMethods;
+import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLtopicmodeler;
-import com.datumbox.framework.machinelearning.common.validation.LatentDirichletAllocationValidation;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractTopicModeler;
+import com.datumbox.framework.machinelearning.common.validators.LatentDirichletAllocationValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
-import com.datumbox.framework.statistics.sampling.SRS;
+import com.datumbox.framework.statistics.sampling.SimpleRandomSampling;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -57,27 +57,27 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
+public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLtopicmodeler.ModelParameters {
+    public static class ModelParameters extends AbstractTopicModeler.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         private int totalIterations;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Integer, Integer> documentWordCounts; //the n.(d) in the papers
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         /** 
@@ -225,7 +225,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     }  
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLtopicmodeler.TrainingParameters {  
+    public static class TrainingParameters extends AbstractTopicModeler.TrainingParameters {  
         private static final long serialVersionUID = 1L;
         
         private int k = 2; //number of topics
@@ -310,7 +310,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseMLtopicmodeler.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractTopicModeler.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
         private double perplexity = 0.0;
@@ -342,7 +342,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
      * @param dbConf 
      */
     public LatentDirichletAllocation(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidation()); 
+        super(dbName, dbConf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidator()); 
     }
     
     /**
@@ -381,12 +381,19 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         }
         
         for(int topicId=0;topicId<k;++topicId) {
-            ptw.put(topicId, MapFunctions.sortAssociativeArrayByValueDescending(ptw.get(topicId)));
+            ptw.put(topicId, MapMethods.sortAssociativeArrayByValueDescending(ptw.get(topicId)));
         }
         
         return ptw;
     }
     
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        predictAndValidate(newData);
+    }
+    
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -416,7 +423,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                 Object word = entry.getValue();
                 
                 //sample a topic
-                Integer topic = PHPfunctions.mt_rand(0,k-1);
+                Integer topic = PHPMethods.mt_rand(0,k-1);
                 
                 increase(topicCounts, topic);
                 topicAssignmentOfDocumentWord.put(Arrays.asList(documentId, wordPosition), topic);
@@ -494,7 +501,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     //Descriptives.normalize(topicProbabilities);
                     
                     //sample from these probabilieis
-                    Integer newTopic = (Integer)SRS.weightedSampling(topicProbabilities, 1, true).iterator().next();
+                    Integer newTopic = (Integer)SimpleRandomSampling.weightedSampling(topicProbabilities, 1, true).iterator().next();
                     topic = newTopic; //new topic assigment
                     
                     //add back the word in the dataset
@@ -507,7 +514,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     topicAssignments.put(topic, TypeInference.toDouble(topicAssignments.get(topic))+1.0/totalWords);
                 }
                 
-                Object mainTopic=MapFunctions.selectMaxKeyValue(topicAssignments).getKey();
+                Object mainTopic=MapMethods.selectMaxKeyValue(topicAssignments).getKey();
                 
                 if(!mainTopic.equals(r.getYPredicted())) {
                     ++changedCounter;
@@ -527,11 +534,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         
     }
 
-    @Override
-    protected void predictDataset(Dataframe newData) {
-        predictAndValidate(newData);
-    }
-    
+    /** {@inheritDoc} */
     @Override
     protected ValidationMetrics validateModel(Dataframe validationData) {
         return predictAndValidate(validationData);
@@ -591,10 +594,10 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
         DatabaseConnector dbc = kb().getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_CACHE, true);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, StorageHint.IN_CACHE, true);
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -607,7 +610,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                 Object word = entry.getValue();
                 
                 //sample a topic
-                Integer topic = PHPfunctions.mt_rand(0,k-1);
+                Integer topic = PHPMethods.mt_rand(0,k-1);
                 
                 increase(tmp_topicCounts, topic);
                 tmp_topicAssignmentOfDocumentWord.put(Arrays.asList(documentId, wordPosition), topic);
@@ -702,7 +705,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     //Descriptives.normalize(topicProbabilities);
                     
                     //sample from these probabilieis
-                    Integer newTopic = (Integer)SRS.weightedSampling(topicProbabilities, 1, true).iterator().next();
+                    Integer newTopic = (Integer)SimpleRandomSampling.weightedSampling(topicProbabilities, 1, true).iterator().next();
                     topic = newTopic; //new topic assignment
                     
                     
@@ -715,7 +718,7 @@ public class LatentDirichletAllocation extends BaseMLtopicmodeler<LatentDirichle
                     topicAssignments.put(topic, TypeInference.toDouble(topicAssignments.get(topic))+1.0/totalDocumentWords);
                 }
                 
-                Object mainTopic=MapFunctions.selectMaxKeyValue(topicAssignments).getKey();
+                Object mainTopic=MapMethods.selectMaxKeyValue(topicAssignments).getKey();
                 
                 if(!mainTopic.equals(r.getYPredicted())) {
                     ++changedCounter;

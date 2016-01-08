@@ -107,10 +107,11 @@ public interface DatabaseConnector extends AutoCloseable {
      * @param name
      * @param type
      * @param storageHint
+     * @param isConcurrent
      * @param isTemporary
      * @return 
      */
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary);
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary);
     
     /**
      * Drops the Big Map.

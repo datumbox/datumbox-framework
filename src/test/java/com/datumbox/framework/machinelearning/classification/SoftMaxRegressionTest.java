@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.datatransformation.XMinMaxNormalizer;
-import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.Datasets;
+import com.datumbox.tests.abstracts.AbstractTest;
+import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +31,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for SoftMaxRegression.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SoftMaxRegressionTest extends BaseTest {
+public class SoftMaxRegressionTest extends AbstractTest {
 
     /**
-     * Test of predict method, of class SoftMaxRegression.
+     * Test of validate method, of class SoftMaxRegression.
      */
     @Test
     public void testValidate() {

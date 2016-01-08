@@ -15,17 +15,18 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for WordSequenceExtractor.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WordSequenceExtractorTest extends BaseTest {
+public class WordSequenceExtractorTest extends AbstractTest {
     /**
      * Test of extract method, of class WordSequenceExtractor.
      */

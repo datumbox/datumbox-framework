@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
 /** 
  * Implementation of Bayesian Ensemble Method. This algorithm can be used to 
@@ -30,10 +30,10 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters, BayesianEnsembleMethod.ValidationMetrics> {
+public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters, BayesianEnsembleMethod.ValidationMetrics> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+    public static class ModelParameters extends AbstractNaiveBayes.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -47,13 +47,13 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters { 
+    public static class TrainingParameters extends AbstractNaiveBayes.TrainingParameters { 
         private static final long serialVersionUID = 1L;
 
     } 
         
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractNaiveBayes.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }
@@ -69,6 +69,7 @@ public class BayesianEnsembleMethod extends BaseNaiveBayes<BayesianEnsembleMetho
         isBinarized = true;
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         kb().getTrainingParameters().setMultiProbabilityWeighted(false);

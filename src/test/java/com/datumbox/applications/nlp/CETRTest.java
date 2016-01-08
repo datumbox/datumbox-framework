@@ -16,7 +16,7 @@
 package com.datumbox.applications.nlp;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.UncheckedIOException;
 
@@ -24,10 +24,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for CETR.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CETRTest extends BaseTest {
+public class CETRTest extends AbstractTest {
     
     /**
      * Test of extract method, of class CETR.

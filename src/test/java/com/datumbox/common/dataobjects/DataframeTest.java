@@ -16,7 +16,7 @@
 package com.datumbox.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,10 +35,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Dataframe.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DataframeTest extends BaseTest {
+public class DataframeTest extends AbstractTest {
     
     /**
      * Test of parseCSVFile method, of class Dataframe.Builder.

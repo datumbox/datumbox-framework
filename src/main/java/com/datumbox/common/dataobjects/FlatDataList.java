@@ -15,6 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.interfaces.Copyable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object> {
+public class FlatDataList extends DataStructureList<List<Object>> implements Iterable<Object>, Copyable<FlatDataList> {
     private static final long serialVersionUID = 1L;
     
     /**
@@ -47,11 +48,8 @@ public class FlatDataList extends DataStructureList<List<Object>> implements Ite
         super(internalData);
     }
     
-    /**
-     * Generates a copy of this object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
+    @Override
     public FlatDataList copy() {
         FlatDataList copy = new FlatDataList();
         copy.internalData.addAll(this.internalData);

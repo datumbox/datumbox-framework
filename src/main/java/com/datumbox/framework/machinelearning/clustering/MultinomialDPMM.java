@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
@@ -38,12 +38,12 @@ import org.apache.commons.math3.linear.RealVector;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters, MultinomialDPMM.ValidationMetrics> {
+public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters, MultinomialDPMM.ValidationMetrics> {
     
     /**
      * The Cluster class of the MultinomialDPMM model.
      */
-    public static class Cluster extends BaseDPMM.Cluster {
+    public static class Cluster extends AbstractDPMM.Cluster {
         private static final long serialVersionUID = 1L;
         
         //informational fields
@@ -103,6 +103,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             this.dimensions = dimensions;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected void initializeClusterParameters() {
             //Set default hyperparameters if not set
@@ -110,7 +111,8 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             cache_wordcounts_plusalpha=null;
             wordCounts = new ArrayRealVector(dimensions); 
         }
-
+        
+        /** {@inheritDoc} */
         @Override
         protected double posteriorLogPdf(Record r) {
             if(wordCounts==null) {
@@ -152,6 +154,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             this.featureIds = featureIds;
         }
 
+        /** {@inheritDoc} */
         @Override
         protected boolean add(Integer rId, Record r) {
             int size= recordIdSet.size();
@@ -175,6 +178,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             return true;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected boolean remove(Integer rId, Record r) {
             if(wordCounts==null) {
@@ -194,6 +198,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
             return true;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected void updateClusterParameters() {
             cache_wordcounts_plusalpha=null;
@@ -228,7 +233,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseDPMM.ModelParameters<MultinomialDPMM.Cluster> {
+    public static class ModelParameters extends AbstractDPMM.ModelParameters<MultinomialDPMM.Cluster> {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -257,7 +262,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseDPMM.TrainingParameters {
+    public static class TrainingParameters extends AbstractDPMM.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private double alphaWords = 50.0; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
@@ -283,7 +288,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
     }
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseDPMM.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractDPMM.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }
@@ -298,6 +303,7 @@ public class MultinomialDPMM extends BaseDPMM<MultinomialDPMM.Cluster, Multinomi
         super(dbName, dbConf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = kb().getModelParameters();

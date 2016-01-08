@@ -16,16 +16,17 @@
 package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Chisquare.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareTest extends BaseTest {
+public class ChisquareTest extends AbstractTest {
 
     /**
      * Test of test method, of class Chisquare.

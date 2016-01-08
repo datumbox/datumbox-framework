@@ -18,9 +18,9 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.Datasets;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
+import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +29,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for MaximumEntropy.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MaximumEntropyTest extends BaseTest {
+public class MaximumEntropyTest extends AbstractTest {
 
     /**
      * Test of validate method, of class MaximumEntropy.

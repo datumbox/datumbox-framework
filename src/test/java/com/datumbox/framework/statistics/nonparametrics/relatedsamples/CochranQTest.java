@@ -16,16 +16,17 @@
 package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for CochranQ.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CochranQTest extends BaseTest {
+public class CochranQTest extends AbstractTest {
     
     /**
      * Test of test method, of class CochranQ.

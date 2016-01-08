@@ -64,6 +64,11 @@ public class RandomGenerator {
     public static synchronized Random getThreadLocalRandom() {
         if(threadLocalRandom == null) {
             threadLocalRandom = new ThreadLocal<Random>() {
+                /**
+                 * Builds a Random object using the globalSeed (if available).
+                 * 
+                 * @return 
+                 */
                 @Override
                 protected Random initialValue() {
                     if(globalSeed == null) {

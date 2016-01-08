@@ -24,10 +24,12 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable.Prediction;
 
 
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
-import com.datumbox.framework.machinelearning.common.validation.OrdinalRegressionValidation;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
+import com.datumbox.framework.machinelearning.common.validators.OrdinalRegressionValidator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -51,19 +53,19 @@ import java.util.TreeSet;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> {
+public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> implements PredictParallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLclassifier.ModelParameters {
+    public static class ModelParameters extends AbstractClassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> weights; //the W parameters of the model
 
         /**
          * Right-side limits of the class on the ordinal regression line. 
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> thitas; 
 
         /** 
@@ -113,7 +115,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {    
+    public static class TrainingParameters extends AbstractClassifier.TrainingParameters {    
         private static final long serialVersionUID = 1L;
         
         private int totalIterations=100; 
@@ -159,7 +161,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
         private double SSE = 0.0; 
@@ -210,31 +212,42 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
      * @param dbConf 
      */
     public OrdinalRegression(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidation());
+        super(dbName, dbConf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidator());
     }
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) { 
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        _predictDatasetParallel(newData);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public Prediction _predictRecord(Record r) { 
         ModelParameters modelParameters = kb().getModelParameters();
         
-        Map<Object, Double> weights = modelParameters.getWeights();
-        Map<Object, Double> thitas = modelParameters.getThitas();
-        
-        
-        //mapping between the thita and the exact previous thita value
-        Map<Object, Object> previousThitaMapping = getPreviousThitaMappings();
-        
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            AssociativeArray predictionProbabilities = hypothesisFunction(r.getX(), previousThitaMapping, weights, thitas);
-            
-            Object theClass=getSelectedClassFromClassScores(predictionProbabilities);
-            
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), theClass, predictionProbabilities));
-        }
+        AssociativeArray predictionProbabilities = hypothesisFunction(r.getX(), getPreviousThitaMappings(), modelParameters.getWeights(), modelParameters.getThitas());
+
+        Object predictedClass=getSelectedClassFromClassScores(predictionProbabilities);
+
+        return new Prediction(predictedClass, predictionProbabilities);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -280,9 +293,9 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
-            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);
@@ -313,6 +326,7 @@ public class OrdinalRegression extends BaseMLclassifier<OrdinalRegression.ModelP
         }
     }
    
+    /** {@inheritDoc} */
     @Override
     protected ValidationMetrics validateModel(Dataframe validationData) {
         ValidationMetrics validationMetrics = super.validateModel(validationData);

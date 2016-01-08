@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.statistics.distributions;
 
-import com.datumbox.framework.mathematics.discrete.ArithmeticMath;
+import com.datumbox.framework.mathematics.discrete.Arithmetics;
 
 /**
  * This class provides methods for the CDFs and PDFs of the most common discrete 
@@ -195,7 +195,7 @@ public class DiscreteDistributions {
         }
         n = Math.max(n,r);//obvisouly the total number of tries must be larger than the number of required successes
         
-        double probability = ArithmeticMath.combination(n-1, r-1)*Math.pow(1-p,n-r)*Math.pow(p,r);
+        double probability = Arithmetics.combination(n-1, r-1)*Math.pow(1-p,n-r)*Math.pow(p,r);
         
         return probability;
     }

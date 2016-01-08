@@ -15,6 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.interfaces.Copyable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class AssociativeArray2D extends DataStructureMap<Map<Object, AssociativeArray>> {
+public class AssociativeArray2D extends DataStructureMap<Map<Object, AssociativeArray>> implements Copyable<AssociativeArray2D> {
     private static final long serialVersionUID = 1L;
     
     /**
@@ -46,11 +47,8 @@ public class AssociativeArray2D extends DataStructureMap<Map<Object, Associative
         super(internalData);
     }
     
-    /**
-     * Generates a copy of this object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
+    @Override
     public AssociativeArray2D copy() {
         AssociativeArray2D aArray2D = new AssociativeArray2D();
         for(Map.Entry<Object, AssociativeArray> entry: internalData.entrySet()) {

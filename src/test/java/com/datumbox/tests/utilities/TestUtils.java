@@ -23,7 +23,7 @@ import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.TestConfiguration;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;

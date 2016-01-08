@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.framework.utilities.text.tokenizers.Tokenizer;
+import com.datumbox.common.utilities.PHPMethods;
+import com.datumbox.framework.utilities.text.tokenizers.AbstractTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,12 +33,12 @@ import org.apache.commons.lang3.math.NumberUtils;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, String, Double> {
+public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Parameters, String, Double> {
     
     /**
      * Parameters of the NgramsExtractor.
      */
-    public static class Parameters extends TextExtractor.Parameters {  
+    public static class Parameters extends AbstractTextExtractor.Parameters {  
         private static final long serialVersionUID = 1L;
         
         private int maxCombinations=3;
@@ -249,7 +249,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
                 String IDcombinationReverse = entry2.getKey();
                 Integer wordsBetween = entry2.getValue();
                 
-                int numberOfWords = PHPfunctions.substr_count(IDcombinationReverse, SEPARATOR)-1;//starts enumeration from 0. We need to subtract one because at the end each string has an extra SEPARATOR
+                int numberOfWords = PHPMethods.substr_count(IDcombinationReverse, SEPARATOR)-1;//starts enumeration from 0. We need to subtract one because at the end each string has an extra SEPARATOR
                 
                 int extraWords = wordsBetween - numberOfWords;
                 
@@ -310,7 +310,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         double points=0.0;
         
 
-        Tokenizer tokenizer = parameters.generateTokenizer();
+        AbstractTokenizer tokenizer = parameters.generateTokenizer();
         
         List<String> tmpKwd = tokenizer.tokenize(keyword);
         
@@ -416,7 +416,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
             for(Map.Entry<String, Integer> entry : wordCombinations.entrySet()) {
                 String IDcombinationReverse = entry.getKey();
                 
-                int numberOfWords=PHPfunctions.substr_count(IDcombinationReverse, SEPARATOR);
+                int numberOfWords=PHPMethods.substr_count(IDcombinationReverse, SEPARATOR);
                 if(numberOfWords<maxCombinations) {
                     int wordsBetween=i-windowStart;
 
@@ -478,7 +478,7 @@ public class NgramsExtractor extends TextExtractor<NgramsExtractor.Parameters, S
         
         Map<String, Integer> word2ID = new HashMap<>();
         
-        Tokenizer tokenizer = parameters.generateTokenizer();
+        AbstractTokenizer tokenizer = parameters.generateTokenizer();
         List<String> keywordList = tokenizer.tokenize(text);
         
         int lastId=-1;

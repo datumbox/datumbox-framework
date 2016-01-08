@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WhitespaceTokenizer implements Tokenizer {
+public class WhitespaceTokenizer extends AbstractTokenizer {
     
     /**
      * Separates the tokens of a string by splitting it on white space.

@@ -24,7 +24,7 @@ import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 
-import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import java.util.Map;
 
 
@@ -38,13 +38,13 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
+public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends ScoreBasedFeatureSelection.ModelParameters {
+    public static class ModelParameters extends AbstractScoreBasedFeatureSelector.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
         
         /** 
@@ -76,7 +76,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends ScoreBasedFeatureSelection.TrainingParameters {
+    public static class TrainingParameters extends AbstractScoreBasedFeatureSelector.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean binarized = false;
@@ -132,6 +132,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         super(dbName, dbConf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -143,7 +144,7 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         int n = modelParameters.getN();
         
         DatabaseConnector dbc = kb().getDbc();
-        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -214,16 +215,17 @@ public class TFIDF extends ScoreBasedFeatureSelection<TFIDF.ModelParameters, TFI
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<maxTFIDFfeatureScores.size()) {
-            ScoreBasedFeatureSelection.selectHighScoreFeatures(maxTFIDFfeatureScores, maxFeatures);
+            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(maxTFIDFfeatureScores, maxFeatures);
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void filterFeatures(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
         Map<Object, Double> maxTFIDFfeatureScores = kb().getModelParameters().getMaxTFIDFfeatureScores();
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         for(Object feature: newData.getXDataTypes().keySet()) {
             if(!maxTFIDFfeatureScores.containsKey(feature)) {

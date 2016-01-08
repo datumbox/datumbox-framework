@@ -19,8 +19,8 @@ import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
+import com.datumbox.common.utilities.PHPMethods;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -47,12 +47,12 @@ import org.apache.commons.math3.linear.RealVector;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.ModelParameters, GaussianDPMM.TrainingParameters, GaussianDPMM.ValidationMetrics> {
+public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPMM.ModelParameters, GaussianDPMM.TrainingParameters, GaussianDPMM.ValidationMetrics> {
     
     /**
      * The Cluster class of the GaussianDPMM model.
      */
-    public static class Cluster extends BaseDPMM.Cluster {
+    public static class Cluster extends AbstractDPMM.Cluster {
         private static final long serialVersionUID = 1L;
         
         //informational fields
@@ -218,6 +218,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return meanDf;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected double posteriorLogPdf(Record r) {
             RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);    
@@ -245,7 +246,8 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             double logPdf = -0.5 * x_muInvSx_muT + Math.log(normConst);
             return logPdf;
         }
-
+        
+        /** {@inheritDoc} */
         @Override
         protected void initializeClusterParameters() {
             //Set default hyperparameters if not set
@@ -272,6 +274,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             cache_covariance_inverse=null;
         }
     
+        /** {@inheritDoc} */
         @Override
         protected boolean add(Integer rId, Record r) {
             int size= recordIdSet.size();
@@ -297,6 +300,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return true;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected boolean remove(Integer rId, Record r) {
             if(xi_sum==null || xi_square_sum==null) {
@@ -322,6 +326,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             return Psi.scalarMultiply(1.0/(kappa*(nu-dimensions+1.0)));
         }
                 
+        /** {@inheritDoc} */
         @Override
         protected void clear() {
             super.clear();
@@ -329,6 +334,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
             xi_square_sum = null;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected void updateClusterParameters() {
             if(xi_sum==null || xi_square_sum==null || psi0==null || mu0==null) {
@@ -363,7 +369,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseDPMM.ModelParameters<GaussianDPMM.Cluster> {
+    public static class ModelParameters extends AbstractDPMM.ModelParameters<GaussianDPMM.Cluster> {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -393,7 +399,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseDPMM.TrainingParameters {
+    public static class TrainingParameters extends AbstractDPMM.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private int kappa0 = 0;
@@ -444,7 +450,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @return 
          */
         public double[] getMu0() {
-            return PHPfunctions.array_clone(mu0);
+            return PHPMethods.array_clone(mu0);
         }
 
         /**
@@ -453,7 +459,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @param mu0 
          */
         public void setMu0(double[] mu0) {
-            this.mu0 = PHPfunctions.array_clone(mu0);
+            this.mu0 = PHPMethods.array_clone(mu0);
         }
 
         /**
@@ -462,7 +468,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @return 
          */
         public double[][] getPsi0() {
-            return PHPfunctions.array_clone(psi0);
+            return PHPMethods.array_clone(psi0);
         }
 
         /**
@@ -471,13 +477,13 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
          * @param psi0 
          */
         public void setPsi0(double[][] psi0) {
-            this.psi0 = PHPfunctions.array_clone(psi0);
+            this.psi0 = PHPMethods.array_clone(psi0);
         }
         
     }
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseDPMM.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractDPMM.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }
@@ -492,6 +498,7 @@ public class GaussianDPMM extends BaseDPMM<GaussianDPMM.Cluster, GaussianDPMM.Mo
         super(dbName, dbConf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class, GaussianDPMM.ValidationMetrics.class);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = kb().getModelParameters();

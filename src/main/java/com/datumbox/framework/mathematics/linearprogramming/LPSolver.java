@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.mathematics.linearprogramming;
 
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.PHPMethods;
 import java.util.List;
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
@@ -72,7 +72,7 @@ public class LPSolver {
          * @return 
          */
         public double[] getVariableValues() {
-            return PHPfunctions.array_clone(variableValues);
+            return PHPMethods.array_clone(variableValues);
         }
         
         /**
@@ -81,7 +81,7 @@ public class LPSolver {
          * @param variableValues 
          */
         public void setVariableValues(double[] variableValues) {
-            this.variableValues = PHPfunctions.array_clone(variableValues);
+            this.variableValues = PHPMethods.array_clone(variableValues);
         }
 
         /**
@@ -90,7 +90,7 @@ public class LPSolver {
          * @return 
          */
         public double[] getDualSolution() {
-            return PHPfunctions.array_clone(dualSolution);
+            return PHPMethods.array_clone(dualSolution);
         }
         
         /**
@@ -99,7 +99,7 @@ public class LPSolver {
          * @param dualSolution 
          */
         public void setDualSolution(double[] dualSolution) {
-            this.dualSolution = PHPfunctions.array_clone(dualSolution);
+            this.dualSolution = PHPMethods.array_clone(dualSolution);
         }
     }
     
@@ -131,7 +131,7 @@ public class LPSolver {
          * @param value             The right part value of the constrain
          */
         public LPConstraint(double[] constraintBody, int sign, double value) {
-            this.contraintBody=PHPfunctions.array_clone(constraintBody);
+            this.contraintBody=PHPMethods.array_clone(constraintBody);
             this.sign=sign;
             this.value=value;
         }
@@ -142,7 +142,7 @@ public class LPSolver {
          * @return 
          */
         public double[] getContraintBody() {
-            return PHPfunctions.array_clone(contraintBody);
+            return PHPMethods.array_clone(contraintBody);
         }
         
         /**

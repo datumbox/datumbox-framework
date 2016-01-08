@@ -17,8 +17,8 @@ package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.Datasets;
+import com.datumbox.tests.abstracts.AbstractTest;
+import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,10 +28,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for TFIDF.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDFTest extends BaseTest {
+public class TFIDFTest extends AbstractTest {
 
     /**
      * Test of shortMethodName method, of class TFIDF.

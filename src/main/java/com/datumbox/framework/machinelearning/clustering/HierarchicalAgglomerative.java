@@ -22,10 +22,11 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.MapMethods;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
 
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
-import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer;
+import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -45,12 +46,12 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> {
+public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> implements PredictParallelizable {
 
     /**
      * The Cluster class of the HierarchicalAgglomerative model.
      */
-    public static class Cluster extends BaseMLclusterer.Cluster {
+    public static class Cluster extends AbstractClusterer.Cluster {
         private static final long serialVersionUID = 1L;
         
         private Record centroid;
@@ -130,7 +131,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         protected void setActive(boolean active) {
             this.active = active;
         }
-
+        
+        /** {@inheritDoc} */
         @Override
         protected boolean add(Integer rId, Record r) {
             boolean result = recordIdSet.add(rId);
@@ -140,11 +142,13 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
             return result;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected boolean remove(Integer rId, Record r) {
             throw new UnsupportedOperationException("Remove operation is not supported.");
         }
                 
+        /** {@inheritDoc} */
         @Override
         protected void clear() {
             super.clear();
@@ -153,7 +157,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLclusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
+    public static class ModelParameters extends AbstractClusterer.ModelParameters<HierarchicalAgglomerative.Cluster> {
         private static final long serialVersionUID = 1L;
           
         /** 
@@ -167,7 +171,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {  
+    public static class TrainingParameters extends AbstractClusterer.TrainingParameters {  
         private static final long serialVersionUID = 1L;
         
         /**
@@ -296,7 +300,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClusterer.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }
@@ -308,36 +312,47 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
      * @param dbConf 
      */
     public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidation<>());
+        super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidator<>());
     } 
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) { 
-        if(newData.isEmpty()) {
-            return;
-        }
-        
-        ModelParameters modelParameters = kb().getModelParameters();
-        
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
-        
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            
-            AssociativeArray clusterDistances = new AssociativeArray();
-            for(Cluster c : clusterList.values()) {
-                double distance = calculateDistance(r, c.getCentroid());
-                clusterDistances.put(c.getClusterId(), distance);
-            }
-            
-            Descriptives.normalize(clusterDistances);
-            
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), getSelectedClusterFromDistances(clusterDistances), clusterDistances));
-        }
-        
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
     }
     
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        _predictDatasetParallel(newData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Prediction _predictRecord(Record r) {
+        ModelParameters modelParameters = kb().getModelParameters();
+        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
+
+        AssociativeArray clusterDistances = new AssociativeArray();
+        for(Cluster c : clusterList.values()) {
+            double distance = calculateDistance(r, c.getCentroid());
+            clusterDistances.put(c.getClusterId(), distance);
+        }
+
+        Descriptives.normalize(clusterDistances);
+        
+        return new Prediction(getSelectedClusterFromDistances(clusterDistances), clusterDistances);
+    }
+    
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -381,7 +396,7 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
     } 
     
     private Object getSelectedClusterFromDistances(AssociativeArray clusterDistances) {
-        Map.Entry<Object, Object> minEntry = MapFunctions.selectMinKeyValue(clusterDistances);
+        Map.Entry<Object, Object> minEntry = MapMethods.selectMinKeyValue(clusterDistances);
         
         return minEntry.getKey();
     }
@@ -393,8 +408,8 @@ public class HierarchicalAgglomerative extends BaseMLclusterer<HierarchicalAgglo
         
         DatabaseConnector dbc = kb().getDbc();
 
-        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_MEMORY, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_MEMORY, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster

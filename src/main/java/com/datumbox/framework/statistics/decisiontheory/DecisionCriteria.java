@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.decisiontheory;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.AbstractMap;
@@ -56,7 +56,7 @@ public class DecisionCriteria {
             }
         }
         
-        Map.Entry<Object, Object> entry = MapFunctions.selectMaxKeyValue(minPayoffs);
+        Map.Entry<Object, Object> entry = MapMethods.selectMaxKeyValue(minPayoffs);
         return entry;
     }
     
@@ -152,7 +152,7 @@ public class DecisionCriteria {
             }
         }
         
-        Map.Entry<Object, Object> entry = MapFunctions.selectMaxKeyValue(optionAverages);
+        Map.Entry<Object, Object> entry = MapMethods.selectMaxKeyValue(optionAverages);
         return entry;
     }
     
@@ -196,7 +196,7 @@ public class DecisionCriteria {
             combinedPayoffs.put(option, TypeInference.toDouble(entry.getValue())*alpha + minPayoffs.getDouble(option)*(1.0-alpha));
         }
         
-        Map.Entry<Object, Object> entry = MapFunctions.selectMaxKeyValue(combinedPayoffs);
+        Map.Entry<Object, Object> entry = MapMethods.selectMaxKeyValue(combinedPayoffs);
         return entry;
     }
     
@@ -212,12 +212,12 @@ public class DecisionCriteria {
             throw new IllegalArgumentException("The payoff matrix does not have a rectangular format.");
         }
         
-        Map.Entry<Object, Object> eventEntry = MapFunctions.selectMaxKeyValue(eventProbabilities);
+        Map.Entry<Object, Object> eventEntry = MapMethods.selectMaxKeyValue(eventProbabilities);
         
         Object mostProbableEvent = eventEntry.getKey();
         //Double mostProbableEventProbability = Dataset.toDouble(eventEntry.getValue());
         
-        return MapFunctions.selectMaxKeyValue(payoffMatrix.get(mostProbableEvent));
+        return MapMethods.selectMaxKeyValue(payoffMatrix.get(mostProbableEvent));
     }
     
     /**
@@ -249,7 +249,7 @@ public class DecisionCriteria {
             }
         }
         
-        Map.Entry<Object, Object> entry = MapFunctions.selectMaxKeyValue(expectedPayoffs);
+        Map.Entry<Object, Object> entry = MapMethods.selectMaxKeyValue(expectedPayoffs);
         return entry;
     }
 }

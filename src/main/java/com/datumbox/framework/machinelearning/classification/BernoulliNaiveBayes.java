@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -42,13 +42,13 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters, BernoulliNaiveBayes.ValidationMetrics> {
+public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters, BernoulliNaiveBayes.ValidationMetrics> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+    public static class ModelParameters extends AbstractNaiveBayes.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> sumOfLog1minusProb; //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
         
         /** 
@@ -79,13 +79,13 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {   
+    public static class TrainingParameters extends AbstractNaiveBayes.TrainingParameters {   
         private static final long serialVersionUID = 1L;
 
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractNaiveBayes.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }
@@ -101,14 +101,10 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         isBinarized = true;
     }
     
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) { 
-        if(newData.isEmpty()) {
-            return;
-        }
-        
+    public Prediction _predictRecord(Record r) {
         ModelParameters modelParameters = kb().getModelParameters();
-        
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
@@ -117,70 +113,62 @@ public class BernoulliNaiveBayes extends BaseNaiveBayes<BernoulliNaiveBayes.Mode
         Object someClass = classesSet.iterator().next();
         
         
-        Map<Object, Double> cachedLogPriors = new HashMap<>(logPriors); //this is small. Size equal to class numbers. We cache it because we don't want to load it again and again from the DB
-        
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            //Build new map here! clear the prediction scores with the scores of the classes
-            AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(cachedLogPriors)); 
-            
-            //in order to avoid looping throug all available features for each record, we have already calculated the Sum of log(1-prob). So we know the score of a record that has no feature activated. We add this score on the initial score below:
-            for(Map.Entry<Object, Double> entry : sumOfLog1minusProb.entrySet()) {
-                Object theClass = entry.getKey();
-                Double value = entry.getValue();
-                Double previousValue = predictionScores.getDouble(theClass);
-                predictionScores.put(theClass, previousValue+value);
-            }
-            
-            
-            //Then we loop through all the active features of the record, we add the log(prob) and we subtract the log(1-prob)
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Object feature = entry.getKey();
-                
-                
-                //EVERY feature within our dictionary has a value for EVERY class
-                //So if the feature has no value for one random class (someClass has 
-                //no particular significance), then it will not have for any class
-                //and thus the feature is not in the dictionary and can be ignored.
-                if(!logLikelihoods.containsKey(Arrays.<Object>asList(feature, someClass))) {
-                    continue;
-                }
-                
-                //extract the feature scores for each class for the particular feature
-                AssociativeArray classLogScoresForThisFeature = new AssociativeArray(); 
-                for(Object theClass : classesSet) {
-                    Double logScore = logLikelihoods.get(Arrays.<Object>asList(feature, theClass));
-                    classLogScoresForThisFeature.put(theClass, logScore);
-                }
-                
-                
-                Double occurrences=TypeInference.toDouble(entry.getValue());
-                if(occurrences==null || occurrences==0.0) { 
-                    continue;
-                }
-                //no need to specifically binarize the occurrences. we will not multiply the score by it
-                
-                
-                
-                for(Map.Entry<Object, Object> entry2 : classLogScoresForThisFeature.entrySet()) {
-                    Object theClass = entry2.getKey();
-                    Double probability = TypeInference.toDouble(entry2.getValue());
-                    Double previousValue = predictionScores.getDouble(theClass);
-                    predictionScores.put(theClass, previousValue + Math.log(probability)-Math.log(1.0-probability));
-                }
-                //classLogScoresForThisFeature=null;
-            }
-            
-            Object theClass=getSelectedClassFromClassScores(predictionScores);
-            
-            Descriptives.normalizeExp(predictionScores);
-            
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
+        //Build new map here! clear the prediction scores with the scores of the classes
+        AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(logPriors)); 
+
+        //in order to avoid looping throug all available features for each record, we have already calculated the Sum of log(1-prob). So we know the score of a record that has no feature activated. We add this score on the initial score below:
+        for(Map.Entry<Object, Double> entry : sumOfLog1minusProb.entrySet()) {
+            Object theClass = entry.getKey();
+            Double value = entry.getValue();
+            Double previousValue = predictionScores.getDouble(theClass);
+            predictionScores.put(theClass, previousValue+value);
         }
+
+
+        //Then we loop through all the active features of the record, we add the log(prob) and we subtract the log(1-prob)
+        for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+            Object feature = entry.getKey();
+
+
+            //EVERY feature within our dictionary has a value for EVERY class
+            //So if the feature has no value for one random class (someClass has 
+            //no particular significance), then it will not have for any class
+            //and thus the feature is not in the dictionary and can be ignored.
+            if(!logLikelihoods.containsKey(Arrays.<Object>asList(feature, someClass))) {
+                continue;
+            }
+
+            //extract the feature scores for each class for the particular feature
+            AssociativeArray classLogScoresForThisFeature = new AssociativeArray(); 
+            for(Object theClass : classesSet) {
+                Double logScore = logLikelihoods.get(Arrays.<Object>asList(feature, theClass));
+                classLogScoresForThisFeature.put(theClass, logScore);
+            }
+
+
+            Double occurrences=TypeInference.toDouble(entry.getValue());
+            if(occurrences==null || occurrences==0.0) { 
+                continue;
+            }
+            //no need to specifically binarize the occurrences. we will not multiply the score by it
+
+            for(Map.Entry<Object, Object> entry2 : classLogScoresForThisFeature.entrySet()) {
+                Object theClass = entry2.getKey();
+                Double probability = TypeInference.toDouble(entry2.getValue());
+                Double previousValue = predictionScores.getDouble(theClass);
+                predictionScores.put(theClass, previousValue + Math.log(probability)-Math.log(1.0-probability));
+            }
+            //classLogScoresForThisFeature=null;
+        }
+
+        Object predictedClass=getSelectedClassFromClassScores(predictionScores);
+
+        Descriptives.normalizeExp(predictionScores);
         
+        return new Prediction(predictedClass, predictionScores);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();

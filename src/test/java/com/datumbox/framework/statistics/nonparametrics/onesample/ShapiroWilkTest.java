@@ -16,17 +16,18 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for ShapiroWilk.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ShapiroWilkTest extends BaseTest {
+public class ShapiroWilkTest extends AbstractTest {
     
     /**
      * Test of test method, of class ShapiroWilk.

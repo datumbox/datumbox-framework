@@ -19,17 +19,18 @@ import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection2D;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Anova.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class AnovaTest extends BaseTest {
+public class AnovaTest extends AbstractTest {
 
     /**
      * Test of oneWayTestEqualVars method, of class Anova.

@@ -21,18 +21,19 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.MapMethods;
+import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
 
 
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclusterer;
-import com.datumbox.framework.machinelearning.common.validation.ClustererValidation;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer;
+import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
-import com.datumbox.framework.statistics.sampling.SRS;
+import com.datumbox.framework.statistics.sampling.SimpleRandomSampling;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -53,12 +54,12 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> {
+public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> implements PredictParallelizable {
 
     /**
      * The Cluster class of the Kmeans model.
      */
-    public static class Cluster extends BaseMLclusterer.Cluster {
+    public static class Cluster extends AbstractClusterer.Cluster {
         private static final long serialVersionUID = 1L;
         
         private Record centroid;
@@ -108,6 +109,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             return changed;
         }
 
+        /** {@inheritDoc} */
         @Override
         protected boolean add(Integer rId, Record r) {
             boolean result = recordIdSet.add(rId);
@@ -117,11 +119,13 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             return result;
         }
         
+        /** {@inheritDoc} */
         @Override
         protected boolean remove(Integer rId, Record r) {
             throw new UnsupportedOperationException("Remove operation is not supported.");
         }
                 
+        /** {@inheritDoc} */
         @Override
         protected void clear() {
             super.clear();
@@ -130,12 +134,12 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLclusterer.ModelParameters<Kmeans.Cluster> {
+    public static class ModelParameters extends AbstractClusterer.ModelParameters<Kmeans.Cluster> {
         private static final long serialVersionUID = 1L;
         
         private int totalIterations;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> featureWeights; 
         
         /** 
@@ -185,7 +189,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLclusterer.TrainingParameters {    
+    public static class TrainingParameters extends AbstractClusterer.TrainingParameters {    
         private static final long serialVersionUID = 1L;
         
         /**
@@ -393,7 +397,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     } 
 
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseMLclusterer.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClusterer.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }
@@ -405,35 +409,47 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
      * @param dbConf 
      */
     public Kmeans(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidation<>());
+        super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidator<>());
     } 
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) { 
-        if(newData.isEmpty()) {
-            return;
-        }
-        
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        _predictDatasetParallel(newData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Prediction _predictRecord(Record r) {
         ModelParameters modelParameters = kb().getModelParameters();
         Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
         
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            
-            AssociativeArray clusterDistances = new AssociativeArray();
-            for(Cluster c : clusterList.values()) {
-                double distance = calculateDistance(r, c.getCentroid());
-                clusterDistances.put(c.getClusterId(), distance);
-            }
-            
-            Descriptives.normalize(clusterDistances);
-            
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), getSelectedClusterFromDistances(clusterDistances), clusterDistances));
+        AssociativeArray clusterDistances = new AssociativeArray();
+        for(Cluster c : clusterList.values()) {
+            double distance = calculateDistance(r, c.getCentroid());
+            clusterDistances.put(c.getClusterId(), distance);
         }
+
+        Descriptives.normalize(clusterDistances);
         
+        return new Prediction(getSelectedClusterFromDistances(clusterDistances), clusterDistances);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -491,9 +507,9 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             DatabaseConnector dbc = kb().getDbc();
             
-            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
-            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
-            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
@@ -584,7 +600,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
     } 
     
     private Object getSelectedClusterFromDistances(AssociativeArray clusterDistances) {
-        Map.Entry<Object, Object> minEntry = MapFunctions.selectMinKeyValue(clusterDistances);
+        Map.Entry<Object, Object> minEntry = MapMethods.selectMinKeyValue(clusterDistances);
         
         return minEntry.getKey();
     }
@@ -642,7 +658,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             
             int sampleSize = modelParameters.getN();
             if(initializationMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
-                sampleSize = (int)Math.max(Math.ceil(trainingParameters.getSubsetFurthestFirstcValue()*k*PHPfunctions.log(k, 2)), k);
+                sampleSize = (int)Math.max(Math.ceil(trainingParameters.getSubsetFurthestFirstcValue()*k*PHPMethods.log(k, 2)), k);
             }
             
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
@@ -693,7 +709,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
             DatabaseConnector dbc = kb().getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
 
                 for(Map.Entry<Integer, Record> e : trainingData.entries()) {
@@ -719,7 +735,7 @@ public class Kmeans extends BaseMLclusterer<Kmeans.Cluster, Kmeans.ModelParamete
                 }
                 
                 Descriptives.normalize(minClusterDistanceArray);
-                Integer selectedRecordId = (Integer)SRS.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
+                Integer selectedRecordId = (Integer)SimpleRandomSampling.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
                 
                 dbc.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
                 //minClusterDistanceArray = null;

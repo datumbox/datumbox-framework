@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for McNemar.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class McNemarTest extends BaseTest {
+public class McNemarTest extends AbstractTest {
 
     /**
      * Test of test method, of class McNemar.

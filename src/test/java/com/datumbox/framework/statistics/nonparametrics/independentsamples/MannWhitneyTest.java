@@ -17,17 +17,18 @@ package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for MannWhitney.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MannWhitneyTest extends BaseTest {
+public class MannWhitneyTest extends AbstractTest {
 
     /**
      * Test of test method, of class MannWhitney.

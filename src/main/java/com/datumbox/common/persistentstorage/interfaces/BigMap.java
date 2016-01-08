@@ -47,4 +47,11 @@ public @interface BigMap {
      * @return 
      */
     public StorageHint storageHint();
+    
+    /**
+     * Parameter that passes whether the BigMap should be tread-safe.
+     * 
+     * @return 
+     */
+    public boolean concurrent();
 }

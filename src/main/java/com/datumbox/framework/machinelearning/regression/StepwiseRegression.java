@@ -15,13 +15,13 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
-import com.datumbox.framework.machinelearning.common.StepwiseCompatible;
+import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLregressor;
+import com.datumbox.common.utilities.MapMethods;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -34,12 +34,12 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters, BaseMLregressor.ValidationMetrics>  {
+public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters, AbstractRegressor.ValidationMetrics>  {
     
-    private transient BaseMLregressor mlregressor = null;
+    private transient AbstractRegressor mlregressor = null;
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLregressor.ModelParameters {
+    public static class ModelParameters extends AbstractRegressor.ModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -54,7 +54,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLregressor.TrainingParameters {
+    public static class TrainingParameters extends AbstractRegressor.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         //primitives/wrappers
@@ -63,10 +63,10 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         private Double aout = 0.05;
         
         //Classes
-        private Class<? extends BaseMLregressor> regressionClass;
+        private Class<? extends AbstractRegressor> regressionClass;
 
         //Parameter Objects
-        private BaseMLregressor.TrainingParameters regressionTrainingParameters;
+        private AbstractRegressor.TrainingParameters regressionTrainingParameters;
 
         //Field Getters/Setters
 
@@ -118,7 +118,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
          * 
          * @return 
          */
-        public Class<? extends BaseMLregressor> getRegressionClass() {
+        public Class<? extends AbstractRegressor> getRegressionClass() {
             return regressionClass;
         }
         
@@ -129,7 +129,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
          * 
          * @param regressionClass 
          */
-        public void setRegressionClass(Class<? extends BaseMLregressor> regressionClass) {
+        public void setRegressionClass(Class<? extends AbstractRegressor> regressionClass) {
             if(!StepwiseCompatible.class.isAssignableFrom(regressionClass)) {
                 throw new IllegalArgumentException("The regression model is not Stepwise Compatible.");
             }
@@ -142,7 +142,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
          * 
          * @return 
          */
-        public BaseMLregressor.TrainingParameters getRegressionTrainingParameters() {
+        public AbstractRegressor.TrainingParameters getRegressionTrainingParameters() {
             return regressionTrainingParameters;
         }
         
@@ -152,7 +152,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
          * 
          * @param regressionTrainingParameters 
          */
-        public void setRegressionTrainingParameters(BaseMLregressor.TrainingParameters regressionTrainingParameters) {
+        public void setRegressionTrainingParameters(AbstractRegressor.TrainingParameters regressionTrainingParameters) {
             this.regressionTrainingParameters = regressionTrainingParameters;
         }
         
@@ -161,9 +161,9 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
 
     /*
     The no ValidationMetrics Class here!!!!!! The algorithm fetches the
-    validations metrics of the mlregressor and cast them to BaseMLregressor.ValidationMetrics.
+    validations metrics of the mlregressor and cast them to AbstractRegressor.ValidationMetrics.
     */
-    //public static class ValidationMetrics extends BaseMLregressor.ValidationMetrics { }
+    //public static class ValidationMetrics extends AbstractRegressor.ValidationMetrics { }
     
     
     /**
@@ -197,8 +197,9 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
     }
     
     /**
-     * k-Fold Cross Validation is not supported in this algorithm. Run it directly 
-     * to the wrapped regressor.
+     * Performs k-fold cross validation on the dataset using an already trained
+     * Regressor and returns its ValidationMetrics Object. Before calling this method
+     * you must have already trained a model.
      * 
      * @param trainingData
      * @param trainingParameters
@@ -206,17 +207,32 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
      * @return 
      */
     @Override
-    public BaseMLregressor.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TrainingParameters trainingParameters, int k) {
-        throw new UnsupportedOperationException("K-fold Cross Validation is not supported. Run it directly to the wrapped regressor."); 
+    public AbstractRegressor.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TrainingParameters trainingParameters, int k) {
+        if(mlregressor == null) {
+            throw new RuntimeException("You need to train a Regressor before running k-fold cross validation.");
+        }
+        else {
+            return (ValidationMetrics) mlregressor.kFoldCrossValidation(trainingData, trainingParameters, k);
+        }
     }
     
+    /** {@inheritDoc} */
     @Override
-    protected BaseMLregressor.ValidationMetrics validateModel(Dataframe validationData) {
+    protected AbstractRegressor.ValidationMetrics validateModel(Dataframe validationData) {
         loadRegressor();
         
-        return (BaseMLregressor.ValidationMetrics) mlregressor.validate(validationData);
+        return (AbstractRegressor.ValidationMetrics) mlregressor.validate(validationData);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        loadRegressor();
+        
+        mlregressor.predict(newData);
+    }
+    
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = kb().getTrainingParameters();
@@ -241,7 +257,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
             
             //fetch the feature with highest pvalue, excluding constant
             pvalues.remove(Dataframe.COLUMN_NAME_CONSTANT);
-            Map.Entry<Object, Double> maxPvalueEntry = MapFunctions.selectMaxKeyValue(pvalues);
+            Map.Entry<Object, Double> maxPvalueEntry = MapMethods.selectMaxKeyValue(pvalues);
             //pvalues=null;
             
             if(maxPvalueEntry.getValue()<=aOut) {
@@ -260,24 +276,17 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
+        mlregressor = AbstractAlgorithm.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
         
         mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
         copiedTrainingData.delete();
         //copiedTrainingData = null;
     }
 
-    @Override
-    protected void predictDataset(Dataframe newData) {
-        loadRegressor();
-        
-        mlregressor.predict(newData);
-    }
-    
     private void loadRegressor() {
         if(mlregressor==null) {
             //initialize algorithm
-            mlregressor = BaseMLmodel.newInstance(kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf()); 
+            mlregressor = AbstractAlgorithm.newInstance(kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf()); 
         }
     }
     
@@ -285,7 +294,7 @@ public class StepwiseRegression extends BaseMLregressor<StepwiseRegression.Model
         TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         //initialize algorithm
-        mlregressor = BaseMLmodel.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
+        mlregressor = AbstractAlgorithm.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
 
         //train the regressor
         mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());

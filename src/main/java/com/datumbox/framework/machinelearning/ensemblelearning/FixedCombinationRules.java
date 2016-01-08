@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.ArrayList;
@@ -275,7 +275,7 @@ public class FixedCombinationRules {
             //Object classifier = entry.getKey();
             AssociativeArray listOfClassProbabilities = entry.getValue();
             
-            Map.Entry<Object, Object> selectedClassEntry = MapFunctions.selectMaxKeyValue(listOfClassProbabilities);
+            Map.Entry<Object, Object> selectedClassEntry = MapMethods.selectMaxKeyValue(listOfClassProbabilities);
             
             Object theClass = selectedClassEntry.getKey();
             

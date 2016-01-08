@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for NormalIndependentSamples.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NormalIndependentSamplesTest extends BaseTest {
+public class NormalIndependentSamplesTest extends AbstractTest {
 
     /**
      * Test of testMeans method, of class NormalIndependentSamples.

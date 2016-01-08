@@ -15,12 +15,13 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.interfaces.Copyable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
-import com.datumbox.framework.utilities.text.extractors.TextExtractor;
+import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Dataframe implements Collection<Record> {
+public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     
     /**
      * Internal name of the response variable.
@@ -69,22 +70,22 @@ public class Dataframe implements Collection<Record> {
         
         /**
          * It builds a Dataframe object from a provided list of text files. The data
-         * map should have as index the names of each class and as values the URIs
-         * of the training files. The files should contain one training example
-         * per row. If we want to parse a Text File of unknown category then
-         * pass a single URI with null as key.
-         * 
-         * The method requires as arguments a file with the category names and locations
-         * of the training files, an instance of a TextExtractor which is used
-         * to extract the keywords from the documents and the Database Configuration
-         * Object.
+ map should have as index the names of each class and as values the URIs
+ of the training files. The files should contain one training example
+ per row. If we want to parse a Text File of unknown category then
+ pass a single URI with null as key.
+ 
+ The method requires as arguments a file with the category names and locations
+ of the training files, an instance of a AbstractTextExtractor which is used
+ to extract the keywords from the documents and the Database Configuration
+ Object.
          * 
          * @param textFilesMap
          * @param textExtractor
          * @param dbConf
          * @return 
          */
-        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, TextExtractor textExtractor, DatabaseConfiguration dbConf) {
+        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, AbstractTextExtractor textExtractor, DatabaseConfiguration dbConf) {
             Dataframe dataset = new Dataframe(dbConf);
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             
@@ -205,10 +206,10 @@ public class Dataframe implements Collection<Record> {
         String dbName = "dts";
         dbc = this.dbConf.getConnector(dbName);
         
-        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true);
+        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, false, true);
         
         yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
     }
     
     /**
@@ -619,11 +620,8 @@ public class Dataframe implements Collection<Record> {
         }
     }
     
-    /**
-     * Returns a deep copy of the Dataframe. 
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
+    @Override
     public Dataframe copy() {
         Dataframe d = new Dataframe(dbConf);
         

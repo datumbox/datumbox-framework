@@ -15,15 +15,16 @@
  */
 package com.datumbox.framework.utilities.text.cleaners;
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for StringCleaner.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StringCleanerTest extends BaseTest {
+public class StringCleanerTest extends AbstractTest {
 
     /**
      * Test of tokenizeURLs method, of class StringCleaner.

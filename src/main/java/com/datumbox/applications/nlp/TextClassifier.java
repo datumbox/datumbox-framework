@@ -20,13 +20,13 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
-import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
-import com.datumbox.framework.machinelearning.common.bases.wrappers.BaseWrapper;
-import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
+import com.datumbox.framework.machinelearning.common.abstracts.wrappers.AbstractWrapper;
+import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
-import com.datumbox.framework.utilities.text.extractors.TextExtractor;
+import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,12 +40,12 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, TextClassifier.TrainingParameters>  {
+public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParameters, TextClassifier.TrainingParameters>  {
     
     /**
      * It contains all the Model Parameters which are learned during the training.
      */
-    public static class ModelParameters extends BaseWrapper.ModelParameters {
+    public static class ModelParameters extends AbstractWrapper.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -61,16 +61,16 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
     /**
      * It contains the Training Parameters of the Text Classifier.
      */
-    public static class TrainingParameters extends BaseWrapper.TrainingParameters<DataTransformer, FeatureSelection, BaseMLmodel> {
+    public static class TrainingParameters extends AbstractWrapper.TrainingParameters<AbstractTransformer, AbstractFeatureSelector, AbstractAlgorithm> {
         private static final long serialVersionUID = 1L;
         
         //Classes
 
-        private Class<? extends TextExtractor> textExtractorClass;
+        private Class<? extends AbstractTextExtractor> textExtractorClass;
 
         //Parameter Objects
 
-        private TextExtractor.Parameters textExtractorParameters;
+        private AbstractTextExtractor.Parameters textExtractorParameters;
 
         //Field Getters/Setters
         
@@ -79,7 +79,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
          * 
          * @return 
          */
-        public Class<? extends TextExtractor> getTextExtractorClass() {
+        public Class<? extends AbstractTextExtractor> getTextExtractorClass() {
             return textExtractorClass;
         }
         
@@ -90,7 +90,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
          * 
          * @param textExtractorClass 
          */
-        public void setTextExtractorClass(Class<? extends TextExtractor> textExtractorClass) {
+        public void setTextExtractorClass(Class<? extends AbstractTextExtractor> textExtractorClass) {
             this.textExtractorClass = textExtractorClass;
         }
         
@@ -99,7 +99,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
          * 
          * @return 
          */
-        public TextExtractor.Parameters getTextExtractorParameters() {
+        public AbstractTextExtractor.Parameters getTextExtractorParameters() {
             return textExtractorParameters;
         }
         
@@ -108,7 +108,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
          * 
          * @param textExtractorParameters 
          */
-        public void setTextExtractorParameters(TextExtractor.Parameters textExtractorParameters) {
+        public void setTextExtractorParameters(AbstractTextExtractor.Parameters textExtractorParameters) {
             this.textExtractorParameters = textExtractorParameters;
         }
 
@@ -136,7 +136,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      */
     public void fit(Map<Object, URI> datasets, TrainingParameters trainingParameters) { 
         //build trainingDataset
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
+        AbstractTextExtractor textExtractor = AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets, textExtractor, kb().getDbConf());
         
         fit(trainingData, trainingParameters);
@@ -176,7 +176,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
+        AbstractTextExtractor textExtractor = AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         
         //build the testDataset
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, textExtractor, kb().getDbConf());
@@ -200,7 +200,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
+        AbstractTextExtractor textExtractor = AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         
         Dataframe testDataset = new Dataframe(kb().getDbConf());
         
@@ -222,14 +222,14 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      * @param testDataset
      * @return 
      */
-    public BaseMLmodel.ValidationMetrics validate(Dataframe testDataset) {  
+    public AbstractAlgorithm.ValidationMetrics validate(Dataframe testDataset) {  
         logger.info("validate()");
         
         //ensure db loaded
         kb().load();
         
         preprocessTestDataset(testDataset);
-        BaseMLmodel.ValidationMetrics vm = mlmodel.validate(testDataset);
+        AbstractAlgorithm.ValidationMetrics vm = mlmodel.validate(testDataset);
         
         return vm;
     }
@@ -243,24 +243,25 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
      * @param datasets
      * @return 
      */
-    public BaseMLmodel.ValidationMetrics validate(Map<Object, URI> datasets) {
+    public AbstractAlgorithm.ValidationMetrics validate(Map<Object, URI> datasets) {
         //ensure db loaded
         kb().load();
         
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        TextExtractor textExtractor = TextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
+        AbstractTextExtractor textExtractor = AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters());
         
         //build the testDataset
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(datasets, textExtractor, kb().getDbConf());
         
-        BaseMLmodel.ValidationMetrics vm = validate(testDataset);
+        AbstractAlgorithm.ValidationMetrics vm = validate(testDataset);
         
         testDataset.delete();
         
         return vm;
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingDataset) {
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
@@ -269,7 +270,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
+            dataTransformer = AbstractTransformer.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
             dataTransformer.fit_transform(trainingDataset, trainingParameters.getDataTransformerTrainingParameters());
         }
         
@@ -277,17 +278,17 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
-            FeatureSelection.TrainingParameters featureSelectionParameters = trainingParameters.getFeatureSelectionTrainingParameters();
-            if(CategoricalFeatureSelection.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
-                ((CategoricalFeatureSelection.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
+            featureSelection = AbstractFeatureSelector.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+            AbstractFeatureSelector.TrainingParameters featureSelectionParameters = trainingParameters.getFeatureSelectionTrainingParameters();
+            if(AbstractCategoricalFeatureSelector.TrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
+                ((AbstractCategoricalFeatureSelector.TrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
             }
             //find the most popular features & remove unnecessary features
             featureSelection.fit_transform(trainingDataset, trainingParameters.getFeatureSelectionTrainingParameters());   
         }
         
         //initialize mlmodel
-        mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+        mlmodel = AbstractAlgorithm.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingDataset, trainingParameters.getMLmodelTrainingParameters());
@@ -306,7 +307,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = DataTransformer.<DataTransformer>newInstance(dtClass, dbName, dbConf);
+                dataTransformer = AbstractTransformer.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
             }        
             
             dataTransformer.transform(testDataset);
@@ -317,7 +318,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = FeatureSelection.<FeatureSelection>newInstance(fsClass, dbName, dbConf);
+                featureSelection = AbstractFeatureSelector.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -326,7 +327,7 @@ public class TextClassifier extends BaseWrapper<TextClassifier.ModelParameters, 
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = BaseMLmodel.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+            mlmodel = AbstractAlgorithm.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
     }
     

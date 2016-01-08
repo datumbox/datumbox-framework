@@ -17,9 +17,9 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
-import com.datumbox.common.utilities.PHPfunctions;
-import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
+import com.datumbox.common.utilities.PHPMethods;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +34,10 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MutualInformation extends CategoricalFeatureSelection<MutualInformation.ModelParameters, MutualInformation.TrainingParameters>{
+public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters>{
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
+    public static class ModelParameters extends AbstractCategoricalFeatureSelector.ModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -51,7 +51,7 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends CategoricalFeatureSelection.TrainingParameters {
+    public static class TrainingParameters extends AbstractCategoricalFeatureSelector.TrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }
@@ -66,7 +66,7 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
         super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
     }
     
-    
+    /** {@inheritDoc} */
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
@@ -98,16 +98,16 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
                 //Note we calculate it partially because if one of the N.. is zero the log will not be defined and it will return NAN.
                 double MI=0.0;
                 if(N11>0.0) {
-                    MI+=(N11/N)*PHPfunctions.log((N/N1_)*(N11/N_1),2.0);
+                    MI+=(N11/N)*PHPMethods.log((N/N1_)*(N11/N_1),2.0);
                 }
                 if(N01>0.0) {
-                    MI+=(N01/N)*PHPfunctions.log((N/N0_)*(N01/N_1),2.0);
+                    MI+=(N01/N)*PHPMethods.log((N/N0_)*(N01/N_1),2.0);
                 }
                 if(N10>0.0) {
-                    MI+=(N10/N)*PHPfunctions.log((N/N1_)*(N10/N_0),2.0);
+                    MI+=(N10/N)*PHPMethods.log((N/N1_)*(N10/N_0),2.0);
                 }
                 if(N00>0.0) {
-                    MI+=(N00/N)*PHPfunctions.log((N/N0_)*(N00/N_0),2.0);
+                    MI+=(N00/N)*PHPMethods.log((N/N0_)*(N00/N_0),2.0);
                 }
 
                 
@@ -122,7 +122,7 @@ public class MutualInformation extends CategoricalFeatureSelection<MutualInforma
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            ScoreBasedFeatureSelection.selectHighScoreFeatures(featureScores, maxFeatures);
+            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(featureScores, maxFeatures);
         }
         
 

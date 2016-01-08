@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.mathematics.linearprogramming;
 
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.ArrayList;
 import java.util.List;
 import lpsolve.LpSolve;
@@ -24,10 +24,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for LPSolver.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LPSolverTest extends BaseTest {
+public class LPSolverTest extends AbstractTest {
 
     /**
      * Test of solve method, of class LPSolver.

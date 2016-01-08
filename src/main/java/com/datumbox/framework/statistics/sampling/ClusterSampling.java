@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Iterator;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class ClusterSampling {
         TransposeDataCollection sampledIds = new TransposeDataCollection(); 
         
         Object[] selectedClusters = clusterIdList.keySet().toArray();
-        PHPfunctions.<Object>shuffle(selectedClusters);
+        PHPMethods.<Object>shuffle(selectedClusters);
         
         for(int i = 0; i<sampleM; ++i) {
             Object cluster = selectedClusters[i];

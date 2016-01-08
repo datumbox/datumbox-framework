@@ -19,10 +19,10 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.objecttypes.Parameterizable;
+import com.datumbox.common.interfaces.Parameterizable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.utilities.MapFunctions;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.MapMethods;
+import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.utilities.text.cleaners.HTMLCleaner;
@@ -224,7 +224,7 @@ public class CETR {
         }
         
         //fetch the cluster with the smallest average.
-        Map.Entry<Object, Double> entry = MapFunctions.selectMinKeyValue(avgTTRscorePerCluster);
+        Map.Entry<Object, Double> entry = MapMethods.selectMinKeyValue(avgTTRscorePerCluster);
         
         //this cluster is considered the non-content cluster
         Integer nonContentClusterId = (Integer)entry.getKey();
@@ -401,7 +401,7 @@ public class CETR {
     
     private String clearText(String text) {
         text = HTMLCleaner.removeNonTextTagsAndAttributes(text); //remove all the irrelevant HTML Tags that are not related to the text (such as forms, scripts etc)
-        if(PHPfunctions.substr_count(text, '\n')<=1) { //if the document is in a single line (no spaces), then break it in order for this algorithm to work
+        if(PHPMethods.substr_count(text, '\n')<=1) { //if the document is in a single line (no spaces), then break it in order for this algorithm to work
             text = text.replace(">", ">\n");
         }
         

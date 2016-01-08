@@ -19,18 +19,19 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for ClusterSampling.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ClusterSamplingTest extends BaseTest {
+public class ClusterSamplingTest extends AbstractTest {
     
     private TransposeDataList generateClusterIdList() {
         TransposeDataList clusterIdList = new TransposeDataList();

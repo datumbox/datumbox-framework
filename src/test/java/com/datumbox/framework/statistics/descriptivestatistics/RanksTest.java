@@ -17,20 +17,21 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Ranks.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class RanksTest extends BaseTest {
+public class RanksTest extends AbstractTest {
 
     /**
-     * Test of getRanksFromValues method, of class Dataset.
+     * Test of getRanksFromValues method, of class Ranks.
      */
     @Test
     public void testGetRanksFromValues() {

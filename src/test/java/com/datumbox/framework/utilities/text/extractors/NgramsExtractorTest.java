@@ -15,18 +15,19 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for NgramsExtractor.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NgramsExtractorTest extends BaseTest {
+public class NgramsExtractorTest extends AbstractTest {
 
     /**
      * Test of extract method, of class NgramsExtractor.

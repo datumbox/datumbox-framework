@@ -18,11 +18,11 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
@@ -35,13 +35,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for LatentDirichletAllocation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LatentDirichletAllocationTest extends BaseTest {
+public class LatentDirichletAllocationTest extends AbstractTest {
     
     /**
-     * Test of predict method, of class LatentDirichletAllocation.
+     * Test of validate method, of class LatentDirichletAllocation.
      */
     @Test
     public void testValidate() {
@@ -91,7 +92,7 @@ public class LatentDirichletAllocationTest extends BaseTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
         
-        BaseMLclassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
+        AbstractClassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
         
         double expResult = 0.6859007513066202;
         double result = vm.getMacroF1();

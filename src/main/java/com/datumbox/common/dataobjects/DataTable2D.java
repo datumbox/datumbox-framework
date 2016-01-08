@@ -83,6 +83,12 @@ public class DataTable2D extends AssociativeArray2D {
     
     /** {@inheritDoc} */
     @Override
+    public DataTable2D copy() {
+        return (DataTable2D) super.copy();
+    }
+    
+    /** {@inheritDoc} */
+    @Override
     public boolean equals(Object o) {
         if ( this == o ) return true;
         if ( !(o instanceof DataTable2D) ) return false;

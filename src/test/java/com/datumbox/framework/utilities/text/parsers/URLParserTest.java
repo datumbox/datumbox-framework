@@ -15,17 +15,18 @@
  */
 package com.datumbox.framework.utilities.text.parsers;
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for URLParser.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class URLParserTest extends BaseTest {
+public class URLParserTest extends AbstractTest {
 
     /**
      * Test of toAbsolute method, of class URLParser.

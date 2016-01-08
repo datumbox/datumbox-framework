@@ -16,8 +16,8 @@
 package com.datumbox.framework.statistics.timeseries;
 
 import com.datumbox.common.dataobjects.FlatDataList;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +25,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Smoothing.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SmoothingTest extends BaseTest {
+public class SmoothingTest extends AbstractTest {
     
     private FlatDataList generateFlatDataList() {
         //Example from Tzortzopoulos' notes

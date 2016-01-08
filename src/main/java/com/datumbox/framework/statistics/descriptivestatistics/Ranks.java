@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
-import com.datumbox.common.utilities.MapFunctions;
+import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.dataobjects.TypeInference;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -85,7 +85,7 @@ public class Ranks {
             }
             tiesCounter.put(value, ((Number) count).intValue() + 1);
         }
-        tiesCounter.overwrite(MapFunctions.<Object, Object>sortNumberMapByKeyAscending(tiesCounter.entrySet()));
+        tiesCounter.overwrite(MapMethods.<Object, Object>sortNumberMapByKeyAscending(tiesCounter.entrySet()));
         int itemCounter = 0;
         Iterator<Map.Entry<Object, Object>> it = tiesCounter.entrySet().iterator();
         while (it.hasNext()) {

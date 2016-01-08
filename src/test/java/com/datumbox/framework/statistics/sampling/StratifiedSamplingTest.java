@@ -21,19 +21,20 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for StratifiedSampling.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StratifiedSamplingTest extends BaseTest {
+public class StratifiedSamplingTest extends AbstractTest {
     
     private AssociativeArray generateNh() {
         AssociativeArray nh = new AssociativeArray();

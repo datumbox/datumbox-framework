@@ -20,17 +20,18 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import com.datumbox.tests.utilities.TestUtils;
 
 import org.junit.Test;
 
 /**
+ * Test cases for Bivariate.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BivariateTest extends BaseTest {
+public class BivariateTest extends AbstractTest {
 
     private Dataframe generateDataset(DatabaseConfiguration dbConf) {
         Dataframe dataset = new Dataframe(dbConf);

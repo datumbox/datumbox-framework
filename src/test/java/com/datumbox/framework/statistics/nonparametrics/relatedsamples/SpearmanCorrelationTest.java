@@ -17,17 +17,18 @@ package com.datumbox.framework.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.TransposeDataList;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for SpearmanCorrelation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SpearmanCorrelationTest extends BaseTest {
+public class SpearmanCorrelationTest extends AbstractTest {
     
     /**
      * Test of test method, of class SpearmanCorrelation.

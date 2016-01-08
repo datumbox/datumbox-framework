@@ -51,7 +51,7 @@ public class StratifiedSampling {
                 continue;
             }
             
-            sampledIds.put(strata, SRS.weightedSampling(entry.getValue(), sampleN.intValue(), withReplacement));
+            sampledIds.put(strata, SimpleRandomSampling.weightedSampling(entry.getValue(), sampleN.intValue(), withReplacement));
         }
         
         return sampledIds;
@@ -76,7 +76,7 @@ public class StratifiedSampling {
                 continue;
             }
             
-            sampledIds.put(strata, SRS.randomSampling(entry.getValue(), sampleN.intValue(), withReplacement));
+            sampledIds.put(strata, SimpleRandomSampling.randomSampling(entry.getValue(), sampleN.intValue(), withReplacement));
         }
         
         return sampledIds;
@@ -106,7 +106,7 @@ public class StratifiedSampling {
                 throw new IllegalArgumentException("Invalid strata population size.");
             }
             
-            mean += strataPopulation*SRS.mean(entry.getValue())/populationN;
+            mean += strataPopulation*SimpleRandomSampling.mean(entry.getValue())/populationN;
         }
         
         return mean;
@@ -139,9 +139,9 @@ public class StratifiedSampling {
             //Analysis of Variance
             
             //Within Strata
-            variance+=(strataPopulation-1)*SRS.variance(entry.getValue());
+            variance+=(strataPopulation-1)*SimpleRandomSampling.variance(entry.getValue());
             //Between Strata
-            variance+=strataPopulation*Math.pow(SRS.mean(entry.getValue())-mean,2);
+            variance+=strataPopulation*Math.pow(SimpleRandomSampling.mean(entry.getValue())-mean,2);
         }
         
         variance/=(populationN-1);
@@ -188,10 +188,10 @@ public class StratifiedSampling {
             
             double Wh = strataPopulation/populationN;
                 
-            //this is the formula when we do SRS in each strata. nevertheless in order to keep our code DRY, instead of writing directly the formula of SRS here, we will call SRS xbarVariance function to estimate it.
+            //this is the formula when we do SimpleRandomSampling in each strata. nevertheless in order to keep our code DRY, instead of writing directly the formula of SimpleRandomSampling here, we will call SimpleRandomSampling xbarVariance function to estimate it.
             //$fh=$nh[$strata]/$populationNh[$strata];
-            //$variance+=$Wh*$Wh*SRS::variance($flatDataCollection)*(1-$fh)/$nh[$strata]; 
-            variance+= Wh*Wh* SRS.xbarVariance(SRS.variance(entry.getValue()), strataSample, strataPopulation);
+            //$variance+=$Wh*$Wh*SimpleRandomSampling::variance($flatDataCollection)*(1-$fh)/$nh[$strata]; 
+            variance+= Wh*Wh* SimpleRandomSampling.xbarVariance(SimpleRandomSampling.variance(entry.getValue()), strataSample, strataPopulation);
         }
         
         return variance;

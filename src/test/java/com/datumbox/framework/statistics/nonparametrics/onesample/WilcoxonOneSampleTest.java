@@ -16,17 +16,18 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for WilcoxonOneSample.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WilcoxonOneSampleTest extends BaseTest {
+public class WilcoxonOneSampleTest extends AbstractTest {
 
     /**
      * Test of test method, of class WilcoxonOneSample.

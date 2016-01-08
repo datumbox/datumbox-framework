@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for FIndependentSamples.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FIndependentSamplesTest extends BaseTest {
+public class FIndependentSamplesTest extends AbstractTest {
     
     /**
      * Test of testVariances method, of class FIndependentSamples.

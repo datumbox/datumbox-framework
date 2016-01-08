@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinearRegression;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -24,6 +24,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
 
 
 import java.util.Map;
@@ -40,10 +41,10 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> {
+public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> implements PredictParallelizable {
      
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseLinearRegression.ModelParameters {
+    public static class ModelParameters extends AbstractLinearRegression.ModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -57,7 +58,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {  
+    public static class TrainingParameters extends AbstractLinearRegression.TrainingParameters {  
         private static final long serialVersionUID = 1L;
         
         private int totalIterations=1000; 
@@ -103,7 +104,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractLinearRegression.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }
@@ -118,6 +119,37 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         super(dbName, dbConf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
     }
 
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        _predictDatasetParallel(newData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Prediction _predictRecord(Record r) {
+        Map<Object, Double> thitas = kb().getModelParameters().getThitas();
+        
+        double yPredicted = hypothesisFunction(r.getX(), thitas);
+        
+        return new Prediction(yPredicted, null);
+    }
+    
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -141,7 +173,7 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             
@@ -168,18 +200,6 @@ public class NLMS extends BaseLinearRegression<NLMS.ModelParameters, NLMS.Traini
         }
     }
 
-    @Override
-    protected void predictDataset(Dataframe newData) {
-        Map<Object, Double> thitas = kb().getModelParameters().getThitas();
-        
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            double yPredicted = hypothesisFunction(r.getX(), thitas);
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
-        }
-    }
-    
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 

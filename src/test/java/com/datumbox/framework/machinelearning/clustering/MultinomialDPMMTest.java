@@ -18,10 +18,10 @@ package com.datumbox.framework.machinelearning.clustering;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseDPMM;
-import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.Datasets;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
+import com.datumbox.tests.abstracts.AbstractTest;
+import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +30,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for MultinomialDPMM.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialDPMMTest extends BaseTest {
+public class MultinomialDPMMTest extends AbstractTest {
     
     /**
-     * Test of predict method, of class MultinomialDPMM.
+     * Test of validate method, of class MultinomialDPMM.
      */
     @Test
     public void testValidate() {
@@ -56,7 +57,7 @@ public class MultinomialDPMMTest extends BaseTest {
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(AbstractDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
         
         instance.fit(trainingData, param);
@@ -114,7 +115,7 @@ public class MultinomialDPMMTest extends BaseTest {
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(BaseDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(AbstractDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
         
         MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);

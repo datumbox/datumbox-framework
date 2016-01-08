@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseBoostingBagging;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
@@ -35,10 +35,10 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters, Adaboost.ValidationMetrics> {
+public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters, Adaboost.ValidationMetrics> {
  
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseBoostingBagging.ModelParameters {
+    public static class ModelParameters extends AbstractBoostingBagging.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -52,13 +52,13 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseBoostingBagging.TrainingParameters {    
+    public static class TrainingParameters extends AbstractBoostingBagging.TrainingParameters {    
         private static final long serialVersionUID = 1L;
         
     } 
         
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseBoostingBagging.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractBoostingBagging.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }
@@ -73,6 +73,7 @@ public class Adaboost extends BaseBoostingBagging<Adaboost.ModelParameters, Adab
         super(dbName, dbConf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
     } 
 
+    /** {@inheritDoc} */
     @Override
     protected Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights) { 
         //calculate prediction error for this classifier

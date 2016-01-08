@@ -16,17 +16,18 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for WaldWolfowitz.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WaldWolfowitzTest extends BaseTest {
+public class WaldWolfowitzTest extends AbstractTest {
 
     /**
      * Test of test method, of class WaldWolfowitz.

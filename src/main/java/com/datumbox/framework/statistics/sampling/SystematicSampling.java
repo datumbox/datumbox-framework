@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.sampling;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.PHPMethods;
 import java.util.Iterator;
 
 /**
@@ -42,7 +42,7 @@ public class SystematicSampling {
         
         Object[] keys = idList.toArray();
         if(randomizeRecords) {
-            PHPfunctions.<Object>shuffle(keys);
+            PHPMethods.<Object>shuffle(keys);
         }
         
         int k = populationN/n; //number of systematics
@@ -50,7 +50,7 @@ public class SystematicSampling {
             throw new IllegalArgumentException("The number of systematics is too small.");
         }
         
-        int randomSystematic = PHPfunctions.mt_rand(0,k-1);
+        int randomSystematic = PHPMethods.mt_rand(0,k-1);
         
         for(int i=randomSystematic;i<keys.length;i+=k) {
             Object pointID = keys[i];
@@ -67,7 +67,7 @@ public class SystematicSampling {
      * @return 
      */
     public static double mean(FlatDataCollection flatDataCollection) {
-        return SRS.mean(flatDataCollection);
+        return SimpleRandomSampling.mean(flatDataCollection);
     }
     
     /**

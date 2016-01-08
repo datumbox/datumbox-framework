@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.tokenizers;
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,10 +23,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for WhitespaceTokenizer.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WhitespaceTokenizerTest extends BaseTest {
+public class WhitespaceTokenizerTest extends AbstractTest {
 
     /**
      * Test of tokenize method, of class WhitespaceTokenizer.

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.cleaners;
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +24,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for HTMLCleaner.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class HTMLCleanerTest extends BaseTest {
+public class HTMLCleanerTest extends AbstractTest {
 
     /**
      * Test of replaceImgWithAlt method, of class HTMLCleaner.

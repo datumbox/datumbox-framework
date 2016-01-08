@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveBayes;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
 
 /**
@@ -29,10 +29,10 @@ import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseNaiveB
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters, MultinomialNaiveBayes.ValidationMetrics> {
+public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters, MultinomialNaiveBayes.ValidationMetrics> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseNaiveBayes.ModelParameters {
+    public static class ModelParameters extends AbstractNaiveBayes.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -46,13 +46,13 @@ public class MultinomialNaiveBayes extends BaseNaiveBayes<MultinomialNaiveBayes.
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseNaiveBayes.TrainingParameters {    
+    public static class TrainingParameters extends AbstractNaiveBayes.TrainingParameters {    
         private static final long serialVersionUID = 1L;
         
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseNaiveBayes.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractNaiveBayes.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.framework.utilities.text.tokenizers.Tokenizer;
+import com.datumbox.framework.utilities.text.tokenizers.AbstractTokenizer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +25,12 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class WordSequenceExtractor extends TextExtractor<WordSequenceExtractor.Parameters, Integer, String> {
+public class WordSequenceExtractor extends AbstractTextExtractor<WordSequenceExtractor.Parameters, Integer, String> {
     
     /**
      * Parameters of the WordSequenceExtractor.
      */
-    public static class Parameters extends TextExtractor.Parameters {   
+    public static class Parameters extends AbstractTextExtractor.Parameters {   
         private static final long serialVersionUID = 1L;
         
     }
@@ -54,7 +54,7 @@ public class WordSequenceExtractor extends TextExtractor<WordSequenceExtractor.P
      */
     @Override
     public Map<Integer, String> extract(final String text) {
-        Tokenizer tokenizer = parameters.generateTokenizer();
+        AbstractTokenizer tokenizer = parameters.generateTokenizer();
         
         List<String> tmpKwd = tokenizer.tokenize(text);
         

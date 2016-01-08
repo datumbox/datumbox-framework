@@ -21,22 +21,23 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.featureselection.continuous.PCA;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.Datasets;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
+import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for NLMS.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NLMSTest extends BaseTest {
+public class NLMSTest extends AbstractTest {
 
     /**
-     * Test of predict method, of class NLMS.
+     * Test of validate method, of class NLMS.
      */
     @Test
     public void testValidate() {
@@ -141,5 +142,4 @@ public class NLMSTest extends BaseTest {
         trainingData.delete();
     }
 
-    
 }

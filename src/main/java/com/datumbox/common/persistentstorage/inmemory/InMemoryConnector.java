@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.persistentstorage.inmemory;
 
-import com.datumbox.common.persistentstorage.AutoCloseConnector;
+import com.datumbox.common.persistentstorage.abstracts.AutoCloseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -29,6 +29,8 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 
 /**
@@ -115,14 +117,14 @@ public class InMemoryConnector extends AutoCloseConnector {
     
     /** {@inheritDoc} */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
         if(MapType.HASHMAP.equals(type)) {
-            return new HashMap<>();
+            return isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
         }
         else if(MapType.TREEMAP.equals(type)) {
-            return new TreeMap<>();
+            return isConcurrent?new ConcurrentSkipListMap<>():new TreeMap<>();
         }
         else {
             throw new IllegalArgumentException("Unsupported MapType.");

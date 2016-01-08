@@ -16,16 +16,17 @@
 package com.datumbox.framework.statistics.distributions;
 
 
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for ContinuousDistributions.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ContinuousDistributionsTest extends BaseTest {
+public class ContinuousDistributionsTest extends AbstractTest {
     
     /**
      * Test of chisquareCdf method, of class ContinuousDistributions.

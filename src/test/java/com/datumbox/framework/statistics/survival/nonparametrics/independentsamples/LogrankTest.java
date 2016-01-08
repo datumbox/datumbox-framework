@@ -17,17 +17,18 @@ package com.datumbox.framework.statistics.survival.nonparametrics.independentsam
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Logrank.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LogrankTest extends BaseTest {
+public class LogrankTest extends AbstractTest {
     
     /**
      * Test of test method, of class Logrank.

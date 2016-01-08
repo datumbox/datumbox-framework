@@ -17,17 +17,18 @@ package com.datumbox.framework.statistics.parametrics.independentsamples;
 
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for LevenesIndependentSamples.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LevenesIndependentSamplesTest extends BaseTest {
+public class LevenesIndependentSamplesTest extends AbstractTest {
 
     /**
      * Test of testVariances method, of class LevenesIndependentSamples.

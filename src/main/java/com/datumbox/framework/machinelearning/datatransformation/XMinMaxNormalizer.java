@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.datatransformation;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.bases.datatransformation.BaseDummyMinMaxTransformer;
+import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractDummyMinMaxTransformer;
 import java.util.Map;
 
 /**
@@ -25,7 +25,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class XMinMaxNormalizer extends BaseDummyMinMaxTransformer {
+public class XMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
 
     /**
      * Public constructor of the algorithm.
@@ -37,31 +37,35 @@ public class XMinMaxNormalizer extends BaseDummyMinMaxTransformer {
         super(dbName, dbConf);
     }
     
+    /** {@inheritDoc} */
     @Override
-    protected void _fit(Dataframe data) {
+    protected void _fit(Dataframe trainingData) {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
-        BaseDummyMinMaxTransformer.fitX(data, minColumnValues, maxColumnValues);
+        AbstractDummyMinMaxTransformer.fitX(trainingData, minColumnValues, maxColumnValues);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _convert(Dataframe data) {
         
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _normalize(Dataframe data) {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
-        BaseDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
+        AbstractDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void _denormalize(Dataframe data) {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
-        BaseDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
+        AbstractDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
     }
 }

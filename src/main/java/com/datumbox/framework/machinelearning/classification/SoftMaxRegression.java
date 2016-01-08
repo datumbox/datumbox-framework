@@ -19,13 +19,14 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.framework.machinelearning.common.validation.SoftMaxRegressionValidation;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
+import com.datumbox.framework.machinelearning.common.validators.SoftMaxRegressionValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
 import java.util.List;
@@ -44,13 +45,13 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> {
+public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> implements PredictParallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLclassifier.ModelParameters {
+    public static class ModelParameters extends AbstractClassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
@@ -81,7 +82,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters { 
+    public static class TrainingParameters extends AbstractClassifier.TrainingParameters { 
         private static final long serialVersionUID = 1L;
         
         private int totalIterations=100; 
@@ -127,7 +128,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
         private double SSE = 0.0; 
@@ -178,32 +179,50 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
      * @param dbConf 
      */
     public SoftMaxRegression(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidation());
+        super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidator());
     }
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) { 
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        _predictDatasetParallel(newData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Prediction _predictRecord(Record r) {
         ModelParameters modelParameters = kb().getModelParameters();
         
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            AssociativeArray predictionScores = new AssociativeArray();
-            for(Object theClass : classesSet) {
-                predictionScores.put(theClass, calculateClassScore(r.getX(), theClass, thitas));
-            }
-            
-            Object theClass=getSelectedClassFromClassScores(predictionScores);
-            
-            Descriptives.normalizeExp(predictionScores);
-            
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
+        AssociativeArray predictionScores = new AssociativeArray();
+        for(Object theClass : classesSet) {
+            predictionScores.put(theClass, calculateClassScore(r.getX(), theClass, thitas));
         }
+
+        Object predictedClass=getSelectedClassFromClassScores(predictionScores);
+
+        Descriptives.normalizeExp(predictionScores);
+        
+        return new Prediction(predictedClass, predictionScores);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -240,7 +259,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, true);
+            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             batchGradientDescent(trainingData, tmp_newThitas, learningRate);
@@ -265,6 +284,7 @@ public class SoftMaxRegression extends BaseMLclassifier<SoftMaxRegression.ModelP
         }
     }
     
+    /** {@inheritDoc} */
     @Override
     protected SoftMaxRegression.ValidationMetrics validateModel(Dataframe validationData) {
         SoftMaxRegression.ValidationMetrics validationMetrics = super.validateModel(validationData);

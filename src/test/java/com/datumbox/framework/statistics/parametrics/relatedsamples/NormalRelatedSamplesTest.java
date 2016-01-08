@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.parametrics.relatedsamples;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for NormalRelatedSamples.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NormalRelatedSamplesTest extends BaseTest {
+public class NormalRelatedSamplesTest extends AbstractTest {
 
     /**
      * Test of testMean method, of class NormalRelatedSamples.

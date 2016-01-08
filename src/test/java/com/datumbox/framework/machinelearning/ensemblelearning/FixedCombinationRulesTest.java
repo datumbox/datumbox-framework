@@ -18,16 +18,17 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.TypeInference;
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for FixedCombinationRules.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FixedCombinationRulesTest extends BaseTest {
+public class FixedCombinationRulesTest extends AbstractTest {
     
     private DataTable2D getClassifierClassProbabilityMatrix() {
         DataTable2D d = new DataTable2D();

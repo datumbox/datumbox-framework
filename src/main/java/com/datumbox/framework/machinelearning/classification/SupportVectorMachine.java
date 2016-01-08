@@ -19,14 +19,15 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLclassifier;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.RandomGenerator;
-import com.datumbox.framework.machinelearning.common.validation.ClassifierValidation;
+import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
+import com.datumbox.framework.machinelearning.common.validators.ClassifierValidator;
 
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
@@ -53,13 +54,13 @@ import libsvm.svm_problem;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> {
+public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> implements PredictParallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseMLclassifier.ModelParameters {
+    public static class ModelParameters extends AbstractClassifier.ModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         private Map<Object, Integer> classIds = new HashMap<>(); //this is small. Size equal to class numbers;
@@ -137,7 +138,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseMLclassifier.TrainingParameters {     
+    public static class TrainingParameters extends AbstractClassifier.TrainingParameters {     
         private static final long serialVersionUID = 1L;
         
         private svm_parameter svmParameter = new svm_parameter();
@@ -188,7 +189,7 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseMLclassifier.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }
@@ -200,25 +201,43 @@ public class SupportVectorMachine extends BaseMLclassifier<SupportVectorMachine.
      * @param dbConf 
      */
     public SupportVectorMachine(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class, new ClassifierValidation<>());
+        super(dbName, dbConf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class, new ClassifierValidator<>());
         svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) { 
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            AssociativeArray predictionScores = calculateClassScores(r.getX());
-            
-            Object theClass=getSelectedClassFromClassScores(predictionScores);
-            
-            Descriptives.normalize(predictionScores);
-            
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), theClass, predictionScores));
-        }
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
     }
     
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
+        _predictDatasetParallel(newData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Prediction _predictRecord(Record r) {
+        AssociativeArray predictionScores = calculateClassScores(r.getX());
+        
+        Object predictedClass=getSelectedClassFromClassScores(predictionScores);
+
+        Descriptives.normalize(predictionScores);
+        
+        return new Prediction(predictedClass, predictionScores);
+    }
+    
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         kb().getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm

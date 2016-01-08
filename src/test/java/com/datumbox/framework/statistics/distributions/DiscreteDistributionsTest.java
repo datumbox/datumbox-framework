@@ -16,16 +16,17 @@
 package com.datumbox.framework.statistics.distributions;
 
 
-import com.datumbox.configuration.TestConfiguration;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for DiscreteDistributions.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class DiscreteDistributionsTest extends BaseTest {
+public class DiscreteDistributionsTest extends AbstractTest {
     
     /**
      * Test of bernoulli method, of class DiscreteDistributions.

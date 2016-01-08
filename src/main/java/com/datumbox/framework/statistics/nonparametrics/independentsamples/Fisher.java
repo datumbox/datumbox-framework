@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
-import com.datumbox.framework.mathematics.discrete.ArithmeticMath;
+import com.datumbox.framework.mathematics.discrete.Arithmetics;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +50,7 @@ public class Fisher {
             combinations.add(r);
         }
 
-        double standardPart = ArithmeticMath.factorial(n1dot)*ArithmeticMath.factorial(n2dot)*ArithmeticMath.factorial(ndot1)*ArithmeticMath.factorial(ndot2)/ArithmeticMath.factorial(n);
+        double standardPart = Arithmetics.factorial(n1dot)*Arithmetics.factorial(n2dot)*Arithmetics.factorial(ndot1)*Arithmetics.factorial(ndot2)/Arithmetics.factorial(n);
 
         double originalPvalue=0.0;
         double Psum=0;
@@ -61,7 +61,7 @@ public class Fisher {
             int n12=n1dot-n11;
             int n22=n2dot-n21;
 
-            double pvalue=standardPart/(ArithmeticMath.factorial(n11)*ArithmeticMath.factorial(n12)*ArithmeticMath.factorial(n21)*ArithmeticMath.factorial(n22));
+            double pvalue=standardPart/(Arithmetics.factorial(n11)*Arithmetics.factorial(n12)*Arithmetics.factorial(n21)*Arithmetics.factorial(n22));
 
             if(r==originalN11) {
                 originalPvalue=pvalue;

@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.featureselection.continuous;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.machinelearning.common.bases.featureselection.ContinuousFeatureSelection;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractContinuousFeatureSelector;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -25,7 +25,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,13 +49,13 @@ import org.apache.commons.math3.stat.StatUtils;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.TrainingParameters> {
+public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends ContinuousFeatureSelection.ModelParameters {
+    public static class ModelParameters extends AbstractContinuousFeatureSelector.ModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds;
         
         private int rows; //rows of the eigenvector matrix
@@ -137,7 +137,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @return 
          */
         public double[] getMean() {
-            return PHPfunctions.array_clone(mean);
+            return PHPMethods.array_clone(mean);
         }
         
         /**
@@ -146,7 +146,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @param mean 
          */
         protected void setMean(double[] mean) {
-            this.mean = PHPfunctions.array_clone(mean);
+            this.mean = PHPMethods.array_clone(mean);
         }
         
         /**
@@ -155,7 +155,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @return 
          */
         public double[] getEigenValues() {
-            return PHPfunctions.array_clone(eigenValues);
+            return PHPMethods.array_clone(eigenValues);
         }
         
         /**
@@ -164,7 +164,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @param eigenValues 
          */
         protected void setEigenValues(double[] eigenValues) {
-            this.eigenValues = PHPfunctions.array_clone(eigenValues);
+            this.eigenValues = PHPMethods.array_clone(eigenValues);
         }
         
         /**
@@ -173,7 +173,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @return 
          */
         public double[][] getComponents() {
-            return PHPfunctions.array_clone(components);
+            return PHPMethods.array_clone(components);
         }
         
         /**
@@ -182,13 +182,13 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
          * @param components 
          */
         protected void setComponents(double[][] components) {
-            this.components = PHPfunctions.array_clone(components);
+            this.components = PHPMethods.array_clone(components);
         }
     
     }
 
     /** {@inheritDoc} */  
-    public static class TrainingParameters extends ContinuousFeatureSelection.TrainingParameters {
+    public static class TrainingParameters extends AbstractContinuousFeatureSelector.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean whitened = false;
@@ -267,6 +267,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         super(dbName, dbConf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe originalData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -353,6 +354,7 @@ public class PCA extends ContinuousFeatureSelection<PCA.ModelParameters, PCA.Tra
         modelParameters.setComponents(components.getData());      
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void filterFeatures(Dataframe newData) {
         ModelParameters modelParameters = kb().getModelParameters();

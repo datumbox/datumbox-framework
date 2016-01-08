@@ -62,11 +62,7 @@ public class AssociativeArray extends DataStructureMap<Map<Object, Object>> {
         super(internalData);
     }
     
-    /**
-     * Generates a copy of this object.
-     * 
-     * @return 
-     */
+    /** {@inheritDoc} */
     public AssociativeArray copy() {
         AssociativeArray copy = new AssociativeArray();
         copy.internalData.putAll(this.internalData);

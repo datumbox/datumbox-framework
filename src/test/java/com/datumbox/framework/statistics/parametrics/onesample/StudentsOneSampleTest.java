@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.parametrics.onesample;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for StudentsOneSample.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StudentsOneSampleTest extends BaseTest {
+public class StudentsOneSampleTest extends AbstractTest {
     
     /**
      * Test of testMean method, of class StudentsOneSample.

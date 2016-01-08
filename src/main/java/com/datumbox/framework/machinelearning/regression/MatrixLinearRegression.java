@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
-import com.datumbox.framework.machinelearning.common.StepwiseCompatible;
-import com.datumbox.framework.machinelearning.common.bases.basemodels.BaseLinearRegression;
+import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
+import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -25,7 +25,7 @@ import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,16 +43,16 @@ import org.apache.commons.math3.linear.RealVector;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {
+public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends BaseLinearRegression.ModelParameters {
+    public static class ModelParameters extends AbstractLinearRegression.ModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
          * Feature set
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds; //list of all the supported features
         
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
@@ -110,13 +110,13 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends BaseLinearRegression.TrainingParameters {
+    public static class TrainingParameters extends AbstractLinearRegression.TrainingParameters {
         private static final long serialVersionUID = 1L;
 
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends BaseLinearRegression.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractLinearRegression.ValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }
@@ -133,10 +133,39 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
 
     /** {@inheritDoc} */
     @Override
-    public Map<Object, Double> getFeaturePvalues() {
-        return kb().getModelParameters().getFeaturePvalues();
+    protected void _predictDataset(Dataframe newData) {
+        //read model params
+        ModelParameters modelParameters = kb().getModelParameters();
+
+        int d = modelParameters.getD()+1; //plus one for the constant
+        
+        Map<Object, Double> thitas = modelParameters.getThitas();
+        Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
+        
+        RealVector coefficients = new ArrayRealVector(d);
+        for(Map.Entry<Object, Double> entry : thitas.entrySet()) {
+            Integer featureId = featureIds.get(entry.getKey());
+            coefficients.setEntry(featureId, entry.getValue());
+        }
+        
+        Map<Integer, Integer> recordIdsReference = new HashMap<>(); //use a mapping between recordIds and rowIds in Matrix
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
+        
+        RealMatrix X = matrixDataset.getX();
+        
+        RealVector Y = X.operate(coefficients);
+        for(Map.Entry<Integer, Record> e : newData.entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
+            int rowId = recordIdsReference.get(rId);
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
+        }
+        
+        //recordIdsReference = null;
+        //matrixDataset = null;
     }
-    
+
+    /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
@@ -184,7 +213,7 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         //XtXinv = null;
 
         //creating a flipped map of ids to features
-        Map<Integer, Object> idsFeatures = PHPfunctions.array_flip(featureIds);
+        Map<Integer, Object> idsFeatures = PHPMethods.array_flip(featureIds);
 
 
         Map<Object, Double> pvalues = new HashMap<>(); //This is not small, but it does not make sense to store it in the db
@@ -208,39 +237,11 @@ public class MatrixLinearRegression extends BaseLinearRegression<MatrixLinearReg
         modelParameters.setFeaturePvalues(pvalues);
 
     }
-
+    
+    /** {@inheritDoc} */
     @Override
-    protected void predictDataset(Dataframe newData) {
-        //read model params
-        ModelParameters modelParameters = kb().getModelParameters();
-
-        int d = modelParameters.getD()+1; //plus one for the constant
-        
-        Map<Object, Double> thitas = modelParameters.getThitas();
-        Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
-        
-        RealVector coefficients = new ArrayRealVector(d);
-        for(Map.Entry<Object, Double> entry : thitas.entrySet()) {
-            Integer featureId = featureIds.get(entry.getKey());
-            coefficients.setEntry(featureId, entry.getValue());
-        }
-        
-        Map<Integer, Integer> recordIdsReference = new HashMap<>(); //use a mapping between recordIds and rowIds in Matrix
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
-        
-        RealMatrix X = matrixDataset.getX();
-        
-        RealVector Y = X.operate(coefficients);
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            int rowId = recordIdsReference.get(rId);
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), Y.getEntry(rowId), r.getYPredictedProbabilities()));
-        }
-        
-        //recordIdsReference = null;
-        //matrixDataset = null;
+    public Map<Object, Double> getFeaturePvalues() {
+        return kb().getModelParameters().getFeaturePvalues();
     }
-
     
 }

@@ -17,8 +17,8 @@ package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.tests.bases.BaseTest;
-import com.datumbox.tests.utilities.Datasets;
+import com.datumbox.tests.abstracts.AbstractTest;
+import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,10 +28,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for MutualInformation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MutualInformationTest extends BaseTest {
+public class MutualInformationTest extends AbstractTest {
 
     /**
      * Test of fit_transform method, of class MutualInformation.

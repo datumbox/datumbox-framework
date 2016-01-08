@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.mathematics.discrete;
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,10 +24,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Combinatorics.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CombinatoricsTest extends BaseTest {
+public class CombinatoricsTest extends AbstractTest {
 
     /**
      * Test of permutations method, of class Combinatorics.

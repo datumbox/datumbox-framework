@@ -18,12 +18,12 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.configuration.TestConfiguration;
+import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 
 import com.datumbox.framework.machinelearning.featureselection.categorical.ChisquareSelect;
 import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
@@ -38,10 +38,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for TextClassifier.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TextClassifierTest extends BaseTest {
+public class TextClassifierTest extends AbstractTest {
 
     /**
      * Test of train method, of class TextClassifier.

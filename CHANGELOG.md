@@ -51,7 +51,11 @@ Version 0.7.0-SNAPSHOT - Build 20160108
 - KnowledgeBase is no longer serializable. Its serializable fields are stored individually into the Database.
 - Restructuring the framework to remove all FindBug warnings.
 - KnowledgeBase is now an interface, while the implementation moved to StandardKnowledgeBase. The interface contains a static factory method to produce any KB. This enable us to define the knowledgeBase field of BaseTrainable private and final.
-- Moved SensitivityRates and StepwiseCompatible to the machinelearning/common/ package.
+- All methods that have copy() now implement the Copyable interface.
+- Added the multi-thread support on the predict method of most ML models.
+- Updated the MapDBConnector to call compact on primary db before close.
+- Updated the DatabaseConnector.getBigMap() support thread-safe maps.
+- Massive restructuring of packages and class names.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.persistentstorage.mapdb;
 
-import com.datumbox.common.persistentstorage.AutoCloseConnector;
+import com.datumbox.common.persistentstorage.abstracts.AutoCloseConnector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -49,9 +51,26 @@ public class MapDBConnector extends AutoCloseConnector {
     /**
      * Enum class which stores the Database Type used for every collection.
      */
-    private enum DatabaseType {
+    private enum DBType {
+        /**
+         * Primary DB stores all the BigMaps maps and atomic variables which will 
+         * be persisted after the connection closes; the DB maintains an separate 
+         * LRU cache to speed up the operations.
+         */
         PRIMARY_DB,
+        
+        /**
+         * Temp DB cached is used to store temporary medium-sized BigMaps which 
+         * will not be persisted after the connection closes; the DB maintains 
+         * an separate LRU cache to speed up the operations.
+         */
         TEMP_DB_CACHED,
+        
+        /**
+         * Temp DB uncached is used to store temporary large-sized BigMaps which 
+         * will not be persisted after the connection closes; the DB does not
+         * maintain any cache.
+         */
         TEMP_DB_UNCACHED;
     }
     
@@ -59,7 +78,7 @@ public class MapDBConnector extends AutoCloseConnector {
      * This list stores all the DB objects which are used to persist the data. This
      * library uses one default and one temporary db.
      */
-    private final Map<DatabaseType, DB> dbRegistry = new HashMap<>(); 
+    private final Map<DBType, DB> dbRegistry = new HashMap<>(); 
     
     /** 
      * @param database
@@ -76,7 +95,7 @@ public class MapDBConnector extends AutoCloseConnector {
     @Override
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
-        DB db = openDB(DatabaseType.PRIMARY_DB);
+        DB db = openDB(DBType.PRIMARY_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
         atomicVar.set(serializableObject);
         db.commit();
@@ -88,7 +107,7 @@ public class MapDBConnector extends AutoCloseConnector {
     @SuppressWarnings("unchecked")
     public <T extends Serializable> T loadObject(String name, Class<T> klass) {
         assertConnectionOpen();
-        DB db = openDB(DatabaseType.PRIMARY_DB);
+        DB db = openDB(DBType.PRIMARY_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
         return klass.cast(atomicVar.get());
     }
@@ -97,6 +116,17 @@ public class MapDBConnector extends AutoCloseConnector {
     @Override
     public void close() {
         super.close();
+        
+        //perform a compact() on the primary db if it is open.
+        //if close() is called after successfully training an algorithm then
+        //running the compact is a good idea on close. if the close() is the
+        //result of calling the delete() method on the algorithm then we are safe
+        //because the clear operation will remove everything before we call close().
+        DB db = dbRegistry.get(DBType.PRIMARY_DB);
+        if(isOpenDB(db)) {
+            db.compact();
+        }
+        
         closeDBRegistry();
     }
     
@@ -120,16 +150,16 @@ public class MapDBConnector extends AutoCloseConnector {
     
     /** {@inheritDoc} */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
         if(storageHint == StorageHint.IN_MEMORY && dbConf.isHybridized()) {
             //store in memory
             if(MapType.HASHMAP.equals(type)) {
-                return new HashMap<>();
+                return isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
             }
             else if(MapType.TREEMAP.equals(type)) {
-                return new TreeMap<>();
+                return isConcurrent?new ConcurrentSkipListMap<>():new TreeMap<>();
             }
             else {
                 throw new IllegalArgumentException("Unsupported MapType.");
@@ -139,21 +169,21 @@ public class MapDBConnector extends AutoCloseConnector {
             //store in disk with optional LRU cache
             
             //first find if the particular collection exists and retrieve its dbType
-            DatabaseType dbType = getDatabaseTypeFromName(name);
+            DBType dbType = getDatabaseTypeFromName(name);
             
             if(dbType == null) {
                 //the map does not exist. Find where it should be created.
                 if(isTemporary == false) {
-                    dbType = DatabaseType.PRIMARY_DB;
+                    dbType = DBType.PRIMARY_DB;
                 }
                 else {
                     if(storageHint == StorageHint.IN_MEMORY || storageHint == StorageHint.IN_CACHE) {
                         //we will use the LRU cache option
-                        dbType = DatabaseType.TEMP_DB_CACHED;
+                        dbType = DBType.TEMP_DB_CACHED;
                     }
                     else if(storageHint == StorageHint.IN_DISK) {
                         //no cache at all
-                        dbType = DatabaseType.TEMP_DB_UNCACHED;
+                        dbType = DBType.TEMP_DB_UNCACHED;
                     }
                     else {
                         throw new IllegalArgumentException("Unsupported StorageHint.");
@@ -186,7 +216,7 @@ public class MapDBConnector extends AutoCloseConnector {
     public <T extends Map> void dropBigMap(String name, T map) {
         assertConnectionOpen();
         
-        DatabaseType dbType = getDatabaseTypeFromName(name);
+        DBType dbType = getDatabaseTypeFromName(name);
         
         if(dbType != null) {
             DB db = dbRegistry.get(dbType);
@@ -219,21 +249,21 @@ public class MapDBConnector extends AutoCloseConnector {
      * @param dbType
      * @return 
      */
-    private DB openDB(DatabaseType dbType) {
+    private DB openDB(DBType dbType) {
         DB db = dbRegistry.get(dbType);
         if(!isOpenDB(db)) {
             DBMaker m;
             
             boolean permitCaching = true;
-            if(dbType == DatabaseType.PRIMARY_DB) {
+            if(dbType == DBType.PRIMARY_DB) {
                 //main storage
                 m = DBMaker.newFileDB(getDefaultPath().toFile());
             }
-            else if(dbType == DatabaseType.TEMP_DB_CACHED || dbType == DatabaseType.TEMP_DB_UNCACHED) {
+            else if(dbType == DBType.TEMP_DB_CACHED || dbType == DBType.TEMP_DB_UNCACHED) {
                 //temporary storage
                 m = DBMaker.newTempFileDB().deleteFilesAfterClose();
                 
-                if(dbType == DatabaseType.TEMP_DB_UNCACHED) {
+                if(dbType == DBType.TEMP_DB_UNCACHED) {
                     permitCaching = false;
                 }
             }
@@ -273,8 +303,8 @@ public class MapDBConnector extends AutoCloseConnector {
      * @param name
      * @return 
      */
-    private DatabaseType getDatabaseTypeFromName(String name) {
-        for(Map.Entry<DatabaseType, DB> entry : dbRegistry.entrySet()) {
+    private DBType getDatabaseTypeFromName(String name) {
+        for(Map.Entry<DBType, DB> entry : dbRegistry.entrySet()) {
             DB db = entry.getValue();
             if(isOpenDB(db) && db.exists(name)) {
                 return entry.getKey();

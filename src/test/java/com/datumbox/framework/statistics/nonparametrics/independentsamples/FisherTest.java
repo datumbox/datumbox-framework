@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.nonparametrics.independentsamples;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Fisher.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FisherTest extends BaseTest {
+public class FisherTest extends AbstractTest {
     
     /**
      * Test of test method, of class Fisher.

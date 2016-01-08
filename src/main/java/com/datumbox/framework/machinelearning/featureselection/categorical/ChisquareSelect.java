@@ -15,12 +15,12 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
-import com.datumbox.framework.machinelearning.common.bases.featureselection.CategoricalFeatureSelection;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.bases.featureselection.ScoreBasedFeatureSelection;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.independentsamples.Chisquare;
 import java.util.Arrays;
@@ -36,10 +36,10 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters>{
+public class ChisquareSelect extends AbstractCategoricalFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters>{
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends CategoricalFeatureSelection.ModelParameters {
+    public static class ModelParameters extends AbstractCategoricalFeatureSelector.ModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -53,7 +53,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends CategoricalFeatureSelection.TrainingParameters {
+    public static class TrainingParameters extends AbstractCategoricalFeatureSelector.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private double aLevel = 0.05; 
@@ -94,6 +94,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
     }
     
+    /** {@inheritDoc} */
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
@@ -143,7 +144,7 @@ public class ChisquareSelect extends CategoricalFeatureSelection<ChisquareSelect
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            ScoreBasedFeatureSelection.selectHighScoreFeatures(featureScores, maxFeatures);
+            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(featureScores, maxFeatures);
         }
     }
     

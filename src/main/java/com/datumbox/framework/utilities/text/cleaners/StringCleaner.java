@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.cleaners;
 
-import com.datumbox.common.utilities.PHPfunctions;
+import com.datumbox.common.utilities.PHPMethods;
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Locale;
@@ -65,7 +65,7 @@ public class StringCleaner {
      * @return 
      */
     public static String tokenizeURLs(String text) {
-        return PHPfunctions.preg_replace(URL_PATTERN, TOKENIZED_URL, text);
+        return PHPMethods.preg_replace(URL_PATTERN, TOKENIZED_URL, text);
     }
     
     /**

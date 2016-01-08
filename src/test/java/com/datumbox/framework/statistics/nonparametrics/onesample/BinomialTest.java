@@ -16,15 +16,16 @@
 package com.datumbox.framework.statistics.nonparametrics.onesample;
 
 
-import com.datumbox.tests.bases.BaseTest;
+import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test cases for Binomial.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BinomialTest extends BaseTest {
+public class BinomialTest extends AbstractTest {
     
     /**
      * Test of test method, of class Binomial.

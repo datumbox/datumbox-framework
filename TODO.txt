@@ -1,8 +1,10 @@
 CODE IMPROVEMENTS
 =================
 
-- Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
-- Add multithreading support.
+- Validate that calling compact on MapDB is not reducing the speed too much.
+- See of we can make LatentDirichletAllocation use the parallel prediction.
+- Add multithreading support on the training part and on some parts of DataTransformation, FeatureSelection.
+
 - Update all maven plugins and dependencies to their latest versions.
     - Add support for MapDB 2.0 once a stable version is released.
     - Upgrade maven-surefire to 2.19.1.
@@ -28,8 +30,18 @@ NEW ALGORITHMS
 - Add the ability to search through the configuration space and find the best performing algorithmic configuration.
 
 
-CHECK OUT HUGE COLLECTION LIBS, DBS AND STORAGE
-===============================================
+TO CHECK OUT
+============
+
+Linear Algebra
+--------------
+
+- JBLAS - Linear Algebra for Java:
+	https://github.com/mikiobraun/jblas
+	http://jblas.org/
+
+Huge Collection libs, DBs and Storage
+-------------------------------------
 
 - Java StoredMap + BerkeleyDB:
     http://docs.oracle.com/cd/E17277_02/html/java/com/sleepycat/collections/StoredMap.html
