@@ -21,9 +21,9 @@ import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrain
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
 import com.datumbox.framework.machinelearning.common.bases.mlmodels.BaseMLmodel;
-import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.bases.datatransformation.DataTransformer;
 import com.datumbox.framework.machinelearning.common.bases.featureselection.FeatureSelection;
+import com.datumbox.framework.machinelearning.common.dataobjects.StandardKnowledgeBase;
 
 /**
  * The BaseWrapper is a trainable object that uses composition instead of inheritance
@@ -35,7 +35,7 @@ import com.datumbox.framework.machinelearning.common.bases.featureselection.Feat
  * @param <MP>
  * @param <TP>
  */
-public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP extends BaseWrapper.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
+public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP extends BaseWrapper.TrainingParameters> extends BaseTrainable<MP, TP, StandardKnowledgeBase<MP, TP>> {
     
     /**
      * The DataTransformer instance of the wrapper.
@@ -214,7 +214,7 @@ public abstract class BaseWrapper<MP extends BaseWrapper.ModelParameters, TP ext
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
     protected BaseWrapper(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+        super(dbName, dbConf, StandardKnowledgeBase.class, mpClass, tpClass);
     }
       
     /** {@inheritDoc} */

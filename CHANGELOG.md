@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160107
+Version 0.7.0-SNAPSHOT - Build 20160108
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -50,6 +50,7 @@ Version 0.7.0-SNAPSHOT - Build 20160107
 - Changed the behaviour and the public methods of the DatabaseConnector interface. The dropDatabase() is replaced with a clear() method that deletes all the data but does not close the connection with the database.
 - KnowledgeBase is no longer serializable. Its serializable fields are stored individually into the Database.
 - Restructuring the framework to remove all FindBug warnings.
+- KnowledgeBase is now an interface, while the implementation moved to StandardKnowledgeBase. The interface contains a static factory method to produce any KB. This enable us to define the knowledgeBase field of BaseTrainable private and final.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

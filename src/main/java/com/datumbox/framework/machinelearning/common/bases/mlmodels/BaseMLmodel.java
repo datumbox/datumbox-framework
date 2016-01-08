@@ -72,7 +72,7 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
     }
     
     /** 
-     * @param dbName
+     * @param baseDBname
      * @param dbConf
      * @param mpClass
      * @param tpClass
@@ -80,9 +80,8 @@ public abstract class BaseMLmodel<MP extends BaseMLmodel.ModelParameters, TP ext
      * @param modelValidator
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
-    protected BaseMLmodel(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
-        super(dbName, dbConf);
-        this.knowledgeBase = new MLmodelKnowledgeBase<>(this.dbName, dbConf, mpClass, tpClass, vmClass);
+    protected BaseMLmodel(String baseDBname, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, ModelValidation<MP, TP, VM> modelValidator) {
+        super(baseDBname, dbConf, MLmodelKnowledgeBase.class, mpClass, tpClass, vmClass);
         this.modelValidator = modelValidator;
     } 
     

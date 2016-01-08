@@ -22,7 +22,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseModelParameters;
 import com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainingParameters;
-import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
+import com.datumbox.framework.machinelearning.common.dataobjects.StandardKnowledgeBase;
 
 /**
  * Base class for all the Feature Selectors of the framework.
@@ -31,7 +31,7 @@ import com.datumbox.framework.machinelearning.common.dataobjects.KnowledgeBase;
  * @param <MP>
  * @param <TP>
  */
-public abstract class FeatureSelection<MP extends FeatureSelection.ModelParameters, TP extends FeatureSelection.TrainingParameters> extends BaseTrainable<MP, TP, KnowledgeBase<MP, TP>> {
+public abstract class FeatureSelection<MP extends FeatureSelection.ModelParameters, TP extends FeatureSelection.TrainingParameters> extends BaseTrainable<MP, TP, StandardKnowledgeBase<MP, TP>> {
 
     /**
      * The ModelParameters class stores the coefficients that were learned during
@@ -65,7 +65,7 @@ public abstract class FeatureSelection<MP extends FeatureSelection.ModelParamete
      * @see com.datumbox.framework.machinelearning.common.bases.baseobjects.BaseTrainable#BaseTrainable(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class)  
      */
     protected FeatureSelection(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+        super(dbName, dbConf, StandardKnowledgeBase.class, mpClass, tpClass);
     }
     
     

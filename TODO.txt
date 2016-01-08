@@ -4,6 +4,7 @@ CODE IMPROVEMENTS
 - Checkout some of the "Load of known null value" perhaps we can completely remove this parameter if it is always null. MatrixDataframe.newInstance param recordIdsReference.
 - Checkout that the example project passes as is. Check that the hybridized is on by default.
 - Update the example project to the latest version build and the config file.
+
 - Add a predictRecord() method BaseMLmodel and refactor the code to be implemented by every algorithm.
 - Add multithreading support.
 - Update all maven plugins and dependencies to their latest versions.
