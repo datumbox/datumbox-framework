@@ -15,7 +15,6 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.framework.utilities.text.tokenizers.AbstractTokenizer;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -31,15 +30,15 @@ import java.util.Set;
 public class UniqueWordSequenceExtractor extends AbstractTextExtractor<UniqueWordSequenceExtractor.Parameters, Integer, String> {
     
     /**
-     * Parameters of the UniqueWordSequenceExtractor.
+     * AbstractParameters of the UniqueWordSequenceExtractor.
      */
-    public static class Parameters extends AbstractTextExtractor.Parameters {  
+    public static class Parameters extends AbstractTextExtractor.AbstractParameters {  
         private static final long serialVersionUID = 1L;
         
     }
     
     /**
-     * Public constructor that accepts as arguments the Parameters object.
+     * Public constructor that accepts as arguments the AbstractParameters object.
      * 
      * @param parameters 
      */
@@ -59,9 +58,7 @@ public class UniqueWordSequenceExtractor extends AbstractTextExtractor<UniqueWor
      */
     @Override
     public Map<Integer, String> extract(final String text) {
-        AbstractTokenizer tokenizer = parameters.generateTokenizer();
-        
-        Set<String> tmpKwd = new LinkedHashSet<>(tokenizer.tokenize(text));
+        Set<String> tmpKwd = new LinkedHashSet<>(generateTokenizer().tokenize(text));
         
         Map<Integer, String> keywordSequence = new LinkedHashMap<>();
         

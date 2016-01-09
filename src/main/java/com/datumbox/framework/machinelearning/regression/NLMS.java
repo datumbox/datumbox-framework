@@ -44,12 +44,12 @@ import java.util.Map;
 public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> implements PredictParallelizable {
      
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractLinearRegression.ModelParameters {
+    public static class ModelParameters extends AbstractLinearRegression.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -58,7 +58,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractLinearRegression.TrainingParameters {  
+    public static class TrainingParameters extends AbstractLinearRegression.AbstractTrainingParameters {  
         private static final long serialVersionUID = 1L;
         
         private int totalIterations=1000; 
@@ -104,7 +104,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractLinearRegression.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractLinearRegression.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }

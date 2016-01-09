@@ -27,7 +27,7 @@ import java.util.List;
  * @param <TP>
  * @param <VM>
  */
-public class LinearRegressionValidator<MP extends AbstractLinearRegression.ModelParameters, TP extends AbstractLinearRegression.TrainingParameters, VM extends AbstractLinearRegression.ValidationMetrics> extends AbstractValidator<MP, TP, VM> {
+public class LinearRegressionValidator<MP extends AbstractLinearRegression.AbstractModelParameters, TP extends AbstractLinearRegression.AbstractTrainingParameters, VM extends AbstractLinearRegression.AbstractValidationMetrics> extends AbstractValidator<MP, TP, VM> {
     
     /** {@inheritDoc} */
     @Override
@@ -37,7 +37,7 @@ public class LinearRegressionValidator<MP extends AbstractLinearRegression.Model
             return null;
         }
         
-        //create a new empty ValidationMetrics Object
+        //create a new empty AbstractValidationMetrics Object
         VM avgValidationMetrics = (VM) validationMetricsList.iterator().next().getEmptyObject();
         
         int k = validationMetricsList.size(); //number of samples

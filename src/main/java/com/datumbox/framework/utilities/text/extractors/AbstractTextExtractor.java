@@ -23,39 +23,21 @@ import java.util.Map;
 
 /**
  * Base class for all Text exactor classes. The Text Extractors are parameterized
- * with a Parameters class and they take as input strings.
+ with a AbstractParameters class and they take as input strings.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <TP>
  * @param <K>
  * @param <V>
  */
-public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.Parameters, K, V> {
+public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.AbstractParameters, K, V> {
     
     /**
-     * Parameters of the AbstractTextExtractor.
+     * AbstractParameters of the AbstractTextExtractor.
      */
-    public static abstract class Parameters implements Parameterizable {         
+    public static abstract class AbstractParameters implements Parameterizable {         
         
         private Class<? extends AbstractTokenizer> tokenizer = WhitespaceTokenizer.class;
-
-        /**
-         * Generates a new AbstractTokenizer object by using the provided tokenizer class.
-         * 
-         * @return 
-         */
-        public AbstractTokenizer generateTokenizer() {
-            if(tokenizer==null) {
-                return null;
-            }
-            
-            try {
-                return tokenizer.newInstance();
-            } 
-            catch (InstantiationException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
 
         /**
          * Getter of the AbstractTokenizer class.
@@ -78,17 +60,37 @@ public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.Par
     }
     
     /**
-     * The Parameters of the AbstractTextExtractor.
+     * The AbstractParameters of the AbstractTextExtractor.
      */
     protected TP parameters;
     
     /**
-     * Public constructor that accepts as arguments the Parameters object.
+     * Public constructor that accepts as arguments the AbstractParameters object.
      * 
      * @param parameters 
      */
     public AbstractTextExtractor(TP parameters) {
         this.parameters = parameters;
+    }
+
+
+    /**
+     * Generates a new AbstractTokenizer object by using the provided tokenizer class.
+     * 
+     * @return 
+     */
+    protected AbstractTokenizer generateTokenizer() {
+        Class<? extends AbstractTokenizer> tokenizer = parameters.getTokenizer();
+        if(tokenizer==null) {
+            return null;
+        }
+
+        try {
+            return tokenizer.newInstance();
+        } 
+        catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**
@@ -113,7 +115,7 @@ public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.Par
      * @param parameters
      * @return 
      */
-    public static <T extends AbstractTextExtractor, TP extends AbstractTextExtractor.Parameters> T newInstance(Class<T> tClass, TP parameters) {
+    public static <T extends AbstractTextExtractor, TP extends AbstractTextExtractor.AbstractParameters> T newInstance(Class<T> tClass, TP parameters) {
         T textExtractor = null;
         try {
             textExtractor = (T) tClass.getConstructors()[0].newInstance(parameters);

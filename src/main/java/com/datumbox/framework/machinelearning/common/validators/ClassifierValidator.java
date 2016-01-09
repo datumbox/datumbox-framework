@@ -31,7 +31,7 @@ import java.util.Set;
  * @param <TP>
  * @param <VM>
  */
-public class ClassifierValidator<MP extends AbstractClassifier.ModelParameters, TP extends AbstractClassifier.TrainingParameters, VM extends AbstractClassifier.ValidationMetrics> extends AbstractValidator<MP, TP, VM> {
+public class ClassifierValidator<MP extends AbstractClassifier.AbstractModelParameters, TP extends AbstractClassifier.AbstractTrainingParameters, VM extends AbstractClassifier.AbstractValidationMetrics> extends AbstractValidator<MP, TP, VM> {
     
     /** {@inheritDoc} */
     @Override
@@ -44,7 +44,7 @@ public class ClassifierValidator<MP extends AbstractClassifier.ModelParameters, 
         int k = validationMetricsList.size(); //number of samples
 
         
-        //create a new empty ValidationMetrics Object
+        //create a new empty AbstractValidationMetrics Object
         VM avgValidationMetrics = (VM) validationMetricsList.iterator().next().getEmptyObject();
             
             

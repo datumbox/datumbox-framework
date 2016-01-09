@@ -16,7 +16,6 @@
 package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 
 /**
@@ -27,30 +26,7 @@ import com.datumbox.framework.machinelearning.common.abstracts.validators.Abstra
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.ModelParameters, TP extends AbstractTopicModeler.TrainingParameters, VM extends AbstractTopicModeler.ValidationMetrics> extends AbstractAlgorithm<MP, TP, VM> {
-    
-    /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractAlgorithm.ModelParameters {
-        
-        /** 
-         * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
-         */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-        
-    } 
-    
-    /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractAlgorithm.TrainingParameters {    
-
-    } 
-    
-    /** {@inheritDoc} */
-    public static abstract class ValidationMetrics extends AbstractAlgorithm.ValidationMetrics {
-  
-    }
+public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.AbstractModelParameters, TP extends AbstractTopicModeler.AbstractTrainingParameters, VM extends AbstractTopicModeler.AbstractValidationMetrics> extends AbstractModeler<MP, TP, VM> {
     
     /** 
      * @param dbName

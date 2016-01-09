@@ -57,7 +57,7 @@ import java.util.Set;
 public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> implements PredictParallelizable {
 
     /** {@inheritDoc} */
-    public static class Cluster extends AbstractClusterer.Cluster {
+    public static class Cluster extends AbstractClusterer.AbstractCluster {
         private static final long serialVersionUID = 1L;
         
         private Record centroid;
@@ -66,7 +66,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         /** 
          * @param clusterId
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer) 
          */
         protected Cluster(int clusterId) {
             super(clusterId);
@@ -132,7 +132,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractClusterer.ModelParameters<Kmeans.Cluster> {
+    public static class ModelParameters extends AbstractClusterer.AbstractModelParameters<Kmeans.Cluster> {
         private static final long serialVersionUID = 1L;
         
         private int totalIterations;
@@ -142,7 +142,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -187,7 +187,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractClusterer.TrainingParameters {    
+    public static class TrainingParameters extends AbstractClusterer.AbstractTrainingParameters {    
         private static final long serialVersionUID = 1L;
         
         /**
@@ -395,7 +395,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     } 
 
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClusterer.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClusterer.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }

@@ -15,17 +15,15 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
+import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainingParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractValidationMetrics;
+import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
+import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.TripleKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
 
 /**
  * Base Class for Machine Learning algorithms.
@@ -35,39 +33,15 @@ import com.datumbox.framework.machinelearning.common.dataobjects.TripleKnowledge
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractAlgorithm<MP extends AbstractAlgorithm.ModelParameters, TP extends AbstractAlgorithm.TrainingParameters, VM extends AbstractAlgorithm.ValidationMetrics> extends AbstractTrainer<MP, TP, TripleKnowledgeBase<MP, TP, VM>> {
+public abstract class AbstractModeler<MP extends ModelParameters, TP extends TrainingParameters, VM extends ValidationMetrics> extends AbstractTrainer<MP, TP, TripleKnowledgeBase<MP, TP, VM>> {
     
     private final AbstractValidator<MP, TP, VM> modelValidator;
     
     /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
+     * The AbstractValidationMetrics class stores information about the performance of the
+ algorithm.
      */
-    public static abstract class ModelParameters extends AbstractModelParameters {
-        
-        /** 
-         * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
-         */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-        
-    }
-    
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
-    public static abstract class TrainingParameters extends AbstractTrainingParameters {
-        
-    } 
-
-    /**
-     * The ValidationMetrics class stores information about the performance of the
-     * algorithm.
-     */
-    public static abstract class ValidationMetrics extends AbstractValidationMetrics {   
+    public static abstract class AbstractValidationMetrics implements ValidationMetrics {   
         
     }
     
@@ -78,16 +52,16 @@ public abstract class AbstractAlgorithm<MP extends AbstractAlgorithm.ModelParame
      * @param tpClass
      * @param vmClass
      * @param modelValidator
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...) 
      */
-    protected AbstractAlgorithm(String baseDBname, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
+    protected AbstractModeler(String baseDBname, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
         super(baseDBname, dbConf, TripleKnowledgeBase.class, mpClass, tpClass, vmClass);
         this.modelValidator = modelValidator;
     } 
     
     /**
-     * Performs k-fold cross validation on the dataset and returns the ValidationMetrics
-     * Object.
+     * Performs k-fold cross validation on the dataset and returns the AbstractValidationMetrics
+ Object.
      * 
      * @param trainingData
      * @param trainingParameters

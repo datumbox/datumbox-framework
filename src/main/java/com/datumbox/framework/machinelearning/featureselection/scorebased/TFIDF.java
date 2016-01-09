@@ -41,7 +41,7 @@ import java.util.Map;
 public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractScoreBasedFeatureSelector.ModelParameters {
+    public static class ModelParameters extends AbstractScoreBasedFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -49,7 +49,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -76,7 +76,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractScoreBasedFeatureSelector.TrainingParameters {
+    public static class TrainingParameters extends AbstractScoreBasedFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean binarized = false;

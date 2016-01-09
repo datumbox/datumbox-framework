@@ -1,8 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Try declaring all internal static abstract classes with abstract and then simplify the structure by keeping only the none empty ones.
-- Build Interfaces for all the basic abstract classes appearing on the root of com.datumbox.framework.machinelearning.common.abstracts to make it more user friendly. Place there any newInstance methods.
+- Profiling & benchmarking.
 - Add multithreading support on the training part and on some parts of DataTransformation, FeatureSelection and Dataframe.Builder.parseTextFiles().
 
 - Update all maven plugins and dependencies to their latest versions.

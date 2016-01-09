@@ -40,19 +40,19 @@ import org.slf4j.LoggerFactory;
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCategoricalFeatureSelector.ModelParameters, TP extends AbstractCategoricalFeatureSelector.TrainingParameters> extends AbstractFeatureSelector<MP, TP> {
+public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCategoricalFeatureSelector.AbstractModelParameters, TP extends AbstractCategoricalFeatureSelector.AbstractTrainingParameters> extends AbstractFeatureSelector<MP, TP> {
     
     /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractFeatureSelector.ModelParameters {
+    public static abstract class AbstractModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -77,7 +77,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     }
     
     /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractFeatureSelector.TrainingParameters {
+    public static abstract class AbstractTrainingParameters extends AbstractFeatureSelector.AbstractTrainingParameters {
         
         private Integer rareFeatureThreshold = null;
         private Integer maxFeatures=null;

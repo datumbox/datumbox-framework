@@ -57,7 +57,7 @@ public class GaussianDPMMTest extends AbstractTest {
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setKappa0(0);
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
@@ -118,7 +118,7 @@ public class GaussianDPMMTest extends AbstractTest {
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setKappa0(0);
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});

@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.machinelearning.common.abstracts;
+package com.datumbox.framework.machinelearning.common.interfaces;
 
 import com.datumbox.common.interfaces.Parameterizable;
 
 /**
- * Base class for every TrainingParameters class in the framework. 
+ * The TrainingParameters objects store all the initial parameters provided
+ * to the algorithms during training. 
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 
-public abstract class AbstractTrainingParameters implements Parameterizable {
+public interface TrainingParameters extends Parameterizable {
 
 }

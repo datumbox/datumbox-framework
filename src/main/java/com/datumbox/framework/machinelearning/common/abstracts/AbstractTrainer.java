@@ -15,13 +15,20 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts;
 
+import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.interfaces.Trainable;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
+import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +41,119 @@ import org.slf4j.LoggerFactory;
  * @param <TP>
  * @param <KB>
  */
-public abstract class AbstractTrainer<MP extends AbstractModelParameters, TP extends AbstractTrainingParameters, KB extends DoubleKnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
+public abstract class AbstractTrainer<MP extends ModelParameters, TP extends TrainingParameters, KB extends DoubleKnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
+    
+    
+    /**
+     * Base class for every ModelParameter class in the framework. It automatically
+     * initializes all the BidMap fields by using reflection.
+     * 
+     * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
+     */
+    public static abstract class AbstractModelParameters implements ModelParameters {
+        //number of data points used for training
+        private Integer n = 0;
+
+        //number of features in data points used for training
+        private Integer d = 0;
+
+        /**
+         * Protected constructor which accepts as argument the DatabaseConnector.
+         * 
+         * @param dbc 
+         */
+        public AbstractModelParameters(DatabaseConnector dbc) {
+            //Initialize all the BigMap fields
+            bigMapInitializer(dbc);
+        }
+
+        /**
+         * Getter for the total number of records used in training.
+         * 
+         * @return 
+         */
+        public Integer getN() {
+            return n;
+        }
+
+        /**
+         * Getter for the dimension of the dataset used in training.
+         * 
+         * @return 
+         */
+        public Integer getD() {
+            return d;
+        }
+
+        /**
+         * Setter for the total number of records used in training.
+         * 
+         * @param n 
+         */
+        protected void setN(Integer n) {
+            this.n = n;
+        }
+
+        /**
+         * Setter for the dimension of the dataset used in training.
+         * 
+         * @param d 
+         */
+        protected void setD(Integer d) {
+            this.d = d;
+        }
+
+        /**
+         * Initializes all the fields of the class which are marked with the BigMap
+         * annotation automatically.
+         * 
+         * @param dbc 
+         */
+        private void bigMapInitializer(DatabaseConnector dbc) {
+            //get all the fields from all the inherited classes
+            for(Field field : getAllFields(new LinkedList<>(), this.getClass())){
+
+                //if the field is annotated with BigMap
+                if (field.isAnnotationPresent(BigMap.class)) {
+                    field.setAccessible(true);
+
+                    try {
+                        BigMap a = field.getAnnotation(BigMap.class);
+                        field.set(this, dbc.getBigMap(field.getName(), a.mapType(), a.storageHint(), a.concurrent(), false));
+                    } 
+                    catch (IllegalArgumentException | IllegalAccessException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                }
+            }
+        }
+
+        /**
+         * Gets all the fields recursively from all the parent classes.
+         * 
+         * @param fields
+         * @param type
+         * @return 
+         */
+        private List<Field> getAllFields(List<Field> fields, Class<?> type) {
+            fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+            if (type.getSuperclass() != null) {
+                fields = getAllFields(fields, type.getSuperclass());
+            }
+
+            return fields;
+        }
+    }
+
+    /**
+     * The AbstractTrainingParameters class stores the parameters that can be 
+     * changed  before training the algorithm.
+     */
+    public static abstract class AbstractTrainingParameters implements TrainingParameters {
+                     
+    }
     
     /**
      * The Logger of all algorithms.
@@ -52,28 +171,6 @@ public abstract class AbstractTrainer<MP extends AbstractModelParameters, TP ext
      */
     private final KB knowledgeBase;
     
-    /**
-     * Generates a new instance of a AbstractTrainer by providing the Class of the
- algorithm.
-     * 
-     * @param <BT>
-     * @param aClass
-     * @param dbName
-     * @param dbConf
-     * @return 
-     */
-    public static <BT extends AbstractTrainer> BT newInstance(Class<BT> aClass, String dbName, DatabaseConfiguration dbConf) {
-        BT algorithm = null;
-        try {
-            algorithm = aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConf);
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        return algorithm;
-    }
-
     /**
      * The basic Constructor of all BaseTrainable classes.
      * 
@@ -117,8 +214,10 @@ public abstract class AbstractTrainer<MP extends AbstractModelParameters, TP ext
         kb().setTrainingParameters(trainingParameters);
         
         MP modelParameters = kb().getModelParameters();
-        modelParameters.setN(trainingData.size());
-        modelParameters.setD(trainingData.xColumnSize());
+        if(modelParameters instanceof AbstractModelParameters) {
+            ((AbstractModelParameters)modelParameters).setN(trainingData.size());
+            ((AbstractModelParameters)modelParameters).setD(trainingData.xColumnSize());
+        }
         
         _fit(trainingData);
         

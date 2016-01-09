@@ -17,10 +17,10 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.common.dataobjects.Dataframe;
+import com.datumbox.common.interfaces.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapMethods;
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,12 +39,12 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private transient AbstractRegressor mlregressor = null;
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractRegressor.ModelParameters {
+    public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -54,7 +54,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractRegressor.TrainingParameters {
+    public static class TrainingParameters extends AbstractRegressor.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         //primitives/wrappers
@@ -66,7 +66,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private Class<? extends AbstractRegressor> regressionClass;
 
         //Parameter Objects
-        private AbstractRegressor.TrainingParameters regressionTrainingParameters;
+        private AbstractRegressor.AbstractTrainingParameters regressionTrainingParameters;
 
         //Field Getters/Setters
 
@@ -142,7 +142,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @return 
          */
-        public AbstractRegressor.TrainingParameters getRegressionTrainingParameters() {
+        public AbstractRegressor.AbstractTrainingParameters getRegressionTrainingParameters() {
             return regressionTrainingParameters;
         }
         
@@ -152,7 +152,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @param regressionTrainingParameters 
          */
-        public void setRegressionTrainingParameters(AbstractRegressor.TrainingParameters regressionTrainingParameters) {
+        public void setRegressionTrainingParameters(AbstractRegressor.AbstractTrainingParameters regressionTrainingParameters) {
             this.regressionTrainingParameters = regressionTrainingParameters;
         }
         
@@ -276,7 +276,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = AbstractAlgorithm.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
+        mlregressor = Trainable.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
         
         mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
         copiedTrainingData.delete();
@@ -286,7 +286,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private void loadRegressor() {
         if(mlregressor==null) {
             //initialize algorithm
-            mlregressor = AbstractAlgorithm.newInstance(kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf()); 
+            mlregressor = Trainable.newInstance(kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf()); 
         }
     }
     
@@ -294,7 +294,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         //initialize algorithm
-        mlregressor = AbstractAlgorithm.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
+        mlregressor = Trainable.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
 
         //train the regressor
         mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());

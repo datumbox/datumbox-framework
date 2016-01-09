@@ -18,10 +18,10 @@ package com.datumbox.framework.machinelearning.common.dataobjects;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainingParameters;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
+import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
 
 
 /**
@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public class DoubleKnowledgeBase<MP extends AbstractModelParameters, TP extends AbstractTrainingParameters> implements KnowledgeBase<MP, TP> {
+public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements KnowledgeBase<MP, TP> {
     
     /**
      * The database configuration of the Permanent Storage.

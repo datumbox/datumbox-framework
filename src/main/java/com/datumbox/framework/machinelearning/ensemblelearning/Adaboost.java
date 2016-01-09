@@ -38,12 +38,12 @@ import java.util.Map;
 public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters, Adaboost.ValidationMetrics> {
  
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractBoostingBagging.ModelParameters {
+    public static class ModelParameters extends AbstractBoostingBagging.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -52,13 +52,13 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractBoostingBagging.TrainingParameters {    
+    public static class TrainingParameters extends AbstractBoostingBagging.AbstractTrainingParameters {    
         private static final long serialVersionUID = 1L;
         
     } 
         
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractBoostingBagging.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractBoostingBagging.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }

@@ -47,7 +47,7 @@ import java.util.Set;
 public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters, CollaborativeFiltering.ValidationMetrics> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractRecommender.ModelParameters {
+    public static class ModelParameters extends AbstractRecommender.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
@@ -55,7 +55,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -84,7 +84,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractRecommender.TrainingParameters {
+    public static class TrainingParameters extends AbstractRecommender.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         /**
@@ -130,7 +130,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     }
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractRecommender.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractRecommender.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
         private double RMSE = 0.0; 

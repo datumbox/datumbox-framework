@@ -60,7 +60,7 @@ import java.util.Map;
 public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractTopicModeler.ModelParameters {
+    public static class ModelParameters extends AbstractTopicModeler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         private int totalIterations;
@@ -82,7 +82,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -225,7 +225,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     }  
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractTopicModeler.TrainingParameters {  
+    public static class TrainingParameters extends AbstractTopicModeler.AbstractTrainingParameters {  
         private static final long serialVersionUID = 1L;
         
         private int k = 2; //number of topics
@@ -310,7 +310,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractTopicModeler.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractTopicModeler.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
         private double perplexity = 0.0;

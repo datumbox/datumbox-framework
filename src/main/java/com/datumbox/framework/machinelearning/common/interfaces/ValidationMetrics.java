@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.machinelearning.common.abstracts;
+package com.datumbox.framework.machinelearning.common.interfaces;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Base class for every ValidationMetrics class in the framework. 
+ * Interface for every ValidationMetrics class in the framework. 
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 
-public abstract class AbstractValidationMetrics implements Serializable {
+public interface ValidationMetrics extends Serializable {
 
     /**
      * This method allows us to create a new empty Validation Metrics object 
@@ -32,7 +32,7 @@ public abstract class AbstractValidationMetrics implements Serializable {
      * 
      * @return 
      */
-    public AbstractValidationMetrics getEmptyObject() {
+    default public ValidationMetrics getEmptyObject() {
         try {
             return this.getClass().getConstructor().newInstance();
         } 

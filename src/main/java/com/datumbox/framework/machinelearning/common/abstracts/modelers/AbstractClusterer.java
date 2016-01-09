@@ -19,7 +19,6 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import com.datumbox.framework.machinelearning.common.interfaces.Cluster;
 
 
 /**
@@ -42,10 +42,10 @@ import java.util.Set;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP extends AbstractClusterer.ModelParameters, TP extends AbstractClusterer.TrainingParameters, VM extends AbstractClusterer.ValidationMetrics> extends AbstractAlgorithm<MP, TP, VM> {
+public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractCluster, MP extends AbstractClusterer.AbstractModelParameters, TP extends AbstractClusterer.AbstractTrainingParameters, VM extends AbstractClusterer.AbstractValidationMetrics> extends AbstractModeler<MP, TP, VM> {
 
     /** {@inheritDoc} */
-    public static abstract class Cluster extends AbstractCluster {
+    public static abstract class AbstractCluster implements Cluster {
 
         /**
          * The id of the cluster.
@@ -67,7 +67,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
          * 
          * @param clusterId 
          */
-        protected Cluster(Integer clusterId) {
+        protected AbstractCluster(Integer clusterId) {
             this.clusterId = clusterId;
             recordIdSet = new HashSet<>(); //This is large but it should store only references of the Records not the actualy objects
         }
@@ -88,12 +88,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
         @Override
         public Object getLabelY() {
             return labelY;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        protected void setLabelY(Object labelY) {
-            this.labelY = labelY;
         }
 
         /** {@inheritDoc} */
@@ -133,14 +127,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
 
         /** {@inheritDoc} */
         @Override
-        protected void clear() {
-            if(recordIdSet!=null) {
-                recordIdSet.clear();
-            }
-        }
-
-        /** {@inheritDoc} */
-        @Override
         public int hashCode() {
             int hash = 7;
             hash = 89 * hash + this.clusterId;
@@ -156,19 +142,59 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
             if (getClass() != obj.getClass()) {
                 return false;
             }
-            else if (!Objects.equals(this.clusterId, ((Cluster) obj).clusterId)) {
+            else if (!Objects.equals(this.clusterId, ((AbstractCluster) obj).clusterId)) {
                 return false;
             }
             return true;
         }
 
+        /**
+         * Setter for the label Y of the cluster.
+         * 
+         * @param labelY 
+         */
+        protected void setLabelY(Object labelY) {
+            this.labelY = labelY;
+        }
+
+        /**
+         * Clears all the assignments and internal parameters of the cluster.
+         */
+        protected void clear() {
+            if(recordIdSet!=null) {
+                recordIdSet.clear();
+            }
+        }
+
+
+        //abstract methods that modify the cluster set and should update its statistics in each implementation
+
+        /**
+         * Adds the Record r with unique identified rId in the cluster and
+         * updates the cluster's parameters.
+         * 
+         * @param rId
+         * @param r
+         * @return 
+         */
+        protected abstract boolean add(Integer rId, Record r);
+
+        /**
+         * Removes the Record r with unique identified rId from the cluster and
+         * updates the cluster's parameters
+         * 
+         * @param rId
+         * @param r
+         * @return 
+         */
+        protected abstract boolean remove(Integer rId, Record r);
     }
     
     /**
      * {@inheritDoc}
      * @param <CL>
      */
-    public static abstract class ModelParameters<CL extends AbstractClusterer.Cluster> extends AbstractAlgorithm.ModelParameters {
+    public static abstract class AbstractModelParameters<CL extends Cluster> extends AbstractModeler.AbstractModelParameters {
         
         //number of classes if the dataset is annotated. Use Linked Hash Set to ensure that the order of classes will be maintained. 
         private Set<Object> goldStandardClasses = new LinkedHashSet<>();
@@ -177,9 +203,9 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -211,7 +237,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
         }
         
         /**
-         * Getter for Cluster List.
+         * Getter for AbstractCluster List.
          * 
          * @return 
          */
@@ -220,7 +246,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
         }
         
         /**
-         * Setter for Cluster List.
+         * Setter for AbstractCluster List.
          * 
          * @param clusterList 
          */
@@ -230,11 +256,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
         
     } 
     
-    /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractAlgorithm.TrainingParameters {    
-
-    } 
-
     /**
      * 
      * {@inheritDoc}
@@ -243,7 +264,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
      * http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html
      * http://thesis.neminis.org/wp-content/plugins/downloads-manager/upload/masterThesis-VR.pdf
      */
-    public static abstract class ValidationMetrics extends AbstractAlgorithm.ValidationMetrics {
+    public static abstract class AbstractValidationMetrics extends AbstractModeler.AbstractValidationMetrics {
         
         private Double purity = null;
         private Double NMI = null; //Normalized Mutual Information: I(Omega,Gama) calculation
@@ -397,7 +418,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.Cluster, MP
     }
     
     /**
-     * Getter for the Cluster list.
+     * Getter for the AbstractCluster list.
      * 
      * @return 
      */

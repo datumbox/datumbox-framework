@@ -27,7 +27,7 @@ import java.util.List;
  * @param <TP>
  * @param <VM>
  */
-public class ClustererValidator<MP extends AbstractClusterer.ModelParameters, TP extends AbstractClusterer.TrainingParameters, VM extends AbstractClusterer.ValidationMetrics> extends AbstractValidator<MP, TP, VM> {
+public class ClustererValidator<MP extends AbstractClusterer.AbstractModelParameters, TP extends AbstractClusterer.AbstractTrainingParameters, VM extends AbstractClusterer.AbstractValidationMetrics> extends AbstractValidator<MP, TP, VM> {
     
     /** {@inheritDoc} */
     @Override
@@ -40,7 +40,7 @@ public class ClustererValidator<MP extends AbstractClusterer.ModelParameters, TP
         int k = validationMetricsList.size(); //number of samples
 
         
-        //create a new empty ValidationMetrics Object
+        //create a new empty AbstractValidationMetrics Object
         VM avgValidationMetrics = (VM) validationMetricsList.iterator().next().getEmptyObject();
         
         //estimate average values

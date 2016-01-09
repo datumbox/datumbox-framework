@@ -57,7 +57,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
         
         instance.fit(trainingData, param);
@@ -115,7 +115,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
         
         MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);

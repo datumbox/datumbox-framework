@@ -37,12 +37,12 @@ import java.util.Map;
 public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters>{
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractCategoricalFeatureSelector.ModelParameters {
+    public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -51,7 +51,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractCategoricalFeatureSelector.TrainingParameters {
+    public static class TrainingParameters extends AbstractCategoricalFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }

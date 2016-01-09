@@ -20,12 +20,12 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.interfaces.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.MapMethods;
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.machinelearning.common.validators.ClassifierValidator;
 import com.datumbox.framework.machinelearning.ensemblelearning.FixedCombinationRules;
@@ -44,21 +44,21 @@ import java.util.Set;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.ModelParameters, TP extends AbstractBoostingBagging.TrainingParameters, VM extends AbstractBoostingBagging.ValidationMetrics> extends AbstractClassifier<MP, TP, VM> {
+public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.AbstractModelParameters, TP extends AbstractBoostingBagging.AbstractTrainingParameters, VM extends AbstractBoostingBagging.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> {
 
     private static final String DB_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
     
     /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractClassifier.ModelParameters {
+    public static abstract class AbstractModelParameters extends AbstractClassifier.AbstractModelParameters {
         
         private List<Double> weakClassifierWeights = new ArrayList<>();
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -83,7 +83,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     } 
 
     /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractClassifier.TrainingParameters {      
+    public static abstract class AbstractTrainingParameters extends AbstractClassifier.AbstractTrainingParameters {      
         
         //primitives/wrappers
         private int maxWeakClassifiers = 5; //the total number of classifiers that Bagging will initialize
@@ -92,7 +92,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         private Class<? extends AbstractClassifier> weakClassifierClass; //the class name of weak classifiear
         
         //Parameter Objects
-        private AbstractClassifier.TrainingParameters weakClassifierTrainingParameters; //the parameters of the weak classifier
+        private AbstractClassifier.AbstractTrainingParameters weakClassifierTrainingParameters; //the parameters of the weak classifier
         
         /**
          * Getter for the maximum number of weak classifiers.
@@ -135,7 +135,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
          * 
          * @return 
          */
-        public AbstractClassifier.TrainingParameters getWeakClassifierTrainingParameters() {
+        public AbstractClassifier.AbstractTrainingParameters getWeakClassifierTrainingParameters() {
             return weakClassifierTrainingParameters;
         }
 
@@ -144,16 +144,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
          * 
          * @param weakClassifierTrainingParameters 
          */
-        public void setWeakClassifierTrainingParameters(AbstractClassifier.TrainingParameters weakClassifierTrainingParameters) {
+        public void setWeakClassifierTrainingParameters(AbstractClassifier.AbstractTrainingParameters weakClassifierTrainingParameters) {
             this.weakClassifierTrainingParameters = weakClassifierTrainingParameters;
         }
         
     } 
-    
-    /** {@inheritDoc} */
-    public static abstract class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
-
-    }
 
     /**
      * @param dbName
@@ -186,7 +181,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
-            try (AbstractClassifier mlclassifier = AbstractAlgorithm.newInstance(
+            try (AbstractClassifier mlclassifier = Trainable.newInstance(
                     weakClassifierClass, 
                     dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
                     kb().getDbConf())) {
@@ -225,8 +220,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
         
         int n = modelParameters.getN();
         
@@ -249,7 +244,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         }
         
         Class<? extends AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierClass();
-        AbstractClassifier.TrainingParameters weakClassifierTrainingParameters = trainingParameters.getWeakClassifierTrainingParameters();
+        AbstractClassifier.AbstractTrainingParameters weakClassifierTrainingParameters = trainingParameters.getWeakClassifierTrainingParameters();
         int totalWeakClassifiers = trainingParameters.getMaxWeakClassifiers();
         
         //training the weak classifiers
@@ -264,7 +259,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
             
             Dataframe validationDataset;
-            try (AbstractClassifier mlclassifier = AbstractAlgorithm.newInstance(
+            try (AbstractClassifier mlclassifier = Trainable.newInstance(
                     weakClassifierClass, 
                     dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
                     kb().getDbConf())) {
@@ -339,8 +334,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     }
     
     private void deleteWeakClassifiers() {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
         
         if(modelParameters==null) {
             return;
@@ -350,7 +345,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {
-            AbstractClassifier mlclassifier = AbstractAlgorithm.newInstance(weakClassifierClass, dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), kb().getDbConf());
+            AbstractClassifier mlclassifier = Trainable.newInstance(weakClassifierClass, dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), kb().getDbConf());
             mlclassifier.delete();
         }
     }

@@ -46,7 +46,7 @@ import org.apache.commons.math3.linear.RealVector;
 public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractLinearRegression.ModelParameters {
+    public static class ModelParameters extends AbstractLinearRegression.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -59,7 +59,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
     
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -110,13 +110,13 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractLinearRegression.TrainingParameters {
+    public static class TrainingParameters extends AbstractLinearRegression.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractLinearRegression.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractLinearRegression.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }

@@ -16,7 +16,6 @@
 package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 
 /**
@@ -27,31 +26,13 @@ import com.datumbox.framework.machinelearning.common.abstracts.validators.Abstra
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractRegressor<MP extends AbstractRegressor.ModelParameters, TP extends AbstractRegressor.TrainingParameters, VM extends AbstractRegressor.ValidationMetrics> extends AbstractAlgorithm<MP, TP, VM> {
-    
-    /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractAlgorithm.ModelParameters {
-        
-        /** 
-         * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
-         */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-        
-    } 
-    
-    /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractAlgorithm.TrainingParameters {    
-
-    } 
+public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractModelParameters, TP extends AbstractRegressor.AbstractTrainingParameters, VM extends AbstractRegressor.ValidationMetrics> extends AbstractModeler<MP, TP, VM> {
     
     /**
      * {@inheritDoc}
      * DO NOT DECLARE ABSTRACT!!!! IT IS INITIALIZED BY StepwiseRegression class
      */
-    public static class ValidationMetrics extends AbstractAlgorithm.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractModeler.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }

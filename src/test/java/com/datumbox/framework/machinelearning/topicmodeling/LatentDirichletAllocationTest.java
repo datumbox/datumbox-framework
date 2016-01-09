@@ -92,7 +92,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
         
-        AbstractClassifier.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
+        AbstractClassifier.AbstractValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
         
         double expResult = 0.6859007513066202;
         double result = vm.getMacroF1();

@@ -39,7 +39,7 @@ import java.util.Map;
 public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer<AbstractDummyMinMaxTransformer.ModelParameters, AbstractDummyMinMaxTransformer.TrainingParameters> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractTransformer.ModelParameters {
+    public static class ModelParameters extends AbstractTransformer.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /**
@@ -62,7 +62,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -125,7 +125,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractTransformer.TrainingParameters {
+    public static class TrainingParameters extends AbstractTransformer.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
     }

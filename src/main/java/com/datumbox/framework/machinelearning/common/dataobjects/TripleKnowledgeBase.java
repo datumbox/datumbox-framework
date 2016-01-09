@@ -16,7 +16,9 @@
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
+import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
+import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -29,15 +31,15 @@ import java.lang.reflect.InvocationTargetException;
  * @param <TP>
  * @param <VM>
  */
-public class TripleKnowledgeBase<MP extends AbstractAlgorithm.ModelParameters, TP extends AbstractAlgorithm.TrainingParameters, VM extends AbstractAlgorithm.ValidationMetrics> extends DoubleKnowledgeBase<MP, TP> {
+public class TripleKnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters, VM extends ValidationMetrics> extends DoubleKnowledgeBase<MP, TP> {
     
     /**
-     * The class of the ValidationMetrics class of the algorithm.
+     * The class of the AbstractValidationMetrics class of the algorithm.
      */
     protected final Class<VM> vmClass;
     
     /**
-     * The ValidationMetrics object of the algorithm.
+     * The AbstractValidationMetrics object of the algorithm.
      */
     protected VM validationMetrics;
     
@@ -86,7 +88,7 @@ public class TripleKnowledgeBase<MP extends AbstractAlgorithm.ModelParameters, T
     }
     
     /**
-     * Returns an empty ValidationMetrics Object.
+     * Returns an empty AbstractValidationMetrics Object.
      * 
      * @return 
      */

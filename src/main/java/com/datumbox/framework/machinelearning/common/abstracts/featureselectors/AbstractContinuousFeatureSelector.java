@@ -16,7 +16,6 @@
 package com.datumbox.framework.machinelearning.common.abstracts.featureselectors;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 /**
  * Abstract class which is the base of every Continuous Feature Selection algorithm.
@@ -25,26 +24,8 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractContinuousFeatureSelector<MP extends AbstractContinuousFeatureSelector.ModelParameters, TP extends AbstractContinuousFeatureSelector.TrainingParameters> extends AbstractFeatureSelector<MP, TP> {
+public abstract class AbstractContinuousFeatureSelector<MP extends AbstractContinuousFeatureSelector.AbstractModelParameters, TP extends AbstractContinuousFeatureSelector.AbstractTrainingParameters> extends AbstractFeatureSelector<MP, TP> {
 
-    /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractFeatureSelector.ModelParameters {
-        
-        /** 
-         * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
-         */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-        
-    }
-    
-    /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractFeatureSelector.TrainingParameters {
-        
-    }
-    
     /** 
      * @param dbName
      * @param dbConf

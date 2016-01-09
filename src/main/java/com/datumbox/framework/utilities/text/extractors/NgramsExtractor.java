@@ -36,9 +36,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Parameters, String, Double> {
     
     /**
-     * Parameters of the NgramsExtractor.
+     * AbstractParameters of the NgramsExtractor.
      */
-    public static class Parameters extends AbstractTextExtractor.Parameters {  
+    public static class Parameters extends AbstractTextExtractor.AbstractParameters {  
         private static final long serialVersionUID = 1L;
         
         private int maxCombinations=3;
@@ -204,7 +204,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
     private Integer numberOfWordsInDoc;
 
     /**
-     * Public constructor that accepts as arguments the Parameters object.
+     * Public constructor that accepts as arguments the AbstractParameters object.
      * 
      * @param parameters 
      */
@@ -310,7 +310,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         double points=0.0;
         
 
-        AbstractTokenizer tokenizer = parameters.generateTokenizer();
+        AbstractTokenizer tokenizer = generateTokenizer();
         
         List<String> tmpKwd = tokenizer.tokenize(keyword);
         
@@ -478,8 +478,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         
         Map<String, Integer> word2ID = new HashMap<>();
         
-        AbstractTokenizer tokenizer = parameters.generateTokenizer();
-        List<String> keywordList = tokenizer.tokenize(text);
+        List<String> keywordList = generateTokenizer().tokenize(text);
         
         int lastId=-1;
         numberOfWordsInDoc = keywordList.size();

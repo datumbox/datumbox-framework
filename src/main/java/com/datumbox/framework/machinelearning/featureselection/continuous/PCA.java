@@ -52,7 +52,7 @@ import org.apache.commons.math3.stat.StatUtils;
 public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractContinuousFeatureSelector.ModelParameters {
+    public static class ModelParameters extends AbstractContinuousFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -68,7 +68,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -188,7 +188,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     }
 
     /** {@inheritDoc} */  
-    public static class TrainingParameters extends AbstractContinuousFeatureSelector.TrainingParameters {
+    public static class TrainingParameters extends AbstractContinuousFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean whitened = false;

@@ -17,8 +17,6 @@ package com.datumbox.framework.machinelearning.common.interfaces;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.TripleKnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 import java.io.Serializable;
@@ -32,7 +30,7 @@ import java.io.Serializable;
  * @param <MP>
  * @param <TP>
  */
-public interface KnowledgeBase<MP extends AbstractModelParameters, TP extends AbstractTrainingParameters> extends AutoCloseable {
+public interface KnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> extends AutoCloseable {
     
     /**
      * Generates a new KnowledgeBase object based on the provided input.

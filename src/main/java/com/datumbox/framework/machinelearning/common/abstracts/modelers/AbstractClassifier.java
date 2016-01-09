@@ -37,7 +37,7 @@ import java.util.Set;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractClassifier<MP extends AbstractClassifier.ModelParameters, TP extends AbstractClassifier.TrainingParameters, VM extends AbstractClassifier.ValidationMetrics> extends AbstractAlgorithm<MP, TP, VM> {
+public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractModelParameters, TP extends AbstractClassifier.AbstractTrainingParameters, VM extends AbstractClassifier.AbstractValidationMetrics> extends AbstractModeler<MP, TP, VM> {
     
     /**
      * Enum that stores the 4 possible Sensitivity Rates.
@@ -65,16 +65,16 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.ModelPara
     }
     
     /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractAlgorithm.ModelParameters {
+    public static abstract class AbstractModelParameters extends AbstractModeler.AbstractModelParameters {
         
         //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>();
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -106,14 +106,9 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.ModelPara
         }
         
     } 
-    
-    /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractAlgorithm.TrainingParameters {    
-
-    } 
 
     /** {@inheritDoc} */
-    public static abstract class ValidationMetrics extends AbstractAlgorithm.ValidationMetrics {
+    public static abstract class AbstractValidationMetrics extends AbstractModeler.AbstractValidationMetrics {
         
         //validation metrics
         private double accuracy = 0.0;

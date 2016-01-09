@@ -48,10 +48,10 @@ import java.util.Set;
  * @param <VM>
  */
 
-public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends AbstractDPMM.ModelParameters, TP extends AbstractDPMM.TrainingParameters, VM extends AbstractDPMM.ValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable {
+public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters, VM extends AbstractDPMM.AbstractValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable {
     
     /** {@inheritDoc} */
-    public static abstract class Cluster extends AbstractClusterer.Cluster {
+    public static abstract class AbstractCluster extends AbstractClusterer.AbstractCluster {
         /**
          * The featureIds provides a mapping between the column names
          * and their positions on the internal data vector.
@@ -62,14 +62,14 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
         
         /** 
          * @param clusterId
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractCluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer) 
          */
-        protected Cluster(Integer clusterId) {
+        protected AbstractCluster(Integer clusterId) {
             super(clusterId);
         }
         
         /**
-         * Setter for the Cluster id.
+         * Setter for the AbstractCluster id.
          * 
          * @param clusterId 
          */
@@ -109,7 +109,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
      * {@inheritDoc}
      * @param <CL> 
      */
-    public static abstract class ModelParameters<CL extends AbstractDPMM.Cluster> extends AbstractClusterer.ModelParameters<CL> {
+    public static abstract class AbstractModelParameters<CL extends AbstractDPMM.AbstractCluster> extends AbstractClusterer.AbstractModelParameters<CL> {
         
         private int totalIterations;
 
@@ -118,9 +118,9 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -165,7 +165,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
     }
     
     /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractClusterer.TrainingParameters {   
+    public static abstract class AbstractTrainingParameters extends AbstractClusterer.AbstractTrainingParameters {   
         /**
          * Alpha value of Dirichlet process
          */
@@ -249,11 +249,6 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
         
     }
     
-    /** {@inheritDoc} */
-    public static abstract class ValidationMetrics extends AbstractClusterer.ValidationMetrics {
-        
-    }
-    
     /** 
      * @param dbName
      * @param dbConf
@@ -289,11 +284,11 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
+        Map<Integer, AbstractCluster> clusterList = modelParameters.getClusterList();
         
         AssociativeArray clusterScores = new AssociativeArray();
-        for(Cluster c : clusterList.values()) {
+        for(AbstractCluster c : clusterList.values()) {
             double probability = c.posteriorLogPdf(r);
             clusterScores.put(c.getClusterId(), probability);
         }
@@ -306,7 +301,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
@@ -342,16 +337,16 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
      * @param maxIterations The maximum number of iterations
      */
     private int collapsedGibbsSampling(Dataframe dataset) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
         Map<Integer, CL> tempClusterMap = new HashMap<>(modelParameters.getClusterList());
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double alpha = trainingParameters.getAlpha();
         
         //Initialize clusters, create a cluster for every xi
         Integer newClusterId = tempClusterMap.size(); //start counting the Ids based on clusters in the list
 
-        if(trainingParameters.getInitializationMethod()==TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD) {
+        if(trainingParameters.getInitializationMethod()==AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD) {
             for(Map.Entry<Integer, Record> e : dataset.entries()) {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
@@ -448,7 +443,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.Cluster, MP extends A
                 Integer sampledClusterId = (Integer)SimpleRandomSampling.weightedSampling(condProbCiGivenXiAndOtherCi, 1, true).iterator().next();
                 //condProbCiGivenXiAndOtherCi=null;
                 
-                //Add Xi back to the sampled Cluster
+                //Add Xi back to the sampled AbstractCluster
                 if(Objects.equals(sampledClusterId, newClusterId)) { //if new cluster
                     //add the record in the new cluster
                     r = new Record(r.getX(), r.getY(), newClusterId, r.getYPredictedProbabilities());

@@ -43,7 +43,7 @@ import java.util.Set;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelParameters, TP extends AbstractNaiveBayes.TrainingParameters, VM extends AbstractNaiveBayes.ValidationMetrics> extends AbstractClassifier<MP, TP, VM> implements PredictParallelizable {
+public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters, VM extends AbstractNaiveBayes.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> implements PredictParallelizable {
     /**
      * Flag that indicates whether the algorithm binarizes the provided activated 
      * features.
@@ -51,7 +51,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelPara
     protected boolean isBinarized;
     
     /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractClassifier.ModelParameters {
+    public static abstract class AbstractModelParameters extends AbstractClassifier.AbstractModelParameters {
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> logPriors; //prior log probabilities of the classes
@@ -61,9 +61,9 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelPara
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
@@ -105,7 +105,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelPara
     } 
 
     /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractClassifier.TrainingParameters {         
+    public static abstract class AbstractTrainingParameters extends AbstractClassifier.AbstractTrainingParameters {         
         private boolean multiProbabilityWeighted=false; //whether the classifier weights the probabilities based on the number of occurences. (multiple occurences are taken into account when we estimate the classification scores) 
         
         /**
@@ -128,11 +128,6 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelPara
             this.multiProbabilityWeighted = multiProbabilityWeighted;
         }
     } 
-    
-    /** {@inheritDoc} */
-    public static abstract class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
-
-    }
 
     /** 
      * @param dbName
@@ -170,7 +165,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelPara
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
@@ -223,7 +218,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.ModelPara
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = kb().getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         

@@ -16,6 +16,9 @@
 package com.datumbox.common.interfaces;
 
 import com.datumbox.common.dataobjects.Dataframe;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * This interface is used to mark classes that can be trained. This interface 
@@ -26,6 +29,28 @@ import com.datumbox.common.dataobjects.Dataframe;
  * @param <TP>
  */
 public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends AutoCloseable {
+
+    /**
+     * Generates a new instance of a AbstractTrainer by providing the Class of 
+     * the algorithm.
+     * 
+     * @param <BT>
+     * @param aClass
+     * @param dbName
+     * @param dbConf
+     * @return 
+     */
+    public static <BT extends AbstractTrainer> BT newInstance(Class<BT> aClass, String dbName, DatabaseConfiguration dbConf) {
+        BT algorithm = null;
+        try {
+            algorithm = aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConf);
+        } 
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return algorithm;
+    }
     
     /**
      * Returns the model parameters that were estimated after training.

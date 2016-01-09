@@ -57,7 +57,7 @@ import libsvm.svm_problem;
 public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> implements PredictParallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractClassifier.ModelParameters {
+    public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -69,7 +69,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -138,7 +138,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractClassifier.TrainingParameters {     
+    public static class TrainingParameters extends AbstractClassifier.AbstractTrainingParameters {     
         private static final long serialVersionUID = 1L;
         
         private svm_parameter svmParameter = new svm_parameter();
@@ -189,7 +189,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
 
     }

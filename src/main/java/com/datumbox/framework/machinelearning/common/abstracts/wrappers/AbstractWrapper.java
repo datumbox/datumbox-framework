@@ -16,18 +16,16 @@
 package com.datumbox.framework.machinelearning.common.abstracts.wrappers;
 
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainingParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
  * The AbstractWrapper is a trainable object that uses composition instead of inheritance
- to extend the functionality of a AbstractAlgorithm. It includes various internal objects
+ to extend the functionality of a AbstractModeler. It includes various internal objects
  * such as Data Transformers, Feature Selectors and Machine Learning models which 
  * are combined in the training and prediction process. 
  * 
@@ -35,7 +33,7 @@ import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledge
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters, TP extends AbstractWrapper.TrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
+public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelParameters, TP extends AbstractWrapper.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
     
     /**
      * The AbstractTransformer instance of the wrapper.
@@ -50,33 +48,17 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
     /**
      * The Machine Learning model instance of the wrapper.
      */
-    protected AbstractAlgorithm mlmodel = null;
-    
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
-    public static abstract class ModelParameters extends AbstractModelParameters {
+    protected AbstractModeler mlmodel = null;
         
-        /** 
-         * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
-         */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-        
-    }
-    
     /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
+     * The AbstractTrainingParameters class stores the parameters that can be changed
+ before training the algorithm.
      * 
      * @param <DT>
      * @param <FS>
      * @param <ML>
      */
-    public static abstract class TrainingParameters<DT extends AbstractTransformer, FS extends AbstractFeatureSelector, ML extends AbstractAlgorithm> extends AbstractTrainingParameters {
+    public static abstract class AbstractTrainingParameters<DT extends AbstractTransformer, FS extends AbstractFeatureSelector, ML extends AbstractModeler> extends AbstractTrainer.AbstractTrainingParameters {
         
         //Classes
         private Class<? extends DT> dataTransformerClass;
@@ -86,11 +68,11 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
         private Class<? extends ML> mlmodelClass;
        
         //Parameter Objects
-        private DT.TrainingParameters dataTransformerTrainingParameters;
+        private DT.AbstractTrainingParameters dataTransformerTrainingParameters;
         
-        private FS.TrainingParameters featureSelectionTrainingParameters;
+        private FS.AbstractTrainingParameters featureSelectionTrainingParameters;
         
-        private ML.TrainingParameters mlmodelTrainingParameters;
+        private ML.AbstractTrainingParameters mlmodelTrainingParameters;
 
         /**
          * Getter for the Java class of the Data Transformer.
@@ -153,7 +135,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
          * 
          * @return 
          */
-        public DT.TrainingParameters getDataTransformerTrainingParameters() {
+        public DT.AbstractTrainingParameters getDataTransformerTrainingParameters() {
             return dataTransformerTrainingParameters;
         }
         
@@ -163,7 +145,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
          * 
          * @param dataTransformerTrainingParameters 
          */
-        public void setDataTransformerTrainingParameters(DT.TrainingParameters dataTransformerTrainingParameters) {
+        public void setDataTransformerTrainingParameters(DT.AbstractTrainingParameters dataTransformerTrainingParameters) {
             this.dataTransformerTrainingParameters = dataTransformerTrainingParameters;
         }
 
@@ -172,7 +154,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
          * 
          * @return 
          */
-        public FS.TrainingParameters getFeatureSelectionTrainingParameters() {
+        public FS.AbstractTrainingParameters getFeatureSelectionTrainingParameters() {
             return featureSelectionTrainingParameters;
         }
         
@@ -182,7 +164,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
          * 
          * @param featureSelectionTrainingParameters 
          */
-        public void setFeatureSelectionTrainingParameters(FS.TrainingParameters featureSelectionTrainingParameters) {
+        public void setFeatureSelectionTrainingParameters(FS.AbstractTrainingParameters featureSelectionTrainingParameters) {
             this.featureSelectionTrainingParameters = featureSelectionTrainingParameters;
         }
 
@@ -191,7 +173,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
          * 
          * @return 
          */
-        public ML.TrainingParameters getMLmodelTrainingParameters() {
+        public ML.AbstractTrainingParameters getMLmodelTrainingParameters() {
             return mlmodelTrainingParameters;
         }
         
@@ -200,7 +182,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
          * 
          * @param mlmodelTrainingParameters 
          */
-        public void setMLmodelTrainingParameters(ML.TrainingParameters mlmodelTrainingParameters) {
+        public void setMLmodelTrainingParameters(ML.AbstractTrainingParameters mlmodelTrainingParameters) {
             this.mlmodelTrainingParameters = mlmodelTrainingParameters;
         }
         
@@ -211,7 +193,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
      * @param dbConf
      * @param mpClass
      * @param tpClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...) 
      */
     protected AbstractWrapper(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, DoubleKnowledgeBase.class, mpClass, tpClass);
@@ -253,7 +235,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
      * @param <VM>
      * @return 
      */
-    public <VM extends AbstractAlgorithm.ValidationMetrics> VM getValidationMetrics() {
+    public <VM extends ValidationMetrics> VM getValidationMetrics() {
         if(mlmodel!=null) {
             return (VM) mlmodel.getValidationMetrics();
         }
@@ -268,7 +250,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.ModelParameters
      * @param <VM>
      * @param validationMetrics 
      */
-    public <VM extends AbstractAlgorithm.ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
+    public <VM extends ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
         if(mlmodel!=null) {
             mlmodel.setValidationMetrics(validationMetrics);
         }

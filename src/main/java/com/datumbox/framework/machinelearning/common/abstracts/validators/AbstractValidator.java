@@ -19,8 +19,12 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPMethods;
 
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.common.dataobjects.FlatDataList;
+import com.datumbox.common.interfaces.Trainable;
+import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
+import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractValidator<MP extends AbstractAlgorithm.ModelParameters, TP extends AbstractAlgorithm.TrainingParameters, VM extends AbstractAlgorithm.ValidationMetrics> {
+public abstract class AbstractValidator<MP extends ModelParameters, TP extends TrainingParameters, VM extends ValidationMetrics> {
     
     /**
      * The Logger of all Validators.
@@ -60,7 +64,7 @@ public abstract class AbstractValidator<MP extends AbstractAlgorithm.ModelParame
      * @param trainingParameters
      * @return 
      */
-    public VM kFoldCrossValidation(Dataframe dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends AbstractAlgorithm> aClass, TP trainingParameters) {
+    public VM kFoldCrossValidation(Dataframe dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends AbstractModeler> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds.");
@@ -78,7 +82,7 @@ public abstract class AbstractValidator<MP extends AbstractAlgorithm.ModelParame
         }
         PHPMethods.shuffle(ids);
         
-        AbstractAlgorithm<MP, TP, VM> mlmodel;
+        AbstractModeler<MP, TP, VM> mlmodel;
         
         String foldDBname=dbName+dbConf.getDBnameSeparator()+DB_INDICATOR;
         
@@ -116,7 +120,7 @@ public abstract class AbstractValidator<MP extends AbstractAlgorithm.ModelParame
             
             
             //initialize mlmodel
-            mlmodel = AbstractAlgorithm.newInstance(aClass, foldDBname+(fold+1), dbConf);
+            mlmodel = Trainable.newInstance(aClass, foldDBname+(fold+1), dbConf);
             
             
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);

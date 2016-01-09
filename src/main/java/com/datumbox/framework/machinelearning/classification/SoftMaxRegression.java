@@ -48,7 +48,7 @@ import java.util.Set;
 public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> implements PredictParallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractClassifier.ModelParameters {
+    public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -56,7 +56,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -82,7 +82,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     } 
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractClassifier.TrainingParameters { 
+    public static class TrainingParameters extends AbstractClassifier.AbstractTrainingParameters { 
         private static final long serialVersionUID = 1L;
         
         private int totalIterations=100; 
@@ -128,7 +128,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     } 
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
         private double SSE = 0.0; 

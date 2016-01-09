@@ -41,9 +41,9 @@ import org.apache.commons.math3.linear.RealVector;
 public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters, MultinomialDPMM.ValidationMetrics> {
     
     /**
-     * The Cluster class of the MultinomialDPMM model.
+     * The AbstractCluster class of the MultinomialDPMM model.
      */
-    public static class Cluster extends AbstractDPMM.Cluster {
+    public static class Cluster extends AbstractDPMM.AbstractCluster {
         private static final long serialVersionUID = 1L;
         
         //informational fields
@@ -233,12 +233,12 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractDPMM.ModelParameters<MultinomialDPMM.Cluster> {
+    public static class ModelParameters extends AbstractDPMM.AbstractModelParameters<MultinomialDPMM.Cluster> {
         private static final long serialVersionUID = 1L;
         
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -262,7 +262,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractDPMM.TrainingParameters {
+    public static class TrainingParameters extends AbstractDPMM.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private double alphaWords = 50.0; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
@@ -288,7 +288,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
     }
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractDPMM.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractDPMM.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }

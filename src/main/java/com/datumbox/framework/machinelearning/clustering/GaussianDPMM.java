@@ -50,9 +50,9 @@ import org.apache.commons.math3.linear.RealVector;
 public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPMM.ModelParameters, GaussianDPMM.TrainingParameters, GaussianDPMM.ValidationMetrics> {
     
     /**
-     * The Cluster class of the GaussianDPMM model.
+     * The AbstractCluster class of the GaussianDPMM model.
      */
-    public static class Cluster extends AbstractDPMM.Cluster {
+    public static class Cluster extends AbstractDPMM.AbstractCluster {
         private static final long serialVersionUID = 1L;
         
         //informational fields
@@ -369,12 +369,12 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     }
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractDPMM.ModelParameters<GaussianDPMM.Cluster> {
+    public static class ModelParameters extends AbstractDPMM.AbstractModelParameters<GaussianDPMM.Cluster> {
         private static final long serialVersionUID = 1L;
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -399,7 +399,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractDPMM.TrainingParameters {
+    public static class TrainingParameters extends AbstractDPMM.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private int kappa0 = 0;
@@ -483,7 +483,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     }
     
     /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractDPMM.ValidationMetrics {
+    public static class ValidationMetrics extends AbstractDPMM.AbstractValidationMetrics {
         private static final long serialVersionUID = 1L;
         
     }

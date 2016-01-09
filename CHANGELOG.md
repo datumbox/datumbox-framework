@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160108
+Version 0.7.0-SNAPSHOT - Build 20160109
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -55,7 +55,7 @@ Version 0.7.0-SNAPSHOT - Build 20160108
 - Added the multi-thread support on the predict method of most ML models.
 - Updated the MapDBConnector to call compact on primary db before close.
 - Updated the DatabaseConnector.getBigMap() support thread-safe maps.
-- Massive restructuring of packages and class names.
+- Simplify the architecture. Massive restructuring of packages and class names. Change the structure of Interfaces and inheritance in TP, MP, VM and Algorithms.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

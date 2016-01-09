@@ -16,12 +16,14 @@
 package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataframe;
+import com.datumbox.common.interfaces.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractAlgorithm;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.machinelearning.common.abstracts.wrappers.AbstractWrapper;
 import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
+import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
  * Modeler is a convenience class which can be used to train Machine Learning
@@ -35,12 +37,12 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
     /**
      * It contains all the Model Parameters which are learned during the training.
      */
-    public static class ModelParameters extends AbstractWrapper.ModelParameters {
+    public static class ModelParameters extends AbstractWrapper.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /**
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector)
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -51,7 +53,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
     /**
      * It contains the Training Parameters of the Modeler.
      */
-    public static class TrainingParameters extends AbstractWrapper.TrainingParameters<AbstractTransformer, AbstractFeatureSelector, AbstractAlgorithm> {
+    public static class TrainingParameters extends AbstractWrapper.AbstractTrainingParameters<AbstractTransformer, AbstractFeatureSelector, AbstractModeler> {
         private static final long serialVersionUID = 1L;
 
     }
@@ -85,7 +87,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
      * @param testData
      * @return 
      */
-    public AbstractAlgorithm.ValidationMetrics validate(Dataframe testData) {
+    public ValidationMetrics validate(Dataframe testData) {
         logger.info("validate()");
         
         return evaluateData(testData, true);
@@ -105,7 +107,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = AbstractTransformer.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
             dataTransformer.fit_transform(trainingData, trainingParameters.getDataTransformerTrainingParameters());
         }
         
@@ -115,7 +117,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = AbstractFeatureSelector.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
             featureSelection.fit_transform(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
         }
         
@@ -124,7 +126,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         //initialize mlmodel
         Class mlClass = trainingParameters.getMLmodelClass();
-        mlmodel = AbstractAlgorithm.<AbstractAlgorithm>newInstance(mlClass, dbName, dbConf); 
+        mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, dbConf); 
         
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingData, trainingParameters.getMLmodelTrainingParameters());
@@ -134,7 +136,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         }
     }
     
-    private AbstractAlgorithm.ValidationMetrics evaluateData(Dataframe data, boolean estimateValidationMetrics) {
+    private ValidationMetrics evaluateData(Dataframe data, boolean estimateValidationMetrics) {
         //ensure db loaded
         kb().load();
         Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
@@ -146,7 +148,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = AbstractTransformer.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
             }        
             dataTransformer.transform(data);
         }
@@ -156,7 +158,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = AbstractFeatureSelector.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
             }
 
             //remove unnecessary features
@@ -167,12 +169,12 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         //initialize mlmodel
         if(mlmodel==null) {
             Class mlClass = trainingParameters.getMLmodelClass();
-            mlmodel = AbstractAlgorithm.<AbstractAlgorithm>newInstance(mlClass, dbName, dbConf); 
+            mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, dbConf); 
         }
         
         //call predict of the mlmodel for the new dataset
         
-        AbstractAlgorithm.ValidationMetrics vm = null;
+        ValidationMetrics vm = null;
         if(estimateValidationMetrics) {
             //run validate which calculates validation metrics. It is used by validate() method
             vm = mlmodel.validate(data);

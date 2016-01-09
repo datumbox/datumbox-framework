@@ -17,11 +17,8 @@ package com.datumbox.framework.machinelearning.common.abstracts.featureselectors
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters;
-import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainingParameters;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 
 /**
@@ -31,38 +28,14 @@ import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledge
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.ModelParameters, TP extends AbstractFeatureSelector.TrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
-
-    /**
-     * The ModelParameters class stores the coefficients that were learned during
-     * the training of the algorithm.
-     */
-    public static abstract class ModelParameters extends AbstractModelParameters {
-
-        /** 
-         * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
-         */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
-        }
-        
-    }
-    
-    /**
-     * The TrainingParameters class stores the parameters that can be changed
-     * before training the algorithm.
-     */
-    public static abstract class TrainingParameters extends AbstractTrainingParameters {
-        
-    }
-    
+public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
+ 
     /** 
      * @param dbName
      * @param dbConf
      * @param mpClass
      * @param tpClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...) 
      */
     protected AbstractFeatureSelector(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, DoubleKnowledgeBase.class, mpClass, tpClass);

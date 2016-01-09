@@ -40,19 +40,19 @@ import java.util.Map;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractLinearRegression<MP extends AbstractLinearRegression.ModelParameters, TP extends AbstractLinearRegression.TrainingParameters, VM extends AbstractLinearRegression.ValidationMetrics> extends AbstractRegressor<MP, TP, VM> {
+public abstract class AbstractLinearRegression<MP extends AbstractLinearRegression.AbstractModelParameters, TP extends AbstractLinearRegression.AbstractTrainingParameters, VM extends AbstractLinearRegression.AbstractValidationMetrics> extends AbstractRegressor<MP, TP, VM> {
     
     /** {@inheritDoc} */
-    public static abstract class ModelParameters extends AbstractRegressor.ModelParameters {
+    public static abstract class AbstractModelParameters extends AbstractRegressor.AbstractModelParameters {
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         /** 
          * @param dbc
-         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer.AbstractModelParameters#AbstractModelParameters(com.datumbox.common.persistentstorage.interfaces.DatabaseConnector) 
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
         
@@ -74,14 +74,9 @@ public abstract class AbstractLinearRegression<MP extends AbstractLinearRegressi
             this.thitas = thitas;
         }
     } 
-
-    /** {@inheritDoc} */
-    public static abstract class TrainingParameters extends AbstractRegressor.TrainingParameters {     
-
-    } 
     
     /** {@inheritDoc} */
-    public static abstract class ValidationMetrics extends AbstractRegressor.ValidationMetrics {
+    public static abstract class AbstractValidationMetrics extends AbstractRegressor.ValidationMetrics {
         private double RSquare = 0.0; 
         private double RSquareAdjusted = 0.0; 
         private double SSE = 0.0; 
