@@ -109,7 +109,7 @@ public class WilcoxonOneSample {
      * @param n
      * @return 
      */
-    protected static double scoreToPvalue(double score, int n) {
+    private static double scoreToPvalue(double score, int n) {
         /*
         if(n<=20) {
             //calculate it from binomial distribution

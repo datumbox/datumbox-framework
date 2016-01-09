@@ -36,12 +36,12 @@ public class TripleKnowledgeBase<MP extends ModelParameters, TP extends Training
     /**
      * The class of the AbstractValidationMetrics class of the algorithm.
      */
-    protected final Class<VM> vmClass;
+    private final Class<VM> vmClass;
     
     /**
      * The AbstractValidationMetrics object of the algorithm.
      */
-    protected VM validationMetrics;
+    private VM validationMetrics;
     
     /**
      * Public constructor of the object.

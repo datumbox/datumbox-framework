@@ -276,7 +276,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = Trainable.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
+        mlregressor = generateRegressor();
         
         mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
         copiedTrainingData.delete();
@@ -285,16 +285,19 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     private void loadRegressor() {
         if(mlregressor==null) {
-            //initialize algorithm
-            mlregressor = Trainable.newInstance(kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf()); 
+            mlregressor = generateRegressor();
         }
+    }
+    
+    private AbstractRegressor generateRegressor() {
+        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf());
     }
     
     private Map<Object, Double> runRegression(Dataframe trainingData) {
         TrainingParameters trainingParameters = kb().getTrainingParameters();
         
         //initialize algorithm
-        mlregressor = Trainable.newInstance(trainingParameters.getRegressionClass(), dbName, kb().getDbConf()); 
+        mlregressor = generateRegressor();
 
         //train the regressor
         mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());

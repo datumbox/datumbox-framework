@@ -209,7 +209,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int wordCount(String strText) {
+    private static int wordCount(String strText) {
         return PHPMethods.substr_count(strText, ' ')+1; // Space count + 1 is word count
     }
 
@@ -220,7 +220,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int letterCount(String strText) {
+    private static int letterCount(String strText) {
         return strText.replaceAll("[^\\p{L}0-9]", "").length(); //remove all non-alphanumerics
     }
 
@@ -230,7 +230,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int sentenceCount(String strText) {
+    private static int sentenceCount(String strText) {
         int numberOfDots=PHPMethods.substr_count(strText, '.');
         // Will be tripped up by "Mr." or "U.K.". Not a major concern at this point.
         if(strText.charAt(strText.length()-1)!='.') { //missing the final dot, count it too
@@ -245,7 +245,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be transformed
      * @return 
      */
-    protected static String cleanText(String strText) {
+    private static String cleanText(String strText) {
         strText = HTMLCleaner.unsafeRemoveAllTags(strText);
         strText = strText.toLowerCase(Locale.ENGLISH);
         
@@ -263,7 +263,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static double averageWordsPerSentence(String strText) {
+    private static double averageWordsPerSentence(String strText) {
         int intSentenceCount = sentenceCount(strText);
         int intWordCount = wordCount(strText);
         return (intWordCount / (double)intSentenceCount);
@@ -275,7 +275,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static int totalSyllables(String strText) {
+    private static int totalSyllables(String strText) {
         int intSyllableCount = 0;
         
         List<String> arrWords = (new WhitespaceTokenizer()).tokenize(strText);
@@ -292,7 +292,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static double averageSyllablesPerWord(String strText) {
+    private static double averageSyllablesPerWord(String strText) {
         int intSyllableCount = totalSyllables(strText);
         int intWordCount = wordCount(strText);
         
@@ -305,7 +305,7 @@ public class ReadabilityStatistics {
      * @param   strText                  Text to be measured
      * @return 
      */
-    protected static int wordsWithThreeSyllables(String strText) {
+    private static int wordsWithThreeSyllables(String strText) {
         int intLongWordCount = 0;
         
         List<String> arrWords = (new WhitespaceTokenizer()).tokenize(strText);
@@ -325,7 +325,7 @@ public class ReadabilityStatistics {
      * @param   strText      Text to be measured
      * @return 
      */
-    protected static double percentageWordsWithThreeSyllables(String strText) {
+    private static double percentageWordsWithThreeSyllables(String strText) {
         int intWordCount = wordCount(strText);
         int intLongWordCount = wordsWithThreeSyllables(strText);
         double percentage = ((intLongWordCount / (double)intWordCount) * 100.0);
@@ -341,7 +341,7 @@ public class ReadabilityStatistics {
      * @param   strWord      Word to be measured
      * @return 
      */
-    protected static int syllableCount(String strWord) {
+    private static int syllableCount(String strWord) {
 
         // Should be no non-alpha characters
         strWord = StringCleaner.removeSymbols(strWord).toLowerCase(Locale.ENGLISH);

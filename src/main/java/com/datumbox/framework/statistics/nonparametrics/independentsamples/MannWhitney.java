@@ -129,7 +129,7 @@ public class MannWhitney {
      * @param n2
      * @return 
      */
-    protected static double scoreToPvalue(double score, int n1, int n2) {
+    private static double scoreToPvalue(double score, int n1, int n2) {
         /*
         if(n1<=10 && n2<=10) {
             //calculate it from tables too small values

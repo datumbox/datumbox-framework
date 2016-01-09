@@ -176,7 +176,7 @@ public class CoxMantel {
      * @param score
      * @return 
      */
-    protected static double scoreToPvalue(double score) {
+    private static double scoreToPvalue(double score) {
         return ContinuousDistributions.gaussCdf(score);
     }
     

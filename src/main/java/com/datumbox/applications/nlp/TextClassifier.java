@@ -295,7 +295,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         }
         
         //initialize mlmodel
-        mlmodel = Trainable.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+        mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, dbConf); 
         
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingDataset, trainingParameters.getMLmodelTrainingParameters());
@@ -334,7 +334,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = Trainable.newInstance(trainingParameters.getMLmodelClass(), dbName, dbConf); 
+            mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
     }
     

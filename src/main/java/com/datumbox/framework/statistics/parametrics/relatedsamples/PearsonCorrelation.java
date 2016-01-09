@@ -98,7 +98,7 @@ public class PearsonCorrelation {
      * @param n
      * @return 
      */
-    protected static double scoreToPvalue(double score, int n) {
+    private static double scoreToPvalue(double score, int n) {
         double T= score/Math.sqrt((1-score*score)/(n-2));
         return ContinuousDistributions.studentsCdf(T, n-2);
     }   

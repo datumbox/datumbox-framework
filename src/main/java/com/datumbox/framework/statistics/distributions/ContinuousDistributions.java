@@ -264,7 +264,7 @@ public class ContinuousDistributions {
      * @param A
      * @return 
      */
-    protected static double gCf(double x, double A) {
+    private static double gCf(double x, double A) {
        // Good for X>A+1
        double A0=0;
        double B0=1;
@@ -296,7 +296,7 @@ public class ContinuousDistributions {
      * @param A
      * @return 
      */
-    protected static double gSer(double x, double A) {
+    private static double gSer(double x, double A) {
         // Good for X<A+1.
         double T9=1/A;
         double G=T9;

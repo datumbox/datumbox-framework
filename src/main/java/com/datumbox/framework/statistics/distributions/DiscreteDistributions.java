@@ -123,7 +123,7 @@ public class DiscreteDistributions {
      * @param n
      * @return 
      */
-    protected static double approxBinomialCdf(int k, double p, int n) {
+    private static double approxBinomialCdf(int k, double p, int n) {
         //use an approximation as described at http://www.math.ucla.edu/~tom/distributions/binomial.html
         double Z = p;
         double A=k+1;

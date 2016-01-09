@@ -82,8 +82,6 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
         }
         PHPMethods.shuffle(ids);
         
-        AbstractModeler<MP, TP, VM> mlmodel;
-        
         String foldDBname=dbName+dbConf.getDBnameSeparator()+DB_INDICATOR;
         
         List<VM> validationMetricsList = new LinkedList<>();
@@ -120,7 +118,7 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
             
             
             //initialize mlmodel
-            mlmodel = Trainable.newInstance(aClass, foldDBname+(fold+1), dbConf);
+            AbstractModeler mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>)aClass, foldDBname+(fold+1), dbConf);
             
             
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
@@ -132,7 +130,7 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
             Dataframe validationData = dataset.getSubset(foldValidationIds);
             
             //fetch validation metrics
-            VM entrySample = mlmodel.validate(validationData);
+            VM entrySample = (VM) mlmodel.validate(validationData);
             validationData.delete();
             //validationData = null;
             

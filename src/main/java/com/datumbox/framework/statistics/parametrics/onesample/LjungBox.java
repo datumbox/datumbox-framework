@@ -65,7 +65,7 @@ public class LjungBox {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, int h, double aLevel) {
+    private static boolean checkCriticalValue(double score, int h, double aLevel) {
         return checkCriticalValue(score, h, aLevel, 0, 0);
     }
     
@@ -79,7 +79,7 @@ public class LjungBox {
      * @param q
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, int h, double aLevel, int p, int q) { //p and q are used only in ARIMA Models (p,0,q).
+    private static boolean checkCriticalValue(double score, int h, double aLevel, int p, int q) { //p and q are used only in ARIMA Models (p,0,q).
         double probability=ContinuousDistributions.chisquareCdf(score,h - p - q);
 
         boolean rejectH0=false;

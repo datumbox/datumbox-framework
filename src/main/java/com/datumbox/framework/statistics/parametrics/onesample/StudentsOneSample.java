@@ -80,7 +80,7 @@ public class StudentsOneSample {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, int n, boolean is_twoTailed, double aLevel) {
+    private static boolean checkCriticalValue(double score, int n, boolean is_twoTailed, double aLevel) {
         double probability=ContinuousDistributions.studentsCdf(score,n-1);
 
         boolean rejectH0=false;

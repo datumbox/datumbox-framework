@@ -111,7 +111,7 @@ public class KolmogorovSmirnovIndependentSamples {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, boolean is_twoTailed, int n1, int n2, double aLevel) {
+    private static boolean checkCriticalValue(double score, boolean is_twoTailed, int n1, int n2, double aLevel) {
         boolean rejected=false;
 
         double criticalValue= calculateCriticalValue(is_twoTailed,n1,n2,aLevel);

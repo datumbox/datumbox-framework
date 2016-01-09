@@ -181,8 +181,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
-            try (AbstractClassifier mlclassifier = Trainable.newInstance(
-                    weakClassifierClass, 
+            try (AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
+                    (Class<AbstractClassifier>)weakClassifierClass, 
                     dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
                     kb().getDbConf())) {
                 mlclassifier.predict(newData);
@@ -259,8 +259,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
             
             Dataframe validationDataset;
-            try (AbstractClassifier mlclassifier = Trainable.newInstance(
-                    weakClassifierClass, 
+            try (AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
+                    (Class<AbstractClassifier>)weakClassifierClass, 
                     dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
                     kb().getDbConf())) {
                 mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters);
@@ -345,7 +345,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {
-            AbstractClassifier mlclassifier = Trainable.newInstance(weakClassifierClass, dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), kb().getDbConf());
+            AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
+                    (Class<AbstractClassifier>)weakClassifierClass, 
+                    dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    kb().getDbConf()
+            );
             mlclassifier.delete();
         }
     }

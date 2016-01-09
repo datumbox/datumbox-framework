@@ -65,8 +65,7 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
      * @param dbConf 
      */
     public BayesianEnsembleMethod(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class);
-        isBinarized = true;
+        super(dbName, dbConf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class, true);
     }
     
     /** {@inheritDoc} */

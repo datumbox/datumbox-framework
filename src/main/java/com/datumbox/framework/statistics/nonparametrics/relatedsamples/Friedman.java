@@ -124,7 +124,7 @@ public class Friedman {
      * @param k
      * @return 
      */
-    protected static double scoreToPvalue(double score, int k) {
+    private static double scoreToPvalue(double score, int k) {
         /*
         if(k<=5) {
             //calculate it from tables too small values

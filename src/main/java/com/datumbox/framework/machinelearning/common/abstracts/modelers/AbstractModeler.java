@@ -19,11 +19,9 @@ import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.TripleKnowledgeBase;
-import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
 
 /**
  * Base Class for Machine Learning algorithms.
@@ -33,7 +31,7 @@ import com.datumbox.framework.machinelearning.common.interfaces.TrainingParamete
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractModeler<MP extends ModelParameters, TP extends TrainingParameters, VM extends ValidationMetrics> extends AbstractTrainer<MP, TP, TripleKnowledgeBase<MP, TP, VM>> {
+public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelParameters, TP extends AbstractModeler.AbstractTrainingParameters, VM extends AbstractModeler.AbstractValidationMetrics> extends AbstractTrainer<MP, TP, TripleKnowledgeBase<MP, TP, VM>> {
     
     private final AbstractValidator<MP, TP, VM> modelValidator;
     

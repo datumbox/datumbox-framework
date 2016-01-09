@@ -124,7 +124,7 @@ public class KendallTauCorrelation {
      * @param n
      * @return 
      */
-    protected static double scoreToPvalue(double score, int n) {
+    private static double scoreToPvalue(double score, int n) {
         double variance=2.0*(2.0*n+5.0)/(9.0*n*(n-1.0));
 
         double Z=score/Math.sqrt(variance); //follows approximately Normal with 0 mean and variance as calculated above

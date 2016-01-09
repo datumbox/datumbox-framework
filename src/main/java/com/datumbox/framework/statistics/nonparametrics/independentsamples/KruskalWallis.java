@@ -140,7 +140,7 @@ public class KruskalWallis {
      * @param k
      * @return 
      */
-    protected static double scoreToPvalue(double score, int k) {
+    private static double scoreToPvalue(double score, int k) {
         /*
         if(k<=3) {
             //calculate it from tables too small values

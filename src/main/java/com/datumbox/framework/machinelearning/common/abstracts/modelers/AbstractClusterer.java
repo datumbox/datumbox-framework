@@ -55,12 +55,12 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         /**
          * The set which contains the id of the records included in the cluster.
          */
-        protected Set<Integer> recordIdSet; 
+        protected final Set<Integer> recordIdSet = new HashSet<>(); 
 
         /**
          * The Y label of the cluster is the "gold standard class" (if available).
          */
-        protected Object labelY;
+        private Object labelY;
 
         /**
          * Protected constructor of Cluster which takes as argument a unique id.
@@ -69,7 +69,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
          */
         protected AbstractCluster(Integer clusterId) {
             this.clusterId = clusterId;
-            recordIdSet = new HashSet<>(); //This is large but it should store only references of the Records not the actualy objects
         }
 
         /** {@inheritDoc} */
@@ -194,7 +193,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
      * {@inheritDoc}
      * @param <CL>
      */
-    public static abstract class AbstractModelParameters<CL extends Cluster> extends AbstractModeler.AbstractModelParameters {
+    public static abstract class AbstractModelParameters<CL extends AbstractClusterer.AbstractCluster> extends AbstractModeler.AbstractModelParameters {
         
         //number of classes if the dataset is annotated. Use Linked Hash Set to ensure that the order of classes will be maintained. 
         private Set<Object> goldStandardClasses = new LinkedHashSet<>();

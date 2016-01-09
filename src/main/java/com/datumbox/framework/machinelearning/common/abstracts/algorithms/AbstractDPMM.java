@@ -67,6 +67,22 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         protected AbstractCluster(Integer clusterId) {
             super(clusterId);
         }
+
+        /**
+         * Getter for the featureIds which is a mapping between the column names
+         * and their positions on the vector.
+         * 
+         * @return 
+         */
+        protected abstract Map<Object, Integer> getFeatureIds();
+        
+        /**
+         * Setter for the featureIds which is a mapping between the column names
+         * and their positions on the vector.
+         * 
+         * @param featureIds 
+         */
+        protected abstract void setFeatureIds(Map<Object, Integer> featureIds);
         
         /**
          * Setter for the AbstractCluster id.

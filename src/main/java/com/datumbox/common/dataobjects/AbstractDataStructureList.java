@@ -27,13 +27,6 @@ import java.util.List;
 public abstract class AbstractDataStructureList<T extends List<?>> extends AbstractDataStructureCollection<T> {
     
     /**
-     * Default public constructor
-     */
-    public AbstractDataStructureList() {
-        super();
-    }
-    
-    /**
      * Public constructor which takes as argument the appropriate Java collection.
      * 
      * @param data 

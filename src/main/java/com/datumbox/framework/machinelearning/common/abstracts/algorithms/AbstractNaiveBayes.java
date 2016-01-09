@@ -48,7 +48,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
      * Flag that indicates whether the algorithm binarizes the provided activated 
      * features.
      */
-    protected boolean isBinarized;
+    private final boolean isBinarized;
     
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -135,11 +135,12 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
      * @param mpClass
      * @param tpClass
      * @param vmClass
+     * @param isBinarized
      * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+    protected AbstractNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, boolean isBinarized) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
-        isBinarized = false;
+        this.isBinarized = isBinarized;
     } 
     
     private boolean parallelized = true;

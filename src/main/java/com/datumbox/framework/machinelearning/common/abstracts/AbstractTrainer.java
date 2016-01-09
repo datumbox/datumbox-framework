@@ -41,9 +41,8 @@ import org.slf4j.LoggerFactory;
  * @param <TP>
  * @param <KB>
  */
-public abstract class AbstractTrainer<MP extends ModelParameters, TP extends TrainingParameters, KB extends DoubleKnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
-    
-    
+public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelParameters, TP extends AbstractTrainer.AbstractTrainingParameters, KB extends DoubleKnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
+       
     /**
      * Base class for every ModelParameter class in the framework. It automatically
      * initializes all the BidMap fields by using reflection.

@@ -88,22 +88,14 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             super(clusterId);
         }
 
-        /**
-         * Getter for the featureIds which is a mapping between the column names
-         * and their positions on the vector.
-         * 
-         * @return 
-         */
+        /** {@inheritDoc} */
+        @Override
         protected Map<Object, Integer> getFeatureIds() {
             return featureIds;
         }
         
-        /**
-         * Setter for the featureIds which is a mapping between the column names
-         * and their positions on the vector.
-         * 
-         * @param featureIds 
-         */
+        /** {@inheritDoc} */
+        @Override
         protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }

@@ -27,13 +27,6 @@ import java.util.Map;
 public abstract class AbstractDataStructureMap<T extends Map<?,?>> extends AbstractDataStructure<T> {
     
     /**
-     * Default public constructor
-     */
-    public AbstractDataStructureMap() {
-        super();
-    }
-    
-    /**
      * Public constructor which takes as argument the appropriate Java collection.
      * 
      * @param data 

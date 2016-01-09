@@ -38,17 +38,17 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
     /**
      * The AbstractTransformer instance of the wrapper.
      */
-    protected AbstractTransformer dataTransformer = null;
+    protected AbstractTransformer dataTransformer;
     
     /**
      * The AbstractFeatureSelector instance of the wrapper.
      */
-    protected AbstractFeatureSelector featureSelection = null;
+    protected AbstractFeatureSelector featureSelection;
     
     /**
      * The Machine Learning model instance of the wrapper.
      */
-    protected AbstractModeler mlmodel = null;
+    protected AbstractModeler mlmodel;
         
     /**
      * The AbstractTrainingParameters class stores the parameters that can be changed
@@ -252,7 +252,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
      */
     public <VM extends ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
         if(mlmodel!=null) {
-            mlmodel.setValidationMetrics(validationMetrics);
+            mlmodel.setValidationMetrics((AbstractModeler.AbstractValidationMetrics) validationMetrics);
         }
     }
 }

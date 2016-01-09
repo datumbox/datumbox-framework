@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Go through all the classes, check encapsulation in vars & methods, comments, annotations and architecture.
 - Profiling & benchmarking.
 - Add multithreading support on the training part and on some parts of DataTransformation, FeatureSelection and Dataframe.Builder.parseTextFiles().
 

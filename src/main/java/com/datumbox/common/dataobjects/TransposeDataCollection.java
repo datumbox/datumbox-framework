@@ -35,8 +35,7 @@ public class TransposeDataCollection extends AbstractDataStructureMap<Map<Object
      * Default constructor which initializes the internal data with a LinkedHashMap.
      */
     public TransposeDataCollection() {
-        super();
-        internalData = new LinkedHashMap<>();
+        super(new LinkedHashMap<>());
     }
     
     /**

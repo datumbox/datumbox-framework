@@ -103,7 +103,7 @@ public class WaldWolfowitz {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, int n1, int n2, double aLevel) {
+    private static boolean checkCriticalValue(double score, int n1, int n2, double aLevel) {
             boolean rejected=false;
 
             int n=n1+n2;

@@ -35,8 +35,7 @@ public class FlatDataList extends AbstractDataStructureList<List<Object>> implem
      * Default constructor which initializes the internal data with an ArrayList.
      */
     public FlatDataList() {
-        super();
-        internalData = new ArrayList<>();
+        super(new ArrayList<>());
     }
     
     /**

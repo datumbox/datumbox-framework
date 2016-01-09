@@ -56,7 +56,7 @@ public class NormalRelatedSamples {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, boolean is_twoTailed, double aLevel) {
+    private static boolean checkCriticalValue(double score, boolean is_twoTailed, double aLevel) {
         double probability=ContinuousDistributions.gaussCdf(score);
 
         boolean rejectH0=false;

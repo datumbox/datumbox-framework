@@ -62,7 +62,7 @@ public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.Abs
     /**
      * The AbstractParameters of the AbstractTextExtractor.
      */
-    protected TP parameters;
+    protected final TP parameters;
     
     /**
      * Public constructor that accepts as arguments the AbstractParameters object.

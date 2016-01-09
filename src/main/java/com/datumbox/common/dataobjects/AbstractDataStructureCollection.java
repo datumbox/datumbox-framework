@@ -28,13 +28,6 @@ import java.util.Iterator;
 public abstract class AbstractDataStructureCollection<T extends Collection<?>> extends AbstractDataStructure<T> {
     
     /**
-     * Default public constructor
-     */
-    public AbstractDataStructureCollection() {
-        super();
-    }
-    
-    /**
      * Public constructor which takes as argument the appropriate Java collection.
      * 
      * @param data 

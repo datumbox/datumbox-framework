@@ -59,14 +59,7 @@ public abstract class AbstractDataStructure<T> implements Serializable {
     /**
      * Internal Wrapped Java Collection.
      */
-    protected T internalData;
-    
-    /**
-     * Default public constructor
-     */
-    public AbstractDataStructure() {
-        
-    }
+    protected final T internalData;
     
     /**
      * Public constructor which takes as argument the appropriate Java collection

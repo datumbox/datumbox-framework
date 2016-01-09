@@ -64,7 +64,7 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
      * @param dbConf 
      */
     public MultinomialNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class);
+        super(dbName, dbConf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class, false);
     }
     
 }

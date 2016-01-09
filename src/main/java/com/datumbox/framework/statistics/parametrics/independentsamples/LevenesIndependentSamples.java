@@ -125,7 +125,7 @@ public class LevenesIndependentSamples {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, int n, int k, double aLevel) {
+    private static boolean checkCriticalValue(double score, int n, int k, double aLevel) {
         double probability=ContinuousDistributions.fCdf(score,k-1,n-k);
 
         boolean rejectH0=false;

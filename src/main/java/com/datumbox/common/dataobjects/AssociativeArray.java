@@ -39,18 +39,17 @@ public class AssociativeArray extends AbstractDataStructureMap<Map<Object, Objec
      * @return 
      */
     public static AssociativeArray copy2Unmodifiable(AssociativeArray original) {
-        AssociativeArray copy = new AssociativeArray();
-        copy.internalData.putAll(original.internalData);
-        copy.internalData = Collections.unmodifiableMap(copy.internalData);
-        return copy;
+        Map<Object, Object> internalData = new LinkedHashMap<>();
+        internalData.putAll(original.internalData);
+        internalData = Collections.unmodifiableMap(internalData);
+        return new AssociativeArray(internalData);
     }
     
     /**
      * Default constructor which initializes the internal data with a LinkedHashMap.
      */
     public AssociativeArray() {
-        super();
-        internalData = new LinkedHashMap<>();
+        super(new LinkedHashMap<>());
     }
     
     /**

@@ -39,7 +39,7 @@ public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends Training
     /**
      * The database configuration of the Permanent Storage.
      */
-    protected final DatabaseConfiguration dbConf;
+    private final DatabaseConfiguration dbConf;
     
     /**
      * The connector to the Permanent Storage.
@@ -49,22 +49,22 @@ public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends Training
     /**
      * The class of the ModelParameters class of the algorithm.
      */
-    protected final Class<MP> mpClass;
+    private final Class<MP> mpClass;
     
     /**
      * The class of the TrainingParameters class of the algorithm.
      */
-    protected final Class<TP> tpClass;
+    private final Class<TP> tpClass;
     
     /**
      * The ModelParameters object of the algorithm.
      */
-    protected MP modelParameters;
+    private MP modelParameters;
     
     /**
      * The TrainingParameters object of the algorithm.
      */
-    protected TP trainingParameters;
+    private TP trainingParameters;
     
     /**
      * Public constructor of the object.

@@ -123,7 +123,7 @@ public class KolmogorovSmirnovOneSample {
      * @param aLevel
      * @return 
      */
-    protected static boolean checkCriticalValue(double score, boolean is_twoTailed, int n, double aLevel) {
+    private static boolean checkCriticalValue(double score, boolean is_twoTailed, int n, double aLevel) {
         boolean rejected=false;
 
         double criticalValue;

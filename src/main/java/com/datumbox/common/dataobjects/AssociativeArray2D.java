@@ -34,8 +34,7 @@ public class AssociativeArray2D extends AbstractDataStructureMap<Map<Object, Ass
      * Default constructor which initializes the internal data with a LinkedHashMap.
      */
     public AssociativeArray2D() {
-        super();
-        internalData = new LinkedHashMap<>();
+        super(new LinkedHashMap<>());
     }
     
     /**

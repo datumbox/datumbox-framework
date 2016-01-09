@@ -97,8 +97,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
      * @param dbConf 
      */
     public BernoulliNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class);
-        isBinarized = true;
+        super(dbName, dbConf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class, true);
     }
     
     /** {@inheritDoc} */

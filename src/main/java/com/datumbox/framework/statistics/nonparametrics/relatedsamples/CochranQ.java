@@ -125,7 +125,7 @@ public class CochranQ {
      * @param k
      * @return 
      */
-    protected static double scoreToPvalue(double score, int n, int k) {
+    private static double scoreToPvalue(double score, int n, int k) {
         /*
         if(n<4 || n*k<24) {
             //calculate it from tables too small values

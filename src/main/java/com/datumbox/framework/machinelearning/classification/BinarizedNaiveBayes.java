@@ -66,8 +66,7 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
      * @param dbConf 
      */
     public BinarizedNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class);
-        isBinarized = true;
+        super(dbName, dbConf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class, true);
     }
     
     /** {@inheritDoc} */
