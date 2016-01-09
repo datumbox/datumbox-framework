@@ -213,11 +213,10 @@ public abstract class AbstractTrainer<MP extends ModelParameters, TP extends Tra
         kb().clear();
         kb().setTrainingParameters(trainingParameters);
         
-        MP modelParameters = kb().getModelParameters();
-        if(modelParameters instanceof AbstractModelParameters) {
-            ((AbstractModelParameters)modelParameters).setN(trainingData.size());
-            ((AbstractModelParameters)modelParameters).setD(trainingData.xColumnSize());
-        }
+        AbstractModelParameters modelParameters = (AbstractModelParameters) kb().getModelParameters();
+        modelParameters.setN(trainingData.size());
+        modelParameters.setD(trainingData.xColumnSize());
+        
         
         _fit(trainingData);
         
