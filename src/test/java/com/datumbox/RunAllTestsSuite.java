@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(ClasspathSuite.class)
 @SuiteTypes({SuiteType.TEST_CLASSES})
-public class DatumboxTest {
+public class RunAllTestsSuite {
     
     /**
      * Executes in a serial manner all the tests of the project.
@@ -43,7 +43,7 @@ public class DatumboxTest {
         System.out.println("Datumbox Framework Tests");
         System.out.println("Press any key to continue...");
         System.in.read();  
-        JUnitCore.runClasses(DatumboxTest.class);
+        JUnitCore.runClasses(RunAllTestsSuite.class);
     }
     
 }
