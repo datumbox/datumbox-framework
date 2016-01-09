@@ -88,7 +88,7 @@
         
         <!-- Code Dependencies -->
         <commons-lang-version>3.4</commons-lang-version>
-        <commons-math-version>3.5</commons-math-version>
+        <commons-math-version>3.6</commons-math-version>
         <commons-csv-version>1.2</commons-csv-version>
         <slf4j-api-version>1.7.13</slf4j-api-version>
         <libsvm-version>3.21</libsvm-version>
