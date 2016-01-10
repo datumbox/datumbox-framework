@@ -385,9 +385,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 if(covert2dummy(columnTypes.get(column))) { 
-                    //Note: The referenceLevels Map is an implementation of ConcurrentHashMap.
-                    //Thus we don't need a synchronized() block.
-                    referenceLevels.putIfAbsent(column, entry.getValue());
+                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized() block.
                 }
             }
         });

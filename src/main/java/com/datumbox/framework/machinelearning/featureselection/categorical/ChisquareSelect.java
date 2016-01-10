@@ -142,12 +142,8 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
                 }
             }
             
-            //REMEMBER! larger scores means more important keywords.
-            if (bestScore>=criticalValue) {
-                //if the score is larger than the critical value, then select the feature
-                synchronized(featureScores) {
-                    featureScores.put(feature, bestScore);
-                }
+            if (bestScore>=criticalValue) { //if the score is larger than the critical value, then select the feature
+                featureScores.put(feature, bestScore); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized() block.
             }
         }); 
         

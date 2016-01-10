@@ -45,7 +45,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
         /** 
