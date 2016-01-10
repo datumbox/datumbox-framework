@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160109
+Version 0.7.0-SNAPSHOT - Build 20160110
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -56,6 +56,10 @@ Version 0.7.0-SNAPSHOT - Build 20160109
 - Updated the MapDBConnector to call compact on primary db before close.
 - Updated the DatabaseConnector.getBigMap() support thread-safe maps.
 - Simplify the architecture. Massive restructuring of packages and class names. Change the structure of Interfaces and inheritance in TP, MP, VM and Algorithms.
+- On Dataframe we now can set records on keys that do not already exist.
+- The NgramsExtractor was rewritten to remove its internal state.
+- Added a concurrency package on common with useful helper classes.
+- Added threads on the Builder of Dataframes.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

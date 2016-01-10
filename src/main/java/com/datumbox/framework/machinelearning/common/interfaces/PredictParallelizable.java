@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.common.interfaces;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.utilities.StreamMethods;
+import com.datumbox.common.concurrency.StreamMethods;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.stream.Collectors;

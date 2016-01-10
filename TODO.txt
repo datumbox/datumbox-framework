@@ -2,7 +2,7 @@ CODE IMPROVEMENTS
 =================
 
 - Profiling & benchmarking.
-- Add multithreading support on the training part and on some parts of DataTransformation, FeatureSelection and Dataframe.Builder.parseTextFiles().
+- Add multithreading support on the training methods of the models and on some parts of DataTransformation and FeatureSelection.
 
 - Update all maven plugins and dependencies to their latest versions.
     - Add support for MapDB 2.0 once a stable version is released.

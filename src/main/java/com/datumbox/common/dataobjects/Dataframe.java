@@ -20,6 +20,8 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.common.concurrency.StreamMethods;
+import com.datumbox.common.concurrency.ThreadMethods;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
 import java.io.BufferedReader;
@@ -28,7 +30,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -96,13 +97,27 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                 logger.info("Dataset Parsing {} class", theClass);
                 
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
-                    for (String line; (line = br.readLine()) != null;) {
-                        dataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass));
-                    }
+                    ////for (String line; (line = br.readLine()) != null;) {
+                    ////    dataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass));
+                    ////}
+                    
+                    final int baseCounter = dataset.size(); //because we read multiple files we need to keep track of all records added earlier
+                    ThreadMethods.throttledExecution(StreamMethods.enumerate(br.lines(), false), e -> { //WARNING: Do NOT turn on the parallel flags. Any parallelist is taken care of by the throttledExecution() method
+                        Integer rId = baseCounter + e.getKey();
+                        String line = e.getValue();
+                        
+                        AssociativeArray xData = new AssociativeArray(
+                                textExtractor.extract(StringCleaner.clear(line))
+                        );
+                        Record r = new Record(xData, theClass);
+
+                        synchronized(dataset) {
+                            dataset.set(rId, r);
+                        }
+                    });
                 } 
                 catch (IOException ex) {
-                    dataset.delete();
-                    throw new UncheckedIOException(ex);
+                    throw new RuntimeException(ex);
                 }
             }
             
@@ -152,34 +167,45 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                                 .withQuote(quote)
                                 .withRecordSeparator(recordSeparator);
             
-            try (final CSVParser parser = new CSVParser(reader, format)) {                    
-                for (CSVRecord row : parser) {
-                    
+            try (final CSVParser parser = new CSVParser(reader, format)) { 
+                //for (CSVRecord row : parser) {
+                
+                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false), false), e -> { //WARNING: Do NOT turn on the parallel flags. Any parallelist is taken care of by the throttledExecution() method
+                    Integer rId = e.getKey();
+                    CSVRecord row = e.getValue();
+                ////StreamMethods.<CSVRecord>stream(parser.spliterator(), false).forEachOrdered(row -> {
                     if (!row.isConsistent()) {
                         logger.warn("WARNING: Skipping row {} because its size does not match the header size.", row.getRecordNumber());
-                        continue;
                     }
-                    
-                    Object y = null;
-                    AssociativeArray xData = new AssociativeArray();
-                    for (Map.Entry<String, TypeInference.DataType> entry : headerDataTypes.entrySet()) {
-                        String column = entry.getKey();
-                        TypeInference.DataType dataType = entry.getValue();
+                    else {
+                        Object y = null;
+                        AssociativeArray xData = new AssociativeArray();
+                        for (Map.Entry<String, TypeInference.DataType> entry : headerDataTypes.entrySet()) {
+                            String column = entry.getKey();
+                            TypeInference.DataType dataType = entry.getValue();
+
+                            Object value = TypeInference.DataType.parse(row.get(column), dataType); //parse the string value according to the DataType
+                            if (yVariable != null && yVariable.equals(column)) {
+                                y = value;
+                            } 
+                            else {
+                                xData.put(column, value);
+                            }
+                        }
                         
-                        Object value = TypeInference.DataType.parse(row.get(column), dataType); //parse the string value according to the DataType
-                        if (yVariable != null && yVariable.equals(column)) {
-                            y = value;
-                        } 
-                        else {
-                            xData.put(column, value);
+                        Record r = new Record(xData, y);
+                        
+                        //use the internal unsafe methods to avoid the update of the Metas. 
+                        //The Metas are already set in the construction of the Dataframe.
+                        ////dataset._add(r); 
+                        synchronized(dataset) {
+                            dataset._unsafe_set(rId, r); 
                         }
                     }
-                    dataset._add(new Record(xData, y)); //use the internal _add() to avoid the update of the Metas. The Metas are already set in the construction of the Dataframe.
-                }
+                });
             } 
             catch (IOException ex) {
-                dataset.delete();
-                throw new UncheckedIOException(ex);
+                throw new RuntimeException(ex);
             }
             return dataset;
         }
@@ -192,6 +218,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     
     private final DatabaseConnector dbc; 
     private final DatabaseConfiguration dbConf; 
+    
+    /**
+     * Keeps a counter of the id that will be used for the next record.
+     */
+    private int nextAvailableRecordId = 0;
     
     /**
      * Public constructor of Dataframe.
@@ -287,9 +318,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /** {@inheritDoc} */
     @Override
     public boolean addAll(Collection<? extends Record> c) {
-        for(Record r : c) {
-            add(r);
-        }
+        c.stream().forEach(this::add);
         return true;
     }
     
@@ -478,8 +507,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
     
     /**
-     * Sets the record of a particular id in the dataset. The record must already
-     * exists within the dataset or an IllegalArgumentException is thrown.
+     * Sets the record of a particular id in the dataset. If the record does not
+     * exist it will be added with the specific id and the next added record will
+     * have as id the next integer.
      * 
      * Note that the meta-data are partially updated. This means that if the replaced 
      * Record contained a column which is now no longer available in the dataset,
@@ -492,9 +522,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Integer set(Integer rId, Record r) {
-        if(records.containsKey(rId)==false) {
-            throw new IllegalArgumentException("Setting an id which does not exist is not permitted.");
-        }
         _unsafe_set(rId, r);
         updateMeta(r);
         return rId;
@@ -721,18 +748,22 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     
     /**
      * Sets the record in a particular position in the dataset, WITHOUT updating
-     * the internal meta-info. This method is similar to set() and it allows quick updates 
+     * the internal meta-info and returns the previous value (null if not existed). 
+     * This method is similar to set() and it allows quick updates 
      * on the dataset. Nevertheless it is not advised to use this method because 
      * unless you explicitly call the recalculateMeta() method, the meta data
-     * will be corrupted.Also it does not validate that the id already exists.  
-     * If you do use this method, MAKE sure you perform the recalculation after 
-     * you are done with the updates AND set rIds that already exist.
+     * will be corrupted. If you do use this method, MAKE sure you perform the 
+     * recalculation after you are done with the updates.
      * 
      * @param rId
      * @param r 
+     * @return  
      */
-    public void _unsafe_set(Integer rId, Record r) {
-        records.put(rId, r);
+    public Record _unsafe_set(Integer rId, Record r) {
+        if(nextAvailableRecordId<rId) {
+            nextAvailableRecordId = rId+1; //move ahead the next id
+        }
+        return records.put(rId, r);
     }
     
     /**
@@ -753,7 +784,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     private Integer _add(Record r) {
-        Integer newId = size();
+        Integer newId = nextAvailableRecordId++;
         records.put(newId, r);
         return newId;
     }
