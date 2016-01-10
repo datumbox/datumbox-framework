@@ -118,6 +118,12 @@
                 </excludes>  
            </resource>
         </resources>
+        <testResources>
+           <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+           </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -243,6 +249,7 @@
                         <exclude>README.md</exclude>
                         <exclude>TODO.txt</exclude>
                         <exclude>src/main/resources/license.txt</exclude>
+                        <exclude>src/test/resources/datasets/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

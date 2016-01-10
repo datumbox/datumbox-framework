@@ -26,9 +26,8 @@ import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -58,10 +57,10 @@ public class TextClassifierTest extends AbstractTest {
         
         Map<Object, URI> dataset = new HashMap<>();
         try {
-            dataset.put("negative", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.neg")));
-            dataset.put("positive", TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.pos")));
+            dataset.put("negative", this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.neg.txt").toURI());
+            dataset.put("positive", this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.pos.txt").toURI());
         }
-        catch(UncheckedIOException | MalformedURLException ex) {
+        catch(UncheckedIOException | URISyntaxException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }
@@ -109,9 +108,9 @@ public class TextClassifierTest extends AbstractTest {
         instance = new TextClassifier(dbName, dbConf);
         Dataframe validationData = null;
         try {
-            validationData = instance.predict(TestUtils.getRemoteFile(new URL("http://www.datumbox.com/files/datasets/example.test")));
+            validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());
         }
-        catch(UncheckedIOException | MalformedURLException ex) {
+        catch(UncheckedIOException | URISyntaxException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }

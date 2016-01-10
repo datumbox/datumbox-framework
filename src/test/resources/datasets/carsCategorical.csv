@@ -1,0 +1,11 @@
+color,type,origin,stolen
+red,sports,domestic,yes
+red,sports,domestic,no
+red,sports,domestic,yes
+yellow,sports,domestic,no
+yellow,sports,imported,yes
+yellow,suv,imported,no
+yellow,suv,imported,yes
+yellow,suv,domestic,no
+red,suv,imported,no
+red,sports,imported,yes

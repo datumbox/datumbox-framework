@@ -1,0 +1,5 @@
+city,temperature,is_sunny,traffic_rank,is_capital,name_of_port,metro_population
+Athens,30.0,yes,3,true,"Piraeus",3753783
+London,14.,No,2,True,Port of London,13614409.0
+"New York",-12,Yes,1,False,New York's port,null
+"Atlantis,	""the lost city""",,,4,INVALID_VALUE,null,null

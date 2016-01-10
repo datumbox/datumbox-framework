@@ -18,7 +18,13 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
-import java.io.UncheckedIOException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -41,12 +47,12 @@ public class CETRTest extends AbstractTest {
         
         String dbName = this.getClass().getSimpleName();
         
-        String text = null;
+        String text;        
         try {
-            text = TestUtils.webRequest("http://www.example.org/");
+            List<String> lines = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("datasets/example.com.html").toURI()), StandardCharsets.UTF_8);
+            text = StringUtils.join(lines, "\r\n");
         }
-        catch(UncheckedIOException ex) {
-            logger.warn("Unable to download datasets, skipping test.");
+        catch(IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
         
