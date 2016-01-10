@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -97,10 +98,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                 logger.info("Dataset Parsing {} class", theClass);
                 
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
-                    ////for (String line; (line = br.readLine()) != null;) {
-                    ////    dataset.add(new Record(new AssociativeArray(textExtractor.extract(StringCleaner.clear(line))), theClass));
-                    ////}
-                    
                     final int baseCounter = dataset.size(); //because we read multiple files we need to keep track of all records added earlier
                     ThreadMethods.throttledExecution(StreamMethods.enumerate(br.lines(), false), e -> { //WARNING: Do NOT turn on the parallel flags. Any parallelist is taken care of by the throttledExecution() method
                         Integer rId = baseCounter + e.getKey();
@@ -168,12 +165,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                                 .withRecordSeparator(recordSeparator);
             
             try (final CSVParser parser = new CSVParser(reader, format)) { 
-                //for (CSVRecord row : parser) {
-                
                 ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false), false), e -> { //WARNING: Do NOT turn on the parallel flags. Any parallelist is taken care of by the throttledExecution() method
                     Integer rId = e.getKey();
                     CSVRecord row = e.getValue();
-                ////StreamMethods.<CSVRecord>stream(parser.spliterator(), false).forEachOrdered(row -> {
+                
                     if (!row.isConsistent()) {
                         logger.warn("WARNING: Skipping row {} because its size does not match the header size.", row.getRecordNumber());
                     }
@@ -197,7 +192,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                         
                         //use the internal unsafe methods to avoid the update of the Metas. 
                         //The Metas are already set in the construction of the Dataframe.
-                        ////dataset._add(r); 
                         synchronized(dataset) {
                             dataset._unsafe_set(rId, r); 
                         }
@@ -318,7 +312,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /** {@inheritDoc} */
     @Override
     public boolean addAll(Collection<? extends Record> c) {
-        c.stream().forEach(this::add);
+        for(Record r : c) {
+            add(r);
+        }
         return true;
     }
     
@@ -362,27 +358,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     @Override
     public Iterator<Record> iterator() {
-        return new Iterator<Record>() {
-            private final Iterator<Record> it = records.values().iterator();
-            
-            /** {@inheritDoc} */
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public Record next() {
-                return it.next();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-            }
-        };
+        return values().iterator();
     }
     
     
@@ -652,8 +628,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     public Dataframe copy() {
         Dataframe d = new Dataframe(dbConf);
         
-        for(Record r : values()) {
-            d.add(r); 
+        for(Map.Entry<Integer, Record> e : entries()) {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
+            d.set(rId, r); 
         }        
         return d;
     }
@@ -743,7 +721,28 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Iterable<Record> values() {
-        return Dataframe.this::iterator;
+        return () -> new Iterator<Record>(){
+            
+            private final Iterator<Record> it = records.values().iterator();
+            
+            /** {@inheritDoc} */
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+            
+            /** {@inheritDoc} */
+            @Override
+            public Record next() {
+                return it.next();
+            }
+            
+            /** {@inheritDoc} */
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+            }
+        };
     }
     
     /**

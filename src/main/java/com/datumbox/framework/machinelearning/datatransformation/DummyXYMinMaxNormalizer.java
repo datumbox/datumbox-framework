@@ -45,16 +45,16 @@ public class DummyXYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
         
-        AbstractDummyMinMaxTransformer.fitX(trainingData, minColumnValues, maxColumnValues);
-        AbstractDummyMinMaxTransformer.fitY(trainingData, minColumnValues, maxColumnValues);
+        fitX(trainingData, minColumnValues, maxColumnValues);
+        fitY(trainingData, minColumnValues, maxColumnValues);
         
-        AbstractDummyMinMaxTransformer.fitDummy(trainingData, kb().getModelParameters().getReferenceLevels());
+        fitDummy(trainingData, kb().getModelParameters().getReferenceLevels());
     }
 
     /** {@inheritDoc} */
     @Override
     protected void _convert(Dataframe data) {
-        AbstractDummyMinMaxTransformer.transformDummy(data, kb().getModelParameters().getReferenceLevels());
+        transformDummy(data, kb().getModelParameters().getReferenceLevels());
     }
     
     /** {@inheritDoc} */
@@ -63,8 +63,8 @@ public class DummyXYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
-        AbstractDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
-        AbstractDummyMinMaxTransformer.normalizeY(data, minColumnValues, maxColumnValues);
+        normalizeX(data, minColumnValues, maxColumnValues);
+        normalizeY(data, minColumnValues, maxColumnValues);
     }
     
     /** {@inheritDoc} */
@@ -73,8 +73,8 @@ public class DummyXYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
-        AbstractDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
-        AbstractDummyMinMaxTransformer.denormalizeY(data, minColumnValues, maxColumnValues);
+        denormalizeX(data, minColumnValues, maxColumnValues);
+        denormalizeY(data, minColumnValues, maxColumnValues);
     }
        
 }

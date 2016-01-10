@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.datatransformers;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
@@ -147,8 +148,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected static void fitX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        
-        for(Map.Entry<Object, TypeInference.DataType> entry : data.getXDataTypes().entrySet()) {
+        StreamMethods.stream(data.getXDataTypes().entrySet(), true).forEach(entry -> {
             Object column = entry.getKey();
             TypeInference.DataType columnType = entry.getValue();
 
@@ -157,15 +157,17 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                 Double max = Descriptives.max(columnValues.toFlatDataCollection());
                 Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
-                minColumnValues.put(column, min);
-                maxColumnValues.put(column, max);
+                synchronized (minColumnValues) {
+                    minColumnValues.put(column, min);
+                }
+                synchronized (maxColumnValues) {
+                    maxColumnValues.put(column, max);
+                }
             }
             else {
                 //do nothing for non-numeric columns
             }
-        }
-
-        //do nothing for the response variable Y
+        }); //do nothing for the response variable Y
     }
     
     /**
@@ -176,7 +178,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected static void normalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Map.Entry<Integer, Record> e : data.entries()) {
+        StreamMethods.stream(data.entries(), true).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
@@ -207,9 +209,13 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             }
             
             if(modified) {
-                data._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities())); //no modification on the actula columns takes place, safe to do.
+                Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                
+                synchronized(data) {
+                    data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                }
             }
-        }
+        });
     }
     
     /**
@@ -220,7 +226,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected static void denormalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        for(Map.Entry<Integer, Record> e : data.entries()) {
+        StreamMethods.stream(data.entries(), true).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
@@ -246,9 +252,13 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             }
             
             if(modified) {
-                data._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities())); //no modification on the actula columns takes place, safe to do.
+                Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+                
+                synchronized(data) {
+                    data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                }
             }
-        }
+        });
     }
     
     /**
@@ -279,36 +289,36 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected static void normalizeY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        if(data.isEmpty()) {
-            return;
-        }
-        
         if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
-            for(Map.Entry<Integer, Record> e : data.entries()) {
+            StreamMethods.stream(data.entries(), true).forEach(e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 Double value = TypeInference.toDouble(r.getY());
-                if(value==null) { //if we have a missing value don't perform any normalization
-                    continue;
+                
+                if(value!=null) { //if we have a missing value don't perform any normalization
+                    //do the same for the response variable Y
+                    Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
+                    Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
+
+                    //it is important how we will handle 0 normalized values because
+                    //0-valued features are considered inactive.
+                    double normalizedValue;
+                    if(min.equals(max)) {
+                        normalizedValue = (min!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
+                    }
+                    else {
+                        normalizedValue = (value-min)/(max-min);
+                    }
+
+                    Record newR = new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities());
+
+                    synchronized(data) {
+                        data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                    }
                 }
                 
-                //do the same for the response variable Y
-                Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
-                Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
-                
-                //it is important how we will handle 0 normalized values because
-                //0-valued features are considered inactive.
-                double normalizedValue;
-                if(min.equals(max)) {
-                    normalizedValue = (min!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
-                }
-                else {
-                    normalizedValue = (value-min)/(max-min);
-                }
-                
-                data._unsafe_set(rId, new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities()));
-            }
+            });
         }
     }
     
@@ -320,15 +330,10 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected static void denormalizeY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        
-        if(data.isEmpty()) {
-            return;
-        }
-        
         TypeInference.DataType dataType = data.getYDataType();
         if(dataType==TypeInference.DataType.NUMERICAL || dataType==null) {
 
-            for(Map.Entry<Integer, Record> e : data.entries()) {
+            StreamMethods.stream(data.entries(), true).forEach(e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 
@@ -356,9 +361,13 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                         denormalizedYPredicted = YPredicted*(max-min) + min;
                     }
                 }
-                
-                data._unsafe_set(rId, new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities()));
-            }
+
+                Record newR = new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities());
+
+                synchronized(data) {
+                    data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                }
+            });
         }
     }
     
@@ -372,18 +381,20 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
 
         //find the referenceLevels for each categorical variable
-        for(Record r : data) {
+        StreamMethods.stream(data, true).forEachOrdered(r -> {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
-                if(referenceLevels.containsKey(column)==false) { //already set?
-                    if(covert2dummy(columnTypes.get(column))==false) { 
-                        continue; //only ordinal and categorical are converted into dummyvars
+                if(covert2dummy(columnTypes.get(column))) { //only ordinal and categorical are converted into dummyvars
+                    if(referenceLevels.containsKey(column)==false) { 
+                        synchronized(referenceLevels) {
+                            if(referenceLevels.containsKey(column)==false) { 
+                                referenceLevels.put(column, entry.getValue());
+                            }
+                        }
                     }
-                    Object value = entry.getValue();
-                    referenceLevels.put(column, value);
                 }
             }
-        }
+        });
     }
     
     /**
@@ -397,7 +408,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
         //Replace variables with dummy versions
-        for(Map.Entry<Integer, Record> e : data.entries()) {
+        StreamMethods.stream(data.entries(), true).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             
@@ -427,12 +438,16 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             }
             
             if(modified) {
-                data._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
+                Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+
+                synchronized(data) {
+                    data._unsafe_set(rId, newR); //we call below the recalculateMeta()
+                }
             }
-        }
+        });
         
         //Reset Meta info
-        data.recalculateMeta(); //call the recalculate because we used _unsafe_set()
+        data.recalculateMeta(); 
     }
     
     /**

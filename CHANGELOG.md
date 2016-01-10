@@ -59,7 +59,7 @@ Version 0.7.0-SNAPSHOT - Build 20160110
 - On Dataframe we now can set records on keys that do not already exist.
 - The NgramsExtractor was rewritten to remove its internal state.
 - Added a concurrency package on common with useful helper classes.
-- Added threads on the Builder of Dataframes.
+- Added threads on the Builder of Dataframes and on the DataTransformation algorithms (both fit and transform).
 - Converted the big test Datasets to files stored as resources in the project. This includes all the files that we downloaded from the web.
 
 Version 0.6.1 - Build 20160102

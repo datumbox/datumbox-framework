@@ -42,7 +42,7 @@ public class XMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
     protected void _fit(Dataframe trainingData) {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
-        AbstractDummyMinMaxTransformer.fitX(trainingData, minColumnValues, maxColumnValues);
+        fitX(trainingData, minColumnValues, maxColumnValues);
     }
     
     /** {@inheritDoc} */
@@ -57,7 +57,7 @@ public class XMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
-        AbstractDummyMinMaxTransformer.normalizeX(data, minColumnValues, maxColumnValues);
+        normalizeX(data, minColumnValues, maxColumnValues);
     }
 
     /** {@inheritDoc} */
@@ -66,6 +66,6 @@ public class XMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
         Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
         Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
 
-        AbstractDummyMinMaxTransformer.denormalizeX(data, minColumnValues, maxColumnValues);
+        denormalizeX(data, minColumnValues, maxColumnValues);
     }
 }
