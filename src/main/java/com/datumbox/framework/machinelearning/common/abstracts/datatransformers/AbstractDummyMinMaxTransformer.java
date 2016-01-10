@@ -46,7 +46,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         /**
          * The reference levels of each categorical variable.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Object> referenceLevels;
         
         /**
@@ -379,19 +379,15 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      */
     protected static void fitDummy(Dataframe data, Map<Object, Object> referenceLevels) {
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
-
+        
         //find the referenceLevels for each categorical variable
         StreamMethods.stream(data, true).forEachOrdered(r -> {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
-                if(covert2dummy(columnTypes.get(column))) { //only ordinal and categorical are converted into dummyvars
-                    if(referenceLevels.containsKey(column)==false) { 
-                        synchronized(referenceLevels) {
-                            if(referenceLevels.containsKey(column)==false) { 
-                                referenceLevels.put(column, entry.getValue());
-                            }
-                        }
-                    }
+                if(covert2dummy(columnTypes.get(column))) { 
+                    //Note: The referenceLevels Map is an implementation of ConcurrentHashMap.
+                    //Thus we don't need a synchronized() block.
+                    referenceLevels.putIfAbsent(column, entry.getValue());
                 }
             }
         });
@@ -451,7 +447,8 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     }
     
     /**
-     * Checks whether the variable should be converted into dummy (boolean).
+     * Checks whether the variable should be converted into dummy (boolean). Only
+     * categorical and ordinal values are converted.
      * 
      * @param columnType
      * @return 

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.continuous;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractContinuousFeatureSelector;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -364,15 +365,14 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
         MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
-        RealMatrix X = matrixDataset.getX();
         
         RealMatrix components = new BlockRealMatrix(modelParameters.getComponents());
         
         
         //multiplying the data with components
-        X = X.multiply(components);
+        final RealMatrix X = matrixDataset.getX().multiply(components);
         
-        for(Map.Entry<Integer, Record> e : newData.entries()) {
+        StreamMethods.stream(newData.entries(), true).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);
@@ -383,14 +383,18 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
                 xData.put(componentId, value);
                 ++componentId;
             }
-            
-            newData._unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
-        }
+
+            Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+
+            synchronized(newData) {
+                newData._unsafe_set(rId, newR); //we call below the recalculateMeta()
+            }
+        });
         
         //recordIdsReference = null;
         //matrixDataset = null;
         
-        newData.recalculateMeta(); //call the recalculate because we used _unsafe_set()
+        newData.recalculateMeta(); 
     }
     
 }

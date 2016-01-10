@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
-import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 
 import java.util.Arrays;
@@ -76,10 +76,15 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         
         double N = modelParameters.getN();
-        for(Map.Entry<Object, Double> featureCount : featureCounts.entrySet()) {
+        
+        final double log2 = Math.log(2.0);
+        
+        StreamMethods.stream(featureCounts.entrySet(), true).forEach(featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
+            
+            double bestScore = Double.NEGATIVE_INFINITY; //REMEMBER! larger scores means more important feature.
             
             for(Map.Entry<Object, Integer> classCount : classCounts.entrySet()) {
                 Object theClass = classCount.getKey();
@@ -96,29 +101,29 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
                 
                 //calculate Mutual Information
                 //Note we calculate it partially because if one of the N.. is zero the log will not be defined and it will return NAN.
-                double MI=0.0;
+                double scorevalue=0.0;
                 if(N11>0.0) {
-                    MI+=(N11/N)*PHPMethods.log((N/N1_)*(N11/N_1),2.0);
+                    scorevalue+=(N11/N)*Math.log((N/N1_)*(N11/N_1))/log2; 
                 }
                 if(N01>0.0) {
-                    MI+=(N01/N)*PHPMethods.log((N/N0_)*(N01/N_1),2.0);
+                    scorevalue+=(N01/N)*Math.log((N/N0_)*(N01/N_1))/log2;
                 }
                 if(N10>0.0) {
-                    MI+=(N10/N)*PHPMethods.log((N/N1_)*(N10/N_0),2.0);
+                    scorevalue+=(N10/N)*Math.log((N/N1_)*(N10/N_0))/log2;
                 }
                 if(N00>0.0) {
-                    MI+=(N00/N)*PHPMethods.log((N/N0_)*(N00/N_0),2.0);
+                    scorevalue+=(N00/N)*Math.log((N/N0_)*(N00/N_0))/log2;
                 }
 
-                
-                //REMEMBER! larger scores means more important keywords.
-                Double previousMI = featureScores.get(feature);
-                if(previousMI==null || previousMI<MI) { //add or update score
-                    featureScores.put(feature, MI);
+                if(scorevalue>bestScore) {
+                    bestScore = scorevalue;
                 }
-                
             }
-        }
+            
+            synchronized(featureScores) {
+                featureScores.put(feature, bestScore);
+            }
+        });
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {

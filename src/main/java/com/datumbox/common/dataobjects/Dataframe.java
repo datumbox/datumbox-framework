@@ -334,7 +334,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         return array;
     }
     
-    
     /** {@inheritDoc} */      
     @Override
     @SuppressWarnings("unchecked")
@@ -564,7 +563,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     
     /**
      * Removes completely a list of columns from the dataset. The meta-data of 
-     * the Dataframe are updated.
+     * the Dataframe are updated. The method internally uses threads.
      * 
      * @param columnSet
      */
@@ -578,18 +577,21 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
 
-        for(Map.Entry<Integer, Record> e : entries()) {
+        StreamMethods.stream(entries(), true).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             
             AssociativeArray xData = r.getX().copy();
-            int d = xData.size();
-            xData.keySet().removeAll(columnSet);
+            boolean modified = xData.keySet().removeAll(columnSet);
             
-            if(xData.size()!=d) {
-                _unsafe_set(rId, new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities()));
+            if(modified) {
+                Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
+
+                synchronized(this) {
+                    _unsafe_set(rId, newR); //safe to call in this context. we already updated the meta when we modified the xDataTypes
+                }
             }
-        }
+        });
         
     }
     

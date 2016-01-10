@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
@@ -103,20 +104,22 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         
-        DataTable2D contingencyTable = new DataTable2D();
-        contingencyTable.put(0, new AssociativeArray());
-        contingencyTable.put(1, new AssociativeArray());
-        
         double criticalValue = ContinuousDistributions.chisquareInverseCdf(trainingParameters.getALevel(), 1); //one degree of freedom because the tables below are 2x2
         
-        
         double N = modelParameters.getN();
-        for(Map.Entry<Object, Double> featureCount : featureCounts.entrySet()) {
+        
+        StreamMethods.stream(featureCounts.entrySet(), true).forEach(featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
             
-            for(Map.Entry<Object, Integer> classCount : classCounts.entrySet()) {
+            double bestScore = Double.NEGATIVE_INFINITY; //REMEMBER! larger scores means more important feature.
+            
+            DataTable2D contingencyTable = new DataTable2D();
+            contingencyTable.put(0, new AssociativeArray());
+            contingencyTable.put(1, new AssociativeArray());
+
+            for (Map.Entry<Object, Integer> classCount : classCounts.entrySet()) {
                 Object theClass = classCount.getKey();
                 
                 Integer featureClassC = featureClassCounts.get(Arrays.<Object>asList(feature, theClass));                
@@ -132,15 +135,21 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
                 contingencyTable.get(1).put(1, N11);
                 
                 double scorevalue = Chisquare.getScoreValue(contingencyTable); 
-                if(scorevalue>=criticalValue) { //if the score is larger than the critical value, then select the feature
-                    Double previousCriticalValue = featureScores.get(feature);
-                    if(previousCriticalValue==null || previousCriticalValue<scorevalue) { //add or update score
-                        featureScores.put(feature, scorevalue);
-                    }
+                //contingencyTable = null;
+                
+                if(scorevalue>bestScore) {
+                    bestScore = scorevalue;
                 }
             }
-        }
-        //contingencyTable = null;
+            
+            //REMEMBER! larger scores means more important keywords.
+            if (bestScore>=criticalValue) {
+                //if the score is larger than the critical value, then select the feature
+                synchronized(featureScores) {
+                    featureScores.put(feature, bestScore);
+                }
+            }
+        }); 
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {

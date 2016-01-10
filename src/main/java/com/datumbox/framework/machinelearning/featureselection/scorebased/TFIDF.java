@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -26,6 +27,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.Storag
 
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 
 /**
@@ -176,46 +178,58 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         }
         
         
-        Map<Object, Double> maxTFIDFfeatureScores = modelParameters.getMaxTFIDFfeatureScores();
+        final Map<Object, Double> maxFeatureScores = modelParameters.getMaxTFIDFfeatureScores();
+        
+        //this lambda checks if the new score is larger than the current max score of the feature
+        BiFunction<Object, Double, Boolean> isGreaterThanMax = (feature, newScore) -> {
+            Double maxScore = maxFeatureScores.get(feature);
+            return maxScore==null || maxScore<newScore;
+        };
+        
         //calculate the maximum tfidf scores
-        for(Record r : trainingData) { 
+        StreamMethods.stream(trainingData, true).forEach(r -> {
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
                 Double counts = TypeInference.toDouble(entry.getValue());
                 
-                if(counts==null || counts == 0.0) {
-                    continue;
-                }
-                
-                if(binarized) {
-                    counts = 1.0;
-                }
-                
-                //double tf = counts/documentLength;
-                double tf = counts;
-                double idf = tmp_idfMap.get(keyword);
-                
-                double tfidf = tf*idf;
-                
-                if(tfidf==0.0) {
-                    continue; //ignore 0 scored features
-                }
-                
-                //store the maximum value of the tfidf
-                Double maxTfidf = maxTFIDFfeatureScores.get(keyword);
-                if(maxTfidf==null || maxTfidf<tfidf) {
-                    maxTFIDFfeatureScores.put(keyword, tfidf);
+                if(counts != null && counts > 0.0) {
+
+                    if(binarized) {
+                        counts = 1.0;
+                    }
+
+                    //double tf = counts/documentLength;
+                    double tf = counts;
+                    double idf = tmp_idfMap.get(keyword);
+
+                    double tfidf = tf*idf;
+                    
+                    if(tfidf > 0.0) { //ignore 0 scored features
+                        
+                        //Threads will help here under the assumption that only 
+                        //a small number of records will have features that exceed 
+                        //the maximum score. Thus they will stop in this if statement
+                        //and they will not go into the synced block.
+                        if(isGreaterThanMax.apply(keyword, tfidf)) {
+                            synchronized(maxFeatureScores) {
+                                if(isGreaterThanMax.apply(keyword, tfidf)) {
+                                    maxFeatureScores.put(keyword, tfidf);
+                                }
+                            }
+                        }
+                        
+                    }
                 }
             }
-        }
+        });
         
         //Drop the temporary Collection
         dbc.dropBigMap("tmp_idf", tmp_idfMap);
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
-        if(maxFeatures!=null && maxFeatures<maxTFIDFfeatureScores.size()) {
-            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(maxTFIDFfeatureScores, maxFeatures);
+        if(maxFeatures!=null && maxFeatures<maxFeatureScores.size()) {
+            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(maxFeatureScores, maxFeatures);
         }
     }
 
