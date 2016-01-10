@@ -108,6 +108,9 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean transformData = (dtClass!=null);
         if(transformData) {
             dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+            
+            setParallelized(dataTransformer);
+            
             dataTransformer.fit_transform(trainingData, trainingParameters.getDataTransformerTrainingParameters());
         }
         
@@ -118,6 +121,9 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+            
+            setParallelized(featureSelection);
+            
             featureSelection.fit_transform(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
         }
         
@@ -127,6 +133,8 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         //initialize mlmodel
         Class mlClass = trainingParameters.getMLmodelClass();
         mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, dbConf); 
+        
+        setParallelized(mlmodel);
         
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingData, trainingParameters.getMLmodelTrainingParameters());
@@ -150,6 +158,9 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
             if(dataTransformer==null) {
                 dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
             }        
+            
+            setParallelized(dataTransformer);
+        
             dataTransformer.transform(data);
         }
         
@@ -160,7 +171,9 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
             if(featureSelection==null) {
                 featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
             }
-
+            
+            setParallelized(featureSelection);
+            
             //remove unnecessary features
             featureSelection.transform(data);
         }
@@ -171,6 +184,8 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
             Class mlClass = trainingParameters.getMLmodelClass();
             mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, dbConf); 
         }
+        
+        setParallelized(mlmodel);
         
         //call predict of the mlmodel for the new dataset
         

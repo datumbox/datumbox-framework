@@ -26,6 +26,7 @@ import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.machinelearning.common.abstracts.wrappers.AbstractWrapper;
 import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
+import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
@@ -278,6 +279,9 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         boolean transformData = (dtClass!=null);
         if(transformData) {
             dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+            
+            setParallelized(dataTransformer);
+            
             dataTransformer.fit_transform(trainingDataset, trainingParameters.getDataTransformerTrainingParameters());
         }
         
@@ -290,12 +294,17 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
             if(AbstractCategoricalFeatureSelector.AbstractTrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((AbstractCategoricalFeatureSelector.AbstractTrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
             }
+            
+            setParallelized(featureSelection);
+            
             //find the most popular features & remove unnecessary features
             featureSelection.fit_transform(trainingDataset, trainingParameters.getFeatureSelectionTrainingParameters());   
         }
         
         //initialize mlmodel
         mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, dbConf); 
+            
+        setParallelized(mlmodel);
         
         //train the mlmodel on the whole dataset
         mlmodel.fit(trainingDataset, trainingParameters.getMLmodelTrainingParameters());
@@ -317,6 +326,8 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
                 dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
             }        
             
+            setParallelized(dataTransformer);
+            
             dataTransformer.transform(testDataset);
         }
 
@@ -327,6 +338,8 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
             if(featureSelection==null) {
                 featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
             }
+            
+            setParallelized(featureSelection);
 
             //remove unnecessary features
             featureSelection.transform(testDataset);
@@ -336,6 +349,8 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         if(mlmodel==null) {
             mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, dbConf); 
         }
+        
+        setParallelized(mlmodel);
     }
     
 }

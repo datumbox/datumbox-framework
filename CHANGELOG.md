@@ -62,6 +62,7 @@ Version 0.7.0-SNAPSHOT - Build 20160110
 - Added threads on the Builder of Dataframes, on the DataTransformation and FeatureSelection algorithms (both fit and transform).
 - Converted the big test Datasets to files stored as resources in the project. This includes all the files that we downloaded from the web.
 - Added the TrainParallelizable for the models that use parallelism during training.
+- Updated all Wrappers to inherit from Parallelizable and set the parallelized flags of the individual components before training and predict/transform.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

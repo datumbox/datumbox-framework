@@ -30,8 +30,7 @@ public interface Parallelizable {
     public boolean isParallelized();
     
     /**
-     * Setter for the parallelized parameter. If the parameter is set to true,
-     * the execution of the anal
+     * Setter for the parallelized parameter. 
      * 
      * @param parallelized 
      */

@@ -15,12 +15,14 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.wrappers;
 
+import com.datumbox.common.interfaces.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
+import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
@@ -33,7 +35,7 @@ import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetric
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelParameters, TP extends AbstractWrapper.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
+public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelParameters, TP extends AbstractWrapper.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> implements Parallelizable {
     
     /**
      * The AbstractTransformer instance of the wrapper.
@@ -198,7 +200,21 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
     protected AbstractWrapper(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, dbConf, DoubleKnowledgeBase.class, mpClass, tpClass);
     }
-      
+    
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public void delete() {
@@ -253,6 +269,18 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
     public <VM extends ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
         if(mlmodel!=null) {
             mlmodel.setValidationMetrics((AbstractModeler.AbstractValidationMetrics) validationMetrics);
+        }
+    }
+    
+    /**
+     * Updates the parallelized flag of the component if it supports it. This is
+     * done just before the train and predict methods.
+     * 
+     * @param algorithm 
+     */
+    protected void setParallelized(Trainable algorithm) {
+        if (algorithm != null && algorithm instanceof Parallelizable) {
+            ((Parallelizable)algorithm).setParallelized(isParallelized());
         }
     }
 }
