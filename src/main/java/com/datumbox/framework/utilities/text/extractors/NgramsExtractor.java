@@ -197,12 +197,6 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
     
     private static final char SEPARATOR = '_';
         
-    private Map<Integer, String> ID2word; //ID=>Kwd
-    private Map<Integer, Double> ID2occurrences; //ID=>counts/scores
-    private Map<Integer, Integer> position2ID; //word position=>ID
-
-    private Integer numberOfWordsInDoc;
-
     /**
      * Public constructor that accepts as arguments the AbstractParameters object.
      * 
@@ -222,27 +216,24 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
      */
     @Override
     public Map<String, Double> extract(final String text) {
-        //initialize/reset the protected variables
-        ID2word = new HashMap<>();
-        ID2occurrences = new HashMap<>();
-        position2ID = new LinkedHashMap<>(); //maintain the order of insertation
-        numberOfWordsInDoc = 0;
+        Map<Integer, String> ID2word = new HashMap<>(); //ID=>Kwd
+        Map<Integer, Double> ID2occurrences = new HashMap<>(); //ID=>counts/scores
+        Map<Integer, Integer> position2ID = new LinkedHashMap<>(); //word position=>ID maintain the order of insertation
         
-        
-        buildInternalArrays(text);
+        int numberOfWordsInDoc = buildInternalArrays(text, ID2word, ID2occurrences, position2ID);
         
         Map<String, Double> keywordProximityScores = new HashMap<>();
         
         //move the "window" across the document by 1 word at each time
         for(Map.Entry<Integer, Integer> entry : position2ID.entrySet()) {
             Integer wordID = entry.getValue();
-            if(!useThisWord(wordID)) {
+            if(!useThisWord(wordID, ID2word, ID2occurrences)) {
                 continue;
             }
             
             Integer position = entry.getKey();
             
-            Map<String, Integer> wordCombinations = getCombinationsWithinWindow(position, parameters.getMaxCombinations());
+            Map<String, Integer> wordCombinations = getCombinationsWithinWindow(position, parameters.getMaxCombinations(), ID2word, ID2occurrences, position2ID, numberOfWordsInDoc);
             
             //translate positions to proximity metrics
             for(Map.Entry<String, Integer> entry2 : wordCombinations.entrySet()) {
@@ -391,7 +382,9 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         return points;
     }
 
-    private Map<String, Integer> getCombinationsWithinWindow(Integer windowStart, int maxCombinations) {
+    private Map<String, Integer> getCombinationsWithinWindow(Integer windowStart, int maxCombinations, 
+            Map<Integer, String> ID2word, Map<Integer, Double> ID2occurrences, Map<Integer, Integer> position2ID, 
+            int numberOfWordsInDoc) {
         int windowLength=Math.min(windowStart+parameters.getExaminationWindowLength(), numberOfWordsInDoc);
         
         //stores IDn_...ID2_ID1_=>words Between last word and windowStart
@@ -405,7 +398,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         String separator = String.valueOf(SEPARATOR);
         for(int i=windowStart+1;i<windowLength;++i) {
             Integer ID = position2ID.get(i);
-            if(ID==null || useThisWord(ID)==false || (isfirstWordNumber && NumberUtils.isNumber(ID2word.get(ID)))) {
+            if(ID==null || useThisWord(ID, ID2word, ID2occurrences)==false || (isfirstWordNumber && NumberUtils.isNumber(ID2word.get(ID)))) {
                 continue;
             }
 
@@ -460,7 +453,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         return wordCombinations;
     }
     
-    private boolean useThisWord(Integer wordID) {
+    private boolean useThisWord(Integer wordID, Map<Integer, String> ID2word, Map<Integer, Double> ID2occurrences) {
         String word = ID2word.get(wordID);
         if(word==null) {
             return false;
@@ -474,14 +467,14 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         return true;
     }
     
-    private void buildInternalArrays(final String text) {
+    private int buildInternalArrays(final String text, Map<Integer, String> ID2word, Map<Integer, Double> ID2occurrences, Map<Integer, Integer> position2ID) {
         
         Map<String, Integer> word2ID = new HashMap<>();
         
         List<String> keywordList = generateTokenizer().tokenize(text);
         
         int lastId=-1;
-        numberOfWordsInDoc = keywordList.size();
+        int numberOfWordsInDoc = keywordList.size();
         for(int position=0;position<numberOfWordsInDoc;++position) {
             String word = keywordList.get(position);
             
@@ -500,6 +493,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         //keywordList = null;
 
         //word2ID = null;
+        return numberOfWordsInDoc;
     }
     
 }
