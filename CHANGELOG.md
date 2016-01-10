@@ -61,6 +61,7 @@ Version 0.7.0-SNAPSHOT - Build 20160110
 - Added a concurrency package on common with useful helper classes.
 - Added threads on the Builder of Dataframes, on the DataTransformation and FeatureSelection algorithms (both fit and transform).
 - Converted the big test Datasets to files stored as resources in the project. This includes all the files that we downloaded from the web.
+- Added the TrainParallelizable for the models that use parallelism during training.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

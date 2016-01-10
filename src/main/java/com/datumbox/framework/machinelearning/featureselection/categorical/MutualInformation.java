@@ -20,6 +20,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
+import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters>{
+public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters> implements Parallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
@@ -66,6 +67,20 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
     }
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+
     /** {@inheritDoc} */
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
@@ -79,7 +94,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         
         final double log2 = Math.log(2.0);
         
-        StreamMethods.stream(featureCounts.entrySet(), true).forEach(featureCount -> {
+        StreamMethods.stream(featureCounts.entrySet(), isParallelized()).forEach(featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)

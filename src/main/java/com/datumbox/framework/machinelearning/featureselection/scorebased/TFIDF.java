@@ -26,6 +26,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapTyp
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
+import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -40,7 +41,7 @@ import java.util.function.BiFunction;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
+public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> implements Parallelizable {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractScoreBasedFeatureSelector.AbstractModelParameters {
@@ -134,6 +135,20 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         super(dbName, dbConf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
     }
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
@@ -187,7 +202,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         };
         
         //calculate the maximum tfidf scores
-        StreamMethods.stream(trainingData, true).forEach(r -> {
+        StreamMethods.stream(trainingData, isParallelized()).forEach(r -> {
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();

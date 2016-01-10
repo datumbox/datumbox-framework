@@ -27,6 +27,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.PHPMethods;
+import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ import org.apache.commons.math3.stat.StatUtils;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> {
+public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> implements Parallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractContinuousFeatureSelector.AbstractModelParameters {
@@ -268,6 +269,20 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         super(dbName, dbConf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
     }
 
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+    
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe originalData) {
@@ -372,7 +387,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         //multiplying the data with components
         final RealMatrix X = matrixDataset.getX().multiply(components);
         
-        StreamMethods.stream(newData.entries(), true).forEach(e -> {
+        StreamMethods.stream(newData.entries(), isParallelized()).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);

@@ -22,6 +22,7 @@ import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
+import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.statistics.nonparametrics.independentsamples.Chisquare;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareSelect extends AbstractCategoricalFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters>{
+public class ChisquareSelect extends AbstractCategoricalFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters> implements Parallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
@@ -95,6 +96,20 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
     }
     
+    private boolean parallelized = true;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+
     /** {@inheritDoc} */
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
@@ -108,7 +123,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         
         double N = modelParameters.getN();
         
-        StreamMethods.stream(featureCounts.entrySet(), true).forEach(featureCount -> {
+        StreamMethods.stream(featureCounts.entrySet(), isParallelized()).forEach(featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
