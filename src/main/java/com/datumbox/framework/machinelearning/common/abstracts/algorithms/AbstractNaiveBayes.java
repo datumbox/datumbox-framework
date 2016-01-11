@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -26,6 +27,7 @@ import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.ClassifierValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -43,7 +45,7 @@ import java.util.Set;
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters, VM extends AbstractNaiveBayes.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> implements PredictParallelizable {
+public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters, VM extends AbstractNaiveBayes.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> implements PredictParallelizable, TrainParallelizable {
     /**
      * Flag that indicates whether the algorithm binarizes the provided activated 
      * features.
@@ -56,7 +58,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> logPriors; //prior log probabilities of the classes
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
         
         /** 
@@ -247,7 +249,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         //now calculate the statistics of features
         for(Record r : trainingData) { 
             //store the occurrances of the features
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach(entry -> {
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
@@ -271,10 +273,13 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
                     if(theClass.equals(r.getY())) {
                         //update the statistics of the feature
                         logLikelihoods.put(featureClassTuple, previousValue+occurrences);
-                        totalFeatureOccurrencesForEachClass.put(theClass,totalFeatureOccurrencesForEachClass.getDouble(theClass)+occurrences);
+                        
+                        synchronized(totalFeatureOccurrencesForEachClass) {
+                            totalFeatureOccurrencesForEachClass.put(theClass,totalFeatureOccurrencesForEachClass.getDouble(theClass)+occurrences);
+                        }
                     }
-                }                
-            }
+                }
+            });
             
         }
         
@@ -289,10 +294,9 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         
         
         //update log likelihood
-        for(Map.Entry<List<Object>, Double> featureClassCounts : logLikelihoods.entrySet()) {
-            List<Object> tp = featureClassCounts.getKey();
-            //Object feature = tp.get(0);
-            Object theClass = tp.get(1);
+        StreamMethods.stream(logLikelihoods.entrySet(), isParallelized()).forEach(featureClassCounts -> {
+            List<Object> featureClassTuple = featureClassCounts.getKey();
+            Object theClass = featureClassTuple.get(1);
             Double occurrences = featureClassCounts.getValue();
             if(occurrences==null) {
                 occurrences=0.0;
@@ -301,9 +305,8 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             //We perform laplace smoothing (also known as add-1)
             Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.getDouble(theClass)+d); // the d is also known in NLP problems as the Vocabulary size. 
             
-            logLikelihoods.put(featureClassCounts.getKey(), Math.log( smoothedProbability )); //calculate the logScore
-        }
-        
+            logLikelihoods.put(featureClassTuple, Math.log( smoothedProbability )); //calculate the logScore
+        }); 
         //totalFeatureOccurrencesForEachClass=null;
     }
     

@@ -56,7 +56,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         private RealVector wordCounts;
         
         //Cache
-        private transient Double cache_wordcounts_plusalpha; //Cached value of WordCountsPlusAlpha used only for speed optimization
+        private transient volatile Double cache_wordcounts_plusalpha; //Cached value of WordCountsPlusAlpha used only for speed optimization
         
         /** 
          * @param clusterId
@@ -107,8 +107,9 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         @Override
         protected void initializeClusterParameters() {
             //Set default hyperparameters if not set
-
-            cache_wordcounts_plusalpha=null;
+            synchronized(this) {
+                cache_wordcounts_plusalpha=null;
+            }
             wordCounts = new ArrayRealVector(dimensions); 
         }
         
@@ -125,11 +126,14 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
 
             double cOfWordCountsPlusAlpha;
             if(cache_wordcounts_plusalpha==null) {
-                cache_wordcounts_plusalpha=C(wordCountsPlusAlpha);
+                synchronized(this) {
+                    if(cache_wordcounts_plusalpha==null) {
+                        cache_wordcounts_plusalpha=C(wordCountsPlusAlpha);
+                    }
+                }
             }
             cOfWordCountsPlusAlpha=cache_wordcounts_plusalpha;
 
-            //double pdf= C(wordCountsPlusAlpha.add(x_mu))/C(wordCountsPlusAlpha);
             double logPdf= C(wordCountsPlusAlpha.add(x_mu))-cOfWordCountsPlusAlpha;
             return logPdf;
         }
@@ -193,7 +197,9 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         /** {@inheritDoc} */
         @Override
         protected void updateClusterParameters() {
-            cache_wordcounts_plusalpha=null;
+            synchronized(this) {
+                cache_wordcounts_plusalpha=null;
+            }
         }
         
         /**
@@ -236,21 +242,6 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             super(dbc);
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public Map<Integer, Cluster> getClusterList() {
-            Map<Integer, Cluster> clusterList = super.getClusterList();
-            
-            //overrides the method in order to ensure that the featureIds parameters are loaded in the clusters
-            Map<Object, Integer> featureIds = getFeatureIds();
-            for(Cluster c : clusterList.values()) {
-                if(c.getFeatureIds()==null) {
-                    c.setFeatureIds(featureIds);
-                }
-            }
-            
-            return clusterList;
-        }
     }
     
     /** {@inheritDoc} */

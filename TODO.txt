@@ -2,7 +2,13 @@ CODE IMPROVEMENTS
 =================
 
 - Profiling & benchmarking.
-- Add multithreading support on the training methods of the models.
+- Add multithreading support on the training for the following models: 
+    - OrdinalRegression
+    - SoftMaxRegression
+    - HierarchicalAgglomerative
+    - Kmeans
+    - NLMS
+- Search for getFeatureIds() and see it the estimation should change. We can use the Dataframe.xDataTypes instead?
 
 - Update all maven plugins and dependencies to their latest versions.
     - Add support for MapDB 2.0 once a stable version is released.

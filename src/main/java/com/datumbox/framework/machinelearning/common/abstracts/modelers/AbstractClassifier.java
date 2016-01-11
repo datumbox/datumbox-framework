@@ -67,7 +67,7 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractModeler.AbstractModelParameters {
         
-        //Set with all the supported classes. Use Linked Hash Set to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
+        //Set with all the supported classes. Use LinkedHashSet to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>();
         
         /** 

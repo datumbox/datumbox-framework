@@ -77,8 +77,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private transient RealMatrix xi_square_sum; 
         
         //Cache
-        private transient Double cache_covariance_determinant; //Cached value of Covariance determinant used only for speed optimization
-        private transient RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
+        private transient volatile Double cache_covariance_determinant; //Cached value of Covariance determinant used only for speed optimization
+        private transient volatile RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
         
         /**
          * @param clusterId
@@ -221,10 +221,13 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             RealMatrix invCovariance;
 
             if(cache_covariance_determinant==null || cache_covariance_inverse==null) {
-                LUDecomposition lud = new LUDecomposition(covariance);
-                cache_covariance_determinant = lud.getDeterminant();
-                cache_covariance_inverse = lud.getSolver().getInverse();
-                //lud =null;
+                synchronized(this) {
+                    if(cache_covariance_determinant==null || cache_covariance_inverse==null) {
+                        LUDecomposition lud = new LUDecomposition(covariance);
+                        cache_covariance_determinant = lud.getDeterminant();
+                        cache_covariance_inverse = lud.getSolver().getInverse();
+                    }
+                }
             }
             determinant=cache_covariance_determinant;
             invCovariance=cache_covariance_inverse;
@@ -262,8 +265,10 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             meanError = calculateMeanError(psi0, kappa0, nu0);
             meanDf = nu0-dimensions+1;
             
-            cache_covariance_determinant=null;
-            cache_covariance_inverse=null;
+            synchronized(this) {
+                cache_covariance_determinant=null;
+                cache_covariance_inverse=null;
+            }
         }
     
         /** {@inheritDoc} */
@@ -352,9 +357,10 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
 
             //clear cache
-            cache_covariance_determinant=null;
-            cache_covariance_inverse=null;
-
+            synchronized(this) {
+                cache_covariance_determinant=null;
+                cache_covariance_inverse=null;
+            }
             meanError = calculateMeanError(psi, kappa_n, nu);
             meanDf = nu-dimensions+1;
         }
@@ -370,22 +376,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
-        }
-        
-        /** {@inheritDoc} */
-        @Override
-        public Map<Integer, Cluster> getClusterList() {
-            Map<Integer, Cluster> clusterList = super.getClusterList();
-            
-            //overrides the method in order to ensure that the featureIds parameters are loaded in the clusters
-            Map<Object, Integer> featureIds = getFeatureIds();
-            for(Cluster c : clusterList.values()) {
-                if(c.getFeatureIds()==null) {
-                    c.setFeatureIds(featureIds);
-                }
-            }
-            
-            return clusterList;
         }
     
     }

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -29,6 +30,7 @@ import com.datumbox.framework.machinelearning.common.interfaces.PredictParalleli
 import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable.Prediction;
 
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SimpleRandomSampling;
@@ -48,7 +50,7 @@ import java.util.Set;
  * @param <VM>
  */
 
-public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters, VM extends AbstractDPMM.AbstractValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable {
+public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters, VM extends AbstractDPMM.AbstractValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable, TrainParallelizable {
     
     /** {@inheritDoc} */
     public static abstract class AbstractCluster extends AbstractClusterer.AbstractCluster {
@@ -177,7 +179,21 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         public void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
-        
+       
+        /** {@inheritDoc} */
+        @Override
+        public Map<Integer, CL> getClusterList() {
+            Map<Integer, CL> clusterList = super.getClusterList();
+            
+            //overrides the method in order to ensure that the featureIds parameters are loaded in the clusters
+            for(CL c : clusterList.values()) {
+                if(c.getFeatureIds()==null) {
+                    c.setFeatureIds(getFeatureIds());
+                }
+            }
+            
+            return clusterList;
+        } 
     }
     
     /** {@inheritDoc} */
@@ -475,13 +491,13 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                     ++newClusterId;
                 }
                 else {
-                    r = new Record(r.getX(), r.getY(), sampledClusterId, r.getYPredictedProbabilities());
-                    dataset._unsafe_set(rId, r);
-                    
-                    tempClusterMap.get(sampledClusterId).add(rId, r);
-                    if(noChangeMade && !Objects.equals(pointClusterId, sampledClusterId)) {
+                    if(!Objects.equals(pointClusterId, sampledClusterId)) { //if it assigned in a different cluster update the record
+                        r = new Record(r.getX(), r.getY(), sampledClusterId, r.getYPredictedProbabilities());
+                        dataset._unsafe_set(rId, r);
                         noChangeMade=false;
                     }
+                    
+                    tempClusterMap.get(sampledClusterId).add(rId, r); //add it to the cluster (or just add it back)
                 }
                 
             }
@@ -508,16 +524,17 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.posteriorLogPdf
         //Calculate the probabilities of assigning the point for every cluster
-        for(CL ck : clusterMap.values()) {
+        StreamMethods.stream(clusterMap.values(), isParallelized()).forEach((ck) -> {
             //compute P_k(X[i]) = P(X[i] | X[-i] = k)
             double marginalLogLikelihoodXi = ck.posteriorLogPdf(r);
             //set N_{k,-i} = dim({X[-i] = k})
             //compute P(z[i] = k | z[-i], Data) = N_{k,-i}/(a+N-1)
             double mixingXi = ck.size()/(alpha+n-1.0);
-
             
-            condProbCiGivenXiAndOtherCi.put(ck.getClusterId(), marginalLogLikelihoodXi+Math.log(mixingXi));
-        }
+            synchronized(condProbCiGivenXiAndOtherCi) {
+                condProbCiGivenXiAndOtherCi.put(ck.getClusterId(), marginalLogLikelihoodXi+Math.log(mixingXi));
+            }
+        });
         
         return condProbCiGivenXiAndOtherCi;
     }

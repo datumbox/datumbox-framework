@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -26,14 +27,14 @@ import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.ClassifierValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -46,13 +47,13 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParameters, MaximumEntropy.TrainingParameters, MaximumEntropy.ValidationMetrics> implements PredictParallelizable {
+public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParameters, MaximumEntropy.TrainingParameters, MaximumEntropy.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
         
         /** 
@@ -171,63 +172,62 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         
         Map<List<Object>, Double> lambdas = modelParameters.getLambdas();
         Set<Object> classesSet = modelParameters.getClasses();
+        double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
         
         //first we need to find all the classes
         for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             classesSet.add(theClass); 
-        }
-        
-        //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = kb().getDbc();
-        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        
-        double Cmax = 0.0; //max number of activated features in the dataset. Required from the IIS algorithm
-        double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
-        
-        //then we calculate the observed probabilities in training set
-        for(Record r : trainingData) { 
-            int activeFeatures=0; //counts the number of non-zero (active) features of the record
             
-            //store the occurrances of the features
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Double occurrences=TypeInference.toDouble(entry.getValue());
-                
-                if(occurrences==null || occurrences==0.0) {
-                    continue;
-                }
-                Object feature = entry.getKey();
-                
-                //loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
-                //in a previous implementation I did not loop through all the classes and used only the one of the record.
-                //THIS IS WRONG. By not assigning 0 scores to the rest of the classes for this feature, we don't penalties for the non occurrance. 
-                //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
-                for(Object theClass : classesSet) {
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
-                    Double previousValue = tmp_EpFj_observed.get(featureClassTuple);
-                    if(previousValue==null) {
-                        previousValue=0.0;
-                        tmp_EpFj_observed.put(featureClassTuple, 0.0);
-                        lambdas.put(featureClassTuple, 0.0); //initialize lambda
-                    }
-                    
-                    //find the class of this particular example
-                    if(theClass.equals(r.getY())) {
-                        //update the statistics of the feature
-                        tmp_EpFj_observed.put(featureClassTuple, previousValue + increment);
-                    }
-                } 
-                
-                ++activeFeatures;
-            }
-            
+            //counts the number of non-zero (active) features of the record
+            int activeFeatures=(int) r.getX().values().stream().filter(e -> e !=null && TypeInference.toDouble(e) > 0.0).count();
 
             //NOTE: we try to find the Cmax the maximum number of active featured in the training dataset. The total number of features in original IIS were required to be constant. NEVERTHELESS as it is mentioned here http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf the Cmax only needs to constrain the number of features and not necessarily to be equal to them.
             //NOTE2: In this implementation the Cmax is equal to the maximum number of features that were found in the training dataset. We don't need to go through all the classes to find the Cmax. This is because of the way that the features are selected.
             if(activeFeatures>Cmax) {
                 Cmax=activeFeatures;
             }
+            
+        }
+        
+        //create a temporary map for the observed probabilities in training set
+        DatabaseConnector dbc = kb().getDbc();
+        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        
+        
+        double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
+        
+        //then we calculate the observed probabilities in training set
+        for(Record r : trainingData) { 
+            
+            //store the occurrances of the features
+            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach((entry) -> {
+                Double occurrences=TypeInference.toDouble(entry.getValue());
+                if (occurrences!=null && occurrences>0.0) {
+                    Object feature = entry.getKey();
+                
+                    //loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
+                    //in a previous implementation I did not loop through all the classes and used only the one of the record.
+                    //THIS IS WRONG. By not assigning 0 scores to the rest of the classes for this feature, we don't penalties for the non occurrance. 
+                    //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
+                    for(Object theClass : classesSet) {
+                        List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                        Double previousValue = tmp_EpFj_observed.get(featureClassTuple);
+                        if(previousValue==null) {
+                            previousValue=0.0;
+                            tmp_EpFj_observed.put(featureClassTuple, 0.0);
+                            lambdas.put(featureClassTuple, 0.0); //initialize lambda
+                        }
+
+                        //find the class of this particular example
+                        if(theClass.equals(r.getY())) {
+                            //update the statistics of the feature
+                            tmp_EpFj_observed.put(featureClassTuple, previousValue + increment);
+                        }
+                    } 
+                }
+            });
             
         }
         
@@ -255,28 +255,24 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-            Collection<List<Object>> infiniteLambdaWeights = new ArrayList<>();
-            
-            //initialize the model probabilities with 0. We will start estimating them piece by piece
-            for(Map.Entry<List<Object>, Double> featureClassCounts : EpFj_observed.entrySet()) {
-                List<Object> tp = featureClassCounts.getKey();
-                tmp_EpFj_model.put(tp, 0.0);
-            }
+            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             
             //calculate the model probabilities
             for(Record r : trainingData) { 
                 AssociativeArray classScores = new AssociativeArray();
                 
-                for(Object theClass : classesSet) {
+                StreamMethods.stream(classesSet, isParallelized()).forEach((theClass) -> {
                     double score = calculateClassScore(r.getX(), theClass);
-                    classScores.put(theClass, score);
-                }
+                    
+                    synchronized(classScores) {
+                        classScores.put(theClass, score);
+                    }
+                });
                 
                 Descriptives.normalizeExp(classScores);
                 
                 //The below seems a bit strange but this is actually how the model probabilities are estimated. It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
-                for(Map.Entry<Object, Object> entry : classScores.entrySet()) {
+                StreamMethods.stream(classScores.entrySet(), isParallelized()).forEach((entry) -> {
                     Object theClass = entry.getKey();
                     Double score = TypeInference.toDouble(entry.getValue());
                     
@@ -291,28 +287,25 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                         Object feature = entry2.getKey();
                         List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
                         
-                        tmp_EpFj_model.put(featureClassTuple, tmp_EpFj_model.get(featureClassTuple) + probabilityFraction);
+                        tmp_EpFj_model.put(featureClassTuple, tmp_EpFj_model.getOrDefault(featureClassTuple, 0.0) + probabilityFraction);
                     }
-                }
-                
+                }); 
                 //classScores=null;
+                
             }
             
-            Double minimumNonInfiniteLambdaWeight = null;
-            Double maximumNonInfiniteLambdaWeight = null;
+            AtomicBoolean infiniteValuesDetected = new AtomicBoolean(false);
             //Now we have the model probabilities. We will use it to estimate the Deltas and finally update the lamdas
-            for(Map.Entry<List<Object>, Double> featureClassCounts : tmp_EpFj_model.entrySet()) {
+            StreamMethods.stream(tmp_EpFj_model.entrySet(), isParallelized()).forEach(featureClassCounts -> {
                 List<Object> tp = featureClassCounts.getKey();
-                //Object feature = tp.getKey1();
-                //Object theClass = tp.getKey2();
                 
                 Double EpFj_observed_value = EpFj_observed.get(tp);
                 Double EpFj_model_value = featureClassCounts.getValue();    
                 
                 
                 if(Math.abs(EpFj_observed_value-EpFj_model_value)<=1e-8) {
-                    //if those two are equal or both zero (pay attention to this, we try to handle the zero cases here)
-                    //then do nothing. The two are equal so no change on weights is required.
+                    //if those two are equal or both zero then do nothing.
+                    //The two are equal so no change on weights is required.
                 }
                 else if(EpFj_observed_value==0.0) {
                     //The feature did not appear at all in the dataset for this class
@@ -339,8 +332,8 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                     //non-negative infinite weight in the dataset. This is something
                     //similar to the plus1 smoothing.
                     
-                    lambdas.put(tp, Double.NEGATIVE_INFINITY); //this will be revised, see comment above
-                    infiniteLambdaWeights.add(tp);
+                    lambdas.put(tp, Double.NEGATIVE_INFINITY);
+                    infiniteValuesDetected.set(true);
                 }
                 else if(EpFj_model_value==0.0) {
                     //the model did not assign any positive probability for this feature in this class
@@ -360,50 +353,41 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                     //weight.
                     
                     
-                    lambdas.put(tp, Double.POSITIVE_INFINITY); //this will be revised, see comment above
-                    infiniteLambdaWeights.add(tp);
+                    lambdas.put(tp, Double.POSITIVE_INFINITY);
+                    infiniteValuesDetected.set(true);
                 }
                 else {
                     //the formula below can't produce a +inf or -inf value
                     double deltaJ = Math.log(EpFj_observed_value/EpFj_model_value)/Cmax;
                     double newValue = lambdas.get(tp) + deltaJ;
                     lambdas.put(tp, newValue); //update lamdas by delta
-                    
-                    if(minimumNonInfiniteLambdaWeight==null || newValue<minimumNonInfiniteLambdaWeight) {
-                        minimumNonInfiniteLambdaWeight=newValue;
-                    }
-                    if(maximumNonInfiniteLambdaWeight==null || newValue>maximumNonInfiniteLambdaWeight) {
-                        maximumNonInfiniteLambdaWeight=newValue;
-                    }
                 }
-                
-                
-            }
+            });
             
             
+            if(infiniteValuesDetected.get()) {
             
-            if(!infiniteLambdaWeights.isEmpty()) {
+            
+                Double minimumNonInfiniteLambdaWeight = lambdas.values().stream().filter(v -> Double.isFinite(v)).min(Double::compare).get();
+                Double maximumNonInfiniteLambdaWeight = lambdas.values().stream().filter(v -> Double.isFinite(v)).max(Double::compare).get();
                 
-                for(List<Object> featureClass : infiniteLambdaWeights) {
-                    Double value = lambdas.get(featureClass);
+                StreamMethods.stream(lambdas.entrySet(), isParallelized()).filter(e -> Double.isInfinite(e.getValue())).forEach(e -> {
+                    List<Object> featureClass = e.getKey();
+                    Double value = e.getValue();
                     
                     if(value==Double.NEGATIVE_INFINITY) {
                         lambdas.put(featureClass, minimumNonInfiniteLambdaWeight);
                     }
-                    else if(value==Double.POSITIVE_INFINITY) {
+                    else { //value==Double.POSITIVE_INFINITY
                         lambdas.put(featureClass, maximumNonInfiniteLambdaWeight);
                     }
-                    else { //this should never happen!
-                        lambdas.put(featureClass, 0.0);
-                    }
-                }
+                });
             }
             
             
             
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
-            //infiniteLambdaWeights = null; //dbc.dropTable("infiniteLambdaWeights", infiniteLambdaWeights);
         }
         
     }
