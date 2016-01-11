@@ -161,36 +161,29 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         int n = modelParameters.getN();
         
         DatabaseConnector dbc = kb().getDbc();
-        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
         //using two different maps
         for(Record r : trainingData) { 
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach(entry -> {
                 Object keyword = entry.getKey();
                 Double counts = TypeInference.toDouble(entry.getValue());
                 
-                if(counts==null || counts == 0.0) {
-                    continue;
+                if(counts!=null && counts > 0.0) {
+                    tmp_idfMap.put(keyword, tmp_idfMap.getOrDefault(keyword, 0.0)+1.0);
                 }
-                
-                Double previousIDFvalue = tmp_idfMap.get(keyword);
-                if(previousIDFvalue==null) {
-                    previousIDFvalue = 0.0;
-                }
-                
-                tmp_idfMap.put(keyword, ++previousIDFvalue);
-            }
+            });
         }
         
         //convert counts to idf scores
-        for(Map.Entry<Object, Double> entry : tmp_idfMap.entrySet()) {
+        StreamMethods.stream(tmp_idfMap.entrySet(), isParallelized()).forEach(entry -> {
             Object keyword = entry.getKey();
             Double countsInDocument = entry.getValue();
             
             tmp_idfMap.put(keyword, Math.log10(n/countsInDocument));
-        }
+        });
         
         
         final Map<Object, Double> maxFeatureScores = modelParameters.getMaxTFIDFfeatureScores();

@@ -183,11 +183,14 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
         //(X'X)^-1
         RealMatrix Xt = X.transpose();
         LUDecomposition lud = new LUDecomposition(Xt.multiply(X));
+        //W = (X'X)^-1 * X'Y
         RealMatrix XtXinv = lud.getSolver().getInverse();
+        RealVector coefficients = XtXinv.multiply(Xt).operate(Y);
+        // instead of matrix inversion calculate (X'X) * W = X'Y
+        //RealVector coefficients = lud.getSolver().solve(Xt.operate(Y));
         //lud =null;
         
-        //(X'X)^-1 * X'Y
-        RealVector coefficients = XtXinv.multiply(Xt).operate(Y);
+        
         //Xt = null;
         
         //put the features coefficients in the thita map

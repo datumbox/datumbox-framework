@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -143,7 +145,10 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        _predictDatasetParallel(newData);
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer);
+        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
     
     /** {@inheritDoc} */
@@ -202,30 +207,23 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         for(Record r : trainingData) { 
             
             //store the occurrances of the features
-            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach((entry) -> {
+            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach(entry -> {
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 if (occurrences!=null && occurrences>0.0) {
                     Object feature = entry.getKey();
                 
-                    //loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
-                    //in a previous implementation I did not loop through all the classes and used only the one of the record.
-                    //THIS IS WRONG. By not assigning 0 scores to the rest of the classes for this feature, we don't penalties for the non occurrance. 
+                    //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
                     //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
                     for(Object theClass : classesSet) {
                         List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
-                        Double previousValue = tmp_EpFj_observed.get(featureClassTuple);
-                        if(previousValue==null) {
-                            previousValue=0.0;
-                            tmp_EpFj_observed.put(featureClassTuple, 0.0);
+                        if(tmp_EpFj_observed.putIfAbsent(featureClassTuple, 0.0) == null) {
                             lambdas.put(featureClassTuple, 0.0); //initialize lambda
                         }
-
-                        //find the class of this particular example
-                        if(theClass.equals(r.getY())) {
-                            //update the statistics of the feature
-                            tmp_EpFj_observed.put(featureClassTuple, previousValue + increment);
-                        }
                     } 
+
+                    //find the class of this particular example
+                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, r.getY());
+                    tmp_EpFj_observed.put(featureClassTuple, tmp_EpFj_observed.get(featureClassTuple) + increment);
                 }
             });
             
@@ -259,20 +257,19 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             //calculate the model probabilities
             for(Record r : trainingData) { 
-                AssociativeArray classScores = new AssociativeArray();
                 
-                StreamMethods.stream(classesSet, isParallelized()).forEach((theClass) -> {
-                    double score = calculateClassScore(r.getX(), theClass);
-                    
-                    synchronized(classScores) {
-                        classScores.put(theClass, score);
-                    }
-                });
+                //build a map with the scores of the record for each class
+                final AssociativeArray xData = r.getX();
+                AssociativeArray classScores = new AssociativeArray(
+                    StreamMethods.stream(classesSet, isParallelized()).collect(
+                        Collectors.toMap(Function.identity(), theClass->calculateClassScore(xData, theClass))
+                    )
+                );
                 
                 Descriptives.normalizeExp(classScores);
                 
                 //The below seems a bit strange but this is actually how the model probabilities are estimated. It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
-                StreamMethods.stream(classScores.entrySet(), isParallelized()).forEach((entry) -> {
+                StreamMethods.stream(classScores.entrySet(), isParallelized()).forEach(entry -> {
                     Object theClass = entry.getKey();
                     Double score = TypeInference.toDouble(entry.getValue());
                     
@@ -368,14 +365,14 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             if(infiniteValuesDetected.get()) {
             
             
-                Double minimumNonInfiniteLambdaWeight = lambdas.values().stream().filter(v -> Double.isFinite(v)).min(Double::compare).get();
-                Double maximumNonInfiniteLambdaWeight = lambdas.values().stream().filter(v -> Double.isFinite(v)).max(Double::compare).get();
+                Double minimumNonInfiniteLambdaWeight = StreamMethods.stream(lambdas.values(), isParallelized()).filter(v -> Double.isFinite(v)).min(Double::compare).get();
+                Double maximumNonInfiniteLambdaWeight = StreamMethods.stream(lambdas.values(), isParallelized()).filter(v -> Double.isFinite(v)).max(Double::compare).get();
                 
                 StreamMethods.stream(lambdas.entrySet(), isParallelized()).filter(e -> Double.isInfinite(e.getValue())).forEach(e -> {
                     List<Object> featureClass = e.getKey();
                     Double value = e.getValue();
                     
-                    if(value==Double.NEGATIVE_INFINITY) {
+                    if(value<0.0) { //value==Double.NEGATIVE_INFINITY
                         lambdas.put(featureClass, minimumNonInfiniteLambdaWeight);
                     }
                     else { //value==Double.POSITIVE_INFINITY

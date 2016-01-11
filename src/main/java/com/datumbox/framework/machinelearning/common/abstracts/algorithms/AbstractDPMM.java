@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -99,11 +100,6 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
          * Updates the cluster parameters by using the assigned points.
          */
         protected abstract void updateClusterParameters();
-        
-        /**
-         * Initializes the cluster's internal parameters.
-         */
-        protected abstract void initializeClusterParameters();
         
         /**
          * Returns the log posterior PDF of a particular point xi, to belong to this
@@ -310,7 +306,10 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        _predictDatasetParallel(newData);
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer);
+        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */
@@ -348,8 +347,8 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                if(!featureIds.containsKey(feature)) {
-                    featureIds.put(feature, previousFeatureId++);
+                if(featureIds.putIfAbsent(feature, previousFeatureId) == null) {
+                    previousFeatureId++;
                 }
             }
         }
@@ -519,24 +518,22 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     }
     
     private AssociativeArray clusterProbabilities(Record r, int n, Map<Integer, CL> clusterMap) {
-        AssociativeArray condProbCiGivenXiAndOtherCi = new AssociativeArray();
+        Map<Object, Object> condProbCiGivenXiAndOtherCi = new ConcurrentHashMap<>();
         double alpha = kb().getTrainingParameters().getAlpha();
         
-        //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.posteriorLogPdf
+        //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
         //Calculate the probabilities of assigning the point for every cluster
-        StreamMethods.stream(clusterMap.values(), isParallelized()).forEach((ck) -> {
+        StreamMethods.stream(clusterMap.values(), isParallelized()).forEach(ck -> {
             //compute P_k(X[i]) = P(X[i] | X[-i] = k)
             double marginalLogLikelihoodXi = ck.posteriorLogPdf(r);
             //set N_{k,-i} = dim({X[-i] = k})
             //compute P(z[i] = k | z[-i], Data) = N_{k,-i}/(a+N-1)
             double mixingXi = ck.size()/(alpha+n-1.0);
             
-            synchronized(condProbCiGivenXiAndOtherCi) {
-                condProbCiGivenXiAndOtherCi.put(ck.getClusterId(), marginalLogLikelihoodXi+Math.log(mixingXi));
-            }
+            condProbCiGivenXiAndOtherCi.put(ck.getClusterId(), marginalLogLikelihoodXi+Math.log(mixingXi)); //concurrent map and non-overlapping keys for each thread
         });
         
-        return condProbCiGivenXiAndOtherCi;
+        return new AssociativeArray(condProbCiGivenXiAndOtherCi);
     }
     
     private Object getSelectedClusterFromScores(AssociativeArray clusterScores) {

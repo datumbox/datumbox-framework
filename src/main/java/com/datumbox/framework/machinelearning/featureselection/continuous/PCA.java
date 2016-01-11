@@ -28,7 +28,6 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapTyp
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
-import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.math3.linear.BlockRealMatrix;
@@ -293,20 +292,21 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        //Map<Integer, Integer> recordIdsReference = null;
         MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, null, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
         double[] meanValues = new double[d];
-        for(Map.Entry<Object, Integer> entry : featureIds.entrySet()) {
-            Object feature = entry.getKey();
-            Integer columnId = entry.getValue();
+        for(Integer columnId : featureIds.values()) {
             
-            meanValues[columnId] = Descriptives.mean(originalData.getXColumn(feature).toFlatDataCollection());
+            meanValues[columnId] = 0.0;
+            for(double v : X.getColumn(columnId)) {
+                meanValues[columnId] += v;
+            }
+            meanValues[columnId] /= n;
             
-            for(int row=0;row<n;++row) {
-                X.addToEntry(row, columnId, -meanValues[columnId]); //inplace subtraction!!!
+            for(int row=0;row<n;row++) {
+                X.addToEntry(row, columnId, -meanValues[columnId]);
             }
         }
         modelParameters.setMean(meanValues);
@@ -326,7 +326,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         if(kb().getTrainingParameters().isWhitened()) { 
 
             double[] sqrtEigenValues = new double[eigenValues.length];
-            for(int i=0;i<eigenValues.length;++i) {
+            for(int i=0;i<eigenValues.length;i++) {
                 sqrtEigenValues[i] = Math.sqrt(eigenValues[i]);
             }
 
@@ -342,7 +342,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
             int varCounter=0;
             for(double l : eigenValues) {
                 sum+=l/totalVariance;
-                ++varCounter;
+                varCounter++;
                 if(sum>=variancePercentageThreshold) {
                     break;
                 }
@@ -372,14 +372,14 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
 
     /** {@inheritDoc} */
     @Override
-    protected void filterFeatures(Dataframe newData) {
+    protected void filterFeatures(Dataframe dataset) {
         ModelParameters modelParameters = kb().getModelParameters();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(dataset, recordIdsReference, featureIds);
         
         RealMatrix components = new BlockRealMatrix(modelParameters.getComponents());
         
@@ -387,7 +387,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         //multiplying the data with components
         final RealMatrix X = matrixDataset.getX().multiply(components);
         
-        StreamMethods.stream(newData.entries(), isParallelized()).forEach(e -> {
+        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);
@@ -395,21 +395,20 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
             AssociativeArray xData = new AssociativeArray();
             int componentId=0;
             for(double value : X.getRow(rowId)) {
-                xData.put(componentId, value);
-                ++componentId;
+                xData.put(componentId++, value);
             }
 
             Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
 
-            synchronized(newData) {
-                newData._unsafe_set(rId, newR); //we call below the recalculateMeta()
+            synchronized(dataset) {
+                dataset._unsafe_set(rId, newR); //we call below the recalculateMeta()
             }
         });
         
         //recordIdsReference = null;
         //matrixDataset = null;
         
-        newData.recalculateMeta(); 
+        dataset.recalculateMeta(); 
     }
     
 }

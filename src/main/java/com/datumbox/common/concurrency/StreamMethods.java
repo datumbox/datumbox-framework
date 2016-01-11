@@ -72,10 +72,9 @@ public class StreamMethods {
      * 
      * @param <T>
      * @param stream
-     * @param parallel
      * @return 
      */
-    public static <T> Stream<Map.Entry<Integer, T>> enumerate(Stream<T> stream, boolean parallel) {
+    public static <T> Stream<Map.Entry<Integer, T>> enumerate(Stream<T> stream) {
         Iterator<Map.Entry<Integer, T>> iterator = new Iterator<Map.Entry<Integer, T>>() {
             private int counter = 0;
             
@@ -99,7 +98,7 @@ public class StreamMethods {
                 throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
             }
         };
-        return stream(iterator, parallel);
+        return stream(iterator, stream.isParallel());
     }
     
 }

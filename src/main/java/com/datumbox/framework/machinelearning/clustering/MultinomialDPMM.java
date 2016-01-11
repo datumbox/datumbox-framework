@@ -47,94 +47,42 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         private static final long serialVersionUID = 1L;
         
         //informational fields
-        private int dimensions;
+        private final int dimensions;
         
         //hyper parameters
-        private double alphaWords; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
+        private final double alphaWords; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
         
         //cluster parameters
         private RealVector wordCounts;
         
-        //Cache
-        private transient volatile Double cache_wordcounts_plusalpha; //Cached value of WordCountsPlusAlpha used only for speed optimization
+        private Double wordcounts_plusalpha; //internal cached value of WordCountsPlusAlpha
         
         /** 
          * @param clusterId
+         * @param dimensions
+         * @param alphaWords
          * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
          */
-        protected Cluster(Integer clusterId) {
+        protected Cluster(Integer clusterId, int dimensions, double alphaWords) {
             super(clusterId);
-        }
-        
-        //hyper parameters getters/setters
-        /**
-         * Getter for the Alpha hyperparameter of the words.
-         * 
-         * @return 
-         */
-        protected double getAlphaWords() {
-            return alphaWords;
-        }
-        
-        /**
-         * Setter for the Alpha hyperparameter of the words.
-         * 
-         * @param alphaWords 
-         */
-        protected void setAlphaWords(double alphaWords) {
-            this.alphaWords = alphaWords;
-        }
-
-        /**
-         * Getter for number of Dimensions.
-         * 
-         * @return 
-         */
-        protected int getDimensions() {
-            return dimensions;
-        }
-
-        /**
-         * Setter for number of Dimensions.
-         * 
-         * @param dimensions 
-         */
-        protected void setDimensions(int dimensions) {
+            
+            
             this.dimensions = dimensions;
-        }
-        
-        /** {@inheritDoc} */
-        @Override
-        protected void initializeClusterParameters() {
-            //Set default hyperparameters if not set
-            synchronized(this) {
-                cache_wordcounts_plusalpha=null;
-            }
+            this.alphaWords = alphaWords;
+            
             wordCounts = new ArrayRealVector(dimensions); 
+            wordcounts_plusalpha = estimateWordCountsPlusAlpha();
         }
         
         /** {@inheritDoc} */
         @Override
         protected double posteriorLogPdf(Record r) {
-            if(wordCounts==null) {
-                throw new RuntimeException("The cluster is empty or uninitialized.");
-            }
             RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);    
 
             RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
             RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
 
-            double cOfWordCountsPlusAlpha;
-            if(cache_wordcounts_plusalpha==null) {
-                synchronized(this) {
-                    if(cache_wordcounts_plusalpha==null) {
-                        cache_wordcounts_plusalpha=C(wordCountsPlusAlpha);
-                    }
-                }
-            }
-            cOfWordCountsPlusAlpha=cache_wordcounts_plusalpha;
-
-            double logPdf= C(wordCountsPlusAlpha.add(x_mu))-cOfWordCountsPlusAlpha;
+            double logPdf = C(wordCountsPlusAlpha.add(x_mu))-wordcounts_plusalpha;
             return logPdf;
         }
 
@@ -197,9 +145,19 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         /** {@inheritDoc} */
         @Override
         protected void updateClusterParameters() {
-            synchronized(this) {
-                cache_wordcounts_plusalpha=null;
-            }
+            wordcounts_plusalpha = estimateWordCountsPlusAlpha();
+        }
+        
+        /**
+         * Estimates the WordCountsPlusAlpha which is stored internally in the
+         * cluster for performance reasons.
+         * 
+         * @return 
+         */
+        private double estimateWordCountsPlusAlpha() {    
+            RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
+            RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
+            return C(wordCountsPlusAlpha);
         }
         
         /**
@@ -211,7 +169,6 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         private double C(RealVector alphaVector) {
             double Cvalue;
             double sumAi=0.0;
-            //double productGammaAi=1.0;
             double sumLogGammaAi=0.0;
 
             int aLength=alphaVector.getDimension();
@@ -219,11 +176,9 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             for(int i=0;i<aLength;++i) {
                 tmp=alphaVector.getEntry(i);
                 sumAi+= tmp;
-                //productGammaAi*=ContinuousDistributions.gamma(tmp);
                 sumLogGammaAi+=ContinuousDistributions.logGamma(tmp);
             }
 
-            //Cvalue = productGammaAi/Gamma.gamma(sumAi);
             Cvalue = sumLogGammaAi-ContinuousDistributions.logGamma(sumAi);
 
             return Cvalue;
@@ -291,13 +246,9 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = kb().getModelParameters();
         TrainingParameters trainingParameters = kb().getTrainingParameters();
-        Cluster c = new Cluster(clusterId);
+        Cluster c = new Cluster(clusterId, modelParameters.getD(), trainingParameters.getAlphaWords());
         
-        c.setDimensions(modelParameters.getD());
         c.setFeatureIds(modelParameters.getFeatureIds());
-        c.setAlphaWords(trainingParameters.getAlphaWords());
-        
-        c.initializeClusterParameters();
         
         return c;
     }

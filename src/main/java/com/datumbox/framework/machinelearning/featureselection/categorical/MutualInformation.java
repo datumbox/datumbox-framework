@@ -135,7 +135,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
                 }
             }
             
-            featureScores.put(feature, bestScore); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized() block.
+            featureScores.put(feature, bestScore); //This Map is concurrent and there are no overlaping keys between threads
         });
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();

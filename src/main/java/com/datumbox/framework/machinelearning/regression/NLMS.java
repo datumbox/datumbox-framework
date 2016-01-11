@@ -136,7 +136,10 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        _predictDatasetParallel(newData);
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer);
+        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */

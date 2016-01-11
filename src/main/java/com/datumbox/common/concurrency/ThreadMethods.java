@@ -44,7 +44,7 @@ public class ThreadMethods {
         ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
         ThrottledExecutor executor = new ThrottledExecutor(executorService, maxTasks);
         
-        stream.forEach(i -> {
+        stream.sequential().forEach(i -> {
             executor.execute(() -> {
                 consumer.accept(i);
             });

@@ -56,13 +56,13 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private static final long serialVersionUID = 1L;
         
         //informational fields
-        private int dimensions;
+        private final int dimensions;
 
         //hyper parameters
-        private int kappa0;
-        private int nu0;
-        private RealVector mu0;
-        private RealMatrix psi0;
+        private final int kappa0;
+        private final int nu0;
+        private final RealVector mu0;
+        private final RealMatrix psi0;
         
         //cluster parameters
         private RealVector mean;
@@ -82,10 +82,40 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         
         /**
          * @param clusterId
+         * @param kappa0
+         * @param nu0
+         * @param dimensions
+         * @param mu0
+         * @param psi0
          * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster
          */
-        protected Cluster(Integer clusterId) {
+        protected Cluster(Integer clusterId, int dimensions, int kappa0, int nu0, RealVector mu0, RealMatrix psi0) {
             super(clusterId);
+            
+            if(nu0<dimensions) {
+                nu0 = dimensions;
+            }
+            
+            if(mu0==null) {
+                mu0 = new ArrayRealVector(dimensions); //0 vector
+            }
+            
+            if(psi0==null) {
+                psi0 = MatrixUtils.createRealIdentityMatrix(dimensions); //identity matrix
+            }
+
+            mean = new ArrayRealVector(dimensions);
+            covariance = MatrixUtils.createRealIdentityMatrix(dimensions);
+            
+            meanError = calculateMeanError(psi0, kappa0, nu0);
+            meanDf = nu0-dimensions+1;
+            
+            
+            this.kappa0 = kappa0;
+            this.nu0 = nu0;
+            this.mu0 = mu0;
+            this.psi0 = psi0;
+            this.dimensions = dimensions;
         }
 
         /** {@inheritDoc} */
@@ -99,99 +129,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
-        
-        
-        //hyper parameters getters/setters
-        /**
-         * Getter for Kappa0 hyperparameter.
-         * 
-         * @return 
-         */
-        protected int getKappa0() {
-            return kappa0;
-        }
 
-        /**
-         * Setter for Kappa0 hyperparameter.
-         * 
-         * @param kappa0
-         */
-        protected void setKappa0(int kappa0) {
-            this.kappa0 = kappa0;
-        }
-
-        /**
-         * Getter for Nu0 hyperparameter.
-         * 
-         * @return 
-         */
-        protected int getNu0() {
-            return nu0;
-        }
-
-        /**
-         * Getter for Nu0 hyperparameter.
-         * 
-         * @param nu0 
-         */
-        protected void setNu0(int nu0) {
-            this.nu0 = nu0;
-        }
-
-        /**
-         * Getter for Mu0 hyperparameter.
-         * 
-         * @return 
-         */
-        protected RealVector getMu0() {
-            return mu0;
-        }
-
-        /**
-         * Getter for Mu0 hyperparameter.
-         * 
-         * @param mu0 
-         */
-        protected void setMu0(RealVector mu0) {
-            this.mu0 = mu0;
-        }
-
-        /**
-         * Getter for Psi0 hyperparameter.
-         * 
-         * @return 
-         */
-        protected RealMatrix getPsi0() {
-            return psi0;
-        }
-        
-        /**
-         * Setter for Psi0 hyperparameter.
-         * 
-         * @param psi0 
-         */
-        protected void setPsi0(RealMatrix psi0) {
-            this.psi0 = psi0;
-        }
-
-        /**
-         * Getter for number of Dimensions.
-         * 
-         * @return 
-         */
-        protected int getDimensions() {
-            return dimensions;
-        }
-        
-        /**
-         * Setter for number of Dimensions.
-         * 
-         * @param dimensions 
-         */
-        protected void setDimensions(int dimensions) {
-            this.dimensions = dimensions;
-        }
-        
         /**
          * Getter for the Mean Error.
          * 
@@ -217,8 +155,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
             x_mu = x_mu.subtract(mean);
             
-            Double determinant;
-            RealMatrix invCovariance;
 
             if(cache_covariance_determinant==null || cache_covariance_inverse==null) {
                 synchronized(this) {
@@ -229,8 +165,9 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
                     }
                 }
             }
-            determinant=cache_covariance_determinant;
-            invCovariance=cache_covariance_inverse;
+            
+            Double determinant=cache_covariance_determinant;
+            RealMatrix invCovariance=cache_covariance_inverse;
 
             double x_muInvSx_muT = (invCovariance.preMultiply(x_mu)).dotProduct(x_mu);
 
@@ -240,35 +177,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             //double pdf = Math.exp(-0.5 * x_muInvSx_muT)*normConst;
             double logPdf = -0.5 * x_muInvSx_muT + Math.log(normConst);
             return logPdf;
-        }
-        
-        /** {@inheritDoc} */
-        @Override
-        protected void initializeClusterParameters() {
-            //Set default hyperparameters if not set
-
-            if(nu0<dimensions) {
-                nu0 = dimensions;
-            }
-            
-            if(mu0==null) {
-                mu0 = new ArrayRealVector(dimensions); //0 vector
-            }
-            
-            if(psi0==null) {
-                psi0 = MatrixUtils.createRealIdentityMatrix(dimensions); //identity matrix
-            }
-
-            mean = new ArrayRealVector(dimensions); //ContinuousDistributions.multinomialGaussianSample(mean, covariance)
-            covariance = MatrixUtils.createRealIdentityMatrix(dimensions);
-            
-            meanError = calculateMeanError(psi0, kappa0, nu0);
-            meanDf = nu0-dimensions+1;
-            
-            synchronized(this) {
-                cache_covariance_determinant=null;
-                cache_covariance_inverse=null;
-            }
         }
     
         /** {@inheritDoc} */
@@ -329,6 +237,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             super.clear();
             xi_sum = null;
             xi_square_sum = null;
+            cache_covariance_determinant = null;
+            cache_covariance_inverse = null;
         }
         
         /** {@inheritDoc} */
@@ -354,16 +264,18 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             //mu_mu0 = null;
 
             mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(n) ).mapDivide(kappa_n);
-            covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
-
-            //clear cache
+            
             synchronized(this) {
-                cache_covariance_determinant=null;
-                cache_covariance_inverse=null;
+                covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
+                LUDecomposition lud = new LUDecomposition(covariance);
+                cache_covariance_determinant = lud.getDeterminant();
+                cache_covariance_inverse = lud.getSolver().getInverse();
             }
+            
             meanError = calculateMeanError(psi, kappa_n, nu);
             meanDf = nu-dimensions+1;
         }
+        
     }
     
     /** {@inheritDoc} */
@@ -485,24 +397,19 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = kb().getModelParameters();
         TrainingParameters trainingParameters = kb().getTrainingParameters();
-        Cluster c = new Cluster(clusterId);
-        
-        c.setDimensions(modelParameters.getD());
-        c.setFeatureIds(modelParameters.getFeatureIds());
-        c.setKappa0(trainingParameters.getKappa0());
-        c.setNu0(trainingParameters.getNu0());
-        
         double[] mu0 = trainingParameters.getMu0();
-        if(mu0!=null) {
-            c.setMu0(new ArrayRealVector(mu0));
-        }
-        
         double[][] psi0 = trainingParameters.getPsi0();
-        if(psi0!=null) {
-            c.setPsi0(new BlockRealMatrix(psi0));
-        }
         
-        c.initializeClusterParameters();
+        Cluster c = new Cluster(
+                clusterId, 
+                modelParameters.getD(),
+                trainingParameters.getKappa0(), 
+                trainingParameters.getNu0(),
+                mu0!=null?new ArrayRealVector(mu0):null,
+                psi0!=null?new BlockRealMatrix(psi0):null
+                
+        );
+        c.setFeatureIds(modelParameters.getFeatureIds());
         
         return c;
     }

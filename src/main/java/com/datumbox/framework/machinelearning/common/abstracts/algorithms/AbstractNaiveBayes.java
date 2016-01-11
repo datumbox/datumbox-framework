@@ -162,7 +162,10 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        _predictDatasetParallel(newData);
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer);
+        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
     
     /** {@inheritDoc} */
@@ -230,57 +233,64 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         Set<Object> classesSet = modelParameters.getClasses();
         
         //calculate first statistics about the classes
-        AssociativeArray totalFeatureOccurrencesForEachClass = new AssociativeArray();
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Object, Double> totalFeatureOccurrencesForEachClass = dbc.getBigMap("tmp_totalFeatureOccurrencesForEachClass", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         for(Record r : trainingData) { 
             Object theClass=r.getY();
             
-            Double classCount = logPriors.get(theClass);
-            if(classCount!=null) { //already exists? increase counter
-                logPriors.put(theClass,classCount+1.0);  
-            }
-            else { //is it new class? add it
-                classesSet.add(theClass);
+            if(classesSet.add(theClass)) { //is it new class? add it
                 logPriors.put(theClass, 1.0);  
                 totalFeatureOccurrencesForEachClass.put(theClass, 0.0);
             }
+            else { //already exists? increase counter
+                logPriors.put(theClass,logPriors.get(theClass)+1.0);  
+            }
         }
+        
+        //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
+        //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
+        /*
+            Implementation note:
+            The code below uses the metadata from the Dataframe to avoid looping through all the data. 
+            This means that if the metadata are stale (contain more columns than the actual data due to 
+            updates/removes) we will initialize more parameters here. Nevertheless this should not have 
+            any effects on the results of the algorithm since the scores will be the same in all classes
+            and it will be taken care by the normalization.
+        */
+        StreamMethods.stream(trainingData.getXDataTypes().keySet(), isParallelized()).forEach(feature -> {
+            for(Object theClass : classesSet) {
+                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                logLikelihoods.put(featureClassTuple, 0.0); //the key is unique across threads and the map is concurrent
+            }
+        });
         
         
         //now calculate the statistics of features
         for(Record r : trainingData) { 
+            Object theClass = r.getY();
             //store the occurrances of the features
-            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach(entry -> {
+            double sumOfOccurrences = StreamMethods.stream(r.getX().entrySet(), isParallelized()).mapToDouble(entry -> {
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
-                if(isBinarized && occurrences>0) {
-                    occurrences=1.0;
-                }
-                
-                //loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
-                //in a previous implementation I did not loop through all the classes and used only the one of the record.
-                //THIS IS WRONG. By not assigning 0 scores to the rest of the classes for this feature, we don't penalties for the non occurrance. 
-                //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
-                for(Object theClass : classesSet) {
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
-                    Double previousValue = logLikelihoods.get(featureClassTuple);
-                    if(previousValue==null) {
-                        previousValue=0.0;
-                        logLikelihoods.put(featureClassTuple, 0.0);
+                if(occurrences!= null && occurrences>0.0) {
+                    if(isBinarized) {
+                        occurrences=1.0;
                     }
                     
-                    //find the class of this particular example
-                    if(theClass.equals(r.getY())) {
-                        //update the statistics of the feature
-                        logLikelihoods.put(featureClassTuple, previousValue+occurrences);
-                        
-                        synchronized(totalFeatureOccurrencesForEachClass) {
-                            totalFeatureOccurrencesForEachClass.put(theClass,totalFeatureOccurrencesForEachClass.getDouble(theClass)+occurrences);
-                        }
-                    }
+                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                    logLikelihoods.put(featureClassTuple, logLikelihoods.get(featureClassTuple)+occurrences); //each thread updates a unique key and the map is cuncurrent
+                    
+                    return occurrences;
                 }
-            });
-            
+                else {
+                    return 0.0;
+                }
+            }).sum();
+           
+            if(sumOfOccurrences>0.0) {
+                totalFeatureOccurrencesForEachClass.put(theClass,totalFeatureOccurrencesForEachClass.get(theClass)+sumOfOccurrences);
+            }
         }
         
         //calculate prior log probabilities
@@ -303,11 +313,12 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             }
 
             //We perform laplace smoothing (also known as add-1)
-            Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.getDouble(theClass)+d); // the d is also known in NLP problems as the Vocabulary size. 
+            Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.get(theClass)+d); // the d is also known in NLP problems as the Vocabulary size. 
             
             logLikelihoods.put(featureClassTuple, Math.log( smoothedProbability )); //calculate the logScore
         }); 
-        //totalFeatureOccurrencesForEachClass=null;
+        //Drop the temporary Collection
+        dbc.dropBigMap("tmp_totalFeatureOccurrencesForEachClass", totalFeatureOccurrencesForEachClass);
     }
     
 }

@@ -35,8 +35,6 @@ public class MatrixDataframe {
     
     private final RealMatrix X;
     private final RealVector Y;
-    private final Map<Integer, Integer> recordId2RowId;
-    private final Map<Object, Integer> feature2ColumnId;
      
     /**
      * Getter for the X Matrix which contains the data of the Dataframe.
@@ -56,24 +54,6 @@ public class MatrixDataframe {
         return Y;
     }
     
-    /**
-     * Getter for the Map that stores the mapping between Record and Row Id.
-     * 
-     * @return 
-     */
-    public Map<Integer, Integer> getRecordId2RowId() {
-        return recordId2RowId;
-    }
-    
-    /**
-     * Getter for the Map that stores the mapping between Feature and Column Id.
-     * 
-     * @return 
-     */
-    public Map<Object, Integer> getFeature2ColumnId() {
-        return feature2ColumnId;
-    }
-    
     
     /**
      * Private constructor which accepts as arguments the Y Vector with the values
@@ -83,14 +63,11 @@ public class MatrixDataframe {
      * 
      * @param Y
      * @param X
-     * @param feature2ColumnId 
      */
-    private MatrixDataframe(RealMatrix X, RealVector Y, Map<Integer, Integer> recordId2RowId, Map<Object, Integer> feature2ColumnId) {
+    private MatrixDataframe(RealMatrix X, RealVector Y) {
         //this constructor must be private because it is used only internally
         this.Y = Y;
         this.X = X;
-        this.feature2ColumnId = feature2ColumnId;
-        this.recordId2RowId = recordId2RowId;
     }
     
     /**
@@ -118,7 +95,7 @@ public class MatrixDataframe {
             ++d;
         }
         
-        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n), recordIdsReference, featureIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n));
         
         
         if(dataset.isEmpty()) {
@@ -127,13 +104,13 @@ public class MatrixDataframe {
         
         boolean extractY=(dataset.getYDataType()==TypeInference.DataType.NUMERICAL);
         
-        int previousFeatureId=0; 
+        int featureId=0; 
         if(addConstantColumn) {
             for(int row=0;row<n;++row) {
-                m.X.setEntry(row, previousFeatureId, 1.0); //put the constant in evey row
+                m.X.setEntry(row, featureId, 1.0); //put the constant in evey row
             }
-            m.feature2ColumnId.put(Dataframe.COLUMN_NAME_CONSTANT, previousFeatureId);
-            ++previousFeatureId; 
+            featureIdsReference.put(Dataframe.COLUMN_NAME_CONSTANT, featureId);
+            ++featureId; 
         }
         
         int rowId = 0;
@@ -151,20 +128,18 @@ public class MatrixDataframe {
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                Integer featureId = m.feature2ColumnId.get(feature);
-                if(featureId==null) {
-                    featureId = previousFeatureId;
-                    m.feature2ColumnId.put(feature, featureId);
-                    ++previousFeatureId;
+                Integer knownFeatureId = featureIdsReference.get(feature);
+                if(knownFeatureId==null) {
+                    featureIdsReference.put(feature, featureId);
+                    knownFeatureId = featureId;
+                    
+                    ++featureId;
                 }
                 
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value != null) {
-                    m.X.setEntry(rowId, featureId, value);
-                }
-                else {
-                    //else the X matrix maintains the 0.0 default value
-                }
+                    m.X.setEntry(rowId, knownFeatureId, value);
+                }//else the X matrix maintains the 0.0 default value
             }
             ++rowId;
         }
@@ -190,7 +165,7 @@ public class MatrixDataframe {
         int n = newData.size();
         int d = featureIdsReference.size();
         
-        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n), recordIdsReference, featureIdsReference);
+        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n));
         
         if(newData.isEmpty()) {
             return m;
@@ -198,7 +173,7 @@ public class MatrixDataframe {
         
         boolean extractY=(newData.getYDataType()==TypeInference.DataType.NUMERICAL);
         
-        boolean addConstantColumn = m.feature2ColumnId.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
+        boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         
         int rowId = 0;
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -219,14 +194,11 @@ public class MatrixDataframe {
                 Object feature = entry.getKey();
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value!=null) {
-                    Integer featureId = m.feature2ColumnId.get(feature);
+                    Integer featureId = featureIdsReference.get(feature);
                     if(featureId!=null) {//if the feature exists in our database
                         m.X.setEntry(rowId, featureId, value);
                     }
-                }
-                else {
-                    //else the X matrix maintains the 0.0 default value
-                }
+                }//else the X matrix maintains the 0.0 default value
             }
             ++rowId;
         }

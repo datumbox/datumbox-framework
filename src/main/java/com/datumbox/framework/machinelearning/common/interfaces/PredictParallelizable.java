@@ -21,7 +21,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.concurrency.StreamMethods;
 import java.io.Serializable;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * All Machine Learning models capable of predicting records in parallel implement
@@ -84,25 +83,23 @@ public interface PredictParallelizable extends Parallelizable {
     public Prediction _predictRecord(Record r);
     
     /**
-     * Estimates the predictions for a new Dataframe in a parallel way.
+     * Estimates the predictions for a new Dataframe in a parallel way. We provide
+     * the Dataframe and an empty map which acts as a temporary buffer for storing
+     * the results before they are loaded in the dataframe.
      * 
      * @param newData 
+     * @param resultsBuffer 
      */
-    default public void _predictDatasetParallel(Dataframe newData) {
-        
-        Map<Integer, Prediction> results = StreamMethods.<Map.Entry<Integer, Record>>stream(newData.entries(), isParallelized())
-                .collect(
-                        Collectors.toMap(
-                                Map.Entry::getKey, 
-                                e -> _predictRecord(e.getValue())
-                        )
-                );
+    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer) {
+        StreamMethods.<Map.Entry<Integer, Record>>stream(newData.entries(), isParallelized()).forEach(e -> {
+            resultsBuffer.put(e.getKey(), _predictRecord(e.getValue())); //the key is unique across threads and the map is concurrent
+        });
 
         //Use the map to update the records
         for(Map.Entry<Integer, Record> entry : newData.entries()) {
             Integer rId = entry.getKey();
             Record r = entry.getValue();
-            Prediction p = results.get(rId);
+            Prediction p = resultsBuffer.get(rId);
             newData._unsafe_set(rId, new Record(r.getX(), r.getY(), p.getYPredicted(), p.getYPredictedProbabilities()));
         }
         

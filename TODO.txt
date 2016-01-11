@@ -1,14 +1,16 @@
 CODE IMPROVEMENTS
 =================
 
-- Profiling & benchmarking.
 - Add multithreading support on the training for the following models: 
     - OrdinalRegression
     - SoftMaxRegression
     - HierarchicalAgglomerative
     - Kmeans
     - NLMS
-- Search for getFeatureIds() and see it the estimation should change. We can use the Dataframe.xDataTypes instead?
+- Try if possible to use atomic int in dataframe: a.updateAndGet((x) -> max(x+1,rId+1));
+- Add a from-to or limit option on the Dataframe.Builder
+- Consider changing the policy of copying the data on the constructor of Record and start using unmodifiable without copy instead.
+- Profiling & benchmarking.
 
 - Update all maven plugins and dependencies to their latest versions.
     - Add support for MapDB 2.0 once a stable version is released.

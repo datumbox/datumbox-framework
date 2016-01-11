@@ -222,7 +222,10 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        _predictDatasetParallel(newData);
+        DatabaseConnector dbc = kb().getDbc();
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer);
+        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */
@@ -250,20 +253,19 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         Set<Object> classesSet = modelParameters.getClasses(); //we need to maintain this because inherited code relies on it
         
         //build the classIds and featureIds maps
-        int previousClassId = 0;
-        int previousFeatureId = 0;
+        int classId = 0;
+        int featureId = 0;
         for(Record r : trainingData) { 
             Object theClass=r.getY();
             
-            if(!classIds.containsKey(theClass)) {
-                classIds.put(theClass, previousClassId++);
-                classesSet.add(theClass);
+            if(classesSet.add(theClass)) {
+                classIds.put(theClass, classId++);
             }
             
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                if(!featureIds.containsKey(feature)) {
-                    featureIds.put(feature, previousFeatureId++);
+                if(featureIds.putIfAbsent(feature, featureId) == null) {
+                    featureId++;
                 }
             }
         }

@@ -53,13 +53,13 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         /**
          * The minimum value of each numerical variable.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> minColumnValues;
         
         /**
          * The maximum value of each numerical variable.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> maxColumnValues;
 
         /** 
@@ -158,42 +158,35 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Learns the normalization parameters for the X data.
      * 
-     * @param data
+     * @param dataset
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected void fitX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(data.getXDataTypes().entrySet(), isParallelized()).forEach(entry -> {
+    protected void fitX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+        StreamMethods.stream(dataset.getXDataTypes().entrySet(), isParallelized()).forEach(entry -> {
             Object column = entry.getKey();
             TypeInference.DataType columnType = entry.getValue();
 
             if(columnType==TypeInference.DataType.NUMERICAL) {
-                FlatDataList columnValues = data.getXColumn(column);
+                FlatDataList columnValues = dataset.getXColumn(column);
                 Double max = Descriptives.max(columnValues.toFlatDataCollection());
                 Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
-                synchronized (minColumnValues) {
-                    minColumnValues.put(column, min);
-                }
-                synchronized (maxColumnValues) {
-                    maxColumnValues.put(column, max);
-                }
-            }
-            else {
-                //do nothing for non-numeric columns
-            }
+                minColumnValues.put(column, min); //each tread takes a unique key and the map is concurrent
+                maxColumnValues.put(column, max); //each tread takes a unique key and the map is concurrent
+            } //do nothing for non-numeric columns
         }); //do nothing for the response variable Y
     }
     
     /**
      * Normalizes the X data.
      * 
-     * @param data
+     * @param dataset
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected void normalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(data.entries(), isParallelized()).forEach(e -> {
+    protected void normalizeX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
@@ -226,8 +219,8 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
-                synchronized(data) {
-                    data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                synchronized(dataset) {
+                    dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
                 }
             }
         });
@@ -236,12 +229,12 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Denormalizes the X data.
      * 
-     * @param data
+     * @param dataset
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected void denormalizeX(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(data.entries(), isParallelized()).forEach(e -> {
+    protected void denormalizeX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
@@ -269,8 +262,8 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
-                synchronized(data) {
-                    data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                synchronized(dataset) {
+                    dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
                 }
             }
         });
@@ -279,15 +272,15 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Learns the normalization parameters for the Y variable.
      * 
-     * @param data
+     * @param dataset
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected void fitY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
+    protected void fitY(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+        if(dataset.getYDataType()==TypeInference.DataType.NUMERICAL) {
             //if this is numeric normalize it
 
-            FlatDataList columnValues = data.getYColumn();
+            FlatDataList columnValues = dataset.getYColumn();
             Double max = Descriptives.max(columnValues.toFlatDataCollection());
             Double min = Descriptives.min(columnValues.toFlatDataCollection());
 
@@ -299,14 +292,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Normalizes the Y variable.
      * 
-     * @param data
+     * @param dataset
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected void normalizeY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        if(data.getYDataType()==TypeInference.DataType.NUMERICAL) {
+    protected void normalizeY(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+        if(dataset.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
-            StreamMethods.stream(data.entries(), isParallelized()).forEach(e -> {
+            StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 Double value = TypeInference.toDouble(r.getY());
@@ -328,8 +321,8 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
 
                     Record newR = new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities());
 
-                    synchronized(data) {
-                        data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                    synchronized(dataset) {
+                        dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
                     }
                 }
                 
@@ -340,15 +333,15 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Denormalizes the Y variable.
      * 
-     * @param data
+     * @param dataset
      * @param minColumnValues
      * @param maxColumnValues 
      */
-    protected void denormalizeY(Dataframe data, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        TypeInference.DataType dataType = data.getYDataType();
+    protected void denormalizeY(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
+        TypeInference.DataType dataType = dataset.getYDataType();
         if(dataType==TypeInference.DataType.NUMERICAL || dataType==null) {
 
-            StreamMethods.stream(data.entries(), isParallelized()).forEach(e -> {
+            StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 
@@ -379,8 +372,8 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
 
                 Record newR = new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities());
 
-                synchronized(data) {
-                    data._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                synchronized(dataset) {
+                    dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
                 }
             });
         }
@@ -389,18 +382,18 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Learns the reference levels of the categorical variables.
      * 
-     * @param data
+     * @param dataset
      * @param referenceLevels 
      */
-    protected void fitDummy(Dataframe data, Map<Object, Object> referenceLevels) {
-        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
+    protected void fitDummy(Dataframe dataset, Map<Object, Object> referenceLevels) {
+        Map<Object, TypeInference.DataType> columnTypes = dataset.getXDataTypes();
         
         //find the referenceLevels for each categorical variable
-        StreamMethods.stream(data, isParallelized()).forEachOrdered(r -> {
+        StreamMethods.stream(dataset, isParallelized()).forEachOrdered(r -> {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 if(covert2dummy(columnTypes.get(column))) { 
-                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized() block.
+                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized is needed.
                 }
             }
         });
@@ -409,15 +402,15 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /**
      * Transforms the categorical variables into dummy (boolean) variables.
      * 
-     * @param data
+     * @param dataset
      * @param referenceLevels 
      */
-    protected void transformDummy(Dataframe data, Map<Object, Object> referenceLevels) {
+    protected void transformDummy(Dataframe dataset, Map<Object, Object> referenceLevels) {
 
-        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
+        Map<Object, TypeInference.DataType> columnTypes = dataset.getXDataTypes();
         
         //Replace variables with dummy versions
-        StreamMethods.stream(data.entries(), isParallelized()).forEach(e -> {
+        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             
@@ -449,14 +442,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
 
-                synchronized(data) {
-                    data._unsafe_set(rId, newR); //we call below the recalculateMeta()
+                synchronized(dataset) {
+                    dataset._unsafe_set(rId, newR); //we call below the recalculateMeta()
                 }
             }
         });
         
         //Reset Meta info
-        data.recalculateMeta(); 
+        dataset.recalculateMeta(); 
     }
     
     /**

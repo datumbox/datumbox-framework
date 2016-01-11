@@ -98,7 +98,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                 
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
                     final int baseCounter = dataset.size(); //because we read multiple files we need to keep track of all records added earlier
-                    ThreadMethods.throttledExecution(StreamMethods.enumerate(br.lines(), false), e -> { //WARNING: Do NOT turn on the parallel flags. Any parallelist is taken care of by the throttledExecution() method
+                    ThreadMethods.throttledExecution(StreamMethods.enumerate(br.lines()), e -> { 
                         Integer rId = baseCounter + e.getKey();
                         String line = e.getValue();
                         
@@ -164,7 +164,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                                 .withRecordSeparator(recordSeparator);
             
             try (final CSVParser parser = new CSVParser(reader, format)) { 
-                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false), false), e -> { //WARNING: Do NOT turn on the parallel flags. Any parallelist is taken care of by the throttledExecution() method
+                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false)), e -> { 
                     Integer rId = e.getKey();
                     CSVRecord row = e.getValue();
                 
@@ -311,9 +311,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /** {@inheritDoc} */
     @Override
     public boolean addAll(Collection<? extends Record> c) {
-        for(Record r : c) {
+        c.stream().forEach(r -> {
             add(r);
-        }
+        });
         return true;
     }
     
