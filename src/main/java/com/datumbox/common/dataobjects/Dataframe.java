@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+////import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -109,6 +110,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
                         synchronized(dataset) {
                             dataset.set(rId, r);
+                            ////dataset._unsafe_set(rId, r);
                         }
                     });
                 } 
@@ -116,6 +118,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                     throw new RuntimeException(ex);
                 }
             }
+            
+            ////dataset.recalculateMeta();
             
             return dataset;
         }
@@ -216,6 +220,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * Keeps a counter of the id that will be used for the next record.
      */
     private int nextAvailableRecordId = 0;
+    ////private final AtomicInteger nextAvailableRecordId = new AtomicInteger();
     
     /**
      * Public constructor of Dataframe.
@@ -475,7 +480,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Integer addRecord(Record r) {
-        Integer rId = _add(r);
+        Integer rId = _unsafe_add(r);
         updateMeta(r);
         return rId;
     }
@@ -763,6 +768,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         if(nextAvailableRecordId<rId) {
             nextAvailableRecordId = rId+1; //move ahead the next id
         }
+        ////nextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
         return records.put(rId, r);
     }
     
@@ -783,8 +789,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @param r
      * @return 
      */
-    private Integer _add(Record r) {
+    private Integer _unsafe_add(Record r) {
         Integer newId = nextAvailableRecordId++;
+        ////Integer newId = nextAvailableRecordId.getAndIncrement();
         records.put(newId, r);
         return newId;
     }
@@ -800,9 +807,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             Object column = entry.getKey();
             Object value = entry.getValue();
             
-            if(xDataTypes.containsKey(column) == false) {
-                xDataTypes.put(column, TypeInference.getDataType(value));
-            }
+            xDataTypes.putIfAbsent(column, TypeInference.getDataType(value));
         }
         
         if(yDataType == null) {
