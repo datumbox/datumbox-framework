@@ -7,10 +7,8 @@ CODE IMPROVEMENTS
     - HierarchicalAgglomerative
     - Kmeans
     - NLMS
-- Add a from-to or limit option on the Dataframe.Builder
-- Do we need DOUBLE_ACCURACY_MEDIUM and DOUBLE_ACCURACY_LOW?
 - FeatureSwitch for list in the Dataframe?
-- Consider changing the policy of copying the data on the constructor of Record and start using unmodifiable without copy instead.
+- Adding custom executors in parallelstreams so that they don't block? http://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
 - Profiling & benchmarking.
 
 - Update all maven plugins and dependencies to their latest versions.

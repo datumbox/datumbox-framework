@@ -80,7 +80,7 @@ public class NLMSTest extends AbstractTest {
         df.denormalize(validationData);
         
         for(Record r : validationData) {
-            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_LOW);
+            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         }
         
         df.delete();

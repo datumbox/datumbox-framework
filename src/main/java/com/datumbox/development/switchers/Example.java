@@ -13,20 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.development.interfaces;
+package com.datumbox.development.switchers;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import com.datumbox.development.FeatureContext;
+import com.datumbox.development.interfaces.Feature;
 
 /**
- * This is a meta annotation which is applied to all annotations with enums.
+ * Example of a Feature Switch.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ANNOTATION_TYPE})
-public @interface FeatureMark {
+public enum Example implements Feature {
     
+    /**
+     * 1st Option.
+     */
+    OPTION1,
+    
+    /**
+     * 2nd Option.
+     */
+    OPTION2;
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean isActivated() {
+        return FeatureContext.isActive(this);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return name();
+    }
 }

@@ -65,6 +65,10 @@ Version 0.7.0-SNAPSHOT - Build 20160112
 - Updated all Wrappers to inherit from Parallelizable and set the parallelized flags of the individual components before training and predict/transform.
 - Modified Dataframe to be usable without a synchronized block.
 - Created a basic feature switching component for the framework.
+- Removed the DOUBLE_ACCURACY_LOW property from the tests since it is no longer used and increased the accuracy of DOUBLE_ACCURACY_MEDIUM.
+- Added a skip/limit option on the Dataframe.Builder.parseCSVFile().
+- Changed the policy of copying the data on the constructor of Record to just wrapping them in an unmodifiable map.
+
 
 Version 0.6.1 - Build 20160102
 ------------------------------

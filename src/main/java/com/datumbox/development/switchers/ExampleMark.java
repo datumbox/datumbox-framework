@@ -13,20 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.development.interfaces;
+package com.datumbox.development.switchers;
 
+import com.datumbox.development.interfaces.FeatureMark;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 /**
- * This is a meta annotation which is applied to all annotations with enums.
+ * Example class for the Mark annotation which is used to mark fields, methods etc 
+ * which belong only to specific options.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
+@FeatureMark
+@Target({ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PACKAGE, ElementType.PARAMETER, ElementType.TYPE})
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ANNOTATION_TYPE})
-public @interface FeatureMark {
+public @interface ExampleMark { 
     
+    /**
+     * Parameter that passes the options of the enum.
+     * 
+     * @return 
+     */
+    public Example[] options();
+
 }

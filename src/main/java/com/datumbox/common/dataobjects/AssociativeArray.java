@@ -46,6 +46,20 @@ public class AssociativeArray extends AbstractDataStructureMap<Map<Object, Objec
     }
     
     /**
+     * Converts the internal data of the provided AssociativeArray to unmondifiable
+     * but it does not copy its values. This means that if the original AssociativeArray
+     * gets modified, the data of the new object will be modified too. This method 
+     * is not as safe as copy2Unmodifiable() but it should be preferred when speed
+     * is crucial.
+     * 
+     * @param original
+     * @return 
+     */
+    public static AssociativeArray convert2Unmodifiable(AssociativeArray original) {
+        return new AssociativeArray(Collections.unmodifiableMap(original.internalData));
+    }
+    
+    /**
      * Default constructor which initializes the internal data with a LinkedHashMap.
      */
     public AssociativeArray() {

@@ -85,7 +85,7 @@ public class Datasets {
             headerDataTypes.put("imported", TypeInference.DataType.BOOLEAN);
             headerDataTypes.put("stolen", TypeInference.DataType.BOOLEAN);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -128,7 +128,7 @@ public class Datasets {
             headerDataTypes.put("origin", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("stolen", TypeInference.DataType.CATEGORICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -160,7 +160,7 @@ public class Datasets {
             headerDataTypes.put("c3", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("class", TypeInference.DataType.ORDINAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "class", headerDataTypes, ',', '"', "\r\n", dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "class", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -268,7 +268,7 @@ public class Datasets {
             headerDataTypes.put("Thal", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("Status", TypeInference.DataType.CATEGORICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "Status", headerDataTypes, ',', '"', "\r\n", dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "Status", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -589,28 +589,19 @@ public class Datasets {
         $dataTable[]=array(array($x1,$x2),null);
         */
         Dataframe trainingData = new Dataframe(dbConf);
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)40,(Double)1.7}, (Double)53.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)45,(Double)2.1}, (Double)65.09));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)41,(Double)3.8}, (Double)116.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)47,(Double)5.0}, (Double)152.094));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)41,(Double)2.0}, (Double)62.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionNumeric.csv"), "UTF-8")) {
+            Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+            headerDataTypes.put("c1", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
+            
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+        }
+        catch(IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
         
-        Dataframe validationData = new Dataframe(dbConf);
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)49,(Double)4.5}, (Double)137.098));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)46,(Double)2.9}, (Double)89.092));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.9}, (Double)59.092));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)40,(Double)1.7}, (Double)53.08));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)45,(Double)2.1}, (Double)65.09));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)41,(Double)3.8}, (Double)116.082));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)47,(Double)5.0}, (Double)152.094));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)41,(Double)2.0}, (Double)62.082));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)40,(Double)0.9}, (Double)29.08));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(Integer)46,(Double)1.2}, (Double)38.092));
+        Dataframe validationData = trainingData.copy();
         
         return new Dataframe[] {trainingData, validationData};
     }

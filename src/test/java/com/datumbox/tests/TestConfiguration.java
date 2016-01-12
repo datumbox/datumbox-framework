@@ -31,12 +31,7 @@ public class TestConfiguration {
     /**
      * Medium Accuracy Level for assert.
      */
-    public static final double DOUBLE_ACCURACY_MEDIUM = 0.01;
-    
-    /**
-     * Low Accuracy Level for assert.
-     */
-    public static final double DOUBLE_ACCURACY_LOW = 0.5;
+    public static final double DOUBLE_ACCURACY_MEDIUM = 0.0001;
     
     /**
      * Seed of the RandomGenerator.

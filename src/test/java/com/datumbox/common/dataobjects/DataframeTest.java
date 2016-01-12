@@ -59,7 +59,7 @@ public class DataframeTest extends AbstractTest {
         
         Dataframe dataset;
         try (Reader fileReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("datasets/cities.csv"), "UTF-8")) {
-            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", dbConf);
+            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
         }
         catch(UncheckedIOException | IOException ex) {
             logger.warn("Unable to download datasets, skipping test.");

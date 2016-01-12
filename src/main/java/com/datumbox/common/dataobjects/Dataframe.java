@@ -146,12 +146,22 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
          * @param delimiter
          * @param quote
          * @param recordSeparator
+         * @param skip
+         * @param limit
          * @param dbConf
          * @return 
          */
         public static Dataframe parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, 
-                                           char delimiter, char quote, String recordSeparator, DatabaseConfiguration dbConf) {
+                                           char delimiter, char quote, String recordSeparator, Long skip, Long limit, DatabaseConfiguration dbConf) {
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
+            
+            if(skip == null) {
+                skip = 0L;
+            }
+            
+            if(limit == null) {
+                limit = Long.MAX_VALUE;
+            }
             
             logger.info("Parsing CSV file");
             
@@ -173,7 +183,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                                 .withRecordSeparator(recordSeparator);
             
             try (final CSVParser parser = new CSVParser(reader, format)) { 
-                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false)), e -> { 
+                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false)).skip(skip).limit(limit), e -> { 
                     Integer rId = e.getKey();
                     CSVRecord row = e.getValue();
                 
@@ -248,10 +258,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         String dbName = "dts";
         dbc = this.dbConf.getConnector(dbName);
         
-        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true, true);
+        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
         
         yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
     }
     
     /**
