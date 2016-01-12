@@ -22,6 +22,8 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapTyp
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.concurrency.ThreadMethods;
+import com.datumbox.development.switchers.SynchronizedBlocks;
+import com.datumbox.development.switchers.SynchronizedBlocksMark;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
 import java.io.BufferedReader;
@@ -37,7 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-////import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -108,9 +110,14 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                         );
                         Record r = new Record(xData, theClass);
 
-                        synchronized(dataset) {
-                            dataset.set(rId, r);
-                            ////dataset._unsafe_set(rId, r);
+                        //we call below the recalculateMeta()
+                        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                            dataset.set(rId, r); 
+                        }
+                        else {
+                            synchronized(dataset) {
+                                dataset.set(rId, r);
+                            }
                         }
                     });
                 } 
@@ -118,8 +125,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                     throw new RuntimeException(ex);
                 }
             }
-            
-            ////dataset.recalculateMeta();
             
             return dataset;
         }
@@ -195,8 +200,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                         
                         //use the internal unsafe methods to avoid the update of the Metas. 
                         //The Metas are already set in the construction of the Dataframe.
-                        synchronized(dataset) {
+                        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
                             dataset._unsafe_set(rId, r); 
+                        }
+                        else {
+                            synchronized(dataset) {
+                                dataset._unsafe_set(rId, r);
+                            }
                         }
                     }
                 });
@@ -219,8 +229,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /**
      * Keeps a counter of the id that will be used for the next record.
      */
+    @SynchronizedBlocksMark(options={SynchronizedBlocks.WITH_SYNCHRONIZED})
     private int nextAvailableRecordId = 0;
-    ////private final AtomicInteger nextAvailableRecordId = new AtomicInteger();
+    
+    @SynchronizedBlocksMark(options={SynchronizedBlocks.WITHOUT_SYNCHRONIZED})
+    private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
     
     /**
      * Public constructor of Dataframe.
@@ -235,10 +248,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         String dbName = "dts";
         dbc = this.dbConf.getConnector(dbName);
         
-        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, false, true);
+        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true, true);
         
         yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
     }
     
     /**
@@ -591,9 +604,15 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-
-                synchronized(this) {
-                    _unsafe_set(rId, newR); //safe to call in this context. we already updated the meta when we modified the xDataTypes
+                
+                //safe to call in this context. we already updated the meta when we modified the xDataTypes
+                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                    _unsafe_set(rId, newR); 
+                }
+                else {
+                    synchronized(this) {
+                        _unsafe_set(rId, newR); 
+                    }                    
                 }
             }
         });
@@ -765,10 +784,16 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return  
      */
     public Record _unsafe_set(Integer rId, Record r) {
-        if(nextAvailableRecordId<rId) {
-            nextAvailableRecordId = rId+1; //move ahead the next id
+        //move ahead the next id
+        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+            atomicNextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
         }
-        ////nextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
+        else {
+            if(nextAvailableRecordId<rId) {
+                nextAvailableRecordId = rId+1; 
+            }
+        }
+        
         return records.put(rId, r);
     }
     
@@ -790,8 +815,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     private Integer _unsafe_add(Record r) {
-        Integer newId = nextAvailableRecordId++;
-        ////Integer newId = nextAvailableRecordId.getAndIncrement();
+        Integer newId;
+        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+            newId = atomicNextAvailableRecordId.getAndIncrement();
+        }
+        else {
+            newId = nextAvailableRecordId++;
+        }
         records.put(newId, r);
         return newId;
     }
@@ -807,11 +837,16 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             Object column = entry.getKey();
             Object value = entry.getValue();
             
-            xDataTypes.putIfAbsent(column, TypeInference.getDataType(value));
+            if(value!=null) {
+                xDataTypes.putIfAbsent(column, TypeInference.getDataType(value));
+            }
         }
         
         if(yDataType == null) {
-            yDataType = TypeInference.getDataType(r.getY());
+            Object value = r.getY();
+            if(value!=null) {
+                yDataType = TypeInference.getDataType(r.getY());
+            }
         }
     }
     

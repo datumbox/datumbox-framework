@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160111
+Version 0.7.0-SNAPSHOT - Build 20160112
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -63,6 +63,8 @@ Version 0.7.0-SNAPSHOT - Build 20160111
 - Converted the big test Datasets to files stored as resources in the project. This includes all the files that we downloaded from the web.
 - Added the TrainParallelizable for the models that use parallelism during training.
 - Updated all Wrappers to inherit from Parallelizable and set the parallelized flags of the individual components before training and predict/transform.
+- Modified Dataframe to be usable without a synchronized block.
+- Created a basic feature switching component for the framework.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

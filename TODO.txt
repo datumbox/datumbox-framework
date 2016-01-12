@@ -7,8 +7,9 @@ CODE IMPROVEMENTS
     - HierarchicalAgglomerative
     - Kmeans
     - NLMS
-- Try if possible to use atomic int in dataframe: a.updateAndGet((x) -> max(x+1,rId+1));
 - Add a from-to or limit option on the Dataframe.Builder
+- Do we need DOUBLE_ACCURACY_MEDIUM and DOUBLE_ACCURACY_LOW?
+- FeatureSwitch for list in the Dataframe?
 - Consider changing the policy of copying the data on the constructor of Record and start using unmodifiable without copy instead.
 - Profiling & benchmarking.
 

@@ -26,6 +26,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.development.switchers.SynchronizedBlocks;
 import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import java.util.Arrays;
@@ -219,8 +220,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
-                synchronized(dataset) {
-                    dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                //no modification on the actual columns takes place, safe to do.
+                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                    dataset._unsafe_set(rId, newR); 
+                }
+                else {
+                    synchronized(dataset) {
+                        dataset._unsafe_set(rId, newR); 
+                    }                    
                 }
             }
         });
@@ -262,8 +269,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
-                synchronized(dataset) {
-                    dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                //no modification on the actual columns takes place, safe to do.
+                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                    dataset._unsafe_set(rId, newR); 
+                }
+                else {
+                    synchronized(dataset) {
+                        dataset._unsafe_set(rId, newR); 
+                    }                    
                 }
             }
         });
@@ -321,8 +334,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
 
                     Record newR = new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities());
 
-                    synchronized(dataset) {
-                        dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                    //no modification on the actual columns takes place, safe to do.
+                    if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                        dataset._unsafe_set(rId, newR); 
+                    }
+                    else {
+                        synchronized(dataset) {
+                            dataset._unsafe_set(rId, newR); 
+                        }                    
                     }
                 }
                 
@@ -372,8 +391,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
 
                 Record newR = new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities());
 
-                synchronized(dataset) {
-                    dataset._unsafe_set(rId, newR); //no modification on the actula columns takes place, safe to do.
+                //no modification on the actual columns takes place, safe to do.
+                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                    dataset._unsafe_set(rId, newR); 
+                }
+                else {
+                    synchronized(dataset) {
+                        dataset._unsafe_set(rId, newR); 
+                    }                    
                 }
             });
         }
@@ -442,8 +467,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
 
-                synchronized(dataset) {
-                    dataset._unsafe_set(rId, newR); //we call below the recalculateMeta()
+                //we call below the recalculateMeta()
+                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                    dataset._unsafe_set(rId, newR); 
+                }
+                else {
+                    synchronized(dataset) {
+                        dataset._unsafe_set(rId, newR); 
+                    }                    
                 }
             }
         });

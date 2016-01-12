@@ -27,6 +27,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.PHPMethods;
+import com.datumbox.development.switchers.SynchronizedBlocks;
 import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
 import java.util.HashMap;
 import java.util.Map;
@@ -399,9 +400,15 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
             }
 
             Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-
-            synchronized(dataset) {
-                dataset._unsafe_set(rId, newR); //we call below the recalculateMeta()
+            
+            //we call below the recalculateMeta()
+            if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                dataset._unsafe_set(rId, newR); 
+            }
+            else {
+                synchronized(dataset) {
+                    dataset._unsafe_set(rId, newR);
+                }
             }
         });
         
