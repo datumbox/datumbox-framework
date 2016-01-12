@@ -2,7 +2,6 @@ CODE IMPROVEMENTS
 =================
 
 - Add multithreading support on the training for the following models: 
-    - OrdinalRegression
     - SoftMaxRegression
     - HierarchicalAgglomerative
     - Kmeans

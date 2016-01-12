@@ -523,7 +523,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
         //Calculate the probabilities of assigning the point for every cluster
-        StreamMethods.stream(clusterMap.values(), isParallelized()).forEach(ck -> {
+        StreamMethods.stream(clusterMap.values().stream(), isParallelized()).forEach(ck -> {
             //compute P_k(X[i]) = P(X[i] | X[-i] = k)
             double marginalLogLikelihoodXi = ck.posteriorLogPdf(r);
             //set N_{k,-i} = dim({X[-i] = k})

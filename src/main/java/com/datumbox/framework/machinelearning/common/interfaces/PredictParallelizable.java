@@ -19,6 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.concurrency.StreamMethods;
+import com.datumbox.development.switchers.SynchronizedBlocks;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -91,17 +92,28 @@ public interface PredictParallelizable extends Parallelizable {
      * @param resultsBuffer 
      */
     default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer) {
-        StreamMethods.<Map.Entry<Integer, Record>>stream(newData.entries(), isParallelized()).forEach(e -> {
+        StreamMethods.stream(newData.entries(), isParallelized()).forEach(e -> {
             resultsBuffer.put(e.getKey(), _predictRecord(e.getValue())); //the key is unique across threads and the map is concurrent
         });
 
         //Use the map to update the records
-        for(Map.Entry<Integer, Record> entry : newData.entries()) {
-            Integer rId = entry.getKey();
-            Record r = entry.getValue();
+        StreamMethods.stream(newData.entries(), isParallelized()).forEach(e -> {
+            Integer rId = e.getKey();
+            Record r = e.getValue();
             Prediction p = resultsBuffer.get(rId);
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), p.getYPredicted(), p.getYPredictedProbabilities()));
-        }
+            
+            
+            Record newR = new Record(r.getX(), r.getY(), p.getYPredicted(), p.getYPredictedProbabilities());
+                
+            if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                newData._unsafe_set(rId, newR); 
+            }
+            else {
+                synchronized(newData) {
+                    newData._unsafe_set(rId, newR); 
+                }                    
+            }
+        });
         
     }
 }

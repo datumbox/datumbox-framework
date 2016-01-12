@@ -94,7 +94,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         
         final double log2 = Math.log(2.0);
         
-        StreamMethods.stream(featureCounts.entrySet(), isParallelized()).forEach(featureCount -> {
+        StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()).forEach(featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)

@@ -164,7 +164,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected void fitX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(dataset.getXDataTypes().entrySet(), isParallelized()).forEach(entry -> {
+        StreamMethods.stream(dataset.getXDataTypes().entrySet().stream(), isParallelized()).forEach(entry -> {
             Object column = entry.getKey();
             TypeInference.DataType columnType = entry.getValue();
 
@@ -414,7 +414,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         Map<Object, TypeInference.DataType> columnTypes = dataset.getXDataTypes();
         
         //find the referenceLevels for each categorical variable
-        StreamMethods.stream(dataset, isParallelized()).forEachOrdered(r -> {
+        StreamMethods.stream(dataset.stream(), isParallelized()).forEachOrdered(r -> {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 if(covert2dummy(columnTypes.get(column))) { 

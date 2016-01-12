@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -29,6 +30,7 @@ import com.datumbox.framework.machinelearning.common.interfaces.PredictParalleli
 
 
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.OrdinalRegressionValidator;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +55,7 @@ import java.util.TreeSet;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> implements PredictParallelizable {
+public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -260,27 +262,23 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         Map<Object, Double> thitas = modelParameters.getThitas();
         
         //add classes in a sorted way (ordinal ascending order)
-        Set<Object> sortedClasses = new TreeSet<>();
+        //also we initialize the weights and thitas to zero
+        TreeSet<Object> sortedClasses = new TreeSet<>();
         for(Record r : trainingData) { 
             Object theClass=r.getY();
             
             sortedClasses.add(theClass); 
-        }
-        Set<Object> classesSet = modelParameters.getClasses();
-        classesSet.addAll(sortedClasses);
-        
-        //we initialize the weights and thitas to zero
-        for(Object feature: trainingData.getXDataTypes().keySet()) {
-            weights.put(feature, 0.0);
-        }
-        for(Record r : trainingData) { 
+            
             thitas.put(r.getY(), 0.0);
         }
         
-        Object finalClass = null;
-        for(Object theClass : classesSet) {
-            finalClass=theClass;
-        }
+        Object finalClass = sortedClasses.last();
+        Set<Object> classesSet = modelParameters.getClasses();
+        classesSet.addAll(sortedClasses);
+        
+        for(Object feature: trainingData.getXDataTypes().keySet()) {
+            weights.put(feature, 0.0);
+        }        
         thitas.put(finalClass, Double.POSITIVE_INFINITY);
         
         
@@ -356,7 +354,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        for(Record r : trainingData) { 
+        StreamMethods.stream(trainingData.stream(), isParallelized()).forEach(r -> { 
             Object rClass = r.getY();
             Object rPreviousClass = previousThitaMapping.get(rClass);
             
@@ -371,23 +369,26 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
                 gOfPrevious = g(thitas.get(rPreviousClass)-xTw);
             }
                     
+            double dtG_multiplier = (gOfCurrent-gOfPrevious)*multiplier;
             
-            
-            //update weights                
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Object column = entry.getKey();
-                Double xij = TypeInference.toDouble(entry.getValue());
-                
-                newWeights.put(column, newWeights.get(column)+multiplier*xij*(gOfCurrent-gOfPrevious));
+            synchronized(newWeights) {
+                //update weights                
+                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                    Object column = entry.getKey();
+                    Double xij = TypeInference.toDouble(entry.getValue());
+
+                    newWeights.put(column, newWeights.get(column)+xij*dtG_multiplier);
+                }
             }
             
-            
-            //update thitas
-            newThitas.put(rClass, newThitas.get(rClass)+multiplier*(-gOfCurrent));
-            if(rPreviousClass!=null) {
-                newThitas.put(rPreviousClass, newThitas.get(rPreviousClass)+multiplier*gOfPrevious);
+            synchronized(newThitas) {
+                //update thitas
+                newThitas.put(rClass, newThitas.get(rClass)+multiplier*(-gOfCurrent));
+                if(rPreviousClass!=null) {
+                    newThitas.put(rPreviousClass, newThitas.get(rPreviousClass)+multiplier*gOfPrevious);
+                }
             }
-        }
+        });
     }
     
     private AssociativeArray hypothesisFunction(AssociativeArray x, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
@@ -416,9 +417,9 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     }
     
     private double calculateError(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
-        double error=0.0;
         
-        for(Record r : trainingData) { 
+        double error = StreamMethods.stream(trainingData.stream(), isParallelized()).mapToDouble(r -> { 
+            double e=0.0;
             double xTw = xTw(r.getX(), weights);
             
             Object theClass = r.getY();
@@ -426,11 +427,13 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             
             if(previousClass!=null) {
-                error += h(thitas.get(previousClass)-xTw);
+                e += h(thitas.get(previousClass)-xTw);
             }
             
-            error += h(xTw-thitas.get(theClass));
-        }
+            e += h(xTw-thitas.get(theClass));
+            
+            return e;
+        }).sum();
         
         return error/kb().getModelParameters().getN();
     }

@@ -211,7 +211,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
             any effects on the results of the algorithm since the scores will be the same in all classes
             and it will be taken care by the normalization.
         */
-        StreamMethods.stream(trainingData.getXDataTypes().keySet(), isParallelized()).forEach(feature -> {
+        StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()).forEach(feature -> {
             for(Object theClass : classesSet) {
                 List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
                 likelihoods.put(featureClassTuple, 0.0); //the key unique across threads and the map is concurrent
@@ -222,7 +222,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         //now calculate the statistics of features
         for(Record r : trainingData) {
             //store the occurrances of the features
-            StreamMethods.stream(r.getX().entrySet(), isParallelized()).forEach(entry -> {
+            StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).forEach(entry -> {
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
@@ -248,7 +248,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         }
         
         //update log likelihood
-        StreamMethods.stream(likelihoods.entrySet(), isParallelized()).forEach(entry -> {
+        StreamMethods.stream(likelihoods.entrySet().stream(), isParallelized()).forEach(entry -> {
             List<Object> featureClassTuple = entry.getKey();
             Object theClass = featureClassTuple.get(1);
             Double occurrences = entry.getValue();

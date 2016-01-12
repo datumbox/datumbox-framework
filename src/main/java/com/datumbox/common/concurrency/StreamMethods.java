@@ -54,6 +54,23 @@ public class StreamMethods {
     }
     
     /**
+     * Converts an Stream to parallel or sequential .
+     * 
+     * @param <T>
+     * @param stream
+     * @param parallel
+     * @return 
+     */
+    public static <T> Stream<T> stream(Stream<T> stream, boolean parallel) {
+        if(parallel) {
+            return stream.parallel();
+        }
+        else {
+            return stream.sequential();
+        }
+    }
+    
+    /**
      * Converts an iterator to a stream.
      * 
      * @param <T>
