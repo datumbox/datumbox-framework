@@ -7,7 +7,6 @@ CODE IMPROVEMENTS
     - HierarchicalAgglomerative
     - Kmeans
     - NLMS
-- FeatureSwitch for list in the Dataframe?
 - Adding custom executors in parallelstreams so that they don't block? http://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
 - Profiling & benchmarking.
 

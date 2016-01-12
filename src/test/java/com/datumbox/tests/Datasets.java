@@ -588,7 +588,7 @@ public class Datasets {
         $y=2+0.002*$x1+30*$x2;
         $dataTable[]=array(array($x1,$x2),null);
         */
-        Dataframe trainingData = new Dataframe(dbConf);
+        Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionNumeric.csv"), "UTF-8")) {
             Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
             headerDataTypes.put("c1", TypeInference.DataType.NUMERICAL);
