@@ -83,11 +83,11 @@ public class Record implements Serializable {
      * @param yPredictedProbabilities 
      */
     public Record(AssociativeArray x, Object y, Object yPredicted, AssociativeArray yPredictedProbabilities) {
-        this.x = AssociativeArray.convert2Unmodifiable(x); //AssociativeArray.copy2Unmodifiable(x);
+        this.x = AssociativeArray.copy2Unmodifiable(x);
         this.y = y;
         this.yPredicted = yPredicted;
         if (yPredictedProbabilities != null) {
-            this.yPredictedProbabilities = AssociativeArray.convert2Unmodifiable(yPredictedProbabilities); //AssociativeArray.copy2Unmodifiable(yPredictedProbabilities);
+            this.yPredictedProbabilities = AssociativeArray.copy2Unmodifiable(yPredictedProbabilities);
         }
         else {
             this.yPredictedProbabilities = null;
