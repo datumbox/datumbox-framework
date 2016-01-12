@@ -53,7 +53,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
@@ -202,7 +202,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, false, true);
         _predictDatasetParallel(newData, resultsBuffer);
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }

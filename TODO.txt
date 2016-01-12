@@ -4,7 +4,6 @@ CODE IMPROVEMENTS
 - Add multithreading support on the training for the following models: 
     - HierarchicalAgglomerative
     - Kmeans
-    - NLMS
 - Adding custom executors in parallelstreams so that they don't block? http://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
 - Profiling & benchmarking.
 
