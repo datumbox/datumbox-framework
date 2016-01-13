@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -137,7 +138,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         private int totalIterations;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> featureWeights; 
         
         /** 
@@ -490,16 +491,13 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         if(trainingParameters.isWeighted()==false) {
             //the unweighted version of the algorithm
-            double gammaWeight = trainingParameters.getCategoricalGamaMultiplier(); 
-            for(Record r : trainingData) { 
-                for(Object feature : r.getX().keySet()) {
-                    //standard kmeans has equal weights in all numeric features
-                    //for categorical, dummy or ordinal feature, use the Gamma Multiplier of Kprototypes
-                    double weight = (columnTypes.get(feature)!=TypeInference.DataType.NUMERICAL)?gammaWeight:1.0;
-                    
-                    featureWeights.put(feature, weight); 
-                }
-            }
+            double gammaWeight = trainingParameters.getCategoricalGamaMultiplier();
+            StreamMethods.stream(columnTypes.entrySet().stream(), isParallelized()).forEach(e -> {
+                //standard kmeans has equal weights in all numeric features
+                //for categorical, dummy or ordinal feature, use the Gamma Multiplier of Kprototypes
+                double weight = (e.getValue()!=TypeInference.DataType.NUMERICAL)?gammaWeight:1.0;
+                featureWeights.put(e.getKey(), weight);
+            });
         }
         else {
             //calculate weights for the features
@@ -508,47 +506,37 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             
             DatabaseConnector dbc = kb().getDbc();
             
-            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
-                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Double value = TypeInference.toDouble(entry.getValue());
-                    if(value==null || value==0.0) {
-                        continue;
-                    }
-                    
-                    Object feature = entry.getKey();
-                    
-                    if(columnTypes.get(feature)!=TypeInference.DataType.NUMERICAL) {
-                        Double previousValue = tmp_categoricalFrequencies.get(feature);
-                        if(previousValue==null) {
-                            previousValue = 0.0;
+                StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).forEach(e -> {
+                    Double value = TypeInference.toDouble(e.getValue());
+                    if (value!=null && value!=0.0) {
+                        Object feature = e.getKey();
+                        
+                        if(columnTypes.get(feature)!=TypeInference.DataType.NUMERICAL) {
+                            Double previousValue = tmp_categoricalFrequencies.getOrDefault(feature, 0.0);
+                            tmp_categoricalFrequencies.put(feature, previousValue+1.0);
                         }
-                        tmp_categoricalFrequencies.put(feature, previousValue+1.0);
-                    }
-                    else {
-                        Double previousValueSumX = tmp_varianceSumX.get(feature);
-                        Double previousValueSumXsquare = tmp_varianceSumXsquare.get(feature);
-                        if(previousValueSumX==null) {
-                            previousValueSumX = 0.0;
-                            previousValueSumXsquare = 0.0;
+                        else {
+                            Double previousValueSumX = tmp_varianceSumX.getOrDefault(feature, 0.0);
+                            Double previousValueSumXsquare = tmp_varianceSumXsquare.getOrDefault(feature, 0.0);
+                            tmp_varianceSumX.put(feature, previousValueSumX+value);
+                            tmp_varianceSumXsquare.put(feature, previousValueSumXsquare+value*value);
                         }
-                        tmp_varianceSumX.put(feature, previousValueSumX+value);
-                        tmp_varianceSumXsquare.put(feature, previousValueSumXsquare+value*value);
                     }
-                    
-                }
+                });
             }
             
             double gammaWeight = trainingParameters.getCategoricalGamaMultiplier();
             
             //estimate weights
-            for(Map.Entry<Object, TypeInference.DataType> entry : columnTypes.entrySet()) {
-                Object feature = entry.getKey();
-                TypeInference.DataType type = entry.getValue();
+            StreamMethods.stream(columnTypes.entrySet().stream(), isParallelized()).forEach(e -> {
+                Object feature = e.getKey();
+                TypeInference.DataType type = e.getValue();
                 
                 double weight;
                 if(type!=TypeInference.DataType.NUMERICAL) {
@@ -571,7 +559,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 }
                 
                 featureWeights.put(feature, weight);
-            }
+            });
             
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_categoricalFrequencies", tmp_categoricalFrequencies);
@@ -710,30 +698,28 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             DatabaseConnector dbc = kb().getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
-
-                for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                
+                StreamMethods.stream(trainingData.entries(), isParallelized()).forEach(e -> {
                     Integer rId = e.getKey();
                     Record r = e.getValue();
-                    if(alreadyAddedPoints.contains(rId)) {
-                        continue; //ignore points that are already selected
-                    }
-                    
-                    double minClusterDistance = 1.0;
-                    if(clusterList.size()>0) {
-                        minClusterDistance = Double.MAX_VALUE;
-                        for(Cluster c : clusterList.values()) {
-                            double distance = calculateDistance(r, c.getCentroid());
+                    if(alreadyAddedPoints.contains(rId)==false) {
+                        double minClusterDistance = 1.0;
+                        if(clusterList.size()>0) {
+                            minClusterDistance = Double.MAX_VALUE;
+                            for(Cluster c : clusterList.values()) {
+                                double distance = calculateDistance(r, c.getCentroid());
 
-                            if(distance<minClusterDistance) {
-                                minClusterDistance=distance;
+                                if(distance<minClusterDistance) {
+                                    minClusterDistance=distance;
+                                }
                             }
                         }
+
+                        minClusterDistanceArray.put(rId, minClusterDistance);
                     }
-                    
-                    minClusterDistanceArray.put(rId, minClusterDistance);
-                }
+                });
                 
                 Descriptives.normalize(minClusterDistanceArray);
                 Integer selectedRecordId = (Integer)SimpleRandomSampling.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
@@ -763,7 +749,6 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         int maxIterations = trainingParameters.getMaxIterations();
         modelParameters.setTotalIterations(maxIterations);
         
-        AssociativeArray clusterDistances = new AssociativeArray();
         for(int iteration=0;iteration<maxIterations;++iteration) {
             logger.debug("Iteration {}", iteration);
             
@@ -773,10 +758,12 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             }
             
             //assign records in clusters
-            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+            StreamMethods.stream(trainingData.entries(), isParallelized()).forEach(e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
+                
                 //we are storing cluster references not clusterIds
+                AssociativeArray clusterDistances = new AssociativeArray();
                 for(Cluster c : clusterList.values()) {
                     clusterDistances.put(c, calculateDistance(r, c.getCentroid()));
                 }
@@ -785,11 +772,10 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 Cluster selectedCluster = (Cluster)getSelectedClusterFromDistances(clusterDistances);
                 
                 //add the record in the cluster
-                selectedCluster.add(rId, r);
-                
-                //clear the distances
-                clusterDistances.clear();
-            }
+                synchronized(selectedCluster) {
+                    selectedCluster.add(rId, r);
+                }
+            });
             
             //update clusters
             boolean changed=false;

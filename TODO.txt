@@ -3,8 +3,8 @@ CODE IMPROVEMENTS
 
 - Add multithreading support on the training for the following models: 
     - HierarchicalAgglomerative
-    - Kmeans
 - Adding custom executors in parallelstreams so that they don't block? http://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
+- Control number of threads. Build a more general configuration mechanism.
 - Profiling & benchmarking.
 
 - Update all maven plugins and dependencies to their latest versions.
