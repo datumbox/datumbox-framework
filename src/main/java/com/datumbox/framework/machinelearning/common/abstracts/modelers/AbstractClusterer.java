@@ -198,6 +198,24 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         //number of classes if the dataset is annotated. Use Linked Hash Set to ensure that the order of classes will be maintained. 
         private Set<Object> goldStandardClasses = new LinkedHashSet<>();
         
+        /**
+         * It stores in-memory the list of clusters.
+         * 
+         * The clusters need to stay in memory and not on a BigMap for various reasons: 
+         * 1. the analysis is dependent on them and we need quick retrieval.
+         * 2. the Cluster objects contain transient fields that can't be serialized. If filebacked-maps are used those fields will not be stored.
+         * 3. the entire code base assumes they are in memory, so when we modify them we don't set them back to the map.
+         * 
+         * The first point can be fixed easily with LRU caching. Unfortunately the
+         * points 2 & 3 require the entire codebase of clustering algorithms to be
+         * rewritten.
+         * 
+         * This limitation of not being unable to store the clusters in BigMaps
+         * causes problems to Clustering algorithms which on their initial step 
+         * they set 1 cluster for every Record on the dataset. This will cause
+         * too much data to be loaded in memory.
+         * 
+         */
         private Map<Integer, CL> clusterList = new HashMap<>(); //the cluster objects of the model
 
         /** 

@@ -31,6 +31,7 @@ import com.datumbox.framework.machinelearning.common.interfaces.PredictParalleli
 
 
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -55,7 +56,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> implements PredictParallelizable {
+public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParameters, Kmeans.TrainingParameters, Kmeans.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
 
     /** {@inheritDoc} */
     public static class Cluster extends AbstractClusterer.AbstractCluster {
