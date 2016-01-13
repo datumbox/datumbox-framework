@@ -369,7 +369,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      */
     private int collapsedGibbsSampling(Dataframe dataset) {
         AbstractModelParameters modelParameters = kb().getModelParameters();
-        Map<Integer, CL> tempClusterMap = new HashMap<>(modelParameters.getClusterList());
+        Map<Integer, CL> tempClusterMap = new HashMap<>(modelParameters.getClusterList()); //This variable is also on memory and faces the same problem as clusterList
         AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double alpha = trainingParameters.getAlpha();

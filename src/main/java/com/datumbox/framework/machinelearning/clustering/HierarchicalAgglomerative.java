@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -26,6 +27,7 @@ import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
 
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.mathematics.distances.Distance;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -46,7 +48,7 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> implements PredictParallelizable {
+public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
 
     /** {@inheritDoc} */
     public static class Cluster extends AbstractClusterer.AbstractCluster {
@@ -409,8 +411,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         
         DatabaseConnector dbc = kb().getDbc();
 
-        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -429,7 +431,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         }
         
         //calculate distance table and minimum distances
-        for(Map.Entry<Integer, Cluster> entry1 : clusterList.entrySet()) {
+        StreamMethods.stream(clusterList.entrySet().stream(), isParallelized()).forEach(entry1 -> {
             Integer clusterId1 = entry1.getKey();
             Cluster c1 = entry1.getValue();
             
@@ -450,7 +452,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
                     tmp_minClusterDistanceId.put(clusterId1, clusterId2);
                 }
             }
-        }
+        });
         
         //merging process
         boolean continueMerging = true;
@@ -529,66 +531,64 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         
         //update the distances with the merged cluster
         TrainingParameters.Linkage linkageMethod = trainingParameters.getLinkageMethod();
-        for(Map.Entry<Integer, Cluster> entry : clusterList.entrySet()) {
+        StreamMethods.stream(clusterList.entrySet().stream(), isParallelized()).forEach(entry -> {
+        
             //Integer clusterId = entry.getKey();
             Cluster ci = entry.getValue();
-            if(ci.isActive()==false) {
-                continue; //skip inactive clusters
-            }
+            if(ci.isActive()) { //skip inactive clusters
             
-            double distance;
-            if(Objects.equals(c1.getClusterId(), ci.getClusterId())) {
-                distance = Double.MAX_VALUE;
-            }
-            else if(linkageMethod==TrainingParameters.Linkage.SINGLE) {
-                double c1ciDistance = distanceArray.get(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()));
-                double c2ciDistance = distanceArray.get(Arrays.<Object>asList(c2.getClusterId(), ci.getClusterId()));
-                distance = Math.min(c1ciDistance, c2ciDistance);
-            }
-            else if(linkageMethod==TrainingParameters.Linkage.COMPLETE) {
-                double c1ciDistance = distanceArray.get(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()));
-                double c2ciDistance = distanceArray.get(Arrays.<Object>asList(c2.getClusterId(), ci.getClusterId()));
-                distance = Math.max(c1ciDistance, c2ciDistance);
-            }
-            else if(linkageMethod==TrainingParameters.Linkage.AVERAGE) {
-                double c1ciDistance = distanceArray.get(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()));
-                double c2ciDistance = distanceArray.get(Arrays.<Object>asList(c2.getClusterId(), ci.getClusterId()));
-                distance = (c1ciDistance*c1Size + c2ciDistance*c2Size)/(c1Size+c2Size);
-            }
-            else {
-                distance = calculateDistance(c1.getCentroid(), ci.getCentroid());
-            }
-            
-            distanceArray.put(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()), distance);
-            distanceArray.put(Arrays.<Object>asList(ci.getClusterId(), c1.getClusterId()), distance);
-        }
-        
-        //update minimum distance ids 
-        for(Map.Entry<Integer, Cluster> entry1 : clusterList.entrySet()) {
-            Integer id1 = entry1.getKey();
-            if(entry1.getValue().isActive()==false) {
-                continue; //skip inactive clusters
-            }
-            
-            Integer minDistanceId = minClusterDistanceId.get(id1);
-            
-            if(Objects.equals(minDistanceId, c1.getClusterId()) || Objects.equals(minDistanceId, c2.getClusterId())) {
-                Integer newMinDistanceId = id1;
-                
-                for(Map.Entry<Integer, Cluster> entry2 : clusterList.entrySet()) {
-                    Integer id2 = entry2.getKey();
-                    if(entry2.getValue().isActive()==false) {
-                        continue; //skip inactive clusters
-                    }
-            
-                    if(distanceArray.get(Arrays.<Object>asList(id1, id2)) < distanceArray.get(Arrays.<Object>asList(id1, newMinDistanceId)) ){
-                        newMinDistanceId = id2;
-                    }
+                double distance;
+                if(Objects.equals(c1.getClusterId(), ci.getClusterId())) {
+                    distance = Double.MAX_VALUE;
                 }
-                
-                minClusterDistanceId.put(id1, newMinDistanceId);
+                else if(linkageMethod==TrainingParameters.Linkage.SINGLE) {
+                    double c1ciDistance = distanceArray.get(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()));
+                    double c2ciDistance = distanceArray.get(Arrays.<Object>asList(c2.getClusterId(), ci.getClusterId()));
+                    distance = Math.min(c1ciDistance, c2ciDistance);
+                }
+                else if(linkageMethod==TrainingParameters.Linkage.COMPLETE) {
+                    double c1ciDistance = distanceArray.get(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()));
+                    double c2ciDistance = distanceArray.get(Arrays.<Object>asList(c2.getClusterId(), ci.getClusterId()));
+                    distance = Math.max(c1ciDistance, c2ciDistance);
+                }
+                else if(linkageMethod==TrainingParameters.Linkage.AVERAGE) {
+                    double c1ciDistance = distanceArray.get(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()));
+                    double c2ciDistance = distanceArray.get(Arrays.<Object>asList(c2.getClusterId(), ci.getClusterId()));
+                    distance = (c1ciDistance*c1Size + c2ciDistance*c2Size)/(c1Size+c2Size);
+                }
+                else {
+                    distance = calculateDistance(c1.getCentroid(), ci.getCentroid());
+                }
+
+                distanceArray.put(Arrays.<Object>asList(c1.getClusterId(), ci.getClusterId()), distance);
+                distanceArray.put(Arrays.<Object>asList(ci.getClusterId(), c1.getClusterId()), distance);
             }
-        }
+        });
+        
+        //update minimum distance ids
+        StreamMethods.stream(clusterList.entrySet().stream(), isParallelized()).forEach(entry1 -> {
+            
+            Integer id1 = entry1.getKey();
+            if (entry1.getValue().isActive()) { //skip inactive clusters
+                Integer minDistanceId = minClusterDistanceId.get(id1);
+                if (Objects.equals(minDistanceId, c1.getClusterId()) || Objects.equals(minDistanceId, c2.getClusterId())) {
+                    Integer newMinDistanceId = id1;
+                    
+                    for(Map.Entry<Integer, Cluster> entry2 : clusterList.entrySet()) {
+                        Integer id2 = entry2.getKey();
+                        if(entry2.getValue().isActive()==false) {
+                            continue; //skip inactive clusters
+                        }
+                        
+                        if(distanceArray.get(Arrays.<Object>asList(id1, id2)) < distanceArray.get(Arrays.<Object>asList(id1, newMinDistanceId)) ){
+                            newMinDistanceId = id2;
+                        }
+                    }
+                    
+                    minClusterDistanceId.put(id1, newMinDistanceId);
+                }
+            }
+        });
         
         
         return true;

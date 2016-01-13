@@ -67,6 +67,7 @@ Version 0.7.0-SNAPSHOT - Build 20160113
 - Created a basic feature switching component for the framework.
 - Removed the DOUBLE_ACCURACY_LOW property from the tests since it is no longer used and increased the accuracy of DOUBLE_ACCURACY_MEDIUM.
 - Added a skip/limit option on the Dataframe.Builder.parseCSVFile().
+- Added multithreading support on the training for many ML models.
 
 Version 0.6.1 - Build 20160102
 ------------------------------
