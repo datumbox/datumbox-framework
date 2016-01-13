@@ -26,6 +26,7 @@ import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable;
+import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 
 
 import java.util.Map;
@@ -42,7 +43,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> implements PredictParallelizable {
+public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
      
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractLinearRegression.AbstractModelParameters {

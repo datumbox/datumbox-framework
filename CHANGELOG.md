@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160112
+Version 0.7.0-SNAPSHOT - Build 20160113
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -67,7 +67,6 @@ Version 0.7.0-SNAPSHOT - Build 20160112
 - Created a basic feature switching component for the framework.
 - Removed the DOUBLE_ACCURACY_LOW property from the tests since it is no longer used and increased the accuracy of DOUBLE_ACCURACY_MEDIUM.
 - Added a skip/limit option on the Dataframe.Builder.parseCSVFile().
-
 
 Version 0.6.1 - Build 20160102
 ------------------------------
