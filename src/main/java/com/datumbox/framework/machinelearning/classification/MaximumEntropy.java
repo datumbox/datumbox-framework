@@ -368,15 +368,17 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                 Double minimumNonInfiniteLambdaWeight = StreamMethods.stream(lambdas.values().stream(), isParallelized()).filter(v -> Double.isFinite(v)).min(Double::compare).get();
                 Double maximumNonInfiniteLambdaWeight = StreamMethods.stream(lambdas.values().stream(), isParallelized()).filter(v -> Double.isFinite(v)).max(Double::compare).get();
                 
-                StreamMethods.stream(lambdas.entrySet().stream(), isParallelized()).filter(e -> Double.isInfinite(e.getValue())).forEach(e -> {
+                StreamMethods.stream(lambdas.entrySet().stream(), isParallelized()).forEach(e -> {
                     List<Object> featureClass = e.getKey();
                     Double value = e.getValue();
                     
-                    if(value<0.0) { //value==Double.NEGATIVE_INFINITY
-                        lambdas.put(featureClass, minimumNonInfiniteLambdaWeight);
-                    }
-                    else { //value==Double.POSITIVE_INFINITY
-                        lambdas.put(featureClass, maximumNonInfiniteLambdaWeight);
+                    if(Double.isInfinite(value)) {
+                        if(value<0.0) { //value==Double.NEGATIVE_INFINITY
+                            lambdas.put(featureClass, minimumNonInfiniteLambdaWeight);
+                        }
+                        else { //value==Double.POSITIVE_INFINITY
+                            lambdas.put(featureClass, maximumNonInfiniteLambdaWeight);
+                        }
                     }
                 });
             }

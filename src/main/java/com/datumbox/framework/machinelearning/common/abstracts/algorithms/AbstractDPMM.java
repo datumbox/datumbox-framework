@@ -525,10 +525,10 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         //copy the values in the map and update the cluster ids
         Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
-        newClusterId = clusterMap.size();
+        int cid = clusterMap.size();
         for(CL cluster : tempClusterMap.values()) {
-            clusterMap.put(newClusterId, (CL) cluster.copy2new(newClusterId));
-            newClusterId++;
+            clusterMap.put(cid, (CL) cluster.copy2new(cid));
+            cid++;
         }
         kb().getDbc().dropBigMap("tmp_tempClusterMap", tempClusterMap);
         

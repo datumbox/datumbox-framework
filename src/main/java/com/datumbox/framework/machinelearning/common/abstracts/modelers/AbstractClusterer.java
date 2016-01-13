@@ -179,6 +179,9 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
          * @return 
          */
         public Integer getC() {
+            if(clusterMap == null) {
+                return 0;
+            }
             return clusterMap.size();
         }
         

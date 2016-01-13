@@ -262,13 +262,14 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
             mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(size) ).mapDivide(kappa_n);
             
-            covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
+            synchronized(this) {
+                covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
+                cache_covariance_determinant = null;
+                cache_covariance_inverse = null;
+            }
             
             meanError = calculateMeanError(psi, kappa_n, nu);
             meanDf = nu-dimensions+1;
-            
-            cache_covariance_determinant = null;
-            cache_covariance_inverse = null;
         }
         
         /** {@inheritDoc} */

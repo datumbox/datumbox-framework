@@ -15,8 +15,11 @@
  */
 package com.datumbox.common.concurrency;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -59,4 +62,20 @@ public class ThreadMethods {
         }
     }
     
+    /**
+     * Alternative to parallelStreams() which executes the tasks in a separate
+     * pool.
+     * 
+     * @param <T>
+     * @param callable 
+     * @return  
+     */
+    public static <T> T forkJoinExecution(Callable<T> callable) {
+        try {
+            return new ForkJoinPool().submit(callable).get();
+        } 
+        catch (InterruptedException | ExecutionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }
