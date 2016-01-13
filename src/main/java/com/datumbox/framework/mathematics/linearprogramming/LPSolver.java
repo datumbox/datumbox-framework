@@ -62,7 +62,7 @@ public class LPSolver {
          * 
          * @param objectiveValue 
          */
-        public void setObjectiveValue(Double objectiveValue) {
+        protected void setObjectiveValue(Double objectiveValue) {
             this.objectiveValue = objectiveValue;
         }
         
@@ -80,7 +80,7 @@ public class LPSolver {
          * 
          * @param variableValues 
          */
-        public void setVariableValues(double[] variableValues) {
+        protected void setVariableValues(double[] variableValues) {
             this.variableValues = PHPMethods.array_clone(variableValues);
         }
 
@@ -98,7 +98,7 @@ public class LPSolver {
          * 
          * @param dualSolution 
          */
-        public void setDualSolution(double[] dualSolution) {
+        protected void setDualSolution(double[] dualSolution) {
             this.dualSolution = PHPMethods.array_clone(dualSolution);
         }
     }

@@ -68,6 +68,8 @@ Version 0.7.0-SNAPSHOT - Build 20160113
 - Removed the DOUBLE_ACCURACY_LOW property from the tests since it is no longer used and increased the accuracy of DOUBLE_ACCURACY_MEDIUM.
 - Added a skip/limit option on the Dataframe.Builder.parseCSVFile().
 - Added multithreading support on the training for many ML models.
+- Fixed the limitation on the clustering algorithms which forced us to store the clusters in memory.
+- Forced the headerDataTypes parameter of Dataframe.Builder.parseCSVFile() to be a LinkedHashMap.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

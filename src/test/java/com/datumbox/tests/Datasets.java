@@ -26,8 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Random;
 
 
@@ -76,7 +75,7 @@ public class Datasets {
         */
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/carsNumeric.csv"), "UTF-8")) {
-            Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("red", TypeInference.DataType.BOOLEAN);
             headerDataTypes.put("yellow", TypeInference.DataType.BOOLEAN);
             headerDataTypes.put("sports", TypeInference.DataType.BOOLEAN);
@@ -122,7 +121,7 @@ public class Datasets {
         */
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/carsCategorical.csv"), "UTF-8")) {
-            Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("color", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("type", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("origin", TypeInference.DataType.CATEGORICAL);
@@ -154,7 +153,7 @@ public class Datasets {
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/winesOrdinal.csv"), "UTF-8")) {
-            Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("c1", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("c3", TypeInference.DataType.NUMERICAL);
@@ -195,7 +194,7 @@ public class Datasets {
      */
     public static Dataframe[] gaussianClusters(DatabaseConfiguration dbConf) {
         Dataframe trainingData = new Dataframe(dbConf);
-        int observationsPerCluster = 5;
+        int observationsPerCluster = 50;
         Random rnd = RandomGenerator.getThreadLocalRandom();
         for(int i=0;i<observationsPerCluster;++i) {
             trainingData.add(Datasets.<Object>newDataVector(new Object[] {rnd.nextGaussian(),rnd.nextGaussian()}, "c1"));
@@ -226,11 +225,38 @@ public class Datasets {
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 0.0,0.0,0.0,2.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 0.0,0.0,0.0,2.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 0.0,0.0,0.0,2.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 0.0,0.0,0.0,2.0}, "c1"));
         //cluster 2
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 0.0,0.0,0.0,0.0, 5.0,6.0,5.0,4.0}, "c2"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 0.0,0.0,1.0,0.0, 6.0,7.0,7.0,3.0}, "c2"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 0.0,0.0,0.0,2.0, 10.0,16.0,4.0,6.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 0.0,0.0,0.0,0.0, 5.0,6.0,5.0,4.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 0.0,0.0,1.0,0.0, 6.0,7.0,7.0,3.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 0.0,0.0,0.0,2.0, 10.0,16.0,4.0,6.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 0.0,0.0,0.0,0.0, 5.0,6.0,5.0,4.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 0.0,0.0,1.0,0.0, 6.0,7.0,7.0,3.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 0.0,0.0,0.0,2.0, 10.0,16.0,4.0,6.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 0.0,0.0,0.0,0.0, 5.0,6.0,5.0,4.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 0.0,0.0,1.0,0.0, 6.0,7.0,7.0,3.0}, "c2"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 0.0,0.0,0.0,2.0, 10.0,16.0,4.0,6.0}, "c2"));
         //cluster 3
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 5.0,6.0,5.0,4.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 6.0,7.0,7.0,3.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 10.0,16.0,4.0,6.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 5.0,6.0,5.0,4.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 6.0,7.0,7.0,3.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 10.0,16.0,4.0,6.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 5.0,6.0,5.0,4.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 6.0,7.0,7.0,3.0}, "c3"));
+        trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 10.0,16.0,4.0,6.0}, "c3"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 5.0,6.0,5.0,4.0}, "c3"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 6.0,7.0,7.0,3.0}, "c3"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {12.0,12.0, 10.0,16.0,4.0,6.0, 10.0,16.0,4.0,6.0}, "c3"));
@@ -252,7 +278,7 @@ public class Datasets {
         //http://www.sgi.com/tech/mlc/db/heart.names
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/heart.csv"), "UTF-8")) {
-            Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("Age", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("Sex", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("ChestPain", TypeInference.DataType.ORDINAL); 
@@ -590,7 +616,7 @@ public class Datasets {
         */
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionNumeric.csv"), "UTF-8")) {
-            Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("c1", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
@@ -624,50 +650,22 @@ public class Datasets {
         $y=2+10*$x1+0.002*$x2+30*$x3+10*$x4;
         $dataTable[]=array(array((string)$x1,$x2,$x3,(string)$x4),null);
         */
-        Dataframe trainingData = new Dataframe(dbConf);
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        trainingData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
+        Dataframe trainingData;
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionMixed.csv"), "UTF-8")) {
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
+            headerDataTypes.put("c1", TypeInference.DataType.CATEGORICAL);
+            headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("c3", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("c4", TypeInference.DataType.CATEGORICAL);
+            headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
+            
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+        }
+        catch(IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
         
-        
-        Dataframe validationData = new Dataframe(dbConf);
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)49,(Double)4.5,(String)"0"}, (Double)167.098));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)2.9,(String)"0"}, (Double)99.092));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)46,(Double)1.9,(String)"2"}, (Double)89.092));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)40,(Double)1.7,(String)"3"}, (Double)103.08));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)45,(Double)2.1,(String)"0"}, (Double)95.09));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)3.8,(String)"1"}, (Double)136.082));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)47,(Double)5.0,(String)"3"}, (Double)202.094));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"1",(Integer)41,(Double)2.0,(String)"4"}, (Double)112.082));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"3",(Integer)40,(Double)0.9,(String)"0"}, (Double)59.08));
-        validationData.add(Datasets.<Object>newDataVector(new Object[] {(String)"2",(Integer)46,(Double)1.2,(String)"4"}, (Double)98.092));
+        Dataframe validationData = trainingData.copy();
         
         return new Dataframe[] {trainingData, validationData};
     }

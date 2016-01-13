@@ -34,7 +34,6 @@ import com.datumbox.framework.machinelearning.common.interfaces.TrainParalleliza
 import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SimpleRandomSampling;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -70,6 +69,16 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         protected AbstractCluster(Integer clusterId) {
             super(clusterId);
         }
+        
+        /**
+         * @param clusterId
+         * @param copy 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster) 
+         */
+        protected AbstractCluster(Integer clusterId, AbstractCluster copy) {
+            super(clusterId, copy);
+            featureIds = copy.featureIds;
+        }
 
         /**
          * Getter for the featureIds which is a mapping between the column names
@@ -88,15 +97,6 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         protected abstract void setFeatureIds(Map<Object, Integer> featureIds);
         
         /**
-         * Setter for the AbstractCluster id.
-         * 
-         * @param clusterId 
-         */
-        protected void setClusterId(Integer clusterId) {
-            this.clusterId = clusterId;
-        }
-        
-        /**
          * Updates the cluster parameters by using the assigned points.
          */
         protected abstract void updateClusterParameters();
@@ -112,11 +112,19 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         /** {@inheritDoc} */
         @Override
-        protected abstract boolean add(Integer rId, Record r);
+        protected abstract void add(Record r);
         
         /** {@inheritDoc} */
         @Override
-        protected abstract boolean remove(Integer rId, Record r);
+        protected abstract void remove(Record r);
+        
+        /**
+         * Produces a shallow copy of the cluster with a newClusterId.
+         * 
+         * @param newClusterId
+         * @return 
+         */
+        protected abstract AbstractCluster copy2new(Integer newClusterId);
     }
     
     /** 
@@ -152,7 +160,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
          * 
          * @param totalIterations 
          */
-        public void setTotalIterations(int totalIterations) {
+        protected void setTotalIterations(int totalIterations) {
             this.totalIterations = totalIterations;
         }
 
@@ -172,24 +180,10 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
          * 
          * @param featureIds 
          */
-        public void setFeatureIds(Map<Object, Integer> featureIds) {
+        protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
-       
-        /** {@inheritDoc} */
-        @Override
-        public Map<Integer, CL> getClusterList() {
-            Map<Integer, CL> clusterList = super.getClusterList();
-            
-            //overrides the method in order to ensure that the featureIds parameters are loaded in the clusters
-            for(CL c : clusterList.values()) {
-                if(c.getFeatureIds()==null) {
-                    c.setFeatureIds(getFeatureIds());
-                }
-            }
-            
-            return clusterList;
-        } 
+        
     }
     
     /** {@inheritDoc} */
@@ -316,12 +310,13 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     @Override
     public Prediction _predictRecord(Record r) {
         AbstractModelParameters modelParameters = kb().getModelParameters();
-        Map<Integer, AbstractCluster> clusterList = modelParameters.getClusterList();
+        Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
         
         AssociativeArray clusterScores = new AssociativeArray();
-        for(AbstractCluster c : clusterList.values()) {
+        for(Integer clusterId : clusterMap.keySet()) {
+            CL c = getFromClusterMap(clusterId, clusterMap);
             double probability = c.posteriorLogPdf(r);
-            clusterScores.put(c.getClusterId(), probability);
+            clusterScores.put(clusterId, probability);
         }
         
         Descriptives.normalizeExp(clusterScores);
@@ -359,6 +354,26 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         //set the actual iterations performed
         modelParameters.setTotalIterations(totalIterations);
         
+        clearClusters();
+    }
+    
+    /**
+     * Always use this method to get the cluster from the clusterMap because it 
+     * ensures that the featureIds are set.
+     * The featureIds can be unset if we use a data structure which stores
+     * stuff in file. Since the featureIds field of cluster is transient, the
+     * information gets lost. This function ensures that it sets it back.
+     * 
+     * @param clusterId
+     * @param clusterMap
+     * @return 
+     */
+    private CL getFromClusterMap(int clusterId, Map<Integer, CL> clusterMap) {
+        CL c = clusterMap.get(clusterId);
+        if(c.getFeatureIds() == null) {
+            c.setFeatureIds(kb().getModelParameters().getFeatureIds()); //fetch the featureIds from model parameters object
+        }
+        return c;
     }
     
     /**
@@ -369,7 +384,9 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      */
     private int collapsedGibbsSampling(Dataframe dataset) {
         AbstractModelParameters modelParameters = kb().getModelParameters();
-        Map<Integer, CL> tempClusterMap = new HashMap<>(modelParameters.getClusterList()); //This variable is also on memory and faces the same problem as clusterList
+        
+        Map<Integer, CL> tempClusterMap = kb().getDbc().getBigMap("tmp_tempClusterMap", MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        tempClusterMap.putAll(modelParameters.getClusterMap());
         AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double alpha = trainingParameters.getAlpha();
@@ -381,17 +398,15 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
             for(Map.Entry<Integer, Record> e : dataset.entries()) {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
+                
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
+                cluster.add(r);
+                tempClusterMap.put(newClusterId, cluster);
 
                 //add the record in the new cluster
                 r = new Record(r.getX(), r.getY(), newClusterId, r.getYPredictedProbabilities());
                 dataset._unsafe_set(rId, r);
-                
-                cluster.add(rId, r);
-
-                //add the cluster in clusterList
-                tempClusterMap.put(newClusterId, cluster);
 
                 ++newClusterId;
             }            
@@ -406,8 +421,6 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
             for(int i=0;i<numberOfNewClusters;++i) {
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
-                
-                //add the cluster in clusterList
                 tempClusterMap.put(newClusterId, cluster);
 
                 ++newClusterId;
@@ -418,12 +431,14 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 
-                int assignedClusterId = PHPMethods.mt_rand(0, clusterMapSize-1);
+                Integer assignedClusterId = PHPMethods.mt_rand(0, clusterMapSize-1);
                 
                 r = new Record(r.getX(), r.getY(), assignedClusterId, r.getYPredictedProbabilities());
                 dataset._unsafe_set(rId, r);
                 
-                tempClusterMap.get((Integer)assignedClusterId).add(rId, r);
+                CL c = getFromClusterMap(assignedClusterId, tempClusterMap);
+                c.add(r);
+                tempClusterMap.put(assignedClusterId, c);
             }
         }
 
@@ -444,14 +459,17 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                 Record r = e.getValue();
                 
                 Integer pointClusterId = (Integer) r.getYPredicted();
-                CL ci = tempClusterMap.get(pointClusterId);
+                CL ci = getFromClusterMap(pointClusterId, tempClusterMap);
                 
                 //remove the point from the cluster
-                ci.remove(rId, r);
+                ci.remove(r);
                 
                 //if empty cluster remove it
                 if(ci.size()==0) {
                     tempClusterMap.remove(pointClusterId);
+                }
+                else {
+                    tempClusterMap.put(pointClusterId, ci);
                 }
                 
                 AssociativeArray condProbCiGivenXiAndOtherCi = clusterProbabilities(r, n, tempClusterMap);
@@ -480,9 +498,8 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                     r = new Record(r.getX(), r.getY(), newClusterId, r.getYPredictedProbabilities());
                     dataset._unsafe_set(rId, r);
                     
-                    cNew.add(rId, r);
+                    cNew.add(r);
                     
-                    //add the cluster in clusterList
                     tempClusterMap.put(newClusterId, cNew);
                     
                     noChangeMade=false;
@@ -496,7 +513,9 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                         noChangeMade=false;
                     }
                     
-                    tempClusterMap.get(sampledClusterId).add(rId, r); //add it to the cluster (or just add it back)
+                    CL c = getFromClusterMap(sampledClusterId, tempClusterMap);
+                    c.add(r); //add it to the cluster (or just add it back)
+                    tempClusterMap.put(sampledClusterId, c);
                 }
                 
             }
@@ -505,14 +524,13 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         }
         
         //copy the values in the map and update the cluster ids
-        Map<Integer, CL> clusterList = modelParameters.getClusterList();
-        newClusterId = clusterList.size();
+        Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
+        newClusterId = clusterMap.size();
         for(CL cluster : tempClusterMap.values()) {
-            cluster.setClusterId(newClusterId);
-            clusterList.put(newClusterId, cluster);
-            ++newClusterId;
+            clusterMap.put(newClusterId, (CL) cluster.copy2new(newClusterId));
+            newClusterId++;
         }
-        //tempClusterMap = null;
+        kb().getDbc().dropBigMap("tmp_tempClusterMap", tempClusterMap);
         
         return iteration;
     }
@@ -523,14 +541,15 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
         //Calculate the probabilities of assigning the point for every cluster
-        StreamMethods.stream(clusterMap.values().stream(), isParallelized()).forEach(ck -> {
+        StreamMethods.stream(clusterMap.keySet().stream(), isParallelized()).forEach(clusterId -> {
+            AbstractCluster ck = getFromClusterMap(clusterId, clusterMap);
             //compute P_k(X[i]) = P(X[i] | X[-i] = k)
             double marginalLogLikelihoodXi = ck.posteriorLogPdf(r);
             //set N_{k,-i} = dim({X[-i] = k})
             //compute P(z[i] = k | z[-i], Data) = N_{k,-i}/(a+N-1)
             double mixingXi = ck.size()/(alpha+n-1.0);
             
-            condProbCiGivenXiAndOtherCi.put(ck.getClusterId(), marginalLogLikelihoodXi+Math.log(mixingXi)); //concurrent map and non-overlapping keys for each thread
+            condProbCiGivenXiAndOtherCi.put(clusterId, marginalLogLikelihoodXi+Math.log(mixingXi)); //concurrent map and non-overlapping keys for each thread
         });
         
         return new AssociativeArray(condProbCiGivenXiAndOtherCi);

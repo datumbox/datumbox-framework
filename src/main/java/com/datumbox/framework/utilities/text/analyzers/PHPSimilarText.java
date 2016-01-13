@@ -31,27 +31,27 @@ public class PHPSimilarText {
         private int pos2=0;
         private int max=0;
 
-        public int getPos1() {
+        protected int getPos1() {
             return pos1;
         }
 
-        public void setPos1(int pos1) {
+        protected void setPos1(int pos1) {
             this.pos1 = pos1;
         }
 
-        public int getPos2() {
+        protected int getPos2() {
             return pos2;
         }
 
-        public void setPos2(int pos2) {
+        protected void setPos2(int pos2) {
             this.pos2 = pos2;
         }
 
-        public int getMax() {
+        protected int getMax() {
             return max;
         }
 
-        public void setMax(int max) {
+        protected void setMax(int max) {
             this.max = max;
         }
     }

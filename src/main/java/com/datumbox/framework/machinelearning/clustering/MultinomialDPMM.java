@@ -74,6 +74,19 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             wordcounts_plusalpha = estimateWordCountsPlusAlpha();
         }
         
+        /**
+         * @param clusterId
+         * @param copy 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
+         */
+        protected Cluster(Integer clusterId, Cluster copy) {
+            super(clusterId, copy);
+            dimensions = copy.dimensions;
+            alphaWords = copy.alphaWords; 
+            wordCounts = copy.wordCounts;
+            wordcounts_plusalpha = copy.wordcounts_plusalpha;
+        }
+        
         /** {@inheritDoc} */
         @Override
         protected double posteriorLogPdf(Record r) {
@@ -100,13 +113,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
 
         /** {@inheritDoc} */
         @Override
-        protected boolean add(Integer rId, Record r) {
-            int size= recordIdSet.size();
-            
-            if(recordIdSet.add(rId)==false) {
-                return false;
-            }
-            
+        protected void add(Record r) {
             RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
@@ -117,20 +124,15 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
                 wordCounts=wordCounts.add(rv);
             }
             
-            updateClusterParameters();
+            size++;
             
-            return true;
+            updateClusterParameters();
         }
         
         /** {@inheritDoc} */
         @Override
-        protected boolean remove(Integer rId, Record r) {
-            if(wordCounts==null) {
-                return false; //The cluster is empty or uninitialized.
-            }
-            if(recordIdSet.remove(rId)==false) {
-                return false;
-            }
+        protected void remove(Record r) {
+            size--;
             
             RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
@@ -138,14 +140,24 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             wordCounts=wordCounts.subtract(rv);
             
             updateClusterParameters();
-            
-            return true;
         }
         
         /** {@inheritDoc} */
         @Override
         protected void updateClusterParameters() {
             wordcounts_plusalpha = estimateWordCountsPlusAlpha();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void clear() {
+            
+        }
+        
+        /** {@inheritDoc} */
+        @Override
+        protected Cluster copy2new(Integer newClusterId) {
+            return new Cluster(newClusterId, this);
         }
         
         /**
@@ -247,7 +259,6 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         ModelParameters modelParameters = kb().getModelParameters();
         TrainingParameters trainingParameters = kb().getTrainingParameters();
         Cluster c = new Cluster(clusterId, modelParameters.getD(), trainingParameters.getAlphaWords());
-        
         c.setFeatureIds(modelParameters.getFeatureIds());
         
         return c;

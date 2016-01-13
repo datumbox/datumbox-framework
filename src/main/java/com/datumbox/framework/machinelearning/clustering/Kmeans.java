@@ -64,7 +64,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         private Record centroid;
         
-        private final transient AssociativeArray xi_sum;
+        private final AssociativeArray xi_sum;
         
         /** 
          * @param clusterId
@@ -74,6 +74,17 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             super(clusterId);
             centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
+        }
+        
+        /**
+         * @param clusterId
+         * @param copy 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
+         */
+        protected Cluster(Integer clusterId, Cluster copy) {
+            super(clusterId, copy);
+            centroid = copy.centroid;
+            xi_sum = copy.xi_sum;
         }
         
         /**
@@ -93,10 +104,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         protected boolean updateClusterParameters() {
             boolean changed=false;
             
-            int size = recordIdSet.size();
-            
-            AssociativeArray centoidValues = new AssociativeArray();
-            centoidValues.addValues(xi_sum);
+            AssociativeArray centoidValues = xi_sum.copy();
             
             if(size>0) {
                 centoidValues.multiplyValues(1.0/size);
@@ -111,25 +119,31 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
 
         /** {@inheritDoc} */
         @Override
-        protected boolean add(Integer rId, Record r) {
-            boolean result = recordIdSet.add(rId);
-            if(result) {
-                xi_sum.addValues(r.getX());
-            }
-            return result;
+        protected void add(Record r) {
+            size++;
+            xi_sum.addValues(r.getX());
         }
         
         /** {@inheritDoc} */
         @Override
-        protected boolean remove(Integer rId, Record r) {
+        protected void remove(Record r) {
             throw new UnsupportedOperationException("Remove operation is not supported.");
         }
                 
         /** {@inheritDoc} */
         @Override
         protected void clear() {
-            super.clear();
             xi_sum.clear();
+        }
+        
+        /**
+         * Resets the cluster while keeping the centroid the same. This is a 
+         * method required by the implementation of Kmeans and it should not 
+         * be linked to the clear() method.
+         */
+        protected void reset() {
+            xi_sum.clear();
+            size = 0;
         }
     }
     
@@ -439,12 +453,14 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     @Override
     public Prediction _predictRecord(Record r) {
         ModelParameters modelParameters = kb().getModelParameters();
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
+        Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
         AssociativeArray clusterDistances = new AssociativeArray();
-        for(Cluster c : clusterList.values()) {
+        for(Map.Entry<Integer, Cluster> e : clusterMap.entrySet()) {
+            Integer clusterId = e.getKey();
+            Cluster c= e.getValue();
             double distance = calculateDistance(r, c.getCentroid());
-            clusterDistances.put(c.getClusterId(), distance);
+            clusterDistances.put(clusterId, distance);
         }
 
         Descriptives.normalize(clusterDistances);
@@ -476,6 +492,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         //calculate clusters
         calculateClusters(trainingData);
         
+        clearClusters();
     }
     
     /**
@@ -602,21 +619,19 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         int k = trainingParameters.getK();
         TrainingParameters.Initialization initializationMethod = trainingParameters.getInitializationMethod();
         
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
+        Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         if(initializationMethod==TrainingParameters.Initialization.SET_FIRST_K || 
            initializationMethod==TrainingParameters.Initialization.FORGY) {
             int i = 0;
-            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
-                Integer rId = e.getKey();
-                Record r = e.getValue();
+            for(Record r : trainingData.values()) {
                 if(i>=k) {
                     break;
                 } 
                 Integer clusterId= i;
                 Cluster c = new Cluster(clusterId);
-                c.add(rId, r);
+                c.add(r);
                 c.updateClusterParameters();
-                clusterList.put(clusterId, c);
+                clusterMap.put(clusterId, c);
                 
                 ++i;
             }
@@ -624,23 +639,24 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         else if(initializationMethod==TrainingParameters.Initialization.RANDOM_PARTITION) {
             int i = 0;
             
-            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
-                Integer rId = e.getKey();
-                Record r = e.getValue();
+            for(Record r : trainingData.values()) {
                 Integer clusterId = i%k;
                 
-                Cluster c = clusterList.get(clusterId);
+                Cluster c = clusterMap.get(clusterId);
                 if(c==null) {
                     c = new Cluster(clusterId);
-                    clusterList.put(clusterId, c);
                 }
                 
-                c.add(rId, r);
+                c.add(r);
+                clusterMap.put(clusterId, c);
                 ++i;
             }
             
-            for(Cluster c : clusterList.values()) {
+            for(Map.Entry<Integer, Cluster> e : clusterMap.entrySet()) {
+                Integer clusterId = e.getKey();
+                Cluster c = e.getValue();
                 c.updateClusterParameters();
+                clusterMap.put(clusterId, c);
             }
         }
         else if(initializationMethod==TrainingParameters.Initialization.FURTHEST_FIRST ||
@@ -668,7 +684,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                     }
                     
                     double minClusterDistance = Double.MAX_VALUE;
-                    for(Cluster c : clusterList.values()) {
+                    for(Cluster c : clusterMap.values()) {
                         double distance = calculateDistance(r, c.getCentroid());
                         
                         if(distance<minClusterDistance) {
@@ -686,12 +702,12 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 
                 alreadyAddedPoints.add(selectedRecordId);
                 
-                Integer clusterId = clusterList.size();
+                Integer clusterId = clusterMap.size();
                 Cluster c = new Cluster(clusterId);
-                c.add(selectedRecordId, trainingData.get(selectedRecordId));
+                c.add(trainingData.get(selectedRecordId));
                 c.updateClusterParameters();
                 
-                clusterList.put(clusterId, c);
+                clusterMap.put(clusterId, c);
             }
             //alreadyAddedPoints = null;
         }
@@ -707,9 +723,9 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                     Record r = e.getValue();
                     if(alreadyAddedPoints.contains(rId)==false) {
                         double minClusterDistance = 1.0;
-                        if(clusterList.size()>0) {
+                        if(clusterMap.size()>0) {
                             minClusterDistance = Double.MAX_VALUE;
-                            for(Cluster c : clusterList.values()) {
+                            for(Cluster c : clusterMap.values()) {
                                 double distance = calculateDistance(r, c.getCentroid());
 
                                 if(distance<minClusterDistance) {
@@ -731,12 +747,12 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 
                 alreadyAddedPoints.add(selectedRecordId);
                 
-                Integer clusterId = clusterList.size();
+                Integer clusterId = clusterMap.size();
                 Cluster c = new Cluster(clusterId);
-                c.add(selectedRecordId, trainingData.get(selectedRecordId));
+                c.add(trainingData.get(selectedRecordId));
                 c.updateClusterParameters();
                 
-                clusterList.put(clusterId, c);
+                clusterMap.put(clusterId, c);
             }
             //alreadyAddedPoints = null;
         }
@@ -745,7 +761,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     private void calculateClusters(Dataframe trainingData) {
         ModelParameters modelParameters = kb().getModelParameters();
         TrainingParameters trainingParameters = kb().getTrainingParameters();
-        Map<Integer, Cluster> clusterList = modelParameters.getClusterList();
+        Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
         int maxIterations = trainingParameters.getMaxIterations();
         modelParameters.setTotalIterations(maxIterations);
@@ -754,34 +770,42 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             logger.debug("Iteration {}", iteration);
             
             //reset cluster points
-            for(Cluster c : clusterList.values()) {
-                c.clear();
+            for(Map.Entry<Integer, Cluster> entry1 : clusterMap.entrySet()) {
+                Integer clusterId = entry1.getKey();
+                Cluster cluster = entry1.getValue();
+                cluster.reset();
+                clusterMap.put(clusterId, cluster);
             }
             
             //assign records in clusters
-            StreamMethods.stream(trainingData.entries(), isParallelized()).forEach(e -> {
-                Integer rId = e.getKey();
-                Record r = e.getValue();
+            StreamMethods.stream(trainingData.values(), isParallelized()).forEach(r -> {
                 
                 //we are storing cluster references not clusterIds
                 AssociativeArray clusterDistances = new AssociativeArray();
-                for(Cluster c : clusterList.values()) {
-                    clusterDistances.put(c, calculateDistance(r, c.getCentroid()));
+                for(Map.Entry<Integer, Cluster> entry : clusterMap.entrySet()) {
+                    Integer cId = entry.getKey();
+                    Cluster c = entry.getValue();
+                    clusterDistances.put(cId, calculateDistance(r, c.getCentroid()));
                 }
                 
                 //find the closest cluster
-                Cluster selectedCluster = (Cluster)getSelectedClusterFromDistances(clusterDistances);
+                Integer selectedClusterId = (Integer)getSelectedClusterFromDistances(clusterDistances);
                 
                 //add the record in the cluster
-                synchronized(selectedCluster) {
-                    selectedCluster.add(rId, r);
+                synchronized(clusterMap) {
+                    Cluster selectedCluster = clusterMap.get(selectedClusterId);
+                    selectedCluster.add(r);
+                    clusterMap.put(selectedClusterId, selectedCluster);
                 }
             });
             
             //update clusters
             boolean changed=false;
-            for(Cluster c : clusterList.values()) {
+            for(Map.Entry<Integer, Cluster> e : clusterMap.entrySet()) {
+                Integer cId = e.getKey();
+                Cluster c = e.getValue();
                 changed|=c.updateClusterParameters();
+                clusterMap.put(cId, c);
             }
             
             //if none of the clusters changed then exit

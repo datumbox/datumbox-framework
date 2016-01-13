@@ -37,6 +37,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -151,7 +152,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
          * @param dbConf
          * @return 
          */
-        public static Dataframe parseCSVFile(Reader reader, String yVariable, Map<String, TypeInference.DataType> headerDataTypes, 
+        public static Dataframe parseCSVFile(Reader reader, String yVariable, LinkedHashMap<String, TypeInference.DataType> headerDataTypes, 
                                            char delimiter, char quote, String recordSeparator, Long skip, Long limit, DatabaseConfiguration dbConf) {
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             

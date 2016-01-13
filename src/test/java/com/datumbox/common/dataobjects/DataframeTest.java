@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class DataframeTest extends AbstractTest {
         DatabaseConfiguration dbConf = TestUtils.getDBConfig();
         
         
-        Map<String, TypeInference.DataType> headerDataTypes = new HashMap<>(); 
+        LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
         headerDataTypes.put("city", TypeInference.DataType.CATEGORICAL);
         headerDataTypes.put("temperature", TypeInference.DataType.NUMERICAL);
         headerDataTypes.put("is_sunny", TypeInference.DataType.BOOLEAN);

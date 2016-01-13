@@ -16,7 +16,6 @@
 package com.datumbox.framework.machinelearning.common.interfaces;
 
 import com.datumbox.common.interfaces.Learnable;
-import java.util.Set;
 
 
 /**
@@ -25,21 +24,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface Cluster extends Learnable, Iterable<Integer> {
-
-    /**
-     * Getter for cluster id.
-     * 
-     * @return 
-     */
-    public Integer getClusterId();
-
-    /**
-     * Getter for the set of Record Ids assigned to this cluster.
-     * 
-     * @return 
-     */
-    public Set<Integer> getRecordIdSet();
+public interface Cluster extends Learnable {
 
     /**
      * Getter for the label Y of the cluster.

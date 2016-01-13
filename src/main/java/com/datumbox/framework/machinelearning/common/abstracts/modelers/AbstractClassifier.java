@@ -293,7 +293,6 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
         //create new validation metrics object
         VM validationMetrics = kb().getEmptyValidationMetricsObject();
         
-        //short notation
         Map<List<Object>, Double> ctMap = validationMetrics.getContingencyTable();
         for(Object theClass : classesSet) {
             ctMap.put(Arrays.<Object>asList(theClass, SensitivityRates.TRUE_POSITIVE), 0.0); //true possitive

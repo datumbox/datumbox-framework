@@ -17,14 +17,14 @@ package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
+import com.datumbox.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
+import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +50,12 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         /**
          * The id of the cluster.
          */
-        protected Integer clusterId;
+        protected final Integer clusterId;
 
         /**
-         * The set which contains the id of the records included in the cluster.
+         * The number of points assigned to the cluster.
          */
-        protected final Set<Integer> recordIdSet = new HashSet<>(); 
+        protected int size = 0;
 
         /**
          * The Y label of the cluster is the "gold standard class" (if available).
@@ -70,17 +70,17 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         protected AbstractCluster(Integer clusterId) {
             this.clusterId = clusterId;
         }
-
-        /** {@inheritDoc} */
-        @Override
-        public Integer getClusterId() {
-            return clusterId;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public Set<Integer> getRecordIdSet() {
-            return Collections.unmodifiableSet(recordIdSet);
+        
+        /**
+         * Copy constructor, which takes as argument the new cluster id and the
+         * cluster that we want to copy. We produce a shallow copy of the object.
+         * 
+         * @param clusterId
+         * @param copy 
+         */
+        protected AbstractCluster(Integer clusterId, AbstractCluster copy) {
+            this.clusterId = clusterId;
+            labelY = copy.labelY;
         }
 
         /** {@inheritDoc} */
@@ -92,36 +92,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         /** {@inheritDoc} */
         @Override
         public int size() {
-            if(recordIdSet == null) {
-                return 0;
-            }
-            return recordIdSet.size();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public Iterator<Integer> iterator() {
-            return new Iterator<Integer>() {
-                private final Iterator<Integer> it = recordIdSet.iterator();
-
-                /** {@inheritDoc} */
-                @Override
-                public boolean hasNext() {
-                    return it.hasNext();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public Integer next() {
-                    return it.next();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-                }
-            };
+            return size;
         }
 
         /** {@inheritDoc} */
@@ -159,34 +130,24 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         /**
          * Clears all the assignments and internal parameters of the cluster.
          */
-        protected void clear() {
-            if(recordIdSet!=null) {
-                recordIdSet.clear();
-            }
-        }
+        protected abstract void clear();
 
 
         //abstract methods that modify the cluster set and should update its statistics in each implementation
 
         /**
-         * Adds the Record r with unique identified rId in the cluster and
-         * updates the cluster's parameters.
+         * Adds the Record r with in the cluster and updates the cluster's parameters.
          * 
-         * @param rId
          * @param r
-         * @return 
          */
-        protected abstract boolean add(Integer rId, Record r);
+        protected abstract void add(Record r);
 
         /**
-         * Removes the Record r with unique identified rId from the cluster and
-         * updates the cluster's parameters
+         * Removes the Record r from the cluster and updates the cluster's parameters
          * 
-         * @param rId
          * @param r
-         * @return 
          */
-        protected abstract boolean remove(Integer rId, Record r);
+        protected abstract void remove(Record r);
     }
     
     /**
@@ -199,24 +160,10 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         private Set<Object> goldStandardClasses = new LinkedHashSet<>();
         
         /**
-         * It stores in-memory the list of clusters.
-         * 
-         * The clusters need to stay in memory and not on a BigMap for various reasons: 
-         * 1. the analysis is dependent on them and we need quick retrieval.
-         * 2. the Cluster objects contain transient fields that can't be serialized. If filebacked-maps are used those fields will not be stored.
-         * 3. the entire code base assumes they are in memory, so when we modify them we don't set them back to the map.
-         * 
-         * The first point can be fixed easily with LRU caching. Unfortunately the
-         * points 2 & 3 require the entire codebase of clustering algorithms to be
-         * rewritten.
-         * 
-         * This limitation of not being unable to store the clusters in BigMaps
-         * causes problems to Clustering algorithms which on their initial step 
-         * they set 1 cluster for every Record on the dataset. This will cause
-         * too much data to be loaded in memory.
-         * 
+         * It stores a map with all the clusters.
          */
-        private Map<Integer, CL> clusterList = new HashMap<>(); //the cluster objects of the model
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
+        private Map<Integer, CL> clusterMap;
 
         /** 
          * @param dbc
@@ -232,7 +179,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
          * @return 
          */
         public Integer getC() {
-            return clusterList.size();
+            return clusterMap.size();
         }
         
         /**
@@ -258,17 +205,17 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
          * 
          * @return 
          */
-        public Map<Integer, CL> getClusterList() {
-            return clusterList;
+        public Map<Integer, CL> getClusterMap() {
+            return clusterMap;
         }
         
         /**
          * Setter for AbstractCluster List.
          * 
-         * @param clusterList 
+         * @param clusterMap 
          */
-        protected void setClusterList(Map<Integer, CL> clusterList) {
-            this.clusterList = clusterList;
+        protected void setClusterMap(Map<Integer, CL> clusterMap) {
+            this.clusterMap = clusterMap;
         }
         
     } 
@@ -337,6 +284,21 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
+    /**
+     * Clears the clusters from their internal caching parameters before storing
+     * them. It should be called in the _fit() method of each Clusterer.
+     */
+    protected void clearClusters() {
+        MP modelParameters = kb().getModelParameters();
+        Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
+        for(Map.Entry<Integer, CL> e : clusterMap.entrySet()) {
+            Integer clusterId = e.getKey();
+            CL c = e.getValue();
+            c.clear();
+            clusterMap.put(clusterId, c);
+        }
+    }
+    
     /** {@inheritDoc} */
     @Override
     protected VM validateModel(Dataframe validationData) {
@@ -345,7 +307,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         int n = validationData.size();
         
         MP modelParameters = kb().getModelParameters();
-        Map<Integer, CL> clusterList = modelParameters.getClusterList();
+        Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
         Set<Object> goldStandardClassesSet = modelParameters.getGoldStandardClasses();
         
         //create new validation metrics object
@@ -368,8 +330,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         Map<Object, Double> countOfC = new HashMap<>(); //this is small equal to number of classes
         
         //initialize the tables with zeros
-        for(CL cluster : clusterList.values()) {
-            Integer clusterId = cluster.getClusterId();
+        for(Integer clusterId : clusterMap.keySet()) {
             countOfW.put(clusterId, 0.0);
             for(Object theClass : modelParameters.getGoldStandardClasses()) {
                 ctMap.put(Arrays.<Object>asList(clusterId, theClass), 0.0);
@@ -394,8 +355,9 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         double logN = Math.log((double)n);
         double purity=0.0;
         double Iwc=0.0; //http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html
-        for(CL cluster : clusterList.values()) {
-            Integer clusterId = cluster.getClusterId();
+        for(Map.Entry<Integer, CL> e : clusterMap.entrySet()) {
+            Integer clusterId = e.getKey();
+            CL c = e.getValue();
             double maxCounts=Double.NEGATIVE_INFINITY;
             
             //loop through the possible classes and find the most popular one
@@ -404,7 +366,8 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
                 double Nwc = ctMap.get(tpk);
                 if(Nwc>maxCounts) {
                     maxCounts=Nwc;
-                    cluster.setLabelY(goldStandardClass);
+                    c.setLabelY(goldStandardClass);
+                    clusterMap.put(clusterId, c);
                 }
                 
                 if(Nwc>0) {
@@ -440,6 +403,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
      * @return 
      */
     public Map<Integer, CL> getClusters() {
-        return kb().getModelParameters().getClusterList();
+        return kb().getModelParameters().getClusterMap();
     }
 }

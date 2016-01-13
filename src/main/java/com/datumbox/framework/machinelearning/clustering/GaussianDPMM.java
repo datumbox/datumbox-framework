@@ -73,12 +73,12 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private int meanDf;
         
         //internal vars for calculation
-        private transient RealVector xi_sum;
-        private transient RealMatrix xi_square_sum; 
+        private RealVector xi_sum;
+        private RealMatrix xi_square_sum; 
         
         //Cache
-        private transient volatile Double cache_covariance_determinant; //Cached value of Covariance determinant used only for speed optimization
-        private transient volatile RealMatrix cache_covariance_inverse; //Cached value of Inverse Covariance used only for speed optimization
+        private volatile Double cache_covariance_determinant; 
+        private volatile RealMatrix cache_covariance_inverse; 
         
         /**
          * @param clusterId
@@ -116,6 +116,29 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             this.mu0 = mu0;
             this.psi0 = psi0;
             this.dimensions = dimensions;
+        }
+        
+        /**
+         * @param clusterId
+         * @param copy 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster
+         */
+        protected Cluster(Integer clusterId, Cluster copy) {
+            super(clusterId, copy);
+            
+            dimensions = copy.dimensions;
+            kappa0 = copy.kappa0;
+            nu0 = copy.nu0;
+            mu0 = copy.mu0;
+            psi0 = copy.psi0;
+            mean = copy.mean;
+            covariance = copy.covariance;
+            meanError = copy.meanError;
+            meanDf = copy.meanDf;
+            xi_sum = copy.xi_sum;
+            xi_square_sum = copy.xi_square_sum; 
+            cache_covariance_determinant = copy.cache_covariance_determinant;
+            cache_covariance_inverse = copy.cache_covariance_inverse; 
         }
 
         /** {@inheritDoc} */
@@ -155,7 +178,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
             x_mu = x_mu.subtract(mean);
             
-
             if(cache_covariance_determinant==null || cache_covariance_inverse==null) {
                 synchronized(this) {
                     if(cache_covariance_determinant==null || cache_covariance_inverse==null) {
@@ -166,14 +188,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
                 }
             }
             
-            Double determinant=cache_covariance_determinant;
-            RealMatrix invCovariance=cache_covariance_inverse;
-
-            double x_muInvSx_muT = (invCovariance.preMultiply(x_mu)).dotProduct(x_mu);
-
-            double normConst = 1.0/( Math.pow(2*Math.PI, dimensions/2.0) * Math.pow(determinant, 0.5) );
-
-
+            double x_muInvSx_muT = (cache_covariance_inverse.preMultiply(x_mu)).dotProduct(x_mu);
+            double normConst = 1.0/( Math.pow(2*Math.PI, dimensions/2.0) * Math.pow(cache_covariance_determinant, 0.5) );
             //double pdf = Math.exp(-0.5 * x_muInvSx_muT)*normConst;
             double logPdf = -0.5 * x_muInvSx_muT + Math.log(normConst);
             return logPdf;
@@ -181,13 +197,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     
         /** {@inheritDoc} */
         @Override
-        protected boolean add(Integer rId, Record r) {
-            int size= recordIdSet.size();
-            
-            if(recordIdSet.add(rId)==false) {
-                return false;
-            }
-            
+        protected void add(Record r) {
             RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
@@ -200,20 +210,15 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
                 xi_square_sum=xi_square_sum.add(rv.outerProduct(rv));
             }
             
-            updateClusterParameters();
+            size++;
             
-            return true;
+            updateClusterParameters();
         }
         
         /** {@inheritDoc} */
         @Override
-        protected boolean remove(Integer rId, Record r) {
-            if(xi_sum==null || xi_square_sum==null) {
-                return false; //The cluster is empty or uninitialized
-            }
-            if(recordIdSet.remove(rId)==false) {
-                return false;
-            }
+        protected void remove(Record r) {
+            size--;
             
             RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
@@ -222,8 +227,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             xi_square_sum=xi_square_sum.subtract(rv.outerProduct(rv));
             
             updateClusterParameters();
-            
-            return true;
         }
         
         private RealMatrix calculateMeanError(RealMatrix Psi, int kappa, int nu) {
@@ -234,7 +237,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         /** {@inheritDoc} */
         @Override
         protected void clear() {
-            super.clear();
             xi_sum = null;
             xi_square_sum = null;
             cache_covariance_determinant = null;
@@ -244,38 +246,36 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         /** {@inheritDoc} */
         @Override
         protected void updateClusterParameters() {
-            if(xi_sum==null || xi_square_sum==null || psi0==null || mu0==null) {
-                return; //The cluster is empty or uninitialized
-            }
-            int n = recordIdSet.size();
-
             //fetch hyperparameters
 
-            int kappa_n = kappa0 + n;
-            int nu = nu0 + n;
+            int kappa_n = kappa0 + size;
+            int nu = nu0 + size;
 
-            RealVector mu = xi_sum.mapDivide(n);
+            RealVector mu = xi_sum.mapDivide(size);
             RealVector mu_mu0 = mu.subtract(mu0);
 
-            RealMatrix C = xi_square_sum.subtract( ( mu.outerProduct(mu) ).scalarMultiply(n) );
+            RealMatrix C = xi_square_sum.subtract( ( mu.outerProduct(mu) ).scalarMultiply(size) );
 
-            RealMatrix psi = psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*n/(double)kappa_n) ));
+            RealMatrix psi = psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*size/(double)kappa_n) ));
             //C = null;
             //mu_mu0 = null;
 
-            mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(n) ).mapDivide(kappa_n);
+            mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(size) ).mapDivide(kappa_n);
             
-            synchronized(this) {
-                covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
-                LUDecomposition lud = new LUDecomposition(covariance);
-                cache_covariance_determinant = lud.getDeterminant();
-                cache_covariance_inverse = lud.getSolver().getInverse();
-            }
+            covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
             
             meanError = calculateMeanError(psi, kappa_n, nu);
             meanDf = nu-dimensions+1;
+            
+            cache_covariance_determinant = null;
+            cache_covariance_inverse = null;
         }
         
+        /** {@inheritDoc} */
+        @Override
+        protected Cluster copy2new(Integer newClusterId) {
+            return new Cluster(newClusterId, this);
+        }
     }
     
     /** {@inheritDoc} */

@@ -23,6 +23,7 @@ NEW ALGORITHMS
 ==============
 
 - Rewrite PCA to avoid using RealMatrix.
+- Speed up LDA: http://www.cs.ucsb.edu/~mingjia/cs240/doc/273811.pdf
 - Add regularization in the currenlty supported algorithms.
 - Write a Mixture of Gaussians clustering method.
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.

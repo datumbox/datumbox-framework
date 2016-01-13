@@ -26,7 +26,7 @@ public class TestConfiguration {
     /**
      * High Accuracy Level for assert.
      */
-    public static final double DOUBLE_ACCURACY_HIGH = 0.000001;
+    public static final double DOUBLE_ACCURACY_HIGH = 0.00001;
     
     /**
      * Medium Accuracy Level for assert.
@@ -42,8 +42,8 @@ public class TestConfiguration {
      * The class of the DatabaseConfiguration.
      */
     public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = 
-        com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration.class
-        //com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration.class
+        //com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration.class
+        com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration.class
         ;
     
     /**
