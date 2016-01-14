@@ -15,7 +15,6 @@
  */
 package com.datumbox.common.persistentstorage.interfaces;
 
-import java.util.Properties;
 import com.datumbox.common.interfaces.Configurable;
 
 /**

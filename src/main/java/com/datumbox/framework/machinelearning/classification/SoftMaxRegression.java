@@ -187,6 +187,11 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     }
     
     private boolean parallelized = true;
+    
+    /**
+     * This executor is used for the parallel processing of streams with custom 
+     * Thread pool.
+     */
     protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
