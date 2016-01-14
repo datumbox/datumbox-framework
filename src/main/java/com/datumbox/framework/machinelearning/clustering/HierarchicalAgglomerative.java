@@ -15,12 +15,12 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -73,7 +73,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         /**
          * @param clusterId
          * @param copy 
-         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster) 
          */
         protected Cluster(Integer clusterId, Cluster copy) {
             super(clusterId, copy);
@@ -313,11 +313,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidator<>());
-        streamExecutor = new ForkJoinStream();
+    public HierarchicalAgglomerative(String dbName, Configuration conf) {
+        super(dbName, conf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidator<>());
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     } 
     
     private boolean parallelized = true;
@@ -345,7 +345,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer);
+        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 

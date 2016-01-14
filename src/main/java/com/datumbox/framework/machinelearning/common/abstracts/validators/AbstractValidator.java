@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.validators;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.PHPMethods;
 
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
@@ -59,12 +59,12 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
      * @param dataset
      * @param k
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param aClass
      * @param trainingParameters
      * @return 
      */
-    public VM kFoldCrossValidation(Dataframe dataset, int k, String dbName, DatabaseConfiguration dbConf, Class<? extends AbstractModeler> aClass, TP trainingParameters) {
+    public VM kFoldCrossValidation(Dataframe dataset, int k, String dbName, Configuration conf, Class<? extends AbstractModeler> aClass, TP trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds.");
@@ -82,7 +82,7 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
         }
         PHPMethods.shuffle(ids);
         
-        String foldDBname=dbName+dbConf.getDBnameSeparator()+DB_INDICATOR;
+        String foldDBname=dbName+conf.getDbConfig().getDBnameSeparator()+DB_INDICATOR;
         
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
@@ -118,7 +118,7 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
             
             
             //initialize mlmodel
-            AbstractModeler mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>)aClass, foldDBname+(fold+1), dbConf);
+            AbstractModeler mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>)aClass, foldDBname+(fold+1), conf);
             
             
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);

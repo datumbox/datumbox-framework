@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class DataframeTest extends AbstractTest {
     public void testParseCSVFile() {
         logger.info("parseCSVFile");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
         LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
@@ -58,14 +58,14 @@ public class DataframeTest extends AbstractTest {
         
         Dataframe dataset;
         try (Reader fileReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("datasets/cities.csv"), "UTF-8")) {
-            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(UncheckedIOException | IOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }
         
-        Dataframe expResult = new Dataframe(dbConf);
+        Dataframe expResult = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("city", "Athens");
@@ -139,9 +139,9 @@ public class DataframeTest extends AbstractTest {
     public void testGetColumns() {
         logger.info("getColumns");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe dataset = new Dataframe(dbConf);
+        Dataframe dataset = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
@@ -179,10 +179,10 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValues() {
         logger.info("extractColumnValues");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         Object column = "height";
-        Dataframe dataset = new Dataframe(dbConf);
+        Dataframe dataset = new Dataframe(conf);
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -215,10 +215,10 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValuesByY() {
         logger.info("extractColumnValuesByY");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         Object column = "height";
-        Dataframe dataset = new Dataframe(dbConf);
+        Dataframe dataset = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);
@@ -245,9 +245,9 @@ public class DataframeTest extends AbstractTest {
     public void testRemove() {
         logger.info("remove");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe dataset = new Dataframe(dbConf);
+        Dataframe dataset = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);

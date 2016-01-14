@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.util.List;
 
@@ -66,10 +66,10 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public BootstrapAggregating(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
+    public BootstrapAggregating(String dbName, Configuration conf) {
+        super(dbName, conf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
     } 
 
     /** {@inheritDoc} */

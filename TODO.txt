@@ -1,8 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Control number of threads via config. Build a more general configuration mechanism. If threads = 1, turn off by default the parallelize
-- Search for Runtime.getRuntime().availableProcessors(); and the default constructor of ForkJoinStream() to add the number of threads.
+
 - Profiling & benchmarking.
 
 - Update all maven plugins and dependencies to their latest versions.

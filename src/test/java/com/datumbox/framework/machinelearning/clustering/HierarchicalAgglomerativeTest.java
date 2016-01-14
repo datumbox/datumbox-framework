@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -43,22 +43,22 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate"); 
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(dbConf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, dbConf);
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf);
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
@@ -74,8 +74,8 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
-        instance = new HierarchicalAgglomerative(dbName, dbConf);
+        df = new DummyXYMinMaxNormalizer(dbName, conf);
+        instance = new HierarchicalAgglomerative(dbName, conf);
         
         instance.validate(validationData);
         
@@ -114,23 +114,23 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(dbConf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
 
         
         
         
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, dbConf);
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf);
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);

@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
@@ -62,11 +62,11 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public MutualInformation(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream();
+    public MutualInformation(String dbName, Configuration conf) {
+        super(dbName, conf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;

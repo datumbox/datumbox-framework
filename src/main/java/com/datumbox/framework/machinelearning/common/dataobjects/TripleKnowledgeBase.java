@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
@@ -47,13 +47,13 @@ public class TripleKnowledgeBase<MP extends ModelParameters, TP extends Training
      * Public constructor of the object.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      * @param mpClass 
      * @param tpClass 
      * @param vmClass 
      */
-    public TripleKnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+    public TripleKnowledgeBase(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, conf, mpClass, tpClass);
         this.vmClass = vmClass;
     }
     

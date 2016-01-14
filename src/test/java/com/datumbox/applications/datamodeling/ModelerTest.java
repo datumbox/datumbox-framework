@@ -17,7 +17,7 @@ package com.datumbox.applications.datamodeling;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
@@ -43,9 +43,9 @@ public class ModelerTest extends AbstractTest {
     public void testTrainAndValidate() {
         logger.info("testTrainAndValidate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.carsNumeric(dbConf);
+        Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         
         Dataframe validationData = data[1];
@@ -53,7 +53,7 @@ public class ModelerTest extends AbstractTest {
         
         String dbName = this.getClass().getSimpleName();
         
-        Modeler instance = new Modeler(dbName, dbConf);
+        Modeler instance = new Modeler(dbName, conf);
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         
         
@@ -89,7 +89,7 @@ public class ModelerTest extends AbstractTest {
         logger.info("validate");
         
         
-        instance = new Modeler(dbName, dbConf);
+        instance = new Modeler(dbName, conf);
         
         instance.validate(validationData);
         

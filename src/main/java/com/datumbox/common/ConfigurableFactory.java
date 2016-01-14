@@ -13,55 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.common.persistentstorage;
+package com.datumbox.common;
 
-import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
+import com.datumbox.common.interfaces.Configurable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
- * Factory that initializes and returns the DatabaseConfiguration based on the
- * configuration file. 
+ * Factory that initializes and returns the Configurable objects based on the
+ * property file. 
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public enum ConfigurationFactory {
-    /**
-     * InMemory is the default storage engine, it is very fast and it should be used when the data fit the memory.
-     */
-    INMEMORY(InMemoryConfiguration.class),
-    
-    /**
-     * MapDB is an alternative storage engine, which should be used when the data don't fit in memory.
-     */
-    MAPDB(MapDBConfiguration.class);
-    
-    private final Class<? extends DatabaseConfiguration> klass;
-    
-    /**
-     * Private constructor for the enum.
-     * 
-     * @param klass 
-     */
-    private ConfigurationFactory(Class<? extends DatabaseConfiguration> klass) {
-        this.klass = klass;
-    }
+public class ConfigurableFactory {
     
     /**
      * Initializes the Configuration Object based on the config file.
      * 
+     * @param <C>
+     * @param klass
      * @return 
      */
-    public DatabaseConfiguration getConfiguration() {
-        //Initialize dbConfig object
-        DatabaseConfiguration dbConf;
+    public static <C extends Configurable> C getConfiguration(Class<C> klass) {
+        //Initialize config object
+        C conf;
         try {
-            dbConf = klass.getConstructor().newInstance();
+            Constructor<C> constructor = klass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            conf = constructor.newInstance();
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -69,7 +52,7 @@ public enum ConfigurationFactory {
         
         Properties properties = new Properties();
         
-        ClassLoader cl = ConfigurationFactory.class.getClassLoader();
+        ClassLoader cl = ConfigurableFactory.class.getClassLoader();
         
         //Load default properties from jar
         try (InputStream in = cl.getResourceAsStream("datumbox.config.default.properties")) {
@@ -90,8 +73,8 @@ public enum ConfigurationFactory {
             }
         }
         
-        dbConf.load(properties);
+        conf.load(properties);
         
-        return dbConf;
+        return conf;
     }
 }

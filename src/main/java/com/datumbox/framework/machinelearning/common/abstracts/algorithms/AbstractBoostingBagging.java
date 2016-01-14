@@ -15,13 +15,13 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.interfaces.Trainable;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -152,14 +152,14 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     /**
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
      * @param vmClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractBoostingBagging(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
+    protected AbstractBoostingBagging(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, conf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
     } 
     
     /** {@inheritDoc} */
@@ -183,8 +183,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int t=0;t<totalWeakClassifiers;++t) {
             try (AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
                     (Class<AbstractClassifier>)weakClassifierClass, 
-                    dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    kb().getDbConf())) {
+                    dbName+kb().getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    kb().getConf())) {
                 mlclassifier.predict(newData);
             }
             
@@ -261,8 +261,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             Dataframe validationDataset;
             try (AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
                     (Class<AbstractClassifier>)weakClassifierClass, 
-                    dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    kb().getDbConf())) {
+                    dbName+kb().getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    kb().getConf())) {
                 mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters);
                 sampledTrainingDataset.delete();
                 //sampledTrainingDataset = null;
@@ -347,8 +347,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int t=0;t<totalWeakClassifiers;++t) {
             AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
                     (Class<AbstractClassifier>)weakClassifierClass, 
-                    dbName+kb().getDbConf().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    kb().getDbConf()
+                    dbName+kb().getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
+                    kb().getConf()
             );
             mlclassifier.delete();
         }

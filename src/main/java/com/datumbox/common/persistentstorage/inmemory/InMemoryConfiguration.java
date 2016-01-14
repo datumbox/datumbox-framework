@@ -34,6 +34,13 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     //DB specific properties
     private String outputFolder = "./";
     
+    /**
+     * Default Constructor.
+     */
+    public InMemoryConfiguration() {
+        
+    }
+    
     /** {@inheritDoc} */
     @Override
     public DatabaseConnector getConnector(String database) {

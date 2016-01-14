@@ -15,13 +15,13 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -329,14 +329,14 @@ public abstract class AbstractLinearRegression<MP extends AbstractLinearRegressi
     
     /** 
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
      * @param vmClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractLinearRegression(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass, new LinearRegressionValidator<>());
+    protected AbstractLinearRegression(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
+        super(dbName, conf, mpClass, tpClass, vmClass, new LinearRegressionValidator<>());
     } 
     
     /** {@inheritDoc} */

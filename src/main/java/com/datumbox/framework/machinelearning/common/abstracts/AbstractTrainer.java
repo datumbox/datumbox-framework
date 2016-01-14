@@ -15,11 +15,11 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.interfaces.Trainable;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
@@ -174,20 +174,20 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * The basic Constructor of all BaseTrainable classes.
      * 
      * @param baseDBname
-     * @param dbConf 
+     * @param conf 
      * @param kbClass 
      * @param kbSubtypeClasses 
      */
-    protected AbstractTrainer(String baseDBname, DatabaseConfiguration dbConf, Class<? extends DoubleKnowledgeBase> kbClass, Class<? extends Serializable>... kbSubtypeClasses) {
+    protected AbstractTrainer(String baseDBname, Configuration conf, Class<? extends DoubleKnowledgeBase> kbClass, Class<? extends Serializable>... kbSubtypeClasses) {
         String methodName = this.getClass().getSimpleName();
-        String dbNameSeparator = dbConf.getDBnameSeparator();
+        String dbNameSeparator = conf.getDbConfig().getDBnameSeparator();
         if(!baseDBname.contains(methodName+dbNameSeparator)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
             baseDBname += dbNameSeparator + methodName;
         }
         
         dbName = baseDBname;
         
-        knowledgeBase = (KB) KnowledgeBase.newInstance(kbClass, dbName, dbConf, kbSubtypeClasses);
+        knowledgeBase = (KB) KnowledgeBase.newInstance(kbClass, dbName, conf, kbSubtypeClasses);
     }
     
     /** {@inheritDoc} */

@@ -15,12 +15,12 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import com.datumbox.framework.machinelearning.common.interfaces.Parallelizable;
@@ -91,11 +91,11 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public ChisquareSelect(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream();
+    public ChisquareSelect(String dbName, Configuration conf) {
+        super(dbName, conf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;

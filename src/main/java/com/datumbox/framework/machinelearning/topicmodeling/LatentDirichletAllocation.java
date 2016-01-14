@@ -15,13 +15,13 @@
  */
 package com.datumbox.framework.machinelearning.topicmodeling;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -339,10 +339,10 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public LatentDirichletAllocation(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidator()); 
+    public LatentDirichletAllocation(String dbName, Configuration conf) {
+        super(dbName, conf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidator()); 
     }
     
     /**

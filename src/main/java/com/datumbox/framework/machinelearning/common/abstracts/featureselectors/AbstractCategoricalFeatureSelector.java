@@ -15,11 +15,11 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.featureselectors;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.dataobjects.TypeInference.DataType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
@@ -147,13 +147,13 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     /** 
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractCategoricalFeatureSelector(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+    protected AbstractCategoricalFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, mpClass, tpClass);
     }
     
     /** {@inheritDoc} */

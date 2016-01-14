@@ -71,6 +71,7 @@ Version 0.7.0-SNAPSHOT - Build 20160114
 - Fixed the limitation on the clustering algorithms which forced us to store the clusters in memory.
 - Forced the headerDataTypes parameter of Dataframe.Builder.parseCSVFile() to be a LinkedHashMap.
 - Added custom thread pool in the parallel stream execution. Created the ForkJoinStream class and enhanced the ThreadMethods class.
+- Created a new Configuration mechanism and added the ability to configure the concurrency.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.datatransformation.XMinMaxNormalizer;
@@ -44,23 +44,23 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
-        Dataframe[] data = Datasets.carsCategorical(dbConf);
+        Dataframe[] data = Datasets.carsCategorical(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
 
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, dbConf);
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, conf);
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
@@ -72,8 +72,8 @@ public class SoftMaxRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
-        instance = new SoftMaxRegression(dbName, dbConf);
+        df = new DummyXYMinMaxNormalizer(dbName, conf);
+        instance = new SoftMaxRegression(dbName, conf);
         
         instance.validate(validationData);
         	        
@@ -106,20 +106,20 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(dbConf);
+        Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
-        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, dbConf);
+        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new XMinMaxNormalizer.TrainingParameters());
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, dbConf);
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, conf);
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);

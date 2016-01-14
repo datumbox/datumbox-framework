@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.interfaces.Trainable;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractRegressor;
@@ -170,10 +170,10 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public StepwiseRegression(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
+    public StepwiseRegression(String dbName, Configuration conf) {
+        super(dbName, conf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
     } 
      
     /** {@inheritDoc} */
@@ -290,7 +290,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     }
     
     private AbstractRegressor generateRegressor() {
-        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) kb().getTrainingParameters().getRegressionClass(), dbName, kb().getDbConf());
+        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) kb().getTrainingParameters().getRegressionClass(), dbName, kb().getConf());
     }
     
     private Map<Object, Double> runRegression(Dataframe trainingData) {

@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -42,19 +42,19 @@ public class StepwiseRegressionTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.regressionNumeric(dbConf);
+        Dataframe[] data = Datasets.regressionNumeric(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
-        StepwiseRegression instance = new StepwiseRegression(dbName, dbConf);
+        StepwiseRegression instance = new StepwiseRegression(dbName, conf);
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
@@ -73,10 +73,10 @@ public class StepwiseRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.transform(validationData);
         
-        instance = new StepwiseRegression(dbName, dbConf);
+        instance = new StepwiseRegression(dbName, conf);
         instance.validate(validationData);
         
         df.denormalize(validationData);

@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -43,22 +43,22 @@ public class OrdinalRegressionTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
-        Dataframe[] data = Datasets.winesOrdinal(dbConf);
+        Dataframe[] data = Datasets.winesOrdinal(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, dbConf);
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         df.transform(validationData);
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, dbConf);
+        OrdinalRegression instance = new OrdinalRegression(dbName, conf);
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
@@ -70,8 +70,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXMinMaxNormalizer(dbName, dbConf);
-        instance = new OrdinalRegression(dbName, dbConf);
+        df = new DummyXMinMaxNormalizer(dbName, conf);
+        instance = new OrdinalRegression(dbName, conf);
         
         instance.validate(validationData);
 
@@ -104,21 +104,21 @@ public class OrdinalRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.winesOrdinal(dbConf);
+        Dataframe[] data = Datasets.winesOrdinal(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, dbConf);
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
         
-        OrdinalRegression instance = new OrdinalRegression(dbName, dbConf);
+        OrdinalRegression instance = new OrdinalRegression(dbName, conf);
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);

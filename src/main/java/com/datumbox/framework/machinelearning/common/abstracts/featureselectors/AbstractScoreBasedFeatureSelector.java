@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.featureselectors;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.utilities.SelectKth;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,13 +33,13 @@ public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScore
 
     /** 
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractScoreBasedFeatureSelector(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+    protected AbstractScoreBasedFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, mpClass, tpClass);
     }
     
     /**

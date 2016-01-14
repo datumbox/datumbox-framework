@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.featureselection.continuous.PCA;
@@ -43,21 +43,21 @@ public class NLMSTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.regressionNumeric(dbConf);
+        Dataframe[] data = Datasets.regressionNumeric(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
 
-        NLMS instance = new NLMS(dbName, dbConf);
+        NLMS instance = new NLMS(dbName, conf);
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
@@ -71,8 +71,8 @@ public class NLMSTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
-        instance = new NLMS(dbName, dbConf);
+        df = new DummyXYMinMaxNormalizer(dbName, conf);
+        instance = new NLMS(dbName, conf);
         
         instance.validate(validationData);
         
@@ -98,22 +98,22 @@ public class NLMSTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.regressionMixed(dbConf);
+        Dataframe[] data = Datasets.regressionMixed(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
 
         
         
-        PCA featureSelection = new PCA(dbName, dbConf);
+        PCA featureSelection = new PCA(dbName, conf);
         PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
         featureSelectionParameters.setMaxDimensions(trainingData.xColumnSize()-1);
         featureSelectionParameters.setWhitened(false);
@@ -122,7 +122,7 @@ public class NLMSTest extends AbstractTest {
         featureSelection.delete();
         
         
-        NLMS instance = new NLMS(dbName, dbConf);
+        NLMS instance = new NLMS(dbName, conf);
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);

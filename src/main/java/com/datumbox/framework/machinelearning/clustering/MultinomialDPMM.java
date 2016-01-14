@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.statistics.distributions.ContinuousDistributions;
@@ -61,7 +61,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
          * @param clusterId
          * @param dimensions
          * @param alphaWords
-         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer) 
          */
         protected Cluster(Integer clusterId, int dimensions, double alphaWords) {
             super(clusterId);
@@ -77,7 +77,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         /**
          * @param clusterId
          * @param copy 
-         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster) 
          */
         protected Cluster(Integer clusterId, Cluster copy) {
             super(clusterId, copy);
@@ -247,10 +247,10 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public MultinomialDPMM(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
+    public MultinomialDPMM(String dbName, Configuration conf) {
+        super(dbName, conf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
     }
     
     /** {@inheritDoc} */

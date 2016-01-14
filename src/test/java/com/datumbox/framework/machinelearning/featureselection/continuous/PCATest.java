@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.featureselection.continuous;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -43,16 +43,16 @@ public class PCATest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.featureTransformationPCA(dbConf);
+        Dataframe[] data = Datasets.featureTransformationPCA(conf);
         
         Dataframe originalData = data[0];
         Dataframe validationdata = data[0].copy();
         Dataframe expResult = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        PCA instance = new PCA(dbName, dbConf);
+        PCA instance = new PCA(dbName, conf);
         
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
@@ -61,7 +61,7 @@ public class PCATest extends AbstractTest {
         instance.close();
         //instance = null;
         
-        instance = new PCA(dbName, dbConf);
+        instance = new PCA(dbName, conf);
         
         instance.transform(validationdata);
         

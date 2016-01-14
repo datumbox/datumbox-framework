@@ -15,7 +15,7 @@
  */
 package com.datumbox.applications.nlp;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class CETRTest extends AbstractTest {
     public void testExtract() {
         logger.info("extract");
          
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         String dbName = this.getClass().getSimpleName();
         
@@ -60,7 +60,7 @@ public class CETRTest extends AbstractTest {
         parameters.setNumberOfClusters(2);
         parameters.setAlphaWindowSizeFor2DModel(3);
         parameters.setSmoothingAverageRadius(2);
-        CETR instance = new CETR(dbName, dbConf);
+        CETR instance = new CETR(dbName, conf);
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
         String result = instance.extract(text, parameters);
         assertEquals(expResult, result);

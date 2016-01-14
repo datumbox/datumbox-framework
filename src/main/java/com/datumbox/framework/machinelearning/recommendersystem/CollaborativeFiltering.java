@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.recommendersystem;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataList;
@@ -22,7 +23,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
@@ -158,10 +158,10 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public CollaborativeFiltering(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class, CollaborativeFiltering.ValidationMetrics.class, new CollaborativeFilteringValidator<>());
+    public CollaborativeFiltering(String dbName, Configuration conf) {
+        super(dbName, conf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class, CollaborativeFiltering.ValidationMetrics.class, new CollaborativeFilteringValidator<>());
     } 
 
     /** {@inheritDoc} */

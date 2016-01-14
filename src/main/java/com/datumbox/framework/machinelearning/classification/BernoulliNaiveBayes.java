@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -22,7 +23,6 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -96,10 +96,10 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public BernoulliNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class, true);
+    public BernoulliNaiveBayes(String dbName, Configuration conf) {
+        super(dbName, conf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class, true);
     }
     
     /** {@inheritDoc} */

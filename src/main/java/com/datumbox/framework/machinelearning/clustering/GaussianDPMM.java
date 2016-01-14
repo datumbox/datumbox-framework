@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
@@ -387,10 +387,10 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public GaussianDPMM(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class, GaussianDPMM.ValidationMetrics.class);
+    public GaussianDPMM(String dbName, Configuration conf) {
+        super(dbName, conf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class, GaussianDPMM.ValidationMetrics.class);
     }
     
     /** {@inheritDoc} */

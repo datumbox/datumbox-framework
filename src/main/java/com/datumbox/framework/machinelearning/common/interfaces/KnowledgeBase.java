@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.interfaces;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.dataobjects.TripleKnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
@@ -38,16 +38,16 @@ public interface KnowledgeBase<MP extends ModelParameters, TP extends TrainingPa
      * @param <KB>
      * @param kbClass
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param kbSubtypeClasses
      * @return 
      */
-    public static <KB extends KnowledgeBase> KB newInstance(Class<KB> kbClass, String dbName, DatabaseConfiguration dbConf, Class<? extends Serializable>[] kbSubtypeClasses) {
+    public static <KB extends KnowledgeBase> KB newInstance(Class<KB> kbClass, String dbName, Configuration conf, Class<? extends Serializable>[] kbSubtypeClasses) {
         if(DoubleKnowledgeBase.class.equals(kbClass) && kbSubtypeClasses.length == 2) {
-            return (KB) new DoubleKnowledgeBase(dbName, dbConf, kbSubtypeClasses[0], kbSubtypeClasses[1]);
+            return (KB) new DoubleKnowledgeBase(dbName, conf, kbSubtypeClasses[0], kbSubtypeClasses[1]);
         }
         else if(TripleKnowledgeBase.class.equals(kbClass) && kbSubtypeClasses.length == 3) {
-            return (KB) new TripleKnowledgeBase(dbName, dbConf, kbSubtypeClasses[0], kbSubtypeClasses[1], kbSubtypeClasses[2]);
+            return (KB) new TripleKnowledgeBase(dbName, conf, kbSubtypeClasses[0], kbSubtypeClasses[1], kbSubtypeClasses[2]);
         }
         else {
             throw new IllegalArgumentException("Unsupported KnowledgeBase class.");
@@ -62,11 +62,11 @@ public interface KnowledgeBase<MP extends ModelParameters, TP extends TrainingPa
     public DatabaseConnector getDbc();
     
     /**
-     * Getter for the Database Configuration.
+     * Getter for the Configuration.
      * 
      * @return 
      */
-    public DatabaseConfiguration getDbConf();
+    public Configuration getConf();
 
     /**
      * Saves the KnowledgeBase to the permanent storage.

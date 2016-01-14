@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -41,9 +41,9 @@ public class ChisquareSelectTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.featureSelectionCategorical(dbConf, 1000);
+        Dataframe[] data = Datasets.featureSelectionCategorical(conf, 1000);
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
@@ -54,7 +54,7 @@ public class ChisquareSelectTest extends AbstractTest {
         param.setIgnoringNumericalFeatures(false);
         param.setALevel(0.05);
         
-        ChisquareSelect instance = new ChisquareSelect(dbName, dbConf);
+        ChisquareSelect instance = new ChisquareSelect(dbName, conf);
         
         
         instance.fit_transform(trainingData, param);
@@ -62,7 +62,7 @@ public class ChisquareSelectTest extends AbstractTest {
         //instance = null;
         
         
-        instance = new ChisquareSelect(dbName, dbConf);
+        instance = new ChisquareSelect(dbName, conf);
         
         instance.transform(validationData);
         

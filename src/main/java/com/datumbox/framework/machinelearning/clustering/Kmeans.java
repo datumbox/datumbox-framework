@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -22,7 +23,6 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.common.dataobjects.TypeInference;
@@ -80,7 +80,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         /**
          * @param clusterId
          * @param copy 
-         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster 
+         * @see com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer.AbstractCluster) 
          */
         protected Cluster(Integer clusterId, Cluster copy) {
             super(clusterId, copy);
@@ -421,11 +421,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public Kmeans(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidator<>());
-        streamExecutor = new ForkJoinStream();
+    public Kmeans(String dbName, Configuration conf) {
+        super(dbName, conf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidator<>());
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     } 
     
     private boolean parallelized = true;
@@ -453,7 +453,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer);
+        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 

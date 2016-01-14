@@ -15,13 +15,13 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -130,11 +130,11 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public TFIDF(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream();
+    public TFIDF(String dbName, Configuration conf) {
+        super(dbName, conf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;

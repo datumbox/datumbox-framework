@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.continuous;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -24,7 +25,6 @@ import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.PHPMethods;
@@ -264,11 +264,11 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public PCA(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream();
+    public PCA(String dbName, Configuration conf) {
+        super(dbName, conf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
 
     private boolean parallelized = true;

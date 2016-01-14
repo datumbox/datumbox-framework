@@ -15,9 +15,9 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.interfaces.Copyable;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -88,11 +88,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
          * 
          * @param textFilesMap
          * @param textExtractor
-         * @param dbConf
+         * @param conf
          * @return 
          */
-        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, AbstractTextExtractor textExtractor, DatabaseConfiguration dbConf) {
-            Dataframe dataset = new Dataframe(dbConf);
+        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, AbstractTextExtractor textExtractor, Configuration conf) {
+            Dataframe dataset = new Dataframe(conf);
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             
             for (Map.Entry<Object, URI> entry : textFilesMap.entrySet()) {
@@ -121,7 +121,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                                 dataset.set(rId, r);
                             }
                         }
-                    });
+                    }, conf.getConcurrencyConfig());
                 } 
                 catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -150,11 +150,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
          * @param recordSeparator
          * @param skip
          * @param limit
-         * @param dbConf
+         * @param conf
          * @return 
          */
         public static Dataframe parseCSVFile(Reader reader, String yVariable, LinkedHashMap<String, TypeInference.DataType> headerDataTypes, 
-                                           char delimiter, char quote, String recordSeparator, Long skip, Long limit, DatabaseConfiguration dbConf) {
+                                           char delimiter, char quote, String recordSeparator, Long skip, Long limit, Configuration conf) {
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             
             if(skip == null) {
@@ -174,7 +174,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             TypeInference.DataType yDataType = headerDataTypes.get(yVariable);
             Map<String, TypeInference.DataType> xDataTypes = new HashMap<>(headerDataTypes); //copy header types
             xDataTypes.remove(yVariable); //remove the response variable from xDataTypes
-            Dataframe dataset = new Dataframe(dbConf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
+            Dataframe dataset = new Dataframe(conf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
             
             
             CSVFormat format = CSVFormat
@@ -221,7 +221,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                             }
                         }
                     }
-                });
+                }, conf.getConcurrencyConfig());
             } 
             catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -236,7 +236,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     private Map<Integer, Record> records;
     
     private final DatabaseConnector dbc; 
-    private final DatabaseConfiguration dbConf; 
+    private final Configuration conf; 
     
     /**
      * This executor is used for the parallel processing of streams with custom 
@@ -256,33 +256,33 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /**
      * Public constructor of Dataframe.
      * 
-     * @param dbConf 
+     * @param conf 
      */
-    public Dataframe(DatabaseConfiguration dbConf) {
-        this.dbConf = dbConf;
+    public Dataframe(Configuration conf) {
+        this.conf = conf;
         
         //we dont need to have a unique name, because it is not used by the connector on the current implementations
         //String dbName = "dts_"+new BigInteger(130, RandomGenerator.getThreadLocalRandom()).toString(32);
         String dbName = "dts";
-        dbc = this.dbConf.getConnector(dbName);
+        dbc = this.conf.getDbConfig().getConnector(dbName);
         
         records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
         
         yDataType = null;
         xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
         
-        streamExecutor = new ForkJoinStream();
+        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
     }
     
     /**
      * Private constructor used by the Builder inner static class.
      * 
-     * @param dbConf
+     * @param conf
      * @param yDataType
      * @param xDataTypes 
      */
-    private Dataframe(DatabaseConfiguration dbConf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
-        this(dbConf);
+    private Dataframe(Configuration conf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
+        this(conf);
         this.yDataType = yDataType;
         this.xDataTypes.putAll(xDataTypes);
     }
@@ -649,7 +649,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Dataframe getSubset(FlatDataList idsCollection) {
-        Dataframe d = new Dataframe(dbConf);
+        Dataframe d = new Dataframe(conf);
         
         for(Object id : idsCollection) {
             d.add(get((Integer)id)); 
@@ -671,7 +671,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /** {@inheritDoc} */
     @Override
     public Dataframe copy() {
-        Dataframe d = new Dataframe(dbConf);
+        Dataframe d = new Dataframe(conf);
         
         for(Map.Entry<Integer, Record> e : entries()) {
             Integer rId = e.getKey();

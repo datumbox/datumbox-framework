@@ -15,12 +15,12 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.interfaces.Parameterizable;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.machinelearning.clustering.Kmeans;
@@ -120,18 +120,18 @@ public class CETR {
     }
     
     private final String dbName;
-    private final DatabaseConfiguration dbConf;
+    private final Configuration conf;
     
     /**
      * Constructor for the CETR class. It accepts as arguments the name of the
      * database were the temporary results are stored and the Database Configuration.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public CETR(String dbName, DatabaseConfiguration dbConf) {
+    public CETR(String dbName, Configuration conf) {
         this.dbName = dbName;
-        this.dbConf = dbConf;
+        this.conf = conf;
     }
     
     /**
@@ -169,7 +169,7 @@ public class CETR {
         
         boolean use2Dmodel = (parameters.getAlphaWindowSizeFor2DModel()>0);
         
-        Dataframe dataset = new Dataframe(dbConf);
+        Dataframe dataset = new Dataframe(conf);
         if(use2Dmodel) {
             List<Double> G = computeDerivatives(TTRlist, parameters.getAlphaWindowSizeFor2DModel());
             gaussianSmoothing(G);
@@ -246,7 +246,7 @@ public class CETR {
     }
 
     private void performClustering(Dataframe dataset, int numberOfClusters) {
-        Kmeans instance = new Kmeans(dbName, dbConf);
+        Kmeans instance = new Kmeans(dbName, conf);
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(numberOfClusters);

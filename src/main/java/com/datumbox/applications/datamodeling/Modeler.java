@@ -15,9 +15,9 @@
  */
 package com.datumbox.applications.datamodeling;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.interfaces.Trainable;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractModeler;
@@ -63,10 +63,10 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
      * database were the results are stored and the Database Configuration.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public Modeler(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
+    public Modeler(String dbName, Configuration conf) {
+        super(dbName, conf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
     }
 
     /**
@@ -100,14 +100,14 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         //get the training parameters
         Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        DatabaseConfiguration dbConf = kb().getDbConf();
+        Configuration conf = kb().getConf();
         
         //transform the training dataset
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
             
             setParallelized(dataTransformer);
             
@@ -120,7 +120,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             
             setParallelized(featureSelection);
             
@@ -132,7 +132,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         //initialize mlmodel
         Class mlClass = trainingParameters.getMLmodelClass();
-        mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, dbConf); 
+        mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
         
         setParallelized(mlmodel);
         
@@ -149,14 +149,14 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         kb().load();
         Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        DatabaseConfiguration dbConf = kb().getDbConf();
+        Configuration conf = kb().getConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
             }        
             
             setParallelized(dataTransformer);
@@ -169,7 +169,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             }
             
             setParallelized(featureSelection);
@@ -182,7 +182,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         //initialize mlmodel
         if(mlmodel==null) {
             Class mlClass = trainingParameters.getMLmodelClass();
-            mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, dbConf); 
+            mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
         }
         
         setParallelized(mlmodel);

@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.ensemblelearning;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
@@ -43,21 +43,21 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.ensembleLearningResponses(dbConf);
+        Dataframe[] data = Datasets.ensembleLearningResponses(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         
-        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, dbConf);
+        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, conf);
         
         BayesianEnsembleMethod.TrainingParameters param = new BayesianEnsembleMethod.TrainingParameters();
         
@@ -69,8 +69,8 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
-        instance = new BayesianEnsembleMethod(dbName, dbConf);
+        df = new DummyXYMinMaxNormalizer(dbName, conf);
+        instance = new BayesianEnsembleMethod(dbName, conf);
         
         instance.validate(validationData);
         

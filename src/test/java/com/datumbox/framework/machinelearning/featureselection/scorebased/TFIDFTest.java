@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -41,9 +41,9 @@ public class TFIDFTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.featureSelectionTFIDF(dbConf);
+        Dataframe[] data = Datasets.featureSelectionTFIDF(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
@@ -53,14 +53,14 @@ public class TFIDFTest extends AbstractTest {
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        TFIDF instance = new TFIDF(dbName, dbConf);
+        TFIDF instance = new TFIDF(dbName, conf);
         
         instance.fit_transform(trainingData, param);
         instance.close();
         //instance = null;
         
         
-        instance = new TFIDF(dbName, dbConf);
+        instance = new TFIDF(dbName, conf);
         
         instance.transform(validationData);
         

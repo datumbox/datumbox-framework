@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 
 /**
@@ -30,15 +30,15 @@ public abstract class AbstractRecommender<MP extends AbstractRecommender.Abstrac
     
     /** 
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
      * @param vmClass
      * @param modelValidator
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractRecommender(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
-        super(dbName, dbConf, mpClass, tpClass, vmClass, modelValidator);
+    protected AbstractRecommender(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
+        super(dbName, conf, mpClass, tpClass, vmClass, modelValidator);
     } 
     
 }

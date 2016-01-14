@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.featureselectors;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
 import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.machinelearning.common.dataobjects.DoubleKnowledgeBase;
@@ -32,13 +32,13 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
  
     /** 
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...) 
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...) 
      */
-    protected AbstractFeatureSelector(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, DoubleKnowledgeBase.class, mpClass, tpClass);
+    protected AbstractFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, DoubleKnowledgeBase.class, mpClass, tpClass);
     }
     
     

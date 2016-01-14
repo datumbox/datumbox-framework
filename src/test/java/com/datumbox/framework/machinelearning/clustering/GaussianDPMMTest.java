@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -43,16 +43,16 @@ public class GaussianDPMMTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate"); 
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.gaussianClusters(dbConf);
+        Dataframe[] data = Datasets.gaussianClusters(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
 
         
         String dbName = this.getClass().getSimpleName();
-        GaussianDPMM instance = new GaussianDPMM(dbName, dbConf);
+        GaussianDPMM instance = new GaussianDPMM(dbName, conf);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -67,7 +67,7 @@ public class GaussianDPMMTest extends AbstractTest {
         
         instance.close();
         //instance = null;
-        instance = new GaussianDPMM(dbName, dbConf);
+        instance = new GaussianDPMM(dbName, conf);
         
         instance.validate(validationData);
         
@@ -103,17 +103,17 @@ public class GaussianDPMMTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
          
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.gaussianClusters(dbConf);
+        Dataframe[] data = Datasets.gaussianClusters(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
-        GaussianDPMM instance = new GaussianDPMM(dbName, dbConf);
+        GaussianDPMM instance = new GaussianDPMM(dbName, conf);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);

@@ -15,13 +15,15 @@
  */
 package com.datumbox.tests.utilities;
 
+import com.datumbox.common.ConfigurableFactory;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
-import com.datumbox.common.persistentstorage.ConfigurationFactory;
 import com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
+import com.datumbox.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
+import com.datumbox.common.persistentstorage.Database;
 import com.datumbox.tests.TestConfiguration;
 import static org.junit.Assert.assertEquals;
 
@@ -72,20 +74,28 @@ public class TestUtils {
      * 
      * @return 
      */
-    public static DatabaseConfiguration getDBConfig() {
+    public static Configuration getConfig() {
         String tmpFolder = System.getProperty("java.io.tmpdir");
+        Configuration conf = Configuration.getConfiguration();
+        
         if (TestConfiguration.PERMANENT_STORAGE.equals(InMemoryConfiguration.class)) {
-            InMemoryConfiguration dbConf = (InMemoryConfiguration) ConfigurationFactory.INMEMORY.getConfiguration();
+            InMemoryConfiguration dbConf = (InMemoryConfiguration) ConfigurableFactory.getConfiguration(Database.INMEMORY.getDatabaseClass());
             dbConf.setOutputFolder(tmpFolder);
-            return dbConf;
+            conf.setDbConfig(dbConf);
         } 
         else if (TestConfiguration.PERMANENT_STORAGE.equals(MapDBConfiguration.class)) {
-            MapDBConfiguration dbConf = (MapDBConfiguration) ConfigurationFactory.MAPDB.getConfiguration();
+            MapDBConfiguration dbConf = (MapDBConfiguration) ConfigurableFactory.getConfiguration(Database.MAPDB.getDatabaseClass());
             dbConf.setOutputFolder(tmpFolder);
             dbConf.setHybridized(TestConfiguration.HYBRIDIZED_STORAGE);
-            return dbConf;
+            conf.setDbConfig(dbConf);
         }
-        return null;
+        
+        ConcurrencyConfiguration concurrencyConf = conf.getConcurrencyConfig();
+        concurrencyConf.setParallelized(TestConfiguration.PARALLELIZED);
+        concurrencyConf.setMaxNumberOfThreadsPerTask(TestConfiguration.MAX_NUMBER_OF_THREADS_PER_TASK);
+        conf.setConcurrencyConfig(concurrencyConf);
+        
+        return conf;
     }
     
 }

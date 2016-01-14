@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.clustering;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -43,23 +43,23 @@ public class KmeansTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(dbConf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
         
         
-        Kmeans instance = new Kmeans(dbName, dbConf);
+        Kmeans instance = new Kmeans(dbName, conf);
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
@@ -78,8 +78,8 @@ public class KmeansTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, dbConf);
-        instance = new Kmeans(dbName, dbConf);
+        df = new DummyXYMinMaxNormalizer(dbName, conf);
+        instance = new Kmeans(dbName, conf);
         
         instance.validate(validationData);
         
@@ -118,24 +118,24 @@ public class KmeansTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(dbConf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
 
         
         
         
-        Kmeans instance = new Kmeans(dbName, dbConf);
+        Kmeans instance = new Kmeans(dbName, conf);
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);

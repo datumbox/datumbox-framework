@@ -15,13 +15,13 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
@@ -116,11 +116,11 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public NLMS(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
-        streamExecutor = new ForkJoinStream();
+    public NLMS(String dbName, Configuration conf) {
+        super(dbName, conf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
 
     private boolean parallelized = true;
@@ -148,7 +148,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer);
+        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 

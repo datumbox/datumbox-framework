@@ -16,7 +16,7 @@
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -41,9 +41,9 @@ public class MutualInformationTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.featureSelectionCategorical(dbConf, 1000);
+        Dataframe[] data = Datasets.featureSelectionCategorical(conf, 1000);
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
@@ -53,7 +53,7 @@ public class MutualInformationTest extends AbstractTest {
         param.setMaxFeatures(5);
         param.setIgnoringNumericalFeatures(false);
         
-        MutualInformation instance = new MutualInformation(dbName, dbConf);
+        MutualInformation instance = new MutualInformation(dbName, conf);
         
         
         instance.fit_transform(trainingData, param);
@@ -61,7 +61,7 @@ public class MutualInformationTest extends AbstractTest {
         //instance = null;
         
         
-        instance = new MutualInformation(dbName, dbConf);
+        instance = new MutualInformation(dbName, conf);
         
         instance.transform(validationData);
         

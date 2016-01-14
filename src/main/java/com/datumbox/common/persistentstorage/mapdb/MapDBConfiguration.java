@@ -43,6 +43,13 @@ public class MapDBConfiguration implements DatabaseConfiguration {
 
     private boolean hybridized = false;
     
+    /**
+     * Default Constructor.
+     */
+    public MapDBConfiguration() {
+        
+    }
+    
     /** {@inheritDoc} */
     @Override
     public DatabaseConnector getConnector(String database) {

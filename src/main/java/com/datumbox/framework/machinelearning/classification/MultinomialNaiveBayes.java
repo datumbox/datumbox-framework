@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -61,10 +61,10 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public MultinomialNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class, false);
+    public MultinomialNaiveBayes(String dbName, Configuration conf) {
+        super(dbName, conf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class, false);
     }
     
 }

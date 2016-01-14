@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.dataobjects.TypeInference;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.common.utilities.RandomGenerator;
 import java.io.IOException;
@@ -57,10 +57,10 @@ public class Datasets {
     /**
      * Cars Numeric Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] carsNumeric(DatabaseConfiguration dbConf) {
+    public static Dataframe[] carsNumeric(Configuration conf) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
         FeatureList: 
@@ -84,14 +84,14 @@ public class Datasets {
             headerDataTypes.put("imported", TypeInference.DataType.BOOLEAN);
             headerDataTypes.put("stolen", TypeInference.DataType.BOOLEAN);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }
         
         
-        Dataframe validationData = new Dataframe(dbConf);
+        Dataframe validationData = new Dataframe(conf);
         AssociativeArray xData = new AssociativeArray();
         xData.put("red", true);
         xData.put("yellow", false);
@@ -107,10 +107,10 @@ public class Datasets {
     /**
      * Cars Categorical Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] carsCategorical(DatabaseConfiguration dbConf) {
+    public static Dataframe[] carsCategorical(Configuration conf) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
         FeatureList: 
@@ -127,13 +127,13 @@ public class Datasets {
             headerDataTypes.put("origin", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("stolen", TypeInference.DataType.CATEGORICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }
         
-        Dataframe validationData = new Dataframe(dbConf);
+        Dataframe validationData = new Dataframe(conf);
         AssociativeArray xData = new AssociativeArray();
         xData.put("color", "red");
         xData.put("type", "suv");
@@ -146,10 +146,10 @@ public class Datasets {
     /**
      * Wines Ordinal Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] winesOrdinal(DatabaseConfiguration dbConf) {   
+    public static Dataframe[] winesOrdinal(Configuration conf) {   
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/winesOrdinal.csv"), "UTF-8")) {
@@ -159,14 +159,14 @@ public class Datasets {
             headerDataTypes.put("c3", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("class", TypeInference.DataType.ORDINAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "class", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "class", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }
         
         
-        Dataframe validationData = new Dataframe(dbConf);
+        Dataframe validationData = new Dataframe(conf);
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("c1", 5.92085126899850);
         xData1.put("c2", 6.01037072456601);
@@ -189,11 +189,11 @@ public class Datasets {
     /**
      * Gaussian Clusters Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] gaussianClusters(DatabaseConfiguration dbConf) {
-        Dataframe trainingData = new Dataframe(dbConf);
+    public static Dataframe[] gaussianClusters(Configuration conf) {
+        Dataframe trainingData = new Dataframe(conf);
         int observationsPerCluster = 50;
         Random rnd = RandomGenerator.getThreadLocalRandom();
         for(int i=0;i<observationsPerCluster;++i) {
@@ -216,11 +216,11 @@ public class Datasets {
     /**
      * Multinomial Clusters Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] multinomialClusters(DatabaseConfiguration dbConf) {
-        Dataframe trainingData = new Dataframe(dbConf);
+    public static Dataframe[] multinomialClusters(Configuration conf) {
+        Dataframe trainingData = new Dataframe(conf);
         //cluster 1
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
@@ -270,10 +270,10 @@ public class Datasets {
     /**
      * Heart Disease Clusters Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] heartDiseaseClusters(DatabaseConfiguration dbConf) {
+    public static Dataframe[] heartDiseaseClusters(Configuration conf) {
         //Heart Disease - C2: Age, Sex, ChestPain, RestBP, Cholesterol, BloodSugar, ECG, MaxHeartRate, Angina, OldPeak, STSlope, Vessels, Thal
         //http://www.sgi.com/tech/mlc/db/heart.names
         Dataframe trainingData;
@@ -294,14 +294,14 @@ public class Datasets {
             headerDataTypes.put("Thal", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("Status", TypeInference.DataType.CATEGORICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "Status", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "Status", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }       
         
         
-        Dataframe validationData = new Dataframe(dbConf);
+        Dataframe validationData = new Dataframe(conf);
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("Age", 51);
         xData1.put("Sex", "M");
@@ -339,11 +339,11 @@ public class Datasets {
     /**
      * Ensemble Learning Responses Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] ensembleLearningResponses(DatabaseConfiguration dbConf) {
-        Dataframe trainingData = new Dataframe(dbConf);
+    public static Dataframe[] ensembleLearningResponses(Configuration conf) {
+        Dataframe trainingData = new Dataframe(conf);
         trainingData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -364,7 +364,7 @@ public class Datasets {
         trainingData.add(Datasets.<String>newDataVector(new String[] {"neg","neg"}, "neg"));
         
         
-        Dataframe validationData = new Dataframe(dbConf);
+        Dataframe validationData = new Dataframe(conf);
         validationData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         validationData.add(Datasets.<String>newDataVector(new String[] {"pos","neg"}, "pos"));
         validationData.add(Datasets.<String>newDataVector(new String[] {"neg","pos"}, "neg"));
@@ -376,12 +376,12 @@ public class Datasets {
     /**
      * Categorical Feature Selection Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @param n
      * @return 
      */
-    public static Dataframe[] featureSelectionCategorical(DatabaseConfiguration dbConf, int n) {
-        Dataframe data = new Dataframe(dbConf);
+    public static Dataframe[] featureSelectionCategorical(Configuration conf, int n) {
+        Dataframe data = new Dataframe(conf);
         for(int i=0;i<n;++i) {
             AssociativeArray xData = new AssociativeArray();
             //important fields
@@ -419,11 +419,11 @@ public class Datasets {
     /**
      * PCA Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] featureTransformationPCA(DatabaseConfiguration dbConf) {
-        Dataframe originalData = new Dataframe(dbConf);
+    public static Dataframe[] featureTransformationPCA(Configuration conf) {
+        Dataframe originalData = new Dataframe(conf);
         originalData.add(Datasets.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originalData.add(Datasets.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
         originalData.add(Datasets.<Double>newDataVector(new Double[]{7.0, 8.0, 0.0}, null));
@@ -431,7 +431,7 @@ public class Datasets {
         originalData.add(Datasets.<Double>newDataVector(new Double[]{13.0, 14.0, 15.0}, null));
         
         
-        Dataframe transformedData = new Dataframe(dbConf);
+        Dataframe transformedData = new Dataframe(conf);
         transformedData.add(Datasets.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));
         transformedData.add(Datasets.<Double>newDataVector(new Double[]{-6.0641, 1.0143, -4.8165}, null));
         transformedData.add(Datasets.<Double>newDataVector(new Double[]{-7.7270, 6.7253, 2.8399}, null));
@@ -444,11 +444,11 @@ public class Datasets {
     /**
      * TF-IDF Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] featureSelectionTFIDF(DatabaseConfiguration dbConf) {
-        Dataframe trainingData = new Dataframe(dbConf);
+    public static Dataframe[] featureSelectionTFIDF(Configuration conf) {
+        Dataframe trainingData = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("important1", 2.0);
@@ -482,11 +482,11 @@ public class Datasets {
     /**
      * Recommender System Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] recommenderSystemFood(DatabaseConfiguration dbConf) {
-        Dataframe trainingData = new Dataframe(dbConf);
+    public static Dataframe[] recommenderSystemFood(Configuration conf) {
+        Dataframe trainingData = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("ml1", 5.0);
@@ -587,7 +587,7 @@ public class Datasets {
         xData11.put("vg3", 0.5);
         trainingData.add(new Record(xData11, "pitta"));
         
-        Dataframe validationData = new Dataframe(dbConf);
+        Dataframe validationData = new Dataframe(conf);
         
         AssociativeArray profileData = new AssociativeArray();
         profileData.put("pizza", 4.5);
@@ -601,10 +601,10 @@ public class Datasets {
     /**
      * Regression Numeric Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] regressionNumeric(DatabaseConfiguration dbConf) {
+    public static Dataframe[] regressionNumeric(Configuration conf) {
         /*
         Synthetic Data generated with:
         
@@ -621,7 +621,7 @@ public class Datasets {
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -635,10 +635,10 @@ public class Datasets {
     /**
      * Regression Mixed Dataframe.
      * 
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static Dataframe[] regressionMixed(DatabaseConfiguration dbConf) {
+    public static Dataframe[] regressionMixed(Configuration conf) {
         /*
         Synthetic Data generated with:
         
@@ -659,7 +659,7 @@ public class Datasets {
             headerDataTypes.put("c4", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, dbConf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, conf);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);

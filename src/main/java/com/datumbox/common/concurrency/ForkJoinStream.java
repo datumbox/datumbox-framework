@@ -18,7 +18,6 @@ package com.datumbox.common.concurrency;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
@@ -31,24 +30,16 @@ import java.util.stream.Stream;
  */
 public class ForkJoinStream {
     
-    private final ForkJoinPool pool;
+    private final ConcurrencyConfiguration concurrencyConfig;
     
     /**
-     * Default constructor which creates a ForkJoinPool with parallelism equal 
-     * to the number of available processors.
-     */
-    public ForkJoinStream() {
-        pool = new ForkJoinPool();
-    } 
-    
-    /**
-     * This constructor creates a ForkJoinPool with the indicated parallelism level.
+     * Default constructor which receives the Concurrency Configuration object.
      * 
-     * @param parallelism
+     * @param concurrencyConfig
      */
-    public ForkJoinStream(int parallelism) {
-        pool = new ForkJoinPool(parallelism);
-    }
+    public ForkJoinStream(ConcurrencyConfiguration concurrencyConfig) {
+        this.concurrencyConfig = concurrencyConfig;
+    } 
     
     /**
      * Executes forEach on the provided stream. If the Stream is parallel, it is
@@ -61,12 +52,7 @@ public class ForkJoinStream {
      */
     public <T> void forEach(Stream<T> stream, Consumer<? super T> action) {
         Runnable runnable = () -> stream.forEach(action);
-        if(stream.isParallel()) {
-            ThreadMethods.forkJoinExecution(pool, runnable);
-        }
-        else {
-            runnable.run();
-        }
+        ThreadMethods.forkJoinExecution(runnable, concurrencyConfig, stream.isParallel());
     }
     
     /**
@@ -83,17 +69,7 @@ public class ForkJoinStream {
      */
     public <T, R, A> R collect(Stream<T> stream, Collector<? super T, A, R> collector) {
         Callable<R> callable = () -> stream.collect(collector);
-        if(stream.isParallel()) {
-            return ThreadMethods.forkJoinExecution(pool, callable);
-        }
-        else {
-            try {
-                return callable.call();
-            } 
-            catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfig, stream.isParallel());
     }
     
     /**
@@ -108,17 +84,7 @@ public class ForkJoinStream {
      */
     public <T> Optional<T> min(Stream<T> stream, Comparator<? super T> comparator) {
         Callable<Optional<T>> callable = () -> stream.min(comparator);
-        if(stream.isParallel()) {
-            return ThreadMethods.forkJoinExecution(pool, callable);
-        }
-        else {
-            try {
-                return callable.call();
-            } 
-            catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfig, stream.isParallel());
     }
     
     /**
@@ -133,17 +99,7 @@ public class ForkJoinStream {
      */
     public <T> Optional<T> max(Stream<T> stream, Comparator<? super T> comparator) {
         Callable<Optional<T>> callable = () -> stream.max(comparator);
-        if(stream.isParallel()) {
-            return ThreadMethods.forkJoinExecution(pool, callable);
-        }
-        else {
-            try {
-                return callable.call();
-            } 
-            catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfig, stream.isParallel());
     }
     
     /**
@@ -156,16 +112,6 @@ public class ForkJoinStream {
      */
     public double sum(DoubleStream stream) {
         Callable<Double> callable = () -> stream.sum();
-        if(stream.isParallel()) {
-            return ThreadMethods.forkJoinExecution(pool, callable);
-        }
-        else {
-            try {
-                return callable.call();
-            } 
-            catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfig, stream.isParallel());
     }
 }

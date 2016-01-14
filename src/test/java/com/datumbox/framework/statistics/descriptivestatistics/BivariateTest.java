@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.DataTable2D;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import com.datumbox.tests.utilities.TestUtils;
@@ -33,8 +33,8 @@ import org.junit.Test;
  */
 public class BivariateTest extends AbstractTest {
 
-    private Dataframe generateDataset(DatabaseConfiguration dbConf) {
-        Dataframe dataset = new Dataframe(dbConf);
+    private Dataframe generateDataset(Configuration conf) {
+        Dataframe dataset = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put(0, 6);
@@ -158,9 +158,9 @@ public class BivariateTest extends AbstractTest {
     public void testCovarianceMatrix() {
         logger.info("covarianceMatrix");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 4.5625);
         expResult.put2d(0, 1, 0.5875);
@@ -192,9 +192,9 @@ public class BivariateTest extends AbstractTest {
     public void testPearsonMatrix() {
         logger.info("pearsonMatrix");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.18561229707779);
@@ -226,9 +226,9 @@ public class BivariateTest extends AbstractTest {
     public void testSpearmanMatrix() {
         logger.info("spearmanMatrix");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
         expResult.put(0, new AssociativeArray());
         expResult.put2d(0, 0, 1.0);
@@ -261,9 +261,9 @@ public class BivariateTest extends AbstractTest {
     public void testKendalltauMatrix() {
         logger.info("kendalltauMatrix");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe dataset = generateDataset(dbConf);
+        Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.066666666666667);

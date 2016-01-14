@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 
 /**
@@ -63,10 +63,10 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public BinarizedNaiveBayes(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class, true);
+    public BinarizedNaiveBayes(String dbName, Configuration conf) {
+        super(dbName, conf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class, true);
     }
     
     /** {@inheritDoc} */

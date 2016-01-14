@@ -39,26 +39,33 @@ public class ThreadMethods {
      * @param <T>
      * @param stream
      * @param consumer 
+     * @param concurrencyConfig 
      */
-    public static <T> void throttledExecution(Stream<T> stream, Consumer<T> consumer) {
-        int maxThreads = Runtime.getRuntime().availableProcessors(); //TODO: replace with config
-        int maxTasks = 2*maxThreads; 
-        
-        ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
-        ThrottledExecutor executor = new ThrottledExecutor(executorService, maxTasks);
-        
-        stream.sequential().forEach(i -> {
-            executor.execute(() -> {
-                consumer.accept(i);
+    public static <T> void throttledExecution(Stream<T> stream, Consumer<T> consumer, ConcurrencyConfiguration concurrencyConfig) {
+        if(concurrencyConfig.isParallelized()) {
+            int maxThreads = concurrencyConfig.getMaxNumberOfThreadsPerTask();
+            int maxTasks = 2*maxThreads; 
+
+            ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
+            ThrottledExecutor executor = new ThrottledExecutor(executorService, maxTasks);
+
+            stream.sequential().forEach(i -> {
+                executor.execute(() -> {
+                    consumer.accept(i);
+                });
             });
-        });
-        
-        executorService.shutdown();
-        try {
-            executorService.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
-        } 
-        catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
+
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
+            } 
+            catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        else {
+            Runnable runnable = () -> stream.forEach(consumer);
+            runnable.run();
         }
     }
     
@@ -67,16 +74,31 @@ public class ThreadMethods {
      * pool.
      * 
      * @param <T>
-     * @param pool
      * @param callable 
+     * @param concurrencyConfig 
+     * @param parallelStream 
      * @return  
      */
-    public static <T> T forkJoinExecution(ForkJoinPool pool, Callable<T> callable) {
-        try {
-            return pool.submit(callable).get();
-        } 
-        catch (InterruptedException | ExecutionException ex) {
-            throw new RuntimeException(ex);
+    public static <T> T forkJoinExecution(Callable<T> callable, ConcurrencyConfiguration concurrencyConfig, boolean parallelStream) {
+        if(parallelStream && concurrencyConfig.isParallelized()) {
+            try {
+                ForkJoinPool pool = new ForkJoinPool(concurrencyConfig.getMaxNumberOfThreadsPerTask());
+                
+                T results = pool.submit(callable).get();
+                pool.shutdown();
+                return results;
+            } 
+            catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        else {
+            try {
+                return callable.call();
+            } 
+            catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
     
@@ -84,15 +106,23 @@ public class ThreadMethods {
      * Alternative to parallelStreams() which executes a runnable in a separate
      * pool.
      * 
-     * @param pool
      * @param runnable 
+     * @param concurrencyConfig 
+     * @param parallelStream 
      */
-    public static void forkJoinExecution(ForkJoinPool pool, Runnable runnable) {
-        try {
-            pool.submit(runnable).get();
-        } 
-        catch (InterruptedException | ExecutionException ex) {
-            throw new RuntimeException(ex);
+    public static void forkJoinExecution(Runnable runnable, ConcurrencyConfiguration concurrencyConfig, boolean parallelStream) {
+        if(parallelStream && concurrencyConfig.isParallelized()) {
+            try {
+                ForkJoinPool pool = new ForkJoinPool(concurrencyConfig.getMaxNumberOfThreadsPerTask());
+                pool.submit(runnable).get();
+                pool.shutdown();
+            } 
+            catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        else {
+            runnable.run();
         }
     }
 }

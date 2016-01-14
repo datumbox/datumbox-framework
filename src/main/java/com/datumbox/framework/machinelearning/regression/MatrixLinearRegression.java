@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -22,7 +23,6 @@ import com.datumbox.common.dataobjects.MatrixDataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.utilities.PHPMethods;
@@ -125,10 +125,10 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public MatrixLinearRegression(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
+    public MatrixLinearRegression(String dbName, Configuration conf) {
+        super(dbName, conf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
     }
 
     /** {@inheritDoc} */

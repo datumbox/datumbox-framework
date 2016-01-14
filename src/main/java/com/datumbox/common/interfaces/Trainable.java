@@ -15,8 +15,8 @@
  */
 package com.datumbox.common.interfaces;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
 import java.lang.reflect.InvocationTargetException;
 
@@ -37,13 +37,13 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      * @param <BT>
      * @param aClass
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @return 
      */
-    public static <BT extends AbstractTrainer> BT newInstance(Class<BT> aClass, String dbName, DatabaseConfiguration dbConf) {
+    public static <BT extends AbstractTrainer> BT newInstance(Class<BT> aClass, String dbName, Configuration conf) {
         BT algorithm = null;
         try {
-            algorithm = aClass.getConstructor(String.class, DatabaseConfiguration.class).newInstance(dbName, dbConf);
+            algorithm = aClass.getConstructor(String.class, Configuration.class).newInstance(dbName, conf);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -23,7 +24,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -179,11 +179,11 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public SoftMaxRegression(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidator());
-        streamExecutor = new ForkJoinStream();
+    public SoftMaxRegression(String dbName, Configuration conf) {
+        super(dbName, conf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidator());
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;
@@ -211,7 +211,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, false, true);
-        _predictDatasetParallel(newData, resultsBuffer);
+        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 

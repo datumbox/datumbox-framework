@@ -17,7 +17,7 @@ package com.datumbox.applications.nlp;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 
@@ -50,7 +50,7 @@ public class TextClassifierTest extends AbstractTest {
     public void testTrainAndPredict() {
         logger.info("TrainAndPredict");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
         String dbName = this.getClass().getSimpleName();
@@ -65,7 +65,7 @@ public class TextClassifierTest extends AbstractTest {
             throw new RuntimeException(ex);
         }
         
-        TextClassifier instance = new TextClassifier(dbName, dbConf);
+        TextClassifier instance = new TextClassifier(dbName, conf);
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         //Classifier configuration
@@ -105,7 +105,7 @@ public class TextClassifierTest extends AbstractTest {
         
         
         
-        instance = new TextClassifier(dbName, dbConf);
+        instance = new TextClassifier(dbName, conf);
         Dataframe validationData = null;
         try {
             validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());

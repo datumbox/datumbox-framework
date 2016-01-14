@@ -15,11 +15,11 @@
  */
 package com.datumbox.applications.nlp;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.interfaces.Trainable;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
@@ -121,10 +121,10 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * database were the results are stored and the Database Configuration.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public TextClassifier(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
+    public TextClassifier(String dbName, Configuration conf) {
+        super(dbName, conf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
     }
     
     /**
@@ -140,7 +140,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         //build trainingDataset
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets, 
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
-                kb().getDbConf()
+                kb().getConf()
         );
         
         fit(trainingData, trainingParameters);
@@ -182,7 +182,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, 
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
-                kb().getDbConf()
+                kb().getConf()
         );
         
         predict(testDataset);
@@ -204,7 +204,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
         
-        Dataframe testDataset = new Dataframe(kb().getDbConf());
+        Dataframe testDataset = new Dataframe(kb().getConf());
         
         testDataset.add(new Record(new AssociativeArray(
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters())
@@ -258,7 +258,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(
                 datasets, 
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
-                kb().getDbConf()
+                kb().getConf()
         );
         
         ValidationMetrics vm = validate(testDataset);
@@ -272,12 +272,12 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     @Override
     protected void _fit(Dataframe trainingDataset) {
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        DatabaseConfiguration dbConf = kb().getDbConf();
+        Configuration conf = kb().getConf();
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
             
             setParallelized(dataTransformer);
             
@@ -288,7 +288,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             AbstractFeatureSelector.AbstractTrainingParameters featureSelectionParameters = trainingParameters.getFeatureSelectionTrainingParameters();
             if(AbstractCategoricalFeatureSelector.AbstractTrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
                 ((AbstractCategoricalFeatureSelector.AbstractTrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
@@ -301,7 +301,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         }
         
         //initialize mlmodel
-        mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, dbConf); 
+        mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, conf); 
             
         setParallelized(mlmodel);
         
@@ -315,14 +315,14 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     
     private void preprocessTestDataset(Dataframe testDataset) {
         TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        DatabaseConfiguration dbConf = kb().getDbConf();
+        Configuration conf = kb().getConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, dbConf);
+                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
             }        
             
             setParallelized(dataTransformer);
@@ -335,7 +335,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
             if(featureSelection==null) {
-                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, dbConf);
+                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             }
             
             setParallelized(featureSelection);
@@ -346,7 +346,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         //initialize mlmodel
         if(mlmodel==null) {
-            mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, dbConf); 
+            mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, conf); 
         }
         
         setParallelized(mlmodel);

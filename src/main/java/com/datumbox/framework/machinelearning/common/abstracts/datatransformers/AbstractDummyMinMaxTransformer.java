@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.datatransformers;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -23,7 +24,6 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -136,12 +136,12 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     
     /** 
      * @param dbName
-     * @param dbConf
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @param conf
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractDummyMinMaxTransformer(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, AbstractDummyMinMaxTransformer.ModelParameters.class, AbstractDummyMinMaxTransformer.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream();
+    protected AbstractDummyMinMaxTransformer(String dbName, Configuration conf) {
+        super(dbName, conf, AbstractDummyMinMaxTransformer.ModelParameters.class, AbstractDummyMinMaxTransformer.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;

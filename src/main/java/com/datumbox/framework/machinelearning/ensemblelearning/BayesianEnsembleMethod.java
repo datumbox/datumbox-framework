@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -62,10 +62,10 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public BayesianEnsembleMethod(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class, true);
+    public BayesianEnsembleMethod(String dbName, Configuration conf) {
+        super(dbName, conf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class, true);
     }
     
     /** {@inheritDoc} */

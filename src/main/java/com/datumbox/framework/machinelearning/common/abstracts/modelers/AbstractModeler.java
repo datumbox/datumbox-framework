@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.modelers;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.machinelearning.common.dataobjects.TripleKnowledgeBase;
@@ -45,15 +45,15 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
     
     /** 
      * @param baseDBname
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
      * @param vmClass
      * @param modelValidator
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...) 
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...) 
      */
-    protected AbstractModeler(String baseDBname, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
-        super(baseDBname, dbConf, TripleKnowledgeBase.class, mpClass, tpClass, vmClass);
+    protected AbstractModeler(String baseDBname, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
+        super(baseDBname, conf, TripleKnowledgeBase.class, mpClass, tpClass, vmClass);
         this.modelValidator = modelValidator;
     } 
     
@@ -69,7 +69,7 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
     public VM kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("kFoldCrossValidation()");
         
-        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, kb().getDbConf(), this.getClass(), trainingParameters);
+        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, kb().getConf(), this.getClass(), trainingParameters);
     }
     
     /**

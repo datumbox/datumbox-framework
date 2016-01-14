@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.recommendersystem;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -43,16 +43,16 @@ public class CollaborativeFilteringTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.recommenderSystemFood(dbConf);
+        Dataframe[] data = Datasets.recommenderSystemFood(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();
-        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, dbConf);
+        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, conf);
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
@@ -61,7 +61,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
         
         instance.close();
         //instance = null;
-        instance = new CollaborativeFiltering(dbName, dbConf);
+        instance = new CollaborativeFiltering(dbName, conf);
         
         CollaborativeFiltering.ValidationMetrics vm = instance.validate(validationData);
         

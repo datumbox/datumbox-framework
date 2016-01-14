@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.classification;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
@@ -42,17 +42,17 @@ public class MaximumEntropyTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
-        Dataframe[] data = Datasets.carsNumeric(dbConf);
+        Dataframe[] data = Datasets.carsNumeric(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String dbName = this.getClass().getSimpleName();
-        MaximumEntropy instance = new MaximumEntropy(dbName, dbConf);
+        MaximumEntropy instance = new MaximumEntropy(dbName, conf);
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
@@ -61,7 +61,7 @@ public class MaximumEntropyTest extends AbstractTest {
         
         instance.close();
         //instance = null;
-        instance = new MaximumEntropy(dbName, dbConf);
+        instance = new MaximumEntropy(dbName, conf);
         
         instance.validate(validationData);
         
@@ -89,17 +89,17 @@ public class MaximumEntropyTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(dbConf);
+        Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         
         String dbName = this.getClass().getSimpleName();
-        MaximumEntropy instance = new MaximumEntropy(dbName, dbConf);
+        MaximumEntropy instance = new MaximumEntropy(dbName, conf);
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.featureselectors;
 
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 
 /**
  * Abstract class which is the base of every Continuous Feature Selection algorithm.
@@ -28,13 +28,13 @@ public abstract class AbstractContinuousFeatureSelector<MP extends AbstractConti
 
     /** 
      * @param dbName
-     * @param dbConf
+     * @param conf
      * @param mpClass
      * @param tpClass
-     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration, java.lang.Class, java.lang.Class...)  
+     * @see com.datumbox.framework.machinelearning.common.abstracts.AbstractTrainer#AbstractTrainer(java.lang.String, com.datumbox.common.Configuration, java.lang.Class, java.lang.Class...)  
      */
-    protected AbstractContinuousFeatureSelector(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, dbConf, mpClass, tpClass);
+    protected AbstractContinuousFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, mpClass, tpClass);
     }
     
 }

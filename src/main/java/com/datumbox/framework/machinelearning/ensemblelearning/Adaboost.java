@@ -15,12 +15,12 @@
  */
 package com.datumbox.framework.machinelearning.ensemblelearning;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
@@ -67,10 +67,10 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public Adaboost(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
+    public Adaboost(String dbName, Configuration conf) {
+        super(dbName, conf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
     } 
 
     /** {@inheritDoc} */

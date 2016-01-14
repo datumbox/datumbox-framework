@@ -15,6 +15,7 @@
  */
 package com.datumbox.tests;
 
+import com.datumbox.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 
 /**
@@ -37,6 +38,16 @@ public class TestConfiguration {
      * Seed of the RandomGenerator.
      */
     public static final long RANDOM_SEED = 42L;
+    
+    /**
+     * Whether parallelization is permitted.
+     */
+    public static final boolean PARALLELIZED = true;
+    
+    /**
+     * The maximum number of threads used per task.
+     */
+    public static final int MAX_NUMBER_OF_THREADS_PER_TASK = ConcurrencyConfiguration.AVAILABLE_PROCESSORS;
     
     /**
      * The class of the DatabaseConfiguration.

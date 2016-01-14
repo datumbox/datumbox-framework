@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.common.dataobjects;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.framework.machinelearning.common.interfaces.KnowledgeBase;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +39,7 @@ public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends Training
     /**
      * The database configuration of the Permanent Storage.
      */
-    private final DatabaseConfiguration dbConf;
+    private final Configuration conf;
     
     /**
      * The connector to the Permanent Storage.
@@ -70,14 +70,14 @@ public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends Training
      * Public constructor of the object.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      * @param mpClass 
      * @param tpClass 
      */
-    public DoubleKnowledgeBase(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass) {
-        this.dbConf = dbConf;
+    public DoubleKnowledgeBase(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        this.conf = conf;
         
-        dbc = dbConf.getConnector(dbName);
+        dbc = this.conf.getDbConfig().getConnector(dbName);
         
         this.mpClass = mpClass;
         this.tpClass = tpClass;
@@ -91,8 +91,8 @@ public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends Training
     
     /** {@inheritDoc} */
     @Override
-    public DatabaseConfiguration getDbConf() {
-        return dbConf;
+    public Configuration getConf() {
+        return conf;
     }
 
     /** {@inheritDoc} */

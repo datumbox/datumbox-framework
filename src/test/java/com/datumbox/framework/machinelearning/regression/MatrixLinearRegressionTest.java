@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.regression;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.tests.TestConfiguration;
@@ -43,20 +43,20 @@ public class MatrixLinearRegressionTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.regressionNumeric(dbConf);
+        Dataframe[] data = Datasets.regressionNumeric(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, dbConf);
+        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new XYMinMaxNormalizer.TrainingParameters());
         
         df.transform(validationData);
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConf);
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, conf);
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
@@ -68,8 +68,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new XYMinMaxNormalizer(dbName, dbConf);
-        instance = new MatrixLinearRegression(dbName, dbConf);
+        df = new XYMinMaxNormalizer(dbName, conf);
+        instance = new MatrixLinearRegression(dbName, conf);
         
         instance.validate(validationData);
         
@@ -98,21 +98,21 @@ public class MatrixLinearRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.regressionMixed(dbConf);
+        Dataframe[] data = Datasets.regressionMixed(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
                 
         String dbName = this.getClass().getSimpleName();
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, dbConf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
         
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, dbConf);
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, conf);
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         

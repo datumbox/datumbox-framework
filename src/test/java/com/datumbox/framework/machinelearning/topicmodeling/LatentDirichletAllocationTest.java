@@ -17,7 +17,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.common.Configuration;
 import com.datumbox.tests.TestConfiguration;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
@@ -47,7 +47,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        DatabaseConfiguration dbConf = TestUtils.getDBConfig();
+        Configuration conf = TestUtils.getConfig();
         
         
         String dbName = this.getClass().getSimpleName();
@@ -65,10 +65,10 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         
-        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, dbConf);
+        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, conf);
         
         
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, dbConf);
+        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, conf);
         
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
@@ -80,13 +80,13 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         
         lda.validate(trainingData);
         
-        Dataframe reducedTrainingData = new Dataframe(dbConf);
+        Dataframe reducedTrainingData = new Dataframe(conf);
         for(Record r : trainingData) {
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }
         
-        SoftMaxRegression smr = new SoftMaxRegression(dbName, dbConf);
+        SoftMaxRegression smr = new SoftMaxRegression(dbName, conf);
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);

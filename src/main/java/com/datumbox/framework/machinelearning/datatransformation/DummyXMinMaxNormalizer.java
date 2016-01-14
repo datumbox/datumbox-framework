@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.datatransformation;
 
+import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.Dataframe;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractDummyMinMaxTransformer;
 import java.util.Map;
 
@@ -33,10 +33,10 @@ public class DummyXMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
      * Public constructor of the algorithm.
      * 
      * @param dbName
-     * @param dbConf 
+     * @param conf 
      */
-    public DummyXMinMaxNormalizer(String dbName, DatabaseConfiguration dbConf) {
-        super(dbName, dbConf);
+    public DummyXMinMaxNormalizer(String dbName, Configuration conf) {
+        super(dbName, conf);
     }
     
     /** {@inheritDoc} */
