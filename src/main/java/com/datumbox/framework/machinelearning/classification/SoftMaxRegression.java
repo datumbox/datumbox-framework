@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -182,9 +183,11 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
      */
     public SoftMaxRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidator());
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -249,7 +252,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             thitas.put(Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass), 0.0);
         }
         
-        StreamMethods.stream(trainingData.stream(), isParallelized()).forEach(r -> { 
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
             for(Object feature : r.getX().keySet()) {
                 for(Object theClass : classesSet) {
                     thitas.putIfAbsent(Arrays.<Object>asList(feature, theClass), 0.0);
@@ -315,7 +318,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         Set<Object> classesSet = modelParameters.getClasses();
         
-        StreamMethods.stream(trainingData.stream(), isParallelized()).forEach(r -> { 
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             AssociativeArray classProbabilities = hypothesisFunction(r.getX(), thitas);
             for(Object theClass : classesSet) {
@@ -376,11 +379,11 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression
         //It is optimized for speed to reduce the amount of loops
         
-        double error = StreamMethods.stream(trainingData.stream(), isParallelized()).mapToDouble(r -> { 
+        double error = streamExecutor.sum(StreamMethods.stream(trainingData.stream(), isParallelized()).mapToDouble(r -> { 
             AssociativeArray classProbabilities = hypothesisFunction(r.getX(), thitas);
             Double score = classProbabilities.getDouble(r.getY());
             return Math.log(score); //no need to loop through the categories. Just grab the one that we are interested in
-        }).sum();
+        }));
         
         return -error/kb().getModelParameters().getN();
     }

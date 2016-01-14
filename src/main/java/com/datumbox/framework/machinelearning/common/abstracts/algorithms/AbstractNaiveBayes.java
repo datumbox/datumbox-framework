@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
@@ -142,10 +143,12 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
      */
     protected AbstractNaiveBayes(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, boolean isBinarized) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
+        streamExecutor = new ForkJoinStream();
         this.isBinarized = isBinarized;
     } 
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -257,7 +260,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             any effects on the results of the algorithm since the scores will be the same in all classes
             and it will be taken care by the normalization.
         */
-        StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()).forEach(feature -> {
+        streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
                 List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
                 logLikelihoods.put(featureClassTuple, 0.0); //the key is unique across threads and the map is concurrent
@@ -269,7 +272,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         for(Record r : trainingData) { 
             Object theClass = r.getY();
             //store the occurrances of the features
-            double sumOfOccurrences = StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).mapToDouble(entry -> {
+            double sumOfOccurrences = streamExecutor.sum(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).mapToDouble(entry -> {
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
@@ -286,7 +289,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
                 else {
                     return 0.0;
                 }
-            }).sum();
+            }));
            
             if(sumOfOccurrences>0.0) {
                 totalFeatureOccurrencesForEachClass.put(theClass,totalFeatureOccurrencesForEachClass.get(theClass)+sumOfOccurrences);
@@ -304,7 +307,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         
         
         //update log likelihood
-        StreamMethods.stream(logLikelihoods.entrySet().stream(), isParallelized()).forEach(featureClassCounts -> {
+        streamExecutor.forEach(StreamMethods.stream(logLikelihoods.entrySet().stream(), isParallelized()), featureClassCounts -> {
             List<Object> featureClassTuple = featureClassCounts.getKey();
             Object theClass = featureClassTuple.get(1);
             Double occurrences = featureClassCounts.getValue();

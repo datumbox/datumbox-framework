@@ -41,7 +41,7 @@ public class ThreadMethods {
      * @param consumer 
      */
     public static <T> void throttledExecution(Stream<T> stream, Consumer<T> consumer) {
-        int maxThreads = Runtime.getRuntime().availableProcessors();
+        int maxThreads = Runtime.getRuntime().availableProcessors(); //TODO: replace with config
         int maxTasks = 2*maxThreads; 
         
         ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
@@ -63,16 +63,33 @@ public class ThreadMethods {
     }
     
     /**
-     * Alternative to parallelStreams() which executes the tasks in a separate
+     * Alternative to parallelStreams() which executes a callable in a separate
      * pool.
      * 
      * @param <T>
+     * @param pool
      * @param callable 
      * @return  
      */
-    public static <T> T forkJoinExecution(Callable<T> callable) {
+    public static <T> T forkJoinExecution(ForkJoinPool pool, Callable<T> callable) {
         try {
-            return new ForkJoinPool().submit(callable).get();
+            return pool.submit(callable).get();
+        } 
+        catch (InterruptedException | ExecutionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    /**
+     * Alternative to parallelStreams() which executes a runnable in a separate
+     * pool.
+     * 
+     * @param pool
+     * @param runnable 
+     */
+    public static void forkJoinExecution(ForkJoinPool pool, Runnable runnable) {
+        try {
+            pool.submit(runnable).get();
         } 
         catch (InterruptedException | ExecutionException ex) {
             throw new RuntimeException(ex);

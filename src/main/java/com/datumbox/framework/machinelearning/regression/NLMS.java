@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.regression;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -119,9 +120,11 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
      */
     public NLMS(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
+        streamExecutor = new ForkJoinStream();
     }
 
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -214,7 +217,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         double multiplier = learningRate/modelParameters.getN();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        StreamMethods.stream(trainingData.stream(), isParallelized()).forEach(r -> { 
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), thitas);
             
@@ -270,13 +273,13 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression
         //It is optimized for speed to reduce the amount of loops
         
-        double error = StreamMethods.stream(trainingData.entries(), isParallelized()).mapToDouble(e -> { 
+        double error = streamExecutor.sum(StreamMethods.stream(trainingData.entries(), isParallelized()).mapToDouble(e -> { 
             Integer rId = e.getKey();
             Record r = e.getValue();
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             trainingData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
-        }).sum();
+        }));
         
         return error;
     }

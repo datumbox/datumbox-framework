@@ -15,6 +15,7 @@
  */
 package com.datumbox.common.dataobjects;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.interfaces.Copyable;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -237,6 +238,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     private final DatabaseConnector dbc; 
     private final DatabaseConfiguration dbConf; 
     
+    protected final ForkJoinStream streamExecutor;
+    
     /**
      * Keeps a counter of the id that will be used for the next record.
      */
@@ -263,6 +266,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         
         yDataType = null;
         xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
+        
+        streamExecutor = new ForkJoinStream();
     }
     
     /**
@@ -605,8 +610,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
-
-        StreamMethods.stream(entries(), true).forEach(e -> {
+        
+        streamExecutor.forEach(StreamMethods.stream(entries(), true), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             

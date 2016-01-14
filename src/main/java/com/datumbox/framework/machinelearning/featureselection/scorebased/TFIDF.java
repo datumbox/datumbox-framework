@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.scorebased;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -133,9 +134,11 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
      */
     public TFIDF(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -167,7 +170,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         //in idf map. this help us avoid using twice much memory comparing to
         //using two different maps
         for(Record r : trainingData) { 
-            StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).forEach(entry -> {
+            streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), entry -> {
                 Object keyword = entry.getKey();
                 Double counts = TypeInference.toDouble(entry.getValue());
                 
@@ -178,7 +181,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         }
         
         //convert counts to idf scores
-        StreamMethods.stream(tmp_idfMap.entrySet().stream(), isParallelized()).forEach(entry -> {
+        streamExecutor.forEach(StreamMethods.stream(tmp_idfMap.entrySet().stream(), isParallelized()), entry -> {
             Object keyword = entry.getKey();
             Double countsInDocument = entry.getValue();
             
@@ -195,7 +198,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         };
         
         //calculate the maximum tfidf scores
-        StreamMethods.stream(trainingData.stream(), isParallelized()).forEach(r -> {
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> {
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();

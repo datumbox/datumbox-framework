@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -126,9 +127,11 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
      */
     public MaximumEntropy(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class, new ClassifierValidator<>());
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -207,7 +210,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         for(Record r : trainingData) { 
             
             //store the occurrances of the features
-            StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).forEach(entry -> {
+            streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), entry -> {
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 if (occurrences!=null && occurrences>0.0) {
                     Object feature = entry.getKey();
@@ -261,7 +264,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                 //build a map with the scores of the record for each class
                 final AssociativeArray xData = r.getX();
                 AssociativeArray classScores = new AssociativeArray(
-                    StreamMethods.stream(classesSet.stream(), isParallelized()).collect(
+                    streamExecutor.collect(StreamMethods.stream(classesSet.stream(), isParallelized()), 
                         Collectors.toMap(Function.identity(), theClass->calculateClassScore(xData, theClass))
                     )
                 );
@@ -269,7 +272,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                 Descriptives.normalizeExp(classScores);
                 
                 //The below seems a bit strange but this is actually how the model probabilities are estimated. It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
-                StreamMethods.stream(classScores.entrySet().stream(), isParallelized()).forEach(entry -> {
+                streamExecutor.forEach(StreamMethods.stream(classScores.entrySet().stream(), isParallelized()), entry -> {
                     Object theClass = entry.getKey();
                     Double score = TypeInference.toDouble(entry.getValue());
                     
@@ -293,7 +296,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             AtomicBoolean infiniteValuesDetected = new AtomicBoolean(false);
             //Now we have the model probabilities. We will use it to estimate the Deltas and finally update the lamdas
-            StreamMethods.stream(tmp_EpFj_model.entrySet().stream(), isParallelized()).forEach(featureClassCounts -> {
+            streamExecutor.forEach(StreamMethods.stream(tmp_EpFj_model.entrySet().stream(), isParallelized()), featureClassCounts -> {
                 List<Object> tp = featureClassCounts.getKey();
                 
                 Double EpFj_observed_value = EpFj_observed.get(tp);
@@ -365,10 +368,10 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             if(infiniteValuesDetected.get()) {
             
             
-                Double minimumNonInfiniteLambdaWeight = StreamMethods.stream(lambdas.values().stream(), isParallelized()).filter(v -> Double.isFinite(v)).min(Double::compare).get();
-                Double maximumNonInfiniteLambdaWeight = StreamMethods.stream(lambdas.values().stream(), isParallelized()).filter(v -> Double.isFinite(v)).max(Double::compare).get();
+                Double minimumNonInfiniteLambdaWeight = streamExecutor.min(StreamMethods.stream(lambdas.values().stream(), isParallelized()).filter(v -> Double.isFinite(v)), Double::compare).get();
+                Double maximumNonInfiniteLambdaWeight = streamExecutor.max(StreamMethods.stream(lambdas.values().stream(), isParallelized()).filter(v -> Double.isFinite(v)), Double::compare).get();
                 
-                StreamMethods.stream(lambdas.entrySet().stream(), isParallelized()).forEach(e -> {
+                streamExecutor.forEach(StreamMethods.stream(lambdas.entrySet().stream(), isParallelized()), e -> {
                     List<Object> featureClass = e.getKey();
                     Double value = e.getValue();
                     

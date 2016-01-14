@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.classification;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -215,9 +216,11 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
      */
     public OrdinalRegression(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidator());
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -354,7 +357,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
-        StreamMethods.stream(trainingData.stream(), isParallelized()).forEach(r -> { 
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
             Object rClass = r.getY();
             Object rPreviousClass = previousThitaMapping.get(rClass);
             
@@ -418,7 +421,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     
     private double calculateError(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
         
-        double error = StreamMethods.stream(trainingData.stream(), isParallelized()).mapToDouble(r -> { 
+        double error = streamExecutor.sum(StreamMethods.stream(trainingData.stream(), isParallelized()).mapToDouble(r -> { 
             double e=0.0;
             double xTw = xTw(r.getX(), weights);
             
@@ -433,7 +436,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             e += h(xTw-thitas.get(theClass));
             
             return e;
-        }).sum();
+        }));
         
         return error/kb().getModelParameters().getN();
     }

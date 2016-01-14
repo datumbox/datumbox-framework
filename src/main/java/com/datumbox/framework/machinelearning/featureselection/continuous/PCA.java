@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.continuous;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractContinuousFeatureSelector;
@@ -267,9 +268,11 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
      */
     public PCA(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream();
     }
 
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -388,7 +391,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         //multiplying the data with components
         final RealMatrix X = matrixDataset.getX().multiply(components);
         
-        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
+        streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);

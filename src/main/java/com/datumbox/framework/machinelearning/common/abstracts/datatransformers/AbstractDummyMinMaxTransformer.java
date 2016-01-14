@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.datatransformers;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -140,9 +141,11 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      */
     protected AbstractDummyMinMaxTransformer(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, AbstractDummyMinMaxTransformer.ModelParameters.class, AbstractDummyMinMaxTransformer.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -164,7 +167,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected void fitX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(dataset.getXDataTypes().entrySet().stream(), isParallelized()).forEach(entry -> {
+        streamExecutor.forEach(StreamMethods.stream(dataset.getXDataTypes().entrySet().stream(), isParallelized()), entry -> {
             Object column = entry.getKey();
             TypeInference.DataType columnType = entry.getValue();
 
@@ -187,7 +190,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected void normalizeX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
+        streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
@@ -241,7 +244,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
      * @param maxColumnValues 
      */
     protected void denormalizeX(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
-        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
+        streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             AssociativeArray xData = r.getX().copy();
@@ -312,7 +315,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     protected void normalizeY(Dataframe dataset, Map<Object, Double> minColumnValues, Map<Object, Double> maxColumnValues) {
         if(dataset.getYDataType()==TypeInference.DataType.NUMERICAL) {
             
-            StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
+            streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 Double value = TypeInference.toDouble(r.getY());
@@ -360,7 +363,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         TypeInference.DataType dataType = dataset.getYDataType();
         if(dataType==TypeInference.DataType.NUMERICAL || dataType==null) {
 
-            StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
+            streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
                 
@@ -414,14 +417,14 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         Map<Object, TypeInference.DataType> columnTypes = dataset.getXDataTypes();
         
         //find the referenceLevels for each categorical variable
-        StreamMethods.stream(dataset.stream(), isParallelized()).forEachOrdered(r -> {
+        for(Record r : dataset) {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 if(covert2dummy(columnTypes.get(column))) { 
                     referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized is needed.
                 }
             }
-        });
+        }
     }
     
     /**
@@ -435,7 +438,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         Map<Object, TypeInference.DataType> columnTypes = dataset.getXDataTypes();
         
         //Replace variables with dummy versions
-        StreamMethods.stream(dataset.entries(), isParallelized()).forEach(e -> {
+        streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             
@@ -446,9 +449,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                 if(covert2dummy(columnTypes.get(column))==false) { 
                     continue;
                 }
-                Object value = xData.get(column);
-                
-                xData.remove(column); //remove the original column
+                Object value = xData.remove(column); //remove the original column
                 modified = true;
                 
                 Object referenceLevel= referenceLevels.get(column);

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -424,9 +425,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
      */
     public Kmeans(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidator<>());
+        streamExecutor = new ForkJoinStream();
     } 
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -510,7 +513,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         if(trainingParameters.isWeighted()==false) {
             //the unweighted version of the algorithm
             double gammaWeight = trainingParameters.getCategoricalGamaMultiplier();
-            StreamMethods.stream(columnTypes.entrySet().stream(), isParallelized()).forEach(e -> {
+            streamExecutor.forEach(StreamMethods.stream(columnTypes.entrySet().stream(), isParallelized()), e -> {
                 //standard kmeans has equal weights in all numeric features
                 //for categorical, dummy or ordinal feature, use the Gamma Multiplier of Kprototypes
                 double weight = (e.getValue()!=TypeInference.DataType.NUMERICAL)?gammaWeight:1.0;
@@ -530,7 +533,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
-                StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).forEach(e -> {
+                streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), e -> {
                     Double value = TypeInference.toDouble(e.getValue());
                     if (value!=null && value!=0.0) {
                         Object feature = e.getKey();
@@ -552,7 +555,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             double gammaWeight = trainingParameters.getCategoricalGamaMultiplier();
             
             //estimate weights
-            StreamMethods.stream(columnTypes.entrySet().stream(), isParallelized()).forEach(e -> {
+            streamExecutor.forEach(StreamMethods.stream(columnTypes.entrySet().stream(), isParallelized()), e -> {
                 Object feature = e.getKey();
                 TypeInference.DataType type = e.getValue();
                 
@@ -718,7 +721,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
                 
-                StreamMethods.stream(trainingData.entries(), isParallelized()).forEach(e -> {
+                streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
                     Integer rId = e.getKey();
                     Record r = e.getValue();
                     if(alreadyAddedPoints.contains(rId)==false) {
@@ -778,7 +781,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             }
             
             //assign records in clusters
-            StreamMethods.stream(trainingData.values(), isParallelized()).forEach(r -> {
+            streamExecutor.forEach(StreamMethods.stream(trainingData.values(), isParallelized()), r -> {
                 
                 //we are storing cluster references not clusterIds
                 AssociativeArray clusterDistances = new AssociativeArray();

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector;
@@ -65,9 +66,11 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
      */
     public MutualInformation(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -94,7 +97,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         
         final double log2 = Math.log(2.0);
         
-        StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()).forEach(featureCount -> {
+        streamExecutor.forEach(StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()), featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)

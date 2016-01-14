@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160113
+Version 0.7.0-SNAPSHOT - Build 20160114
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -70,6 +70,7 @@ Version 0.7.0-SNAPSHOT - Build 20160113
 - Added multithreading support on the training for many ML models.
 - Fixed the limitation on the clustering algorithms which forced us to store the clusters in memory.
 - Forced the headerDataTypes parameter of Dataframe.Builder.parseCSVFile() to be a LinkedHashMap.
+- Added custom thread pool in the parallel stream execution. Created the ForkJoinStream class and enhanced the ThreadMethods class.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

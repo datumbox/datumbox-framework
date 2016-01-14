@@ -15,6 +15,8 @@
  */
 package com.datumbox.framework.machinelearning.common.interfaces;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
+
 /**
  * All algorithms capable of using parallelism implement this interface.
  *

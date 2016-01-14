@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -281,9 +282,11 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      */
     protected AbstractDPMM(String dbName, DatabaseConfiguration dbConf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, dbConf, mpClass, tpClass, vmClass, new ClustererValidator<>());
+        streamExecutor = new ForkJoinStream();
     } 
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -541,7 +544,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
         //Calculate the probabilities of assigning the point for every cluster
-        StreamMethods.stream(clusterMap.keySet().stream(), isParallelized()).forEach(clusterId -> {
+        streamExecutor.forEach(StreamMethods.stream(clusterMap.keySet().stream(), isParallelized()), clusterId -> {
             AbstractCluster ck = getFromClusterMap(clusterId, clusterMap);
             //compute P_k(X[i]) = P(X[i] | X[-i] = k)
             double marginalLogLikelihoodXi = ck.posteriorLogPdf(r);

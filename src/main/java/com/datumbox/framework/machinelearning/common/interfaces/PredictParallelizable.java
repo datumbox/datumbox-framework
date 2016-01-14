@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.common.interfaces;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -92,12 +93,14 @@ public interface PredictParallelizable extends Parallelizable {
      * @param resultsBuffer 
      */
     default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer) {
-        StreamMethods.stream(newData.entries(), isParallelized()).forEach(e -> {
+        ForkJoinStream streamExecutor = new ForkJoinStream();
+        
+        streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             resultsBuffer.put(e.getKey(), _predictRecord(e.getValue())); //the key is unique across threads and the map is concurrent
         });
 
         //Use the map to update the records
-        StreamMethods.stream(newData.entries(), isParallelized()).forEach(e -> {
+        streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             Prediction p = resultsBuffer.get(rId);

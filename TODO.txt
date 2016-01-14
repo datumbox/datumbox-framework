@@ -1,8 +1,8 @@
 CODE IMPROVEMENTS
 =================
 
-- Adding custom executors in parallelstreams: http://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
 - Control number of threads via config. Build a more general configuration mechanism.
+- Search for Runtime.getRuntime().availableProcessors(); and the default constructor of ForkJoinStream() to add the number of threads.
 - Profiling & benchmarking.
 
 - Update all maven plugins and dependencies to their latest versions.

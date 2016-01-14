@@ -16,6 +16,7 @@
 package com.datumbox.common.persistentstorage.interfaces;
 
 import java.util.Properties;
+import com.datumbox.common.interfaces.Configurable;
 
 /**
  * This interface should be implemented by objects that store the configuration 
@@ -23,7 +24,7 @@ import java.util.Properties;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface DatabaseConfiguration {
+public interface DatabaseConfiguration extends Configurable {
     
     /**
      * Returns the separator that is used in the DB names. Usually the database
@@ -42,10 +43,4 @@ public interface DatabaseConfiguration {
      */
     public DatabaseConnector getConnector(String database);
     
-    /**
-     * Initializes the DatabaseConfiguration object by using a property file.
-     * 
-     * @param properties 
-     */
-    public void load(Properties properties);
 }

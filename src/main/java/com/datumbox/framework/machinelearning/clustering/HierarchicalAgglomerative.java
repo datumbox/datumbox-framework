@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.clustering;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
@@ -316,9 +317,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
      */
     public HierarchicalAgglomerative(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidator<>());
+        streamExecutor = new ForkJoinStream();
     } 
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -433,7 +436,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         }
         
         //calculate distance table and minimum distances
-        StreamMethods.stream(clusterMap.entrySet().stream(), isParallelized()).forEach(entry1 -> {
+        streamExecutor.forEach(StreamMethods.stream(clusterMap.entrySet().stream(), isParallelized()), entry1 -> {
             Integer clusterId1 = entry1.getKey();
             Cluster c1 = entry1.getValue();
             
@@ -537,7 +540,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         
         //update the distances with the merged cluster
         TrainingParameters.Linkage linkageMethod = trainingParameters.getLinkageMethod();
-        StreamMethods.stream(clusterMap.entrySet().stream(), isParallelized()).forEach(entry -> {
+        streamExecutor.forEach(StreamMethods.stream(clusterMap.entrySet().stream(), isParallelized()), entry -> {
         
             Integer clusterId = entry.getKey();
             Cluster ci = entry.getValue();
@@ -572,7 +575,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         });
         
         //update minimum distance ids
-        StreamMethods.stream(clusterMap.entrySet().stream(), isParallelized()).forEach(entry1 -> {
+        streamExecutor.forEach(StreamMethods.stream(clusterMap.entrySet().stream(), isParallelized()), entry1 -> {
             
             Integer id1 = entry1.getKey();
             if (entry1.getValue().isActive()) { //skip inactive clusters

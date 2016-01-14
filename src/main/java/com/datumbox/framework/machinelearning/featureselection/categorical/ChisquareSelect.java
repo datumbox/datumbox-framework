@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.machinelearning.featureselection.categorical;
 
+import com.datumbox.common.concurrency.ForkJoinStream;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.common.dataobjects.AssociativeArray;
@@ -94,9 +95,11 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      */
     public ChisquareSelect(String dbName, DatabaseConfiguration dbConf) {
         super(dbName, dbConf, ChisquareSelect.ModelParameters.class, ChisquareSelect.TrainingParameters.class);
+        streamExecutor = new ForkJoinStream();
     }
     
     private boolean parallelized = true;
+    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -109,7 +112,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
     public void setParallelized(boolean parallelized) {
         this.parallelized = parallelized;
     }
-
+    
     /** {@inheritDoc} */
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
@@ -123,7 +126,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         
         double N = modelParameters.getN();
         
-        StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()).forEach(featureCount -> {
+        streamExecutor.forEach(StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()), featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
