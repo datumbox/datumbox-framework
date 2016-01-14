@@ -611,7 +611,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
         
-        streamExecutor.forEach(StreamMethods.stream(entries(), true), e -> {
+        streamExecutor.forEach(StreamMethods.stream(entries(), true), e -> { //TODO: this value should depend on the configuration file provided to dataframe.
             Integer rId = e.getKey();
             Record r = e.getValue();
             
