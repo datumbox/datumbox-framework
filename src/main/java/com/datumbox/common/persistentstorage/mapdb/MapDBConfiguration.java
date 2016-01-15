@@ -38,8 +38,6 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     private int cacheSize = 10000;
     
     private boolean compressed = true;
-    
-    private boolean transacted = false;
 
     private boolean hybridized = false;
     
@@ -68,7 +66,6 @@ public class MapDBConfiguration implements DatabaseConfiguration {
         outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
         cacheSize = Integer.parseInt(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
         compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
-        transacted = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.transacted"));
         hybridized = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.hybridized"));
     }
 
@@ -126,26 +123,6 @@ public class MapDBConfiguration implements DatabaseConfiguration {
      */
     public void setCompressed(boolean compressed) {
         this.compressed = compressed;
-    }
-    
-    /**
-     * Getter for the transaction support option.
-     * 
-     * @return 
-     */
-    public boolean isTransacted() {
-        return transacted;
-    }
-
-    /**
-     * Setter for the transaction support option. Turning off transactions can
-     * speed up significantly the algorithms nevertheless it could potentially
-     * lead to corrupted MapDB files. Transactions are disabled by default.
-     * 
-     * @param transacted 
-     */
-    public void setTransacted(boolean transacted) {
-        this.transacted = transacted;
     }
     
     /**

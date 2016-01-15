@@ -260,11 +260,6 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
                 throw new IllegalArgumentException("Unsupported DatabaseType.");
             }
             
-            
-            if(dbConf.isTransacted()==false) {
-                m = m.transactionDisable();
-            }
-            
             if(dbConf.isCompressed()) {
                 m = m.compressionEnable();
             }
@@ -276,6 +271,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
                 m = m.cacheDisable();
             }
             
+            m = m.transactionDisable();
             m = m.asyncWriteEnable();
             m = m.closeOnJvmShutdown();
             
