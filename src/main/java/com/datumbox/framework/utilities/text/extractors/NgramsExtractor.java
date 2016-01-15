@@ -42,8 +42,8 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         private int minWordLength=1;
         private int minWordOccurrence=1;
         
-        private int examinationWindowLength=6; 
-        private int maxDistanceBetweenKwds=2;
+        private int examinationWindowLength=3; 
+        private int maxDistanceBetweenKwds=0;
         
         /**
          * Getter for the number of Maximum keyword combinations that we want to
@@ -222,9 +222,18 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
     private Map<LinkedList<Integer>, Double> getPositionCombinationsWithinWindow(Integer windowStart, int maxCombinations, 
             Map<Integer, String> ID2word, Map<Integer, Double> ID2occurrences, Map<Integer, Integer> position2ID, 
             int numberOfWordsInDoc) {
-        //make sure the window is atleast as the number of combinations but smaller than the total size of the document
-        int windowLength=Math.min(windowStart+Math.max(parameters.getExaminationWindowLength(), maxCombinations), numberOfWordsInDoc);
+        int maxDistanceBetweenKwds=parameters.getMaxDistanceBetweenKwds(); 
         
+        //make sure the window is atleast as the number of combinations but smaller than the total size of the document
+        int windowLength;
+        if(maxDistanceBetweenKwds == 0) {
+            windowLength = maxCombinations;
+        }
+        else {
+            windowLength = Math.max(parameters.getExaminationWindowLength(), maxCombinations);
+        }
+        int windowEnd=Math.min(windowStart+windowLength, numberOfWordsInDoc);
+
         //stores POSITION1,...,POSITIONn-1,POSITIONn=>scores of combinations
         Map<LinkedList<Integer>, Double> positionCombinationsWithScores = new HashMap<>();
         
@@ -232,10 +241,8 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         seedList.add(windowStart);
         positionCombinationsWithScores.put(seedList, 1.0); //score of 1 since we have once occurence
         
-        int maxDistanceBetweenKwds=parameters.getMaxDistanceBetweenKwds(); 
-        
         //take the next word within the window
-        for(int i=windowStart+1;i<windowLength;++i) {
+        for(int i=windowStart+1;i<windowEnd;++i) {
             //take a new word and ensure that we want to use it
             Integer ID = position2ID.get(i);
             if(ID==null || useThisWord(ID, ID2word, ID2occurrences)==false) {

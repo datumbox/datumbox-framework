@@ -77,6 +77,7 @@ public class TextSimilarity {
         NgramsExtractor.Parameters parameters = new NgramsExtractor.Parameters();
         parameters.setMaxCombinations(w);
         parameters.setMaxDistanceBetweenKwds(0);
+        parameters.setExaminationWindowLength(w);
 
         NgramsExtractor ngrams = new NgramsExtractor(parameters);
 

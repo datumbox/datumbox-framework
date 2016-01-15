@@ -88,7 +88,10 @@ public class TextClassifierTest extends AbstractTest {
         
         //text extraction configuration
         trainingParameters.setTextExtractorClass(NgramsExtractor.class);
-        trainingParameters.setTextExtractorParameters(new NgramsExtractor.Parameters());
+        NgramsExtractor.Parameters exParams = new NgramsExtractor.Parameters();
+        exParams.setMaxDistanceBetweenKwds(2);
+        exParams.setExaminationWindowLength(6);
+        trainingParameters.setTextExtractorParameters(exParams);
         
         instance.fit(dataset, trainingParameters);
         
