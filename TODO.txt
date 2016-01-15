@@ -5,8 +5,9 @@ CODE IMPROVEMENTS
 - Profiling & benchmarking.
 
 - Update all maven plugins and dependencies to their latest versions.
-    - Add support for MapDB 2.0 once a stable version is released.
+    - Remove feature switches.
     - Upgrade maven-surefire to 2.19.1.
+    - Add support for MapDB 3.0 once a stable version is released.
 
 - Add the ability to call Machine Learning algorithms from command line like in Mahout.
 
