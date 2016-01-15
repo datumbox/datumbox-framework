@@ -98,7 +98,7 @@ public class TextClassifierTest extends AbstractTest {
         
         instance.setValidationMetrics(vm);
         
-        double expResult2 = 0.853460320496835;
+        double expResult2 = 0.8515582285401859;
         assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
         instance.close();
         //instance = null;

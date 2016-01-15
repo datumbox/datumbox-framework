@@ -15,16 +15,12 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.common.utilities.PHPMethods;
-import com.datumbox.framework.utilities.text.tokenizers.AbstractTokenizer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * The NgramsExtractor class can be used to tokenize a string, extract its keyword
@@ -46,11 +42,8 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         private int minWordLength=1;
         private int minWordOccurrence=1;
         
-        private int examinationWindowLength=15; //15 words later
-        private int maxDistanceBetweenKwds=4; //up to 4 words distance between two words of the same keyword
-        
-        private int keepFloatPointsUntilCombination=3; //After 3 word combinations ignore the float points to reduce memory and improve speed
-        private double keepFloatPointsAbove=0.1; //ignore all floating point scores less than 0.1 to reduce memory and improve speed
+        private int examinationWindowLength=6; 
+        private int maxDistanceBetweenKwds=2;
         
         /**
          * Getter for the number of Maximum keyword combinations that we want to
@@ -64,8 +57,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         
         /**
          * Setter for the number of Maximum keyword combinations that we want to
-         * extract. The default number of keyword combinations extracted by this
-         * class is 3.
+         * extract. 
          * 
          * @param maxCombinations 
          */
@@ -85,8 +77,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
 
         /**
          * Setter for the minimum word length threshold. Words with a length less
-         * than this value will not be extracted. The default value for this
-         * threshold is 1.
+         * than this value will not be extracted. 
          * 
          * @param minWordLength 
          */
@@ -106,8 +97,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         
         /**
          * Setter for the minimum word occurrence threshold. Words with less
-         * occurrences than this value will be ignored. The default value for
-         * this threshold is 1.
+         * occurrences than this value will be ignored. 
          * 
          * @param minWordOccurrence 
          */
@@ -127,7 +117,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         
         /**
          * Setter for the length of the examination window in which we search
-         * for keyword combinations. The default value for this length is 15.
+         * for keyword combinations. 
          * 
          * @param examinationWindowLength 
          */
@@ -149,7 +139,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         /**
          * Setter for the maximum distance between keywords. If the distance 
          * between keywords is greater than this value, the keyword combination 
-         * is ignored. The default value for this threshold is 4.
+         * is ignored. 
          * 
          * @param maxDistanceBetweenKwds 
          */
@@ -157,45 +147,7 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
             this.maxDistanceBetweenKwds = maxDistanceBetweenKwds;
         }
         
-        /**
-         * Getter for the keepFloatPointsUntilCombination variable. 
-         * 
-         * @return 
-         */
-        public int getKeepFloatPointsUntilCombination() {
-            return keepFloatPointsUntilCombination;
-        }
-
-        /**
-         * Setter for the keepFloatPointsUntilCombination variable.
-         * 
-         * @param keepFloatPointsUntilCombination 
-         */
-        public void setKeepFloatPointsUntilCombination(int keepFloatPointsUntilCombination) {
-            this.keepFloatPointsUntilCombination = keepFloatPointsUntilCombination;
-        }
-
-        /**
-         * Getter for the keepFloatPointsAbove variable.
-         * 
-         * @return 
-         */
-        public double getKeepFloatPointsAbove() {
-            return keepFloatPointsAbove;
-        }
-        
-        /**
-         * Setter for the keepFloatPointsAbove variable.
-         * 
-         * @param keepFloatPointsAbove 
-         */
-        public void setKeepFloatPointsAbove(double keepFloatPointsAbove) {
-            this.keepFloatPointsAbove = keepFloatPointsAbove;
-        }
-        
     }
-    
-    private static final char SEPARATOR = '_';
         
     /**
      * Public constructor that accepts as arguments the AbstractParameters object.
@@ -222,8 +174,8 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         
         int numberOfWordsInDoc = buildInternalArrays(text, ID2word, ID2occurrences, position2ID);
         
-        Map<String, Double> keywordProximityScores = new HashMap<>();
-        
+        int maxCombinations = parameters.getMaxCombinations();
+        Map<String, Double> keywordsMap = new HashMap<>();
         //move the "window" across the document by 1 word at each time
         for(Map.Entry<Integer, Integer> entry : position2ID.entrySet()) {
             Integer wordID = entry.getValue();
@@ -232,225 +184,98 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
             }
             
             Integer position = entry.getKey();
+            //Build all the combinations of the current word with other words within the window and estimate the scores
+            Map<LinkedList<Integer>, Double> positionCombinationsWithScores = getPositionCombinationsWithinWindow(position, maxCombinations, ID2word, ID2occurrences, position2ID, numberOfWordsInDoc);
             
-            Map<String, Integer> wordCombinations = getCombinationsWithinWindow(position, parameters.getMaxCombinations(), ID2word, ID2occurrences, position2ID, numberOfWordsInDoc);
-            
-            //translate positions to proximity metrics
-            for(Map.Entry<String, Integer> entry2 : wordCombinations.entrySet()) {
-                String IDcombinationReverse = entry2.getKey();
-                Integer wordsBetween = entry2.getValue();
+            //Convert the positions into words and aggregate over their scores.
+            for(Map.Entry<LinkedList<Integer>, Double> entry2 : positionCombinationsWithScores.entrySet()) {
+                LinkedList<Integer> positionCombination = entry2.getKey();
                 
-                int numberOfWords = PHPMethods.substr_count(IDcombinationReverse, SEPARATOR)-1;//starts enumeration from 0. We need to subtract one because at the end each string has an extra SEPARATOR
-                
-                int extraWords = wordsBetween - numberOfWords;
-                
-                Double proximityScore = keywordProximityScores.get(IDcombinationReverse);
-                if(proximityScore==null) {
-                    proximityScore=0.0;
-                }
-                
-                if(extraWords<=0) {
-                    ++proximityScore;
-                }
-                else {
-                    proximityScore+=0.5*extraWords;
-                }
-                
-                keywordProximityScores.put(IDcombinationReverse, proximityScore);
-            }
-            
-            
-            //wordCombinations = null;
-        }
-        
-        //initialize keyword map
-        Map<String, Double> keywordsMap = new HashMap<>();
-        for(Map.Entry<String, Double> entry : keywordProximityScores.entrySet()) {
-            Double proximityScore = entry.getValue();
-            if(proximityScore>=parameters.getMinWordOccurrence()) {
-                String IDcombinationReverse = entry.getKey();
-                
-                String[] listOfWordIDsReverse = StringUtils.split(IDcombinationReverse, SEPARATOR);
-                
-                StringBuilder sb = new StringBuilder(listOfWordIDsReverse.length*6);
-                for(int i=listOfWordIDsReverse.length-1;i>=0;--i) {
-                    Integer ID = Integer.valueOf(listOfWordIDsReverse[i]);
-                    sb.append(ID2word.get(ID)).append(" ");
+                StringBuilder sb = new StringBuilder(positionCombination.size()*6);
+                for(Integer pos : positionCombination) {
+                    sb.append(ID2word.get(position2ID.get(pos))).append(" ");
                 }
                 
                 if(sb.length()>0) {
-                    keywordsMap.put(sb.toString().trim(), proximityScore);
+                    String key = sb.toString().trim();
+                    double score = entry2.getValue();
+                    
+                    keywordsMap.put(key, keywordsMap.getOrDefault(key, 0.0)+score);
                 }
                 
-                //sb=null;
             }
         }
-        //keywordProximityScores=null;
+        
+        //remove any word that has score less than the min occurrence
+        double minScore = parameters.getMinWordOccurrence();
+        Iterator<Map.Entry<String, Double>> it = keywordsMap.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<String, Double> entry = it.next();
+            if(entry.getValue()<minScore) {
+                it.remove();
+            }
+        }
         
         return keywordsMap;
     }
-    
-    /**
-     * Counts the number of occurrences of a keyword combination in the text.
-     * 
-     * @param keyword
-     * @param text
-     * @return 
-     */
-    public double numberOfOccurrences(String keyword, final String text) {        
-        double points=0.0;
-        
 
-        AbstractTokenizer tokenizer = generateTokenizer();
-        
-        List<String> tmpKwd = tokenizer.tokenize(keyword);
-        
-        int numberOfWords=tmpKwd.size();
-        if(numberOfWords==0) {
-            return points;
-        }
-
-        List<String> tmpWords = tokenizer.tokenize(text);
-        int n = tmpWords.size();
-        
-        Map<String, List<Integer>> word2Positions = new LinkedHashMap<>();
-        for(int position=0;position<n;++position) {
-            String word = tmpWords.get(position);
-            if(tmpKwd.contains(word)==false) {
-                continue;
-            }
-            
-            if(word2Positions.containsKey(word)==false) {
-                word2Positions.put(word, new ArrayList<>());
-            }
-            
-            word2Positions.get(word).add(position);
-        }
-        
-        
-
-        while(!word2Positions.isEmpty()) {
-            int extraWords=0;
-            int wordsBetween=0;
-            Integer previousKwdPosition = null;
-            for(String kwd : tmpKwd) {
-                List<Integer> positionList = word2Positions.get(kwd);
-                if(positionList == null || positionList.isEmpty()) {
-                    return points;
-                }
-                if(previousKwdPosition==null) {
-                    Iterator<Integer> it = positionList.iterator();
-                    previousKwdPosition=it.next();
-                    it.remove();
-                }
-                else {
-                    Integer closestPosition2Previous=null;
-                    int minDistance= Integer.MAX_VALUE;
-                    for(Integer position : positionList) {
-                        int distance=position-previousKwdPosition;
-                        if(distance>0 && distance<=minDistance) {
-                            minDistance=distance;
-                            closestPosition2Previous=position;
-                        }
-                    }
-
-                    if(closestPosition2Previous==null) {
-                        return points;
-                    }
-                    Integer currentKwdPosition=closestPosition2Previous;
-
-                    wordsBetween+=currentKwdPosition-previousKwdPosition;
-
-                    previousKwdPosition=currentKwdPosition;
-                }
-
-                if(word2Positions.get(kwd).isEmpty()) {
-                    word2Positions.remove(kwd);
-                }
-            }
-            
-            extraWords+=wordsBetween-(numberOfWords-1);
-            if(extraWords<=0) {
-                ++points;
-            }
-            else {
-                points+=0.5*extraWords;
-            }
-        }
-
-
-        return points;
-    }
-
-    private Map<String, Integer> getCombinationsWithinWindow(Integer windowStart, int maxCombinations, 
+    private Map<LinkedList<Integer>, Double> getPositionCombinationsWithinWindow(Integer windowStart, int maxCombinations, 
             Map<Integer, String> ID2word, Map<Integer, Double> ID2occurrences, Map<Integer, Integer> position2ID, 
             int numberOfWordsInDoc) {
-        int windowLength=Math.min(windowStart+parameters.getExaminationWindowLength(), numberOfWordsInDoc);
+        //make sure the window is atleast as the number of combinations but smaller than the total size of the document
+        int windowLength=Math.min(windowStart+Math.max(parameters.getExaminationWindowLength(), maxCombinations), numberOfWordsInDoc);
         
-        //stores IDn_...ID2_ID1_=>words Between last word and windowStart
-        Map<String, Integer> wordCombinations = new HashMap<>(); 
-        wordCombinations.put(position2ID.get(windowStart).toString()+SEPARATOR, 0);
+        //stores POSITION1,...,POSITIONn-1,POSITIONn=>scores of combinations
+        Map<LinkedList<Integer>, Double> positionCombinationsWithScores = new HashMap<>();
         
-        boolean isfirstWordNumber = NumberUtils.isNumber(ID2word.get(position2ID.get(windowStart)));
+        LinkedList<Integer> seedList = new LinkedList<>();
+        seedList.add(windowStart);
+        positionCombinationsWithScores.put(seedList, 1.0); //score of 1 since we have once occurence
         
-        int maxDistanceBetweenKwds=parameters.getMaxDistanceBetweenKwds()+2; //the method below substracts the current minus the last occurence. As a result it counts also the first and last word and NOT the words between them. That is why we add 2 on the distance.
+        int maxDistanceBetweenKwds=parameters.getMaxDistanceBetweenKwds(); 
         
-        String separator = String.valueOf(SEPARATOR);
+        //take the next word within the window
         for(int i=windowStart+1;i<windowLength;++i) {
+            //take a new word and ensure that we want to use it
             Integer ID = position2ID.get(i);
-            if(ID==null || useThisWord(ID, ID2word, ID2occurrences)==false || (isfirstWordNumber && NumberUtils.isNumber(ID2word.get(ID)))) {
+            if(ID==null || useThisWord(ID, ID2word, ID2occurrences)==false) {
                 continue;
             }
-
-            String tokenizedID = separator + ID + separator;
-
-            Map<String, Integer> newWordCombinations = new HashMap<>();
             
-            for(Map.Entry<String, Integer> entry : wordCombinations.entrySet()) {
-                String IDcombinationReverse = entry.getKey();
-                
-                int numberOfWords=PHPMethods.substr_count(IDcombinationReverse, SEPARATOR);
-                if(numberOfWords<maxCombinations) {
-                    int wordsBetween=i-windowStart;
-
-                    int extraWords=wordsBetween-numberOfWords;
-
-                    if(extraWords>0 && (numberOfWords>parameters.getKeepFloatPointsUntilCombination() || 0.5*extraWords>parameters.getKeepFloatPointsAbove())) {
-                        continue;
-                    }
-                    
-                    Integer previousWordsBetween = entry.getValue();
-
-                    if(wordsBetween-previousWordsBetween<maxDistanceBetweenKwds) {// the distance between the previous last word and the current last word.  
-                        String IDofFirstWord = IDcombinationReverse.substring(0, IDcombinationReverse.indexOf(SEPARATOR));
-                        if(i>(windowStart+previousWordsBetween+1) && ID2occurrences.get(Integer.valueOf(IDofFirstWord))==1) { //ignore keyword combinations that are not exactly next to the previous word and they occur only once in the text
-                            continue;
-                        }
-
-                        IDcombinationReverse=SEPARATOR+IDcombinationReverse;
-                        if(IDcombinationReverse.contains(tokenizedID)==false) {
-                            newWordCombinations.put(ID+IDcombinationReverse, wordsBetween);
-                        }
-                    }
+            Map<LinkedList<Integer>, Double> newPositionCombinations = new HashMap<>();//here is where we store the new combinations that we produce
+            
+            //it stores the number of words betwen the current position and the original word. It does not include the start/end words only everything between them.
+            int wordsBetweenStart=i-(windowStart+1); 
+            
+            //take any combination already created and try to combine it with the new word
+            for(LinkedList<Integer> previousPositionCombination : positionCombinationsWithScores.keySet()) {
+                int previousNumWords = previousPositionCombination.size();
+                if(previousNumWords>=maxCombinations) {
+                    continue; //respect the max combination size
                 }
+                int wordsBetweenLastCombo = i-(previousPositionCombination.getLast()+1); //this is the number of words between the last word of the previous combo and the new word that we have
+                if(wordsBetweenLastCombo>maxDistanceBetweenKwds) {
+                    continue; //this ensures that the words that are added in the combination will never be more than this threhold appart.
+                }
+                int currentNumWords = previousNumWords+1; //the number of words the next combination will include
+                
+                int extraWords = wordsBetweenStart - (currentNumWords-2); //we do -2 because again we did not include the start and end words
+                
+                double score = 1.0/(1.0+extraWords);
+                
+                LinkedList<Integer> currentPositionCombination = new LinkedList<>(previousPositionCombination);
+                currentPositionCombination.add(i); //add it at the end
+                newPositionCombinations.put(currentPositionCombination, score);
+                
             }
             
-            //add the new combinations in the list if they don't exist already
-            for(Map.Entry<String, Integer> entry : newWordCombinations.entrySet()) {
-                String IDcombinationReverse = entry.getKey();
-                
-                if(!wordCombinations.containsKey(IDcombinationReverse)) {
-                    wordCombinations.put(IDcombinationReverse, entry.getValue());
-                }
-            }
-            
-            
-            //newWordCombinations=null;
+            //add the new combinations in the list
+            positionCombinationsWithScores.putAll(newPositionCombinations);
         }
         
         
         
-        return wordCombinations;
+        return positionCombinationsWithScores;
     }
     
     private boolean useThisWord(Integer wordID, Map<Integer, String> ID2word, Map<Integer, Double> ID2occurrences) {
@@ -458,10 +283,10 @@ public class NgramsExtractor extends AbstractTextExtractor<NgramsExtractor.Param
         if(word==null) {
             return false;
         }
-        else if(parameters.getMinWordLength()>1 && word.length() <parameters.getMinWordLength() && !NumberUtils.isNumber(word)) {
+        else if(word.length() < parameters.getMinWordLength()) {
             return false;
         }
-        else if(parameters.getMinWordOccurrence()>1 && ID2occurrences.get(wordID)<parameters.getMinWordOccurrence()) {
+        else if(ID2occurrences.get(wordID)<parameters.getMinWordOccurrence()) {
             return false;
         }
         return true;

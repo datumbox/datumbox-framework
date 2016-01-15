@@ -72,6 +72,7 @@ Version 0.7.0-SNAPSHOT - Build 20160115
 - Forced the headerDataTypes parameter of Dataframe.Builder.parseCSVFile() to be a LinkedHashMap.
 - Added custom thread pool in the parallel stream execution. Created the ForkJoinStream class and enhanced the ThreadMethods class.
 - Created a new Configuration mechanism and added the ability to configure the concurrency.
+- Updated the NgramsExtractor algorithm to export more keywords.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

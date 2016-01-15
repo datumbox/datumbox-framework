@@ -15,7 +15,6 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
-import com.datumbox.tests.TestConfiguration;
 import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,9 @@ public class NgramsExtractorTest extends AbstractTest {
     public void testExtract() {
         logger.info("extract");
         String text = "In publishing and graphic design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1] In publishing and graphic design, lorem ipsum[1] is a placeholder text (filler text) commonly used to demonstrate the graphic elements of a document or visual presentation, such as font, typography, and layout, by removing the distraction of meaningful content. The lorem ipsum text is typically a section of a Latin text by Cicero with words altered, added, and removed that make it nonsensical and not proper Latin.[1]";
-        NgramsExtractor instance = new NgramsExtractor(new NgramsExtractor.Parameters());
+        NgramsExtractor.Parameters p = new NgramsExtractor.Parameters();
+        p.setMaxDistanceBetweenKwds(0);
+        NgramsExtractor instance = new NgramsExtractor(p);
         
         Map<String, Double> expResult = new HashMap<>();
         
@@ -232,21 +233,6 @@ public class NgramsExtractorTest extends AbstractTest {
         
         Map<String, Double> result = instance.extract(text);
         assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of numberOfOccurrences method, of class NgramsExtractor.
-     */
-    @Test
-    public void testNumberOfOccurrences() {
-        logger.info("numberOfOccurrences");
-        String keyword = "lorem ipsum is";
-        String text = "In publishing and graphic design, lorem ipsum is a placeholder text and used to demonstrate. In publishing and graphic design, lorem ipsum is a placeholder text and used to demonstrate.";
-        NgramsExtractor instance = new NgramsExtractor(new NgramsExtractor.Parameters());
-        
-        double expResult = 2.0;
-        double result = instance.numberOfOccurrences(keyword, text);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
     }
     
 }

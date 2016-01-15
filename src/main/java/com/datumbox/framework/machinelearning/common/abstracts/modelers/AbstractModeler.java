@@ -114,9 +114,6 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
      */
     public void setValidationMetrics(VM validationMetrics) {
         kb().setValidationMetrics(validationMetrics);
-        
-        logger.info("Updating model");
-        kb().save();
     }
     
     /**

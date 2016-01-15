@@ -117,6 +117,9 @@ public class TripleKnowledgeBase<MP extends ModelParameters, TP extends Training
      */
     public void setValidationMetrics(VM validationMetrics) {
         this.validationMetrics = validationMetrics;
+        if(isInitialized()) {
+            dbc.saveObject("validationMetrics", validationMetrics);
+        }
     }
     
     /** {@inheritDoc} */
