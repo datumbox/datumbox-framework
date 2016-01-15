@@ -116,16 +116,6 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     public void close() {
         super.close();
         
-        //perform a compact() on the primary db if it is open.
-        //if close() is called after successfully training an algorithm then
-        //running the compact is a good idea on close. if the close() is the
-        //result of calling the delete() method on the algorithm then we are safe
-        //because the clear operation will remove everything before we call close().
-        DB db = dbRegistry.get(DBType.PRIMARY_DB);
-        if(isOpenDB(db)) {
-            db.compact();
-        }
-        
         closeDBRegistry();
     }
     
