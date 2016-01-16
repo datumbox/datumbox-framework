@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -187,13 +186,13 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         
         //calculate first statistics about the classes
         DatabaseConnector dbc = kb().getDbc();
-        Map<Object, AtomicInteger> totalFeatureOccurrencesForEachClass = dbc.getBigMap("tmp_totalFeatureOccurrencesForEachClass", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        Map<Object, Integer> totalFeatureOccurrencesForEachClass = dbc.getBigMap("tmp_totalFeatureOccurrencesForEachClass", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         for(Record r : trainingData) {
             Object theClass=r.getY();
             
             if(classesSet.add(theClass)) { //is it new class? add it
                 logPriors.put(theClass, 1.0);  
-                totalFeatureOccurrencesForEachClass.put(theClass, new AtomicInteger());
+                totalFeatureOccurrencesForEachClass.put(theClass, 0);
                 sumOfLog1minusProb.put(theClass, 0.0);
             }
             else { //already exists? increase counter
@@ -221,21 +220,25 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         
         //now calculate the statistics of features
         for(Record r : trainingData) {
+            Object theClass = r.getY();
+            
             //store the occurrances of the features
-            streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), entry -> {
+            double sumOfOccurrences = streamExecutor.sum(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).mapToDouble(entry -> {
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
                 if(occurrences!= null && occurrences>0.0) {
                     //The below block of code clips occurrences to 1
-                    Object theClass = r.getY();
                     List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass); 
                     likelihoods.put(featureClassTuple, likelihoods.get(featureClassTuple)+1.0); //each thread updates a unique key and the map is cuncurrent
                     
-                    totalFeatureOccurrencesForEachClass.get(theClass).incrementAndGet(); //atomic operation. Also increment by one due to clipped occurrences
+                    return 1.0;
                 }
-            });
+                
+                return 0.0;
+            }));
             
+            totalFeatureOccurrencesForEachClass.put(theClass, totalFeatureOccurrencesForEachClass.get(theClass)+(int)sumOfOccurrences);
         }
         
         //calculate prior log probabilities
@@ -257,7 +260,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
             }
 
             //We perform laplace smoothing (also known as add-1)
-            Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.get(theClass).get()+d); // the d is also known in NLP problems as the Vocabulary size. 
+            Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.get(theClass)+d); // the d is also known in NLP problems as the Vocabulary size. 
             
             likelihoods.put(featureClassTuple, smoothedProbability);
             

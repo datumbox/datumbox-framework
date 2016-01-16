@@ -191,6 +191,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
             }
             else if(MapType.TREEMAP.equals(type)) {
                 return db.createTreeMap(name)
+                .valuesOutsideNodesEnable()
                 .counterEnable()
                 .makeOrGet();
             }
