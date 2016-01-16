@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -80,10 +80,10 @@ public class CollaborativeFilteringTest extends AbstractTest {
         
         AssociativeArray result = validationData.iterator().next().getYPredictedProbabilities();
         for(Map.Entry<Object, Object> entry : result.entrySet()) {
-            assertEquals(expResult.get(entry.getKey()), TypeInference.toDouble(entry.getValue()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(expResult.get(entry.getKey()), TypeInference.toDouble(entry.getValue()), Constants.DOUBLE_ACCURACY_HIGH);
         }
         
-        assertEquals(vm.getRMSE(), 0.7184568473420477, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(vm.getRMSE(), 0.7184568473420477, Constants.DOUBLE_ACCURACY_HIGH);
         
         instance.delete();
         

@@ -18,7 +18,7 @@ package com.datumbox.applications.datamodeling;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -81,7 +81,7 @@ public class ModelerTest extends AbstractTest {
         instance.setValidationMetrics(vm);
         
         double expResult2 = 0.8;
-        assertEquals(expResult2, vm.getMacroF1(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
         instance.close();
         //instance = null;
         

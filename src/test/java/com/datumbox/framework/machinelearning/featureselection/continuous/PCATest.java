@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -79,7 +79,7 @@ public class PCATest extends AbstractTest {
                 Object feature = entry.getKey();
                 Double value = TypeInference.toDouble(entry.getValue());
                 
-                assertEquals(TypeInference.toDouble(r2.getX().get(feature)), value, TestConfiguration.DOUBLE_ACCURACY_MEDIUM);
+                assertEquals(TypeInference.toDouble(r2.getX().get(feature)), value, Constants.DOUBLE_ACCURACY_MEDIUM);
             }
         }
         

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.mathematics.linearprogramming;
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +57,9 @@ public class LPSolverTest extends AbstractTest {
         expResult.setDualSolution(new double[]{1.0, 0.0, 1.4210526315789, 17.368421052632, -30.684210526315788, 0.0, 0.0});
         
         LPSolver.LPResult result = LPSolver.solve(linearObjectiveFunction, linearConstraintsList, null, null, null, scalingMode);
-        assertEquals(expResult.getObjectiveValue(), result.getObjectiveValue(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        assertArrayEquals(expResult.getVariableValues(), result.getVariableValues(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
-        assertArrayEquals(expResult.getDualSolution(), result.getDualSolution(), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult.getObjectiveValue(), result.getObjectiveValue(), Constants.DOUBLE_ACCURACY_HIGH);
+        assertArrayEquals(expResult.getVariableValues(), result.getVariableValues(), Constants.DOUBLE_ACCURACY_HIGH);
+        assertArrayEquals(expResult.getDualSolution(), result.getDualSolution(), Constants.DOUBLE_ACCURACY_HIGH);
         
     }
     

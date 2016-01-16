@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.framework.machinelearning.datatransformation.XYMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
@@ -80,7 +80,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
 
 
         for(Record r : validationData) {
-            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
         
         df.delete();
@@ -122,7 +122,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
 
         double expResult = 1;
         double result = vm.getRSquare();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
         instance.delete();

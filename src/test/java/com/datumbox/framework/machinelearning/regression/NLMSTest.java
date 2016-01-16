@@ -21,7 +21,7 @@ import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.featureselection.continuous.PCA;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -80,7 +80,7 @@ public class NLMSTest extends AbstractTest {
         df.denormalize(validationData);
         
         for(Record r : validationData) {
-            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), TestConfiguration.DOUBLE_ACCURACY_HIGH);
+            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
         
         df.delete();
@@ -134,7 +134,7 @@ public class NLMSTest extends AbstractTest {
         
         double expResult = 0.999593336284933;
         double result = vm.getRSquare();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
         instance.delete();

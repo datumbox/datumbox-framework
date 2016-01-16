@@ -20,7 +20,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.utilities.PHPMethods;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 214.71;
         double result = Descriptives.sum(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -64,7 +64,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 5.36775;
         double result = Descriptives.mean(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -76,7 +76,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 3.8698920757412;
         double result = Descriptives.meanSE(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -88,7 +88,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 2.565;
         double result = Descriptives.median(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -100,7 +100,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = -36.4;
         double result = Descriptives.min(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -112,7 +112,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 50.85;
         double result = Descriptives.max(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -124,7 +124,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 87.25;
         double result = Descriptives.range(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -136,7 +136,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{56.0,75.0,45.0,71.0,61.0,64.0,58.0,80.0,76.0,61.0}));
         double expResult = 63.85415130126;
         double result = Descriptives.geometricMean(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -148,7 +148,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 9.7666088743776;
         double result = Descriptives.harmonicMean(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -161,7 +161,7 @@ public class DescriptivesTest extends AbstractTest {
         boolean isSample = true;
         double expResult = 599.04258711538;
         double result = Descriptives.variance(flatDataCollection, isSample);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -174,7 +174,7 @@ public class DescriptivesTest extends AbstractTest {
         boolean isSample = true;
         double expResult = 24.475346516758;
         double result = Descriptives.std(flatDataCollection, isSample);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -187,7 +187,7 @@ public class DescriptivesTest extends AbstractTest {
         double mean = 5.36775;
         double expResult = 4.5597031375824;
         double result = Descriptives.cv(std, mean);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -200,7 +200,7 @@ public class DescriptivesTest extends AbstractTest {
         int r = 3;
         double expResult = 3484.6106601128;
         double result = Descriptives.moment(flatDataCollection, r);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -214,7 +214,7 @@ public class DescriptivesTest extends AbstractTest {
         double mean = 5.36775;
         double expResult = 3484.6106601128;
         double result = Descriptives.moment(flatDataCollection, r, mean);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -226,7 +226,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = -0.74454696650836;
         double result = Descriptives.kurtosis(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -238,7 +238,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.77459666924148;
         double result = Descriptives.kurtosisSE(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -250,7 +250,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.24686572127408;
         double result = Descriptives.skewness(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -262,7 +262,7 @@ public class DescriptivesTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 0.37378336538587;
         double result = Descriptives.skewnessSE(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -315,7 +315,7 @@ public class DescriptivesTest extends AbstractTest {
         boolean isSample = false;
         double expResult = 76.39;
         double result = Descriptives.covariance(transposeDataList, isSample);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -328,7 +328,7 @@ public class DescriptivesTest extends AbstractTest {
         int lags = 1;
         double expResult = -0.014242212135952;
         double result = Descriptives.autocorrelation(flatDataList, lags);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**

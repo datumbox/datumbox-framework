@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.sampling;
 
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
@@ -61,7 +61,7 @@ public class SystematicSamplingTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 103.41666666667;
         double result = SystematicSampling.mean(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -73,7 +73,7 @@ public class SystematicSamplingTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 405.75;
         double result = SystematicSampling.xbarVariance(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -85,7 +85,7 @@ public class SystematicSamplingTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 20.143237078484;
         double result = SystematicSampling.xbarStd(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

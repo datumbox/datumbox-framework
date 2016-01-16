@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.topicmodeling;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
@@ -95,7 +95,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         
         double expResult = 0.6859007513066202;
         double result = vm.getMacroF1();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 
         smr.delete();
         lda.delete();

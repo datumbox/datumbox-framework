@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.analyzers;
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -37,7 +37,7 @@ public class TextSimilarityTest extends AbstractTest {
         String text2 = "The first edition of The Origins of Totalitarianism was written in 1950. Soon after the Second World War, this was a time of both reckless optimism and reckless despair. During this time, Dr. Arendt argues, the traditional elements of the political and spiritual world were dissolved into a conglomeration where everything seems to have lost specific value. In particular, the separation between the State and Society seems to have been destroyed. In this book, she seeks to disclose the hidden mechanics by which this transformation occurred.";
         double expResult = 0.4064777327935223;
         double result = TextSimilarity.oliverSimilarity(text1, text2);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -51,7 +51,7 @@ public class TextSimilarityTest extends AbstractTest {
         int w = 3;
         double expResult = 0.15151515151515152;
         double result = TextSimilarity.shinglerSimilarity(text1, text2, w);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

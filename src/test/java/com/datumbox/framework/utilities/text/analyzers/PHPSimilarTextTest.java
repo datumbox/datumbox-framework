@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.analyzers;
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -50,7 +50,7 @@ public class PHPSimilarTextTest extends AbstractTest {
         String txt2 = "this is a great document";
         double expResult = 55.813953488372;
         double result = PHPSimilarText.similarityPercentage(txt1, txt2);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

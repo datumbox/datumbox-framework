@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.analyzers;
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -38,7 +38,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = -188.4;
         double result = ReadabilityStatistics.fleschKincaidReadingEase(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 112.3;
         double result = ReadabilityStatistics.fleschKincaidGradeLevel(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -62,7 +62,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 118.0;
         double result = ReadabilityStatistics.gunningFogScore(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -74,7 +74,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 6.8;
         double result = ReadabilityStatistics.colemanLiauIndex(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 14.1;
         double result = ReadabilityStatistics.smogIndex(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -98,7 +98,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 143.2;
         double result = ReadabilityStatistics.automatedReadabilityIndex(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -110,7 +110,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 20.486603754266213;
         double result = ReadabilityStatistics.daleChallScore(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -122,7 +122,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 16.0;
         double result = ReadabilityStatistics.daleChallGrade(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -134,7 +134,7 @@ public class ReadabilityStatisticsTest extends AbstractTest {
         String strText = TEST_STRING;
         double expResult = 41.523999999999994;
         double result = ReadabilityStatistics.spacheScore(strText);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

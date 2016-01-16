@@ -16,7 +16,7 @@
 package com.datumbox.framework.mathematics.distances;
 
 import com.datumbox.common.dataobjects.AssociativeArray;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +73,7 @@ public class DistanceTest extends AbstractTest {
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 2.6457513110645905905016157536393;
         double result = Distance.euclidean(a1, a2);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -87,7 +87,7 @@ public class DistanceTest extends AbstractTest {
         Map<Object, Double> columnWeights = getWeights();
         double expResult = 2.449489742783178;
         double result = Distance.euclideanWeighted(a1, a2, columnWeights);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -100,7 +100,7 @@ public class DistanceTest extends AbstractTest {
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 5.0;
         double result = Distance.manhattan(a1, a2);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -114,7 +114,7 @@ public class DistanceTest extends AbstractTest {
         Map<Object, Double> columnWeights = getWeights();
         double expResult = 5.0;
         double result = Distance.manhattanWeighted(a1, a2, columnWeights);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -127,7 +127,7 @@ public class DistanceTest extends AbstractTest {
         AssociativeArray a2 = new AssociativeArray(getMap2());
         double expResult = 2.0;
         double result = Distance.maximum(a1, a2);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

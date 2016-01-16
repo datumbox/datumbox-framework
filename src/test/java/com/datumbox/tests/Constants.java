@@ -15,15 +15,13 @@
  */
 package com.datumbox.tests;
 
-import com.datumbox.common.concurrency.ConcurrencyConfiguration;
-import com.datumbox.common.persistentstorage.interfaces.DatabaseConfiguration;
-
 /**
  * Configuration constants for the Tests.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TestConfiguration {
+public class Constants {
+    
     /**
      * High Accuracy Level for assert.
      */
@@ -39,29 +37,4 @@ public class TestConfiguration {
      */
     public static final long RANDOM_SEED = 42L;
     
-    /**
-     * Whether parallelization is permitted.
-     */
-    public static final boolean PARALLELIZED = true;
-    
-    /**
-     * The maximum number of threads used per task.
-     */
-    public static final int MAX_NUMBER_OF_THREADS_PER_TASK = ConcurrencyConfiguration.AVAILABLE_PROCESSORS;
-    
-    /**
-     * The class of the DatabaseConfiguration.
-     */
-    public static final Class<? extends DatabaseConfiguration> PERMANENT_STORAGE = 
-        com.datumbox.common.persistentstorage.inmemory.InMemoryConfiguration.class
-        //com.datumbox.common.persistentstorage.mapdb.MapDBConfiguration.class
-        ;
-    
-    /**
-     * Turn on/off Hybridized Storage for MapDB.
-     */
-    public static final boolean HYBRIDIZED_STORAGE = 
-        false
-        //true
-        ;
 }

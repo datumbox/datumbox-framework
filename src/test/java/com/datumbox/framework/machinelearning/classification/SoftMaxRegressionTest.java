@@ -18,7 +18,7 @@ package com.datumbox.framework.machinelearning.classification;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.machinelearning.datatransformation.XMinMaxNormalizer;
 import com.datumbox.tests.abstracts.AbstractTest;
@@ -130,7 +130,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         df.delete();
         instance.delete();
         

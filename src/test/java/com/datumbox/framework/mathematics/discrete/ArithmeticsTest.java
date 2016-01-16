@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.mathematics.discrete;
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -36,7 +36,7 @@ public class ArithmeticsTest extends AbstractTest {
         int k = 10;
         double expResult = 3628800.0;
         double result = Arithmetics.factorial(k);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ArithmeticsTest extends AbstractTest {
         int k = 3;
         double expResult = 120.0;
         double result = Arithmetics.combination(n, k);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

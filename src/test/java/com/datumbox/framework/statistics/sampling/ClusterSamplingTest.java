@@ -19,7 +19,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class ClusterSamplingTest extends AbstractTest {
         
         double expResult = 10.0;
         double result = ClusterSampling.nBar(clusterIdList);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ClusterSamplingTest extends AbstractTest {
         double expResult = sampleM;
         TransposeDataCollection sampledIds = ClusterSampling.randomSampling(clusterIdList, sampleM);
         double result = sampledIds.size();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -89,7 +89,7 @@ public class ClusterSamplingTest extends AbstractTest {
         TransposeDataCollection sampleDataCollection = generateSampleDataCollection();
         double expResult = 17.5;
         double result = ClusterSampling.mean(sampleDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -103,7 +103,7 @@ public class ClusterSamplingTest extends AbstractTest {
         double Nbar = 10.0;
         double expResult = 2.0;
         double result = ClusterSampling.xbarVariance(sampleDataCollection, populationM, Nbar);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -117,7 +117,7 @@ public class ClusterSamplingTest extends AbstractTest {
         double Nbar = 10.0;
         double expResult = 1.4142135623731;
         double result = ClusterSampling.xbarStd(sampleDataCollection, populationM, Nbar);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

@@ -18,7 +18,7 @@ package com.datumbox.framework.statistics.sampling;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
@@ -55,7 +55,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         double expResult = n;
         FlatDataCollection sampledIds = SimpleRandomSampling.weightedSampling(frequencyTable, n, withReplacement);
         double result = sampledIds.size();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -75,7 +75,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         double expResult = n;
         FlatDataCollection sampledIds = SimpleRandomSampling.weightedSampling(frequencyTable, n, withReplacement);
         double result = sampledIds.size();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -96,7 +96,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         double expResult = n;
         FlatDataCollection sampledIds = SimpleRandomSampling.randomSampling(idList, n, withReplacement);
         double result = sampledIds.size();
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
     /**
@@ -108,7 +108,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 14.595333333333;
         double result = SimpleRandomSampling.mean(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -120,7 +120,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 52.621426666667;
         double result = SimpleRandomSampling.variance(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -132,7 +132,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         FlatDataCollection flatDataCollection = generateFlatDataCollection();
         double expResult = 7.2540627696944;
         double result = SimpleRandomSampling.std(flatDataCollection);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -146,7 +146,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         int populationN = 2147483647;
         double expResult = 3.50809508661;
         double result = SimpleRandomSampling.xbarVariance(variance, sampleN, populationN);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -160,7 +160,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         int populationN = 2147483647;
         double expResult = 1.87299094675;
         double result = SimpleRandomSampling.xbarStd(std, sampleN, populationN);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -174,7 +174,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         int populationN = 3042;
         double expResult = 0.00072252088;
         double result = SimpleRandomSampling.pbarVariance(pbar, sampleN, populationN);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -188,7 +188,7 @@ public class SimpleRandomSamplingTest extends AbstractTest {
         int populationN = 3042;
         double expResult = 0.026879748668207;
         double result = SimpleRandomSampling.pbarStd(pbar, sampleN, populationN);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**

@@ -15,7 +15,7 @@
  */
 package com.datumbox.common.utilities;
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +116,7 @@ public class PHPMethodsTest extends AbstractTest {
         int i = 2;
         double expResult = 42.42;
         double result = PHPMethods.round(d, i);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -129,7 +129,7 @@ public class PHPMethodsTest extends AbstractTest {
         double base = 10.0;
         double expResult = 2.0;
         double result = PHPMethods.log(d, base);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**

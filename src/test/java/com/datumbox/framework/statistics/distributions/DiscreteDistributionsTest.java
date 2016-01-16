@@ -16,7 +16,7 @@
 package com.datumbox.framework.statistics.distributions;
 
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -38,7 +38,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double p = 0.5;
         double expResult = 0.5;
         double result = DiscreteDistributions.bernoulli(k, p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -51,7 +51,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double p = 0.5;
         double expResult = 1.0;
         double result = DiscreteDistributions.bernoulliCdf(k, p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -65,7 +65,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int n = 10;
         double expResult = 0.11718750001462;
         double result = DiscreteDistributions.binomial(k, p, n);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -79,7 +79,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int n = 10;
         double expResult = 0.17187500002003;
         double result = DiscreteDistributions.binomialCdf(k, p, n);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -92,7 +92,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double p = 0.5;
         double expResult = 0.125;
         double result = DiscreteDistributions.geometric(k, p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -105,7 +105,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double p = 0.5;
         double expResult = 0.875;
         double result = DiscreteDistributions.geometricCdf(k, p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -119,7 +119,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double p = 0.5;
         double expResult = 0.08203125;
         double result = DiscreteDistributions.negativeBinomial(n, r, p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -133,7 +133,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double p = 0.5;
         double expResult = 0.12705078125;
         double result = DiscreteDistributions.negativeBinomialCdf(n, r, p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -145,7 +145,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int n = 10;
         double expResult = 0.1;
         double result = DiscreteDistributions.uniform(n);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -158,7 +158,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int n = 10;
         double expResult = 0.3;
         double result = DiscreteDistributions.uniformCdf(k, n);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -173,7 +173,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int Np = 100;
         double expResult = 0.28116339430254;
         double result = DiscreteDistributions.hypergeometric(k, n, Kp, Np);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -188,7 +188,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int Np = 100;
         double expResult = 0.65401998866081;
         double result = DiscreteDistributions.hypergeometricCdf(k, n, Kp, Np);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -201,7 +201,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double lamda = 5.0;
         double expResult = 0.14037389583692;
         double result = DiscreteDistributions.poisson(k, lamda);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -214,7 +214,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         double lamda = 5.0;
         double expResult = 0.26502591533403;
         double result = DiscreteDistributions.poissonCdf(k, lamda);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

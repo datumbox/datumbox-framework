@@ -16,7 +16,7 @@
 package com.datumbox.tests.abstracts;
 
 import com.datumbox.common.utilities.RandomGenerator;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public abstract class AbstractTest {
      */
     public AbstractTest() {
         //Set the global seed (Optional)
-        RandomGenerator.setGlobalSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.setGlobalSeed(Constants.RANDOM_SEED);
     }
     
     /**
@@ -48,6 +48,6 @@ public abstract class AbstractTest {
     @Before
     public void setUp() {
         //Reset the seed of the local Random before every method execution
-        RandomGenerator.getThreadLocalRandom().setSeed(TestConfiguration.RANDOM_SEED);
+        RandomGenerator.getThreadLocalRandom().setSeed(Constants.RANDOM_SEED);
     }
 }

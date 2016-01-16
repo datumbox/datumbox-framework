@@ -21,7 +21,7 @@ import com.datumbox.common.dataobjects.FlatDataList;
 import com.datumbox.common.dataobjects.FlatDataCollection;
 import com.datumbox.common.dataobjects.TransposeDataList;
 import com.datumbox.common.dataobjects.TransposeDataCollection;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.tests.abstracts.AbstractTest;
 
@@ -99,7 +99,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         for(Object stata : sampledIds.keySet()) {
             result+= sampledIds.get(stata).size();
         }
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
     }
 
@@ -123,7 +123,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         for(Object stata : sampledIds.keySet()) {
             result+= sampledIds.get(stata).size();
         }
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -136,7 +136,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 6.4888888888889;
         double result = StratifiedSampling.mean(sampleDataCollection, populationNh);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -149,7 +149,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 9.43856960409;
         double result = StratifiedSampling.variance(sampleDataCollection, populationNh);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -162,7 +162,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 3.0722255132211;
         double result = StratifiedSampling.std(sampleDataCollection, populationNh);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -176,7 +176,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 0.17901234567;
         double result = StratifiedSampling.xbarVariance(sampleDataCollection, nh, populationNh);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -190,7 +190,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         AssociativeArray populationNh = generatePopulationNh();
         double expResult = 0.42309850588133;
         double result = StratifiedSampling.xbarStd(sampleDataCollection, nh, populationNh);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -221,7 +221,7 @@ public class StratifiedSamplingTest extends AbstractTest {
         double expResult = n;
         AssociativeArray sampleSizes = StratifiedSampling.optimumSampleSize(n, populationNh, populationStdh);
         double result = Descriptives.sum(sampleSizes.toFlatDataCollection());
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

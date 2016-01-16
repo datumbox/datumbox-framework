@@ -74,6 +74,7 @@ Version 0.7.0-SNAPSHOT - Build 20160116
 - Created a new Configuration mechanism and added the ability to configure the concurrency.
 - Updated the NgramsExtractor algorithm to export more keywords.
 - Removed the transacted option of MapDB.
+- The configuration of Tests is now controlled using a properties file.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

@@ -16,7 +16,7 @@
 package com.datumbox.framework.statistics.distributions;
 
 
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -38,7 +38,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         int df = 10;
         double expResult = 0.018575928421771;
         double result = ContinuousDistributions.chisquareCdf(x, df);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double z = 3.0;
         double expResult = 0.9986501025724;
         double result = ContinuousDistributions.gaussCdf(z);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -62,7 +62,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double Z = 3.0;
         double expResult = 0.69314718044741;
         double result = ContinuousDistributions.logGamma(Z);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -75,7 +75,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         int df = 10;
         double expResult = 0.99332817273466;
         double result = ContinuousDistributions.studentsCdf(x, df);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double lamda = 10.0;
         double expResult = 0.99999999999991;
         double result = ContinuousDistributions.exponentialCdf(x, lamda);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -102,7 +102,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double b = 2.0;
         double expResult = 0.69735688048532;
         double result = ContinuousDistributions.betaCdf(x, a, b);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -116,7 +116,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         int f2 = 2;
         double expResult = 0.7241964339413;
         double result = ContinuousDistributions.fCdf(x, f1, f2);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -130,7 +130,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double b = 2.0;
         double expResult = 0.017092718679951;
         double result = ContinuousDistributions.gammaCdf(x, a, b);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -144,7 +144,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double b = 10.0;
         double expResult = 0.125;
         double result = ContinuousDistributions.uniformCdf(x, a, b);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -156,7 +156,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double z = 2.0;
         double expResult = 0.99932907474422;
         double result = ContinuousDistributions.kolmogorov(z);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -168,7 +168,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double p = 0.32;
         double expResult = -0.46769879942903;
         double result = ContinuousDistributions.gaussInverseCdf(p);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -181,7 +181,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         int df = 10;
         double expResult = 11.498788492223;
         double result = ContinuousDistributions.chisquareInverseCdf(p, df);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -195,7 +195,7 @@ public class ContinuousDistributionsTest extends AbstractTest {
         double sigma = 1.0;
         double expResult = 0.53230120088549;
         double result = ContinuousDistributions.normalQuantile(p, mu, sigma);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

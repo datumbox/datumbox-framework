@@ -16,7 +16,7 @@
 package com.datumbox.framework.statistics.timeseries;
 
 import com.datumbox.common.dataobjects.FlatDataList;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class SmoothingTest extends AbstractTest {
         int N = 3;
         double expResult = 23.0;
         double result = Smoothing.simpleMovingAverage(flatDataList, N);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -65,7 +65,7 @@ public class SmoothingTest extends AbstractTest {
         int N = 3;
         double expResult = 24.166666666667;
         double result = Smoothing.simpleMovingAverageQuick(Yt, YtminusN, Ft, N);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -78,7 +78,7 @@ public class SmoothingTest extends AbstractTest {
         int N = 3;
         double expResult =22.0;
         double result = Smoothing.weightedMovingAverage(flatDataList, N);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -91,7 +91,7 @@ public class SmoothingTest extends AbstractTest {
         double a = 0.9;
         double expResult = 23.240433133179;
         double result = Smoothing.simpleExponentialSmoothing(flatDataList, a);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -105,7 +105,7 @@ public class SmoothingTest extends AbstractTest {
         double a = 0.9;
         double expResult = 23.474043313318;
         double result = Smoothing.simpleExponentialSmoothingQuick(Ytminus1, Stminus1, a);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**

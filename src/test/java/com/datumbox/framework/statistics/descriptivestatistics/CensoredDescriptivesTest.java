@@ -17,7 +17,7 @@ package com.datumbox.framework.statistics.descriptivestatistics;
 
 import com.datumbox.common.dataobjects.AssociativeArray2D;
 import com.datumbox.common.dataobjects.FlatDataCollection;
-import com.datumbox.tests.TestConfiguration;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class CensoredDescriptivesTest extends AbstractTest {
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 9.6111111111111;
         double result = CensoredDescriptives.median(survivalFunction);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -60,7 +60,7 @@ public class CensoredDescriptivesTest extends AbstractTest {
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 10.0875;
         double result = CensoredDescriptives.mean(survivalFunction);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -72,7 +72,7 @@ public class CensoredDescriptivesTest extends AbstractTest {
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 2.7874113520408;
         double result = CensoredDescriptives.meanVariance(survivalFunction);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
 
     /**
@@ -84,7 +84,7 @@ public class CensoredDescriptivesTest extends AbstractTest {
         AssociativeArray2D survivalFunction = CensoredDescriptives.survivalFunction(generateFlatDataCollection());
         double expResult = 1.6695542375259;
         double result = CensoredDescriptives.meanStd(survivalFunction);
-        assertEquals(expResult, result, TestConfiguration.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }
