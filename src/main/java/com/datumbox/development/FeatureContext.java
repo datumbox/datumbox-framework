@@ -38,7 +38,7 @@ public class FeatureContext {
      * active features switches along with activated options.
      */
     static {
-        ACTIVE_SWITCHES.put(SynchronizedBlocks.class, SynchronizedBlocks.WITHOUT_SYNCHRONIZED);
+        ACTIVE_SWITCHES.put(SynchronizedBlocks.class, SynchronizedBlocks.WITH_SYNCHRONIZED);
     }
     
     /**
