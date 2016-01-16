@@ -178,7 +178,7 @@
                 <configuration>
                     <threadCount>3</threadCount>
                     <parallel>classes</parallel>
-                    <argLine>-Xmx512M -Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                    <argLine>-Xmx512M -Dfile.encoding=${project.build.sourceEncoding} -DskipAfterFailureCount=false</argLine>
                 </configuration>
             </plugin>
             <plugin>
