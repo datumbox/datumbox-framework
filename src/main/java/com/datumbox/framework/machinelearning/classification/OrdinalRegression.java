@@ -379,13 +379,15 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
                     
             double dtG_multiplier = (gOfCurrent-gOfPrevious)*multiplier;
             
-            synchronized(newWeights) {
-                //update weights                
-                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Object column = entry.getKey();
-                    Double xij = TypeInference.toDouble(entry.getValue());
-
-                    newWeights.put(column, newWeights.get(column)+xij*dtG_multiplier);
+            
+            //update weights                
+            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                Object column = entry.getKey();
+                Double xij = TypeInference.toDouble(entry.getValue());
+                
+                double xij_dtG_multiplier = xij*dtG_multiplier;
+                synchronized(newWeights) {
+                    newWeights.put(column, newWeights.get(column)+xij_dtG_multiplier);
                 }
             }
             

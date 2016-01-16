@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
@@ -54,6 +55,23 @@ public class ForkJoinStream {
         Runnable runnable = () -> stream.forEach(action);
         ThreadMethods.forkJoinExecution(runnable, concurrencyConfig, stream.isParallel());
     }
+    
+    /**
+     * Executes map on the provided stream. If the Stream is parallel, it is
+     * executed using the custom pool, else it is executed directly from the
+     * main thread.
+     * 
+     * @param <T>
+     * @param <R>
+     * @param stream
+     * @param mapper
+     * @return 
+     */
+    public <T, R> Stream<R> map(Stream<T> stream, Function<? super T, ? extends R> mapper) {
+        Callable<Stream<R>> callable = () -> stream.map(mapper);
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfig, stream.isParallel());
+    }
+    
     
     /**
      * Executes collect on the provided stream using the provided collector. 

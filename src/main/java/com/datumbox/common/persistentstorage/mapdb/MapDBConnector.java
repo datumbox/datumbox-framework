@@ -16,6 +16,7 @@
 package com.datumbox.common.persistentstorage.mapdb;
 
 import com.datumbox.common.persistentstorage.abstracts.AbstractAutoCloseConnector;
+import com.datumbox.development.switchers.SynchronizedBlocks;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -273,7 +274,14 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
             }
             
             m = m.transactionDisable();
-            m = m.asyncWriteEnable();
+            
+            if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
+                //asynch write is disabled by default
+            }
+            else {
+                m = m.asyncWriteEnable();
+            }
+            
             m = m.closeOnJvmShutdown();
             
             db = m.make();

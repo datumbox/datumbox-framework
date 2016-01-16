@@ -339,22 +339,21 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
                 
                 double errorMultiplier = multiplier*error;
                 
-                synchronized(newThitas) {
                     //update the weight of constant
-                    List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
+                List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
+                synchronized(newThitas) {
                     newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier);
+                }
+                    
+                //update the rest of the weights
+                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                    Double value = TypeInference.toDouble(entry.getValue());
 
-                    //update the rest of the weights
-                    for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                        Double value = TypeInference.toDouble(entry.getValue());
+                    Object feature = entry.getKey();
+                    featureClassTuple = Arrays.<Object>asList(feature, theClass);
 
-                        Object feature = entry.getKey();
-                        featureClassTuple = Arrays.<Object>asList(feature, theClass);
-
-                        Double thitaWeight = newThitas.get(featureClassTuple);
-                        if(thitaWeight!=null) {//ensure that the feature is in the dictionary
-                            newThitas.put(featureClassTuple, thitaWeight+errorMultiplier*value);
-                        }
+                    synchronized(newThitas) {
+                        newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier*value);
                     }
                 }
             }

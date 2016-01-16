@@ -231,16 +231,17 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             synchronized(newThitas) {
                 //update the weight of constant
                 newThitas.put(Dataframe.COLUMN_NAME_CONSTANT, newThitas.get(Dataframe.COLUMN_NAME_CONSTANT)+errorMultiplier);
-
-                //update the rest of the weights
-                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Object feature = entry.getKey();
-
-                    Double thitaWeight = newThitas.get(feature);
-                    if(thitaWeight!=null) {//ensure that the feature is in the supported features
-                        Double value = TypeInference.toDouble(entry.getValue());
-                        newThitas.put(feature, thitaWeight+errorMultiplier*value);
-                    }
+            }
+            
+            //update the rest of the weights
+            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                Object feature = entry.getKey();
+                Double value = TypeInference.toDouble(entry.getValue());
+                
+                double errorMultiplier_value = errorMultiplier*value;
+                
+                synchronized(newThitas) {
+                    newThitas.put(feature, newThitas.get(feature)+errorMultiplier_value);
                 }
             }
         });
@@ -278,11 +279,9 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression
         //It is optimized for speed to reduce the amount of loops
         
-        double error = streamExecutor.sum(StreamMethods.stream(trainingData.entries(), isParallelized()).mapToDouble(e -> { 
-            Integer rId = e.getKey();
-            Record r = e.getValue();
+        double error = streamExecutor.sum(StreamMethods.stream(trainingData.values(), isParallelized()).mapToDouble(r -> { 
             double yPredicted = hypothesisFunction(r.getX(), thitas);
-            trainingData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
+            //trainingData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }));
         
@@ -294,12 +293,9 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Object feature = entry.getKey();
+            Double xj = TypeInference.toDouble(entry.getValue());
             
-            Double thitaWeight = thitas.get(feature);
-            if(thitaWeight!=null) {//ensure that the feature is in the supported features
-                Double xj = TypeInference.toDouble(entry.getValue());
-                sum+=thitaWeight*xj;
-            }
+            sum+=thitas.get(feature)*xj;
         }
         
         return sum;

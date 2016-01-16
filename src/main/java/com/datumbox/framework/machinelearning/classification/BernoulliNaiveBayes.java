@@ -251,24 +251,26 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         }
         
         //update log likelihood
-        streamExecutor.forEach(StreamMethods.stream(likelihoods.entrySet().stream(), isParallelized()), entry -> {
-            List<Object> featureClassTuple = entry.getKey();
-            Object theClass = featureClassTuple.get(1);
-            Double occurrences = entry.getValue();
-            if(occurrences==null) {
-                occurrences=0.0;
-            }
+        for(Object theClass : classesSet) {
+            double sumLog1minusP = streamExecutor.sum(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()).mapToDouble(feature -> {
+                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass); 
+                Double occurrences = likelihoods.get(featureClassTuple);
+                if(occurrences==null) {
+                    occurrences=0.0;
+                }
 
-            //We perform laplace smoothing (also known as add-1)
-            Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.get(theClass)+d); // the d is also known in NLP problems as the Vocabulary size. 
+                //We perform laplace smoothing (also known as add-1)
+                Double smoothedProbability = (occurrences+1.0)/(totalFeatureOccurrencesForEachClass.get(theClass)+d); // the d is also known in NLP problems as the Vocabulary size. 
+
+                likelihoods.put(featureClassTuple, smoothedProbability);
+
+                double log1minusP = Math.log( 1.0-smoothedProbability );
+                
+                return log1minusP;
+            }));
             
-            likelihoods.put(featureClassTuple, smoothedProbability);
-            
-            double log1minusP = Math.log( 1.0-smoothedProbability );
-            synchronized(sumOfLog1minusProb) {
-                sumOfLog1minusProb.put(theClass, sumOfLog1minusProb.get(theClass) + log1minusP); 
-            }
-        });
+            sumOfLog1minusProb.put(theClass, sumOfLog1minusProb.get(theClass) + sumLog1minusP); 
+        }
         
         //Drop the temporary Collection
         dbc.dropBigMap("tmp_totalFeatureOccurrencesForEachClass", totalFeatureOccurrencesForEachClass);
