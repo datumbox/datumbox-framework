@@ -276,7 +276,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                 
                 Descriptives.normalizeExp(classScores);
                 
-                //The below seems a bit strange but this is actually how the model probabilities are estimated. It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
+                //It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
                 streamExecutor.forEach(StreamMethods.stream(classScores.entrySet().stream(), isParallelized()), entry -> {
                     Object theClass = entry.getKey();
                     Double score = TypeInference.toDouble(entry.getValue());

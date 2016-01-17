@@ -36,9 +36,12 @@ public class Chisquare {
      * @return 
      */
     public static AssociativeArray getScore(DataTable2D dataTable) {
+        /*
+        //avoid calling it for performance purposes
         if(dataTable.isValid()==false) {
             throw new IllegalArgumentException("The provided Table does not have a rectangular format.");
         }
+        */
         //Estimate marginal scores and sum
         Map<Object, Double> XdotJ = new HashMap<>();
         Map<Object, Double> XIdot = new HashMap<>();

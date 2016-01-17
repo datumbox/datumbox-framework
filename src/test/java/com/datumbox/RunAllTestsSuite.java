@@ -44,6 +44,9 @@ public class RunAllTestsSuite {
         System.out.println("Press any key to continue...");
         System.in.read();  
         JUnitCore.runClasses(RunAllTestsSuite.class);
+        System.out.println("Finished");
+        System.out.println("Press any key to continue...");
+        System.in.read();  
     }
     
 }
