@@ -120,9 +120,9 @@ public class SmoothingTest extends AbstractTest {
         double beta = 0.01;
         double gamma = 0.01;
         double dev_gamma = 0.1;
-        double expResult = 30.636044533784;
+        double expResult = 30.631118229653282;
         double result = Smoothing.holtWintersSmoothing(flatDataList, season_length, alpha, beta, gamma, dev_gamma);
-        assertEquals(expResult, result, 0.01);
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
     
 }

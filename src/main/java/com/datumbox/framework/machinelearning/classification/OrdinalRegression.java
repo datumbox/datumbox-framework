@@ -68,8 +68,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         /**
          * Right-side limits of the class on the ordinal regression line. 
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
-        private Map<Object, Double> thitas; 
+        private Map<Object, Double> thitas = new HashMap<>(); 
 
         /** 
          * @param dbc
@@ -277,17 +276,17 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             sortedClasses.add(theClass); 
             
-            thitas.put(r.getY(), 0.0);
+            thitas.put(theClass, 0.0);
         }
-        
         Object finalClass = sortedClasses.last();
+        thitas.put(finalClass, Double.POSITIVE_INFINITY);
+        
         Set<Object> classesSet = modelParameters.getClasses();
         classesSet.addAll(sortedClasses);
         
         for(Object feature: trainingData.getXDataTypes().keySet()) {
             weights.put(feature, 0.0);
         }        
-        thitas.put(finalClass, Double.POSITIVE_INFINITY);
         
         
         //mapping between the thita and the exact previous thita value
@@ -302,7 +301,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newThitas = new HashMap<>();
             
             Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
@@ -331,7 +330,6 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             //Drop the temporary Collections
             dbc.dropBigMap("tmp_newWeights", tmp_newWeights);
-            dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
    
@@ -381,12 +379,12 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             
             //update weights                
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Object column = entry.getKey();
-                Double xij = TypeInference.toDouble(entry.getValue());
-                
-                double xij_dtG_multiplier = xij*dtG_multiplier;
-                synchronized(newWeights) {
+            synchronized(newWeights) {
+                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                    Object column = entry.getKey();
+                    Double xij = TypeInference.toDouble(entry.getValue());
+
+                    double xij_dtG_multiplier = xij*dtG_multiplier;
                     newWeights.put(column, newWeights.get(column)+xij_dtG_multiplier);
                 }
             }

@@ -117,12 +117,12 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
             }
             
             
-            //initialize mlmodel
-            AbstractModeler mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>)aClass, foldDBname+(fold+1), conf);
+            //initialize modeler
+            AbstractModeler modeler = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>)aClass, foldDBname+(fold+1), conf);
             
             
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
-            mlmodel.fit(trainingData, trainingParameters); 
+            modeler.fit(trainingData, trainingParameters); 
             trainingData.delete();
             //trainingData = null;
                         
@@ -130,13 +130,13 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
             Dataframe validationData = dataset.getSubset(foldValidationIds);
             
             //fetch validation metrics
-            VM entrySample = (VM) mlmodel.validate(validationData);
+            VM entrySample = (VM) modeler.validate(validationData);
             validationData.delete();
             //validationData = null;
             
             //delete algorithm
-            mlmodel.delete();
-            //mlmodel = null;
+            modeler.delete();
+            //modeler = null;
             
             //add the validationMetrics in the list
             validationMetricsList.add(entrySample);

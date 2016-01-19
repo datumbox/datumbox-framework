@@ -19,7 +19,6 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
 import com.datumbox.tests.Constants;
-import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -57,7 +56,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
         
         instance.fit(trainingData, param);
@@ -115,7 +114,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
         
         MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);

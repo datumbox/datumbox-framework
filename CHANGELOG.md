@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160117
+Version 0.7.0-SNAPSHOT - Build 20160119
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -75,6 +75,9 @@ Version 0.7.0-SNAPSHOT - Build 20160117
 - Updated the NgramsExtractor algorithm to export more keywords.
 - Removed the transacted option of MapDB.
 - The configuration of Tests is now controlled using a properties file.
+- Changed the names of setters/getters of Wrapper classes.
+- Increased the test-coverage.
+- Performed profiling and changed thread logic where necessary to improve speed.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

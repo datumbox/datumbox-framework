@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * TextClassifier is a convenience class which can be used to train Text Classification
  * models. It is a wrapper class which automatically takes care of the text parsing, 
- tokenization, feature selection and model training processes. It takes as input
+ tokenization, feature selection and modeler training processes. It takes as input
  either a Dataframe object or multiple text files (one for each category) with 
  one observation per row.
  * 
@@ -128,7 +128,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     }
     
     /**
-     * Trains a Machine Learning model using the provided dataset files. The data
+     * Trains a Machine Learning modeler using the provided dataset files. The data
  map should have as index the names of each class and as values the URIs
  of the training files. The training files should contain one training example
  per row.
@@ -160,7 +160,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         kb().load();
         
         preprocessTestDataset(testDataset);
-        mlmodel.predict(testDataset);
+        modeler.predict(testDataset);
     }
     
     /**
@@ -221,7 +221,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     }
     
     /**
-     * It validates the model using the provided dataset and it returns the 
+     * It validates the modeler using the provided dataset and it returns the 
  AbstractValidationMetrics. The testDataset should contain the real target variables.
      * 
      * @param testDataset
@@ -234,13 +234,13 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         kb().load();
         
         preprocessTestDataset(testDataset);
-        ValidationMetrics vm = mlmodel.validate(testDataset);
+        ValidationMetrics vm = modeler.validate(testDataset);
         
         return vm;
     }
     
     /**
-     * It validates the model using the provided dataset files. The data
+     * It validates the modeler using the provided dataset files. The data
  map should have as index the names of each class and as values the URIs
  of the training files. The data files should contain one example
  per row.
@@ -284,29 +284,29 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
             dataTransformer.fit_transform(trainingDataset, trainingParameters.getDataTransformerTrainingParameters());
         }
         
-        Class fsClass = trainingParameters.getFeatureSelectionClass();
+        Class fsClass = trainingParameters.getFeatureSelectorClass();
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
-            AbstractFeatureSelector.AbstractTrainingParameters featureSelectionParameters = trainingParameters.getFeatureSelectionTrainingParameters();
-            if(AbstractCategoricalFeatureSelector.AbstractTrainingParameters.class.isAssignableFrom(featureSelectionParameters.getClass())) {
-                ((AbstractCategoricalFeatureSelector.AbstractTrainingParameters)featureSelectionParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
+            featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            AbstractFeatureSelector.AbstractTrainingParameters featureSelectorParameters = trainingParameters.getFeatureSelectorTrainingParameters();
+            if(AbstractCategoricalFeatureSelector.AbstractTrainingParameters.class.isAssignableFrom(featureSelectorParameters.getClass())) {
+                ((AbstractCategoricalFeatureSelector.AbstractTrainingParameters)featureSelectorParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
             }
             
-            setParallelized(featureSelection);
+            setParallelized(featureSelector);
             
             //find the most popular features & remove unnecessary features
-            featureSelection.fit_transform(trainingDataset, trainingParameters.getFeatureSelectionTrainingParameters());   
+            featureSelector.fit_transform(trainingDataset, trainingParameters.getFeatureSelectorTrainingParameters());   
         }
         
-        //initialize mlmodel
-        mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, conf); 
+        //initialize modeler
+        modeler = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getModelerClass(), dbName, conf); 
             
-        setParallelized(mlmodel);
+        setParallelized(modeler);
         
-        //train the mlmodel on the whole dataset
-        mlmodel.fit(trainingDataset, trainingParameters.getMLmodelTrainingParameters());
+        //train the modeler on the whole dataset
+        modeler.fit(trainingDataset, trainingParameters.getModelerTrainingParameters());
         
         if(transformData) {
             dataTransformer.denormalize(trainingDataset); //optional denormalization
@@ -330,26 +330,26 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
             dataTransformer.transform(testDataset);
         }
 
-        Class fsClass = trainingParameters.getFeatureSelectionClass();
+        Class fsClass = trainingParameters.getFeatureSelectorClass();
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            if(featureSelection==null) {
-                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            if(featureSelector==null) {
+                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             }
             
-            setParallelized(featureSelection);
+            setParallelized(featureSelector);
 
             //remove unnecessary features
-            featureSelection.transform(testDataset);
+            featureSelector.transform(testDataset);
         }
         
-        //initialize mlmodel
-        if(mlmodel==null) {
-            mlmodel = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getMLmodelClass(), dbName, conf); 
+        //initialize modeler
+        if(modeler==null) {
+            modeler = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getModelerClass(), dbName, conf); 
         }
         
-        setParallelized(mlmodel);
+        setParallelized(modeler);
     }
     
 }

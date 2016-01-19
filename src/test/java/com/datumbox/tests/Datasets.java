@@ -380,7 +380,7 @@ public class Datasets {
      * @param n
      * @return 
      */
-    public static Dataframe[] featureSelectionCategorical(Configuration conf, int n) {
+    public static Dataframe[] featureSelectorCategorical(Configuration conf, int n) {
         Dataframe data = new Dataframe(conf);
         for(int i=0;i<n;++i) {
             AssociativeArray xData = new AssociativeArray();
@@ -447,7 +447,7 @@ public class Datasets {
      * @param conf
      * @return 
      */
-    public static Dataframe[] featureSelectionTFIDF(Configuration conf) {
+    public static Dataframe[] featureSelectorTFIDF(Configuration conf) {
         Dataframe trainingData = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();

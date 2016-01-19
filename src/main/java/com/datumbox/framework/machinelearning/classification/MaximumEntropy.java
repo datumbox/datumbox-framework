@@ -36,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 /**
@@ -208,34 +206,37 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         DatabaseConnector dbc = kb().getDbc();
         Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
+        //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
+        //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
+        streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
+            for(Object theClass : classesSet) {
+                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                tmp_EpFj_observed.put(featureClassTuple, 0.0);
+                lambdas.put(featureClassTuple, 0.0);
+            }
+        });
         
+    
         double increment = 1.0/n; //this is done for speed reasons. We don't want to repeat the same division over and over
         
         //then we calculate the observed probabilities in training set
-        for(Record r : trainingData) { 
-            
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> {
+            Object theClass = r.getY();
             //store the occurrances of the features
-            streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), entry -> {
+            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 if (occurrences!=null && occurrences>0.0) {
                     Object feature = entry.getKey();
-                
-                    //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
-                    //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
-                    for(Object theClass : classesSet) {
-                        List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
-                        if(tmp_EpFj_observed.putIfAbsent(featureClassTuple, 0.0) == null) {
-                            lambdas.put(featureClassTuple, 0.0); //initialize lambda
-                        }
-                    } 
 
                     //find the class of this particular example
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, r.getY());
-                    tmp_EpFj_observed.put(featureClassTuple, tmp_EpFj_observed.get(featureClassTuple) + increment);
+                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                    synchronized(tmp_EpFj_observed) {
+                        tmp_EpFj_observed.put(featureClassTuple, tmp_EpFj_observed.get(featureClassTuple) + increment);
+                    }
                 }
-            });
+            }
             
-        }
+        });
         
         
         //IIS algorithm
@@ -261,43 +262,46 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             //calculate the model probabilities
-            for(Record r : trainingData) { 
+            streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { //slow parallel loop
                 
                 //build a map with the scores of the record for each class
-                final AssociativeArray xData = r.getX();
-                AssociativeArray classScores = new AssociativeArray(
-                    streamExecutor.collect(StreamMethods.stream(classesSet.stream(), isParallelized()), 
-                        Collectors.toMap(Function.identity(), theClass->calculateClassScore(xData, theClass))
-                    )
-                );
+                AssociativeArray classScores = new AssociativeArray();
+                AssociativeArray xData = r.getX();
+                for(Object theClass : classesSet) {
+                    double score = calculateClassScore(xData, theClass);
+                    classScores.put(theClass, score);
+                }
                 
                 Descriptives.normalizeExp(classScores);
                 
-                //It is the average probability across all documents for a specific characteristic. The code is optimized for speed and this makes it less readable
-                streamExecutor.forEach(StreamMethods.stream(classScores.entrySet().stream(), isParallelized()), entry -> {
+                
+                //It is the average probability across all documents for a specific characteristic
+                for(Map.Entry<Object, Object> entry : classScores.entrySet()) {
                     Object theClass = entry.getKey();
                     Double score = TypeInference.toDouble(entry.getValue());
-                    
+
                     double probabilityFraction = score/n;
                     
-                    for(Map.Entry<Object, Object> entry2 : r.getX().entrySet()) {
-                        Double occurrences=TypeInference.toDouble(entry2.getValue());
-                        
-                        if(occurrences==null || occurrences==0.0) {
-                            continue;
+                    synchronized(tmp_EpFj_model) {
+                        for(Map.Entry<Object, Object> entry2 : r.getX().entrySet()) {
+                            Double occurrences=TypeInference.toDouble(entry2.getValue());
+
+                            if(occurrences==null || occurrences==0.0) {
+                                continue;
+                            }
+                            Object feature = entry2.getKey();
+                            List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+
+                            tmp_EpFj_model.put(featureClassTuple, tmp_EpFj_model.getOrDefault(featureClassTuple, 0.0) + probabilityFraction);           
                         }
-                        Object feature = entry2.getKey();
-                        List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
-                        
-                        tmp_EpFj_model.put(featureClassTuple, tmp_EpFj_model.getOrDefault(featureClassTuple, 0.0) + probabilityFraction);
                     }
-                }); 
+                }
                 //classScores=null;
                 
-            }
+            });
             
             AtomicBoolean infiniteValuesDetected = new AtomicBoolean(false);
             //Now we have the model probabilities. We will use it to estimate the Deltas and finally update the lamdas

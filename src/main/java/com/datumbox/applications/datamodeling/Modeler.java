@@ -28,7 +28,7 @@ import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetric
 /**
  * Modeler is a convenience class which can be used to train Machine Learning
  * models. It is a wrapper class which automatically takes care of the data 
- * transformation, feature selection and model training processes.
+ transformation, feature selection and modeler training processes.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -116,28 +116,28 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         
         //find the most popular features
-        Class fsClass = trainingParameters.getFeatureSelectionClass();
+        Class fsClass = trainingParameters.getFeatureSelectorClass();
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             
-            setParallelized(featureSelection);
+            setParallelized(featureSelector);
             
-            featureSelection.fit_transform(trainingData, trainingParameters.getFeatureSelectionTrainingParameters()); 
+            featureSelector.fit_transform(trainingData, trainingParameters.getFeatureSelectorTrainingParameters()); 
         }
         
         
         
         
-        //initialize mlmodel
-        Class mlClass = trainingParameters.getMLmodelClass();
-        mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
+        //initialize modeler
+        Class mlClass = trainingParameters.getModelerClass();
+        modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
         
-        setParallelized(mlmodel);
+        setParallelized(modeler);
         
-        //train the mlmodel on the whole dataset
-        mlmodel.fit(trainingData, trainingParameters.getMLmodelTrainingParameters());
+        //train the modeler on the whole dataset
+        modeler.fit(trainingData, trainingParameters.getModelerTrainingParameters());
         
         if(transformData) {
             dataTransformer.denormalize(trainingData); //optional denormalization
@@ -164,39 +164,39 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
             dataTransformer.transform(data);
         }
         
-        Class fsClass = trainingParameters.getFeatureSelectionClass();
+        Class fsClass = trainingParameters.getFeatureSelectorClass();
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            if(featureSelection==null) {
-                featureSelection = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            if(featureSelector==null) {
+                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
             }
             
-            setParallelized(featureSelection);
+            setParallelized(featureSelector);
             
             //remove unnecessary features
-            featureSelection.transform(data);
+            featureSelector.transform(data);
         }
         
         
-        //initialize mlmodel
-        if(mlmodel==null) {
-            Class mlClass = trainingParameters.getMLmodelClass();
-            mlmodel = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
+        //initialize modeler
+        if(modeler==null) {
+            Class mlClass = trainingParameters.getModelerClass();
+            modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
         }
         
-        setParallelized(mlmodel);
+        setParallelized(modeler);
         
-        //call predict of the mlmodel for the new dataset
+        //call predict of the modeler for the new dataset
         
         ValidationMetrics vm = null;
         if(estimateValidationMetrics) {
             //run validate which calculates validation metrics. It is used by validate() method
-            vm = mlmodel.validate(data);
+            vm = modeler.validate(data);
         }
         else {
             //run predict which does not calculate validation metrics. It is used in from predict() method
-            mlmodel.predict(data);
+            modeler.predict(data);
         }
         
         if(transformData) {

@@ -18,10 +18,21 @@ package com.datumbox.applications.nlp;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
+import com.datumbox.framework.machinelearning.classification.BernoulliNaiveBayes;
+import com.datumbox.framework.machinelearning.classification.BinarizedNaiveBayes;
+import com.datumbox.framework.machinelearning.classification.MaximumEntropy;
 import com.datumbox.tests.Constants;
 import com.datumbox.framework.machinelearning.classification.MultinomialNaiveBayes;
+import com.datumbox.framework.machinelearning.classification.OrdinalRegression;
+import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
+import com.datumbox.framework.machinelearning.classification.SupportVectorMachine;
+import com.datumbox.framework.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
+import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
+import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
 
 import com.datumbox.framework.machinelearning.featureselection.categorical.ChisquareSelect;
+import com.datumbox.framework.machinelearning.featureselection.categorical.MutualInformation;
+import com.datumbox.framework.machinelearning.featureselection.scorebased.TFIDF;
 import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
@@ -44,16 +55,247 @@ import static org.junit.Assert.*;
 public class TextClassifierTest extends AbstractTest {
 
     /**
-     * Test of train method, of class TextClassifier.
-     */
+     * Test of train and validate method, of class TextClassifier using BernoulliNaiveBayes.
+     */ 
     @Test
-    public void testTrainAndPredict() {
-        logger.info("TrainAndPredict");
+    public void testTrainAndValidateBernoulliNaiveBayes() {
+        logger.info("testTrainAndValidateBernoulliNaiveBayes");
         
+        BernoulliNaiveBayes.TrainingParameters mlParams = new BernoulliNaiveBayes.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "bernouli",
+                BernoulliNaiveBayes.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.8393075950598075
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using BinarizedNaiveBayes.
+     */ 
+    @Test
+    public void testTrainAndValidateBinarizedNaiveBayes() {
+        logger.info("testTrainAndValidateBinarizedNaiveBayes");
+        
+        BinarizedNaiveBayes.TrainingParameters mlParams = new BinarizedNaiveBayes.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "binarizednb",
+                BinarizedNaiveBayes.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.8413587159387832
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using MaximumEntropy.
+     */ 
+    @Test
+    public void testTrainAndValidateMaximumEntropy() {
+        logger.info("testTrainAndValidateMaximumEntropy");
+        
+        MaximumEntropy.TrainingParameters mlParams = new MaximumEntropy.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "maxent",
+                MaximumEntropy.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.9411031042128604
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using MultinomialNaiveBayes.
+     */ 
+    @Test
+    public void testTrainAndValidateMultinomialNaiveBayes() {
+        logger.info("testTrainAndValidateMultinomialNaiveBayes");
+        
+        MultinomialNaiveBayes.TrainingParameters mlParams = new MultinomialNaiveBayes.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "multinomialnb",
+                MultinomialNaiveBayes.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.8685865263692268
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using OrdinalRegression.
+     */ 
+    @Test
+    public void testTrainAndValidateOrdinalRegression() {
+        logger.info("testTrainAndValidateOrdinalRegression");
+        
+        OrdinalRegression.TrainingParameters mlParams = new OrdinalRegression.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "ordinal",
+                OrdinalRegression.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.8290058479532163
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using SoftMaxRegression.
+     */ 
+    @Test
+    public void testTrainAndValidateSoftMaxRegression() {
+        logger.info("testTrainAndValidateSoftMaxRegression");
+        
+        SoftMaxRegression.TrainingParameters mlParams = new SoftMaxRegression.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "softmax",
+                SoftMaxRegression.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.7663106693454584
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using SupportVectorMachine.
+     */ 
+    @Test
+    public void testTrainAndValidateSupportVectorMachine() {
+        logger.info("testTrainAndValidateSupportVectorMachine");
+        
+        SupportVectorMachine.TrainingParameters mlParams = new SupportVectorMachine.TrainingParameters();
+        
+        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
+        fsParams.setALevel(0.05);
+        fsParams.setIgnoringNumericalFeatures(false);
+        fsParams.setMaxFeatures(1000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "svm",
+                SupportVectorMachine.class,
+                mlParams,
+                ChisquareSelect.class,
+                fsParams,
+                0.9803846153846154
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using MutualInformation.
+     */ 
+    @Test
+    public void testTrainAndValidateMutualInformation() {
+        logger.info("testTrainAndValidateMutualInformation");
+        
+        MultinomialNaiveBayes.TrainingParameters mlParams = new MultinomialNaiveBayes.TrainingParameters();
+        
+        MutualInformation.TrainingParameters fsParams = new MutualInformation.TrainingParameters();
+        fsParams.setMaxFeatures(10000);
+        fsParams.setRareFeatureThreshold(3);
+        
+        trainAndValidate(
+                "mutualinfo",
+                MultinomialNaiveBayes.class,
+                mlParams,
+                MutualInformation.class,
+                fsParams,
+                0.8954671493044679
+        );
+    }
+
+    /**
+     * Test of train and validate method, of class TextClassifier using TFIDF.
+     */ 
+    @Test
+    public void testTrainAndValidateTFIDF() {
+        logger.info("testTrainAndValidateTFIDF");
+        
+        MultinomialNaiveBayes.TrainingParameters mlParams = new MultinomialNaiveBayes.TrainingParameters();
+        
+        TFIDF.TrainingParameters fsParams = new TFIDF.TrainingParameters();
+        fsParams.setMaxFeatures(1000);
+        
+        trainAndValidate(
+                "tfidf",
+                MultinomialNaiveBayes.class,
+                mlParams,
+                TFIDF.class,
+                fsParams,
+                0.80461962936161
+        );
+    }
+    
+    /**
+     * Trains and validates a model with the provided modeler and feature selector.
+     * 
+     * @param <ML>
+     * @param <FS>
+     * @param prefix
+     * @param modelerClass
+     * @param modelerTrainingParameters
+     * @param featureSelectorClass
+     * @param featureSelectorTrainingParameters 
+     */
+    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector> void trainAndValidate(
+            String prefix,
+            Class<ML> modelerClass, 
+            ML.AbstractTrainingParameters modelerTrainingParameters,
+            Class<FS> featureSelectorClass, 
+            FS.AbstractTrainingParameters featureSelectorTrainingParameters,
+            double expectedF1score) {
         Configuration conf = TestUtils.getConfig();
         
         
-        String dbName = this.getClass().getSimpleName();
+        String dbName = prefix+this.getClass().getSimpleName();
         
         Map<Object, URI> dataset = new HashMap<>();
         try {
@@ -69,22 +311,16 @@ public class TextClassifierTest extends AbstractTest {
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         //Classifier configuration
-        trainingParameters.setMLmodelClass(MultinomialNaiveBayes.class);
-        MultinomialNaiveBayes.TrainingParameters classifierTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
-        trainingParameters.setMLmodelTrainingParameters(classifierTrainingParameters);
+        trainingParameters.setModelerClass(modelerClass);
+        trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
         
         //data transfomation configuration
         trainingParameters.setDataTransformerClass(null);
         trainingParameters.setDataTransformerTrainingParameters(null);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectionClass(ChisquareSelect.class);
-        ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
-        fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
-        fsParams.setMaxFeatures(10000);
-        fsParams.setRareFeatureThreshold(3);
-        trainingParameters.setFeatureSelectionTrainingParameters(fsParams);
+        trainingParameters.setFeatureSelectorClass(featureSelectorClass);
+        trainingParameters.setFeatureSelectorTrainingParameters(featureSelectorTrainingParameters);
         
         //text extraction configuration
         trainingParameters.setTextExtractorClass(NgramsExtractor.class);
@@ -97,12 +333,11 @@ public class TextClassifierTest extends AbstractTest {
         
         
         
-        MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(dataset);
+        ValidationMetrics vm = instance.validate(dataset);
         
         instance.setValidationMetrics(vm);
         
-        double expResult2 = 0.8515582285401859;
-        assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
+        assertEquals(expectedF1score, ((AbstractClassifier.AbstractValidationMetrics)vm).getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
         instance.close();
         //instance = null;
         

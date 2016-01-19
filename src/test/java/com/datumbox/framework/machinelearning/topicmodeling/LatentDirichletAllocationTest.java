@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
 import com.datumbox.tests.Constants;
 import com.datumbox.framework.machinelearning.classification.SoftMaxRegression;
-import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.utilities.text.extractors.UniqueWordSequenceExtractor;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.utilities.TestUtils;
@@ -76,7 +75,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         trainingParameters.setBeta(0.01);
         trainingParameters.setK(25);        
         
-        lda.fit(trainingData, trainingParameters);
+        lda.fit(trainingData, trainingParameters); 
         
         lda.validate(trainingData);
         
@@ -91,9 +90,9 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
         
-        AbstractClassifier.AbstractValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
+        SoftMaxRegression.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
         
-        double expResult = 0.6859007513066202;
+        double expResult = 0.6843125117743629;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 

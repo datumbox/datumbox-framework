@@ -19,7 +19,6 @@ import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
 import com.datumbox.tests.Constants;
-import com.datumbox.framework.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -57,7 +56,7 @@ public class GaussianDPMMTest extends AbstractTest {
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(GaussianDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setKappa0(0);
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
@@ -118,7 +117,7 @@ public class GaussianDPMMTest extends AbstractTest {
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
-        param.setInitializationMethod(AbstractDPMM.AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
+        param.setInitializationMethod(GaussianDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setKappa0(0);
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});

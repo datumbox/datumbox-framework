@@ -21,6 +21,7 @@ import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
 import com.datumbox.tests.utilities.TestUtils;
@@ -81,9 +82,8 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         df.denormalize(validationData);
         
-        double std = Descriptives.std(trainingData.getYColumn().toFlatDataCollection(), true);
         for(Record r : validationData) {
-            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), std);
+            assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
         
         df.delete();

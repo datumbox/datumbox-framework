@@ -43,7 +43,7 @@ public class TFIDFTest extends AbstractTest {
         
         Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.featureSelectionTFIDF(conf);
+        Dataframe[] data = Datasets.featureSelectorTFIDF(conf);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];

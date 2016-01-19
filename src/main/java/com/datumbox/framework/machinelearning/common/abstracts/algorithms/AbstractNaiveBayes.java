@@ -56,8 +56,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractClassifier.AbstractModelParameters {
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
-        private Map<Object, Double> logPriors; //prior log probabilities of the classes
+        private Map<Object, Double> logPriors = new HashMap<>(); //prior log probabilities of the classes
 
         @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
@@ -241,8 +240,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         Set<Object> classesSet = modelParameters.getClasses();
         
         //calculate first statistics about the classes
-        DatabaseConnector dbc = kb().getDbc();
-        Map<Object, Double> totalFeatureOccurrencesForEachClass = dbc.getBigMap("tmp_totalFeatureOccurrencesForEachClass", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        Map<Object, Double> totalFeatureOccurrencesForEachClass = new HashMap<>();
         for(Record r : trainingData) { 
             Object theClass=r.getY();
             
@@ -274,10 +272,11 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         
         
         //now calculate the statistics of features
-        for(Record r : trainingData) { 
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> {
             Object theClass = r.getY();
             //store the occurrances of the features
-            double sumOfOccurrences = streamExecutor.sum(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()).mapToDouble(entry -> {
+            double sumOfOccurrences = 0.0;
+            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
                 Double occurrences=TypeInference.toDouble(entry.getValue());
                 
@@ -289,17 +288,13 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
                     List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
                     logLikelihoods.put(featureClassTuple, logLikelihoods.get(featureClassTuple)+occurrences); //each thread updates a unique key and the map is cuncurrent
                     
-                    return occurrences;
+                    sumOfOccurrences+=occurrences;
                 }
-                else {
-                    return 0.0;
-                }
-            }));
-           
-            if(sumOfOccurrences>0.0) {
+            }
+            synchronized(totalFeatureOccurrencesForEachClass) {
                 totalFeatureOccurrencesForEachClass.put(theClass,totalFeatureOccurrencesForEachClass.get(theClass)+sumOfOccurrences);
             }
-        }
+        });
         
         //calculate prior log probabilities
         for(Map.Entry<Object, Double> entry : logPriors.entrySet()) {
@@ -325,8 +320,6 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             
             logLikelihoods.put(featureClassTuple, Math.log( smoothedProbability )); //calculate the logScore
         }); 
-        //Drop the temporary Collection
-        dbc.dropBigMap("tmp_totalFeatureOccurrencesForEachClass", totalFeatureOccurrencesForEachClass);
     }
     
 }

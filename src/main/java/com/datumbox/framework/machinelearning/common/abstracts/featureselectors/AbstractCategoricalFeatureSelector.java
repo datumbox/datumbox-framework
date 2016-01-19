@@ -27,6 +27,7 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.Storag
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -162,7 +163,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         DatabaseConnector dbc = kb().getDbc();
         
-        Map<Object, Integer> tmp_classCounts = dbc.getBigMap("tmp_classCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the classes
+        Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
         Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
         Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
 
@@ -179,7 +180,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
 
         //drop the unnecessary stastistics tables
-        dbc.dropBigMap("tmp_classCounts", tmp_classCounts);
         dbc.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
         dbc.dropBigMap("tmp_featureCounts", tmp_featureCounts);
     }

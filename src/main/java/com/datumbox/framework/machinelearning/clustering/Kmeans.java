@@ -538,7 +538,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
-                streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), e -> {
+                for(Map.Entry<Object, Object> e : r.getX().entrySet()) {
                     Double value = TypeInference.toDouble(e.getValue());
                     if (value!=null && value!=0.0) {
                         Object feature = e.getKey();
@@ -554,7 +554,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                             tmp_varianceSumXsquare.put(feature, previousValueSumXsquare+value*value);
                         }
                     }
-                });
+                }
             }
             
             double gammaWeight = trainingParameters.getCategoricalGamaMultiplier();
@@ -785,9 +785,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 clusterMap.put(clusterId, cluster);
             }
             
-            //assign records in clusters
-            streamExecutor.forEach(StreamMethods.stream(trainingData.values(), isParallelized()), r -> {
-                
+            //assign records to clusters
+            Map<Integer, Integer> tmp_clusterAssignments = kb().getDbc().getBigMap("tmp_clusterAssignments", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 //we are storing cluster references not clusterIds
                 AssociativeArray clusterDistances = new AssociativeArray();
                 for(Map.Entry<Integer, Cluster> entry : clusterMap.entrySet()) {
@@ -798,14 +800,20 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 
                 //find the closest cluster
                 Integer selectedClusterId = (Integer)getSelectedClusterFromDistances(clusterDistances);
+                tmp_clusterAssignments.put(rId, selectedClusterId);
+            });
+            
+            for(Map.Entry<Integer, Record> e : trainingData.entries()) {
+                Integer rId = e.getKey();
+                Record r = e.getValue();
                 
                 //add the record in the cluster
-                synchronized(clusterMap) {
-                    Cluster selectedCluster = clusterMap.get(selectedClusterId);
-                    selectedCluster.add(r);
-                    clusterMap.put(selectedClusterId, selectedCluster);
-                }
-            });
+                Integer selectedClusterId = tmp_clusterAssignments.get(rId);
+                Cluster selectedCluster = clusterMap.get(selectedClusterId);
+                selectedCluster.add(r);
+                clusterMap.put(selectedClusterId, selectedCluster);
+            }
+            kb().getDbc().dropBigMap("tmp_clusterAssignments", tmp_clusterAssignments);
             
             //update clusters
             boolean changed=false;

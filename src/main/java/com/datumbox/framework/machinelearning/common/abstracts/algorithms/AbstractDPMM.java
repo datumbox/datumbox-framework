@@ -16,8 +16,6 @@
 package com.datumbox.framework.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.common.Configuration;
-import com.datumbox.common.concurrency.ForkJoinStream;
-import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.dataobjects.AssociativeArray;
 import com.datumbox.common.dataobjects.Dataframe;
 import com.datumbox.common.dataobjects.Record;
@@ -31,7 +29,6 @@ import com.datumbox.framework.machinelearning.common.interfaces.PredictParalleli
 import com.datumbox.framework.machinelearning.common.interfaces.PredictParallelizable.Prediction;
 
 import com.datumbox.framework.machinelearning.common.abstracts.modelers.AbstractClusterer;
-import com.datumbox.framework.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.machinelearning.common.validators.ClustererValidator;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.statistics.sampling.SimpleRandomSampling;
@@ -51,7 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <VM>
  */
 
-public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters, VM extends AbstractDPMM.AbstractValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable, TrainParallelizable {
+public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters, VM extends AbstractDPMM.AbstractValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable {
     
     /** {@inheritDoc} */
     public static abstract class AbstractCluster extends AbstractClusterer.AbstractCluster {
@@ -282,16 +279,9 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      */
     protected AbstractDPMM(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, conf, mpClass, tpClass, vmClass, new ClustererValidator<>());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
     } 
     
     private boolean parallelized = true;
-    
-    /**
-     * This executor is used for the parallel processing of streams with custom 
-     * Thread pool.
-     */
-    protected final ForkJoinStream streamExecutor;
     
     /** {@inheritDoc} */
     @Override
@@ -549,7 +539,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
         //Calculate the probabilities of assigning the point for every cluster
-        streamExecutor.forEach(StreamMethods.stream(clusterMap.keySet().stream(), isParallelized()), clusterId -> {
+        for(Integer clusterId : clusterMap.keySet()) {
             AbstractCluster ck = getFromClusterMap(clusterId, clusterMap);
             //compute P_k(X[i]) = P(X[i] | X[-i] = k)
             double marginalLogLikelihoodXi = ck.posteriorLogPdf(r);
@@ -558,7 +548,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
             double mixingXi = ck.size()/(alpha+n-1.0);
             
             condProbCiGivenXiAndOtherCi.put(clusterId, marginalLogLikelihoodXi+Math.log(mixingXi)); //concurrent map and non-overlapping keys for each thread
-        });
+        }
         
         return new AssociativeArray(condProbCiGivenXiAndOtherCi);
     }

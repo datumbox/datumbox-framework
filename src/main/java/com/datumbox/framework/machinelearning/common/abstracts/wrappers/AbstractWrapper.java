@@ -45,12 +45,12 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
     /**
      * The AbstractFeatureSelector instance of the wrapper.
      */
-    protected AbstractFeatureSelector featureSelection;
+    protected AbstractFeatureSelector featureSelector;
     
     /**
      * The Machine Learning model instance of the wrapper.
      */
-    protected AbstractModeler mlmodel;
+    protected AbstractModeler modeler;
         
     /**
      * The AbstractTrainingParameters class stores the parameters that can be changed
@@ -65,16 +65,16 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
         //Classes
         private Class<? extends DT> dataTransformerClass;
 
-        private Class<? extends FS> featureSelectionClass;
+        private Class<? extends FS> featureSelectorClass;
         
-        private Class<? extends ML> mlmodelClass;
+        private Class<? extends ML> modelerClass;
        
         //Parameter Objects
         private DT.AbstractTrainingParameters dataTransformerTrainingParameters;
         
-        private FS.AbstractTrainingParameters featureSelectionTrainingParameters;
+        private FS.AbstractTrainingParameters featureSelectorTrainingParameters;
         
-        private ML.AbstractTrainingParameters mlmodelTrainingParameters;
+        private ML.AbstractTrainingParameters modelerTrainingParameters;
 
         /**
          * Getter for the Java class of the Data Transformer.
@@ -99,37 +99,37 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
          * 
          * @return 
          */
-        public Class<? extends FS> getFeatureSelectionClass() {
-            return featureSelectionClass;
+        public Class<? extends FS> getFeatureSelectorClass() {
+            return featureSelectorClass;
         }
         
         /**
          * Setter for the Java class of the Feature Selector. Pass null for none.
          * 
-         * @param featureSelectionClass 
+         * @param featureSelectorClass 
          */
-        public void setFeatureSelectionClass(Class<? extends FS> featureSelectionClass) {
-            this.featureSelectionClass = featureSelectionClass;
+        public void setFeatureSelectorClass(Class<? extends FS> featureSelectorClass) {
+            this.featureSelectorClass = featureSelectorClass;
         }
         
         /**
-         * Getter for the Java class of the Machine Learning model which will
-         * be used internally.
+         * Getter for the Java class of the Machine Learning modeler which will
+ be used internally.
          * 
          * @return 
          */
-        public Class<? extends ML> getMLmodelClass() {
-            return mlmodelClass;
+        public Class<? extends ML> getModelerClass() {
+            return modelerClass;
         }
         
         /**
-         * Setter for the Java class of the Machine Learning model which will
-         * be used internally.
+         * Setter for the Java class of the Machine Learning modeler which will
+ be used internally.
          * 
-         * @param mlmodelClass 
+         * @param modelerClass 
          */
-        public void setMLmodelClass(Class<? extends ML> mlmodelClass) {
-            this.mlmodelClass = mlmodelClass;
+        public void setModelerClass(Class<? extends ML> modelerClass) {
+            this.modelerClass = modelerClass;
         }
         
         /**
@@ -156,36 +156,36 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
          * 
          * @return 
          */
-        public FS.AbstractTrainingParameters getFeatureSelectionTrainingParameters() {
-            return featureSelectionTrainingParameters;
+        public FS.AbstractTrainingParameters getFeatureSelectorTrainingParameters() {
+            return featureSelectorTrainingParameters;
         }
         
         /**
          * Setter for the Training Parameters of the Feature Selector. Pass null
          * for none.
          * 
-         * @param featureSelectionTrainingParameters 
+         * @param featureSelectorTrainingParameters 
          */
-        public void setFeatureSelectionTrainingParameters(FS.AbstractTrainingParameters featureSelectionTrainingParameters) {
-            this.featureSelectionTrainingParameters = featureSelectionTrainingParameters;
+        public void setFeatureSelectorTrainingParameters(FS.AbstractTrainingParameters featureSelectorTrainingParameters) {
+            this.featureSelectorTrainingParameters = featureSelectorTrainingParameters;
         }
 
         /**
-         * Getter for the Training Parameters of the Machine Learning model.
+         * Getter for the Training Parameters of the Machine Learning modeler.
          * 
          * @return 
          */
-        public ML.AbstractTrainingParameters getMLmodelTrainingParameters() {
-            return mlmodelTrainingParameters;
+        public ML.AbstractTrainingParameters getModelerTrainingParameters() {
+            return modelerTrainingParameters;
         }
         
         /**
-         * Setter for the Training Parameters of the Machine Learning model.
+         * Setter for the Training Parameters of the Machine Learning modeler.
          * 
-         * @param mlmodelTrainingParameters 
+         * @param modelerTrainingParameters 
          */
-        public void setMLmodelTrainingParameters(ML.AbstractTrainingParameters mlmodelTrainingParameters) {
-            this.mlmodelTrainingParameters = mlmodelTrainingParameters;
+        public void setModelerTrainingParameters(ML.AbstractTrainingParameters modelerTrainingParameters) {
+            this.modelerTrainingParameters = modelerTrainingParameters;
         }
         
     }
@@ -221,11 +221,11 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
         if(dataTransformer!=null) {
             dataTransformer.delete();
         }
-        if(featureSelection!=null) {
-            featureSelection.delete();
+        if(featureSelector!=null) {
+            featureSelector.delete();
         }
-        if(mlmodel!=null) {
-            mlmodel.delete();
+        if(modeler!=null) {
+            modeler.delete();
         }
         kb().delete();
     }
@@ -236,11 +236,11 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
         if(dataTransformer!=null) {
             dataTransformer.close();
         }
-        if(featureSelection!=null) {
-            featureSelection.close();
+        if(featureSelector!=null) {
+            featureSelector.close();
         }
-        if(mlmodel!=null) {
-            mlmodel.close();
+        if(modeler!=null) {
+            modeler.close();
         }
         kb().close();
     }
@@ -252,8 +252,8 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
      * @return 
      */
     public <VM extends ValidationMetrics> VM getValidationMetrics() {
-        if(mlmodel!=null) {
-            return (VM) mlmodel.getValidationMetrics();
+        if(modeler!=null) {
+            return (VM) modeler.getValidationMetrics();
         }
         else {
             return null;
@@ -267,8 +267,8 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
      * @param validationMetrics 
      */
     public <VM extends ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
-        if(mlmodel!=null) {
-            mlmodel.setValidationMetrics((AbstractModeler.AbstractValidationMetrics) validationMetrics);
+        if(modeler!=null) {
+            modeler.setValidationMetrics((AbstractModeler.AbstractValidationMetrics) validationMetrics);
         }
     }
     

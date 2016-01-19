@@ -113,13 +113,13 @@ public class NLMSTest extends AbstractTest {
 
         
         
-        PCA featureSelection = new PCA(dbName, conf);
-        PCA.TrainingParameters featureSelectionParameters = new PCA.TrainingParameters();
-        featureSelectionParameters.setMaxDimensions(trainingData.xColumnSize()-1);
-        featureSelectionParameters.setWhitened(false);
-        featureSelectionParameters.setVariancePercentageThreshold(0.99999995);
-        featureSelection.fit_transform(trainingData, featureSelectionParameters);
-        featureSelection.delete();
+        PCA featureSelector = new PCA(dbName, conf);
+        PCA.TrainingParameters featureSelectorParameters = new PCA.TrainingParameters();
+        featureSelectorParameters.setMaxDimensions(trainingData.xColumnSize()-1);
+        featureSelectorParameters.setWhitened(false);
+        featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
+        featureSelector.fit_transform(trainingData, featureSelectorParameters);
+        featureSelector.delete();
         
         
         NLMS instance = new NLMS(dbName, conf);

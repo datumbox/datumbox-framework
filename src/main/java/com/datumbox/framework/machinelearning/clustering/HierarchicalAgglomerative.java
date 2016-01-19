@@ -424,8 +424,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         
         DatabaseConnector dbc = kb().getDbc();
 
-        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster

@@ -175,14 +175,14 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         //in idf map. this help us avoid using twice much memory comparing to
         //using two different maps
         for(Record r : trainingData) { 
-            streamExecutor.forEach(StreamMethods.stream(r.getX().entrySet().stream(), isParallelized()), entry -> {
+            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
                 Double counts = TypeInference.toDouble(entry.getValue());
                 
                 if(counts!=null && counts > 0.0) {
                     tmp_idfMap.put(keyword, tmp_idfMap.getOrDefault(keyword, 0.0)+1.0);
                 }
-            });
+            }
         }
         
         //convert counts to idf scores

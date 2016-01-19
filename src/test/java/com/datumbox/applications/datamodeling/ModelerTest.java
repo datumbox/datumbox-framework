@@ -59,10 +59,10 @@ public class ModelerTest extends AbstractTest {
         
         //Model Configuration
         
-        trainingParameters.setMLmodelClass(MultinomialNaiveBayes.class);
+        trainingParameters.setModelerClass(MultinomialNaiveBayes.class);
         MultinomialNaiveBayes.TrainingParameters modelTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
         modelTrainingParameters.setMultiProbabilityWeighted(true);
-        trainingParameters.setMLmodelTrainingParameters(modelTrainingParameters);
+        trainingParameters.setModelerTrainingParameters(modelTrainingParameters);
 
         //data transfomation configuration
         trainingParameters.setDataTransformerClass(DummyXMinMaxNormalizer.class);
@@ -70,8 +70,8 @@ public class ModelerTest extends AbstractTest {
         trainingParameters.setDataTransformerTrainingParameters(dtParams);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectionClass(null);
-        trainingParameters.setFeatureSelectionTrainingParameters(null);
+        trainingParameters.setFeatureSelectorClass(null);
+        trainingParameters.setFeatureSelectorTrainingParameters(null);
         
         instance.fit(trainingData, trainingParameters);
         

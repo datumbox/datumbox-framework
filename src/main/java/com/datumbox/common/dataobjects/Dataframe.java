@@ -42,6 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -397,6 +398,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         return values().iterator();
     }
     
+    /** {@inheritDoc} */
+    @Override
+    public Stream<Record> stream() {
+        return StreamMethods.stream(values(), false);
+    }
     
     //Optional Collection Methods
     

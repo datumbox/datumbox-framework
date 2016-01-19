@@ -54,7 +54,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
@@ -210,7 +210,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
@@ -257,11 +257,9 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             thitas.put(Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass), 0.0);
         }
         
-        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
-            for(Object feature : r.getX().keySet()) {
-                for(Object theClass : classesSet) {
-                    thitas.putIfAbsent(Arrays.<Object>asList(feature, theClass), 0.0);
-                }
+        streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
+            for(Object theClass : classesSet) {
+                thitas.putIfAbsent(Arrays.<Object>asList(feature, theClass), 0.0);
             }
         });
         
@@ -323,7 +321,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         Set<Object> classesSet = modelParameters.getClasses();
         
-        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
+        streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { //slow parallel loop
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             AssociativeArray classProbabilities = hypothesisFunction(r.getX(), thitas);
             for(Object theClass : classesSet) {
@@ -339,22 +337,20 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
                 
                 double errorMultiplier = multiplier*error;
                 
-                    //update the weight of constant
-                List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
+                
+                
                 synchronized(newThitas) {
-                    newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier);
-                }
-                    
-                //update the rest of the weights
-                for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                    Double value = TypeInference.toDouble(entry.getValue());
+                    //update the weights
+                    for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
+                        Double value = TypeInference.toDouble(entry.getValue());
 
-                    Object feature = entry.getKey();
-                    featureClassTuple = Arrays.<Object>asList(feature, theClass);
-
-                    synchronized(newThitas) {
-                        newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier*value);
+                        Object feature = entry.getKey();
+                        List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                        
+                        newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier*value);   
                     }
+                    List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
+                    newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier); //update the weight of constant
                 }
             }
         });

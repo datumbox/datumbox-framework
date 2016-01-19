@@ -43,7 +43,7 @@ public class ChisquareSelectTest extends AbstractTest {
         
         Configuration conf = TestUtils.getConfig();
         
-        Dataframe[] data = Datasets.featureSelectionCategorical(conf, 1000);
+        Dataframe[] data = Datasets.featureSelectorCategorical(conf, 1000);
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
