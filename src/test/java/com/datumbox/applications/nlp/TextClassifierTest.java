@@ -70,7 +70,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "bernouli",
                 BernoulliNaiveBayes.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -95,7 +94,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "binarizednb",
                 BinarizedNaiveBayes.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -120,7 +118,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "maxent",
                 MaximumEntropy.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -145,7 +142,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "multinomialnb",
                 MultinomialNaiveBayes.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -170,7 +166,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "ordinal",
                 OrdinalRegression.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -195,7 +190,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "softmax",
                 SoftMaxRegression.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -220,7 +214,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "svm",
                 SupportVectorMachine.class,
                 mlParams,
                 ChisquareSelect.class,
@@ -243,7 +236,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                "mutualinfo",
                 MultinomialNaiveBayes.class,
                 mlParams,
                 MutualInformation.class,
@@ -265,7 +257,6 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setMaxFeatures(1000);
         
         trainAndValidate(
-                "tfidf",
                 MultinomialNaiveBayes.class,
                 mlParams,
                 TFIDF.class,
@@ -279,14 +270,12 @@ public class TextClassifierTest extends AbstractTest {
      * 
      * @param <ML>
      * @param <FS>
-     * @param prefix
      * @param modelerClass
      * @param modelerTrainingParameters
      * @param featureSelectorClass
      * @param featureSelectorTrainingParameters 
      */
     private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector> void trainAndValidate(
-            String prefix,
             Class<ML> modelerClass, 
             ML.AbstractTrainingParameters modelerTrainingParameters,
             Class<FS> featureSelectorClass, 
@@ -295,7 +284,7 @@ public class TextClassifierTest extends AbstractTest {
         Configuration conf = TestUtils.getConfig();
         
         
-        String dbName = prefix+this.getClass().getSimpleName();
+        String dbName = this.getClass().getSimpleName();
         
         Map<Object, URI> dataset = new HashMap<>();
         try {

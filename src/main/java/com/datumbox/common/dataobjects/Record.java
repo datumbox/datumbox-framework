@@ -176,4 +176,22 @@ public class Record implements Serializable {
         return true;
     }
     
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("x => ");
+        sb.append(String.valueOf(x));
+        sb.append(" | ");
+        sb.append("y => ");
+        sb.append(String.valueOf(y));
+        sb.append(" | ");
+        sb.append("yPredicted => ");
+        sb.append(String.valueOf(yPredicted));
+        sb.append(" | ");
+        sb.append("yPredictedProbabilities => ");
+        sb.append(String.valueOf(yPredictedProbabilities));
+        return sb.toString();
+    }
+    
 }

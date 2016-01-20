@@ -20,7 +20,6 @@ import com.datumbox.common.dataobjects.Record;
 import com.datumbox.common.Configuration;
 import com.datumbox.common.dataobjects.TypeInference;
 import com.datumbox.framework.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
-import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.tests.Constants;
 import com.datumbox.tests.abstracts.AbstractTest;
 import com.datumbox.tests.Datasets;
