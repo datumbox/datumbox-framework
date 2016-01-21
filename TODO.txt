@@ -9,6 +9,7 @@ CODE IMPROVEMENTS
     - Add support for MapDB 3.0 once a stable version is released.
 
 - Add the ability to call Machine Learning algorithms from command line like in Mahout.
+- Add more storage engines. Investigate whether BerkeleyDB can be used (license restrictions, use submodules instead?).
 
 
 DOCUMENTATION
