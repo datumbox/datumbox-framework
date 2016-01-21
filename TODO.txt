@@ -3,6 +3,7 @@ CODE IMPROVEMENTS
 
 - Update all maven plugins and dependencies to their latest versions.
     - Test MapDB+async writes with SynchronizedBlocks.WITHOUT_SYNCHRONIZED flag.
+    - Test DataframeMapType.TREEMAP vs DataframeMapType.HASHMAP performance.
     - Remove feature switches.
     - Upgrade maven-surefire to 2.19.1.
     - Add support for MapDB 3.0 once a stable version is released.

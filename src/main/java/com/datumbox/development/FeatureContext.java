@@ -17,6 +17,7 @@ package com.datumbox.development;
 
 import com.datumbox.development.switchers.SynchronizedBlocks;
 import com.datumbox.development.interfaces.Feature;
+import com.datumbox.development.switchers.DataframeMapType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ public class FeatureContext {
      */
     static {
         ACTIVE_SWITCHES.put(SynchronizedBlocks.class, SynchronizedBlocks.WITH_SYNCHRONIZED);
+        ACTIVE_SWITCHES.put(DataframeMapType.class, DataframeMapType.TREEMAP);
     }
     
     /**

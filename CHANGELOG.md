@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160120
+Version 0.7.0-SNAPSHOT - Build 20160121
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -79,6 +79,7 @@ Version 0.7.0-SNAPSHOT - Build 20160120
 - Increased the test-coverage.
 - Performed profiling and changed thread logic where necessary to improve speed.
 - The TextClassifierTest no longer passes a prefix in each test.
+- Added a new DataframeMapType feature switch. The purpose is to test the performance of HashMap+Index vs TreeMap for the Dataframe object.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

@@ -23,6 +23,8 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapTyp
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.concurrency.ThreadMethods;
+import com.datumbox.development.switchers.DataframeMapType;
+import com.datumbox.development.switchers.DataframeMapTypeMark;
 import com.datumbox.development.switchers.SynchronizedBlocks;
 import com.datumbox.development.switchers.SynchronizedBlocksMark;
 import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
@@ -34,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
@@ -254,6 +258,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     @SynchronizedBlocksMark(options={SynchronizedBlocks.WITHOUT_SYNCHRONIZED})
     private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
     
+    @DataframeMapTypeMark(options={DataframeMapType.HASHMAP})
+    private Set<Integer> index = new ConcurrentSkipListSet<>();
+    
     /**
      * Public constructor of Dataframe.
      * 
@@ -267,7 +274,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         String dbName = "dts";
         dbc = this.conf.getDbConfig().getConnector(dbName);
         
-        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
+        records = dbc.getBigMap("tmp_records", (DataframeMapType.HASHMAP.isActivated())?MapType.HASHMAP:MapType.TREEMAP, StorageHint.IN_DISK, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
         
         yDataType = null;
         xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
@@ -321,6 +328,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         
         xDataTypes.clear();
         records.clear();
+        if(DataframeMapType.HASHMAP.isActivated()) {
+            index.clear();
+        }
     }
 
     /**
@@ -477,7 +487,15 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Record remove(Integer id) {
-        return records.remove(id);
+        Record r = records.remove(id);
+        
+        if(DataframeMapType.HASHMAP.isActivated()) {
+            if(r != null) {
+                index.remove(id);
+            }            
+        }
+
+        return r;
     }
     
     /**
@@ -706,6 +724,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         yDataType = null;
         xDataTypes = null;
         records = null;
+        if(DataframeMapType.HASHMAP.isActivated()) {
+            index = null;
+        }
     }
     
     /**
@@ -714,27 +735,53 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Iterable<Map.Entry<Integer, Record>> entries() {
-        return () -> new Iterator<Map.Entry<Integer, Record>>() {
-            private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
-            
-            /** {@inheritDoc} */
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public Map.Entry<Integer, Record> next() {
-                return it.next();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-            }
-        };
+        if(DataframeMapType.HASHMAP.isActivated()) {
+            return () -> new Iterator<Map.Entry<Integer, Record>>() {
+                private final Iterator<Integer> it = index.iterator();
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean hasNext() {
+                    return it.hasNext();
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public Map.Entry<Integer, Record> next() {
+                    Integer rId = it.next();
+                    return new AbstractMap.SimpleImmutableEntry<>(rId, records.get(rId));
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+                }
+            };
+        }
+        else {
+            return () -> new Iterator<Map.Entry<Integer, Record>>() {
+                private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean hasNext() {
+                    return it.hasNext();
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public Map.Entry<Integer, Record> next() {
+                    return it.next();
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+                }
+            };
+        }
     }
     
     /**
@@ -744,7 +791,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Iterable<Integer> index() {
         return () -> new Iterator<Integer>() {
-            private final Iterator<Integer> it = records.keySet().iterator();
+            private final Iterator<Integer> it = (DataframeMapType.HASHMAP.isActivated())?index.iterator():records.keySet().iterator();
             
             /** {@inheritDoc} */
             @Override
@@ -772,28 +819,54 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Iterable<Record> values() {
-        return () -> new Iterator<Record>(){
-            
-            private final Iterator<Record> it = records.values().iterator();
-            
-            /** {@inheritDoc} */
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public Record next() {
-                return it.next();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-            }
-        };
+        if(DataframeMapType.HASHMAP.isActivated()) {
+            return () -> new Iterator<Record>(){
+
+                private final Iterator<Integer> it = index.iterator();
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean hasNext() {
+                    return it.hasNext();
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public Record next() {
+                    return records.get(it.next());
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+                }
+            };
+        }
+        else {
+            return () -> new Iterator<Record>(){
+
+                private final Iterator<Record> it = records.values().iterator();
+
+                /** {@inheritDoc} */
+                @Override
+                public boolean hasNext() {
+                    return it.hasNext();
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public Record next() {
+                    return it.next();
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+                }
+            };
+        }
     }
     
     /**
@@ -820,17 +893,14 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             }
         }
         
-        return records.put(rId, r);
-    }
-    
-    /**
-     * Protected getter for the DatabaseConnector of the Dataframe. It is used
-     * by the DataframeMatrix.
-     * 
-     * @return 
-     */
-    public DatabaseConnector getDbc() {
-        return dbc;
+        Record old = records.put(rId, r);
+        if(old == null) {
+            if(DataframeMapType.HASHMAP.isActivated()) {
+                index.add(rId);
+            }
+        }
+        
+        return old;
     }
     
     /**
@@ -849,7 +919,22 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             newId = nextAvailableRecordId++;
         }
         records.put(newId, r);
+        
+        if(DataframeMapType.HASHMAP.isActivated()) {
+            index.add(newId);
+        }
+
         return newId;
+    }
+    
+    /**
+     * Protected getter for the DatabaseConnector of the Dataframe. It is used
+     * by the DataframeMatrix.
+     * 
+     * @return 
+     */
+    public DatabaseConnector getDbc() {
+        return dbc;
     }
     
     /**
