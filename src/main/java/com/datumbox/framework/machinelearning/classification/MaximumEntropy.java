@@ -44,7 +44,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * References: 
  * http://blog.datumbox.com/machine-learning-tutorial-the-max-entropy-text-classifier/
- * http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
+ * http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html 
+ * https://web.archive.org/web/20121021173335/http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
