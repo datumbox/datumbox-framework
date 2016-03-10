@@ -17,8 +17,8 @@ package com.datumbox.framework.utilities.text.analyzers;
 
 import com.datumbox.framework.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.common.utilities.PHPMethods;
-import com.datumbox.framework.utilities.text.cleaners.HTMLCleaner;
-import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
+import com.datumbox.framework.utilities.text.parsers.HTMLParser;
+import com.datumbox.common.utilities.StringCleaner;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -119,7 +119,7 @@ public class TextSimilarity {
         text=StringCleaner.tokenizeURLs(text);
 
         //Remove HTML
-        text=HTMLCleaner.extractText(text);
+        text=HTMLParser.extractText(text);
 
         //Remove an Accents
         text=StringCleaner.removeAccents(text);

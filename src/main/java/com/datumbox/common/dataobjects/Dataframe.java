@@ -23,12 +23,12 @@ import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.MapTyp
 import com.datumbox.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.common.concurrency.StreamMethods;
 import com.datumbox.common.concurrency.ThreadMethods;
+import com.datumbox.common.interfaces.Extractable;
 import com.datumbox.development.switchers.DataframeMapType;
 import com.datumbox.development.switchers.DataframeMapTypeMark;
 import com.datumbox.development.switchers.SynchronizedBlocks;
 import com.datumbox.development.switchers.SynchronizedBlocksMark;
-import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
-import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
+import com.datumbox.common.utilities.StringCleaner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -87,7 +87,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
  pass a single URI with null as key.
  
  The method requires as arguments a file with the category names and locations
- of the training files, an instance of a AbstractTextExtractor which is used
+ of the training files, an instance of a TextExtractor which is used
  to extract the keywords from the documents and the Database Configuration
  Object.
          * 
@@ -96,7 +96,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
          * @param conf
          * @return 
          */
-        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, AbstractTextExtractor textExtractor, Configuration conf) {
+        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, Extractable textExtractor, Configuration conf) {
             Dataframe dataset = new Dataframe(conf);
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
             
@@ -833,7 +833,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                 /** {@inheritDoc} */
                 @Override
                 public Record next() {
-                    return records.get(it.next());
+                    Integer id = it.next();
+                    return records.get(id);
                 }
 
                 /** {@inheritDoc} */

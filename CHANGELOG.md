@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160121
+Version 0.7.0-SNAPSHOT - Build 20160310
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -80,6 +80,10 @@ Version 0.7.0-SNAPSHOT - Build 20160121
 - Performed profiling and changed thread logic where necessary to improve speed.
 - The TextClassifierTest no longer passes a prefix in each test.
 - Added a new DataframeMapType feature switch. The purpose is to test the performance of HashMap+Index vs TreeMap for the Dataframe object.
+- Renamed HTMLCleaner to HTMLParser and moved it to a different namespace.
+- Moving StringCleaner inside common.utilities.
+- Removed the ClasspathSuite from the tests.
+- Created the Extractable which is inherited by AbstractTextExtractor. 
 
 Version 0.6.1 - Build 20160102
 ------------------------------

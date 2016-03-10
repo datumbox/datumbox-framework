@@ -55,11 +55,6 @@ The following libraries are required for the tests of this project:
  * LICENSE: http://www.opensource.org/licenses/cpl.php (Common Public License Version 1.0)
  * HOMEPAGE: http://www.junit.org/
 
-* ClasspathSuite
- * COPYRIGHT: Copyright 2006 Johannes Link
- * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
- * HOMEPAGE: https://github.com/takari/takari-cpsuite
-
 * Logback
  * COPYRIGHT: Copyright 1999 QOS.ch
  * LICENSE: http://logback.qos.ch/license.html (Eclipse Public License v1.0 / GNU Lesser General Public License version 2.1)

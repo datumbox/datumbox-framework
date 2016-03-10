@@ -25,8 +25,8 @@ import com.datumbox.common.utilities.MapMethods;
 import com.datumbox.common.utilities.PHPMethods;
 import com.datumbox.framework.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.statistics.descriptivestatistics.Descriptives;
-import com.datumbox.framework.utilities.text.cleaners.HTMLCleaner;
-import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
+import com.datumbox.framework.utilities.text.parsers.HTMLParser;
+import com.datumbox.common.utilities.StringCleaner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -152,7 +152,7 @@ public class CETR {
             String row = rows.get(rowId);
             
             //extract the clear text from the selected row
-            row = StringCleaner.removeExtraSpaces(HTMLCleaner.extractText(row));
+            row = StringCleaner.removeExtraSpaces(HTMLParser.extractText(row));
             if(row.isEmpty()) {
                 continue;
             }
@@ -392,7 +392,7 @@ public class CETR {
     }
     
     private int countContentChars(String text) {
-        return StringCleaner.removeExtraSpaces(HTMLCleaner.extractText(text)).length();
+        return StringCleaner.removeExtraSpaces(HTMLParser.extractText(text)).length();
     }
     
     private List<String> extractRows(String text) {
@@ -400,7 +400,7 @@ public class CETR {
     }
     
     private String clearText(String text) {
-        text = HTMLCleaner.removeNonTextTagsAndAttributes(text); //remove all the irrelevant HTML Tags that are not related to the text (such as forms, scripts etc)
+        text = HTMLParser.removeNonTextTagsAndAttributes(text); //remove all the irrelevant HTML Tags that are not related to the text (such as forms, scripts etc)
         if(PHPMethods.substr_count(text, '\n')<=1) { //if the document is in a single line (no spaces), then break it in order for this algorithm to work
             text = text.replace(">", ">\n");
         }

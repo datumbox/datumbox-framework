@@ -27,7 +27,7 @@ import com.datumbox.framework.machinelearning.common.abstracts.modelers.Abstract
 import com.datumbox.framework.machinelearning.common.abstracts.wrappers.AbstractWrapper;
 import com.datumbox.framework.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
 import com.datumbox.framework.machinelearning.common.interfaces.ValidationMetrics;
-import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
+import com.datumbox.common.utilities.StringCleaner;
 import com.datumbox.framework.utilities.text.extractors.AbstractTextExtractor;
 import java.net.URI;
 import java.util.HashMap;

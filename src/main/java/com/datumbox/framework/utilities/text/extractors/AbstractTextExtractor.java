@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.utilities.text.extractors;
 
+import com.datumbox.common.interfaces.Extractable;
 import com.datumbox.common.interfaces.Parameterizable;
 import com.datumbox.framework.utilities.text.tokenizers.AbstractTokenizer;
 import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
@@ -30,7 +31,7 @@ import java.util.Map;
  * @param <K>
  * @param <V>
  */
-public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.AbstractParameters, K, V> {
+public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.AbstractParameters, K, V> implements Extractable<K, V, String> {
     
     /**
      * AbstractParameters of the AbstractTextExtractor.
@@ -103,6 +104,7 @@ public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.Abs
      * @param text
      * @return 
      */
+    @Override
     public abstract Map<K, V> extract(final String text);
     
     /**

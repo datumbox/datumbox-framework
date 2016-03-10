@@ -16,8 +16,8 @@
 package com.datumbox.framework.utilities.text.analyzers;
 
 import com.datumbox.common.utilities.PHPMethods;
-import com.datumbox.framework.utilities.text.cleaners.HTMLCleaner;
-import com.datumbox.framework.utilities.text.cleaners.StringCleaner;
+import com.datumbox.framework.utilities.text.parsers.HTMLParser;
+import com.datumbox.common.utilities.StringCleaner;
 import com.datumbox.framework.utilities.text.tokenizers.WhitespaceTokenizer;
 import java.util.Set;
 import java.util.HashSet;
@@ -246,7 +246,7 @@ public class ReadabilityStatistics {
      * @return 
      */
     private static String cleanText(String strText) {
-        strText = HTMLCleaner.unsafeRemoveAllTags(strText);
+        strText = HTMLParser.unsafeRemoveAllTags(strText);
         strText = strText.toLowerCase(Locale.ENGLISH);
         
         strText = StringCleaner.unifyTerminators(strText);

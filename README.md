@@ -15,7 +15,7 @@ The code is licensed under the [Apache License, Version 2.0](https://github.com/
 Version
 -------
 
-The latest version is 0.7.0-SNAPSHOT (Build 20160121). 
+The latest version is 0.7.0-SNAPSHOT (Build 20160310). 
 
 The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
@@ -65,7 +65,7 @@ The Framework can be improved in many ways and as a result any contribution is w
 Acknowledgements
 ----------------
 
-Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Also many thanks to ej-technologies GmbH for providing a license for their [Java Profiler](http://www.ej-technologies.com/products/jprofiler/overview.html).
+Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Also many thanks to ej-technologies GmbH for providing a license for their [Java Profiler](http://www.ej-technologies.com/products/jprofiler/overview.html) and to IntelliJ for providing a license for their [Java IDE](https://www.jetbrains.com/idea/).
 
 Useful Links
 ------------

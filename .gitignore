@@ -2,9 +2,11 @@
 *.jar
 *.war
 *.ear
+*.iml
 
-/target/
+target/
 /.settings/
+/.idea/
 .classpath
 .project
 nbactions.xml
