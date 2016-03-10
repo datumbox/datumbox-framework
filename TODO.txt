@@ -1,6 +1,18 @@
 CODE IMPROVEMENTS
 =================
 
+- Separate framework in submodules:
+
+    <modules>
+        <module>datumbox-framework-common</module>
+        <module>datumbox-framework-core</module>
+        <module>datumbox-framework-applications</module>
+    </modules>
+
+Datumbox Framework Applications: com.datumbox.framework.applications
+Datumbox Framework Common: com.datumbox.framework.common & com.datumbox.framework.development
+Datumbox Framework Code: com.datumbox.framework.core
+
 - Add regularization in the currenlty supported algorithms:
     - OrdinalRegression: http://qwone.com/~jason/writing/olr.pdf
     - Softmax Regression: http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression http://www.aclweb.org/anthology/P09-1054 http://spark.apache.org/docs/latest/mllib-linear-methods.html
