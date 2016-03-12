@@ -17,7 +17,6 @@ package com.datumbox.framework.common.interfaces;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -32,7 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends AutoCloseable {
 
     /**
-     * Generates a new instance of a AbstractTrainer by providing the Class of 
+     * Generates a new instance of a Trainable by providing the Class of
      * the algorithm.
      * 
      * @param <BT>
@@ -41,7 +40,7 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      * @param conf
      * @return 
      */
-    public static <BT extends AbstractTrainer> BT newInstance(Class<BT> aClass, String dbName, Configuration conf) {
+    public static <BT extends Trainable> BT newInstance(Class<BT> aClass, String dbName, Configuration conf) {
         BT algorithm = null;
         try {
             algorithm = aClass.getConstructor(String.class, Configuration.class).newInstance(dbName, conf);
