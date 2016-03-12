@@ -128,6 +128,21 @@
     </modules>
     
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>license.txt</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -242,7 +257,7 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <version>${license-maven-plugin-version}</version>
                     <configuration>
-                        <header>datumbox-framework-common/src/main/resources/license.txt</header>
+                        <header>src/main/resources/license.txt</header>
                         <properties>
                             <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
                             <copyrightOwner>${project.developers[0].name}</copyrightOwner>
