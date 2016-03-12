@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
-    <version>${root.project.version}</version>
+    <version>0.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>Datumbox Machine Learning Framework</name>
@@ -112,7 +112,6 @@
         <logback-classic-version>1.1.6</logback-classic-version>
         
         <!-- Configuration -->
-        <root.project.version>0.7.0-SNAPSHOT</root.project.version>
         <root.project.dir>${project.basedir}</root.project.dir>
         <gpg.keyname>7083A486</gpg.keyname>
         <buildNumber>${maven.build.timestamp}</buildNumber>

@@ -26,7 +26,7 @@
     <parent>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework</artifactId>
-        <version>${root.project.version}</version>
+        <version>0.7.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
