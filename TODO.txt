@@ -1,7 +1,9 @@
 CODE IMPROVEMENTS
 =================
 
-- Use Maven Assembly plugin to gather modules to one jar.
+- Use Maven Assembly plugin.
+    - Gather modules to one jar.
+    - Copy testResources and main resources to all modules.
 
 - Add regularization in the currenlty supported algorithms:
     - OrdinalRegression: http://qwone.com/~jason/writing/olr.pdf
