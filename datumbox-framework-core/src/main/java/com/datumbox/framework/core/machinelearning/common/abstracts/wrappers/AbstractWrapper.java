@@ -40,17 +40,17 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
     /**
      * The AbstractTransformer instance of the wrapper.
      */
-    protected AbstractTransformer dataTransformer;
+    protected AbstractTransformer dataTransformer = null;
     
     /**
      * The AbstractFeatureSelector instance of the wrapper.
      */
-    protected AbstractFeatureSelector featureSelector;
+    protected AbstractFeatureSelector featureSelector = null;
     
     /**
      * The Machine Learning model instance of the wrapper.
      */
-    protected AbstractModeler modeler;
+    protected AbstractModeler modeler = null;
         
     /**
      * The AbstractTrainingParameters class stores the parameters that can be changed
