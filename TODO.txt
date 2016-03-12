@@ -1,10 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Use Maven Assembly plugin:
-    - Gather modules to one jar.
-    - Copy testResources and main resources to all modules.
-- Use Maven Repository Plugin to create bundles for the central repository: http://maven.apache.org/plugins/maven-repository-plugin/
+- Use Maven Assembly plugin to copy testResources and main resources to all modules.
 
 - Add regularization in the currenlty supported algorithms:
     - OrdinalRegression: http://qwone.com/~jason/writing/olr.pdf
