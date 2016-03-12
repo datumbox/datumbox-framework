@@ -65,7 +65,7 @@ The Framework can be improved in many ways and as a result any contribution is w
 Acknowledgements
 ----------------
 
-Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Also many thanks to ej-technologies GmbH for providing a license for their [Java Profiler](http://www.ej-technologies.com/products/jprofiler/overview.html) and to IntelliJ for providing a license for their [Java IDE](https://www.jetbrains.com/idea/).
+Many thanks to [Eleftherios Bampaletakis](http://gr.linkedin.com/pub/eleftherios-bampaletakis/39/875/551) for his invaluable input on improving the architecture of the Framework. Also many thanks to ej-technologies GmbH for providing a license for their [Java Profiler](http://www.ej-technologies.com/products/jprofiler/overview.html) and to JetBrains for providing a license for their [Java IDE](https://www.jetbrains.com/idea/).
 
 Useful Links
 ------------

@@ -199,7 +199,7 @@
                             <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.datumbox.Datumbox</mainClass>
+                            <mainClass>com.datumbox.framework.Datumbox</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Implementation-Author>${project.developers[0].name}</Implementation-Author>
