@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160310
+Version 0.7.0-SNAPSHOT - Build 20160312
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -83,7 +83,8 @@ Version 0.7.0-SNAPSHOT - Build 20160310
 - Renamed HTMLCleaner to HTMLParser and moved it to a different namespace.
 - Moving StringCleaner inside common.utilities.
 - Removed the ClasspathSuite from the tests.
-- Created the Extractable which is inherited by AbstractTextExtractor. 
+- Created the Extractable which is inherited by AbstractTextExtractor.
+- Convert project into multimodule project.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

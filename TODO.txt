@@ -1,10 +1,9 @@
 CODE IMPROVEMENTS
 =================
 
-- Use Maven Assembly plugin.
+- Use Maven Assembly plugin:
     - Gather modules to one jar.
     - Copy testResources and main resources to all modules.
-
 - Add regularization in the currenlty supported algorithms:
     - OrdinalRegression: http://qwone.com/~jason/writing/olr.pdf
     - Softmax Regression: http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression http://www.aclweb.org/anthology/P09-1054 http://spark.apache.org/docs/latest/mllib-linear-methods.html
@@ -14,7 +13,6 @@ CODE IMPROVEMENTS
     - Test DataframeMapType.TREEMAP vs DataframeMapType.HASHMAP performance.
     - Remove feature switches.
     - Add support for MapDB 3.0 once a stable version is released.
-
 - Add the ability to call Machine Learning algorithms from command line like in Mahout.
 - Add more storage engines. Investigate whether BerkeleyDB can be used (license restrictions, use submodules instead?).
 
