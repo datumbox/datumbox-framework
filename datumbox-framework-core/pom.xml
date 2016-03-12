@@ -20,14 +20,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework-core</artifactId>
-    <version>0.7.0-SNAPSHOT</version>
-    
+
     <name>Datumbox Framework Core</name>
 
     <parent>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework</artifactId>
-        <version>0.7.0-SNAPSHOT</version>
+        <version>${global.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
