@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
-    <version>${global.version}</version>
+    <version>${root.project.version}</version>
     <packaging>pom</packaging>
     
     <name>Datumbox Machine Learning Framework</name>
@@ -87,8 +87,6 @@
     </repositories>
     
     <properties>
-        <!--Global version -->
-        <global.version>0.7.0-SNAPSHOT</global.version>
         <!-- Build Plugins -->
         <java-version>1.8</java-version>
         <maven-compiler-plugin-version>3.5.1</maven-compiler-plugin-version>
@@ -114,6 +112,8 @@
         <logback-classic-version>1.1.6</logback-classic-version>
         
         <!-- Configuration -->
+        <root.project.version>0.7.0-SNAPSHOT</root.project.version>
+        <root.project.dir>${project.basedir}</root.project.dir>
         <gpg.keyname>7083A486</gpg.keyname>
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
@@ -130,7 +130,7 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>${root.project.dir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>license.txt</exclude>
@@ -139,7 +139,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>src/test/resources</directory>
+                <directory>${root.project.dir}/src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>
@@ -257,7 +257,7 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <version>${license-maven-plugin-version}</version>
                     <configuration>
-                        <header>src/main/resources/license.txt</header>
+                        <header>${root.project.dir}/src/main/resources/license.txt</header>
                         <properties>
                             <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
                             <copyrightOwner>${project.developers[0].name}</copyrightOwner>
