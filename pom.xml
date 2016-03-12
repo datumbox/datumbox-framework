@@ -21,6 +21,7 @@
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
     <version>0.7.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
     
     <name>Datumbox Machine Learning Framework</name>
     <description>Datumbox is an open-source Machine Learning Framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
@@ -73,6 +74,17 @@
         <url>scm:git:git@github.com:datumbox/datumbox-framework.git</url>
         <developerConnection>scm:git:git@github.com:datumbox/datumbox-framework.git</developerConnection>
     </scm>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
     
     <properties>
         <!-- Build Plugins -->
@@ -106,6 +118,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <modules>
+        <module>datumbox-framework-common</module>
+        <module>datumbox-framework-core</module>
+        <module>datumbox-framework-applications</module>
+    </modules>
     
     <build>
         <resources>
@@ -123,209 +141,202 @@
                 <filtering>false</filtering>
            </testResource>
         </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin-version}</version>
-                <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
-                    <showDeprecation>true</showDeprecation>
-                    <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <!--
-                        <arg>-verbose</arg>
-                        <arg>-Xlint:all,-options,-path</arg>
-                        -->
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin-version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin-version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin-version}</version>
-                <configuration>
-                    <threadCount>3</threadCount>
-                    <parallel>classes</parallel>
-                    <argLine>-Xmx512M -Dfile.encoding=${project.build.sourceEncoding} -DskipAfterFailureCount=false</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin-version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <archive>                   
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.datumbox.framework.Datumbox</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Author>${project.developers[0].name}</Implementation-Author>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <Implementation-Website>${project.organization.url}</Implementation-Website>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>gmaven-plugin</artifactId>
-                <version>${gmaven-plugin-version}</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <source>
-                                import java.util.Date
-                                import java.text.MessageFormat
-                                def vartimestamp = MessageFormat.format("{0,date,yyyy}", new Date())
-                                project.properties['currentYear'] = vartimestamp
-                            </source>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>${license-maven-plugin-version}</version>
-                <configuration>
-                    <header>src/main/resources/license.txt</header>
-                    <properties>
-                        <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
-                        <copyrightOwner>${project.developers[0].name}</copyrightOwner>
-                        <copyrightEmail>${project.developers[0].email}</copyrightEmail>
-                    </properties>
-                    <excludes>
-                        <exclude>CHANGELOG.md</exclude>
-                        <exclude>LICENSE</exclude>
-                        <exclude>NOTICE</exclude>
-                        <exclude>README.md</exclude>
-                        <exclude>TODO.txt</exclude>
-                        <exclude>src/main/resources/license.txt</exclude>
-                        <exclude>src/test/resources/datasets/*</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin-version}</version>
+                    <configuration>
+                        <source>${java-version}</source>
+                        <target>${java-version}</target>
+                        <showDeprecation>true</showDeprecation>
+                        <encoding>UTF-8</encoding>
+                        <compilerArgs>
+                            <!--
+                            <arg>-verbose</arg>
+                            <arg>-Xlint:all,-options,-path</arg>
+                            -->
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin-version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <additionalparam>-Xdoclint:none</additionalparam>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin-version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin-version}</version>
+                    <configuration>
+                        <threadCount>3</threadCount>
+                        <parallel>classes</parallel>
+                        <argLine>-Xmx512M -Dfile.encoding=${project.build.sourceEncoding} -DskipAfterFailureCount=false</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin-version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                                <mainClass>com.datumbox.framework.Datumbox</mainClass>
+                            </manifest>
+                            <manifestEntries>
+                                <Implementation-Author>${project.developers[0].name}</Implementation-Author>
+                                <Implementation-Build>${buildNumber}</Implementation-Build>
+                                <Implementation-Website>${project.organization.url}</Implementation-Website>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.gmaven</groupId>
+                    <artifactId>gmaven-plugin</artifactId>
+                    <version>${gmaven-plugin-version}</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <source>
+                                    import java.util.Date
+                                    import java.text.MessageFormat
+                                    def vartimestamp = MessageFormat.format("{0,date,yyyy}", new Date())
+                                    project.properties['currentYear'] = vartimestamp
+                                </source>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${license-maven-plugin-version}</version>
+                    <configuration>
+                        <header>datumbox-framework-common/src/main/resources/license.txt</header>
+                        <properties>
+                            <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
+                            <copyrightOwner>${project.developers[0].name}</copyrightOwner>
+                            <copyrightEmail>${project.developers[0].email}</copyrightEmail>
+                        </properties>
+                        <excludes>
+                            <exclude>CHANGELOG.md</exclude>
+                            <exclude>LICENSE</exclude>
+                            <exclude>NOTICE</exclude>
+                            <exclude>README.md</exclude>
+                            <exclude>TODO.txt</exclude>
+                            <exclude>**/license.txt</exclude>
+                            <exclude>**/datasets/*</exclude>
+                        </excludes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>format</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
-    
-    
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-    </repositories>
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>${commons-math-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>${commons-csv-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.datumbox</groupId>
-            <artifactId>libsvm</artifactId>
-            <version>${libsvm-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.datumbox</groupId>
-            <artifactId>lpsolve</artifactId>
-            <version>${lpsolve-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mapdb</groupId>
-            <artifactId>mapdb</artifactId>
-            <version>${mapdb-version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback-classic-version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commons-math-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${commons-csv-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.datumbox</groupId>
+                <artifactId>libsvm</artifactId>
+                <version>${libsvm-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.datumbox</groupId>
+                <artifactId>lpsolve</artifactId>
+                <version>${lpsolve-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapdb</groupId>
+                <artifactId>mapdb</artifactId>
+                <version>${mapdb-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit-version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic-version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <profiles>
         <profile>
             <id>release-sign-artifacts</id>
