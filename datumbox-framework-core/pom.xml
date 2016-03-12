@@ -25,13 +25,13 @@
 
     <parent>
         <groupId>com.datumbox</groupId>
-        <artifactId>datumbox-framework</artifactId>
+        <artifactId>datumbox-framework-parent</artifactId>
         <version>0.7.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
-        <root.project.dir>..</root.project.dir>
+        <parent.project.dir>..</parent.project.dir>
     </properties>
 
     <dependencies>
@@ -81,7 +81,7 @@
     <build>
         <resources>
             <resource>
-                <directory>${root.project.dir}/src/main/resources</directory>
+                <directory>${parent.project.dir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>license.txt</exclude>
@@ -90,7 +90,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>${root.project.dir}/src/test/resources</directory>
+                <directory>${parent.project.dir}/src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>
