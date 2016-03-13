@@ -64,6 +64,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
+        param.setL2(0.001);
         
         instance.fit(trainingData, param);
         
@@ -123,6 +124,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);
+        param.setL2(0.001);
         
         SoftMaxRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 

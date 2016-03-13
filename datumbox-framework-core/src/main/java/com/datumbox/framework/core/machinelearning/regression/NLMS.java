@@ -67,6 +67,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         
         private int totalIterations=1000; 
         private double learningRate=0.1;
+        private double l2=0.0;
 
         /**
          * Getter for the total iterations of the training process.
@@ -103,6 +104,24 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
          */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
+        }
+
+        /**
+         * Getter for the value of L2 regularization.
+         *
+         * @return
+         */
+        public double getL2() {
+            return l2;
+        }
+
+        /**
+         * Setter for the value of the L2 regularization.
+         *
+         * @param l2
+         */
+        public void setL2(double l2) {
+            this.l2 = l2;
         }
 
     } 
@@ -215,9 +234,6 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
-        //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
-        //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
-        //to estimate the costs and only at the end we update the new thitas.
         ModelParameters modelParameters = kb().getModelParameters();
         
         double multiplier = learningRate/modelParameters.getN();
@@ -235,53 +251,40 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
                     Object feature = entry.getKey();
                     Double value = TypeInference.toDouble(entry.getValue());
 
-                    double errorMultiplier_value = errorMultiplier*value;
-
-                    newThitas.put(feature, newThitas.get(feature)+errorMultiplier_value);
+                    newThitas.put(feature, newThitas.get(feature)+errorMultiplier*value);
                 }
                 newThitas.put(Dataframe.COLUMN_NAME_CONSTANT, newThitas.get(Dataframe.COLUMN_NAME_CONSTANT)+errorMultiplier);
             }
         });
-    }
-    
-    /*
-    private void stochasticGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
-        double multiplier = learningRate/kb().getModelParameters().getN();
-        
-        for(Record r : trainingData) { 
-            //mind the fact that we use the new thitas to estimate the cost! 
-            double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), newThitas);
-            
-            double errorMultiplier = multiplier*error;
-            
-            
-            //update the weight of constant
-            newThitas.put(Dataframe.COLUMN_NAME_CONSTANT, newThitas.get(Dataframe.COLUMN_NAME_CONSTANT)+errorMultiplier);
 
-            //update the rest of the weights
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Object feature = entry.getKey();
-                
-                Double thitaWeight = newThitas.get(feature);
-                if(thitaWeight!=null) {//ensure that the feature is in the supported features
-                    Double value = TypeInference.toDouble(entry.getValue());
-                    newThitas.put(feature, thitaWeight+errorMultiplier*value);
-                }
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l2 > 0.0) {
+            for(Map.Entry<Object, Double> e : thitas.entrySet()) {
+                Object column = e.getKey();
+                double w = e.getValue();
+                newThitas.put(column, newThitas.get(column) + l2*w*(-learningRate));
             }
         }
     }
-    */
     
     private double calculateError(Dataframe trainingData, Map<Object, Double> thitas) {
-        //The cost function as described on http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression
         //It is optimized for speed to reduce the amount of loops
         
         double error = streamExecutor.sum(StreamMethods.stream(trainingData.stream(), isParallelized()).mapToDouble(r -> { 
             double yPredicted = hypothesisFunction(r.getX(), thitas);
-            //trainingData._unsafe_set(rId, new Record(r.getX(), r.getY(), yPredicted, r.getYPredictedProbabilities()));
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }));
-        
+        error /= kb().getModelParameters().getN();
+
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l2 > 0.0) {
+            double sumThitaSq = 0.0; //sum of thita^2
+            for(double th : thitas.values()) {
+                sumThitaSq += th*th;
+            }
+            error += l2*sumThitaSq/2.0;
+        }
+
         return error;
     }
     

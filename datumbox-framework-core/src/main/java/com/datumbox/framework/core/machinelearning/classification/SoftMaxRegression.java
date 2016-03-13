@@ -92,6 +92,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         
         private int totalIterations=100; 
         private double learningRate=0.1;
+        private double l2=0.0;
         
         /**
          * Getter for the total iterations of the training process.
@@ -128,6 +129,24 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
          */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
+        }
+
+        /**
+         * Getter for the value of L2 regularization.
+         *
+         * @return
+         */
+        public double getL2() {
+            return l2;
+        }
+
+        /**
+         * Setter for the value of the L2 regularization.
+         *
+         * @param l2
+         */
+        public void setL2(double l2) {
+            this.l2 = l2;
         }
 
     } 
@@ -356,6 +375,15 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
                 }
             }
         });
+
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l2 > 0.0) {
+            for(Map.Entry<List<Object>, Double> e : thitas.entrySet()) {
+                List<Object> featureClassTuple = e.getKey();
+                double w = e.getValue();
+                newThitas.put(featureClassTuple, newThitas.get(featureClassTuple) + l2*w*(-learningRate));
+            }
+        }
         
     }
     
@@ -386,8 +414,19 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             Double score = classProbabilities.getDouble(r.getY());
             return Math.log(score); //no need to loop through the categories. Just grab the one that we are interested in
         }));
-        
-        return -error/kb().getModelParameters().getN();
+
+        error = -error/kb().getModelParameters().getN();
+
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l2 > 0.0) {
+            double sumThitaSq = 0.0; //sum of thita^2
+            for(double th : thitas.values()) {
+                sumThitaSq += th*th;
+            }
+            error += l2*sumThitaSq/2.0;
+        }
+
+        return error;
     }
     
     private AssociativeArray hypothesisFunction(AssociativeArray x, Map<List<Object>, Double> thitas) {

@@ -33,7 +33,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.Abs
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.core.machinelearning.common.validators.OrdinalRegressionValidator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -387,10 +386,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             double xTw = xTw(r.getX(), weights);
             
             double gOfCurrent = g(xTw-thitas.get(rClass));
-            double gOfPrevious = 0.0;
-            if(rPreviousClass!=null) {
-                gOfPrevious = g(thitas.get(rPreviousClass)-xTw);
-            }
+            double gOfPrevious = (rPreviousClass!=null)?g(thitas.get(rPreviousClass)-xTw):0.0;
                     
             double dtG_multiplier = (gOfCurrent-gOfPrevious)*multiplier;
             
