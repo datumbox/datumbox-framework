@@ -120,7 +120,7 @@
         <logback-classic-version>1.1.6</logback-classic-version>
         
         <!-- Configuration -->
-        <parent.project.dir>${project.basedir}</parent.project.dir>
+        <main.basedir>${project.basedir}</main.basedir>
         <gpg.keyname>7083A486</gpg.keyname>
         <buildNumber>${maven.build.timestamp}</buildNumber>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
@@ -138,7 +138,7 @@
     <build>
         <resources>
             <resource>
-                <directory>${parent.project.dir}/src/main/resources</directory>
+                <directory>${main.basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>license.txt</exclude>
@@ -147,7 +147,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>${parent.project.dir}/src/test/resources</directory>
+                <directory>${main.basedir}/src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>
@@ -265,7 +265,7 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <version>${license-maven-plugin-version}</version>
                     <configuration>
-                        <header>${parent.project.dir}/src/main/resources/license.txt</header>
+                        <header>${main.basedir}/src/main/resources/license.txt</header>
                         <properties>
                             <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
                             <copyrightOwner>${project.developers[0].name}</copyrightOwner>
@@ -317,6 +317,47 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <!-- Plugins which are always included -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+            </plugin>
+        </plugins>
+
     </build>
 
     <dependencyManagement>
