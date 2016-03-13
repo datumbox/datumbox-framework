@@ -138,7 +138,7 @@
     <build>
         <resources>
             <resource>
-                <directory>${main.basedir}/src/main/resources</directory>
+                <directory>${main.basedir}/datumbox-framework-common/src/main/resources</directory>
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>license.txt</exclude>
@@ -147,7 +147,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>${main.basedir}/src/test/resources</directory>
+                <directory>${main.basedir}/datumbox-framework-common/src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>
@@ -265,7 +265,7 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <version>${license-maven-plugin-version}</version>
                     <configuration>
-                        <header>${main.basedir}/src/main/resources/license.txt</header>
+                        <header>${main.basedir}/datumbox-framework-common/src/main/resources/license.txt</header>
                         <properties>
                             <copyrightYears>${project.inceptionYear}-${currentYear}</copyrightYears>
                             <copyrightOwner>${project.developers[0].name}</copyrightOwner>
