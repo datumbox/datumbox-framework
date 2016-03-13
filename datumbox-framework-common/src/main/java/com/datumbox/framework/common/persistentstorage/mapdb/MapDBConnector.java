@@ -23,6 +23,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Map;
 
 import java.io.Serializable;
@@ -187,20 +188,27 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
             DB db = openDB(dbType);
             
             //return the appropriate type
+            Map<K,V> map;
             if(DatabaseConnector.MapType.HASHMAP.equals(type)) {
-                return db.createHashMap(name)
+                map = db.createHashMap(name)
                 .counterEnable()
                 .makeOrGet();
             }
             else if(DatabaseConnector.MapType.TREEMAP.equals(type)) {
-                return db.createTreeMap(name)
+                map = db.createTreeMap(name)
                 .valuesOutsideNodesEnable()
                 .counterEnable()
                 .makeOrGet();
+
+                //TODO: This is required because of a race condition in BTreeMap (MapDB v1.0.9). Remove it once it's patched. https://github.com/jankotek/mapdb/issues/664
+                if(isConcurrent) {
+                    map = Collections.synchronizedMap(map);
+                }
             }
             else {
                 throw new IllegalArgumentException("Unsupported MapType.");
             }
+            return map;
         }
     }   
     
