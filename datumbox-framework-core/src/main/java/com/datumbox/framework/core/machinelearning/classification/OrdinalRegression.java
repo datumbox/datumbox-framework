@@ -33,6 +33,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.Abs
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.core.machinelearning.common.validators.OrdinalRegressionValidator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -123,7 +124,8 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         
         private int totalIterations=100; 
         private double learningRate=0.1;
-        
+        private double l2=0.0;
+
         /**
          * Getter for the total iterations of the training process.
          * 
@@ -161,6 +163,23 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             this.learningRate = learningRate;
         }
 
+        /**
+         * Getter for the value of L2 regularization.
+         *
+         * @return
+         */
+        public double getL2() {
+            return l2;
+        }
+
+        /**
+         * Setter for the value of the L2 regularization.
+         *
+         * @param l2
+         */
+        public void setL2(double l2) {
+            this.l2 = l2;
+        }
     } 
     
     /** {@inheritDoc} */
@@ -352,12 +371,9 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> newWeights, Map<Object, Double> newThitas, double learningRate) {
-        //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
-        //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
-        //to estimate the costs and only at the end we update the new thitas.
         ModelParameters modelParameters = kb().getModelParameters();
 
-        double multiplier = -learningRate/modelParameters.getN(); 
+        double multiplier = -learningRate/modelParameters.getN();
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -398,6 +414,15 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
                 }
             }
         });
+
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l2 > 0.0) {
+            for(Map.Entry<Object, Double> e : weights.entrySet()) {
+                Object column = e.getKey();
+                double w = e.getValue();
+                newWeights.put(column, newWeights.get(column) + l2*w*(-learningRate));
+            }
+        }
     }
     
     private AssociativeArray hypothesisFunction(AssociativeArray x, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
@@ -443,8 +468,18 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             return e;
         }));
+        error /= kb().getModelParameters().getN();
+
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l2 > 0.0) {
+            double sumWSq = 0.0; //sum of w^2
+            for(double w : weights.values()) {
+                sumWSq += w*w;
+            }
+            error += l2*sumWSq/2.0;
+        }
         
-        return error/kb().getModelParameters().getN();
+        return error;
     }
     
     private double h(double z) {

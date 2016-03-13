@@ -62,6 +62,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
+        param.setL2(0.001);
         
         instance.fit(trainingData, param);
         
@@ -122,6 +123,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
+        param.setL2(0.001);
         
         OrdinalRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
