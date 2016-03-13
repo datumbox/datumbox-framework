@@ -24,10 +24,6 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.concurrency.ThreadMethods;
 import com.datumbox.framework.common.interfaces.Extractable;
-import com.datumbox.framework.development.switchers.DataframeMapType;
-import com.datumbox.framework.development.switchers.DataframeMapTypeMark;
-import com.datumbox.framework.development.switchers.SynchronizedBlocks;
-import com.datumbox.framework.development.switchers.SynchronizedBlocksMark;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +39,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -119,14 +113,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                         Record r = new Record(xData, theClass);
 
                         //we call below the recalculateMeta()
-                        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                            dataset.set(rId, r); 
-                        }
-                        else {
-                            synchronized(dataset) {
-                                dataset.set(rId, r);
-                            }
-                        }
+                        dataset.set(rId, r);
                     }, conf.getConcurrencyConfig());
                 } 
                 catch (IOException ex) {
@@ -218,14 +205,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                         
                         //use the internal unsafe methods to avoid the update of the Metas. 
                         //The Metas are already set in the construction of the Dataframe.
-                        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                            dataset._unsafe_set(rId, r); 
-                        }
-                        else {
-                            synchronized(dataset) {
-                                dataset._unsafe_set(rId, r);
-                            }
-                        }
+                        dataset._unsafe_set(rId, r);
                     }
                 }, conf.getConcurrencyConfig());
             } 
@@ -240,6 +220,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     private TypeInference.DataType yDataType; 
     private Map<Object, TypeInference.DataType> xDataTypes;
     private Map<Integer, Record> records;
+    private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
     
     private final DatabaseConnector dbc; 
     private final Configuration conf; 
@@ -249,18 +230,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * Thread pool.
      */
     protected final ForkJoinStream streamExecutor;
-    
-    /**
-     * Keeps a counter of the id that will be used for the next record.
-     */
-    @SynchronizedBlocksMark(options={SynchronizedBlocks.WITH_SYNCHRONIZED})
-    private int nextAvailableRecordId = 0;
-    
-    @SynchronizedBlocksMark(options={SynchronizedBlocks.WITHOUT_SYNCHRONIZED})
-    private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
-    
-    @DataframeMapTypeMark(options={DataframeMapType.HASHMAP})
-    private Set<Integer> index = new ConcurrentSkipListSet<>();
     
     /**
      * Public constructor of Dataframe.
@@ -275,10 +244,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         String dbName = "dts";
         dbc = this.conf.getDbConfig().getConnector(dbName);
         
-        records = dbc.getBigMap("tmp_records", (DataframeMapType.HASHMAP.isActivated())?MapType.HASHMAP:MapType.TREEMAP, StorageHint.IN_DISK, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
+        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true, true);
         
         yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated(), true);
+        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
         streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
     }
@@ -329,9 +298,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         
         xDataTypes.clear();
         records.clear();
-        if(DataframeMapType.HASHMAP.isActivated()) {
-            index.clear();
-        }
     }
 
     /**
@@ -488,15 +454,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Record remove(Integer id) {
-        Record r = records.remove(id);
-        
-        if(DataframeMapType.HASHMAP.isActivated()) {
-            if(r != null) {
-                index.remove(id);
-            }            
-        }
-
-        return r;
+        return records.remove(id);
     }
     
     /**
@@ -651,14 +609,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
                 //safe to call in this context. we already updated the meta when we modified the xDataTypes
-                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                    _unsafe_set(rId, newR); 
-                }
-                else {
-                    synchronized(this) {
-                        _unsafe_set(rId, newR); 
-                    }                    
-                }
+                _unsafe_set(rId, newR);
             }
         });
         
@@ -725,9 +676,6 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         yDataType = null;
         xDataTypes = null;
         records = null;
-        if(DataframeMapType.HASHMAP.isActivated()) {
-            index = null;
-        }
     }
     
     /**
@@ -736,53 +684,27 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Iterable<Map.Entry<Integer, Record>> entries() {
-        if(DataframeMapType.HASHMAP.isActivated()) {
-            return () -> new Iterator<Map.Entry<Integer, Record>>() {
-                private final Iterator<Integer> it = index.iterator();
+        return () -> new Iterator<Map.Entry<Integer, Record>>() {
+            private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean hasNext() {
-                    return it.hasNext();
-                }
+            /** {@inheritDoc} */
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
 
-                /** {@inheritDoc} */
-                @Override
-                public Map.Entry<Integer, Record> next() {
-                    Integer rId = it.next();
-                    return new AbstractMap.SimpleImmutableEntry<>(rId, records.get(rId));
-                }
+            /** {@inheritDoc} */
+            @Override
+            public Map.Entry<Integer, Record> next() {
+                return it.next();
+            }
 
-                /** {@inheritDoc} */
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-                }
-            };
-        }
-        else {
-            return () -> new Iterator<Map.Entry<Integer, Record>>() {
-                private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
-
-                /** {@inheritDoc} */
-                @Override
-                public boolean hasNext() {
-                    return it.hasNext();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public Map.Entry<Integer, Record> next() {
-                    return it.next();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-                }
-            };
-        }
+            /** {@inheritDoc} */
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+            }
+        };
     }
     
     /**
@@ -792,7 +714,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Iterable<Integer> index() {
         return () -> new Iterator<Integer>() {
-            private final Iterator<Integer> it = (DataframeMapType.HASHMAP.isActivated())?index.iterator():records.keySet().iterator();
+            private final Iterator<Integer> it = records.keySet().iterator();
             
             /** {@inheritDoc} */
             @Override
@@ -820,55 +742,27 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     public Iterable<Record> values() {
-        if(DataframeMapType.HASHMAP.isActivated()) {
-            return () -> new Iterator<Record>(){
+        return () -> new Iterator<Record>(){
+            private final Iterator<Record> it = records.values().iterator();
 
-                private final Iterator<Integer> it = index.iterator();
+            /** {@inheritDoc} */
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
 
-                /** {@inheritDoc} */
-                @Override
-                public boolean hasNext() {
-                    return it.hasNext();
-                }
+            /** {@inheritDoc} */
+            @Override
+            public Record next() {
+                return it.next();
+            }
 
-                /** {@inheritDoc} */
-                @Override
-                public Record next() {
-                    Integer id = it.next();
-                    return records.get(id);
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-                }
-            };
-        }
-        else {
-            return () -> new Iterator<Record>(){
-
-                private final Iterator<Record> it = records.values().iterator();
-
-                /** {@inheritDoc} */
-                @Override
-                public boolean hasNext() {
-                    return it.hasNext();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public Record next() {
-                    return it.next();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
-                }
-            };
-        }
+            /** {@inheritDoc} */
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("This is a read-only iterator, remove operation is not supported.");
+            }
+        };
     }
     
     /**
@@ -886,23 +780,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Record _unsafe_set(Integer rId, Record r) {
         //move ahead the next id
-        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-            atomicNextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
-        }
-        else {
-            if(nextAvailableRecordId<rId) {
-                nextAvailableRecordId = rId+1; 
-            }
-        }
-        
-        Record old = records.put(rId, r);
-        if(old == null) {
-            if(DataframeMapType.HASHMAP.isActivated()) {
-                index.add(rId);
-            }
-        }
-        
-        return old;
+        atomicNextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
+
+        return records.put(rId, r);
     }
     
     /**
@@ -913,18 +793,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return 
      */
     private Integer _unsafe_add(Record r) {
-        Integer newId;
-        if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-            newId = atomicNextAvailableRecordId.getAndIncrement();
-        }
-        else {
-            newId = nextAvailableRecordId++;
-        }
+        Integer newId = atomicNextAvailableRecordId.getAndIncrement();
         records.put(newId, r);
-        
-        if(DataframeMapType.HASHMAP.isActivated()) {
-            index.add(newId);
-        }
 
         return newId;
     }

@@ -16,7 +16,7 @@
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
 import com.datumbox.framework.common.persistentstorage.abstracts.AbstractAutoCloseConnector;
-import com.datumbox.framework.development.switchers.SynchronizedBlocks;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -200,7 +200,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
                 .counterEnable()
                 .makeOrGet();
 
-                //TODO: This is required because of a race condition in BTreeMap (MapDB v1.0.9). Remove it once it's patched. https://github.com/jankotek/mapdb/issues/664
+                //HOTFIX: There is a race condition in BTreeMap (MapDB v1.0.9 - https://github.com/jankotek/mapdb/issues/664). Remove it once it's patched.
                 if(isConcurrent) {
                     map = Collections.synchronizedMap(map);
                 }
@@ -284,13 +284,8 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
             }
             
             m = m.transactionDisable();
-            
-            if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                //asynch write is disabled by default
-            }
-            else {
-                m = m.asyncWriteEnable();
-            }
+
+            m = m.asyncWriteEnable();
             
             m = m.closeOnJvmShutdown();
             

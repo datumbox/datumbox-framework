@@ -21,7 +21,6 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.concurrency.StreamMethods;
-import com.datumbox.framework.development.switchers.SynchronizedBlocks;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -110,15 +109,8 @@ public interface PredictParallelizable extends Parallelizable {
             
             
             Record newR = new Record(r.getX(), r.getY(), p.getYPredicted(), p.getYPredictedProbabilities());
-                
-            if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                newData._unsafe_set(rId, newR); 
-            }
-            else {
-                synchronized(newData) {
-                    newData._unsafe_set(rId, newR); 
-                }                    
-            }
+
+            newData._unsafe_set(rId, newR);
         });
         
     }

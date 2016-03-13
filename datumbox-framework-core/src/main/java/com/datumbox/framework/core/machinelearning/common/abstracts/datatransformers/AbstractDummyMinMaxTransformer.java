@@ -27,7 +27,6 @@ import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.framework.development.switchers.SynchronizedBlocks;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
@@ -230,14 +229,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
                 //no modification on the actual columns takes place, safe to do.
-                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                    dataset._unsafe_set(rId, newR); 
-                }
-                else {
-                    synchronized(dataset) {
-                        dataset._unsafe_set(rId, newR); 
-                    }                    
-                }
+                dataset._unsafe_set(rId, newR);
             }
         });
     }
@@ -279,14 +271,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
                 
                 //no modification on the actual columns takes place, safe to do.
-                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                    dataset._unsafe_set(rId, newR); 
-                }
-                else {
-                    synchronized(dataset) {
-                        dataset._unsafe_set(rId, newR); 
-                    }                    
-                }
+                dataset._unsafe_set(rId, newR);
             }
         });
     }
@@ -344,14 +329,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                     Record newR = new Record(r.getX(), normalizedValue, r.getYPredicted(), r.getYPredictedProbabilities());
 
                     //no modification on the actual columns takes place, safe to do.
-                    if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                        dataset._unsafe_set(rId, newR); 
-                    }
-                    else {
-                        synchronized(dataset) {
-                            dataset._unsafe_set(rId, newR); 
-                        }                    
-                    }
+                    dataset._unsafe_set(rId, newR);
                 }
                 
             });
@@ -401,14 +379,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                 Record newR = new Record(r.getX(), denormalizedY, denormalizedYPredicted, r.getYPredictedProbabilities());
 
                 //no modification on the actual columns takes place, safe to do.
-                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                    dataset._unsafe_set(rId, newR); 
-                }
-                else {
-                    synchronized(dataset) {
-                        dataset._unsafe_set(rId, newR); 
-                    }                    
-                }
+                dataset._unsafe_set(rId, newR);
             });
         }
     }
@@ -475,14 +446,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
 
                 //we call below the recalculateMeta()
-                if(SynchronizedBlocks.WITHOUT_SYNCHRONIZED.isActivated()) {
-                    dataset._unsafe_set(rId, newR); 
-                }
-                else {
-                    synchronized(dataset) {
-                        dataset._unsafe_set(rId, newR); 
-                    }                    
-                }
+                dataset._unsafe_set(rId, newR);
             }
         });
         
