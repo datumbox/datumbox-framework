@@ -85,6 +85,7 @@ Version 0.7.0-SNAPSHOT - Build 20160313
 - Removed the ClasspathSuite from the tests.
 - Created the Extractable which is inherited by AbstractTextExtractor.
 - Convert project into multimodule project.
+- Added support for L1 and L2 regularization.
 
 Version 0.6.1 - Build 20160102
 ------------------------------
