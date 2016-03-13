@@ -61,7 +61,6 @@ public class WilcoxonOneSample {
         }
 
         //converts the values of the table with its Ranks
-        Di.toFlatDataList();
         Ranks.getRanksFromValues(Di);
         double W=0.0;
         for(Map.Entry<Object, Object> entry : Di.entrySet()) {

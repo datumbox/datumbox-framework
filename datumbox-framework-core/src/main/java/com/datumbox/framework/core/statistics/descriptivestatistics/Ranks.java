@@ -74,7 +74,7 @@ public class Ranks {
      * Internal method used by getRanksFromValues() to produce the tiesCounter
      * and key2AvgRank arrays.
      *
-     * @param dataCollection
+     * @param flatDataCollection
      * @param tiesCounter
      * @param key2AvgRank
      */
