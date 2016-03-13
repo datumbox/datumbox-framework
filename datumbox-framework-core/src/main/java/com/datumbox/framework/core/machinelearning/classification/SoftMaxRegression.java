@@ -47,6 +47,7 @@ import java.util.Set;
  * http://blog.datumbox.com/tuning-the-learning-rate-in-gradient-descent/
  * http://www.cs.cmu.edu/afs/cs/user/aberger/www/html/tutorial/node3.html
  * http://acl.ldc.upenn.edu/P/P02/P02-1002.pdf
+ * http://www.aclweb.org/anthology/P09-1054
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -92,6 +93,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         
         private int totalIterations=100; 
         private double learningRate=0.1;
+        private double l1=0.0;
         private double l2=0.0;
         
         /**
@@ -129,6 +131,24 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
          */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
+        }
+
+        /**
+         * Getter for the value of L1 regularization.
+         *
+         * @return
+         */
+        public double getL1() {
+            return l1;
+        }
+
+        /**
+         * Setter for the value of the L1 regularization.
+         *
+         * @param l1
+         */
+        public void setL1(double l1) {
+            this.l1 = l1;
         }
 
         /**
@@ -358,8 +378,6 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
                 
                 double errorMultiplier = multiplier*error;
                 
-                
-                
                 synchronized(newThitas) {
                     //update the weights
                     for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -375,6 +393,21 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
                 }
             }
         });
+
+        double l1 = kb().getTrainingParameters().getL1();
+        if(l1 > 0.0) {
+            for(Map.Entry<List<Object>, Double> e : thitas.entrySet()) {
+                List<Object> featureClassTuple = e.getKey();
+                double signW = 0.0;
+                if(e.getValue()>0.0) {
+                    signW = 1.0;
+                }
+                else if(e.getValue()<0.0) {
+                    signW = -1.0;
+                }
+                newThitas.put(featureClassTuple, newThitas.get(featureClassTuple) + l1*signW*(-learningRate));
+            }
+        }
 
         double l2 = kb().getTrainingParameters().getL2();
         if(l2 > 0.0) {
@@ -416,6 +449,15 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         }));
 
         error = -error/kb().getModelParameters().getN();
+
+        double l1 = kb().getTrainingParameters().getL1();
+        if(l1 > 0.0) {
+            double sumAbsThita = 0.0; //sum of abs(thita)
+            for(double th : thitas.values()) {
+                sumAbsThita += Math.abs(th);
+            }
+            error += l1*sumAbsThita;
+        }
 
         double l2 = kb().getTrainingParameters().getL2();
         if(l2 > 0.0) {

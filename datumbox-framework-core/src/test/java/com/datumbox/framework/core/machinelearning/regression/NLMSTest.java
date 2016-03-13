@@ -126,6 +126,7 @@ public class NLMSTest extends AbstractTest {
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);
+        param.setL1(0.0001);
         param.setL2(0.00001);
         
         NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);

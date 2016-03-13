@@ -3,9 +3,6 @@ CODE IMPROVEMENTS
 
 - Use Maven Assembly plugin to copy testResources and main resources to all modules.
 
-- Add regularization in the currenlty supported algorithms:
-    - Softmax Regression: http://ufldl.stanford.edu/wiki/index.php/Softmax_Regression http://www.aclweb.org/anthology/P09-1054 http://spark.apache.org/docs/latest/mllib-linear-methods.html
-    - NLMS: http://www.analyticsvidhya.com/blog/2016/01/complete-tutorial-ridge-lasso-regression-python/
 - Update all maven plugins and dependencies to their latest versions.
     - Test MapDB+async writes with SynchronizedBlocks.WITHOUT_SYNCHRONIZED flag.
     - Test DataframeMapType.TREEMAP vs DataframeMapType.HASHMAP performance.

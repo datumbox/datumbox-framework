@@ -42,6 +42,7 @@ import java.util.Map;
  http://cs229.stanford.edu/notes/cs229-notes1.pdf
  http://www.holehouse.org/mlclass/04_Linear_Regression_with_multiple_variables.html
  https://class.coursera.org/ml-003/lecture/index
+ http://www.analyticsvidhya.com/blog/2016/01/complete-tutorial-ridge-lasso-regression-python/
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -67,6 +68,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         
         private int totalIterations=1000; 
         private double learningRate=0.1;
+        private double l1=0.0;
         private double l2=0.0;
 
         /**
@@ -104,6 +106,24 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
          */
         public void setLearningRate(double learningRate) {
             this.learningRate = learningRate;
+        }
+
+        /**
+         * Getter for the value of L1 regularization.
+         *
+         * @return
+         */
+        public double getL1() {
+            return l1;
+        }
+
+        /**
+         * Setter for the value of the L1 regularization.
+         *
+         * @param l1
+         */
+        public void setL1(double l1) {
+            this.l1 = l1;
         }
 
         /**
@@ -257,6 +277,21 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             }
         });
 
+        double l1 = kb().getTrainingParameters().getL1();
+        if(l1 > 0.0) {
+            for(Map.Entry<Object, Double> e : thitas.entrySet()) {
+                Object column = e.getKey();
+                double signW = 0.0;
+                if(e.getValue()>0.0) {
+                    signW = 1.0;
+                }
+                else if(e.getValue()<0.0) {
+                    signW = -1.0;
+                }
+                newThitas.put(column, newThitas.get(column) + l1*signW*(-learningRate));
+            }
+        }
+
         double l2 = kb().getTrainingParameters().getL2();
         if(l2 > 0.0) {
             for(Map.Entry<Object, Double> e : thitas.entrySet()) {
@@ -275,6 +310,15 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }));
         error /= kb().getModelParameters().getN();
+
+        double l1 = kb().getTrainingParameters().getL1();
+        if(l1 > 0.0) {
+            double sumAbsThita = 0.0; //sum of abs(thita)
+            for(double th : thitas.values()) {
+                sumAbsThita += Math.abs(th);
+            }
+            error += l1*sumAbsThita;
+        }
 
         double l2 = kb().getTrainingParameters().getL2();
         if(l2 > 0.0) {
