@@ -18,7 +18,8 @@ package com.datumbox.framework.core.statistics.nonparametrics.relatedsamples;
 
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for McNemar.

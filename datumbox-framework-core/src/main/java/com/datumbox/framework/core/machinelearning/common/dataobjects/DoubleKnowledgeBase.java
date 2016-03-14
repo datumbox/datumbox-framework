@@ -16,12 +16,13 @@
 package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
+import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
+import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 
 
 /**

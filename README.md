@@ -3,7 +3,7 @@ Datumbox Machine Learning Framework
 
 [![Datumbox](http://www.datumbox.com/img/logo.png)](http://www.datumbox.com/)
 
-The Datumbox Machine Learning Framework is an open-source framework written in Java which allows the rapid development Machine Learning and Statistical applications. The main focus of the framework is to include a large number of machine learning algorithms & statistical tests and being able to handle medium-large sized datasets. 
+The Datumbox Machine Learning Framework is an open-source framework written in Java which allows the rapid development Machine Learning and Statistical applications. The main focus of the framework is to include a large number of machine learning algorithms & statistical tests and to be able to handle medium-large sized datasets. 
 
 Copyright & License
 -------------------
@@ -15,7 +15,7 @@ The code is licensed under the [Apache License, Version 2.0](https://github.com/
 Version
 -------
 
-The latest version is 0.7.0-SNAPSHOT (Build 20160313).
+The latest version is 0.7.0-SNAPSHOT (Build 20160314).
 
 The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
@@ -24,13 +24,13 @@ The releases of the framework follow the [Semantic Versioning](http://semver.org
 Installation
 ------------
 
-Datumbox Framework is available on Maven Central Repository. 
+Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.datumbox%22%20AND%20a%3A%22datumbox-framework%22). 
 
 Maven:
 ```
     <dependency>
         <groupId>com.datumbox</groupId>
-        <artifactId>datumbox-framework</artifactId>
+        <artifactId>datumbox-framework-lib</artifactId>
         <version>0.7.0-SNAPSHOT</version>
     </dependency>
 ```
@@ -45,7 +45,7 @@ All the public methods and classes of the Framework are documented with Javadoc 
 Technical Details
 -----------------
 
-The core part of the project is about 30000 lines of code, it uses Java 8 features and a Maven Project Structure. If you find a bug or decide to document particular parts of the code, please consider contributing your changes by sending a pull request. 
+The framework requires Java 8, it uses a Maven Project Structure and it is separated in different modules. 
 
 Which methods/algorithms are supported?
 ---------------------------------------
@@ -55,12 +55,12 @@ The Framework currently supports performing multiple Parametric & non-parametric
 Bug Reports
 -----------
 
-Despite the fact that parts of the Framework have been used in commercial applications, not all classes are equally used/tested. Currently the framework is in Beta version, so you should expect some changes on the public APIs on future versions. If you spot a bug please [submit it as an Issue](https://github.com/datumbox/datumbox-framework/issues) on the official Github repository. 
+Despite the fact that parts of the Framework have been used in commercial applications, not all classes are equally used/tested. Currently the framework is in Alpha version, so you should expect some changes on the public APIs on future versions. If you spot a bug please [submit it as an Issue](https://github.com/datumbox/datumbox-framework/issues) on the official Github repository. 
 
 Contributing
 ------------
 
-The Framework can be improved in many ways and as a result any contribution is welcome. By far the most important part missing from the Framework is multithread support and the ability of using the framework from command line. Other important enhancements include improving the documentation, the test coverage and the examples, improving the architecture of the framework and supporting more Machine Learning and Statistical Models. Please consider contributing if you want to keep this project alive. 
+The Framework can be improved in many ways and as a result any contribution is welcome. By far the most important feature missing from the Framework is the ability to use it from command line or from other languages such as Python. Other important enhancements include improving the documentation, the test coverage and the examples, improving the architecture of the framework and supporting more Machine Learning and Statistical Models. If you make any useful changes on the code, please consider contributing them by sending a pull request.
 
 Acknowledgements
 ----------------

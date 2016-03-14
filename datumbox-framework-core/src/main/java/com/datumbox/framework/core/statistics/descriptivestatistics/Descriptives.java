@@ -15,11 +15,7 @@
  */
 package com.datumbox.framework.core.statistics.descriptivestatistics;
 
-import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.TransposeDataList;
-import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.dataobjects.*;
 
 import java.util.Arrays;
 import java.util.Iterator;

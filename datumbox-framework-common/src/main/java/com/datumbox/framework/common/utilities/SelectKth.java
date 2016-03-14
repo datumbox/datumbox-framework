@@ -15,11 +15,7 @@
  */
 package com.datumbox.framework.common.utilities;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * The SelectKth class provides a fast implementation of a Selection algorithm.

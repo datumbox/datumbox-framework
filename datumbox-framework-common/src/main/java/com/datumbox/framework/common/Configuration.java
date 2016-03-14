@@ -17,12 +17,12 @@ package com.datumbox.framework.common;
 
 import com.datumbox.framework.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.framework.common.interfaces.Configurable;
-import com.datumbox.framework.common.persistentstorage.Database;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
 
 import java.util.Properties;
 
 /**
+ * The main Configuration object of the framework which information about the Database, the concurrency etc.
  *
  * @author vvryniotis
  */
@@ -77,8 +77,13 @@ public class Configuration implements Configurable {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        String defaultDatabase = properties.getProperty("config.defaultDatabase");
-        dbConfig = ConfigurableFactory.getConfiguration(Database.getDatabaseClass(defaultDatabase));
+        String dbConfigClassName = properties.getProperty("dbConfig.className");
+        try {
+            dbConfig = ConfigurableFactory.getConfiguration((Class<DatabaseConfiguration>) Class.forName(dbConfigClassName));
+        }
+        catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
         concurrencyConfig = ConfigurableFactory.getConfiguration(ConcurrencyConfiguration.class);
     }
     

@@ -16,8 +16,8 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 
 /**
  * Base Class for all the Topic Modeling algorithms.

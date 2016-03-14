@@ -16,13 +16,7 @@
 package com.datumbox.framework.common.utilities;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 
 /**
  * Creates a Deep Copy of an object by serializing and deserializing it.

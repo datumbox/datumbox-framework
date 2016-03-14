@@ -15,19 +15,18 @@
  */
 package com.datumbox.framework.core.machinelearning.regression;
 
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.featureselection.continuous.PCA;
-import com.datumbox.framework.tests.abstracts.AbstractTest;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
-import com.datumbox.framework.tests.utilities.TestUtils;
-
+import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for NLMS.
@@ -43,7 +42,7 @@ public class NLMSTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe[] data = Datasets.regressionNumeric(conf);
         
@@ -98,7 +97,7 @@ public class NLMSTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         int k = 5;
         
@@ -134,7 +133,7 @@ public class NLMSTest extends AbstractTest {
         df.denormalize(trainingData);
 
         
-        double expResult = 0.999593336284933;
+        double expResult = 0.9996038547117426;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         

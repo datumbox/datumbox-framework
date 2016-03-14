@@ -17,11 +17,12 @@ package com.datumbox.framework.common.utilities;
 
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.AbstractMap;
 import java.util.Map;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for MapMethods.

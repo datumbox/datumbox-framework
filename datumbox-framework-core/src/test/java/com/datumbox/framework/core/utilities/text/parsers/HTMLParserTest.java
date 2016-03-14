@@ -17,13 +17,14 @@ package com.datumbox.framework.core.utilities.text.parsers;
 
 import com.datumbox.framework.common.utilities.StringCleaner;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for HTMLParser.

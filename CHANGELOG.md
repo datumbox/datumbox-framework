@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160313
+Version 0.7.0-SNAPSHOT - Build 20160314
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
@@ -86,6 +86,8 @@ Version 0.7.0-SNAPSHOT - Build 20160313
 - Created the Extractable which is inherited by AbstractTextExtractor.
 - Convert project into multimodule project.
 - Added support for L1 and L2 regularization.
+- Rename library to datumbox-framework-lib. 
+- Change the structure and config files of persistent storage.
 
 Version 0.6.1 - Build 20160102
 ------------------------------

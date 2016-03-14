@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.core.machinelearning.common.validators;
 
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
+import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 
 import java.util.List;
 

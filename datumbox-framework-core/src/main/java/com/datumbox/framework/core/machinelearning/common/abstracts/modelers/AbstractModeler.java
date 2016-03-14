@@ -16,12 +16,12 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
-import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
-import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.TripleKnowledgeBase;
+import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
+import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
  * Base Class for Machine Learning algorithms.

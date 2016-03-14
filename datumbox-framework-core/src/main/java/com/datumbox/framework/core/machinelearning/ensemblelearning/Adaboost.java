@@ -16,15 +16,11 @@
 package com.datumbox.framework.core.machinelearning.ensemblelearning;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
-import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
+import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.List;
 import java.util.Map;

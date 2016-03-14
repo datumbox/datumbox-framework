@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.core.statistics.sampling;
 
-import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
+import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.utilities.PHPMethods;
 
 import java.util.Iterator;

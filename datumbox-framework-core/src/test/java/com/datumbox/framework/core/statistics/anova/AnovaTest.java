@@ -20,10 +20,11 @@ import com.datumbox.framework.common.dataobjects.FlatDataCollection;
 import com.datumbox.framework.common.dataobjects.TransposeDataCollection;
 import com.datumbox.framework.common.dataobjects.TransposeDataCollection2D;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.Arrays;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for Anova.

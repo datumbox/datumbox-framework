@@ -16,17 +16,11 @@
 package com.datumbox.framework.core.utilities.text.analyzers;
 
 import com.datumbox.framework.common.utilities.PHPMethods;
-import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
 import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
 import com.datumbox.framework.core.utilities.text.tokenizers.WhitespaceTokenizer;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

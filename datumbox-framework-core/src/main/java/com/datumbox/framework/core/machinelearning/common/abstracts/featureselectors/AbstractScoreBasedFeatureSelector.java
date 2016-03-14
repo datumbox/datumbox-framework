@@ -17,12 +17,12 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.utilities.SelectKth;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Abstract class which is the base of every Scored Based Feature Selection algorithm.

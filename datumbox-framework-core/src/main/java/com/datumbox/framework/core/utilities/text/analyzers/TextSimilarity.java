@@ -15,10 +15,11 @@
  */
 package com.datumbox.framework.core.utilities.text.analyzers;
 
-import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.framework.common.utilities.PHPMethods;
-import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
 import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
+import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;

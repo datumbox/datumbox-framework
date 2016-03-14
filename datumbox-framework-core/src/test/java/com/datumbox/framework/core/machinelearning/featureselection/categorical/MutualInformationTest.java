@@ -15,17 +15,17 @@
  */
 package com.datumbox.framework.core.machinelearning.featureselection.categorical;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.tests.abstracts.AbstractTest;
+import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.tests.Datasets;
-import com.datumbox.framework.tests.utilities.TestUtils;
+import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.HashSet;
-
 import java.util.Set;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for MutualInformation.
@@ -41,7 +41,7 @@ public class MutualInformationTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe[] data = Datasets.featureSelectorCategorical(conf, 1000);
         Dataframe trainingData = data[0];

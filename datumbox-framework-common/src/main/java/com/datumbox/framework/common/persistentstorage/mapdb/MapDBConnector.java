@@ -16,27 +16,24 @@
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
 import com.datumbox.framework.common.persistentstorage.abstracts.AbstractAutoCloseConnector;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Map;
-
-import java.io.Serializable;
-import java.io.UncheckedIOException;
-import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 
 /**
@@ -329,15 +326,11 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     private Path getDefaultPath() {
         //get the default filepath of the permanet db file
         String outputFolder = this.dbConf.getOutputFolder();
-        
-        Path filepath;
+
         if(outputFolder == null || outputFolder.isEmpty()) {
-            filepath= FileSystems.getDefault().getPath(database); //write them to the default accessible path
+            outputFolder = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
         }
-        else {
-            filepath= Paths.get(outputFolder + File.separator + database);
-        }
-        
-        return filepath;
+
+        return Paths.get(outputFolder + File.separator + database);
     }
 }

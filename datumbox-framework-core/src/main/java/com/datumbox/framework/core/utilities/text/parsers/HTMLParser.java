@@ -16,14 +16,11 @@
 package com.datumbox.framework.core.utilities.text.parsers;
 
 import com.datumbox.framework.common.utilities.StringCleaner;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * The HTMLParser class is a utility class that provides a list of helpful methods

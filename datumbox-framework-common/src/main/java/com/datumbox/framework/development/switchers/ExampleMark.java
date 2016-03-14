@@ -16,11 +16,8 @@
 package com.datumbox.framework.development.switchers;
 
 import com.datumbox.framework.development.interfaces.FeatureMark;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+
+import java.lang.annotation.*;
 
 /**
  * Example class for the Mark annotation which is used to mark fields, methods etc 

@@ -16,13 +16,14 @@
 package com.datumbox.framework.core.mathematics.discrete;
 
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for Combinatorics.

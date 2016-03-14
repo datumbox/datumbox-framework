@@ -15,14 +15,16 @@
  */
 package com.datumbox.framework.core.statistics.sampling;
 
-import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.tests.abstracts.AbstractTest;
+import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.tests.Constants;
+import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.Arrays;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test cases for SystematicSampling.

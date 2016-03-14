@@ -16,7 +16,6 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
@@ -24,13 +23,15 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
+import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Base class for every Trainable Algorithm of the Framework. This includes Machine Learning

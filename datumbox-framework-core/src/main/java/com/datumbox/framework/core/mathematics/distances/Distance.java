@@ -18,11 +18,7 @@ package com.datumbox.framework.core.mathematics.distances;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The Distance class provides methods to estimate various types of distances

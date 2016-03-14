@@ -33,7 +33,7 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
 
     //DB specific properties
-    private String outputFolder = "./";
+    private String outputFolder = null;
     
     /**
      * Default Constructor.

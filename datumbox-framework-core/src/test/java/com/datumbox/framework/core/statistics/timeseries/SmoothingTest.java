@@ -16,13 +16,14 @@
 package com.datumbox.framework.core.statistics.timeseries;
 
 import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.tests.abstracts.AbstractTest;
 import com.datumbox.framework.tests.Constants;
+import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for Smoothing.

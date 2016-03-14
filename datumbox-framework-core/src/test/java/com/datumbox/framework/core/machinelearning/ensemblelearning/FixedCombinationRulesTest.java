@@ -21,7 +21,8 @@ import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for FixedCombinationRules.

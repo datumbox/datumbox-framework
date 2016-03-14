@@ -15,16 +15,14 @@
  */
 package com.datumbox.framework.core.machinelearning.regression;
 
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import com.datumbox.framework.tests.utilities.TestUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +40,7 @@ public class StepwiseRegressionTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe[] data = Datasets.regressionNumeric(conf);
         

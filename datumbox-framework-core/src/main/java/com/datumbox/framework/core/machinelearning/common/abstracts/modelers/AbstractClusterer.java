@@ -22,16 +22,11 @@ import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
+import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
+
+import java.util.*;
 
 
 /**

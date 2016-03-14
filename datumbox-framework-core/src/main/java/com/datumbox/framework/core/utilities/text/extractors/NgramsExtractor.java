@@ -15,12 +15,7 @@
  */
 package com.datumbox.framework.core.utilities.text.extractors;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The NgramsExtractor class can be used to tokenize a string, extract its keyword

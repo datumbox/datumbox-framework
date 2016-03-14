@@ -15,27 +15,21 @@
  */
 package com.datumbox.framework.applications.nlp;
 
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.machinelearning.classification.BernoulliNaiveBayes;
-import com.datumbox.framework.core.machinelearning.classification.BinarizedNaiveBayes;
-import com.datumbox.framework.core.machinelearning.classification.MaximumEntropy;
-import com.datumbox.framework.core.machinelearning.featureselection.scorebased.TFIDF;
-import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
-import com.datumbox.framework.core.machinelearning.classification.OrdinalRegression;
-import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegression;
-import com.datumbox.framework.core.machinelearning.classification.SupportVectorMachine;
+import com.datumbox.framework.core.machinelearning.classification.*;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
-
 import com.datumbox.framework.core.machinelearning.featureselection.categorical.ChisquareSelect;
 import com.datumbox.framework.core.machinelearning.featureselection.categorical.MutualInformation;
+import com.datumbox.framework.core.machinelearning.featureselection.scorebased.TFIDF;
 import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
+import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import com.datumbox.framework.tests.utilities.TestUtils;
+import org.junit.Test;
+
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,8 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for TextClassifier.
@@ -281,7 +274,7 @@ public class TextClassifierTest extends AbstractTest {
             Class<FS> featureSelectorClass, 
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
             double expectedF1score) {
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         
         String dbName = this.getClass().getSimpleName();

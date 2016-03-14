@@ -15,14 +15,10 @@
  */
 package com.datumbox.framework.common.utilities;
 
-import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import com.datumbox.framework.common.dataobjects.TypeInference;
+
+import java.util.*;
 
 /**
  * The MapMethods class contains a list of convenience methods for Maps and 

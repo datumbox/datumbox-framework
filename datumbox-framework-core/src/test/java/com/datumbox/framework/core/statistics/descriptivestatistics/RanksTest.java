@@ -18,10 +18,12 @@ package com.datumbox.framework.core.statistics.descriptivestatistics;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListMap;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for Ranks.

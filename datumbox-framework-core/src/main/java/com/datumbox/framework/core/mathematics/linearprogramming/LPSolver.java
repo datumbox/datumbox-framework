@@ -16,9 +16,10 @@
 package com.datumbox.framework.core.mathematics.linearprogramming;
 
 import com.datumbox.framework.common.utilities.PHPMethods;
-import java.util.List;
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
+
+import java.util.List;
 
 /**
  * The LPSolver provides an easy way to formulate and solve Linear Programming

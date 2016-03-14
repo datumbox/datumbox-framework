@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework;
+package com.datumbox.framework.lib;
 
 import java.io.IOException;
 import java.io.InputStream;

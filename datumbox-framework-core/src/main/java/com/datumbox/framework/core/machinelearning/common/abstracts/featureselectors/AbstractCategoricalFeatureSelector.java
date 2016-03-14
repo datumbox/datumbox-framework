@@ -18,23 +18,17 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.dataobjects.TypeInference.DataType;
+import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Abstract class which is the base of every Categorical Feature Selection algorithm.

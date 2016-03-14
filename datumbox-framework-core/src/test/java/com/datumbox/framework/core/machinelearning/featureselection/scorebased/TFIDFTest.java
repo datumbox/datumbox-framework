@@ -15,18 +15,17 @@
  */
 package com.datumbox.framework.core.machinelearning.featureselection.scorebased;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import com.datumbox.framework.tests.utilities.TestUtils;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
-
 import java.util.Set;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for TFIDF.
@@ -42,7 +41,7 @@ public class TFIDFTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe[] data = Datasets.featureSelectorTFIDF(conf);
         

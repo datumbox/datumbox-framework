@@ -21,17 +21,19 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.core.machinelearning.common.validators.SoftMaxRegressionValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.framework.core.utilities.regularization.L1Regularizer;
+import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -394,29 +396,9 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             }
         });
 
-        double l1 = kb().getTrainingParameters().getL1();
-        if(l1 > 0.0) {
-            for(Map.Entry<List<Object>, Double> e : thitas.entrySet()) {
-                List<Object> featureClassTuple = e.getKey();
-                double signW = 0.0;
-                if(e.getValue()>0.0) {
-                    signW = 1.0;
-                }
-                else if(e.getValue()<0.0) {
-                    signW = -1.0;
-                }
-                newThitas.put(featureClassTuple, newThitas.get(featureClassTuple) + l1*signW*(-learningRate));
-            }
-        }
+        L1Regularizer.updateWeights(kb().getTrainingParameters().getL1(), learningRate, thitas, newThitas);
 
-        double l2 = kb().getTrainingParameters().getL2();
-        if(l2 > 0.0) {
-            for(Map.Entry<List<Object>, Double> e : thitas.entrySet()) {
-                List<Object> featureClassTuple = e.getKey();
-                double w = e.getValue();
-                newThitas.put(featureClassTuple, newThitas.get(featureClassTuple) + l2*w*(-learningRate));
-            }
-        }
+        L2Regularizer.updateWeights(kb().getTrainingParameters().getL2(), learningRate, thitas, newThitas);
         
     }
     
@@ -450,23 +432,9 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
 
         error = -error/kb().getModelParameters().getN();
 
-        double l1 = kb().getTrainingParameters().getL1();
-        if(l1 > 0.0) {
-            double sumAbsThita = 0.0; //sum of abs(thita)
-            for(double th : thitas.values()) {
-                sumAbsThita += Math.abs(th);
-            }
-            error += l1*sumAbsThita;
-        }
+        error += L1Regularizer.estimatePenalty(kb().getTrainingParameters().getL1(), thitas);
 
-        double l2 = kb().getTrainingParameters().getL2();
-        if(l2 > 0.0) {
-            double sumThitaSq = 0.0; //sum of thita^2
-            for(double th : thitas.values()) {
-                sumThitaSq += th*th;
-            }
-            error += l2*sumThitaSq/2.0;
-        }
+        error += L2Regularizer.estimatePenalty(kb().getTrainingParameters().getL2(), thitas);
 
         return error;
     }

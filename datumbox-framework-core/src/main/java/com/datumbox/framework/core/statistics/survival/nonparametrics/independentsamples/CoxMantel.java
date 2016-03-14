@@ -15,19 +15,11 @@
  */
 package com.datumbox.framework.core.statistics.survival.nonparametrics.independentsamples;
 
-import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.AssociativeArray2D;
-import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.TransposeDataCollection;
-import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.core.statistics.descriptivestatistics.CensoredDescriptives;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implementation of the Cox-Mantel non-parametric test.

@@ -17,8 +17,8 @@ package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.core.machinelearning.common.dataobjects.TripleKnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
+import com.datumbox.framework.core.machinelearning.common.dataobjects.TripleKnowledgeBase;
 
 import java.io.Serializable;
 

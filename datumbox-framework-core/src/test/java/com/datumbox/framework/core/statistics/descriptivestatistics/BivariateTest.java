@@ -15,15 +15,13 @@
  */
 package com.datumbox.framework.core.statistics.descriptivestatistics;
 
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.DataTable2D;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-
 import com.datumbox.framework.tests.utilities.TestUtils;
-
 import org.junit.Test;
 
 /**
@@ -158,7 +156,7 @@ public class BivariateTest extends AbstractTest {
     public void testCovarianceMatrix() {
         logger.info("covarianceMatrix");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
@@ -192,7 +190,7 @@ public class BivariateTest extends AbstractTest {
     public void testPearsonMatrix() {
         logger.info("pearsonMatrix");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
@@ -226,7 +224,7 @@ public class BivariateTest extends AbstractTest {
     public void testSpearmanMatrix() {
         logger.info("spearmanMatrix");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();
@@ -261,7 +259,7 @@ public class BivariateTest extends AbstractTest {
     public void testKendalltauMatrix() {
         logger.info("kendalltauMatrix");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe dataset = generateDataset(conf);
         DataTable2D expResult = new DataTable2D();

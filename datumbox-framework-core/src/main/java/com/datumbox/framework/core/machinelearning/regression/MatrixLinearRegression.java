@@ -16,25 +16,25 @@
 package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
-import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.common.utilities.PHPMethods;
-import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
+import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
+import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

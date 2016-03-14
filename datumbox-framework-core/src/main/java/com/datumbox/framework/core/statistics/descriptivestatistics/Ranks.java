@@ -17,8 +17,8 @@ package com.datumbox.framework.core.statistics.descriptivestatistics;
 
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.utilities.MapMethods;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

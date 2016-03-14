@@ -19,10 +19,11 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import com.datumbox.framework.tests.utilities.TestUtils;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.Test;
 
 /**
  * Test cases for DataEnvelopmentAnalysis.

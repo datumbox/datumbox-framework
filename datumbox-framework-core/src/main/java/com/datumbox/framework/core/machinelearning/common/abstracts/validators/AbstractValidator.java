@@ -17,20 +17,19 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.validators;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.utilities.PHPMethods;
-
-import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.interfaces.Trainable;
+import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The AbstractValidator class is an abstract class responsible for the K-fold Cross

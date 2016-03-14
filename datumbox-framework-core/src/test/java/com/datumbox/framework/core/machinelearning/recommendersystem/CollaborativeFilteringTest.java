@@ -15,20 +15,19 @@
  */
 package com.datumbox.framework.core.machinelearning.recommendersystem;
 
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.tests.abstracts.AbstractTest;
-import com.datumbox.framework.tests.utilities.TestUtils;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
+import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for CollaborativeFiltering.
@@ -44,7 +43,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe[] data = Datasets.recommenderSystemFood(conf);
         

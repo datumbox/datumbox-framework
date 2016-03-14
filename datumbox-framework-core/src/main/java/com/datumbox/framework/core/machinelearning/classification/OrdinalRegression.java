@@ -21,18 +21,17 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
-
-
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
+import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.core.machinelearning.common.validators.OrdinalRegressionValidator;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -411,14 +410,8 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             }
         });
 
-        double l2 = kb().getTrainingParameters().getL2();
-        if(l2 > 0.0) {
-            for(Map.Entry<Object, Double> e : weights.entrySet()) {
-                Object column = e.getKey();
-                double w = e.getValue();
-                newWeights.put(column, newWeights.get(column) + l2*w*(-learningRate));
-            }
-        }
+        L2Regularizer.updateWeights(kb().getTrainingParameters().getL2(), learningRate, weights, newWeights);
+
     }
     
     private AssociativeArray hypothesisFunction(AssociativeArray x, Map<Object, Object> previousThitaMapping, Map<Object, Double> weights, Map<Object, Double> thitas) {
@@ -466,14 +459,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         }));
         error /= kb().getModelParameters().getN();
 
-        double l2 = kb().getTrainingParameters().getL2();
-        if(l2 > 0.0) {
-            double sumWSq = 0.0; //sum of w^2
-            for(double w : weights.values()) {
-                sumWSq += w*w;
-            }
-            error += l2*sumWSq/2.0;
-        }
+        error += L2Regularizer.estimatePenalty(kb().getTrainingParameters().getL2(), weights);
         
         return error;
     }

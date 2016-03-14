@@ -17,6 +17,7 @@ package com.datumbox.framework.common.persistentstorage.mapdb;
 
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+
 import java.util.Properties;
 
 /**
@@ -33,7 +34,7 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
 
     //DB specific properties
-    private String outputFolder = "./";
+    private String outputFolder = null;
     
     private int cacheSize = 10000;
     

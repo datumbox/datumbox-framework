@@ -15,13 +15,7 @@
  */
 package com.datumbox.framework.core.statistics.sampling;
 
-import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.AssociativeArray2D;
-import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.TransposeDataList;
-import com.datumbox.framework.common.dataobjects.TransposeDataCollection;
-import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Map;

@@ -19,11 +19,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
-    <artifactId>datumbox-framework-parent</artifactId>
+    <artifactId>datumbox-framework</artifactId>
     <version>0.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     
-    <name>Datumbox Framework Parent Project</name>
+    <name>Datumbox Machine Learning Framework</name>
     <description>Datumbox is an open-source Machine Learning Framework written in Java which allows the rapid development of Machine Learning and Statistical applications.</description>
     <url>https://github.com/datumbox/datumbox-framework/</url>
     <organization>
@@ -129,10 +129,10 @@
     </properties>
 
     <modules>
-        <module>datumbox-framework</module>
         <module>datumbox-framework-common</module>
         <module>datumbox-framework-core</module>
         <module>datumbox-framework-applications</module>
+        <module>datumbox-framework-lib</module>
     </modules>
     
     <build>
@@ -229,7 +229,7 @@
                                 <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                                 <addClasspath>true</addClasspath>
                                 <classpathPrefix>lib/</classpathPrefix>
-                                <mainClass>com.datumbox.framework.Datumbox</mainClass>
+                                <mainClass>com.datumbox.framework.lib.Datumbox</mainClass>
                             </manifest>
                             <manifestEntries>
                                 <Implementation-Author>${project.developers[0].name}</Implementation-Author>

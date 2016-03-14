@@ -15,13 +15,7 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Data structure which stores internally a Map<Object, Object>. The class provides

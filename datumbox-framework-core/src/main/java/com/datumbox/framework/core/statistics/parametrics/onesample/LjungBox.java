@@ -17,6 +17,7 @@ package com.datumbox.framework.core.statistics.parametrics.onesample;
 
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
+
 import java.util.Iterator;
 
 /**

@@ -19,10 +19,11 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray2D;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.Arrays;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for CensoredDescriptives.

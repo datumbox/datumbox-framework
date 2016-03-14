@@ -15,20 +15,20 @@
  */
 package com.datumbox.framework.core.machinelearning.classification;
 
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XMinMaxNormalizer;
-import com.datumbox.framework.tests.abstracts.AbstractTest;
+import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
-import com.datumbox.framework.tests.utilities.TestUtils;
+import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for SoftMaxRegression.
@@ -44,7 +44,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testValidate() {
         logger.info("validate");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         
         Dataframe[] data = Datasets.carsCategorical(conf);
@@ -108,7 +108,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("kFoldCrossValidation");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         int k = 5;
         

@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.core.statistics.sampling;
 
-import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.TransposeDataList;
+import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.TransposeDataCollection;
+import com.datumbox.framework.common.dataobjects.TransposeDataList;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 

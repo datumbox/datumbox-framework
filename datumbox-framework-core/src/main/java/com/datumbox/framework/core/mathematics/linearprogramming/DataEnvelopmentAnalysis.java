@@ -18,12 +18,12 @@ package com.datumbox.framework.core.mathematics.linearprogramming;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.utilities.PHPMethods;
+import lpsolve.LpSolve;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import lpsolve.LpSolve;
 
 /**
  * Class that performs Data Envelopment Analysis. It requires the installation of

@@ -15,14 +15,16 @@
  */
 package com.datumbox.framework.core.mathematics.linearprogramming;
 
-import com.datumbox.framework.tests.abstracts.AbstractTest;
 import com.datumbox.framework.tests.Constants;
+import com.datumbox.framework.tests.abstracts.AbstractTest;
+import lpsolve.LpSolve;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import lpsolve.LpSolve;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for LPSolver.

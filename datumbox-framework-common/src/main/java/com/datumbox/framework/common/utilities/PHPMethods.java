@@ -15,15 +15,11 @@
  */
 package com.datumbox.framework.common.utilities;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * This class contains a number of convenience methods which have an API similar

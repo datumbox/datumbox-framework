@@ -17,17 +17,17 @@ package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import com.datumbox.framework.tests.utilities.TestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for CETR.
@@ -43,7 +43,7 @@ public class CETRTest extends AbstractTest {
     public void testExtract() {
         logger.info("extract");
          
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         String dbName = this.getClass().getSimpleName();
         

@@ -25,8 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
- * Factory that initializes and returns the Configurable objects based on the
- * property file. 
+ * Factory that initializes and returns the Configurable objects based on the datumbox.config.properties file.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

@@ -17,10 +17,10 @@ package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
+import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.concurrency.StreamMethods;
 
 import java.io.Serializable;
 import java.util.Map;

@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.DataTable2D;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

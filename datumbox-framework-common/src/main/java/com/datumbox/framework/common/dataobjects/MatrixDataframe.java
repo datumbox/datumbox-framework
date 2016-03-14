@@ -15,11 +15,12 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import java.util.Map;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.OpenMapRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
+
+import java.util.Map;
 
 /**
  * The MatrixDataframe class is responsible for converting a Dataframe object to a

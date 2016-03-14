@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.statistics.nonparametrics.independentsamples;
 
 import com.datumbox.framework.core.mathematics.discrete.Arithmetics;
+
 import java.util.HashSet;
 import java.util.Set;
 

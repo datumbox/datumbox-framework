@@ -17,12 +17,14 @@ package com.datumbox.framework.common.utilities;
 
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.regex.Pattern;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for PHPMethods.

@@ -16,6 +16,7 @@
 package com.datumbox.framework.common.persistentstorage.abstracts;
 
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

@@ -18,8 +18,8 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.DataTable2D;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.ArrayList;

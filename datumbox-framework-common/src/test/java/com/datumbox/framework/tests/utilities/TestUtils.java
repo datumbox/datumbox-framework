@@ -17,11 +17,9 @@ package com.datumbox.framework.tests.utilities;
 
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.DataTable2D;
-import com.datumbox.framework.common.persistentstorage.inmemory.InMemoryConfiguration;
-import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.persistentstorage.mapdb.MapDBConfiguration;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.tests.Constants;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -63,30 +61,6 @@ public class TestUtils {
 
             assertEquals(v1, v2, Constants.DOUBLE_ACCURACY_HIGH);
         }
-    }
-
-    /**
-     * Initializes and returns the correct DatabaseConfiguration based on the
-     * configuration.
-     * 
-     * @return 
-     */
-    public static Configuration getConfig() {
-        String tmpFolder = System.getProperty("java.io.tmpdir");
-        Configuration conf = Configuration.getConfiguration();
-        
-        if (conf.getDbConfig().getClass().equals(InMemoryConfiguration.class)) {
-            InMemoryConfiguration dbConf = (InMemoryConfiguration) conf.getDbConfig();
-            dbConf.setOutputFolder(tmpFolder);
-            conf.setDbConfig(dbConf);
-        } 
-        else if (conf.getDbConfig().getClass().equals(MapDBConfiguration.class)) {
-            MapDBConfiguration dbConf = (MapDBConfiguration) conf.getDbConfig();
-            dbConf.setOutputFolder(tmpFolder);
-            conf.setDbConfig(dbConf);
-        }
-        
-        return conf;
     }
     
 }

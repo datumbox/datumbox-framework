@@ -15,19 +15,15 @@
  */
 package com.datumbox.framework.core.statistics.sampling;
 
-import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.AssociativeArray2D;
-import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.TransposeDataList;
-import com.datumbox.framework.common.dataobjects.TransposeDataCollection;
-import com.datumbox.framework.tests.Constants;
+import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.junit.Test;
 
 import java.util.Arrays;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for StratifiedSampling.

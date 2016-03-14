@@ -17,7 +17,8 @@ package com.datumbox.framework.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import com.datumbox.framework.tests.utilities.TestUtils;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -27,8 +28,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for Dataframe.
@@ -44,7 +45,7 @@ public class DataframeTest extends AbstractTest {
     public void testParseCSVFile() {
         logger.info("parseCSVFile");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         
         LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
@@ -139,7 +140,7 @@ public class DataframeTest extends AbstractTest {
     public void testGetColumns() {
         logger.info("getColumns");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe dataset = new Dataframe(conf);
         
@@ -179,7 +180,7 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValues() {
         logger.info("extractColumnValues");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Object column = "height";
         Dataframe dataset = new Dataframe(conf);
@@ -215,7 +216,7 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValuesByY() {
         logger.info("extractColumnValuesByY");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Object column = "height";
         Dataframe dataset = new Dataframe(conf);
@@ -245,7 +246,7 @@ public class DataframeTest extends AbstractTest {
     public void testRemove() {
         logger.info("remove");
         
-        Configuration conf = TestUtils.getConfig();
+        Configuration conf = Configuration.getConfiguration();
         
         Dataframe dataset = new Dataframe(conf);
         

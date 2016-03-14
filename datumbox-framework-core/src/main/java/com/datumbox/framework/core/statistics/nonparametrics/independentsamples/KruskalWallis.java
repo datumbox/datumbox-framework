@@ -21,6 +21,7 @@ import com.datumbox.framework.common.dataobjects.TransposeDataCollection;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Ranks;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
+
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
