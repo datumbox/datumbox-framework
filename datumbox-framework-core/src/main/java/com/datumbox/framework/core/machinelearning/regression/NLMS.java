@@ -29,6 +29,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
+import com.datumbox.framework.core.utilities.regularization.ElasticNetRegularizer;
 import com.datumbox.framework.core.utilities.regularization.L1Regularizer;
 import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
 
@@ -232,7 +233,6 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             tmp_newThitas.putAll(thitas);
             
             batchGradientDescent(trainingData, tmp_newThitas, learningRate);
-            //stochasticGradientDescent(trainingData, newThitas, learningRate);
             
             double newError = calculateError(trainingData,tmp_newThitas);
             
@@ -252,6 +252,13 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
+
+        //apply the weight correction if we use ElasticNet Regularization
+        double l1 = kb().getTrainingParameters().getL1();
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l1>0.0 && l2>0.0) {
+            ElasticNetRegularizer.weightCorrection(l2, thitas);
+        }
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
@@ -263,7 +270,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
             //mind the fact that we use the previous thitas to estimate the new ones! this is because the thitas must be updated simultaniously
             double error = TypeInference.toDouble(r.getY()) - hypothesisFunction(r.getX(), thitas);
-            
+
             double errorMultiplier = multiplier*error;
             
             synchronized(newThitas) {
@@ -278,9 +285,18 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             }
         });
 
-        L1Regularizer.updateWeights(kb().getTrainingParameters().getL1(), learningRate, thitas, newThitas);
+        double l1 = kb().getTrainingParameters().getL1();
+        double l2 = kb().getTrainingParameters().getL2();
 
-        L2Regularizer.updateWeights(kb().getTrainingParameters().getL2(), learningRate, thitas, newThitas);
+        if(l1>0.0 && l2>0.0) {
+            ElasticNetRegularizer.updateWeights(l1, l2, learningRate, thitas, newThitas);
+        }
+        else if(l1>0.0) {
+            L1Regularizer.updateWeights(l1, learningRate, thitas, newThitas);
+        }
+        else if(l2>0.0) {
+            L2Regularizer.updateWeights(l2, learningRate, thitas, newThitas);
+        }
     }
     
     private double calculateError(Dataframe trainingData, Map<Object, Double> thitas) {
@@ -292,9 +308,18 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
         }));
         error /= kb().getModelParameters().getN();
 
-        error += L1Regularizer.estimatePenalty(kb().getTrainingParameters().getL1(), thitas);
+        double l1 = kb().getTrainingParameters().getL1();
+        double l2 = kb().getTrainingParameters().getL2();
 
-        error += L2Regularizer.estimatePenalty(kb().getTrainingParameters().getL2(), thitas);
+        if(l1>0.0 && l2>0.0) {
+            error += ElasticNetRegularizer.estimatePenalty(l1, l2, thitas);
+        }
+        else if(l1>0.0) {
+            error += L1Regularizer.estimatePenalty(l1, thitas);
+        }
+        else if(l2>0.0) {
+            error += L2Regularizer.estimatePenalty(l2, thitas);
+        }
 
         return error;
     }

@@ -60,6 +60,7 @@ public class NLMSTest extends AbstractTest {
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
+        param.setL1(0.00000001);
         
         
         instance.fit(trainingData, param);
@@ -101,17 +102,17 @@ public class NLMSTest extends AbstractTest {
         
         int k = 5;
         
-        Dataframe[] data = Datasets.regressionMixed(conf);
+        Dataframe[] data = Datasets.housingNumerical(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
         
         String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
+
 
         
-        
+
         PCA featureSelector = new PCA(dbName, conf);
         PCA.TrainingParameters featureSelectorParameters = new PCA.TrainingParameters();
         featureSelectorParameters.setMaxDimensions(trainingData.xColumnSize()-1);
@@ -119,21 +120,21 @@ public class NLMSTest extends AbstractTest {
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
         featureSelector.fit_transform(trainingData, featureSelectorParameters);
         featureSelector.delete();
-        
+
         
         NLMS instance = new NLMS(dbName, conf);
-        
+
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);
-        param.setL1(0.0001);
-        param.setL2(0.00001);
+        param.setL1(0.001);
+        param.setL2(0.001);
         
         NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
 
         
-        double expResult = 0.9996038547117426;
+        double expResult = 0.7620091462443493;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         

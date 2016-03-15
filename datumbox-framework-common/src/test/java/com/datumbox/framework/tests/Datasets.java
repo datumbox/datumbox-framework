@@ -143,6 +143,43 @@ public class Datasets {
         
         return new Dataframe[] {trainingData, validationData};
     }
+
+    /**
+     * Housing numerical Dataframe.
+     *
+     * @param conf
+     * @return
+     */
+    public static Dataframe[] housingNumerical(Configuration conf) {
+        //Data from https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names
+        Dataframe trainingData;
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/housing.csv"), "UTF-8")) {
+            LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>();
+            headerDataTypes.put("CRIM", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("ZN", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("INDUS", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("CHAS", TypeInference.DataType.BOOLEAN);
+            headerDataTypes.put("NOX", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("RM", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("AGE", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("DIS", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("RAD", TypeInference.DataType.ORDINAL);
+            headerDataTypes.put("TAX", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("PTRATIO", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("B", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("LSTAT", TypeInference.DataType.NUMERICAL);
+            headerDataTypes.put("MEDV", TypeInference.DataType.NUMERICAL);
+
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "MEDV", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+        }
+        catch(IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+
+        Dataframe validationData = trainingData.copy();
+
+        return new Dataframe[] {trainingData, validationData};
+    }
     
     /**
      * Wines Ordinal Dataframe.

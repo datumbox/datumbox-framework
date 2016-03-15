@@ -32,6 +32,7 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.PredictPara
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.core.machinelearning.common.validators.SoftMaxRegressionValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
+import com.datumbox.framework.core.utilities.regularization.ElasticNetRegularizer;
 import com.datumbox.framework.core.utilities.regularization.L1Regularizer;
 import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
 
@@ -339,6 +340,13 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
+
+        //apply the weight correction if we use ElasticNet Regularization
+        double l1 = kb().getTrainingParameters().getL1();
+        double l2 = kb().getTrainingParameters().getL2();
+        if(l1>0.0 && l2>0.0) {
+            ElasticNetRegularizer.weightCorrection(l2, thitas);
+        }
     }
     
     /** {@inheritDoc} */
@@ -396,9 +404,18 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             }
         });
 
-        L1Regularizer.updateWeights(kb().getTrainingParameters().getL1(), learningRate, thitas, newThitas);
+        double l1 = kb().getTrainingParameters().getL1();
+        double l2 = kb().getTrainingParameters().getL2();
 
-        L2Regularizer.updateWeights(kb().getTrainingParameters().getL2(), learningRate, thitas, newThitas);
+        if(l1>0.0 && l2>0.0) {
+            ElasticNetRegularizer.updateWeights(l1, l2, learningRate, thitas, newThitas);
+        }
+        else if(l1>0.0) {
+            L1Regularizer.updateWeights(l1, learningRate, thitas, newThitas);
+        }
+        else if(l2>0.0) {
+            L2Regularizer.updateWeights(l2, learningRate, thitas, newThitas);
+        }
         
     }
     
@@ -432,9 +449,18 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
 
         error = -error/kb().getModelParameters().getN();
 
-        error += L1Regularizer.estimatePenalty(kb().getTrainingParameters().getL1(), thitas);
+        double l1 = kb().getTrainingParameters().getL1();
+        double l2 = kb().getTrainingParameters().getL2();
 
-        error += L2Regularizer.estimatePenalty(kb().getTrainingParameters().getL2(), thitas);
+        if(l1>0.0 && l2>0.0) {
+            error += ElasticNetRegularizer.estimatePenalty(l1, l2, thitas);
+        }
+        else if(l1>0.0) {
+            error += L1Regularizer.estimatePenalty(l1, thitas);
+        }
+        else if(l2>0.0) {
+            error += L2Regularizer.estimatePenalty(l2, thitas);
+        }
 
         return error;
     }
