@@ -340,13 +340,6 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
-
-        //apply the weight correction if we use ElasticNet Regularization
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
-        if(l1>0.0 && l2>0.0) {
-            ElasticNetRegularizer.weightCorrection(l2, thitas);
-        }
     }
     
     /** {@inheritDoc} */
