@@ -7,6 +7,7 @@ before_install:
   - unzip jlpsolve.zip
   - sudo mv lpsolve/liblpsolve55.so /usr/lib/
   - sudo mv lp_solve_5.5_java/lib/ux64/liblpsolve55j.so /usr/lib/
+  - rm -rf jlpsolve.zip lpsolve lp_solve_5.5_java
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk8
