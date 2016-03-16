@@ -1,5 +1,6 @@
 Datumbox Machine Learning Framework
 ===================================
+[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.png)](https://travis-ci.org/datumbox/datumbox-framework) [![Dependency Status](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.6.1/badge?style=flat)](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.6.1)
 
 [![Datumbox](http://www.datumbox.com/img/logo.png)](http://www.datumbox.com/)
 
@@ -15,7 +16,7 @@ The code is licensed under the [Apache License, Version 2.0](https://github.com/
 Version
 -------
 
-The latest version is 0.7.0-SNAPSHOT (Build 20160316). [![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.png)](https://travis-ci.org/datumbox/datumbox-framework)
+The latest version is 0.7.0-SNAPSHOT (Build 20160316).
 
 The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
