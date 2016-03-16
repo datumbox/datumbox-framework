@@ -9,4 +9,4 @@ before_install:
   - sudo mv lp_solve_5.5_java/lib/ux64/liblpsolve55j.so /usr/lib/
 jdk:
   - oraclejdk8
-script: mvn clean install
+script: mvn clean install -Dgpg.skip=true
