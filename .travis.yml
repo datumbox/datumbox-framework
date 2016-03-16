@@ -12,3 +12,5 @@ jdk:
   - oraclejdk8
 script:
   - mvn clean install -Dgpg.skip=true
+notifications:
+  email: false
