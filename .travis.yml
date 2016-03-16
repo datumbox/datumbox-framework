@@ -1,0 +1,12 @@
+language: java
+before_install:
+  - sudo apt-get install unzip
+  - mkdir lpsolve
+  - curl -L https://sourceforge.net/projects/lpsolve/files/lpsolve/5.5.2.0/lp_solve_5.5.2.0_dev_ux64.tar.gz | tar xvz -C lpsolve
+  - curl -L https://sourceforge.net/projects/lpsolve/files/lpsolve/5.5.2.0/lp_solve_5.5.2.0_java.zip > jlpsolve.zip
+  - unzip jlpsolve.zip
+  - sudo mv lpsolve/liblpsolve55.so /usr/lib/
+  - sudo mv lp_solve_5.5_java/lib/ux64/liblpsolve55j.so /usr/lib/
+jdk:
+  - oraclejdk8
+script: mvn clean install
