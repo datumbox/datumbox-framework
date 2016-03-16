@@ -1,6 +1,7 @@
 language: java
 before_install:
-  - sudo apt-get install unzip
+  - sudo apt-get -qq update
+  - sudo apt-get install -y unzip
   - mkdir lpsolve
   - curl -L https://sourceforge.net/projects/lpsolve/files/lpsolve/5.5.2.0/lp_solve_5.5.2.0_dev_ux64.tar.gz | tar xvz -C lpsolve
   - curl -L https://sourceforge.net/projects/lpsolve/files/lpsolve/5.5.2.0/lp_solve_5.5.2.0_java.zip > jlpsolve.zip
@@ -11,11 +12,7 @@ before_install:
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk8
-before_script:
-  - pip install --user codecov
 script:
   - mvn clean install -Dgpg.skip=true
-after_success:
-  - codecov
 notifications:
   email: false
