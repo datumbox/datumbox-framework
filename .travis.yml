@@ -11,9 +11,11 @@ before_install:
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk8
+before_script:
+  - pip install --user codecov
 script:
   - mvn clean install -Dgpg.skip=true
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
 notifications:
   email: false
