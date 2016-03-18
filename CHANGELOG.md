@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.0-SNAPSHOT - Build 20160316
+Version 0.7.0-SNAPSHOT - Build 20160318
 ---------------------------------------
 
 - Rename the erase() method to delete() in all interfaces.
