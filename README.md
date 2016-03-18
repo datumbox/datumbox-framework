@@ -1,6 +1,6 @@
 Datumbox Machine Learning Framework
 ===================================
-[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.svg)](https://travis-ci.org/datumbox/datumbox-framework) [![Dependency Status](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.0-SNAPSHOT/badge?style=flat)](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.0-SNAPSHOT) [![License](https://img.shields.io/:license-apache-blue.svg)](./LICENSE)
+[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.svg)](https://travis-ci.org/datumbox/datumbox-framework) [![Dependency Status](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.0-SNAPSHOT/badge.svg)](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.0-SNAPSHOT) [![License](https://img.shields.io/:license-apache-blue.svg)](./LICENSE)
 
 [![Datumbox](http://www.datumbox.com/img/logo.png)](http://www.datumbox.com/)
 
