@@ -1,26 +1,26 @@
 Datumbox Machine Learning Framework
 ===================================
-[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.png)](https://travis-ci.org/datumbox/datumbox-framework) [![Dependency Status](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.6.1/badge?style=flat)](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.6.1)
+[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.svg)](https://travis-ci.org/datumbox/datumbox-framework) [![Dependency Status](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.0/badge?style=flat)](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.0) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.datumbox/datumbox-framework/badge.svg)](http://search.maven.org/#artifactdetails%7Ccom.datumbox%7Cdatumbox-framework%7C0.7.0%7Cjar) [![License](https://img.shields.io/:license-apache-blue.svg)](./LICENSE)
 
 [![Datumbox](http://www.datumbox.com/img/logo.png)](http://www.datumbox.com/)
 
-The Datumbox Machine Learning Framework is an open-source framework written in Java which allows the rapid development Machine Learning and Statistical applications. The main focus of the framework is to include a large number of machine learning algorithms & statistical tests and to be able to handle medium-large sized datasets. 
+The Datumbox Machine Learning Framework is an open-source framework written in Java which allows the rapid development Machine Learning and Statistical applications. The main focus of the framework is to include a large number of machine learning algorithms & statistical methods and to be able to handle large sized datasets. 
 
 Copyright & License
 -------------------
 
 Copyright (C) 2013-2016 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
 
-The code is licensed under the [Apache License, Version 2.0](https://github.com/datumbox/datumbox-framework/blob/master/LICENSE).
+The code is licensed under the [Apache License, Version 2.0](./LICENSE).
 
 Version
 -------
 
-The latest version is 0.7.0-SNAPSHOT (Build 20160316).
+The latest version is 0.7.0-SNAPSHOT (Build 20160318).
 
 The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
-The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](https://github.com/datumbox/datumbox-framework/blob/master/CHANGELOG.md).
+The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](./CHANGELOG.md).
 
 Installation
 ------------
