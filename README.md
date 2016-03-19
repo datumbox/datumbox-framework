@@ -25,7 +25,7 @@ The releases of the framework follow the [Semantic Versioning](http://semver.org
 Installation
 ------------
 
-Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.datumbox%22%20AND%20a%3A%22datumbox-framework%22). 
+Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#artifactdetails%7Ccom.datumbox%7Cdatumbox-framework-lib%7C0.7.0%7Cjar). 
 
 Maven:
 ```
