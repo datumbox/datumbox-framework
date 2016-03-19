@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+Version 0.7.1-SNAPSHOT - Build 20160319
+---------------------------------------
+
+- Add changes here.
+
 Version 0.7.0 - Build 20160319
 ------------------------------
 
