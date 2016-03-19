@@ -1,8 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Update all maven plugins and dependencies to their latest versions.
-- Add support for MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
+- Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
 
 
 NEW FEATURES
@@ -16,7 +15,7 @@ DOCUMENTATION
 =============
 
 - Improve the code documentation.
-- Write How-to blog post on building a Text Classification model.
+- Write How-to blog posts on building Text Classification models.
 
 
 NEW ALGORITHMS
@@ -26,6 +25,7 @@ NEW ALGORITHMS
 - Speed up LDA: http://www.cs.ucsb.edu/~mingjia/cs240/doc/273811.pdf
 - Write a Mixture of Gaussians clustering method.
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.
+- Collaborative Filtering for Implicit Feedback Datasets: http://yifanhu.net/PUB/cf.pdf
 - Include an anomaly detection algorithm.
 - Add the ability to search through the configuration space and find the best performing algorithmic configuration.
 
