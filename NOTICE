@@ -4,11 +4,6 @@ Copyright (C) 2013 Vasilis Vryniotis <bbriniotis@datumbox.com>
 
 The following libraries are included in packaged versions of this project:
 
-* Apache Commons Lang
- * COPYRIGHT: Copyright 2001 The Apache Software Foundation
- * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)
- * HOMEPAGE: https://commons.apache.org/proper/commons-lang/
-
 * Apache Commons Math
  * COPYRIGHT: Copyright 2003 The Apache Software Foundation
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)

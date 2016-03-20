@@ -15,8 +15,6 @@
  */
 package com.datumbox.framework.common.utilities;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -246,17 +244,6 @@ public class PHPMethods {
             array[index] = array[i];
             array[i] = tmp;
         }
-    }
-    
-    /**
-     * Returns the contexts of an Objects in a human readable format.
-     * 
-     * @param <T>
-     * @param object
-     * @return 
-     */
-    public static <T> String var_export(T object) {
-        return ToStringBuilder.reflectionToString(object);
     }
     
     /**

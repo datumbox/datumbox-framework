@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-Version 0.7.1-SNAPSHOT - Build 20160319
+Version 0.7.1-SNAPSHOT - Build 20160320
 ---------------------------------------
 
-- Add changes here.
+- Removing Apache Commons Lang from the dependencies. Adding a faster custom unescapeHtml method in HTMLParser.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

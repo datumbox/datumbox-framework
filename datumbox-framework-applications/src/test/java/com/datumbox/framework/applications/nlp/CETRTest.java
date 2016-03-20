@@ -17,7 +17,6 @@ package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -50,7 +49,12 @@ public class CETRTest extends AbstractTest {
         String text;        
         try {
             List<String> lines = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("datasets/example.com.html").toURI()), StandardCharsets.UTF_8);
-            text = StringUtils.join(lines, "\r\n");
+            StringBuilder sb = new StringBuilder();
+            for(String line: lines){
+                sb.append(line);
+                sb.append("\r\n");
+            }
+            text = sb.toString().trim();
         }
         catch(IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);

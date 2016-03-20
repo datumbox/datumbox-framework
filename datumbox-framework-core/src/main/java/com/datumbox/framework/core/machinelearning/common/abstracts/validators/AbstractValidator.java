@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
@@ -122,7 +123,7 @@ public abstract class AbstractValidator<MP extends ModelParameters, TP extends T
             
             
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
-            modeler.fit(trainingData, trainingParameters); 
+            modeler.fit(trainingData, (AbstractTrainer.AbstractTrainingParameters) trainingParameters);
             trainingData.delete();
             //trainingData = null;
                         

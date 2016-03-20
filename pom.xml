@@ -107,7 +107,6 @@
         <gpg-plugin-version>1.6</gpg-plugin-version>
         
         <!-- Code Dependencies -->
-        <commons-lang-version>3.4</commons-lang-version>
         <commons-math-version>3.6</commons-math-version>
         <commons-csv-version>1.2</commons-csv-version>
         <slf4j-api-version>1.7.19</slf4j-api-version>
@@ -362,11 +361,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang-version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
