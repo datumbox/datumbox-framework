@@ -24,11 +24,6 @@ The following libraries are included in packaged versions of this project:
  * LICENSE: http://www.csie.ntu.edu.tw/~cjlin/libsvm/COPYRIGHT (BSD 3-Clause License)
  * HOMEPAGE: http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
-* lp_solve Java wrapper
- * COPYRIGHT: Copyright 2004 Juergen Ebert
- * LICENSE: https://www.gnu.org/licenses/lgpl-2.1.html (GNU Lesser General Public License, version 2.1)
- * HOMEPAGE: http://lpsolve.sourceforge.net/5.5/
-
 * MapDB
  * COPYRIGHT: Copyright 2012 Jan Kotek
  * LICENSE: http://www.apache.org/licenses/LICENSE-2.0.txt (Apache License, Version 2.0)

@@ -16,7 +16,7 @@ The code is licensed under the [Apache License, Version 2.0](./LICENSE).
 Version
 -------
 
-The latest version is 0.7.1-SNAPSHOT (Build 20160320).
+The latest version is 0.7.1-SNAPSHOT (Build 20160321).
 
 The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
@@ -35,8 +35,6 @@ Maven:
         <version>0.7.1-SNAPSHOT</version>
     </dependency>
 ```
-
-Note: A couple of classes which use Linear Programming require installing an external C library called [lpsolve](http://sourceforge.net/projects/lpsolve/). Most users won't use these classes and thus installing the binary library can be considered optional; please check the [Detailed Installation Guide](http://blog.datumbox.com/how-to-install-and-use-the-datumbox-machine-learning-framework/) for more info.
 
 Documentation and Code Examples
 -------------------------------

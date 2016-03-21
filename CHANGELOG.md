@@ -1,10 +1,11 @@
 CHANGELOG
 =========
 
-Version 0.7.1-SNAPSHOT - Build 20160320
+Version 0.7.1-SNAPSHOT - Build 20160321
 ---------------------------------------
 
 - Removing Apache Commons Lang from the dependencies. Adding a faster custom unescapeHtml method in HTMLParser.
+- Removing lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods. 
 
 Version 0.7.0 - Build 20160319
 ------------------------------

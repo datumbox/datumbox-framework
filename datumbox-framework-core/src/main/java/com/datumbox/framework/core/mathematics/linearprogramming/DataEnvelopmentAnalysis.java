@@ -18,7 +18,6 @@ package com.datumbox.framework.core.mathematics.linearprogramming;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.utilities.PHPMethods;
-import lpsolve.LpSolve;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,8 +40,6 @@ public class DataEnvelopmentAnalysis {
     * DEA method separates the features of the observations in input and output; 
     * The DeaRecord is a wrapper Object which stores the input and output parts of our
     * data points.
-    * 
-    * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
     */
     public static class DeaRecord {
         /**
@@ -158,7 +155,7 @@ public class DataEnvelopmentAnalysis {
             //The mathematical model is formulated differently depending the case
             if(hasInput==false) {
                 //if no input then change the way that the linear problem formulates
-                constraints.add(new LPSolver.LPConstraint(currentRecord.getOutput(), LpSolve.LE, 1.0)); //less than 1
+                constraints.add(new LPSolver.LPConstraint(currentRecord.getOutput(), "<=", 1.0)); //less than 1
             }
             else {
                 //create a double[] with size both of the input and output
@@ -179,7 +176,7 @@ public class DataEnvelopmentAnalysis {
                 //conInput=null;
                 
                 //add the constrain on the list
-                constraints.add(new LPSolver.LPConstraint(currentConstraintBody, LpSolve.LE, 0.0)); //less than 0
+                constraints.add(new LPSolver.LPConstraint(currentConstraintBody, "<=", 0.0)); //less than 0
             }    
         }
         
@@ -215,28 +212,11 @@ public class DataEnvelopmentAnalysis {
                 //conOutput=null;
                 
                 //set the denominator equal to 1
-                constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, LpSolve.EQ, 1.0));                
+                constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, "=", 1.0));
             }
-            
-            
-            /*
-            double[] lowBoundsOfVariables = null;
-            double[] upBoundsOfVariables = null;
-            boolean[] strictlyIntegerVariables = null;
-            lowBoundsOfVariables = new double[totalColumns];
-            upBoundsOfVariables = new double[totalColumns];
-            strictlyIntegerVariables = new boolean[totalColumns];
-            for(int i =0; i<totalColumns;++i) {
-                lowBoundsOfVariables[i]=0;
-                upBoundsOfVariables[i]=Double.MAX_VALUE;
-                strictlyIntegerVariables[i]=false;
-            }
-            */
-            
-            Integer scalingMode = LpSolve.SCALE_GEOMETRIC;
             
             //RUN SOLVE
-            LPSolver.LPResult result = LPSolver.solve(objectiveFunction, constraints, null, null, null, scalingMode);
+            LPSolver.LPResult result = LPSolver.solve(objectiveFunction, constraints, true, true);
             Double objectiveValue = result.getObjectiveValue();
             
             if(hasInput) {

@@ -49,10 +49,6 @@
         </dependency>
         <dependency>
             <groupId>com.datumbox</groupId>
-            <artifactId>lpsolve</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.datumbox</groupId>
             <artifactId>datumbox-framework-common</artifactId>
             <version>${project.version}</version>
         </dependency>

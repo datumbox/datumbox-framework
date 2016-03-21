@@ -111,7 +111,6 @@
         <commons-csv-version>1.2</commons-csv-version>
         <slf4j-api-version>1.7.19</slf4j-api-version>
         <libsvm-version>3.21</libsvm-version>
-        <lpsolve-version>5.5.2.0</lpsolve-version>
         <mapdb-version>1.0.9</mapdb-version>
         
         <!-- Test Dependencies -->
@@ -380,11 +379,6 @@
                 <groupId>com.datumbox</groupId>
                 <artifactId>libsvm</artifactId>
                 <version>${libsvm-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.datumbox</groupId>
-                <artifactId>lpsolve</artifactId>
-                <version>${lpsolve-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mapdb</groupId>

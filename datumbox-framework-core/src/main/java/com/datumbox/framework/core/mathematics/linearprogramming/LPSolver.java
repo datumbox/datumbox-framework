@@ -16,9 +16,11 @@
 package com.datumbox.framework.core.mathematics.linearprogramming;
 
 import com.datumbox.framework.common.utilities.PHPMethods;
-import lpsolve.LpSolve;
-import lpsolve.LpSolveException;
+import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.commons.math3.optim.linear.*;
+import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,19 +37,6 @@ public class LPSolver {
     public static class LPResult {
         private Double objectiveValue;
         private double[] variableValues;
-        private double[] dualSolution;
-        
-        /**
-         * The constructor of LP Result.
-         * 
-         * @param numberOfVariables
-         * @param numberOfConstraints 
-         */
-        protected LPResult(int numberOfVariables, int numberOfConstraints) {
-            objectiveValue=null;
-            variableValues=new double[numberOfVariables];
-            dualSolution=new double[numberOfVariables+numberOfConstraints+1];
-        }
         
         /**
          * Getter for the Objective value.
@@ -84,24 +73,6 @@ public class LPSolver {
         protected void setVariableValues(double[] variableValues) {
             this.variableValues = PHPMethods.array_clone(variableValues);
         }
-
-        /**
-         * Getter for the Dual solution.
-         * 
-         * @return 
-         */
-        public double[] getDualSolution() {
-            return PHPMethods.array_clone(dualSolution);
-        }
-        
-        /**
-         * Setter for the Dual solution.
-         * 
-         * @param dualSolution 
-         */
-        protected void setDualSolution(double[] dualSolution) {
-            this.dualSolution = PHPMethods.array_clone(dualSolution);
-        }
     }
     
     /**
@@ -115,9 +86,9 @@ public class LPSolver {
         private final double[] contraintBody;
         
         /**
-         * The sign of the constraint: LE (1) for <=, EQ (3) for =, GE (2) for >=
+         * The sign symbol: ">=", "<=", "=".
          */
-        private final int sign;
+        private final String sign;
         
         /**
          * The value of the constraint; the right part of the constraint.
@@ -128,12 +99,12 @@ public class LPSolver {
          * The constructor of LP Constraint.
          * 
          * @param constraintBody    The array with the parameters of the constrain
-         * @param sign              The sign of the constrain
+         * @param sign          The sign sign of the constrain
          * @param value             The right part value of the constrain
          */
-        public LPConstraint(double[] constraintBody, int sign, double value) {
-            this.contraintBody=PHPMethods.array_clone(constraintBody);
-            this.sign=sign;
+        public LPConstraint(double[] constraintBody, String sign, double value) {
+            this.contraintBody = PHPMethods.array_clone(constraintBody);
+            this.sign = sign;
             this.value=value;
         }
 
@@ -151,7 +122,7 @@ public class LPSolver {
          * 
          * @return 
          */
-        public int getSign() {
+        public String getSign() {
             return sign;
         }
         
@@ -166,117 +137,50 @@ public class LPSolver {
     }
     
     /**
-     * Pads a zero at the beginning of the array. This is required from the library
-     * of lpsolve.
-     * 
-     * @param array
-     * @return 
-     */
-    private static double[] pad1ZeroInfront(double[] array) {
-        double[] paddedArray = new double[array.length+1];
-        System.arraycopy(array, 0, paddedArray, 1, array.length);
-        return paddedArray;
-    }
-    
-    /**
-     * Checks whether the status corresponds to a valid solution
-     * 
-     * @param status    The status id returned by lpsolve
-     * @return          Boolean which indicates if the solution is valid
-     */
-    private static boolean isSolutionValid(int status) {
-        return (status == 0) || (status == 1) || (status == 11) || (status == 12);
-    }
-    
-    /**
      * Solves the LP problem and returns the result.
      * 
      * @param linearObjectiveFunction
      * @param linearConstraintsList
-     * @param lowBoundsOfVariables
-     * @param upBoundsOfVariables
-     * @param strictlyIntegerVariables
-     * @param scalingMode
+     * @param nonNegative
+     * @param maximize
      * @return
      */
-    public static LPResult solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, double[] lowBoundsOfVariables, double[] upBoundsOfVariables, boolean[] strictlyIntegerVariables, Integer scalingMode) {
-        try {
-            return _solve(linearObjectiveFunction, linearConstraintsList, lowBoundsOfVariables, upBoundsOfVariables, strictlyIntegerVariables, scalingMode);
-        } 
-        catch (LpSolveException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    private static LPResult _solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, double[] lowBoundsOfVariables, double[] upBoundsOfVariables, boolean[] strictlyIntegerVariables, Integer scalingMode) throws LpSolveException {
-        //Important note. All the double[] arrays that are passed to the lpsolve
-        //lib MUST start from 1. Do not use the 0 index because it is discarded.
-        
-        
-        int n = linearObjectiveFunction.length; //columns/variables
+    public static LPResult solve(double[] linearObjectiveFunction, List<LPSolver.LPConstraint> linearConstraintsList, boolean nonNegative, boolean maximize) {
         int m = linearConstraintsList.size();
-        
-        LPResult result = new LPResult(n,m);
-        
-        LpSolve solver = LpSolve.makeLp(0, n);
-        solver.setVerbose(LpSolve.NEUTRAL); //set verbose level
-        solver.setMaxim(); //set the problem to maximization
-        solver.setObjFn(pad1ZeroInfront(linearObjectiveFunction));
-        
-        if(scalingMode!=null) {
-            solver.setScaling(scalingMode);
-        }
-        
-        //lower bounds for the variables
-        if(lowBoundsOfVariables!=null && n==lowBoundsOfVariables.length) {
-            for(int i=0;i<n;++i) {
-                solver.setLowbo(i+1, lowBoundsOfVariables[i]); //plus one is required by the lib
-            }
-        }
-        
-        //upper bounds for the variables
-        if(upBoundsOfVariables!=null && n==upBoundsOfVariables.length) {
-            for(int i=0;i<n;++i) {
-                solver.setUpbo(i+1, upBoundsOfVariables[i]); //plus one is required by the lib
-            }
-        }
-        
-        //set variables that are strictly integers
-        if(strictlyIntegerVariables!=null && n==strictlyIntegerVariables.length) {
-            for(int i=0;i<n;++i) {
-                solver.setInt(i+1, strictlyIntegerVariables[i]); //plus one is required by the lib
-            }
-        }
-        
+
+        List<LinearConstraint> constraints = new ArrayList<>(m);
         for(LPSolver.LPConstraint constraint : linearConstraintsList) {
-            solver.addConstraint(pad1ZeroInfront(constraint.getContraintBody()), constraint.getSign(), constraint.getValue());
-        }
-        
-        
-        //solve the problem
-        int status = solver.solve();
-        if(isSolutionValid(status)==false) {
-            solver.setScaling(LpSolve.SCALE_NONE); //turn off automatic scaling
-            status = solver.solve();
-            if(isSolutionValid(status)==false) {
-                throw new RuntimeException("LPSolver Error: "+solver.getStatustext(status));
+            String sign = constraint.getSign();
+            Relationship relationship = null;
+            if(">=".equals(sign)) {
+                relationship = Relationship.GEQ;
             }
+            else if("<=".equals(sign)) {
+                relationship = Relationship.LEQ;
+            }
+            else if("=".equals(sign)) {
+                relationship = Relationship.EQ;
+            }
+            constraints.add(
+                    new LinearConstraint(constraint.getContraintBody(),
+                    relationship,
+                    constraint.getValue())
+            );
         }
-                
-        
-        result.setObjectiveValue((Double) solver.getObjective());
-        
-        double[] variables = result.getVariableValues(); //returns a copy
-        solver.getVariables(variables); //modifies values
-        result.setVariableValues(variables); //sets them back
-        
-        double[] solution = result.getDualSolution();
-        solver.getDualSolution(solution);
-        result.setDualSolution(solution);
-        
-        //delete problem and free the memory
-        solver.deleteLp();
-        
+
+        SimplexSolver solver = new SimplexSolver();
+        PointValuePair solution = solver.optimize(
+                new LinearObjectiveFunction(linearObjectiveFunction, 0.0),
+                new LinearConstraintSet(constraints),
+                maximize?GoalType.MAXIMIZE:GoalType.MINIMIZE,
+                new NonNegativeConstraint(nonNegative),
+                PivotSelectionRule.BLAND
+        );
+
+        LPResult result = new LPResult();
+        result.setObjectiveValue(solution.getValue());
+        result.setVariableValues(solution.getPoint());
+
         return result;
     }
 }
