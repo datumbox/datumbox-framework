@@ -1,23 +1,12 @@
 language: java
 sudo: required
-before_install:
-   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export JAVA_HOME=$(/usr/libexec/java_home); fi
-   - echo $JAVA_HOME
-matrix:
-  include:
-    - os: linux
-      jdk: oraclejdk8
-    - os: linux
-      jdk: openjdk8
-    - os: linux
-      jdk: oraclejdk9
-      sudo: required
-      dist: trusty
-      group: edge
+dist: trusty
 os:
   - linux
-  - osx
-install: mvn install -DskipTests=true -Dgpg.skip=true
+install: mvn install -DskipTests=true -Dgpg.skip=
+jdk:
+  - openjdk8
+  - oraclejdk8
 script:
   - mvn clean install -Dgpg.skip=true
 notifications:
