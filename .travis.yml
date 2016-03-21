@@ -1,14 +1,11 @@
 language: java
-sudo: required
-dist: trusty
-group: edge
+sudo: false
 os:
   - linux
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
-  - openjdk8
   - oraclejdk8
-  - oraclejdk9
+  - openjdk8
 script:
   - mvn clean install -Dgpg.skip=true
 notifications:
