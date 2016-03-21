@@ -23,9 +23,10 @@ NEW ALGORITHMS
 
 - Rewrite PCA to avoid using RealMatrix.
 - Speed up LDA: http://www.cs.ucsb.edu/~mingjia/cs240/doc/273811.pdf
-- Write a Mixture of Gaussians clustering method.
+- Factorization Machines: http://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.
 - Collaborative Filtering for Implicit Feedback Datasets: http://yifanhu.net/PUB/cf.pdf
+- Write a Mixture of Gaussians clustering method.
 - Include an anomaly detection algorithm.
 - Add the ability to search through the configuration space and find the best performing algorithmic configuration.
 

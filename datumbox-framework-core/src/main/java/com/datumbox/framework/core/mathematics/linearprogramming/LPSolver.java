@@ -99,7 +99,7 @@ public class LPSolver {
          * The constructor of LP Constraint.
          * 
          * @param constraintBody    The array with the parameters of the constrain
-         * @param sign          The sign sign of the constrain
+         * @param sign              The sign of the constrain
          * @param value             The right part value of the constrain
          */
         public LPConstraint(double[] constraintBody, String sign, double value) {
