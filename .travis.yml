@@ -3,10 +3,11 @@ sudo: required
 dist: trusty
 os:
   - linux
-install: mvn install -DskipTests=true -Dgpg.skip=
+install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - openjdk8
   - oraclejdk8
+  - oraclejdk9
 script:
   - mvn clean install -Dgpg.skip=true
 notifications:
