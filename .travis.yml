@@ -1,4 +1,8 @@
 language: java
+sudo: false
+os:
+  - linux
+  - osx
 install: mvn install -DskipTests=true -Dgpg.skip=true
 jdk:
   - oraclejdk8
