@@ -1,6 +1,7 @@
 language: java
 sudo: required
 dist: trusty
+group: edge
 os:
   - linux
 install: mvn install -DskipTests=true -Dgpg.skip=true
