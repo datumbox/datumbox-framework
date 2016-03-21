@@ -1,5 +1,8 @@
 language: java
-sudo: false
+sudo: required
+before_install:
+   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export JAVA_HOME=$(/usr/libexec/java_home); fi
+   - echo $JAVA_HOME
 matrix:
   include:
     - os: linux
@@ -11,8 +14,6 @@ matrix:
       sudo: required
       dist: trusty
       group: edge
-    - os: osx
-      env: JAVA_HOME=/usr/libexec/java_home
 os:
   - linux
   - osx
