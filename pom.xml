@@ -107,7 +107,7 @@
         <gpg-plugin-version>1.6</gpg-plugin-version>
         
         <!-- Code Dependencies -->
-        <commons-math-version>3.6</commons-math-version>
+        <commons-math-version>3.6.1</commons-math-version>
         <commons-csv-version>1.2</commons-csv-version>
         <slf4j-api-version>1.7.19</slf4j-api-version>
         <libsvm-version>3.21</libsvm-version>
