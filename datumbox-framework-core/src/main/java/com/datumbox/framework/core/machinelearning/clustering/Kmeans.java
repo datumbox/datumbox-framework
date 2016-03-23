@@ -78,17 +78,6 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         }
         
         /**
-         * @param clusterId
-         * @param copy 
-         * @see AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, AbstractClusterer.AbstractCluster)
-         */
-        protected Cluster(Integer clusterId, Cluster copy) {
-            super(clusterId, copy);
-            centroid = copy.centroid;
-            xi_sum = copy.xi_sum;
-        }
-        
-        /**
          * Returns the centroid of the cluster.
          * 
          * @return 

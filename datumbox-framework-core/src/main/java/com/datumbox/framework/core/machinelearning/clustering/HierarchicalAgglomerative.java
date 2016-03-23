@@ -66,17 +66,6 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
             centroid = new Record(new AssociativeArray(), null);
             xi_sum = new AssociativeArray();
         }
-        /**
-         * @param clusterId
-         * @param copy 
-         * @see AbstractCluster#AbstractCluster(java.lang.Integer, AbstractCluster)
-         */
-        protected Cluster(Integer clusterId, Cluster copy) {
-            super(clusterId, copy);
-            centroid = copy.centroid;
-            active = copy.active;
-            xi_sum = copy.xi_sum;
-        }
         
         /**
          * Returns the centroid of the cluster.

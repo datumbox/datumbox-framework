@@ -52,6 +52,11 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     private final Map<List<Integer>, Double> entries;
 
     /**
+     * The database connector.
+     */
+    private final DatabaseConnector dbc;
+
+    /**
      * Protected constructor with the provided the dimension arguments.
      *
      * @param rowDimension
@@ -65,8 +70,24 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.columnDimension = columnDimension;
 
         String dbName = "mrm_"+System.nanoTime();
-        DatabaseConnector dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
+        dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
         entries = dbc.getBigMap("tmp_entries", MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+    }
+
+    /**
+     * When we perform matrix operations, we often lose the reference to the original matrix and we are unable to
+     * close its database. Even though the JVM will close the db before shutdown, by adding a close method in the finalize
+     * we ensure that if the object is gc, we will release the connection sooner.
+     * @throws java.lang.Throwable
+     */
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            dbc.close();
+        }
+        finally {
+            super.finalize();
+        }
     }
 
     /** {@inheritDoc} */

@@ -8,6 +8,9 @@ Version 0.7.1-SNAPSHOT - Build 20160323
 - Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
 - Upgraded commons-math to latest stable version.
 - Replaced the ArrayRealVector with MapRealVector and the OpenMapRealMatrix with MapRealMatrix which are sparse implementations storing the data in Maps. As a result all methods that used RealMatrixes can benefit from disk-based training.
+- Call dbc.close() on the finalize of MapRealMatrix, to release the resources once gc. 
+- Removed the protected copy-constructor of Cluster algorithms. 
+- Speed optimizations on DPMM algorithms. The GaussianDPMM.Cluster object has breaking changes on the types of the fields.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

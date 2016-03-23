@@ -66,18 +66,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         protected AbstractCluster(Integer clusterId) {
             this.clusterId = clusterId;
         }
-        
-        /**
-         * Copy constructor, which takes as argument the new cluster id and the
-         * cluster that we want to copy. We produce a shallow copy of the object.
-         * 
-         * @param clusterId
-         * @param copy 
-         */
-        protected AbstractCluster(Integer clusterId, AbstractCluster copy) {
-            this.clusterId = clusterId;
-            labelY = copy.labelY;
-        }
 
         /** {@inheritDoc} */
         @Override

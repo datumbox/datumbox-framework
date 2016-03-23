@@ -16,7 +16,6 @@
 package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.MapRealVector;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
@@ -24,6 +23,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
+import org.apache.commons.math3.linear.OpenMapRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
 import java.util.Map;
@@ -73,21 +73,8 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             this.dimensions = dimensions;
             this.alphaWords = alphaWords;
             
-            wordCounts = new MapRealVector(dimensions);
+            wordCounts = new OpenMapRealVector(dimensions);
             wordcounts_plusalpha = estimateWordCountsPlusAlpha();
-        }
-        
-        /**
-         * @param clusterId
-         * @param copy 
-         * @see AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, AbstractClusterer.AbstractCluster)
-         */
-        protected Cluster(Integer clusterId, Cluster copy) {
-            super(clusterId, copy);
-            dimensions = copy.dimensions;
-            alphaWords = copy.alphaWords; 
-            wordCounts = copy.wordCounts;
-            wordcounts_plusalpha = copy.wordcounts_plusalpha;
         }
         
         /** {@inheritDoc} */
@@ -156,21 +143,14 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             
         }
         
-        /** {@inheritDoc} */
-        @Override
-        protected Cluster copy2new(Integer newClusterId) {
-            return new Cluster(newClusterId, this);
-        }
-        
         /**
          * Estimates the WordCountsPlusAlpha which is stored internally in the
          * cluster for performance reasons.
          * 
          * @return 
          */
-        private double estimateWordCountsPlusAlpha() {    
-            RealVector aVector = new MapRealVector(dimensions).mapAddToSelf(alphaWords);
-            RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
+        private double estimateWordCountsPlusAlpha() {
+            RealVector wordCountsPlusAlpha = wordCounts.mapAdd(alphaWords);
             return C(wordCountsPlusAlpha);
         }
         

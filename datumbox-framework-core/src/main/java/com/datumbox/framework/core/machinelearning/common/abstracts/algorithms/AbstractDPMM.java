@@ -67,16 +67,6 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         protected AbstractCluster(Integer clusterId) {
             super(clusterId);
         }
-        
-        /**
-         * @param clusterId
-         * @param copy 
-         * @see AbstractClusterer.AbstractCluster#AbstractCluster(java.lang.Integer, AbstractClusterer.AbstractCluster)
-         */
-        protected AbstractCluster(Integer clusterId, AbstractCluster copy) {
-            super(clusterId, copy);
-            featureIds = copy.featureIds;
-        }
 
         /**
          * Getter for the featureIds which is a mapping between the column names
@@ -107,22 +97,14 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
          * @return      The log posterior PDF
          */
         protected abstract double posteriorLogPdf(Record r);
-        
+
         /** {@inheritDoc} */
         @Override
         protected abstract void add(Record r);
-        
+
         /** {@inheritDoc} */
         @Override
         protected abstract void remove(Record r);
-        
-        /**
-         * Produces a shallow copy of the cluster with a newClusterId.
-         * 
-         * @param newClusterId
-         * @return 
-         */
-        protected abstract AbstractCluster copy2new(Integer newClusterId);
     }
     
     /** 
@@ -382,14 +364,13 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     private int collapsedGibbsSampling(Dataframe dataset) {
         AbstractModelParameters modelParameters = kb().getModelParameters();
         
-        Map<Integer, CL> tempClusterMap = kb().getDbc().getBigMap("tmp_tempClusterMap", MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        tempClusterMap.putAll(modelParameters.getClusterMap());
+        Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
         AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
         
         double alpha = trainingParameters.getAlpha();
         
         //Initialize clusters, create a cluster for every xi
-        Integer newClusterId = tempClusterMap.size(); //start counting the Ids based on clusters in the list
+        Integer newClusterId = clusterMap.size(); //start counting the Ids based on clusters in the list
 
         if(trainingParameters.getInitializationMethod()==AbstractTrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD) {
             for(Map.Entry<Integer, Record> e : dataset.entries()) {
@@ -399,7 +380,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
                 cluster.add(r);
-                tempClusterMap.put(newClusterId, cluster);
+                clusterMap.put(newClusterId, cluster);
 
                 //add the record in the new cluster
                 r = new Record(r.getX(), r.getY(), newClusterId, r.getYPredictedProbabilities());
@@ -418,7 +399,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
             for(int i=0;i<numberOfNewClusters;++i) {
                 //generate a new cluster
                 CL cluster = createNewCluster(newClusterId);
-                tempClusterMap.put(newClusterId, cluster);
+                clusterMap.put(newClusterId, cluster);
 
                 ++newClusterId;
             }
@@ -433,14 +414,14 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                 r = new Record(r.getX(), r.getY(), assignedClusterId, r.getYPredictedProbabilities());
                 dataset._unsafe_set(rId, r);
                 
-                CL c = getFromClusterMap(assignedClusterId, tempClusterMap);
+                CL c = getFromClusterMap(assignedClusterId, clusterMap);
                 c.add(r);
-                tempClusterMap.put(assignedClusterId, c);
+                clusterMap.put(assignedClusterId, c);
             }
         }
 
                 
-        int n = tempClusterMap.size();
+        int n = clusterMap.size();
         
         int maxIterations = trainingParameters.getMaxIterations();
         
@@ -456,20 +437,20 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                 Record r = e.getValue();
                 
                 Integer pointClusterId = (Integer) r.getYPredicted();
-                CL ci = getFromClusterMap(pointClusterId, tempClusterMap);
+                CL ci = getFromClusterMap(pointClusterId, clusterMap);
                 
                 //remove the point from the cluster
                 ci.remove(r);
                 
                 //if empty cluster remove it
                 if(ci.size()==0) {
-                    tempClusterMap.remove(pointClusterId);
+                    clusterMap.remove(pointClusterId);
                 }
                 else {
-                    tempClusterMap.put(pointClusterId, ci);
+                    clusterMap.put(pointClusterId, ci);
                 }
                 
-                AssociativeArray condProbCiGivenXiAndOtherCi = clusterProbabilities(r, n, tempClusterMap);
+                AssociativeArray condProbCiGivenXiAndOtherCi = clusterProbabilities(r, n, clusterMap);
                                 
                 //Calculate the probabilities of assigning the point to a new cluster
                 //compute P*(X[i]) = P(X[i]|λ)
@@ -497,7 +478,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                     
                     cNew.add(r);
                     
-                    tempClusterMap.put(newClusterId, cNew);
+                    clusterMap.put(newClusterId, cNew);
                     
                     noChangeMade=false;
                     
@@ -510,24 +491,15 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
                         noChangeMade=false;
                     }
                     
-                    CL c = getFromClusterMap(sampledClusterId, tempClusterMap);
+                    CL c = getFromClusterMap(sampledClusterId, clusterMap);
                     c.add(r); //add it to the cluster (or just add it back)
-                    tempClusterMap.put(sampledClusterId, c);
+                    clusterMap.put(sampledClusterId, c);
                 }
                 
             }
             
             ++iteration;
         }
-        
-        //copy the values in the map and update the cluster ids
-        Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
-        int cid = clusterMap.size();
-        for(CL cluster : tempClusterMap.values()) {
-            clusterMap.put(cid, (CL) cluster.copy2new(cid));
-            cid++;
-        }
-        kb().getDbc().dropBigMap("tmp_tempClusterMap", tempClusterMap);
         
         return iteration;
     }

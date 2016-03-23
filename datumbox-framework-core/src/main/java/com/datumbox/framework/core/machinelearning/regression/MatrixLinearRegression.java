@@ -17,7 +17,6 @@ package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.MapRealVector;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
@@ -30,6 +29,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
 import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.OpenMapRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -141,7 +141,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         
-        RealVector coefficients = new MapRealVector(d);
+        RealVector coefficients = new OpenMapRealVector(d);
         for(Map.Entry<Object, Double> entry : thitas.entrySet()) {
             Integer featureId = featureIds.get(entry.getKey());
             coefficients.setEntry(featureId, entry.getValue());

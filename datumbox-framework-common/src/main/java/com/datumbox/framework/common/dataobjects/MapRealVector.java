@@ -171,7 +171,7 @@ public class MapRealVector extends OpenMapRealVector {
         final int m = this.getDimension();
         final int n = v.getDimension();
         final RealMatrix product;
-        if(m*n > 10000) { //use only in big values
+        if(m > 1000000) { //use only in big values
             product = new MapRealMatrix(m, n);
         }
         else {

@@ -16,6 +16,7 @@
 package com.datumbox.framework.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
+import org.apache.commons.math3.linear.OpenMapRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -102,7 +103,6 @@ public class MatrixDataframe {
 
         conf = dataset.conf;
         MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
-        
         
         if(dataset.isEmpty()) {
             return m;
@@ -227,8 +227,9 @@ public class MatrixDataframe {
         }
         
         int d = featureIdsReference.size();
-        
-        RealVector v = new MapRealVector(d);
+
+        //create an Map-backed vector only if we have available info about conf.
+        RealVector v = (conf != null)?new MapRealVector(d):new OpenMapRealVector(d);
         
         boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         
