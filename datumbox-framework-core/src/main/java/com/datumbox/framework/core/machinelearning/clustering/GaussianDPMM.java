@@ -73,8 +73,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private int meanDf;
         
         //internal vars for calculation
-        private transient RealVector xi_sum = null;
-        private transient RealMatrix xi_square_sum = null;
+        private RealVector xi_sum = null;
+        private BlockRealMatrix xi_square_sum = null;
         
         //Cache
         private transient volatile Double cache_covariance_determinant = null;
@@ -217,7 +217,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             //update cluster clusterParameters
             if(size==0) {
                 xi_sum=rv;
-                xi_square_sum=rv.outerProduct(rv);
+                int n = rv.getDimension();
+                xi_square_sum=new BlockRealMatrix(n,n).add(rv.outerProduct(rv));
             }
             else {
                 xi_sum=xi_sum.add(rv);
