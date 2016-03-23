@@ -378,7 +378,6 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      * Implementation of Collapsed Gibbs Sampling algorithm.
      * 
      * @param dataset The list of points that we want to cluster
-     * @param maxIterations The maximum number of iterations
      */
     private int collapsedGibbsSampling(Dataframe dataset) {
         AbstractModelParameters modelParameters = kb().getModelParameters();

@@ -211,8 +211,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     private Map<Integer, Record> records;
     private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
     
-    private final DatabaseConnector dbc; 
-    private final Configuration conf; 
+    private final DatabaseConnector dbc;
+
+    /**
+     * The configuration object used to create the Dataframe. It is defined as protected to be accessible by classes
+     * that extend the Dataframe or the MatrixDataframe class which is on the same package.
+     */
+    protected final Configuration conf;
     
     /**
      * This executor is used for the parallel processing of streams with custom 
@@ -227,10 +232,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Dataframe(Configuration conf) {
         this.conf = conf;
-        
-        //we dont need to have a unique name, because it is not used by the connector on the current implementations
-        //String dbName = "dts_"+new BigInteger(130, RandomGenerator.getThreadLocalRandom()).toString(32);
-        String dbName = "dts";
+
+        String dbName = "dts_"+System.nanoTime();
         dbc = this.conf.getDbConfig().getConnector(dbName);
         
         records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true, true);
@@ -449,7 +452,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /**
      * Returns the index of the first occurrence of the specified element in this 
      * Dataframe, or null if this Dataframe does not contain the element.
-     * WARNING: The Recordsare checked only for their X and Y values, not for 
+     * WARNING: The Records are checked only for their X and Y values, not for
      * the yPredicted and yPredictedProbabilities values.
      * 
      * @param o

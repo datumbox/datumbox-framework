@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.MapRealVector;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
@@ -23,7 +24,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
-import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 
 import java.util.Map;
@@ -73,7 +73,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
             this.dimensions = dimensions;
             this.alphaWords = alphaWords;
             
-            wordCounts = new ArrayRealVector(dimensions); 
+            wordCounts = new MapRealVector(dimensions);
             wordcounts_plusalpha = estimateWordCountsPlusAlpha();
         }
         
@@ -95,8 +95,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         protected double posteriorLogPdf(Record r) {
             RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);
 
-            RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
-            RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
+            RealVector wordCountsPlusAlpha = wordCounts.mapAdd(alphaWords);
 
             double logPdf = C(wordCountsPlusAlpha.add(x_mu))-wordcounts_plusalpha;
             return logPdf;
@@ -170,7 +169,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
          * @return 
          */
         private double estimateWordCountsPlusAlpha() {    
-            RealVector aVector = new ArrayRealVector(dimensions, alphaWords);
+            RealVector aVector = new MapRealVector(dimensions).mapAddToSelf(alphaWords);
             RealVector wordCountsPlusAlpha = wordCounts.add(aVector);
             return C(wordCountsPlusAlpha);
         }

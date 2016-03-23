@@ -1,12 +1,13 @@
 CHANGELOG
 =========
 
-Version 0.7.1-SNAPSHOT - Build 20160322
+Version 0.7.1-SNAPSHOT - Build 20160323
 ---------------------------------------
 
-- Removing Apache Commons Lang from the dependencies. Adding a faster custom unescapeHtml method in HTMLParser.
-- Removing lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
-- Upgrading commons-math to latest stable version.
+- Removed Apache Commons Lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
+- Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
+- Upgraded commons-math to latest stable version.
+- Replaced the ArrayRealVector with MapRealVector and the OpenMapRealMatrix with MapRealMatrix which are sparse implementations storing the data in Maps. As a result all methods that used RealMatrixes can benefit from disk-based training.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

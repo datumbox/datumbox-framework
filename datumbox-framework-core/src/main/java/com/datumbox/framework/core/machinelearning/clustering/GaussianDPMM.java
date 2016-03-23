@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.MapRealVector;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
@@ -23,7 +24,11 @@ import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
-import org.apache.commons.math3.linear.*;
+import org.apache.commons.math3.linear.BlockRealMatrix;
+import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
+
 
 import java.util.Map;
 
@@ -31,10 +36,7 @@ import java.util.Map;
 
 /**
  * The GaussianDPMM implements Dirichlet Process Mixture Models with Multivariate 
- * Normal and Normal-Inverse-Wishart prior. 
- * 
- * WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
- * data to be loaded in memory.
+ * Normal and Normal-Inverse-Wishart prior.
  * 
  * References:
  * http://blog.datumbox.com/overview-of-cluster-analysis-and-dirichlet-process-mixture-models/
@@ -60,23 +62,23 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private final int kappa0;
         private final int nu0;
         private final RealVector mu0;
-        private final RealMatrix psi0;
+        private final BlockRealMatrix psi0;
         
         //cluster parameters
         private RealVector mean;
-        private RealMatrix covariance;
+        private BlockRealMatrix covariance;
         
         //validation - confidence interval vars
-        private RealMatrix meanError;
+        private BlockRealMatrix meanError;
         private int meanDf;
         
         //internal vars for calculation
-        private RealVector xi_sum;
-        private RealMatrix xi_square_sum; 
+        private transient RealVector xi_sum = null;
+        private transient RealMatrix xi_square_sum = null;
         
         //Cache
-        private volatile Double cache_covariance_determinant; 
-        private volatile RealMatrix cache_covariance_inverse; 
+        private transient volatile Double cache_covariance_determinant = null;
+        private transient volatile RealMatrix cache_covariance_inverse = null;
         
         /**
          * @param clusterId
@@ -87,7 +89,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          * @param psi0
          * @see AbstractClusterer.AbstractCluster
          */
-        protected Cluster(Integer clusterId, int dimensions, int kappa0, int nu0, RealVector mu0, RealMatrix psi0) {
+        protected Cluster(Integer clusterId, int dimensions, int kappa0, int nu0, RealVector mu0, BlockRealMatrix psi0) {
             super(clusterId);
             
             if(nu0<dimensions) {
@@ -95,15 +97,15 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             }
             
             if(mu0==null) {
-                mu0 = new ArrayRealVector(dimensions); //0 vector
+                mu0 = new MapRealVector(dimensions); //0 vector
             }
             
             if(psi0==null) {
-                psi0 = MatrixUtils.createRealIdentityMatrix(dimensions); //identity matrix
+                psi0 = getIdentity(dimensions); //identity matrix
             }
 
-            mean = new ArrayRealVector(dimensions);
-            covariance = MatrixUtils.createRealIdentityMatrix(dimensions);
+            mean = new MapRealVector(dimensions);
+            covariance = getIdentity(dimensions);
             
             meanError = calculateMeanError(psi0, kappa0, nu0);
             meanDf = nu0-dimensions+1;
@@ -114,6 +116,20 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             this.mu0 = mu0;
             this.psi0 = psi0;
             this.dimensions = dimensions;
+        }
+
+        /**
+         * Utility method that returns the identity matrix.
+         *
+         * @param n
+         * @return
+         */
+        private BlockRealMatrix getIdentity(int n) {
+            BlockRealMatrix identity = new BlockRealMatrix(n, n);
+            for(int i=0;i<n;i++) {
+                identity.setEntry(i,i,1.0);
+            }
+            return identity;
         }
         
         /**
@@ -227,9 +243,9 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             updateClusterParameters();
         }
         
-        private RealMatrix calculateMeanError(RealMatrix Psi, int kappa, int nu) {
+        private BlockRealMatrix calculateMeanError(BlockRealMatrix Psi, int kappa, int nu) {
             //Reference: page 18, equation 228 at http://www.cs.ubc.ca/~murphyk/Papers/bayesGauss.pdf
-            return Psi.scalarMultiply(1.0/(kappa*(nu-dimensions+1.0)));
+            return (BlockRealMatrix)Psi.scalarMultiply(1.0/(kappa*(nu-dimensions+1.0)));
         }
                 
         /** {@inheritDoc} */
@@ -254,14 +270,14 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
             RealMatrix C = xi_square_sum.subtract( ( mu.outerProduct(mu) ).scalarMultiply(size) );
 
-            RealMatrix psi = psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*size/(double)kappa_n) ));
+            BlockRealMatrix psi = psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*size/(double)kappa_n) ));
             //C = null;
             //mu_mu0 = null;
 
             mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(size) ).mapDivide(kappa_n);
             
             synchronized(this) {
-                covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
+                covariance = (BlockRealMatrix)psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
                 cache_covariance_determinant = null;
                 cache_covariance_inverse = null;
             }
@@ -404,7 +420,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
                 modelParameters.getD(),
                 trainingParameters.getKappa0(), 
                 trainingParameters.getNu0(),
-                mu0!=null?new ArrayRealVector(mu0):null,
+                mu0!=null?new MapRealVector(mu0):null,
                 psi0!=null?new BlockRealMatrix(psi0):null
                 
         );

@@ -15,8 +15,7 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.OpenMapRealMatrix;
+import com.datumbox.framework.common.Configuration;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -26,13 +25,18 @@ import java.util.Map;
  * The MatrixDataframe class is responsible for converting a Dataframe object to a
  Matrix representation. Some of the methods on framework require working with
  matrices and this class provides the tools to achieve the necessary conversions.
- The major drawback of using this class is that all the data from the Dataframe
- object are brought in memory and this limits the amount of data that we can
- use.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MatrixDataframe {
+
+    /**
+     * A reference to the most recently used Configuration object. It is necessary to define it static because
+     * some methods of the RealMatrix require generating new object without passing the configuration file.
+     * To have access on the config and build the data map, we require setting this static field with the latest Configuration
+     * object. It is package protected inorder to be accessible from the MapRealMatrix class.
+     */
+    static Configuration conf;
     
     private final RealMatrix X;
     private final RealVector Y;
@@ -95,8 +99,9 @@ public class MatrixDataframe {
         if(addConstantColumn) {
             ++d;
         }
-        
-        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n));
+
+        conf = dataset.conf;
+        MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
         
         
         if(dataset.isEmpty()) {
@@ -165,8 +170,9 @@ public class MatrixDataframe {
         
         int n = newData.size();
         int d = featureIdsReference.size();
-        
-        MatrixDataframe m = new MatrixDataframe(new OpenMapRealMatrix(n, d), new ArrayRealVector(n));
+
+        conf = newData.conf;
+        MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(newData.isEmpty()) {
             return m;
@@ -222,7 +228,7 @@ public class MatrixDataframe {
         
         int d = featureIdsReference.size();
         
-        RealVector v = new ArrayRealVector(d);
+        RealVector v = new MapRealVector(d);
         
         boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         

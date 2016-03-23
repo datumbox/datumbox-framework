@@ -44,9 +44,6 @@ import java.util.Map;
  * Implementation of Principal Component Analysis. The method can be used to project
  * the Dataframe to the orthogonal space and to eliminate components with low variance.
  * 
- * WARNING: This class copies the Dataframe to a RealMatrix which forces all of the
- * data to be loaded in memory.
- * 
  * References: 
  * Intelligent Data Analysis and Probabilistic Inference Slide 15
  * Advanced statistical machine learning and pattern recognition slides 2, tutorial 3, cw 1 matlab code
@@ -320,17 +317,14 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
             }
         }
         modelParameters.setMean(meanValues);
-        
-        RealMatrix components;
-        double[] eigenValues;
-        
+
         //dxd matrix
         RealMatrix covarianceDD = (X.transpose().multiply(X)).scalarMultiply(1.0/(n-1.0)); 
 
         EigenDecomposition decomposition = new EigenDecomposition(covarianceDD);
-        eigenValues = decomposition.getRealEigenvalues();
+        double[] eigenValues = decomposition.getRealEigenvalues();
 
-        components = decomposition.getV();
+        RealMatrix components = decomposition.getV();
         
         //Whiten Components W = U*L^0.5; To whiten them we multiply with L^0.5.
         if(kb().getTrainingParameters().isWhitened()) { 
