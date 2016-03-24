@@ -49,7 +49,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     /**
      * The map that stores the internal data.
      */
-    private final Map<List<Integer>, Double> entries;
+    private final Map<Long, Double> entries;
 
     /**
      * The database connector.
@@ -121,7 +121,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     public double getEntry(int row, int column) throws OutOfRangeException {
         MatrixUtils.checkRowIndex(this, row);
         MatrixUtils.checkColumnIndex(this, column);
-        return entries.getOrDefault(Arrays.asList(row, column), 0.0);
+        return entries.getOrDefault(computeKey(row, column), 0.0);
     }
 
     /** {@inheritDoc} */
@@ -130,10 +130,21 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         MatrixUtils.checkRowIndex(this, row);
         MatrixUtils.checkColumnIndex(this, column);
         if(value == 0.0) {
-            entries.remove(Arrays.asList(row, column)); //if it is exactly 0.0 don't store it. Also make sure you remove any previous key.
+            entries.remove(computeKey(row, column)); //if it is exactly 0.0 don't store it. Also make sure you remove any previous key.
         }
         else {
-            entries.put(Arrays.asList(row, column), value);
+            entries.put(computeKey(row, column), value);
         }
+    }
+
+    /**
+     * Compute the map key of the element of the matrix.
+     *
+     * @param row
+     * @param column
+     * @return
+     */
+    private long computeKey(int row, int column) {
+        return (long)row * columnDimension + column;
     }
 }
