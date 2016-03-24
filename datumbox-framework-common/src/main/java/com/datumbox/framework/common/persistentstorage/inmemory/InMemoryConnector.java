@@ -53,6 +53,7 @@ public class InMemoryConnector extends AbstractAutoCloseConnector {
         super();
         this.database = database;
         this.dbConf = dbConf;
+        logger.trace("Opened db "+ database);
     }
     
     /** {@inheritDoc} */
@@ -100,6 +101,7 @@ public class InMemoryConnector extends AbstractAutoCloseConnector {
             return; 
         }
         super.close();
+        logger.trace("Closed db "+ database);
     }
         
     /** {@inheritDoc} */

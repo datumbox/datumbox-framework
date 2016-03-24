@@ -90,6 +90,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
         super();
         this.database = database;
         this.dbConf = dbConf;
+        logger.trace("Opened db "+ database);
     }
 
     /** {@inheritDoc} */
@@ -115,9 +116,13 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     /** {@inheritDoc} */
     @Override
     public void close() {
+        if(isClosed()){
+            return;
+        }
         super.close();
         
         closeDBRegistry();
+        logger.trace("Closed db "+ database);
     }
     
     /** {@inheritDoc} */

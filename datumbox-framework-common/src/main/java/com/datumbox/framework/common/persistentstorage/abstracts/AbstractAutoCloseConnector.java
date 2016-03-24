@@ -16,6 +16,8 @@
 package com.datumbox.framework.common.persistentstorage.abstracts;
 
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -28,7 +30,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public abstract class AbstractAutoCloseConnector implements DatabaseConnector {
-    
+    /**
+     * Logger for all Connectors.
+     */
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final AtomicBoolean isClosed = new AtomicBoolean(false);
     
     private Thread hook;
