@@ -40,7 +40,7 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     
     private boolean compressed = true;
 
-    private boolean hybridized = false;
+    private boolean hybridized = true;
     
     /**
      * Default Constructor.
