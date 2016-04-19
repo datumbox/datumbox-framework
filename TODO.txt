@@ -8,7 +8,10 @@ NEW FEATURES
 ============
 
 - Create a storage engine for BerkeleyDB.
-- Add the ability to call Machine Learning algorithms from command line like in Mahout.
+- Add the ability to call Machine Learning algorithms from command line or Python:
+    - https://pypi.python.org/pypi/javabridge
+    - https://github.com/LeeKamentsky/python-javabridge/
+    - https://github.com/fracpete/python-weka-wrapper
 
 
 DOCUMENTATION
