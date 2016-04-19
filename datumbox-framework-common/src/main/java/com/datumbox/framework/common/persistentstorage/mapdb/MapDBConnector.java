@@ -98,7 +98,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         DB db = openDB(DBType.PRIMARY_DB);
-        Atomic.Var<T> atomicVar = db.getAtomicVar(name);
+        Atomic.Var<Object> atomicVar = db.atomicVar(name).createOrOpen();
         atomicVar.set(serializableObject);
         db.commit();
     }
@@ -109,7 +109,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     public <T extends Serializable> T loadObject(String name, Class<T> klass) {
         assertConnectionOpen();
         DB db = openDB(DBType.PRIMARY_DB);
-        Atomic.Var<T> atomicVar = db.getAtomicVar(name);
+        Atomic.Var<Object> atomicVar = db.atomicVar(name).createOrOpen();
         return klass.cast(atomicVar.get());
     }
     
@@ -192,20 +192,15 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
             //return the appropriate type
             Map<K,V> map;
             if(DatabaseConnector.MapType.HASHMAP.equals(type)) {
-                map = db.createHashMap(name)
+                map = (Map<K,V>)db.hashMap(name)
                 .counterEnable()
-                .makeOrGet();
+                .createOrOpen();
             }
             else if(DatabaseConnector.MapType.TREEMAP.equals(type)) {
-                map = db.createTreeMap(name)
-                .valuesOutsideNodesEnable()
+                map = (Map<K,V>)db.treeMap(name)
+                //.valuesOutsideNodesEnable() //TODO: restore once implemented
                 .counterEnable()
-                .makeOrGet();
-
-                //HOTFIX: There is a race condition in BTreeMap (MapDB v1.0.9 - https://github.com/jankotek/mapdb/issues/664). Remove it once it's patched.
-                if(isConcurrent) {
-                    map = Collections.synchronizedMap(map);
-                }
+                .createOrOpen();
             }
             else {
                 throw new IllegalArgumentException("Unsupported MapType.");
@@ -224,7 +219,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
         if(dbType != null) {
             DB db = dbRegistry.get(dbType);
             if(isOpenDB(db)) {
-                db.delete(name);
+                //db.delete(name); //TODO: restore once implemented
             }
         }
         else {
@@ -255,16 +250,16 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     private DB openDB(DBType dbType) {
         DB db = dbRegistry.get(dbType);
         if(!isOpenDB(db)) {
-            DBMaker m;
+            DBMaker.Maker m;
             
             boolean permitCaching = true;
             if(dbType == DBType.PRIMARY_DB) {
                 //main storage
-                m = DBMaker.newFileDB(getDefaultPath().toFile());
+                m = DBMaker.fileDB(getDefaultPath().toFile());
             }
             else if(dbType == DBType.TEMP_DB_CACHED || dbType == DBType.TEMP_DB_UNCACHED) {
                 //temporary storage
-                m = DBMaker.newTempFileDB().deleteFilesAfterClose();
+                m = DBMaker.tempFileDB().deleteFilesAfterClose();
                 
                 if(dbType == DBType.TEMP_DB_UNCACHED) {
                     permitCaching = false;
@@ -275,19 +270,14 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
             }
             
             if(dbConf.isCompressed()) {
-                m = m.compressionEnable();
+                //m = m.compressionEnable(); //TODO: restore once implemented
             }
             
             if(permitCaching && dbConf.getCacheSize()>0) {
-                m = m.cacheLRUEnable().cacheSize(dbConf.getCacheSize()) ;
+                //m = m.cacheLRUEnable().cacheSize(dbConf.getCacheSize()); //TODO: restore once implemented
             }
-            else {
-                m = m.cacheDisable();
-            }
-            
-            m = m.transactionDisable();
 
-            m = m.asyncWriteEnable();
+            //m = m.asyncWriteEnable(); //TODO: restore once implemented
             
             m = m.closeOnJvmShutdown();
             
