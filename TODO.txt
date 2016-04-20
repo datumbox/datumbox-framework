@@ -2,6 +2,10 @@ CODE IMPROVEMENTS
 =================
 
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
+- Do not serialize nested bigmaps using MapDBs named variables, instead:
+    - Write a custom serialization mechanism on ModelParameters: http://stackoverflow.com/a/7290812
+    - Read/write fields with reflection except of unserializable bigmaps
+    - Find a way to initialize the bigmaps on read (we have no access on dbc). Perhaps pass this code on KB?
 
 
 NEW FEATURES
