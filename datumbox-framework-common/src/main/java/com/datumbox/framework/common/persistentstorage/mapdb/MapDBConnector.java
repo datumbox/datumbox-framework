@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractAutoCloseConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractDatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import org.mapdb.Atomic;
 import org.mapdb.DB;
@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConnector extends AbstractAutoCloseConnector {
+public class MapDBConnector extends AbstractDatabaseConnector {
     
     private final String database;
     private final MapDBConfiguration dbConf;
@@ -84,7 +84,7 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     /** 
      * @param database
      * @param dbConf
-     * @see AbstractAutoCloseConnector#AbstractAutoCloseConnector()
+     * @see AbstractDatabaseConnector#AbstractDatabaseConnector()
      */
     protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
         super();
@@ -99,8 +99,13 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
         assertConnectionOpen();
         DB db = openDB(DBType.PRIMARY_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
+
+        Map<String, Object> objRefs = preSerializer(serializableObject);
+
         atomicVar.set(serializableObject);
         db.commit();
+
+        postSerializer(serializableObject, objRefs);
     }
 
     /** {@inheritDoc} */
@@ -109,8 +114,13 @@ public class MapDBConnector extends AbstractAutoCloseConnector {
     public <T extends Serializable> T loadObject(String name, Class<T> klass) {
         assertConnectionOpen();
         DB db = openDB(DBType.PRIMARY_DB);
+
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
-        return klass.cast(atomicVar.get());
+        T serializableObject = klass.cast(atomicVar.get());
+
+        postDeserializer(serializableObject);
+
+        return serializableObject;
     }
     
     /** {@inheritDoc} */
