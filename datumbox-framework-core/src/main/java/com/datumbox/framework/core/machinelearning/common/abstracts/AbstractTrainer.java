@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.utilities.ReflectionMethods;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
@@ -29,9 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Base class for every Trainable Algorithm of the Framework. This includes Machine Learning
@@ -111,39 +110,30 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
          */
         private void bigMapInitializer(DatabaseConnector dbc) {
             //get all the fields from all the inherited classes
-            for(Field field : getAllFields(new LinkedList<>(), this.getClass())){
-
+            for(Field field : ReflectionMethods.getAllFields(new LinkedList<>(), this.getClass())){
                 //if the field is annotated with BigMap
                 if (field.isAnnotationPresent(BigMap.class)) {
-                    field.setAccessible(true);
-
-                    try {
-                        BigMap a = field.getAnnotation(BigMap.class);
-                        field.set(this, dbc.getBigMap(field.getName(), a.mapType(), a.storageHint(), a.concurrent(), false));
-                    } 
-                    catch (IllegalArgumentException | IllegalAccessException ex) {
-                        throw new RuntimeException(ex);
-                    }
-
+                    initializeBigMapField(dbc, field);
                 }
             }
         }
 
         /**
-         * Gets all the fields recursively from all the parent classes.
-         * 
-         * @param fields
-         * @param type
-         * @return 
+         * Initializes a field which is marked as BigMap.
+         *
+         * @param dbc
+         * @param field
          */
-        private List<Field> getAllFields(List<Field> fields, Class<?> type) {
-            fields.addAll(Arrays.asList(type.getDeclaredFields()));
+        private void initializeBigMapField(DatabaseConnector dbc, Field field) {
+            field.setAccessible(true);
 
-            if (type.getSuperclass() != null) {
-                fields = getAllFields(fields, type.getSuperclass());
+            try {
+                BigMap a = field.getAnnotation(BigMap.class);
+                field.set(this, dbc.getBigMap(field.getName(), a.mapType(), a.storageHint(), a.concurrent(), false));
             }
-
-            return fields;
+            catch (IllegalArgumentException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
