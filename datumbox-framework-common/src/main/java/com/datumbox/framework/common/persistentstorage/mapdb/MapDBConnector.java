@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -144,9 +143,9 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         
         try {
             Path defaultPath = getDefaultPath();
-            Files.deleteIfExists(defaultPath);
-            Files.deleteIfExists(Paths.get(defaultPath.toString()+".p"));
-            Files.deleteIfExists(Paths.get(defaultPath.toString()+".t"));
+            deleteIfExistsRecursively(defaultPath);
+            deleteIfExistsRecursively(Paths.get(defaultPath.toString()+".p"));
+            deleteIfExistsRecursively(Paths.get(defaultPath.toString()+".t"));
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);

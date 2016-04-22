@@ -109,7 +109,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     public void clear() {
         assertConnectionOpen();
         try {
-            Files.deleteIfExists(getDefaultPath());
+            deleteIfExistsRecursively(getDefaultPath());
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
