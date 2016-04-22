@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.1-SNAPSHOT - Build 20160328
+Version 0.7.1-SNAPSHOT - Build 20160423
 ---------------------------------------
 
 - Removed Apache Commons Lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
@@ -11,6 +11,7 @@ Version 0.7.1-SNAPSHOT - Build 20160328
 - Call dbc.close() on the finalize of MapRealMatrix, to release the resources once gc. 
 - Removed the protected copy-constructor of Cluster algorithms. 
 - Speed optimizations on DPMM algorithms. The GaussianDPMM.Cluster object has breaking changes on the types of the fields.
+- The persistence mechanism was rewritten to avoid serializing BigMaps that exist within Serializable objects.
 
 Version 0.7.0 - Build 20160319
 ------------------------------
