@@ -21,9 +21,13 @@ import com.datumbox.framework.common.utilities.ReflectionMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -181,5 +185,35 @@ public abstract class AbstractDatabaseConnector implements DatabaseConnector {
             }
         }
 
+    }
+
+    /**
+     * Deletes the file or folder recursively if it exists.
+     *
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    protected boolean deleteIfExistsRecursively(Path path) throws IOException {
+        try {
+            return Files.deleteIfExists(path);
+        }
+        catch (DirectoryNotEmptyException ex) {
+            //do recursive delete
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            return true;
+        }
     }
 }
