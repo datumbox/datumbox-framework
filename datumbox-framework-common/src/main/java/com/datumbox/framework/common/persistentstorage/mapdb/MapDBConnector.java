@@ -211,6 +211,11 @@ public class MapDBConnector extends AbstractDatabaseConnector {
                 //.valuesOutsideNodesEnable() //TODO: restore once implemented
                 .counterEnable()
                 .createOrOpen();
+
+                //HOTFIX: There is a race condition in BTreeMap (MapDB v1.0.9 - https://github.com/jankotek/mapdb/issues/664). Remove it once it's patched.
+                if(isConcurrent) {
+                    map = Collections.synchronizedMap(map);
+                }
             }
             else {
                 throw new IllegalArgumentException("Unsupported MapType.");
