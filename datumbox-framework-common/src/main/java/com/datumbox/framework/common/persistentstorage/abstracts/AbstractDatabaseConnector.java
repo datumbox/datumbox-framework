@@ -102,15 +102,17 @@ public abstract class AbstractDatabaseConnector implements DatabaseConnector {
         Map<String, Object> objReferences = new HashMap<>();
         for(Field field : ReflectionMethods.getAllFields(new LinkedList<>(), serializableObject.getClass())) {
 
-            //if the field is annotated with BigMap AND it is not serializable
-            if (field.isAnnotationPresent(BigMap.class) && !Serializable.class.isAssignableFrom(field.getDeclaringClass())) {
+            if (field.isAnnotationPresent(BigMap.class)) {
                 field.setAccessible(true);
 
                 try {
-                    //extract the reference to the object and put it in the map.
-                    objReferences.put(field.getName(), field.get(serializableObject));
-                    //then replace the reference with null to avoid serialization.
-                    field.set(serializableObject, null);
+                    Object value = field.get(serializableObject);
+                    if(!Serializable.class.isAssignableFrom(value.getClass())) { //if the field is annotated with BigMap AND the value is not serializable
+                        //extract the reference to the object and put it in the map.
+                        objReferences.put(field.getName(), value);
+                        //then replace the reference with null to avoid serialization.
+                        field.set(serializableObject, null);
+                    }
                 }
                 catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new RuntimeException(ex);
