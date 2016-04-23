@@ -3,6 +3,7 @@ CODE IMPROVEMENTS
 
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
 - Extend BigMap to pass Key and Value classes and enable the use of custom serializers.
+- Try to separate persistent storage in a separate module that is inherited by common.
 
 
 NEW FEATURES
