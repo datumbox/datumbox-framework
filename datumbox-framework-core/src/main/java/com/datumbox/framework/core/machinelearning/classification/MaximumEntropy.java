@@ -57,7 +57,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=List.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
         
         /** 
@@ -155,7 +155,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
@@ -207,7 +207,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = kb().getDbc();
-        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
         //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
         //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
@@ -265,7 +265,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             //calculate the model probabilities
             streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { //slow parallel loop

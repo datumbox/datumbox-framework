@@ -98,20 +98,22 @@ public interface DatabaseConnector extends AutoCloseable {
      * @return 
      */
     public <T extends Serializable> T loadObject(String name, Class<T> klass);
-    
+
     /**
      * Creates or loads a Big Map collection. 
-     * 
-     * @param <K>
-     * @param <V>
+     *
      * @param name
+     * @param keyClass
+     * @param valueClass
      * @param type
      * @param storageHint
      * @param isConcurrent
      * @param isTemporary
-     * @return 
+     * @param <K>
+     * @param <V>
+     * @return
      */
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary);
+    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary);
     
     /**
      * Drops the Big Map.

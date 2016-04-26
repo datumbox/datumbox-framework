@@ -146,7 +146,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         /**
          * It stores a map with all the clusters.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
+        @BigMap(keyClass=Integer.class, valueClass=AbstractCluster.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
         private Map<Integer, CL> clusterMap;
 
         /** 

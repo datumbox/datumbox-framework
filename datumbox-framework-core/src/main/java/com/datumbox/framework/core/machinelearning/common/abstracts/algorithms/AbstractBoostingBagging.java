@@ -168,7 +168,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = kb().getDbc();
-        Map<Object, DataTable2D> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        Map<Object, DataTable2D> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
         
         //initialize array of recordDecisions
         for(Integer rId : newData.index()) {

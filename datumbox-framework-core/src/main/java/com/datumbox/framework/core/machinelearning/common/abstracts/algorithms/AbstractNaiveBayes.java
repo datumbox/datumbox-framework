@@ -56,7 +56,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
 
         private Map<Object, Double> logPriors = new HashMap<>(); //prior log probabilities of the classes
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=List.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
         
         /** 
@@ -168,7 +168,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }

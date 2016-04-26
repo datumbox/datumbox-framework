@@ -129,7 +129,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
 
             try {
                 BigMap a = field.getAnnotation(BigMap.class);
-                field.set(this, dbc.getBigMap(field.getName(), a.mapType(), a.storageHint(), a.concurrent(), false));
+                field.set(this, dbc.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
             }
             catch (IllegalArgumentException | IllegalAccessException ex) {
                 throw new RuntimeException(ex);

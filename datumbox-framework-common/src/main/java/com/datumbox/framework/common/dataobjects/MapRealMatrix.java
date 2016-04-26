@@ -69,7 +69,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
 
         String dbName = "mrm_"+System.nanoTime();
         dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
-        entries = dbc.getBigMap("tmp_entries", MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        entries = dbc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**

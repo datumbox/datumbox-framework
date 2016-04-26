@@ -42,7 +42,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     public static class ModelParameters extends AbstractRecommender.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
+        @BigMap(keyClass=List.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
         private Map<List<Object>, Double> similarities; //the similarity map among observations
         
         /** 

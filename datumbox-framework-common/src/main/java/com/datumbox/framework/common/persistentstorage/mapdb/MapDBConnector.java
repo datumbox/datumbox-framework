@@ -17,9 +17,7 @@ package com.datumbox.framework.common.persistentstorage.mapdb;
 
 import com.datumbox.framework.common.persistentstorage.abstracts.AbstractDatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import org.mapdb.Atomic;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.mapdb.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -154,7 +152,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     
     /** {@inheritDoc} */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, DatabaseConnector.MapType type, DatabaseConnector.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, DatabaseConnector.MapType type, DatabaseConnector.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
         if(storageHint == DatabaseConnector.StorageHint.IN_MEMORY && dbConf.isHybridized()) {
@@ -203,12 +201,16 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             if(DatabaseConnector.MapType.HASHMAP.equals(type)) {
                 map = db.createHashMap(name)
                 .counterEnable()
+                .keySerializer(getSerializerFromClass(keyClass))
+                .valueSerializer(getSerializerFromClass(valueClass))
                 .makeOrGet();
             }
             else if(DatabaseConnector.MapType.TREEMAP.equals(type)) {
                 map = db.createTreeMap(name)
                 .valuesOutsideNodesEnable()
                 .counterEnable()
+                .keySerializer(getBTreeKeySerializerFromClass(keyClass))
+                .valueSerializer(getSerializerFromClass(valueClass))
                 .makeOrGet();
 
                 //HOTFIX: There is a race condition in BTreeMap (MapDB v1.0.9 - https://github.com/jankotek/mapdb/issues/664). Remove it once it's patched.
@@ -250,7 +252,48 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     }
     
     //private methods of connector class
-    
+
+    /**
+     * Returns the appropriate Serializer (if one exists) else null.
+     *
+     * @param klass
+     * @return
+     */
+    private Serializer<?> getSerializerFromClass(Class<?> klass) {
+        if(klass == Integer.class) {
+            return Serializer.INTEGER;
+        }
+        else if(klass == Long.class) {
+            return Serializer.LONG;
+        }
+        else if(klass == Boolean.class) {
+            return Serializer.BOOLEAN;
+        }
+        else if(klass == String.class) {
+            return Serializer.STRING;
+        }
+        return null; //Default POJO serializer
+    }
+
+    /**
+     * Returns the appropriate BTreeKeySerializer (if one exists) else null.
+     *
+     * @param klass
+     * @return
+     */
+    private BTreeKeySerializer<?> getBTreeKeySerializerFromClass(Class<?> klass) {
+        if(klass == Integer.class) {
+            return BTreeKeySerializer.ZERO_OR_POSITIVE_INT;
+        }
+        else if(klass == Long.class) {
+            return BTreeKeySerializer.ZERO_OR_POSITIVE_LONG;
+        }
+        else if(klass == String.class) {
+            return BTreeKeySerializer.STRING;
+        }
+        return null; //Default POJO serializer
+    }
+
     private boolean isOpenDB(DB db) {
         return !(db == null || db.isClosed());
     }

@@ -42,7 +42,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
         /** 
@@ -160,8 +160,8 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         DatabaseConnector dbc = kb().getDbc();
         
         Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
-        Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
+        Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
 
         
         //build the maps with the feature statistics and counts
@@ -191,7 +191,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         Logger logger = LoggerFactory.getLogger(AbstractCategoricalFeatureSelector.class);
         logger.debug("filterData()");
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();

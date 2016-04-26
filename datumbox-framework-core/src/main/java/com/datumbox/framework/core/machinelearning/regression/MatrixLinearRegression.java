@@ -51,7 +51,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
         /**
          * Feature set
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds; //list of all the supported features
         
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features

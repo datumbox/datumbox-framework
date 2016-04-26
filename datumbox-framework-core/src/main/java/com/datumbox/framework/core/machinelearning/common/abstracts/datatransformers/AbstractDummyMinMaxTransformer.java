@@ -46,19 +46,19 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
         /**
          * The reference levels of each categorical variable.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=Object.class, valueClass=Object.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Object> referenceLevels;
         
         /**
          * The minimum value of each numerical variable.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> minColumnValues;
         
         /**
          * The maximum value of each numerical variable.
          */
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> maxColumnValues;
 
         /** 

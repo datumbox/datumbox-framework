@@ -63,19 +63,19 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         
         private int totalIterations;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
+        @BigMap(keyClass=List.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
         private Map<List<Object>, Integer> topicAssignmentOfDocumentWord; //the Z in the graphical model
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=List.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<List<Integer>, Integer> documentTopicCounts; //the nj(d) in the papers
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
+        @BigMap(keyClass=List.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
         private Map<List<Object>, Integer> topicWordCounts; //the nj(w) in the papers
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Integer.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Integer, Integer> documentWordCounts; //the n.(d) in the papers
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Integer.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         /** 
@@ -592,10 +592,10 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         DatabaseConnector dbc = kb().getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Map.Entry<Integer, Record> e : newData.entries()) {

@@ -49,7 +49,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     public static class ModelParameters extends AbstractScoreBasedFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
         
         /** 
@@ -170,7 +170,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         int n = modelParameters.getN();
         
         DatabaseConnector dbc = kb().getDbc();
-        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -256,7 +256,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         DatabaseConnector dbc = kb().getDbc();
         Map<Object, Double> maxTFIDFfeatureScores = kb().getModelParameters().getMaxTFIDFfeatureScores();
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         for(Object feature: newData.getXDataTypes().keySet()) {
             if(!maxTFIDFfeatureScores.containsKey(feature)) {

@@ -32,6 +32,20 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BigMap {
     /**
+     * Parameter that passes the Class of the Key of the BigMap.
+     *
+     * @return
+     */
+    public Class<?> keyClass();
+
+    /**
+     * Parameter that passes the Class of the Value of the BigMap.
+     *
+     * @return
+     */
+    public Class<?> valueClass();
+
+    /**
      * Parameter that passes the MapType of the BigMap.
      * 
      * @return 

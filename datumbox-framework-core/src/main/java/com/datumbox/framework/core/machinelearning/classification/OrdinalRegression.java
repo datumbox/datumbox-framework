@@ -62,7 +62,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> weights; //the W parameters of the model
 
         /**
@@ -260,7 +260,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
@@ -321,7 +321,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             Map<Object, Double> tmp_newThitas = new HashMap<>();
             
-            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);

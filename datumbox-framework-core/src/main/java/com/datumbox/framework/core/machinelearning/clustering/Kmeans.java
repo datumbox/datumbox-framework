@@ -143,7 +143,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         
         private int totalIterations;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<Object, Double> featureWeights; 
         
         /** 
@@ -441,7 +441,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
@@ -521,9 +521,9 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             
             DatabaseConnector dbc = kb().getDbc();
             
-            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumXsquare = dbc.getBigMap("tmp_varianceSumXsquare", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
@@ -712,7 +712,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             DatabaseConnector dbc = kb().getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+                Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
                 
                 streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
@@ -775,7 +775,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             }
             
             //assign records to clusters
-            Map<Integer, Integer> tmp_clusterAssignments = kb().getDbc().getBigMap("tmp_clusterAssignments", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Integer, Integer> tmp_clusterAssignments = kb().getDbc().getBigMap("tmp_clusterAssignments", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
