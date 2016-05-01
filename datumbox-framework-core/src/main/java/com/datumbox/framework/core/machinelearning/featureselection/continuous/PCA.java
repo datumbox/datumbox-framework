@@ -56,7 +56,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     public static class ModelParameters extends AbstractContinuousFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds;
         
         private int rows; //rows of the eigenvector matrix

@@ -236,10 +236,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         String dbName = "dts_"+System.nanoTime();
         dbc = this.conf.getDbConfig().getConnector(dbName);
         
-        records = dbc.getBigMap("tmp_records", MapType.TREEMAP, StorageHint.IN_DISK, true, true);
+        records = dbc.getBigMap("tmp_records", Integer.class, Record.class, MapType.TREEMAP, StorageHint.IN_DISK, true, true);
         
         yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xDataTypes", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        xDataTypes = dbc.getBigMap("tmp_xDataTypes", Object.class, TypeInference.DataType.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
         streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
     }

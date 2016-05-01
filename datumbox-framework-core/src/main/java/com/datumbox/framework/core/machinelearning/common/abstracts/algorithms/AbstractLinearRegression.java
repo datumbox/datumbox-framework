@@ -47,7 +47,7 @@ public abstract class AbstractLinearRegression<MP extends AbstractLinearRegressi
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractRegressor.AbstractModelParameters {
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         /** 

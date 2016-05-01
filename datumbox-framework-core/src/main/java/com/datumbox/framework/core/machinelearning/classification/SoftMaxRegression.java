@@ -60,7 +60,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap(mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        @BigMap(keyClass=List.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
@@ -254,7 +254,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
@@ -317,7 +317,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             
             tmp_newThitas.putAll(thitas);
             batchGradientDescent(trainingData, tmp_newThitas, learningRate);

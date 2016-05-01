@@ -118,7 +118,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     
     /** {@inheritDoc} */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
         if(MapType.HASHMAP.equals(type)) {

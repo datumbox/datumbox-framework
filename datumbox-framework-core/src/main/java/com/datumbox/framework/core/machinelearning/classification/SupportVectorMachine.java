@@ -57,7 +57,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
-        @BigMap(mapType= MapType.HASHMAP, storageHint= StorageHint.IN_MEMORY, concurrent=false)
+        @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType= MapType.HASHMAP, storageHint= StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds; //list of all the supported features
 
         private Map<Object, Integer> classIds = new HashMap<>(); //this is small. Size equal to class numbers;
@@ -220,7 +220,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", DatabaseConnector.MapType.HASHMAP, DatabaseConnector.StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, DatabaseConnector.MapType.HASHMAP, DatabaseConnector.StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }

@@ -329,7 +329,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     @Override
     protected void _predictDataset(Dataframe newData) {
         DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", MapType.HASHMAP, StorageHint.IN_DISK, true, true);
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
@@ -409,8 +409,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         
         DatabaseConnector dbc = kb().getDbc();
 
-        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
