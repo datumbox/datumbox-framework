@@ -18,6 +18,7 @@ package com.datumbox.framework.common.persistentstorage.mapdb;
 import com.datumbox.framework.common.persistentstorage.abstracts.AbstractDatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import org.mapdb.*;
+import org.mapdb.serializer.GroupSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,6 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -209,7 +209,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
                 map = (Map<K,V>)db.treeMap(name)
                 .valuesOutsideNodesEnable()
                 .counterEnable()
-                .keySerializer(getBTreeKeySerializerFromClass(keyClass))
+                .keySerializer(getSerializerFromClass(keyClass))
                 .valueSerializer(getSerializerFromClass(valueClass))
                 .createOrOpen();
             }
@@ -230,7 +230,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         if(dbType != null) {
             DB db = dbRegistry.get(dbType);
             if(isOpenDB(db)) {
-                db.delete(name); //TODO: restore once implemented
+                //db.delete(name); //TODO: restore once implemented
             }
         }
         else {
@@ -249,12 +249,12 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     //private methods of connector class
 
     /**
-     * Returns the appropriate Serializer (if one exists) else null.
+     * Returns the appropriate Serializer (if one exists) else ELSA.
      *
      * @param klass
      * @return
      */
-    private Serializer<?> getSerializerFromClass(Class<?> klass) {
+    private GroupSerializer<?> getSerializerFromClass(Class<?> klass) {
         if(klass == Integer.class) {
             return Serializer.INTEGER;
         }
@@ -264,29 +264,26 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         else if(klass == Boolean.class) {
             return Serializer.BOOLEAN;
         }
+        else if(klass == Double.class) {
+            return Serializer.DOUBLE;
+        }
         else if(klass == String.class) {
             return Serializer.STRING;
         }
-        return null; //Default POJO serializer
-    }
 
-    /**
-     * Returns the appropriate BTreeKeySerializer (if one exists) else null.
-     *
-     * @param klass
-     * @return
-     */
-    private BTreeKeySerializer<?> getBTreeKeySerializerFromClass(Class<?> klass) {
-        if(klass == Integer.class) {
-            return BTreeKeySerializer.ZERO_OR_POSITIVE_INT;
+        else if(klass == Byte.class) {
+            return Serializer.BYTE;
         }
-        else if(klass == Long.class) {
-            return BTreeKeySerializer.ZERO_OR_POSITIVE_LONG;
+        else if(klass == Short.class) {
+            return Serializer.SHORT;
         }
-        else if(klass == String.class) {
-            return BTreeKeySerializer.STRING;
+        else if(klass == Character.class) {
+            return Serializer.CHAR;
         }
-        return null; //Default POJO serializer
+        else if(klass == Float.class) {
+            return Serializer.FLOAT;
+        }
+        return Serializer.ELSA; //Default POJO serializer
     }
 
     private boolean isOpenDB(DB db) {
