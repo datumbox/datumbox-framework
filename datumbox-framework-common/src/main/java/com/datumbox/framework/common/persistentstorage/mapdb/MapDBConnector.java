@@ -308,7 +308,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             }
             else if(dbType == DBType.TEMP_DB_CACHED || dbType == DBType.TEMP_DB_UNCACHED) {
                 //temporary storage
-                m = DBMaker.tempFileDB().deleteFilesAfterClose();
+                m = DBMaker.tempFileDB().fileDeleteAfterClose();
                 
                 if(dbType == DBType.TEMP_DB_UNCACHED) {
                     permitCaching = false;
