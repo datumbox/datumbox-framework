@@ -56,52 +56,38 @@ public class Combinatorics {
     }
 
     /**
-     * Returns all the possible combinations of a list. 
+     * Returns all the possible combinations of a list.
      * Ported from:
      * http://codereview.stackexchange.com/questions/26854/recursive-method-to-return-a-set-of-all-combinations
      *
-     * @param <T>
      * @param elements
-     * @param elementCount
-     * @return
-     */
-    public static <T> Collection<List<T>> combinations(List<T> elements, int elementCount) {
-        Set<Set<T>> combinations = combinationsSet(elements, elementCount);
-
-        Collection<List<T>> result = new ArrayList<>();
-        for(Set<T> linkedset : combinations) {
-            result.add(new ArrayList<>(linkedset));
-        }
-
-        return result;
-    }
-
-    /**
-     * Similar to combinations() method it returns all possible combinations in a set.
-     *
-     * @param group
      * @param subsetSize
      * @param <T>
      * @return
      */
-    public static <T> Set<Set<T>> combinationsSet(List<T> group, int subsetSize) {
-        Set<Set<T>> resultingCombinations = new LinkedHashSet<> ();
-        int totalSize=group.size();
+    public static <T> Set<Set<T>> combinations(Set<T> elements, int subsetSize) {
+        Set<Set<T>> resultingCombinations = new HashSet<> ();
+        int totalSize=elements.size();
         if (subsetSize == 0) {
-            resultingCombinations.add(new LinkedHashSet<>());
+            resultingCombinations.add(new HashSet<>());
         }
         else if (subsetSize <= totalSize) {
-            List<T> remainingElements = new ArrayList<> (group);
-            T X = remainingElements.remove(remainingElements.size()-1);
+            Set<T> remainingElements = elements;
 
-            Set<Set<T>> combinationsExclusiveX = combinationsSet(remainingElements, subsetSize);
-            Set<Set<T>> combinationsInclusiveX = combinationsSet(remainingElements, subsetSize-1);
-            for (Set<T> combination : combinationsInclusiveX) {
+            Iterator<T> it = remainingElements.iterator();
+            T X = it.next();
+            it.remove();
+
+            resultingCombinations.addAll(combinations(remainingElements, subsetSize));
+
+            for (Set<T> combination : combinations(remainingElements, subsetSize-1)) {
                 combination.add(X);
+                resultingCombinations.add(combination);
             }
-            resultingCombinations.addAll(combinationsExclusiveX);
-            resultingCombinations.addAll(combinationsInclusiveX);
+
+            remainingElements.add(X);
         }
         return resultingCombinations;
     }
+
 }

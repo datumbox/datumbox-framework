@@ -18,10 +18,7 @@ package com.datumbox.framework.core.mathematics.discrete;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -45,7 +42,7 @@ public class CombinatoricsTest extends AbstractTest {
         expResult.add(new ArrayList<>(Arrays.asList("a","c","b")));
         expResult.add(new ArrayList<>(Arrays.asList("c","a","b")));
         expResult.add(new ArrayList<>(Arrays.asList("c","b","a")));
-        Collection<List<String>> result = Combinatorics.<String>permutations(new ArrayList<>(Arrays.asList("a","b","c")));
+        Collection<List<String>> result = Combinatorics.permutations(Arrays.asList("a","b","c"));
         assertEquals(expResult, result);
     }
 
@@ -55,11 +52,11 @@ public class CombinatoricsTest extends AbstractTest {
     @Test
     public void testCombinations() {
         logger.info("combinations");
-        Collection<List<String>> expResult = new ArrayList<>();
-        expResult.add(new ArrayList<>(Arrays.asList("a","b")));
-        expResult.add(new ArrayList<>(Arrays.asList("a","c")));
-        expResult.add(new ArrayList<>(Arrays.asList("b","c")));
-        Collection<List<String>> result = Combinatorics.combinations(new ArrayList<>(Arrays.asList("a","b","c")), 2);
+        Set<Set<String>> expResult = new HashSet<>();
+        expResult.add(new HashSet<>(Arrays.asList("a","b")));
+        expResult.add(new HashSet<>(Arrays.asList("a","c")));
+        expResult.add(new HashSet<>(Arrays.asList("b","c")));
+        Set<Set<String>> result = Combinatorics.combinations(new HashSet<>(Arrays.asList("a","b","c","a")), 2);
         assertEquals(expResult, result);
     }
     
