@@ -16,6 +16,9 @@
 package com.datumbox.framework.core.mathematics.discrete;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Utility class for combinations and permutations.
@@ -56,9 +59,7 @@ public class Combinatorics {
     }
 
     /**
-     * Returns all the possible combinations of a list.
-     * Ported from:
-     * http://codereview.stackexchange.com/questions/26854/recursive-method-to-return-a-set-of-all-combinations
+     * Returns all the possible combinations of the set.
      *
      * @param elements
      * @param subsetSize
@@ -66,28 +67,43 @@ public class Combinatorics {
      * @return
      */
     public static <T> Set<Set<T>> combinations(Set<T> elements, int subsetSize) {
-        Set<Set<T>> resultingCombinations = new HashSet<> ();
-        int totalSize=elements.size();
+        return combinationsStream(elements, subsetSize).collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns all the possible combination of the set in a stream.
+     *
+     * Heavily Modified code:
+     * http://codereview.stackexchange.com/questions/26854/recursive-method-to-return-a-set-of-all-combinations
+     *
+     * @param elements
+     * @param subsetSize
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<Set<T>> combinationsStream(Set<T> elements, int subsetSize) {
         if (subsetSize == 0) {
-            resultingCombinations.add(new HashSet<>());
+            return Stream.of(new HashSet<>());
         }
-        else if (subsetSize <= totalSize) {
+        else if (subsetSize <= elements.size()) {
             Set<T> remainingElements = elements;
 
             Iterator<T> it = remainingElements.iterator();
             T X = it.next();
             it.remove();
 
-            resultingCombinations.addAll(combinations(remainingElements, subsetSize));
-
-            for (Set<T> combination : combinations(remainingElements, subsetSize-1)) {
-                combination.add(X);
-                resultingCombinations.add(combination);
-            }
+            Stream<Set<T>> combinations = Stream.concat(
+                    combinationsStream(remainingElements, subsetSize), //exclude X
+                    combinationsStream(remainingElements, subsetSize-1).map(s -> {s.add(X); return s;}) //include X
+            );
 
             remainingElements.add(X);
+
+            return combinations;
         }
-        return resultingCombinations;
+        else {
+            return Stream.empty();
+        }
     }
 
 }
