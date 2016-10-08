@@ -157,7 +157,7 @@ public class Combinatorics {
             @Override
             public T[] next() {
                 /*
-                if(hasNext == false) {
+                if(!hasNext()) {
                     throw new java.util.NoSuchElementException();
                 }
                 */
@@ -177,6 +177,9 @@ public class Combinatorics {
              * @return
              */
             private boolean locateNext() {
+                if(subsetSize == 0) {
+                    return false;
+                }
                 int N = elements.length;
                 while(true) {
                     if(index <= (N + (r - subsetSize))) {
