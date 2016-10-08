@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.core.mathematics.discrete;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -71,7 +72,7 @@ public class Combinatorics {
     }
 
     /**
-     * Returns all the possible combination of the set in a stream.
+     * Returns all the possible combinations of the set in a stream.
      *
      * Heavily Modified code:
      * http://codereview.stackexchange.com/questions/26854/recursive-method-to-return-a-set-of-all-combinations
@@ -106,4 +107,96 @@ public class Combinatorics {
         }
     }
 
+    /**
+     * Fast and memory efficient way to return an iterator with all the possible combinations of an array.
+     *
+     * Heavily Modified code:
+     * http://hmkcode.com/calculate-find-all-possible-combinations-of-an-array-using-java/
+     *
+     * @param elements
+     * @param subsetSize
+     * @param <T>
+     * @return
+     */
+    public static <T> Iterator<T[]> combinationsIterator(final T[] elements, final int subsetSize) {
+        return new Iterator<T[]>() {
+            /**
+             * The index on the combination array.
+             */
+            private int r = 0;
+
+            /**
+             * The index on the elements array.
+             */
+            private int index = 0;
+
+            /**
+             * The indexes of the elements of the combination.
+             */
+            private final int[] selectedIndexes = new int[subsetSize];
+
+            /**
+             * Flag that tells us if there is a next item. If the flag is null then we don't know.
+             */
+            private Boolean hasNext = null;
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public boolean hasNext() {
+                if(hasNext == null) { //if we don't know if there is a next item, we need to try to locate it.
+                    hasNext = locateNext();
+                }
+                return hasNext;
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public T[] next() {
+                /*
+                if(hasNext == false) {
+                    throw new java.util.NoSuchElementException();
+                }
+                */
+                hasNext = null; //we retrieved the item so we need to locate a new item next time.
+
+                @SuppressWarnings("unchecked")
+                T[] combination =(T[]) Array.newInstance(elements[0].getClass(), subsetSize);
+                for(int i = 0; i< subsetSize; i++) {
+                    combination[i] = elements[selectedIndexes[i]];
+                }
+                return combination;
+            }
+
+            /**
+             * Locates the next item OR informs us that there are no next items.
+             *
+             * @return
+             */
+            private boolean locateNext() {
+                int N = elements.length;
+                while(true) {
+                    if(index <= (N + (r - subsetSize))) {
+                        selectedIndexes[r] = index++;
+                        if(r == subsetSize -1) {
+                            return true; //we retrieved the next
+                        }
+                        else {
+                            r++;
+                        }
+                    }
+                    else {
+                        r--;
+                        if(r < 0) {
+                            return false; //does not have next
+                        }
+                        index = selectedIndexes[r]+1;
+                    }
+                }
+            }
+        };
+    }
 }
