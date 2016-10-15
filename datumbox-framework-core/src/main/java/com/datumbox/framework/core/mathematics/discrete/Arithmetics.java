@@ -49,7 +49,12 @@ public class Arithmetics {
         if(n<k) {
             throw new IllegalArgumentException("The n can't be smaller than k.");
         }
-        return factorial(n)/(factorial(k)*factorial(n-k));
+        double combinations=1.0;
+        double lowerBound = n-k;
+        for(int i=n;i>lowerBound;i--) {
+            combinations *= i/(i-lowerBound);
+        }
+        return combinations;
     }
     
     
