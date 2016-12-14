@@ -111,7 +111,7 @@
         <commons-csv-version>1.4</commons-csv-version>
         <slf4j-api-version>1.7.21</slf4j-api-version>
         <libsvm-version>3.21</libsvm-version>
-        <mapdb-version>3.0.0-RC1</mapdb-version>
+        <mapdb-version>3.0.2</mapdb-version>
         
         <!-- Test Dependencies -->
         <junit-version>4.12</junit-version>
