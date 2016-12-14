@@ -132,7 +132,7 @@ public class DiscreteDistributionsTest extends AbstractTest {
         int n = 10;
         int r = 4;
         double p = 0.5;
-        double expResult = 0.12705078125;
+        double expResult = 0.1279296875;
         double result = DiscreteDistributions.negativeBinomialCdf(n, r, p);
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
     }
