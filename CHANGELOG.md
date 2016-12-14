@@ -4,17 +4,20 @@ CHANGELOG
 Version 0.7.1-SNAPSHOT - Build 20161214
 ---------------------------------------
 
-- Removed Apache Commons Lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
-- Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
-- Upgraded commons-math, commons-csv, slf4j and logback-classic to latest stable versions.
-- Replaced the ArrayRealVector with MapRealVector and the OpenMapRealMatrix with MapRealMatrix which are sparse implementations storing the data in Maps. As a result all methods that used RealMatrixes can benefit from disk-based training.
-- Call dbc.close() on the finalize of MapRealMatrix, to release the resources once gc. 
-- Removed the protected copy-constructor of Cluster algorithms. 
-- Speed optimizations on DPMM algorithms. The GaussianDPMM.Cluster object has breaking changes on the types of the fields.
-- The persistence mechanism was rewritten to avoid serializing BigMaps that exist within Serializable objects.
-- Extended the BigMap to pass Key and Value classes and enable the use of custom serializers.
-- Addition of the FixedBatchSpliterator class in the concurrency package.
-- Faster and more memory efficient methods for Combinations and Arithmetics classes.
+- Dependencies:
+    - Upgraded commons-math, commons-csv, slf4j and logback-classic to latest stable versions.
+    - Removed commons-lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
+    - Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
+- Memory & Storage:
+    - The persistence mechanism was rewritten to avoid serializing BigMaps that exist within Serializable objects.
+    - Extended the BigMap to pass Key and Value classes and enable the use of custom serializers.
+    - Replaced the ArrayRealVector with MapRealVector and the OpenMapRealMatrix with MapRealMatrix which are sparse implementations storing the data in Maps. As a result all methods that used RealMatrixes can benefit from disk-based training.
+- Performance:
+    - Speed optimizations on DPMM algorithms. The GaussianDPMM.Cluster object has breaking changes on the types of the fields.
+    - Faster and more memory efficient methods for Combinations and Arithmetics classes.
+- Code Improvements:    
+    - Addition of the FixedBatchSpliterator class in the concurrency package.
+    - Removed the protected copy-constructor of Cluster algorithms. 
 
 Version 0.7.0 - Build 20160319
 ------------------------------
