@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.7.1-SNAPSHOT - Build 20161214
+Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------
 
 - Dependencies:
