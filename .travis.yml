@@ -6,8 +6,8 @@ os:
 jdk:
   - openjdk8
   - oraclejdk8
-install: mvn install -DskipTests=true -Dgpg.skip=true
+install: mvn install -DskipTests=true
 script:
-  - mvn clean install -Dgpg.skip=true
+  - mvn clean install
 notifications:
   email: false
