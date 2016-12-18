@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.modelselection.metrics;
 
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractMetrics;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.metrics.AbstractMetrics;
 
 import java.util.*;
 
@@ -27,6 +27,7 @@ import java.util.*;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ClassificationMetrics extends AbstractMetrics {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Enum that stores the 4 possible Sensitivity Rates.

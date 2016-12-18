@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.splitters.TemporaryKFold;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 
 /**
  * Base Class for all the Regression algorithms.
@@ -54,6 +54,6 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
     public LinearRegressionMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("validate()");
 
-        return new TemporaryKFold<>(LinearRegressionMetrics.class, k).validate(trainingData, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new KFoldValidator<>(LinearRegressionMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
     }
 }

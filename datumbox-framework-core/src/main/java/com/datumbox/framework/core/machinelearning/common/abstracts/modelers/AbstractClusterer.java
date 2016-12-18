@@ -24,7 +24,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.splitters.TemporaryKFold;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 
 import java.util.*;
 
@@ -233,6 +233,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
     public ClusteringMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("validate()");
 
-        return new TemporaryKFold<>(ClusteringMetrics.class, k).validate(trainingData, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new KFoldValidator<>(ClusteringMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
     }
 }

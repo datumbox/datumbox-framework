@@ -13,45 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.modelselection.splitters;
+package com.datumbox.framework.core.machinelearning.modelselection.validators;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.validators.AbstractValidator;
+import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TemporaryKFold<VM extends ValidationMetrics> {
-
-    //TODO: remove this temporary class and create a permanent solution, using Splitters.
+/**
+ * Performs K-fold cross validation.
+ *
+ * @param <VM>
+ */
+public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValidator<VM> {
 
     /**
-     * The Logger of all Validators.
-     * We want this to be non-static in order to print the names of the inherited classes.
+     * Stores the number of folds.
      */
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private static final String DB_INDICATOR="Kfold";
-
-    private final Class<VM> vmClass;
     private final int k;
 
     /**
-     * The constructor of the Splitter.
+     * The constructor of the K-Fold cross validator.
      *
      * @param vmClass
      * @param k
      */
-    public TemporaryKFold(Class<VM> vmClass, int k) {
-        this.vmClass = vmClass;
+    public KFoldValidator(Class<VM> vmClass, Configuration conf, int k) {
+        super(vmClass, conf);
         this.k = k;
     }
 
@@ -60,13 +58,11 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
      * of folds and returns the average metrics across all folds.
      *
      * @param dataset
-     * @param dbName
-     * @param conf
-     * @param aClass
      * @param trainingParameters
      * @return
      */
-    public VM validate(Dataframe dataset, String dbName, Configuration conf, Class<? extends AbstractModeler> aClass, AbstractModeler.AbstractTrainingParameters trainingParameters) {
+    @Override
+    public VM validate(Dataframe dataset, TrainingParameters trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds.");
@@ -84,11 +80,21 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
         }
         PHPMethods.shuffle(ids);
 
-        String foldDBname=dbName+conf.getDbConfig().getDBnameSeparator()+DB_INDICATOR;
+        Class<? extends AbstractModeler> aClass = null;
+        try {
+            //By convertion the training parameters are one level below the algorithm class. This allows us to retrieve the algorithm class from the training parameters.
+            String className = trainingParameters.getClass().getCanonicalName();
+            aClass = (Class<? extends AbstractModeler>) Class.forName(className.substring(0, className.lastIndexOf('.')));
+        }
+        catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        //initialize modeler
+        AbstractModeler modeler = Trainable.newInstance(aClass, "kfold_"+System.nanoTime(), conf);
 
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
-
             logger.info("Kfold {}", fold);
 
             //as fold window we consider the part of the ids that are used for validation
@@ -119,14 +125,9 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
             }
 
 
-            //initialize modeler
-            AbstractModeler modeler = Trainable.newInstance(aClass, foldDBname+(fold+1), conf);
-
-
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
-            modeler.fit(trainingData, trainingParameters);
+            modeler.fit(trainingData, (AbstractTrainer.AbstractTrainingParameters) trainingParameters);
             trainingData.delete();
-            //trainingData = null;
 
 
             Dataframe validationData = dataset.getSubset(foldValidationIds);
@@ -136,15 +137,11 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
 
             VM entrySample = ValidationMetrics.newInstance(vmClass, validationData);
             validationData.delete();
-            //validationData = null;
-
-            //delete algorithm
-            modeler.delete();
-            //modeler = null;
 
             //add the validationMetrics in the list
             validationMetricsList.add(entrySample);
         }
+        modeler.delete();
 
         VM avgValidationMetrics = ValidationMetrics.newInstance(vmClass, validationMetricsList);
 

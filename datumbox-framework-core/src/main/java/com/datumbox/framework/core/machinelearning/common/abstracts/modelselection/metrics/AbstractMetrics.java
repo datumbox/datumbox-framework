@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.common.abstracts.validators;
+package com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.metrics;
 
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;

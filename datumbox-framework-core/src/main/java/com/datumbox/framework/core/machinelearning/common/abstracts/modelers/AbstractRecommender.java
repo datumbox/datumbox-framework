@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.RecommendationMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.splitters.TemporaryKFold;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 
 /**
  * Abstract Class for recommender algorithms.
@@ -52,6 +52,6 @@ public abstract class AbstractRecommender<MP extends AbstractRecommender.Abstrac
     public RecommendationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("validate()");
 
-        return new TemporaryKFold<>(RecommendationMetrics.class, k).validate(trainingData, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new KFoldValidator<>(RecommendationMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
     }
 }

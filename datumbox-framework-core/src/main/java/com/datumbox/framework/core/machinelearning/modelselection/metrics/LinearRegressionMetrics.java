@@ -19,7 +19,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractMetrics;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.metrics.AbstractMetrics;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.core.statistics.nonparametrics.onesample.Lilliefors;
 import com.datumbox.framework.core.statistics.parametrics.onesample.DurbinWatson;
@@ -32,6 +32,7 @@ import java.util.List;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class LinearRegressionMetrics extends AbstractMetrics {
+    private static final long serialVersionUID = 1L;
 
     private double RSquare = 0.0;
     private double RSquareAdjusted = 0.0;

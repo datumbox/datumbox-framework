@@ -19,7 +19,7 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractMetrics;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.metrics.AbstractMetrics;
 
 import java.util.*;
 
@@ -29,6 +29,7 @@ import java.util.*;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class RecommendationMetrics extends AbstractMetrics {
+    private static final long serialVersionUID = 1L;
 
     private double RMSE = 0.0;
 
