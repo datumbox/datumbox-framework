@@ -92,15 +92,13 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
 
     /** {@inheritDoc} */
     @Override
-    protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
+    protected void estimateFeatureScores(int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
-        
-        double N = modelParameters.getN();
-        
+
         final double log2 = Math.log(2.0);
         
         streamExecutor.forEach(StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()), featureCount -> {

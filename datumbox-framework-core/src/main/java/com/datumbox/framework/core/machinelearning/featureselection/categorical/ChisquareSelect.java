@@ -122,7 +122,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
     
     /** {@inheritDoc} */
     @Override
-    protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
+    protected void estimateFeatureScores(int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
@@ -130,9 +130,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         
         double criticalValue = ContinuousDistributions.chisquareInverseCdf(trainingParameters.getALevel(), 1); //one degree of freedom because the tables below are 2x2
-        
-        double N = modelParameters.getN();
-        
+
         streamExecutor.forEach(StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()), featureCount -> {
             Object feature = featureCount.getKey();
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)

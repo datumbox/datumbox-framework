@@ -270,7 +270,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();
         
-        int n = modelParameters.getN();
+        int n = trainingData.size();
         int sparseD = featureIds.size();
         
         //creating a new SVM problem

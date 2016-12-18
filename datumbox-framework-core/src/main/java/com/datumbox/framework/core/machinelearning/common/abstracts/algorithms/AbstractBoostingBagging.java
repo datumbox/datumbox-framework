@@ -219,7 +219,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         AbstractTrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        int n = modelParameters.getN();
+        int n = trainingData.size();
         
         Set<Object> classesSet = modelParameters.getClasses();
         

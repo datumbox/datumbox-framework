@@ -50,7 +50,7 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
 
         knowledgeBase.load();
 
-        _predictDataset(newData); //TODO: this is no longer necessary if the save/load changes functionality
+        _predictDataset(newData); //FIXME: this is no longer necessary if the save/load changes functionality
     }
 
     /**

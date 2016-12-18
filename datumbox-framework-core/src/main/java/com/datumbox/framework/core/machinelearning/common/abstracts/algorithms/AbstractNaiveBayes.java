@@ -228,8 +228,8 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     @Override
     protected void _fit(Dataframe trainingData) {
         AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
-        int n = modelParameters.getN();
-        int d = modelParameters.getD();
+        int n = trainingData.size();
+        int d = trainingData.xColumnSize();
         
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();

@@ -59,7 +59,10 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractTopicModeler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
-        
+
+        //number of features in data points used for training
+        private Integer d = 0;
+
         private int totalIterations;
         
         @BigMap(keyClass=List.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
@@ -83,6 +86,24 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
+        }
+
+        /**
+         * Getter for the dimension of the dataset used in training.
+         *
+         * @return
+         */
+        public Integer getD() {
+            return d;
+        }
+
+        /**
+         * Setter for the dimension of the dataset used in training.
+         *
+         * @param d
+         */
+        protected void setD(Integer d) {
+            this.d = d;
         }
         
         /**
@@ -362,10 +383,12 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        modelParameters.setD(trainingData.xColumnSize());
+
         int d = modelParameters.getD();
         
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
+
         
         //get model parameters
         int k = trainingParameters.getK(); //number of topics
@@ -565,7 +588,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object wordPosition = entry.getKey();
                 Object word = entry.getValue();
-                
+
                 //sample a topic
                 Integer topic = PHPMethods.mt_rand(0,k-1);
                 

@@ -510,7 +510,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         else {
             //calculate weights for the features
             
-            int n = modelParameters.getN();
+            int n = trainingData.size();
             
             DatabaseConnector dbc = knowledgeBase.getDbc();
             
@@ -652,7 +652,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         else if(initializationMethod==TrainingParameters.Initialization.FURTHEST_FIRST ||
                 initializationMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
             
-            int sampleSize = modelParameters.getN();
+            int sampleSize = trainingData.size();
             if(initializationMethod==TrainingParameters.Initialization.SUBSET_FURTHEST_FIRST) {
                 sampleSize = (int)Math.max(Math.ceil(trainingParameters.getSubsetFurthestFirstcValue()*k*PHPMethods.log(k, 2)), k);
             }

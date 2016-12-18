@@ -109,7 +109,10 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      * @param <CL> 
      */
     public static abstract class AbstractModelParameters<CL extends AbstractDPMM.AbstractCluster> extends AbstractClusterer.AbstractModelParameters<CL> {
-        
+
+        //number of features in data points used for training
+        private Integer d = 0;
+
         private int totalIterations;
 
         @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -122,7 +125,25 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
-        
+
+        /**
+         * Getter for the dimension of the dataset used in training.
+         *
+         * @return
+         */
+        public Integer getD() {
+            return d;
+        }
+
+        /**
+         * Setter for the dimension of the dataset used in training.
+         *
+         * @param d
+         */
+        protected void setD(Integer d) {
+            this.d = d;
+        }
+
         /**
          * Getter for the total number of iterations used in training.
          * 
@@ -304,7 +325,8 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     @Override
     protected void _fit(Dataframe trainingData) {
         AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
-        
+
+        modelParameters.setD(trainingData.xColumnSize());
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         

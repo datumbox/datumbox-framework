@@ -272,7 +272,7 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        double multiplier = learningRate/modelParameters.getN();
+        double multiplier = learningRate/trainingData.size();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
         streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
@@ -314,7 +314,7 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }));
-        error /= knowledgeBase.getModelParameters().getN();
+        error /= trainingData.size();
 
         double l1 = knowledgeBase.getTrainingParameters().getL1();
         double l2 = knowledgeBase.getTrainingParameters().getL2();

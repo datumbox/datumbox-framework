@@ -308,7 +308,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> newWeights, Map<Object, Double> newThitas, double learningRate) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        double multiplier = -learningRate/modelParameters.getN();
+        double multiplier = -learningRate/trainingData.size();
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -394,7 +394,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             return e;
         }));
-        error /= knowledgeBase.getModelParameters().getN();
+        error /= trainingData.size();
 
         error += L2Regularizer.estimatePenalty(knowledgeBase.getTrainingParameters().getL2(), weights);
         

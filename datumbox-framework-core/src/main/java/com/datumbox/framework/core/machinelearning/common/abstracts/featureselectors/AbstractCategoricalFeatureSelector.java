@@ -172,7 +172,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         //call the overriden method to get the scores of the features.
         //WARNING: do not use feature scores for any weighting. Sometimes the features are selected based on a minimum and others on a maximum criterion.
-        estimateFeatureScores(tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
+        estimateFeatureScores(trainingData.size(), tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
         
 
         //drop the unnecessary stastistics tables
@@ -329,10 +329,11 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     /**
      * Abstract method which is responsible for estimating the score of each
      * Feature.
-     * 
+     *
+     * @param N
      * @param classCounts
      * @param featureClassCounts
      * @param featureCounts 
      */
-    protected abstract void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts);
+    protected abstract void estimateFeatureScores(int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts);
 }

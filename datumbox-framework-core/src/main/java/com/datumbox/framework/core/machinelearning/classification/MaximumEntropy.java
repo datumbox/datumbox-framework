@@ -175,7 +175,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        int n = modelParameters.getN();
+        int n = trainingData.size();
         
         
         Map<List<Object>, Double> lambdas = modelParameters.getLambdas();
@@ -252,7 +252,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> lambdas = modelParameters.getLambdas();
         
-        int n = modelParameters.getN();
+        int n = trainingData.size();
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {

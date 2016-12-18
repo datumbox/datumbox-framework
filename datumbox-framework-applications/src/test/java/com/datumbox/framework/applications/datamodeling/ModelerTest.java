@@ -76,7 +76,7 @@ public class ModelerTest extends AbstractTest {
         instance.fit(trainingData, trainingParameters);
         
         /*
-        //TODO: restore this
+        //TODO: restore this test
         ClassifierValidator.ValidationMetrics vm = instance.validate(trainingData);
 
         double expResult2 = 0.8;

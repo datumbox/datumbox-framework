@@ -147,11 +147,11 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
     protected void _predictDataset(Dataframe newData) {
         //read model params
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-
-        int d = modelParameters.getD()+1; //plus one for the constant
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
+
+        int d = thitas.size();
         
         RealVector coefficients = new OpenMapRealVector(d);
         for(Map.Entry<Object, Double> entry : thitas.entrySet()) {
@@ -180,8 +180,8 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        int n = modelParameters.getN();
-        int d = modelParameters.getD();
+        int n = trainingData.size();
+        int d = trainingData.xColumnSize();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();

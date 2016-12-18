@@ -47,11 +47,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
      */
     public static abstract class AbstractModelParameters implements ModelParameters {
-        //number of data points used for training
-        private Integer n = 0; //TODO: do I need this?
-
-        //number of features in data points used for training
-        private Integer d = 0; //TODO: do I need this?
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.
@@ -61,42 +56,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         public AbstractModelParameters(DatabaseConnector dbc) {
             //Initialize all the BigMap fields
             bigMapInitializer(dbc);
-        }
-
-        /**
-         * Getter for the total number of records used in training.
-         * 
-         * @return 
-         */
-        public Integer getN() {
-            return n;
-        }
-
-        /**
-         * Getter for the dimension of the dataset used in training.
-         * 
-         * @return 
-         */
-        public Integer getD() {
-            return d;
-        }
-
-        /**
-         * Setter for the total number of records used in training.
-         * 
-         * @param n 
-         */
-        protected void setN(Integer n) {
-            this.n = n;
-        }
-
-        /**
-         * Setter for the dimension of the dataset used in training.
-         * 
-         * @param d 
-         */
-        protected void setD(Integer d) {
-            this.d = d;
         }
 
         /**
@@ -167,7 +126,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param tpClass
      */
     protected  AbstractTrainer(String baseDBname, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        //TODO: do we really need the dbName here? Perhaps a temp name is good enough
+        //FIXME: do we really need the dbName here? Perhaps a temp name is good enough
         String methodName = this.getClass().getSimpleName();
         String dbNameSeparator = conf.getDbConfig().getDBnameSeparator();
         if(!baseDBname.contains(methodName+dbNameSeparator)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
@@ -199,18 +158,14 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         //reset knowledge base
         knowledgeBase.clear();
         knowledgeBase.setTrainingParameters(trainingParameters);
-        
-        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
-        modelParameters.setN(trainingData.size());
-        modelParameters.setD(trainingData.xColumnSize());
 
         _fit(trainingData);
         
         logger.info("Saving model");
-        knowledgeBase.save(); //TODO: this should be removed.
+        knowledgeBase.save(); //FIXME: this should be removed.
     }
 
-    //TODO: save() and load() method need to go here
+    //FIXME: save() and load() method need to go here
 
     /** {@inheritDoc} */
     @Override
@@ -229,6 +184,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * 
      * @param trainingData 
      */
-    protected abstract void _fit(Dataframe trainingData); //TODO: do we need this method?
+    protected abstract void _fit(Dataframe trainingData); //FIXME: do we need this method?
     
 }

@@ -302,7 +302,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         //to estimate the costs and only at the end we update the new thitas.
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        double multiplier = learningRate/modelParameters.getN();
+        double multiplier = learningRate/trainingData.size();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         Set<Object> classesSet = modelParameters.getClasses();
         
@@ -381,7 +381,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             return Math.log(score); //no need to loop through the categories. Just grab the one that we are interested in
         }));
 
-        error = -error/knowledgeBase.getModelParameters().getN();
+        error = -error/trainingData.size();
 
         double l1 = knowledgeBase.getTrainingParameters().getL1();
         double l2 = knowledgeBase.getTrainingParameters().getL2();

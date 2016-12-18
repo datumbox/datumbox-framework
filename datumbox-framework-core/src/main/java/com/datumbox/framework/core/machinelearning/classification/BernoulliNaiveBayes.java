@@ -161,8 +161,8 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        int n = modelParameters.getN();
-        int d = modelParameters.getD();
+        int n = trainingData.size();
+        int d = trainingData.xColumnSize();
         
         knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         

@@ -294,8 +294,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     protected void _fit(Dataframe originalData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        int n = modelParameters.getN();
-        int d = modelParameters.getD();
+        int n = originalData.size();
+        int d = originalData.xColumnSize();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();

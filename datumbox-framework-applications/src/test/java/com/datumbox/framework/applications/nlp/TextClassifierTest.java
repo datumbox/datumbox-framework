@@ -316,7 +316,7 @@ public class TextClassifierTest extends AbstractTest {
         
 
         /*
-        //TODO: restore this
+        //TODO: restore this test
         ClassifierValidator.ValidationMetrics vm = instance.validate(dataset);
         assertEquals(expectedF1score, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
         */

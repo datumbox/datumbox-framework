@@ -167,7 +167,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         boolean binarized = trainingParameters.isBinarized();
         
         
-        int n = modelParameters.getN();
+        int n = trainingData.size();
         
         DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
