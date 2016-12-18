@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -77,7 +78,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new HierarchicalAgglomerative(dbName, conf);
 
-        HierarchicalAgglomerative.ValidationMetrics vm = instance.validate(validationData);
+        ClustererValidator.ValidationMetrics vm = instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -124,8 +125,8 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        
-        HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClustererValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
 

@@ -61,6 +61,6 @@ public abstract class AbstractValidator<VM extends AbstractValidator.AbstractVal
      * @param validationMetricsList
      * @return 
      */
-    protected abstract VM calculateAverageValidationMetrics(List<VM> validationMetricsList);
+    public abstract VM average(List<VM> validationMetricsList);
 
 }

@@ -45,7 +45,7 @@ import java.util.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters, HierarchicalAgglomerative.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgglomerative.Cluster, HierarchicalAgglomerative.ModelParameters, HierarchicalAgglomerative.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
 
     /** {@inheritDoc} */
     public static class Cluster extends AbstractClusterer.AbstractCluster {
@@ -287,13 +287,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         }
         
     } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClusterer.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-    }
-    
+
     /**
      * Public constructor of the algorithm.
      * 
@@ -301,7 +295,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
      * @param conf 
      */
     public HierarchicalAgglomerative(String dbName, Configuration conf) {
-        super(dbName, conf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidator<>());
+        super(dbName, conf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     } 
     

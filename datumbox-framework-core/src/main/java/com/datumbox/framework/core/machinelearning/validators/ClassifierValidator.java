@@ -318,7 +318,7 @@ public class ClassifierValidator extends AbstractValidator<ClassifierValidator.V
 
     /** {@inheritDoc} */
     @Override
-    protected ValidationMetrics calculateAverageValidationMetrics(List<ValidationMetrics> validationMetricsList) {
+    public ValidationMetrics average(List<ValidationMetrics> validationMetricsList) {
         if(validationMetricsList.isEmpty()) {
             return null;
         }

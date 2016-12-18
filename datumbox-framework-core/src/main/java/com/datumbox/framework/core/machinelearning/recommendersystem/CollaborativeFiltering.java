@@ -24,7 +24,6 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRecommender;
-import com.datumbox.framework.core.machinelearning.validators.CollaborativeFilteringValidator;
 import com.datumbox.framework.core.mathematics.distances.Distance;
 import com.datumbox.framework.core.statistics.parametrics.relatedsamples.PearsonCorrelation;
 
@@ -36,7 +35,7 @@ import java.util.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters, CollaborativeFiltering.ValidationMetrics> {
+public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFiltering.ModelParameters, CollaborativeFiltering.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractRecommender.AbstractModelParameters {
@@ -120,32 +119,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
         }
 
     }
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractRecommender.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double RMSE = 0.0; 
-        
-        /**
-         * Getter for Root-mean-square deviation.
-         * 
-         * @return 
-         */
-        public double getRMSE() {
-            return RMSE;
-        }
 
-        /**
-         * Setter for Root-mean-square deviation.
-         * 
-         * @param RMSE
-         */
-        public void setRMSE(double RMSE) {
-            this.RMSE = RMSE;
-        }
-    }
-    
     /**
      * Public constructor of the algorithm.
      * 
@@ -153,7 +127,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
      * @param conf 
      */
     public CollaborativeFiltering(String dbName, Configuration conf) {
-        super(dbName, conf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class, CollaborativeFiltering.ValidationMetrics.class, new CollaborativeFilteringValidator<>());
+        super(dbName, conf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
     } 
 
     /** {@inheritDoc} */
@@ -236,32 +210,6 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
                 similarities.put(Arrays.asList(y2, y1), similarity); //add also for the reverse key because similarity is symmetric
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected ValidationMetrics validateModel(Dataframe validationData) {
-        _predictDataset(validationData, true);
-        
-        //create new validation metrics object
-        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
-        
-        double RMSE = 0.0;
-        int i = 0;
-        for(Record r : validationData) {
-            AssociativeArray predictions = r.getYPredictedProbabilities();
-            for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Object column = entry.getKey();
-                Object value = entry.getValue();
-                RMSE += Math.pow(TypeInference.toDouble(value)-TypeInference.toDouble(predictions.get(column)), 2.0);
-                ++i;
-            }           
-        }
-        
-        RMSE = Math.sqrt(RMSE/i);
-        validationMetrics.setRMSE(RMSE);
-        
-        return validationMetrics;
     }
     
     private double calculateSimilarity(Record r1, Record r2) {        

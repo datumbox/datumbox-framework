@@ -32,7 +32,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters, BinarizedNaiveBayes.ValidationMetrics> {
+public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
@@ -54,12 +54,6 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
 
     }
     
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
-    }
-    
     /**
      * Public constructor of the algorithm.
      * 
@@ -67,7 +61,7 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
      * @param conf 
      */
     public BinarizedNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class, true);
+        super(dbName, conf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, true);
     }
     
     /** {@inheritDoc} */

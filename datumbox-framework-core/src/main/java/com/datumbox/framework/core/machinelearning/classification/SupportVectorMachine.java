@@ -28,7 +28,6 @@ import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import libsvm.*;
 
@@ -51,7 +50,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters, SupportVectorMachine.ValidationMetrics> implements PredictParallelizable {
+public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachine.ModelParameters, SupportVectorMachine.TrainingParameters> implements PredictParallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -184,13 +183,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
             this.svmParameter = svmParameter;
         }
     } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
 
-    }
-        
     /**
      * Public constructor of the algorithm.
      * 
@@ -198,7 +191,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
      * @param conf 
      */
     public SupportVectorMachine(String dbName, Configuration conf) {
-        super(dbName, conf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class, SupportVectorMachine.ValidationMetrics.class, new ClassifierValidator<>());
+        super(dbName, conf, SupportVectorMachine.ModelParameters.class, SupportVectorMachine.TrainingParameters.class);
         svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
     

@@ -22,9 +22,8 @@ import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 
 import java.util.*;
 
@@ -37,7 +36,7 @@ import java.util.*;
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractCluster, MP extends AbstractClusterer.AbstractModelParameters, TP extends AbstractClusterer.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
+public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractCluster, MP extends AbstractClusterer.AbstractModelParameters, TP extends AbstractClusterer.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
 
     /** {@inheritDoc} */
     public static abstract class AbstractCluster implements Cluster {
@@ -117,7 +116,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
      * {@inheritDoc}
      * @param <CL>
      */
-    public static abstract class AbstractModelParameters<CL extends AbstractClusterer.AbstractCluster> extends AbstractTrainer.AbstractModelParameters {
+    public static abstract class AbstractModelParameters<CL extends AbstractClusterer.AbstractCluster> extends AbstractModeler.AbstractModelParameters {
         
         //number of classes if the dataset is annotated. Use Linked Hash Set to ensure that the order of classes will be maintained. 
         private Set<Object> goldStandardClasses = new LinkedHashSet<>();
@@ -130,7 +129,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
 
         /** 
          * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
          */
         protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -191,7 +190,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractClusterer(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, conf, mpClass, tpClass);
@@ -219,5 +218,16 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
      */
     public Map<Integer, CL> getClusters() {
         return knowledgeBase.getModelParameters().getClusterMap();
+    }
+
+    //TODO: remove this once we create the save/load
+    public ClustererValidator.ValidationMetrics validate(Dataframe testingData) {
+        logger.info("validate()");
+
+        knowledgeBase.load();
+
+        predict(testingData);
+
+        return new ClustererValidator().validate(testingData);
     }
 }

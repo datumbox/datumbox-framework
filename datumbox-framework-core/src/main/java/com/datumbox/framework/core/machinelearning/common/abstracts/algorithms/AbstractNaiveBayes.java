@@ -42,9 +42,8 @@ import java.util.*;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters, VM extends AbstractNaiveBayes.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> implements PredictParallelizable, TrainParallelizable {
+public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> implements PredictParallelizable, TrainParallelizable {
     /**
      * Flag that indicates whether the algorithm binarizes the provided activated 
      * features.
@@ -134,12 +133,11 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @param vmClass
      * @param isBinarized
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
-    protected AbstractNaiveBayes(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, boolean isBinarized) {
-        super(dbName, conf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
+    protected AbstractNaiveBayes(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, boolean isBinarized) {
+        super(dbName, conf, mpClass, tpClass);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
         this.isBinarized = isBinarized;
     } 

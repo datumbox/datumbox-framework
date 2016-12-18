@@ -42,7 +42,7 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPMM.ModelParameters, GaussianDPMM.TrainingParameters, GaussianDPMM.ValidationMetrics> {
+public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPMM.ModelParameters, GaussianDPMM.TrainingParameters> {
 
     /**
      * The AbstractCluster class of the GaussianDPMM model.
@@ -373,12 +373,6 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
     }
 
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractDPMM.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
-    }
-
     /**
      * Public constructor of the algorithm.
      *
@@ -386,7 +380,7 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
      * @param conf
      */
     public GaussianDPMM(String dbName, Configuration conf) {
-        super(dbName, conf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class, GaussianDPMM.ValidationMetrics.class);
+        super(dbName, conf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class);
     }
 
     /** {@inheritDoc} */

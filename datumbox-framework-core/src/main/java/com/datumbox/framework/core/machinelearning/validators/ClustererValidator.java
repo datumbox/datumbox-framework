@@ -179,7 +179,7 @@ public class ClustererValidator extends AbstractValidator<ClustererValidator.Val
 
     /** {@inheritDoc} */
     @Override
-    protected ValidationMetrics calculateAverageValidationMetrics(List<ValidationMetrics> validationMetricsList) {
+    public ValidationMetrics average(List<ValidationMetrics> validationMetricsList) {
         if(validationMetricsList.isEmpty()) {
             return null;
         }

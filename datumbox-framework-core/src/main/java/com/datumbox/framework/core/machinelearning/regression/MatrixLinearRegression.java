@@ -25,7 +25,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import org.apache.commons.math3.linear.LUDecomposition;
@@ -42,15 +42,15 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters, MatrixLinearRegression.ValidationMetrics> implements StepwiseCompatible {
+public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegression.ModelParameters, MatrixLinearRegression.TrainingParameters> implements StepwiseCompatible {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractLinearRegression.AbstractModelParameters {
+    public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
-        /**
-         * Feature set
-         */
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        private Map<Object, Double> thitas; //the thita parameters of the model
+
         @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds; //list of all the supported features
         
@@ -62,6 +62,24 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
          */
         protected ModelParameters(DatabaseConnector dbc) {
             super(dbc);
+        }
+
+        /**
+         * Getter for the Thita coefficients.
+         *
+         * @return
+         */
+        public Map<Object, Double> getThitas() {
+            return thitas;
+        }
+
+        /**
+         * Setter for the Thita coefficients.
+         *
+         * @param thitas
+         */
+        protected void setThitas(Map<Object, Double> thitas) {
+            this.thitas = thitas;
         }
         
         /**
@@ -109,15 +127,9 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractLinearRegression.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractRegressor.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractLinearRegression.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
     }
 
     /**
@@ -127,7 +139,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
      * @param conf 
      */
     public MatrixLinearRegression(String dbName, Configuration conf) {
-        super(dbName, conf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class, MatrixLinearRegression.ValidationMetrics.class);
+        super(dbName, conf, MatrixLinearRegression.ModelParameters.class, MatrixLinearRegression.TrainingParameters.class);
     }
 
     /** {@inheritDoc} */

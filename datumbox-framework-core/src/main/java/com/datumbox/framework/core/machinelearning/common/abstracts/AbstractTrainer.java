@@ -48,10 +48,10 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      */
     public static abstract class AbstractModelParameters implements ModelParameters {
         //number of data points used for training
-        private Integer n = 0;
+        private Integer n = 0; //TODO: do I need this?
 
         //number of features in data points used for training
-        private Integer d = 0;
+        private Integer d = 0; //TODO: do I need this?
 
         /**
          * Protected constructor which accepts as argument the DatabaseConnector.

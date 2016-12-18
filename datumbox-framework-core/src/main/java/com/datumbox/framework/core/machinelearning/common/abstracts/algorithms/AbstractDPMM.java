@@ -28,7 +28,6 @@ import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
-import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
 
@@ -45,10 +44,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <CL>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-
-public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters, VM extends AbstractDPMM.AbstractValidationMetrics> extends AbstractClusterer<CL, MP, TP, VM> implements PredictParallelizable {
+public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP extends AbstractDPMM.AbstractModelParameters, TP extends AbstractDPMM.AbstractTrainingParameters> extends AbstractClusterer<CL, MP, TP> implements PredictParallelizable {
     
     /** {@inheritDoc} */
     public static abstract class AbstractCluster extends AbstractClusterer.AbstractCluster {
@@ -256,11 +253,10 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @param vmClass
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
-    protected AbstractDPMM(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, conf, mpClass, tpClass, vmClass, new ClustererValidator<>());
+    protected AbstractDPMM(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, mpClass, tpClass);
     } 
     
     private boolean parallelized = true;

@@ -30,7 +30,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.validators.OrdinalRegressionValidator;
 import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
 
 import java.util.HashMap;
@@ -56,7 +55,7 @@ import java.util.TreeSet;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -179,52 +178,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             this.l2 = l2;
         }
     } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double SSE = 0.0; 
-        private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
-        
-        /**
-         * Getter for the SSE metric.
-         * 
-         * @return 
-         */
-        public double getSSE() {
-            return SSE;
-        }
-        
-        /**
-         * Setter for the SSE metric.
-         * 
-         * @param SSE 
-         */
-        public void setSSE(double SSE) {
-            this.SSE = SSE;
-        }
-        
-        /**
-         * Getter for the Count R^2 metric.
-         * 
-         * @return 
-         */
-        public double getCountRSquare() {
-            return CountRSquare;
-        }
-        
-        /**
-         * Setter for the Count R^2 metric.
-         * 
-         * @param CountRSquare 
-         */
-        public void setCountRSquare(double CountRSquare) {
-            this.CountRSquare = CountRSquare;
-        }
-        
-    }
-    
+
     /**
      * Public constructor of the algorithm.
      * 
@@ -232,7 +186,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
      * @param conf 
      */
     public OrdinalRegression(String dbName, Configuration conf) {
-        super(dbName, conf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidator());
+        super(dbName, conf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     
@@ -349,23 +303,6 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             //Drop the temporary Collections
             dbc.dropBigMap("tmp_newWeights", tmp_newWeights);
         }
-    }
-   
-    /** {@inheritDoc} */
-    @Override
-    protected ValidationMetrics validateModel(Dataframe validationData) {
-        ValidationMetrics validationMetrics = super.validateModel(validationData);
-        
-        
-        //mapping between the thita and the exact previous thita value
-        Map<Object, Object> previousThitaMapping = getPreviousThitaMappings();
-        
-        validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
-        
-        double SSE = calculateError(validationData, previousThitaMapping, knowledgeBase.getModelParameters().getWeights(), knowledgeBase.getModelParameters().getThitas());
-        validationMetrics.setSSE(SSE);
-        
-        return validationMetrics;
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> newWeights, Map<Object, Double> newThitas, double learningRate) {

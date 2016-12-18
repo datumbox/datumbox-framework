@@ -18,11 +18,9 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 
 import java.util.*;
 
@@ -33,17 +31,17 @@ import java.util.*;
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractModelParameters, TP extends AbstractClassifier.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
+public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractModelParameters, TP extends AbstractClassifier.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
 
     /** {@inheritDoc} */
-    public static abstract class AbstractModelParameters extends AbstractTrainer.AbstractModelParameters {
+    public static abstract class AbstractModelParameters extends AbstractModeler.AbstractModelParameters {
         
         //Set with all the supported classes. Use LinkedHashSet to ensure that the order of classes will be maintained. Some method requires that (ordinal regression)
         private Set<Object> classes = new LinkedHashSet<>();
         
         /** 
          * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
          */
         protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
@@ -83,7 +81,7 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractClassifier(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, conf, mpClass, tpClass);
@@ -100,5 +98,16 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
         
         return maxEntry.getKey();
     }
-    
+
+
+    //TODO: remove this once we create the save/load
+    public ClassifierValidator.ValidationMetrics validate(Dataframe testingData) {
+        logger.info("validate()");
+
+        knowledgeBase.load();
+
+        predict(testingData);
+
+        return new ClassifierValidator().validate(testingData);
+    }
 }

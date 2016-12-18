@@ -39,7 +39,7 @@ import java.util.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters, BernoulliNaiveBayes.ValidationMetrics> {
+public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {

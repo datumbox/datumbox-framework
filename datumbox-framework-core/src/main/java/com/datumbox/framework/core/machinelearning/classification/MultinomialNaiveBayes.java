@@ -30,7 +30,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters, MultinomialNaiveBayes.ValidationMetrics> {
+public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
@@ -50,12 +50,6 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
     public static class TrainingParameters extends AbstractNaiveBayes.AbstractTrainingParameters {    
         private static final long serialVersionUID = 1L;
         
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
 
     /**
@@ -65,7 +59,7 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
      * @param conf 
      */
     public MultinomialNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class, false);
+        super(dbName, conf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, false);
     }
     
 }

@@ -41,7 +41,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters, MultinomialDPMM.ValidationMetrics> {
+public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters> {
     
     /**
      * The AbstractCluster class of the MultinomialDPMM model.
@@ -218,12 +218,6 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         }
         
     }
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractDPMM.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-    }
 
     /**
      * Public constructor of the algorithm.
@@ -232,7 +226,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
      * @param conf 
      */
     public MultinomialDPMM(String dbName, Configuration conf) {
-        super(dbName, conf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
+        super(dbName, conf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class);
     }
     
     /** {@inheritDoc} */

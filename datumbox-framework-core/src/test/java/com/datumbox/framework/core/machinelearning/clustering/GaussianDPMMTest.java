@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -68,7 +69,7 @@ public class GaussianDPMMTest extends AbstractTest {
         //instance = null;
         instance = new GaussianDPMM(dbName, conf);
 
-        GaussianDPMM.ValidationMetrics vm = instance.validate(validationData);
+        ClustererValidator.ValidationMetrics vm = instance.validate(validationData);
 
         double expResult = 1.0;
         double result = vm.getPurity();
@@ -108,8 +109,8 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
-        
-        GaussianDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClustererValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         
         double expResult = 1.0;

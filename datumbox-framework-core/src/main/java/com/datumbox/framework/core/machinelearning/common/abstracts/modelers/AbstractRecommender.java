@@ -16,8 +16,8 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
+import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.validators.RMSEValidator;
 
 /**
  * Abstract Class for recommender algorithms.
@@ -25,21 +25,28 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.validators.A
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-public abstract class AbstractRecommender<MP extends AbstractRecommender.AbstractModelParameters, TP extends AbstractRecommender.AbstractTrainingParameters, VM extends AbstractRecommender.AbstractValidationMetrics> extends AbstractTrainer<MP, TP> {
+public abstract class AbstractRecommender<MP extends AbstractRecommender.AbstractModelParameters, TP extends AbstractRecommender.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
     
     /** 
      * @param dbName
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @param vmClass
-     * @param modelValidator
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
-    protected AbstractRecommender(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
-        super(dbName, conf, mpClass, tpClass, vmClass, modelValidator);
-    } 
-    
+    protected AbstractRecommender(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, mpClass, tpClass);
+    }
+
+    //TODO: remove this once we create the save/load
+    public RMSEValidator.ValidationMetrics validate(Dataframe testingData) {
+        logger.info("validate()");
+
+        knowledgeBase.load();
+
+        predict(testingData);
+
+        return new RMSEValidator().validate(testingData);
+    }
 }

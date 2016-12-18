@@ -36,7 +36,7 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters, AbstractRegressor.ValidationMetrics>  {
+public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters>  {
     
     private transient AbstractRegressor mlregressor = null;
     
@@ -159,13 +159,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
     }
-
-
-    /*
-    The no ValidationMetrics Class here!!!!!! The algorithm fetches the
-    validations metrics of the mlregressor and cast them to AbstractRegressor.ValidationMetrics.
-    */
-    //public static class ValidationMetrics extends AbstractRegressor.ValidationMetrics { }
     
     
     /**
@@ -175,7 +168,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
      * @param conf 
      */
     public StepwiseRegression(String dbName, Configuration conf) {
-        super(dbName, conf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
+        super(dbName, conf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class);
     } 
      
     /** {@inheritDoc} */
@@ -196,34 +189,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         mlregressor = null;
         
         super.close();
-    }
-    
-    /**
-     * Performs k-fold cross validation on the dataset using an already trained
-     * Regressor and returns its ValidationMetrics Object. Before calling this method
-     * you must have already trained a model.
-     * 
-     * @param trainingData
-     * @param trainingParameters
-     * @param k
-     * @return 
-     */
-    @Override
-    public AbstractRegressor.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TrainingParameters trainingParameters, int k) {
-        if(mlregressor == null) {
-            throw new RuntimeException("You need to train a Regressor before running k-fold cross validation.");
-        }
-        else {
-            return (ValidationMetrics) mlregressor.kFoldCrossValidation(trainingData, trainingParameters, k);
-        }
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected AbstractRegressor.ValidationMetrics validateModel(Dataframe validationData) {
-        loadRegressor();
-        
-        return (AbstractRegressor.ValidationMetrics) mlregressor.validate(validationData);
     }
 
     /** {@inheritDoc} */

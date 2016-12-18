@@ -30,7 +30,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.validators.SoftMaxRegressionValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.utilities.regularization.ElasticNetRegularizer;
 import com.datumbox.framework.core.utilities.regularization.L1Regularizer;
@@ -54,7 +53,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -173,52 +172,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         }
 
     } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double SSE = 0.0; 
-        private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
-        
-        /**
-         * Getter for the SSE metric.
-         * 
-         * @return 
-         */
-        public double getSSE() {
-            return SSE;
-        }
-        
-        /**
-         * Setter for the SSE metric.
-         * 
-         * @param SSE 
-         */
-        public void setSSE(double SSE) {
-            this.SSE = SSE;
-        }
-        
-        /**
-         * Getter for the Count R^2 metric.
-         * 
-         * @return 
-         */
-        public double getCountRSquare() {
-            return CountRSquare;
-        }
-        
-        /**
-         * Setter for the Count R^2 metric.
-         * 
-         * @param CountRSquare 
-         */
-        public void setCountRSquare(double CountRSquare) {
-            this.CountRSquare = CountRSquare;
-        }
-        
-    }
-    
+
     /**
      * Public constructor of the algorithm.
      * 
@@ -226,7 +180,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
      * @param conf 
      */
     public SoftMaxRegression(String dbName, Configuration conf) {
-        super(dbName, conf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidator());
+        super(dbName, conf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     
@@ -340,19 +294,6 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             //Drop the temporary Collection
             dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected SoftMaxRegression.ValidationMetrics validateModel(Dataframe validationData) {
-        SoftMaxRegression.ValidationMetrics validationMetrics = super.validateModel(validationData);
-        
-        validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
-        
-        double SSE = calculateError(validationData,knowledgeBase.getModelParameters().getThitas());
-        validationMetrics.setSSE(SSE);
-        
-        return validationMetrics;
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<List<Object>, Double> newThitas, double learningRate) {

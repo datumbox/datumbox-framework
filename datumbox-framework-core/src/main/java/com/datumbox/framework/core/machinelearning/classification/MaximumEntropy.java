@@ -51,7 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParameters, MaximumEntropy.TrainingParameters, MaximumEntropy.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParameters, MaximumEntropy.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -113,13 +113,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         }
 
     } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
 
-    }
-        
     /**
      * Public constructor of the algorithm.
      * 
@@ -127,7 +121,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
      * @param conf 
      */
     public MaximumEntropy(String dbName, Configuration conf) {
-        super(dbName, conf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class, new ClassifierValidator<>());
+        super(dbName, conf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     

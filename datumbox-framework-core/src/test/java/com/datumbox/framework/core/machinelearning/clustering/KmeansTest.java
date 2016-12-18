@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -81,7 +82,7 @@ public class KmeansTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new Kmeans(dbName, conf);
 
-        Kmeans.ValidationMetrics vm = instance.validate(validationData);
+        ClustererValidator.ValidationMetrics vm = instance.validate(validationData);
 
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -132,8 +133,8 @@ public class KmeansTest extends AbstractTest {
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
-        
-        Kmeans.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClustererValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
 

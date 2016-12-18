@@ -25,7 +25,6 @@ import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractTopicModeler;
-import com.datumbox.framework.core.machinelearning.validators.LatentDirichletAllocationValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
 
@@ -55,7 +54,7 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
+public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractTopicModeler.AbstractModelParameters {
@@ -306,33 +305,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         }
         
     } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractTopicModeler.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double perplexity = 0.0;
-        
-        /**
-         * Getter for the perplexity metric.
-         * 
-         * @return 
-         */
-        public double getPerplexity() {
-            return perplexity;
-        }
-        
-        /**
-         * Setter for the perplexity metric.
-         * 
-         * @param perplexity 
-         */
-        public void setPerplexity(double perplexity) {
-            this.perplexity = perplexity;
-        }
 
-    }
-    
     /**
      * Public constructor of the algorithm.
      * 
@@ -340,7 +313,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
      * @param conf 
      */
     public LatentDirichletAllocation(String dbName, Configuration conf) {
-        super(dbName, conf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidator());
+        super(dbName, conf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class);
     }
     
     /**
@@ -383,12 +356,6 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         }
         
         return ptw;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected void _predictDataset(Dataframe newData) {
-        predictAndValidate(newData);
     }
     
     /** {@inheritDoc} */
@@ -531,12 +498,6 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         modelParameters.setTotalIterations(iteration);
         
     }
-
-    /** {@inheritDoc} */
-    @Override
-    protected ValidationMetrics validateModel(Dataframe validationData) {
-        return predictAndValidate(validationData);
-    }
     
     /**
      * Utility method that increases the map value by 1.
@@ -566,8 +527,10 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         }
         map.put(key, previousValue-1);
     }
-    
-    private ValidationMetrics predictAndValidate(Dataframe newData) {
+
+    /** {@inheritDoc} */
+    @Override
+    protected void _predictDataset(Dataframe newData) {
         //This method uses similar approach to the training but the most important
         //difference is that we do not wish to modify the original training params.
         //as a result we need to modify the code to use additional temporary
@@ -575,11 +538,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         //training data in order to make a decision
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        
-        //create new validation metrics object
-        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
-        
+
         //get model parameters
         int d = modelParameters.getD();
         int k = trainingParameters.getK(); //number of topics
@@ -622,8 +581,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         double beta = trainingParameters.getBeta();
         
         int maxIterations = trainingParameters.getMaxIterations();
-        
-        double perplexity = Double.MAX_VALUE;
+
         for(int iteration=0;iteration<maxIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -631,7 +589,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
             
             //collapsed gibbs sampler
             int changedCounter = 0;
-            perplexity = 0.0;
+            double perplexity = 0.0;
             double totalDatasetWords = 0.0;
             for(Map.Entry<Integer, Record> e : newData.entries()) {
                 Integer rId = e.getKey();
@@ -738,10 +696,5 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         dbc.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
         dbc.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
         dbc.dropBigMap("tmp_topicCounts", tmp_topicCounts);
-        
-        
-        validationMetrics.setPerplexity(perplexity);
-        
-        return validationMetrics;
     }
 }
