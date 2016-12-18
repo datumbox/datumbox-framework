@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -78,7 +79,8 @@ public class KmeansTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new Kmeans(dbName, conf);
 
-        ClusteringMetrics vm = instance.validate(validationData);
+        instance.predict(validationData);
+        ClusteringMetrics vm = new ClusteringMetrics(validationData);
 
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -118,8 +120,7 @@ public class KmeansTest extends AbstractTest {
 
         
         
-        
-        Kmeans instance = new Kmeans(dbName, conf);
+
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
@@ -130,7 +131,7 @@ public class KmeansTest extends AbstractTest {
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
 
-        ClusteringMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClusteringMetrics vm = new KFoldValidator<>(ClusteringMetrics.class, conf, k).validate(trainingData, param);
 
         df.denormalize(trainingData);
 
@@ -140,7 +141,6 @@ public class KmeansTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
-        instance.delete();
         
         trainingData.delete();
     }

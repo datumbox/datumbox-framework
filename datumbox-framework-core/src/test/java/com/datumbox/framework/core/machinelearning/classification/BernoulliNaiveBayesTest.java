@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -64,7 +65,7 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         instance = new BernoulliNaiveBayes(dbName, conf);
         
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -97,18 +98,15 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].delete();
         
-        
-        String dbName = this.getClass().getSimpleName();
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, conf);
+
         
         BernoulliNaiveBayes.TrainingParameters param = new BernoulliNaiveBayes.TrainingParameters();
         
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -75,7 +76,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         df = new DummyXMinMaxNormalizer(dbName, conf);
         instance = new OrdinalRegression(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
 
         
         df.denormalize(trainingData);
@@ -119,14 +120,12 @@ public class OrdinalRegressionTest extends AbstractTest {
         DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
         
         df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
-        
-        OrdinalRegression instance = new OrdinalRegression(dbName, conf);
-        
+
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         param.setL2(0.001);
 
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
 
         	        
         df.denormalize(trainingData);
@@ -138,7 +137,6 @@ public class OrdinalRegressionTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
-        instance.delete();
         
         trainingData.delete();
     }

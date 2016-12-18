@@ -2,11 +2,11 @@ CODE IMPROVEMENTS
 =================
 
 - Add save() load() methods in the models
-- The method kFoldCrossValidation is removed from AbstractValidator. It should be a separate class instead. 
 
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
 - Write a ShuffleSplitValidator class similar to KFold.
 - Write generic optimizers instead of having optimization methods in the algorithms.
+
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
 - Try to separate persistent storage in a separate module that is inherited by common.
 

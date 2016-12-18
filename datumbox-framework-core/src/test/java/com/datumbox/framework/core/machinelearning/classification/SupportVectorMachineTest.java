@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -74,7 +75,7 @@ public class SupportVectorMachineTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new SupportVectorMachine(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         
         df.denormalize(trainingData);
@@ -112,20 +113,16 @@ public class SupportVectorMachineTest extends AbstractTest {
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, conf);
+
         
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.LINEAR;
 
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
         
-        double expResult = 0.6473992673992675;
+        double expResult = 0.5861704961704961;
         double result = vm.getMacroF1();
         Assert.assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

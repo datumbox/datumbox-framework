@@ -22,6 +22,7 @@ import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -71,7 +72,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         df = new XYMinMaxNormalizer(dbName, conf);
         instance = new MatrixLinearRegression(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         
 	        
@@ -111,12 +112,11 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
         
-        
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, conf);
+
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
-        LinearRegressionMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        LinearRegressionMetrics vm = new KFoldValidator<>(LinearRegressionMetrics.class, conf, k).validate(trainingData, param);
         
         df.denormalize(trainingData);
 
@@ -125,7 +125,6 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
-        instance.delete();
         
         trainingData.delete();
     }

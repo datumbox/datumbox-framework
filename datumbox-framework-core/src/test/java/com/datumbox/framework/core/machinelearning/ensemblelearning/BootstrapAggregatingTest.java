@@ -21,6 +21,7 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -85,7 +86,7 @@ public class BootstrapAggregatingTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new BootstrapAggregating(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -123,9 +124,7 @@ public class BootstrapAggregatingTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].delete();
         
-        
-        String dbName = this.getClass().getSimpleName();
-        BootstrapAggregating instance = new BootstrapAggregating(dbName, conf);
+
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -138,12 +137,11 @@ public class BootstrapAggregatingTest extends AbstractTest {
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
         
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
         
         double expResult = 0.6609432234432234;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

@@ -40,18 +40,4 @@ public abstract class AbstractRecommender<MP extends AbstractRecommender.Abstrac
         super(dbName, conf, mpClass, tpClass);
     }
 
-    //TODO: remove this once we create the save/load
-    public RecommendationMetrics validate(Dataframe testingData) {
-        logger.info("validate()");
-
-        predict(testingData);
-
-        return new RecommendationMetrics(testingData);
-    }
-    //TODO: remove this once we create the save/load
-    public RecommendationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("validate()");
-
-        return new KFoldValidator<>(RecommendationMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
-    }
 }

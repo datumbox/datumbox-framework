@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -74,7 +75,8 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new HierarchicalAgglomerative(dbName, conf);
 
-        ClusteringMetrics vm = instance.validate(validationData);
+        instance.predict(validationData);
+        ClusteringMetrics vm = new ClusteringMetrics(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -113,8 +115,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
 
         
         
-        
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf);
+
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
@@ -122,7 +123,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
 
-        ClusteringMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClusteringMetrics vm = new KFoldValidator<>(ClusteringMetrics.class, conf, k).validate(trainingData, param);
 
         df.denormalize(trainingData);
 
@@ -132,7 +133,6 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
-        instance.delete();
         
         trainingData.delete();
     }

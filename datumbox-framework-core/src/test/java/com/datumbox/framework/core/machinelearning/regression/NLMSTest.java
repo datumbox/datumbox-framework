@@ -22,6 +22,7 @@ import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.featureselection.continuous.PCA;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -75,7 +76,7 @@ public class NLMSTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new NLMS(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -122,15 +123,14 @@ public class NLMSTest extends AbstractTest {
         featureSelector.fit_transform(trainingData, featureSelectorParameters);
         featureSelector.delete();
 
-        
-        NLMS instance = new NLMS(dbName, conf);
+
 
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);
         param.setL1(0.001);
         param.setL2(0.001);
         
-        LinearRegressionMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        LinearRegressionMetrics vm = new KFoldValidator<>(LinearRegressionMetrics.class, conf, k).validate(trainingData, param);
 
         df.denormalize(trainingData);
 
@@ -140,7 +140,6 @@ public class NLMSTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
-        instance.delete();
         
         trainingData.delete();
     }

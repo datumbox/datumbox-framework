@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.core.utilities.text.extractors.UniqueWordSequenceExtractor;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -85,19 +86,17 @@ public class LatentDirichletAllocationTest extends AbstractTest {
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }
-        
-        SoftMaxRegression smr = new SoftMaxRegression(dbName, conf);
+
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
 
-        ClassificationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, 1).validate(reducedTrainingData, tp);
         
         double expResult = 0.6843125117743629;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 
-        smr.delete();
         lda.delete();
         reducedTrainingData.delete();
         

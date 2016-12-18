@@ -20,6 +20,8 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
@@ -74,14 +76,13 @@ public class ModelerTest extends AbstractTest {
         trainingParameters.setFeatureSelectorTrainingParameters(null);
         
         instance.fit(trainingData, trainingParameters);
-        
-        /*
-        //TODO: restore this test
-        ClassificationMetrics.Metrics vm = instance.validate(trainingData);
+
+        instance.predict(trainingData);
+
+        ClassificationMetrics vm = new ClassificationMetrics(trainingData);
 
         double expResult2 = 0.8;
-        Assert.assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
-        */
+        assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
 
         instance.close();
         //instance = null;

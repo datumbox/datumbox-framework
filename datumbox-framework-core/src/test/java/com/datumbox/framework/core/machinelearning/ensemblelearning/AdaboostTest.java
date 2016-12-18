@@ -21,6 +21,7 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -86,7 +87,7 @@ public class AdaboostTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new Adaboost(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         
         
@@ -126,10 +127,7 @@ public class AdaboostTest extends AbstractTest {
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        Adaboost instance = new Adaboost(dbName, conf);
+
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -141,13 +139,12 @@ public class AdaboostTest extends AbstractTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
-        
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);;
         
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

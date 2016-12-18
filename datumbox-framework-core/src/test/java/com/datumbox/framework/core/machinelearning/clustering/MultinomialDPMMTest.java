@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -63,7 +64,8 @@ public class MultinomialDPMMTest extends AbstractTest {
         //instance = null;
         instance = new MultinomialDPMM(dbName, conf);
 
-        ClusteringMetrics vm = instance.validate(validationData);
+        instance.predict(validationData);
+        ClusteringMetrics vm = new ClusteringMetrics(validationData);
 
         double expResult = 1.0;
         double result = vm.getPurity();
@@ -91,9 +93,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].delete();
         
-        
-        String dbName = this.getClass().getSimpleName();
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, conf);
+
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -101,13 +101,12 @@ public class MultinomialDPMMTest extends AbstractTest {
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
 
-        ClusteringMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClusteringMetrics vm = new KFoldValidator<>(ClusteringMetrics.class, conf, k).validate(trainingData, param);
 
         
         double expResult = 1.0;
         double result = vm.getPurity();
         Assert.assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

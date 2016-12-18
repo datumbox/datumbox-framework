@@ -221,18 +221,4 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         return knowledgeBase.getModelParameters().getClusterMap();
     }
 
-    //TODO: remove this once we create the save/load
-    public ClusteringMetrics validate(Dataframe testingData) {
-        logger.info("validate()");
-
-        predict(testingData);
-
-        return new ClusteringMetrics(testingData);
-    }
-    //TODO: remove this once we create the save/load
-    public ClusteringMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("validate()");
-
-        return new KFoldValidator<>(ClusteringMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
-    }
 }

@@ -100,19 +100,4 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
         return maxEntry.getKey();
     }
 
-
-    //TODO: remove this once we create the save/load
-    public ClassificationMetrics validate(Dataframe testingData) {
-        logger.info("validate()");
-
-        predict(testingData);
-
-        return new ClassificationMetrics(testingData);
-    }
-    //TODO: remove this once we create the save/load
-    public ClassificationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("validate()");
-
-        return new KFoldValidator<>(ClassificationMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
-    }
 }

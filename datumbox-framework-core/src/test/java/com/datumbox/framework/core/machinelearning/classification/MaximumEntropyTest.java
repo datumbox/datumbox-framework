@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -64,7 +65,7 @@ public class MaximumEntropyTest extends AbstractTest {
         //instance = null;
         instance = new MaximumEntropy(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -97,20 +98,16 @@ public class MaximumEntropyTest extends AbstractTest {
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        MaximumEntropy instance = new MaximumEntropy(dbName, conf);
+
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
 
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
         
         double expResult = 0.6051098901098901;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

@@ -63,8 +63,9 @@ public class CollaborativeFilteringTest extends AbstractTest {
         instance.close();
         //instance = null;
         instance = new CollaborativeFiltering(dbName, conf);
-        
-        RecommendationMetrics vm = instance.validate(validationData);
+
+        instance.predict(validationData);
+        RecommendationMetrics vm = new RecommendationMetrics(validationData);
         
         Map<Object, Double> expResult = new HashMap<>();
         expResult.put("pitta", 4.686394033077408);

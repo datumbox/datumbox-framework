@@ -75,7 +75,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         df.transform(validationData);
         
         instance = new StepwiseRegression(dbName, conf);
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         df.denormalize(validationData);
         

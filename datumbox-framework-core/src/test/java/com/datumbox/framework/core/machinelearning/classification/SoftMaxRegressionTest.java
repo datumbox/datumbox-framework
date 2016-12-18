@@ -21,6 +21,7 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -77,7 +78,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new SoftMaxRegression(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         	        
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -120,15 +121,13 @@ public class SoftMaxRegressionTest extends AbstractTest {
         String dbName = this.getClass().getSimpleName();
         XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, conf);
         df.fit_transform(trainingData, new XMinMaxNormalizer.TrainingParameters());
-        
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, conf);
-        
+
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);
         param.setL1(0.0001);
         param.setL2(0.0001);
 
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
 
         df.denormalize(trainingData);
         
@@ -136,7 +135,6 @@ public class SoftMaxRegressionTest extends AbstractTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         df.delete();
-        instance.delete();
         
         trainingData.delete();
     }

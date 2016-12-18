@@ -72,7 +72,7 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new BayesianEnsembleMethod(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);

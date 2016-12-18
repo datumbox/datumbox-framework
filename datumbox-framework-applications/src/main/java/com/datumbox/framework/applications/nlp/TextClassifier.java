@@ -28,6 +28,8 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.featureselec
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.wrappers.AbstractWrapper;
+import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.utilities.text.extractors.AbstractTextExtractor;
 
 import java.net.URI;
@@ -219,6 +221,56 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         testDataset.delete();
         
         return r;
+    }
+
+    /**
+     * It validates the modeler using the provided dataset and it returns the
+     AbstractValidationMetrics. The testDataset should contain the real target variables.
+     *
+     * @param testDataset
+     * @return
+     */
+    public ClassificationMetrics validate(Dataframe testDataset) {
+        logger.info("validate()");
+
+        //ensure db loaded
+        knowledgeBase.load();
+
+        preprocessTestDataset(testDataset);
+        modeler.predict(testDataset);
+
+        ClassificationMetrics vm = new ClassificationMetrics(testDataset);
+
+        return vm;
+    }
+
+    /**
+     * It validates the modeler using the provided dataset files. The data
+     map should have as index the names of each class and as values the URIs
+     of the training files. The data files should contain one example
+     per row.
+     *
+     * @param datasets
+     * @return
+     */
+    public ClassificationMetrics validate(Map<Object, URI> datasets) {
+        //ensure db loaded
+        knowledgeBase.load();
+
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+
+        //build the testDataset
+        Dataframe testDataset = Dataframe.Builder.parseTextFiles(
+                datasets,
+                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()),
+                knowledgeBase.getConf()
+        );
+
+        ClassificationMetrics vm = validate(testDataset);
+
+        testDataset.delete();
+
+        return vm;
     }
     
     /** {@inheritDoc} */

@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -74,7 +75,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new MultinomialNaiveBayes(dbName, conf);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -114,19 +115,16 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].delete();
         
-        
-        String dbName = this.getClass().getSimpleName();
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, conf);
+
         
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
 
-        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
         trainingData.delete();
     }

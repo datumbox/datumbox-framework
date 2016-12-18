@@ -40,20 +40,4 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
         super(dbName, conf, mpClass, tpClass);
     }
 
-    //TODO: remove this once we create the save/load
-    public LinearRegressionMetrics validate(Dataframe testingData) {
-        logger.info("validate()");
-
-        knowledgeBase.load();
-
-        predict(testingData);
-
-        return new LinearRegressionMetrics(testingData);
-    }
-    //TODO: remove this once we create the save/load
-    public LinearRegressionMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("validate()");
-
-        return new KFoldValidator<>(LinearRegressionMetrics.class, knowledgeBase.getConf(), k).validate(trainingData, trainingParameters);
-    }
 }
