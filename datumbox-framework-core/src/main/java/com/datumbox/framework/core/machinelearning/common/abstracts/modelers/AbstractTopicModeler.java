@@ -27,7 +27,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.validators.A
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.AbstractModelParameters, TP extends AbstractTopicModeler.AbstractTrainingParameters, VM extends AbstractTopicModeler.AbstractValidationMetrics> extends AbstractModeler<MP, TP, VM> {
+public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.AbstractModelParameters, TP extends AbstractTopicModeler.AbstractTrainingParameters, VM extends AbstractTopicModeler.AbstractValidationMetrics> extends AbstractTrainer<MP, TP> {
     
     /** 
      * @param dbName
@@ -36,7 +36,7 @@ public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.Abstr
      * @param tpClass
      * @param vmClass
      * @param modelValidator
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractTopicModeler(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
         super(dbName, conf, mpClass, tpClass, vmClass, modelValidator);

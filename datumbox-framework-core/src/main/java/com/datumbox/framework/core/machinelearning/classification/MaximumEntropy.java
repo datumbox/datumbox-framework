@@ -30,7 +30,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Arrays;
@@ -128,7 +128,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
      */
     public MaximumEntropy(String dbName, Configuration conf) {
         super(dbName, conf, MaximumEntropy.ModelParameters.class, MaximumEntropy.TrainingParameters.class, MaximumEntropy.ValidationMetrics.class, new ClassifierValidator<>());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;
@@ -154,16 +154,16 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
     
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        Set<Object> classesSet = kb().getModelParameters().getClasses();
+        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
         
         AssociativeArray predictionScores = new AssociativeArray();
         for(Object theClass : classesSet) {
@@ -180,7 +180,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         
         
@@ -206,14 +206,14 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         }
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
         //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
         //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 tmp_EpFj_observed.put(featureClassTuple, 0.0);
                 lambdas.put(featureClassTuple, 0.0);
             }
@@ -232,7 +232,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                     Object feature = entry.getKey();
 
                     //find the class of this particular example
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                    List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                     synchronized(tmp_EpFj_observed) {
                         tmp_EpFj_observed.put(featureClassTuple, tmp_EpFj_observed.get(featureClassTuple) + increment);
                     }
@@ -252,15 +252,15 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     
     private void IIS(Dataframe trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
         
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        int totalIterations = kb().getTrainingParameters().getTotalIterations();
+        int totalIterations = knowledgeBase.getTrainingParameters().getTotalIterations();
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> lambdas = modelParameters.getLambdas();
         
         int n = modelParameters.getN();
         
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -296,7 +296,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
                                 continue;
                             }
                             Object feature = entry2.getKey();
-                            List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                            List<Object> featureClassTuple = Arrays.asList(feature, theClass);
 
                             tmp_EpFj_model.put(featureClassTuple, tmp_EpFj_model.getOrDefault(featureClassTuple, 0.0) + probabilityFraction);           
                         }
@@ -409,7 +409,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     private Double calculateClassScore(AssociativeArray x, Object theClass) {
         double score = 0;
         
-        Map<List<Object>, Double> lambdas = kb().getModelParameters().getLambdas();
+        Map<List<Object>, Double> lambdas = knowledgeBase.getModelParameters().getLambdas();
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Double value = TypeInference.toDouble(entry.getValue());
@@ -419,7 +419,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             //note that we will not use the value any more. MaxEntropy classifier is binarized.
             
             Object feature = entry.getKey();
-            List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+            List<Object> featureClassTuple = Arrays.asList(feature, theClass);
             
             Double lambdaWeight = lambdas.get(featureClassTuple);
             if(lambdaWeight!=null) {//ensure that the feature is in the dictionary

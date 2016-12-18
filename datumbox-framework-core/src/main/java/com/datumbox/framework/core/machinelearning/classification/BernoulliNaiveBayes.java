@@ -78,12 +78,6 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
     public static class TrainingParameters extends AbstractNaiveBayes.AbstractTrainingParameters {   
         private static final long serialVersionUID = 1L;
 
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
 
     /**
@@ -93,13 +87,13 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
      * @param conf 
      */
     public BernoulliNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class, true);
+        super(dbName, conf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, true);
     }
     
     /** {@inheritDoc} */
     @Override
     public PredictParallelizable.Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
@@ -129,14 +123,14 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
             //So if the feature has no value for one random class (someClass has 
             //no particular significance), then it will not have for any class
             //and thus the feature is not in the dictionary and can be ignored.
-            if(!logLikelihoods.containsKey(Arrays.<Object>asList(feature, someClass))) {
+            if(!logLikelihoods.containsKey(Arrays.asList(feature, someClass))) {
                 continue;
             }
 
             //extract the feature scores for each class for the particular feature
             AssociativeArray classLogScoresForThisFeature = new AssociativeArray(); 
             for(Object theClass : classesSet) {
-                Double logScore = logLikelihoods.get(Arrays.<Object>asList(feature, theClass));
+                Double logScore = logLikelihoods.get(Arrays.asList(feature, theClass));
                 classLogScoresForThisFeature.put(theClass, logScore);
             }
 
@@ -166,11 +160,11 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
-        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         
         
         Map<List<Object>, Double> likelihoods = modelParameters.getLogLikelihoods();
@@ -206,7 +200,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         */
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 likelihoods.put(featureClassTuple, 0.0); //the key unique across threads and the map is concurrent
             }
         });
@@ -224,7 +218,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
                 
                 if(occurrences!= null && occurrences>0.0) {
                     //The below block of code clips occurrences to 1
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass); 
+                    List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                     likelihoods.put(featureClassTuple, likelihoods.get(featureClassTuple)+1.0); //each thread updates a unique key and the map is cuncurrent
                     
                     sumOfOccurrences++;
@@ -249,7 +243,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         //update log likelihood
         for(Object theClass : classesSet) {
             double sumLog1minusP = streamExecutor.sum(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()).mapToDouble(feature -> {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass); 
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 Double occurrences = likelihoods.get(featureClassTuple);
 
                 //We perform laplace smoothing (also known as add-1)

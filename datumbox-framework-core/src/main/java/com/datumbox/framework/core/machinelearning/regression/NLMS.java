@@ -162,7 +162,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
      */
     public NLMS(String dbName, Configuration conf) {
         super(dbName, conf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
 
     private boolean parallelized = true;
@@ -188,16 +188,16 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        Map<Object, Double> thitas = kb().getModelParameters().getThitas();
+        Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
         
         double yPredicted = hypothesisFunction(r.getX(), thitas);
         
@@ -207,7 +207,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -217,13 +217,13 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             thitas.put(feature, 0.0);
         }
         
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
 
         double minError = Double.POSITIVE_INFINITY;
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -255,7 +255,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         double multiplier = learningRate/modelParameters.getN();
         Map<Object, Double> thitas = modelParameters.getThitas();
@@ -278,8 +278,8 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             }
         });
 
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
+        double l1 = knowledgeBase.getTrainingParameters().getL1();
+        double l2 = knowledgeBase.getTrainingParameters().getL2();
 
         if(l1>0.0 && l2>0.0) {
             ElasticNetRegularizer.updateWeights(l1, l2, learningRate, thitas, newThitas);
@@ -299,10 +299,10 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }));
-        error /= kb().getModelParameters().getN();
+        error /= knowledgeBase.getModelParameters().getN();
 
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
+        double l1 = knowledgeBase.getTrainingParameters().getL1();
+        double l2 = knowledgeBase.getTrainingParameters().getL2();
 
         if(l1>0.0 && l2>0.0) {
             error += ElasticNetRegularizer.estimatePenalty(l1, l2, thitas);

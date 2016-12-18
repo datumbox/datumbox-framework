@@ -24,7 +24,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
-import com.datumbox.framework.core.machinelearning.common.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.machinelearning.ensemblelearning.FixedCombinationRules;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
@@ -154,7 +154,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
      * @param mpClass
      * @param tpClass
      * @param vmClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractBoostingBagging(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, conf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
@@ -163,11 +163,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        Class<? extends AbstractClassifier> weakClassifierClass = kb().getTrainingParameters().getWeakClassifierClass();
-        List<Double> weakClassifierWeights = kb().getModelParameters().getWeakClassifierWeights();
+        Class<? extends AbstractClassifier> weakClassifierClass = knowledgeBase.getTrainingParameters().getWeakClassifierClass();
+        List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, DataTable2D> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
         
         //initialize array of recordDecisions
@@ -181,8 +181,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int t=0;t<totalWeakClassifiers;++t) {
             try (AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
                     (Class<AbstractClassifier>)weakClassifierClass, 
-                    dbName+kb().getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    kb().getConf())) {
+                    dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t),
+                    knowledgeBase.getConf())) {
                 mlclassifier.predict(newData);
             }
             
@@ -218,8 +218,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
-        AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
+        AbstractTrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         int n = modelParameters.getN();
         
@@ -259,8 +259,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             Dataframe validationDataset;
             try (AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
                     (Class<AbstractClassifier>)weakClassifierClass, 
-                    dbName+kb().getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    kb().getConf())) {
+                    dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t),
+                    knowledgeBase.getConf())) {
                 mlclassifier.fit(sampledTrainingDataset, weakClassifierTrainingParameters);
                 sampledTrainingDataset.delete();
                 //sampledTrainingDataset = null;
@@ -332,8 +332,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     }
     
     private void deleteWeakClassifiers() {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
-        AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
+        AbstractTrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         if(modelParameters==null) {
             return;
@@ -345,8 +345,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int t=0;t<totalWeakClassifiers;++t) {
             AbstractClassifier mlclassifier = Trainable.<AbstractClassifier>newInstance(
                     (Class<AbstractClassifier>)weakClassifierClass, 
-                    dbName+kb().getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t), 
-                    kb().getConf()
+                    dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR+String.valueOf(t),
+                    knowledgeBase.getConf()
             );
             mlclassifier.delete();
         }

@@ -135,7 +135,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
      */
     public TFIDF(String dbName, Configuration conf) {
         super(dbName, conf, TFIDF.ModelParameters.class, TFIDF.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;
@@ -161,15 +161,15 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         boolean binarized = trainingParameters.isBinarized();
         
         
         int n = modelParameters.getN();
         
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
@@ -253,8 +253,8 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     /** {@inheritDoc} */
     @Override
     protected void filterFeatures(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
-        Map<Object, Double> maxTFIDFfeatureScores = kb().getModelParameters().getMaxTFIDFfeatureScores();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
+        Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
         
         Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         

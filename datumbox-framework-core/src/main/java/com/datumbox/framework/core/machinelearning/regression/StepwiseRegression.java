@@ -237,7 +237,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Integer maxIterations = trainingParameters.getMaxIterations();
         if(maxIterations==null) {
@@ -292,11 +292,11 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     }
     
     private AbstractRegressor generateRegressor() {
-        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) kb().getTrainingParameters().getRegressionClass(), dbName, kb().getConf());
+        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) knowledgeBase.getTrainingParameters().getRegressionClass(), dbName, knowledgeBase.getConf());
     }
     
     private Map<Object, Double> runRegression(Dataframe trainingData) {
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         //initialize algorithm
         mlregressor = generateRegressor();

@@ -73,7 +73,7 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }
     

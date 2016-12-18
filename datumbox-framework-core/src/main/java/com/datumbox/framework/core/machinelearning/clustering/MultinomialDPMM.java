@@ -238,8 +238,8 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
     /** {@inheritDoc} */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Cluster c = new Cluster(clusterId, modelParameters.getD(), trainingParameters.getAlphaWords());
         c.setFeatureIds(modelParameters.getFeatureIds());
         

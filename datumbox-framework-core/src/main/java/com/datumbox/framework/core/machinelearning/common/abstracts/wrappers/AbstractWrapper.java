@@ -195,7 +195,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractWrapper(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, conf, DoubleKnowledgeBase.class, mpClass, tpClass);
@@ -227,7 +227,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
         if(modeler!=null) {
             modeler.delete();
         }
-        kb().delete();
+        knowledgeBase.delete();
     }
       
     /** {@inheritDoc} */
@@ -242,7 +242,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
         if(modeler!=null) {
             modeler.close();
         }
-        kb().close();
+        knowledgeBase.close();
     }
 
     /**

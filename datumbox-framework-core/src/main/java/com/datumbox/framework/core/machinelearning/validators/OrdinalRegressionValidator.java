@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.common.validators;
+package com.datumbox.framework.core.machinelearning.validators;
 
-import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegression;
+import com.datumbox.framework.core.machinelearning.classification.OrdinalRegression;
 
 import java.util.List;
 
 /**
- * Validation class for SoftMax Regression.
+ * Validation class for Ordinal Regression.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SoftMaxRegressionValidator extends ClassifierValidator<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> {
-    
+public class OrdinalRegressionValidator extends ClassifierValidator<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> {
+         
     /** {@inheritDoc} */
     @Override
-    protected SoftMaxRegression.ValidationMetrics calculateAverageValidationMetrics(List<SoftMaxRegression.ValidationMetrics> validationMetricsList) {
-        SoftMaxRegression.ValidationMetrics avgValidationMetrics = super.calculateAverageValidationMetrics(validationMetricsList);
+    protected OrdinalRegression.ValidationMetrics calculateAverageValidationMetrics(List<OrdinalRegression.ValidationMetrics> validationMetricsList) {
+        OrdinalRegression.ValidationMetrics avgValidationMetrics = super.calculateAverageValidationMetrics(validationMetricsList);
         if(avgValidationMetrics==null) {
             return null;
         }
         
         int k = validationMetricsList.size(); //number of samples
-        for(SoftMaxRegression.ValidationMetrics vmSample : validationMetricsList) {
+        for(OrdinalRegression.ValidationMetrics vmSample : validationMetricsList) {
             avgValidationMetrics.setCountRSquare(avgValidationMetrics.getCountRSquare() + vmSample.getCountRSquare()/k);
             avgValidationMetrics.setSSE(avgValidationMetrics.getSSE() + vmSample.getSSE()/k);
         }

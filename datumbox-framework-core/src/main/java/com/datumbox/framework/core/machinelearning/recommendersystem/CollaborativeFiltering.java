@@ -24,7 +24,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRecommender;
-import com.datumbox.framework.core.machinelearning.common.validators.CollaborativeFilteringValidator;
+import com.datumbox.framework.core.machinelearning.validators.CollaborativeFilteringValidator;
 import com.datumbox.framework.core.mathematics.distances.Distance;
 import com.datumbox.framework.core.statistics.parametrics.relatedsamples.PearsonCorrelation;
 
@@ -163,7 +163,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     }
     
     private void _predictDataset(Dataframe newData, boolean includeRated) {
-        Map<List<Object>, Double> similarities = kb().getModelParameters().getSimilarities();
+        Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -216,7 +216,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //calculate similarity matrix
         Map<List<Object>, Double> similarities = modelParameters.getSimilarities();
@@ -244,7 +244,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
         _predictDataset(validationData, true);
         
         //create new validation metrics object
-        ValidationMetrics validationMetrics = kb().getEmptyValidationMetricsObject();
+        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
         double RMSE = 0.0;
         int i = 0;
@@ -265,7 +265,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     }
     
     private double calculateSimilarity(Record r1, Record r2) {        
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         double similarity = 0.0;
         TrainingParameters.SimilarityMeasure similarityMethod = trainingParameters.getSimilarityMethod();

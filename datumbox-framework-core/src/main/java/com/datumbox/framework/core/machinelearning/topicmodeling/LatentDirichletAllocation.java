@@ -25,7 +25,7 @@ import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractTopicModeler;
-import com.datumbox.framework.core.machinelearning.common.validators.LatentDirichletAllocationValidator;
+import com.datumbox.framework.core.machinelearning.validators.LatentDirichletAllocationValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
 
@@ -351,8 +351,8 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     public AssociativeArray2D getWordProbabilitiesPerTopic() {
         AssociativeArray2D ptw = new AssociativeArray2D();
         
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         //initialize a probability list for every topic
         int k = trainingParameters.getK();
@@ -394,10 +394,10 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int d = modelParameters.getD();
         
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         
         //get model parameters
@@ -573,12 +573,12 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         //as a result we need to modify the code to use additional temporary
         //counts for the testing data and merge them with the parameters from the
         //training data in order to make a decision
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         
         //create new validation metrics object
-        ValidationMetrics validationMetrics = kb().getEmptyValidationMetricsObject();
+        ValidationMetrics validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
         //get model parameters
         int d = modelParameters.getD();
@@ -589,7 +589,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
         Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);

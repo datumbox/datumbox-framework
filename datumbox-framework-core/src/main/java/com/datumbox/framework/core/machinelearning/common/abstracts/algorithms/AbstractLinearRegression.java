@@ -26,7 +26,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
-import com.datumbox.framework.core.machinelearning.common.validators.LinearRegressionValidator;
+import com.datumbox.framework.core.machinelearning.validators.LinearRegressionValidator;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.core.statistics.nonparametrics.onesample.Lilliefors;
 import com.datumbox.framework.core.statistics.parametrics.onesample.DurbinWatson;
@@ -335,7 +335,7 @@ public abstract class AbstractLinearRegression<MP extends AbstractLinearRegressi
      * @param mpClass
      * @param tpClass
      * @param vmClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractLinearRegression(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, conf, mpClass, tpClass, vmClass, new LinearRegressionValidator<>());
@@ -348,7 +348,7 @@ public abstract class AbstractLinearRegression<MP extends AbstractLinearRegressi
         
         
         //create new validation metrics object
-        VM validationMetrics = kb().getEmptyValidationMetricsObject();
+        VM validationMetrics = knowledgeBase.getEmptyValidationMetricsObject();
         
         int n = validationData.size();
         
@@ -380,7 +380,7 @@ public abstract class AbstractLinearRegression<MP extends AbstractLinearRegressi
         double RSquare = SSR/SST;
         validationMetrics.setRSquare(RSquare);
         
-        int d = kb().getModelParameters().getD()+1;//add one for the constant
+        int d = knowledgeBase.getModelParameters().getD()+1;//add one for the constant
         int p = d - 1; //exclude constant
         
         double RSquareAdjusted = 1.0 - ((n-1.0)/(n-p-1.0))*(1.0-RSquare);

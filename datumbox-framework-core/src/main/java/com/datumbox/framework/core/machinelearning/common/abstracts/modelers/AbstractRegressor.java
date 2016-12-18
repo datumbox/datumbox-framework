@@ -27,7 +27,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.validators.A
  * @param <TP>
  * @param <VM>
  */
-public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractModelParameters, TP extends AbstractRegressor.AbstractTrainingParameters, VM extends AbstractRegressor.ValidationMetrics> extends AbstractModeler<MP, TP, VM> {
+public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractModelParameters, TP extends AbstractRegressor.AbstractTrainingParameters, VM extends AbstractRegressor.ValidationMetrics> extends AbstractTrainer<MP, TP> {
     
     /**
      * {@inheritDoc}
@@ -45,7 +45,7 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
      * @param tpClass
      * @param vmClass
      * @param modelValidator
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractRegressor(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
         super(dbName, conf, mpClass, tpClass, vmClass, modelValidator);

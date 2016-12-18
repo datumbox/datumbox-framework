@@ -28,7 +28,7 @@ import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClustererValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
 
@@ -257,7 +257,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      * @param mpClass
      * @param tpClass
      * @param vmClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractDPMM(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
         super(dbName, conf, mpClass, tpClass, vmClass, new ClustererValidator<>());
@@ -280,16 +280,16 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
         
         AssociativeArray clusterScores = new AssociativeArray();
@@ -307,7 +307,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
@@ -351,7 +351,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     private CL getFromClusterMap(int clusterId, Map<Integer, CL> clusterMap) {
         CL c = clusterMap.get(clusterId);
         if(c.getFeatureIds() == null) {
-            c.setFeatureIds(kb().getModelParameters().getFeatureIds()); //fetch the featureIds from model parameters object
+            c.setFeatureIds(knowledgeBase.getModelParameters().getFeatureIds()); //fetch the featureIds from model parameters object
         }
         return c;
     }
@@ -362,10 +362,10 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
      * @param dataset The list of points that we want to cluster
      */
     private int collapsedGibbsSampling(Dataframe dataset) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Integer, CL> clusterMap = modelParameters.getClusterMap();
-        AbstractTrainingParameters trainingParameters = kb().getTrainingParameters();
+        AbstractTrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         double alpha = trainingParameters.getAlpha();
         
@@ -506,7 +506,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     
     private AssociativeArray clusterProbabilities(Record r, int n, Map<Integer, CL> clusterMap) {
         Map<Object, Object> condProbCiGivenXiAndOtherCi = new ConcurrentHashMap<>();
-        double alpha = kb().getTrainingParameters().getAlpha();
+        double alpha = knowledgeBase.getTrainingParameters().getAlpha();
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
         //Calculate the probabilities of assigning the point for every cluster

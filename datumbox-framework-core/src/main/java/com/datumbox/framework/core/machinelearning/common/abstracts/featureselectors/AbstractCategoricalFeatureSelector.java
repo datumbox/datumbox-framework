@@ -147,7 +147,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractCategoricalFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
         super(dbName, conf, mpClass, tpClass);
@@ -157,7 +157,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     @Override
     protected void _fit(Dataframe trainingData) {
         
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         
         Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
         Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
@@ -184,7 +184,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     @Override
     protected void filterFeatures(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
-        filterData(newdata, kb().getDbc(), kb().getModelParameters().getFeatureScores(), kb().getTrainingParameters().isIgnoringNumericalFeatures());
+        filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
     }
     
     private static void filterData(Dataframe data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
@@ -219,8 +219,8 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
-        DatabaseConnector dbc = kb().getDbc();
-        TP trainingParameters = kb().getTrainingParameters();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
+        TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
@@ -275,7 +275,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         logger.debug("buildFeatureStatistics()");
-        TP trainingParameters = kb().getTrainingParameters();
+        TP trainingParameters = knowledgeBase.getTrainingParameters();
         boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         //the method below does not only removes the rare features but also
@@ -313,7 +313,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
 
 
                 //featureClass counts
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 Integer featureClassCounter = featureClassCounts.get(featureClassTuple);
                 if(featureClassCounter==null) {
                     featureClassCounter=0;

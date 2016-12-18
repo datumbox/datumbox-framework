@@ -42,8 +42,8 @@ public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {       
-        Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
-        Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
+        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
         
         fitX(trainingData, minColumnValues, maxColumnValues);
         fitY(trainingData, minColumnValues, maxColumnValues);
@@ -58,8 +58,8 @@ public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
     /** {@inheritDoc} */
     @Override
     protected void _normalize(Dataframe data) {
-        Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
-        Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
+        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
         normalizeX(data, minColumnValues, maxColumnValues);
         normalizeY(data, minColumnValues, maxColumnValues);
@@ -68,8 +68,8 @@ public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
     /** {@inheritDoc} */
     @Override
     protected void _denormalize(Dataframe data) {
-        Map<Object, Double> minColumnValues = kb().getModelParameters().getMinColumnValues();
-        Map<Object, Double> maxColumnValues = kb().getModelParameters().getMaxColumnValues();
+        Map<Object, Double> minColumnValues = knowledgeBase.getModelParameters().getMinColumnValues();
+        Map<Object, Double> maxColumnValues = knowledgeBase.getModelParameters().getMaxColumnValues();
 
         denormalizeX(data, minColumnValues, maxColumnValues);
         denormalizeY(data, minColumnValues, maxColumnValues);

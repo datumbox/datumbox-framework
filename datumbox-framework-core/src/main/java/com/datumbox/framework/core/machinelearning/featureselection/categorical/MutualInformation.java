@@ -67,7 +67,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
      */
     public MutualInformation(String dbName, Configuration conf) {
         super(dbName, conf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;
@@ -94,8 +94,8 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
     @Override
     protected void estimateFeatureScores(Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         
@@ -115,7 +115,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
                 
                 double N_1 = classCount.getValue();
                 double N_0 = N - N_1;
-                Integer featureClassC = featureClassCounts.get(Arrays.<Object>asList(feature, theClass));                
+                Integer featureClassC = featureClassCounts.get(Arrays.asList(feature, theClass));
                 double N11 = (featureClassC!=null)?featureClassC.doubleValue():0.0; //N11 is the number of records that have the feature and belong on the specific class
                 
                 double N01 = N_1 - N11; //N01 is the total number of records that do not have the particular feature BUT they belong to the specific class

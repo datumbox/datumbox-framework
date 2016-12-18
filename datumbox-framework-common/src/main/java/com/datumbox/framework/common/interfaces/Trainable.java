@@ -41,15 +41,12 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      * @return 
      */
     public static <BT extends Trainable> BT newInstance(Class<BT> aClass, String dbName, Configuration conf) {
-        BT algorithm = null;
         try {
-            algorithm = aClass.getConstructor(String.class, Configuration.class).newInstance(dbName, conf);
+            return aClass.getConstructor(String.class, Configuration.class).newInstance(dbName, conf);
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
-
-        return algorithm;
     }
     
     /**

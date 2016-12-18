@@ -266,7 +266,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
      */
     public PCA(String dbName, Configuration conf) {
         super(dbName, conf, PCA.ModelParameters.class, PCA.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
 
     private boolean parallelized = true;
@@ -292,7 +292,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe originalData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         int n = modelParameters.getN();
         int d = modelParameters.getD();
@@ -327,7 +327,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         RealMatrix components = decomposition.getV();
         
         //Whiten Components W = U*L^0.5; To whiten them we multiply with L^0.5.
-        if(kb().getTrainingParameters().isWhitened()) { 
+        if(knowledgeBase.getTrainingParameters().isWhitened()) {
 
             double[] sqrtEigenValues = new double[eigenValues.length];
             for(int i=0;i<eigenValues.length;i++) {
@@ -338,8 +338,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         }
         
         //the eigenvalues and their components are sorted by descending order no need to resort them
-        Integer maxDimensions = kb().getTrainingParameters().getMaxDimensions();
-        Double variancePercentageThreshold = kb().getTrainingParameters().getVariancePercentageThreshold();
+        Integer maxDimensions = knowledgeBase.getTrainingParameters().getMaxDimensions();
+        Double variancePercentageThreshold = knowledgeBase.getTrainingParameters().getVariancePercentageThreshold();
         if(variancePercentageThreshold!=null && variancePercentageThreshold<=1) {
             double sum=0.0;
             double totalVariance = StatUtils.sum(eigenValues);
@@ -377,7 +377,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     /** {@inheritDoc} */
     @Override
     protected void filterFeatures(Dataframe dataset) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();

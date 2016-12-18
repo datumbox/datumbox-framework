@@ -134,7 +134,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
     @Override
     protected void _predictDataset(Dataframe newData) {
         //read model params
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
         int d = modelParameters.getD()+1; //plus one for the constant
         
@@ -167,7 +167,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
@@ -243,7 +243,7 @@ public class MatrixLinearRegression extends AbstractLinearRegression<MatrixLinea
     /** {@inheritDoc} */
     @Override
     public Map<Object, Double> getFeaturePvalues() {
-        return kb().getModelParameters().getFeaturePvalues();
+        return knowledgeBase.getModelParameters().getFeaturePvalues();
     }
     
 }

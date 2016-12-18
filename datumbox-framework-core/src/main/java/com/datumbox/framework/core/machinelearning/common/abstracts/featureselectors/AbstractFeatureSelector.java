@@ -18,7 +18,6 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 
 /**
  * Base class for all the Feature Selectors of the framework.
@@ -27,17 +26,17 @@ import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnow
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
+public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
  
     /** 
      * @param dbName
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, DoubleKnowledgeBase.class, mpClass, tpClass);
+        super(dbName, conf, mpClass, tpClass);
     }
     
     
@@ -60,7 +59,7 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        kb().load();
+        knowledgeBase.load();
         
         filterFeatures(newData);
     }

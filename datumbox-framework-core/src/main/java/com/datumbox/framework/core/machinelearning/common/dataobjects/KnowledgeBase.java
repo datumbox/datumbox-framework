@@ -17,7 +17,6 @@ package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 
@@ -26,166 +25,188 @@ import java.lang.reflect.InvocationTargetException;
 
 
 /**
- * The basic implementation of KnowledgeBase with two main internal parameters. 
- * This class is used by the majority of algorithms excluding the ML models 
- * and any other technique that requires Model Parameters and Training Parameters
- * but has no need for Validation Metrics.
+ * The KnowledgeBase stores internally the training and model parameters of the algorithm.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
  */
-public class DoubleKnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements KnowledgeBase<MP, TP> {
-    
+public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements AutoCloseable {
+
     /**
      * The database configuration of the Permanent Storage.
      */
     private final Configuration conf;
-    
+
     /**
      * The connector to the Permanent Storage.
      */
     protected final DatabaseConnector dbc;
-    
+
     /**
      * The class of the ModelParameters class of the algorithm.
      */
     private final Class<MP> mpClass;
-    
+
     /**
      * The class of the TrainingParameters class of the algorithm.
      */
     private final Class<TP> tpClass;
-    
+
     /**
      * The ModelParameters object of the algorithm.
      */
     private MP modelParameters;
-    
+
     /**
      * The TrainingParameters object of the algorithm.
      */
     private TP trainingParameters;
-    
+
     /**
      * Public constructor of the object.
-     * 
+     *
      * @param dbName
-     * @param conf 
-     * @param mpClass 
-     * @param tpClass 
+     * @param conf
+     * @param mpClass
+     * @param tpClass
      */
-    public DoubleKnowledgeBase(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+    public KnowledgeBase(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
         this.conf = conf;
-        
+
         dbc = this.conf.getDbConfig().getConnector(dbName);
-        
+
         this.mpClass = mpClass;
         this.tpClass = tpClass;
     }
-    
-    /** {@inheritDoc} */
-    @Override
+
+    /**
+     * Getter for the Database Connector.
+     *
+     * @return
+     */
     public DatabaseConnector getDbc() {
         return dbc;
     }
-    
-    /** {@inheritDoc} */
-    @Override
+
+    /**
+     * Getter for the Configuration.
+     *
+     * @return
+     */
     public Configuration getConf() {
         return conf;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Saves the KnowledgeBase to the permanent storage.
+     */
     public void save() {
         if(isInitialized()==false) {
             throw new IllegalArgumentException("Can't save an empty KnowledgeBase.");
         }
-        
+
         dbc.saveObject("modelParameters", modelParameters);
         dbc.saveObject("trainingParameters", trainingParameters);
     }
-    
-    /** {@inheritDoc} */
-    @Override
+
+    /**
+     * Loads the KnowledgeBase from the permanent storage.
+     */
     public void load() {
         if(!isInitialized()) {
             modelParameters = dbc.loadObject("modelParameters", mpClass);
             trainingParameters = dbc.loadObject("trainingParameters", tpClass);
         }
     }
-    
-    /** {@inheritDoc} */
-    @Override
+
+    /**
+     * Deletes the database of the algorithm and closes the connection to the
+     * permanent storage.
+     */
     public void delete() {
-    	dbc.clear();
+        dbc.clear();
         close();
-        
+
         modelParameters = null;
         trainingParameters = null;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void close() {
         try {
             dbc.close();
-        } 
+        }
         catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
-    
-    /** {@inheritDoc} */
-    @Override
+
+    /**
+     * Clears the KnowledgeBase object by deleting all its data, while keeping
+     * open the connection to the permanent storage.
+     */
     public void clear() {
         dbc.clear();
         modelParameters = null;
         trainingParameters = null;
-        
+
         try {
             Constructor<MP> c = mpClass.getDeclaredConstructor(DatabaseConnector.class);
             c.setAccessible(true);
             modelParameters = c.newInstance(dbc);
             trainingParameters = tpClass.getConstructor().newInstance();
-        } 
+        }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
-        
+
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Getter for the Training Parameters.
+     *
+     * @return
+     */
     public TP getTrainingParameters() {
         return trainingParameters;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Setter for the Training Parameters.
+     *
+     * @param trainingParameters
+     */
     public void setTrainingParameters(TP trainingParameters) {
         this.trainingParameters = trainingParameters;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Getter for the Model Parameters.
+     *
+     * @return
+     */
     public MP getModelParameters() {
         return modelParameters;
     }
-    
-    /** {@inheritDoc} */
-    @Override
+
+    /**
+     * Setter for the Model Parameters.
+     *
+     * @param modelParameters
+     */
     public void setModelParameters(MP modelParameters) {
         this.modelParameters = modelParameters;
     }
-    
+
     /**
      * Checks if the KnowledgeBase has not been initialized.
-     * 
-     * @return 
+     *
+     * @return
      */
     protected boolean isInitialized() {
         return modelParameters != null && trainingParameters != null;
     }
+
 }

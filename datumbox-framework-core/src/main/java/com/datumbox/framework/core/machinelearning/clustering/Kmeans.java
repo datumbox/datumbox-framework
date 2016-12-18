@@ -32,7 +32,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClustererValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.core.mathematics.distances.Distance;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
@@ -414,7 +414,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
      */
     public Kmeans(String dbName, Configuration conf) {
         super(dbName, conf, Kmeans.ModelParameters.class, Kmeans.TrainingParameters.class, Kmeans.ValidationMetrics.class, new ClustererValidator<>());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     } 
     
     private boolean parallelized = true;
@@ -440,16 +440,16 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
         AssociativeArray clusterDistances = new AssociativeArray();
@@ -468,7 +468,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
@@ -498,8 +498,8 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
      * @param trainingData 
      */
     private void calculateFeatureWeights(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Object, TypeInference.DataType> columnTypes = trainingData.getXDataTypes();
         
         Map<Object, Double> featureWeights = modelParameters.getFeatureWeights();
@@ -519,7 +519,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             
             int n = modelParameters.getN();
             
-            DatabaseConnector dbc = kb().getDbc();
+            DatabaseConnector dbc = knowledgeBase.getDbc();
             
             Map<Object, Double> tmp_categoricalFrequencies = dbc.getBigMap("tmp_categoricalFrequencies", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             Map<Object, Double> tmp_varianceSumX = dbc.getBigMap("tmp_varianceSumX", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
@@ -584,8 +584,8 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     }
     
     private double calculateDistance(Record r1, Record r2) {        
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Object, Double> featureWeights = modelParameters.getFeatureWeights();
         
         double distance = 0.0;
@@ -610,8 +610,8 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     }
     
     private void initializeClusters(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         int k = trainingParameters.getK();
         TrainingParameters.Initialization initializationMethod = trainingParameters.getInitializationMethod();
@@ -709,7 +709,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             //alreadyAddedPoints = null;
         }
         else if(initializationMethod==TrainingParameters.Initialization.PLUS_PLUS) {
-            DatabaseConnector dbc = kb().getDbc();
+            DatabaseConnector dbc = knowledgeBase.getDbc();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
                 Map<Object, Object> tmp_minClusterDistance = dbc.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
@@ -756,8 +756,8 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     }
 
     private void calculateClusters(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
         int maxIterations = trainingParameters.getMaxIterations();
@@ -775,7 +775,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             }
             
             //assign records to clusters
-            Map<Integer, Integer> tmp_clusterAssignments = kb().getDbc().getBigMap("tmp_clusterAssignments", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Integer, Integer> tmp_clusterAssignments = knowledgeBase.getDbc().getBigMap("tmp_clusterAssignments", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
@@ -802,7 +802,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 selectedCluster.add(r);
                 clusterMap.put(selectedClusterId, selectedCluster);
             }
-            kb().getDbc().dropBigMap("tmp_clusterAssignments", tmp_clusterAssignments);
+            knowledgeBase.getDbc().dropBigMap("tmp_clusterAssignments", tmp_clusterAssignments);
             
             //update clusters
             boolean changed=false;

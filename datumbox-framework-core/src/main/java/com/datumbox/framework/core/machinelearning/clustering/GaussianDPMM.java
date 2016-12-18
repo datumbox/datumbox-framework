@@ -392,8 +392,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     /** {@inheritDoc} */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         double[] mu0 = trainingParameters.getMu0();
         double[][] psi0 = trainingParameters.getPsi0();
 

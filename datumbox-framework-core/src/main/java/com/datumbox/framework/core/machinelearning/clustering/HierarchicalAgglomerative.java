@@ -29,7 +29,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClustererValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.core.mathematics.distances.Distance;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
@@ -302,7 +302,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
      */
     public HierarchicalAgglomerative(String dbName, Configuration conf) {
         super(dbName, conf, HierarchicalAgglomerative.ModelParameters.class, HierarchicalAgglomerative.TrainingParameters.class, HierarchicalAgglomerative.ValidationMetrics.class, new ClustererValidator<>());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     } 
     
     private boolean parallelized = true;
@@ -328,16 +328,16 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
 
         AssociativeArray clusterDistances = new AssociativeArray();
@@ -356,7 +356,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> goldStandardClasses = modelParameters.getGoldStandardClasses();
         
@@ -376,7 +376,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     }
     
     private double calculateDistance(Record r1, Record r2) {        
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         double distance = 0.0;
         TrainingParameters.Distance distanceMethod = trainingParameters.getDistanceMethod();
@@ -403,11 +403,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     }
     
     private void calculateClusters(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
 
         Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
         Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
@@ -439,11 +439,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
                     distance = calculateDistance(c1.getCentroid(), c2.getCentroid());
                 }
                 
-                tmp_distanceArray.put(Arrays.<Object>asList(clusterId1, clusterId2), distance);
-                tmp_distanceArray.put(Arrays.<Object>asList(clusterId2, clusterId1), distance);
+                tmp_distanceArray.put(Arrays.asList(clusterId1, clusterId2), distance);
+                tmp_distanceArray.put(Arrays.asList(clusterId2, clusterId1), distance);
                 
                 Integer minDistanceId = tmp_minClusterDistanceId.get(clusterId1);
-                if(minDistanceId==null || distance < tmp_distanceArray.get(Arrays.<Object>asList(clusterId1, minDistanceId))) {
+                if(minDistanceId==null || distance < tmp_distanceArray.get(Arrays.asList(clusterId1, minDistanceId))) {
                     tmp_minClusterDistanceId.put(clusterId1, clusterId2);
                 }
             }
@@ -488,8 +488,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
         //find the two closest clusters 
@@ -503,7 +503,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
                 continue; //skip inactive clusters
             }
             
-            double distance = distanceArray.get(Arrays.<Object>asList(clusterId, minClusterDistanceId.get(clusterId)));
+            double distance = distanceArray.get(Arrays.asList(clusterId, minClusterDistanceId.get(clusterId)));
             if(distance<minDistance) {
                 minClusterId = clusterId;
                 minDistance = distance;
@@ -541,26 +541,26 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
                     distance = Double.MAX_VALUE;
                 }
                 else if(linkageMethod==TrainingParameters.Linkage.SINGLE) {
-                    double c1ciDistance = distanceArray.get(Arrays.<Object>asList(clusterThatMergesId, clusterId));
-                    double c2ciDistance = distanceArray.get(Arrays.<Object>asList(clusterToBeMergedId, clusterId));
+                    double c1ciDistance = distanceArray.get(Arrays.asList(clusterThatMergesId, clusterId));
+                    double c2ciDistance = distanceArray.get(Arrays.asList(clusterToBeMergedId, clusterId));
                     distance = Math.min(c1ciDistance, c2ciDistance);
                 }
                 else if(linkageMethod==TrainingParameters.Linkage.COMPLETE) {
-                    double c1ciDistance = distanceArray.get(Arrays.<Object>asList(clusterThatMergesId, clusterId));
-                    double c2ciDistance = distanceArray.get(Arrays.<Object>asList(clusterToBeMergedId, clusterId));
+                    double c1ciDistance = distanceArray.get(Arrays.asList(clusterThatMergesId, clusterId));
+                    double c2ciDistance = distanceArray.get(Arrays.asList(clusterToBeMergedId, clusterId));
                     distance = Math.max(c1ciDistance, c2ciDistance);
                 }
                 else if(linkageMethod==TrainingParameters.Linkage.AVERAGE) {
-                    double c1ciDistance = distanceArray.get(Arrays.<Object>asList(clusterThatMergesId, clusterId));
-                    double c2ciDistance = distanceArray.get(Arrays.<Object>asList(clusterToBeMergedId, clusterId));
+                    double c1ciDistance = distanceArray.get(Arrays.asList(clusterThatMergesId, clusterId));
+                    double c2ciDistance = distanceArray.get(Arrays.asList(clusterToBeMergedId, clusterId));
                     distance = (c1ciDistance*c1Size + c2ciDistance*c2Size)/(c1Size+c2Size);
                 }
                 else {
                     distance = calculateDistance(c1.getCentroid(), ci.getCentroid());
                 }
 
-                distanceArray.put(Arrays.<Object>asList(clusterThatMergesId, clusterId), distance);
-                distanceArray.put(Arrays.<Object>asList(clusterId, clusterThatMergesId), distance);
+                distanceArray.put(Arrays.asList(clusterThatMergesId, clusterId), distance);
+                distanceArray.put(Arrays.asList(clusterId, clusterThatMergesId), distance);
             }
         });
         
@@ -579,7 +579,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
                             continue; //skip inactive clusters
                         }
                         
-                        if(distanceArray.get(Arrays.<Object>asList(id1, id2)) < distanceArray.get(Arrays.<Object>asList(id1, newMinDistanceId)) ){
+                        if(distanceArray.get(Arrays.asList(id1, id2)) < distanceArray.get(Arrays.asList(id1, newMinDistanceId)) ){
                             newMinDistanceId = id2;
                         }
                     }

@@ -28,7 +28,7 @@ import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import libsvm.*;
 
@@ -219,9 +219,9 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, DatabaseConnector.MapType.HASHMAP, DatabaseConnector.StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 
@@ -240,9 +240,9 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        kb().getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
+        knowledgeBase.getTrainingParameters().getSvmParameter().probability=1; //probabilities are required from the algorithm
         
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
@@ -272,7 +272,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     }
     
     private void libSVMTrainer(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();
@@ -322,7 +322,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         }
         
         //get the parameters for svm
-        svm_parameter params = kb().getTrainingParameters().getSvmParameter();
+        svm_parameter params = knowledgeBase.getTrainingParameters().getSvmParameter();
         
         //train the model
         svm.svm_set_print_string_function((String s) -> {
@@ -335,7 +335,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     }
     
     private AssociativeArray calculateClassScores(AssociativeArray x) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         Map<Object, Integer> classIds = modelParameters.getClassIds();

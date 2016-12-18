@@ -30,7 +30,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.*;
@@ -136,11 +136,11 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
      * @param tpClass
      * @param vmClass
      * @param isBinarized
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractNaiveBayes(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, boolean isBinarized) {
         super(dbName, conf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
         this.isBinarized = isBinarized;
     } 
     
@@ -167,16 +167,16 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
         dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
     
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
@@ -193,7 +193,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             //So if the feature has no value for one random class (someClass has 
             //no particular significance), then it will not have for any class
             //and thus the feature is not in the dictionary and can be ignored.
-            if(!logLikelihoods.containsKey(Arrays.<Object>asList(feature, someClass))) {
+            if(!logLikelihoods.containsKey(Arrays.asList(feature, someClass))) {
                 continue;
             }
 
@@ -201,13 +201,13 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             AssociativeArray classLogScoresForThisFeature = new AssociativeArray();
 
             for(Object theClass : classesSet) {
-                Double logScore = logLikelihoods.get(Arrays.<Object>asList(feature, theClass));
+                Double logScore = logLikelihoods.get(Arrays.asList(feature, theClass));
                 classLogScoresForThisFeature.put(theClass, logScore);
             }
 
 
             Double occurrences=TypeInference.toDouble(entry.getValue());
-            if((!kb().getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
+            if((!knowledgeBase.getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
                 occurrences=1.0;
             }
 
@@ -229,7 +229,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         int n = modelParameters.getN();
         int d = modelParameters.getD();
         
@@ -263,7 +263,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         */
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 logLikelihoods.put(featureClassTuple, 0.0); //the key is unique across threads and the map is concurrent
             }
         });
@@ -283,7 +283,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
                         occurrences=1.0;
                     }
                     
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                    List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                     logLikelihoods.put(featureClassTuple, logLikelihoods.get(featureClassTuple)+occurrences); //each thread updates a unique key and the map is cuncurrent
                     
                     sumOfOccurrences+=occurrences;

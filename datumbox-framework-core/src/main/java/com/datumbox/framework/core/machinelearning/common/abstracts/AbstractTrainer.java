@@ -21,14 +21,12 @@ import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
-import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
-import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
+import com.datumbox.framework.core.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
@@ -39,9 +37,8 @@ import java.util.LinkedList;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <KB>
  */
-public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelParameters, TP extends AbstractTrainer.AbstractTrainingParameters, KB extends DoubleKnowledgeBase<MP, TP>> implements Trainable<MP, TP> {
+public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelParameters, TP extends AbstractTrainer.AbstractTrainingParameters> implements Trainable<MP, TP> {
        
     /**
      * Base class for every ModelParameter class in the framework. It automatically
@@ -159,17 +156,18 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * The KnowledgeBase instance of the algorithm. 
      */
-    private final KB knowledgeBase;
+    protected final KnowledgeBase<MP, TP> knowledgeBase;
     
     /**
      * The basic Constructor of all BaseTrainable classes.
      * 
      * @param baseDBname
      * @param conf 
-     * @param kbClass 
-     * @param kbSubtypeClasses 
+     * @param mpClass
+     * @param tpClass
      */
-    protected AbstractTrainer(String baseDBname, Configuration conf, Class<? extends DoubleKnowledgeBase> kbClass, Class<? extends Serializable>... kbSubtypeClasses) {
+    protected  AbstractTrainer(String baseDBname, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        //TODO: do we really need the dbName here? Perhaps a temp name is good enough
         String methodName = this.getClass().getSimpleName();
         String dbNameSeparator = conf.getDbConfig().getDBnameSeparator();
         if(!baseDBname.contains(methodName+dbNameSeparator)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
@@ -178,20 +176,19 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         
         dbName = baseDBname;
         
-        knowledgeBase = (KB) KnowledgeBase.newInstance(kbClass, dbName, conf, kbSubtypeClasses);
+        knowledgeBase = new KnowledgeBase<>(dbName, conf, mpClass, tpClass);
     }
     
     /** {@inheritDoc} */
     @Override
      public MP getModelParameters() {
-       return kb().getModelParameters();
-
+        return knowledgeBase.getModelParameters();
     } 
     
     /** {@inheritDoc} */
     @Override
     public TP getTrainingParameters() {
-        return kb().getTrainingParameters();
+        return knowledgeBase.getTrainingParameters();
     }
     
     /** {@inheritDoc} */
@@ -200,39 +197,31 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         logger.info("fit()");
         
         //reset knowledge base
-        kb().clear();
-        kb().setTrainingParameters(trainingParameters);
+        knowledgeBase.clear();
+        knowledgeBase.setTrainingParameters(trainingParameters);
         
-        AbstractModelParameters modelParameters = (AbstractModelParameters) kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         modelParameters.setN(trainingData.size());
         modelParameters.setD(trainingData.xColumnSize());
-        
-        
+
         _fit(trainingData);
         
         logger.info("Saving model");
-        kb().save();
+        knowledgeBase.save(); //TODO: this should be removed.
     }
-      
+
+    //TODO: save() and load() method need to go here
+
     /** {@inheritDoc} */
     @Override
     public void delete() {
-        kb().delete();
+        knowledgeBase.delete();
     }
             
     /** {@inheritDoc} */
     @Override
     public void close() {
-        kb().close();
-    }
-    
-    /**
-     * Getter for the KnowledgeBase instance.
-     * 
-     * @return 
-     */
-    protected KB kb() {
-        return knowledgeBase;
+        knowledgeBase.close();
     }
     
     /**
@@ -240,6 +229,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * 
      * @param trainingData 
      */
-    protected abstract void _fit(Dataframe trainingData);
+    protected abstract void _fit(Dataframe trainingData); //TODO: do we need this method?
     
 }

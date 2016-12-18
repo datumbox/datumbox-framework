@@ -80,7 +80,7 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
         //no update on the observationWeights, all observations have equal probability 1/n
         
         //update classifier weights with equal weights
-        List<Double> weakClassifierWeights = kb().getModelParameters().getWeakClassifierWeights();
+        List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
 
         //add the new weak learner in the list of weights
         weakClassifierWeights.add(0.0);

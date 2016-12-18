@@ -72,7 +72,7 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }
     

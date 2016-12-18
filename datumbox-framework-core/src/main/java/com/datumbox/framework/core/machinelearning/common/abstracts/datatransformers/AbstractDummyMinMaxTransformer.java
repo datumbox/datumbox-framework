@@ -134,11 +134,11 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     /** 
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractDummyMinMaxTransformer(String dbName, Configuration conf) {
         super(dbName, conf, AbstractDummyMinMaxTransformer.ModelParameters.class, AbstractDummyMinMaxTransformer.TrainingParameters.class);
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     
     private boolean parallelized = true;
@@ -432,7 +432,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
                    !referenceLevel.equals(value)) { //not equal to reference level
                     
                     //create a new column
-                    List<Object> newColumn = Arrays.<Object>asList(column,value);
+                    List<Object> newColumn = Arrays.asList(column,value);
                     
                     //add a new dummy variable for this column-value combination
                     xData.put(newColumn, true); 
