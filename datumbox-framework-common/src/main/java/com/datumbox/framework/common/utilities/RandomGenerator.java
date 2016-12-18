@@ -16,6 +16,7 @@
 package com.datumbox.framework.common.utilities;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The RandomGenerator generates Random objects that can be read and modified
@@ -29,6 +30,8 @@ public class RandomGenerator {
     private static Long globalSeed;
     
     private static ThreadLocal<Random> threadLocalRandom;
+
+    private static Random threadLocalRandomUnseeded = ThreadLocalRandom.current();
 
     /**
      * Getter for the global seed. The global seed affects the initial seeding of
@@ -81,5 +84,14 @@ public class RandomGenerator {
             };
         }
         return threadLocalRandom.get();
+    }
+
+    /**
+     * Returns a Random object which is local for the thread but unseeded.
+     *
+     * @return
+     */
+    public static Random getThreadLocalRandomUnseeded() {
+        return threadLocalRandomUnseeded;
     }
 }

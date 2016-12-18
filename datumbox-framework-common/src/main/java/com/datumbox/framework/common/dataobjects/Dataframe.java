@@ -24,6 +24,7 @@ import com.datumbox.framework.common.interfaces.Extractable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -233,7 +234,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     public Dataframe(Configuration conf) {
         this.conf = conf;
 
-        String dbName = "dts_"+System.nanoTime();
+        String dbName = "dts_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
         dbc = this.conf.getDbConfig().getConnector(dbName);
         
         records = dbc.getBigMap("tmp_records", Integer.class, Record.class, MapType.TREEMAP, StorageHint.IN_DISK, true, true);

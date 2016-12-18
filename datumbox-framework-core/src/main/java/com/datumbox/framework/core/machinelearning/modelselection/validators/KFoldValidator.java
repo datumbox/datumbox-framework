@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.validators.AbstractValidator;
@@ -91,7 +92,7 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
         }
 
         //initialize modeler
-        AbstractModeler modeler = Trainable.newInstance(aClass, "kfold_"+System.nanoTime(), conf);
+        AbstractModeler modeler = Trainable.newInstance(aClass, "kfold_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf);
 
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {

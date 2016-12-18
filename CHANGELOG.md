@@ -5,10 +5,11 @@ Version 0.8.0-SNAPSHOT - Build 20161218
 ---------------------------------------
 
 - Improved Validation:
-    - Removed the ValidationMetrics from the Algorithms. Now it is a separate object.
+    - Removed the ValidationMetrics from the Algorithms. Now it is a separate object called Metrics.
     - Removed the kFold validation from Algorithms. Now we offer a new validator mechanism.
     - A single KnowledgeBase implementation is now used.
 - Removed the unnecessary n & d model parameters from all models.
+- Random unseeded filenames are now produced using RandomGenerator.getThreadLocalRandomUnseeded().
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

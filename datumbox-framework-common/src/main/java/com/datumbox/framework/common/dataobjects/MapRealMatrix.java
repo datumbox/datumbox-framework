@@ -18,6 +18,7 @@ package com.datumbox.framework.common.dataobjects;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.linear.AbstractRealMatrix;
@@ -67,7 +68,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.rowDimension = rowDimension;
         this.columnDimension = columnDimension;
 
-        String dbName = "mrm_"+System.nanoTime();
+        String dbName = "mrm_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
         dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
         entries = dbc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
