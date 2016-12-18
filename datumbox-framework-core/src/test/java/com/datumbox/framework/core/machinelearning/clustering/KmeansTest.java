@@ -17,7 +17,6 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.tests.Constants;
