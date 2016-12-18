@@ -65,8 +65,6 @@ public class MultinomialDPMMTest extends AbstractTest {
         instance.close();
         //instance = null;
         instance = new MultinomialDPMM(dbName, conf);
-        
-        instance.validate(validationData);
 
         MultinomialDPMM.ValidationMetrics vm = instance.validate(validationData);
 
