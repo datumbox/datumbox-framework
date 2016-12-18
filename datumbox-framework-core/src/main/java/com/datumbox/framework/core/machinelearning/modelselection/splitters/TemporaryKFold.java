@@ -20,7 +20,6 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.utilities.PHPMethods;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 import org.slf4j.Logger;
@@ -32,7 +31,7 @@ import java.util.List;
 
 public class TemporaryKFold<VM extends ValidationMetrics> {
 
-    //TODO: remove this temporary class and create a permanent solution
+    //TODO: remove this temporary class and create a permanent solution, using Splitters.
 
     /**
      * The Logger of all Validators.
@@ -43,14 +42,17 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
     private static final String DB_INDICATOR="Kfold";
 
     private final Class<VM> vmClass;
+    private final int k;
 
     /**
      * The constructor of the Splitter.
      *
      * @param vmClass
+     * @param k
      */
-    public TemporaryKFold(Class<VM> vmClass) {
+    public TemporaryKFold(Class<VM> vmClass, int k) {
         this.vmClass = vmClass;
+        this.k = k;
     }
 
     /**
@@ -58,14 +60,13 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
      * of folds and returns the average metrics across all folds.
      *
      * @param dataset
-     * @param k
      * @param dbName
      * @param conf
      * @param aClass
      * @param trainingParameters
      * @return
      */
-    public VM validate(Dataframe dataset, int k, String dbName, Configuration conf, Class<? extends AbstractModeler> aClass, AbstractTrainer.AbstractTrainingParameters trainingParameters) {
+    public VM validate(Dataframe dataset, String dbName, Configuration conf, Class<? extends AbstractModeler> aClass, AbstractModeler.AbstractTrainingParameters trainingParameters) {
         int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds.");
@@ -119,7 +120,7 @@ public class TemporaryKFold<VM extends ValidationMetrics> {
 
 
             //initialize modeler
-            AbstractModeler modeler = Trainable.newInstance((Class<AbstractModeler>)aClass, foldDBname+(fold+1), conf);
+            AbstractModeler modeler = Trainable.newInstance(aClass, foldDBname+(fold+1), conf);
 
 
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);

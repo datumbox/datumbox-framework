@@ -54,6 +54,6 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
     public LinearRegressionMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("validate()");
 
-        return new TemporaryKFold<>(LinearRegressionMetrics.class).validate(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new TemporaryKFold<>(LinearRegressionMetrics.class, k).validate(trainingData, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
     }
 }

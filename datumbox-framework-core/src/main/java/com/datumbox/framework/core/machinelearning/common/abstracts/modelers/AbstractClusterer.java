@@ -233,6 +233,6 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
     public ClusteringMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
         logger.info("validate()");
 
-        return new TemporaryKFold<>(ClusteringMetrics.class).validate(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new TemporaryKFold<>(ClusteringMetrics.class, k).validate(trainingData, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
     }
 }

@@ -2,12 +2,12 @@ CODE IMPROVEMENTS
 =================
 
 - All ValidationMetrics should hava a serialization number
-- Validation (Validators, Validation Metrics, KnowledgeBase etc) and metrics need to move out of the model
 - Add save() load() methods in the models
-- Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
 - The method kFoldCrossValidation is removed from AbstractValidator. It should be a separate class instead. 
-- Write generic optimizers instead of having optimization methods in the algorithms.
 
+- Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
+- Write a ShuffleSplit class similar to KFold.
+- Write generic optimizers instead of having optimization methods in the algorithms.
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
 - Try to separate persistent storage in a separate module that is inherited by common.
 
