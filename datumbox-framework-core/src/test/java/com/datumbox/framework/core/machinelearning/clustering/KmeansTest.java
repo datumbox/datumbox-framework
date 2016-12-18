@@ -80,28 +80,15 @@ public class KmeansTest extends AbstractTest {
         
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new Kmeans(dbName, conf);
-        
-        instance.validate(validationData);
-        
+
+        Kmeans.ValidationMetrics vm = instance.validate(validationData);
+
         df.denormalize(trainingData);
         df.denormalize(validationData);
-        
-        Map<Integer, Object> expResult = new HashMap<>();
-        Map<Integer, Object> result = new HashMap<>();
-        
-        Map<Integer, Kmeans.Cluster> clusters = instance.getClusters();
-        for(Map.Entry<Integer, Record> e : validationData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            expResult.put(rId, r.getY());
-            Integer clusterId = (Integer) r.getYPredicted();
-            Object label = clusters.get(clusterId).getLabelY();
-            if(label==null) {
-                label = clusterId;
-            }
-            result.put(rId, label);
-        }
-        assertEquals(expResult, result);
+
+        double expResult = 1.0;
+        double result = vm.getPurity();
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         df.delete();
         instance.delete();
