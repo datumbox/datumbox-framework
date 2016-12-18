@@ -376,7 +376,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
 
     /** {@inheritDoc} */
     @Override
-    protected void filterFeatures(Dataframe dataset) {
+    protected void _transform(Dataframe dataset) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //convert data into matrix

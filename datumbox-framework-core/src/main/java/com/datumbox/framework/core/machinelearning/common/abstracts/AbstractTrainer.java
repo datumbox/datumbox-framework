@@ -165,7 +165,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         knowledgeBase.save(); //FIXME: this should be removed.
     }
 
-    //FIXME: save() and load() method need to go here
+    //FIXME: save() and init() method need to go here
 
     /** {@inheritDoc} */
     @Override
@@ -184,6 +184,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * 
      * @param trainingData 
      */
-    protected abstract void _fit(Dataframe trainingData); //FIXME: do we need this method?
+    protected abstract void _fit(Dataframe trainingData);
     
 }

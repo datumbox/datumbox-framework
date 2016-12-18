@@ -159,7 +159,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
+    protected void _predict(Dataframe newData) {
         Class<? extends AbstractClassifier> weakClassifierClass = knowledgeBase.getTrainingParameters().getWeakClassifierClass();
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
         

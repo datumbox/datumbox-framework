@@ -60,11 +60,10 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        knowledgeBase.load();
+        knowledgeBase.init();
         
         _convert(newData); 
         _normalize(newData);
-        
     }
     
     /**
@@ -75,7 +74,7 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
     public void denormalize(Dataframe data) {
         logger.info("denormalize()");
         
-        knowledgeBase.load();
+        knowledgeBase.init();
         
         _denormalize(data);
     }

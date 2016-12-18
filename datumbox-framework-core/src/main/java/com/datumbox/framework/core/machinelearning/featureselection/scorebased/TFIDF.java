@@ -252,7 +252,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
 
     /** {@inheritDoc} */
     @Override
-    protected void filterFeatures(Dataframe newData) {
+    protected void _transform(Dataframe newData) {
         DatabaseConnector dbc = knowledgeBase.getDbc();
         Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
         

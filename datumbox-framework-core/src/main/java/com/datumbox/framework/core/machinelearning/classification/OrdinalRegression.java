@@ -212,11 +212,8 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, knowledgeBase.getConf().getConcurrencyConfig());
-        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+    protected void _predict(Dataframe newData) {
+        _predictDatasetParallel(newData, knowledgeBase.getDbc(), knowledgeBase.getConf().getConcurrencyConfig());
     }
     
     /** {@inheritDoc} */

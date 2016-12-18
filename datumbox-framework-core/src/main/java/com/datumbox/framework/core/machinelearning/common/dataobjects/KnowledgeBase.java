@@ -113,7 +113,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * Loads the KnowledgeBase from the permanent storage.
      */
-    public void load() {
+    public void init() {
         if(!isInitialized()) {
             modelParameters = dbc.loadObject("modelParameters", mpClass);
             trainingParameters = dbc.loadObject("trainingParameters", tpClass);

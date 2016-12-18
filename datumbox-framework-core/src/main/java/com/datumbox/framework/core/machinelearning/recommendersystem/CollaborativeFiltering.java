@@ -132,7 +132,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
 
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
+    protected void _predict(Dataframe newData) {
         Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list

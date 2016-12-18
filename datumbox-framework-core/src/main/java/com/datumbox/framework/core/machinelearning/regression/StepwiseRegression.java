@@ -193,7 +193,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
+    protected void _predict(Dataframe newData) {
         loadRegressor();
         
         mlregressor.predict(newData);

@@ -553,7 +553,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
 
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
+    protected void _predict(Dataframe newData) {
         //This method uses similar approach to the training but the most important
         //difference is that we do not wish to modify the original training params.
         //as a result we need to modify the code to use additional temporary

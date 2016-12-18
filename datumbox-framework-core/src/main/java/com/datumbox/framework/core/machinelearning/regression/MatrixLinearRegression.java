@@ -144,7 +144,7 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
 
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
+    protected void _predict(Dataframe newData) {
         //read model params
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         

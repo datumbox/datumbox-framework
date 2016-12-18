@@ -182,7 +182,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     /** {@inheritDoc} */
     @Override
-    protected void filterFeatures(Dataframe newdata) {
+    protected void _transform(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
         filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
     }

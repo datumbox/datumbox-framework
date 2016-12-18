@@ -21,6 +21,7 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -113,5 +114,18 @@ public interface PredictParallelizable extends Parallelizable {
             newData._unsafe_set(rId, newR);
         });
         
+    }
+
+    /**
+     * Estimates the predictions for a new Dataframe in a parallel way.
+     *
+     * @param newData
+     * @param dbc
+     * @param concurrencyConfig
+     */
+    default public void _predictDatasetParallel(Dataframe newData, DatabaseConnector dbc, ConcurrencyConfiguration concurrencyConfig) {
+        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, DatabaseConnector.MapType.HASHMAP, DatabaseConnector.StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer, concurrencyConfig);
+        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 }

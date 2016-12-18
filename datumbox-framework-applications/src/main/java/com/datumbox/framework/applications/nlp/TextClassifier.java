@@ -28,7 +28,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.featureselec
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.wrappers.AbstractWrapper;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.utilities.text.extractors.AbstractTextExtractor;
 
@@ -160,7 +159,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         logger.info("predict()");
         
         //ensure db loaded
-        knowledgeBase.load();
+        knowledgeBase.init();
         
         preprocessTestDataset(testDataset);
         modeler.predict(testDataset);
@@ -175,7 +174,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      */
     public Dataframe predict(URI datasetURI) {        
         //ensure db loaded
-        knowledgeBase.load();
+        knowledgeBase.init();
         
         //create a dummy dataset map
         Map<Object, URI> dataset = new HashMap<>();
@@ -203,7 +202,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      */
     public Record predict(String text) {         
         //ensure db loaded
-        knowledgeBase.load();
+        knowledgeBase.init();
         
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
@@ -234,7 +233,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         logger.info("validate()");
 
         //ensure db loaded
-        knowledgeBase.load();
+        knowledgeBase.init();
 
         preprocessTestDataset(testDataset);
         modeler.predict(testDataset);
@@ -255,7 +254,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      */
     public ClassificationMetrics validate(Map<Object, URI> datasets) {
         //ensure db loaded
-        knowledgeBase.load();
+        knowledgeBase.init();
 
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
 

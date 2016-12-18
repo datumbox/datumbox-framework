@@ -59,9 +59,9 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        knowledgeBase.load();
+        knowledgeBase.init();
         
-        filterFeatures(newData);
+        _transform(newData);
     }
     
     /**
@@ -69,5 +69,5 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
      * 
      * @param newdata 
      */
-    protected abstract void filterFeatures(Dataframe newdata);
+    protected abstract void _transform(Dataframe newdata);
 }
