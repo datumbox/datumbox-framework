@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -141,7 +142,7 @@ public class AdaboostTest extends AbstractTest {
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
         
-        Adaboost.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassifierValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();

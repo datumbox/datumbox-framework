@@ -33,7 +33,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters, Adaboost.ValidationMetrics> {
+public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters> {
  
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractBoostingBagging.AbstractModelParameters {
@@ -53,12 +53,6 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
     public static class TrainingParameters extends AbstractBoostingBagging.AbstractTrainingParameters {    
         private static final long serialVersionUID = 1L;
         
-    } 
-        
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractBoostingBagging.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
     
     /**
@@ -68,7 +62,7 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
      * @param conf 
      */
     public Adaboost(String dbName, Configuration conf) {
-        super(dbName, conf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
+        super(dbName, conf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class);
     } 
 
     /** {@inheritDoc} */

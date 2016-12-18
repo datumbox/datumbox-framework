@@ -133,10 +133,6 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     /** {@inheritDoc} */
     @Override
     protected void _predictDataset(Dataframe newData) {
-        _predictDataset(newData, false);
-    }
-    
-    private void _predictDataset(Dataframe newData, boolean includeRated) {
         Map<List<Object>, Double> similarities = knowledgeBase.getModelParameters().getSimilarities();
         
         //generate recommendation for each record in the list
@@ -166,10 +162,8 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
                     }
                     
                     Double similarity = entry2.getValue();
-                    
-                    if(includeRated == true || !r.getX().containsKey(column)) {
-                        recommendations.put(column, previousRecValue+similarity*score);
-                    }
+
+                    recommendations.put(column, previousRecValue+similarity*score);
                     simSums.put(column, previousSimsumValue+similarity);
                 }
             }

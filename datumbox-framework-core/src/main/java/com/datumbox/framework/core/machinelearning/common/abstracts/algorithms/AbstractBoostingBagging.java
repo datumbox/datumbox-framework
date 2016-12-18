@@ -40,9 +40,8 @@ import java.util.Set;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.AbstractModelParameters, TP extends AbstractBoostingBagging.AbstractTrainingParameters, VM extends AbstractBoostingBagging.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> {
+public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.AbstractModelParameters, TP extends AbstractBoostingBagging.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> {
 
     private static final String DB_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
@@ -153,11 +152,10 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
      * @param conf
      * @param mpClass
      * @param tpClass
-     * @param vmClass
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
-    protected AbstractBoostingBagging(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass) {
-        super(dbName, conf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
+    protected AbstractBoostingBagging(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+        super(dbName, conf, mpClass, tpClass);
     } 
     
     /** {@inheritDoc} */

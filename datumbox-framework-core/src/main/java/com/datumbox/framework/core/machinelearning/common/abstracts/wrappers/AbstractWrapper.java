@@ -21,9 +21,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
-import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
  * The AbstractWrapper is a trainable object that uses composition instead of inheritance
@@ -35,7 +33,7 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationM
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelParameters, TP extends AbstractWrapper.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> implements Parallelizable {
+public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelParameters, TP extends AbstractWrapper.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> implements Parallelizable {
     
     /**
      * The AbstractTransformer instance of the wrapper.
@@ -198,7 +196,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
      */
     protected AbstractWrapper(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, DoubleKnowledgeBase.class, mpClass, tpClass);
+        super(dbName, conf, mpClass, tpClass);
     }
     
     private boolean parallelized = true;
@@ -243,33 +241,6 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
             modeler.close();
         }
         knowledgeBase.close();
-    }
-
-    /**
-     * Getter for the Validation Metrics of the algorithm.
-     * 
-     * @param <VM>
-     * @return 
-     */
-    public <VM extends ValidationMetrics> VM getValidationMetrics() {
-        if(modeler!=null) {
-            return (VM) modeler.getValidationMetrics();
-        }
-        else {
-            return null;
-        }
-    }
-    
-    /**
-     * Setter for the Validation Metrics of the algorithm.
-     * 
-     * @param <VM>
-     * @param validationMetrics 
-     */
-    public <VM extends ValidationMetrics> void setValidationMetrics(VM validationMetrics) {
-        if(modeler!=null) {
-            modeler.setValidationMetrics((AbstractModeler.AbstractValidationMetrics) validationMetrics);
-        }
     }
     
     /**

@@ -21,6 +21,7 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.featureselection.continuous.PCA;
+import com.datumbox.framework.core.machinelearning.validators.LinearRegressionValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -129,7 +130,7 @@ public class NLMSTest extends AbstractTest {
         param.setL1(0.001);
         param.setL2(0.001);
         
-        NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        LinearRegressionValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
 

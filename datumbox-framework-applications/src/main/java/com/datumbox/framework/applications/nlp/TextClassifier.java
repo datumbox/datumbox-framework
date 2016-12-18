@@ -142,7 +142,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         //build trainingDataset
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets,
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
-                kb().getConf()
+                knowledgeBase.getConf()
         );
         
         fit(trainingData, trainingParameters);
@@ -159,7 +159,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         logger.info("predict()");
         
         //ensure db loaded
-        kb().load();
+        knowledgeBase.load();
         
         preprocessTestDataset(testDataset);
         modeler.predict(testDataset);
@@ -174,17 +174,17 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      */
     public Dataframe predict(URI datasetURI) {        
         //ensure db loaded
-        kb().load();
+        knowledgeBase.load();
         
         //create a dummy dataset map
         Map<Object, URI> dataset = new HashMap<>();
         dataset.put(null, datasetURI);
         
-        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, 
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
-                kb().getConf()
+                knowledgeBase.getConf()
         );
         
         predict(testDataset);
@@ -202,11 +202,11 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      */
     public Record predict(String text) {         
         //ensure db loaded
-        kb().load();
+        knowledgeBase.load();
         
-        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        Dataframe testDataset = new Dataframe(kb().getConf());
+        Dataframe testDataset = new Dataframe(knowledgeBase.getConf());
         
         testDataset.add(new Record(new AssociativeArray(
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters())
@@ -222,59 +222,11 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         return r;
     }
     
-    /**
-     * It validates the modeler using the provided dataset and it returns the 
- AbstractValidationMetrics. The testDataset should contain the real target variables.
-     * 
-     * @param testDataset
-     * @return 
-     */
-    public ValidationMetrics validate(Dataframe testDataset) {
-        logger.info("validate()");
-        
-        //ensure db loaded
-        kb().load();
-        
-        preprocessTestDataset(testDataset);
-        ValidationMetrics vm = modeler.validate(testDataset);
-        
-        return vm;
-    }
-    
-    /**
-     * It validates the modeler using the provided dataset files. The data
- map should have as index the names of each class and as values the URIs
- of the training files. The data files should contain one example
- per row.
-     * 
-     * @param datasets
-     * @return 
-     */
-    public ValidationMetrics validate(Map<Object, URI> datasets) {
-        //ensure db loaded
-        kb().load();
-        
-        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        //build the testDataset
-        Dataframe testDataset = Dataframe.Builder.parseTextFiles(
-                datasets, 
-                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
-                kb().getConf()
-        );
-        
-        ValidationMetrics vm = validate(testDataset);
-        
-        testDataset.delete();
-        
-        return vm;
-    }
-    
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingDataset) {
-        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        Configuration conf = kb().getConf();
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration conf = knowledgeBase.getConf();
         Class dtClass = trainingParameters.getDataTransformerClass();
         
         boolean transformData = (dtClass!=null);
@@ -316,8 +268,8 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     }
     
     private void preprocessTestDataset(Dataframe testDataset) {
-        TextClassifier.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        Configuration conf = kb().getConf();
+        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration conf = knowledgeBase.getConf();
         
         Class dtClass = trainingParameters.getDataTransformerClass();
         

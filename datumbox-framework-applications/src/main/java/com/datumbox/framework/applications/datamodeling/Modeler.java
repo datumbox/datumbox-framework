@@ -77,21 +77,53 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
      */
     public void predict(Dataframe newData) {
         logger.info("predict()");
-        
-        evaluateData(newData, false);
-    }
-    
-    /**
-     * Validates the algorithm with the provided dataset and returns the Validation
-     * Metrics. The provided dataset must contain the real response variables.
-     * 
-     * @param testData
-     * @return 
-     */
-    public ValidationMetrics validate(Dataframe testData) {
-        logger.info("validate()");
-        
-        return evaluateData(testData, true);
+
+        knowledgeBase.load();
+        Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+
+        Configuration conf = knowledgeBase.getConf();
+
+        Class dtClass = trainingParameters.getDataTransformerClass();
+
+        boolean transformData = (dtClass!=null);
+        if(transformData) {
+            if(dataTransformer==null) {
+                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
+            }
+
+            setParallelized(dataTransformer);
+
+            dataTransformer.transform(newData);
+        }
+
+        Class fsClass = trainingParameters.getFeatureSelectorClass();
+
+        boolean selectFeatures = (fsClass!=null);
+        if(selectFeatures) {
+            if(featureSelector==null) {
+                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            }
+
+            setParallelized(featureSelector);
+
+            //remove unnecessary features
+            featureSelector.transform(newData);
+        }
+
+        //initialize modeler
+        if(modeler==null) {
+            Class mlClass = trainingParameters.getModelerClass();
+            modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf);
+        }
+
+        setParallelized(modeler);
+
+        //call predict of the modeler for the new dataset
+        modeler.predict(newData);
+
+        if(transformData) {
+            dataTransformer.denormalize(newData); //optional denormization
+        }
     }
     
     /** {@inheritDoc} */
@@ -99,9 +131,9 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
     protected void _fit(Dataframe trainingData) { 
         
         //get the training parameters
-        Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
+        Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        Configuration conf = kb().getConf();
+        Configuration conf = knowledgeBase.getConf();
         
         //transform the training dataset
         Class dtClass = trainingParameters.getDataTransformerClass();
@@ -143,67 +175,5 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         if(transformData) {
             dataTransformer.denormalize(trainingData); //optional denormalization
         }
-    }
-    
-    private ValidationMetrics evaluateData(Dataframe data, boolean estimateValidationMetrics) {
-        //ensure db loaded
-        kb().load();
-        Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        Configuration conf = kb().getConf();
-        
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
-        if(transformData) {
-            if(dataTransformer==null) {
-                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
-            }        
-            
-            setParallelized(dataTransformer);
-        
-            dataTransformer.transform(data);
-        }
-        
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-        
-        boolean selectFeatures = (fsClass!=null);
-        if(selectFeatures) {
-            if(featureSelector==null) {
-                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
-            }
-            
-            setParallelized(featureSelector);
-            
-            //remove unnecessary features
-            featureSelector.transform(data);
-        }
-        
-        
-        //initialize modeler
-        if(modeler==null) {
-            Class mlClass = trainingParameters.getModelerClass();
-            modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
-        }
-        
-        setParallelized(modeler);
-        
-        //call predict of the modeler for the new dataset
-        
-        ValidationMetrics vm = null;
-        if(estimateValidationMetrics) {
-            //run validate which calculates validation metrics. It is used by validate() method
-            vm = modeler.validate(data);
-        }
-        else {
-            //run predict which does not calculate validation metrics. It is used in from predict() method
-            modeler.predict(data);
-        }
-        
-        if(transformData) {
-            dataTransformer.denormalize(data); //optional denormization
-        }
-        
-        return vm;
     }
 }

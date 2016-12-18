@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters, BootstrapAggregating.ValidationMetrics> {
+public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractBoostingBagging.AbstractModelParameters {
@@ -56,12 +56,6 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
     public static class TrainingParameters extends AbstractBoostingBagging.AbstractTrainingParameters { 
         private static final long serialVersionUID = 1L;
         
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractBoostingBagging.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
     
     /**
@@ -71,7 +65,7 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
      * @param conf 
      */
     public BootstrapAggregating(String dbName, Configuration conf) {
-        super(dbName, conf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
+        super(dbName, conf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class);
     } 
 
     /** {@inheritDoc} */

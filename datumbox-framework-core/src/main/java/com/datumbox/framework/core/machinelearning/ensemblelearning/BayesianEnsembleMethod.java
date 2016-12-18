@@ -31,7 +31,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters, BayesianEnsembleMethod.ValidationMetrics> {
+public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
@@ -51,12 +51,6 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
     public static class TrainingParameters extends AbstractNaiveBayes.AbstractTrainingParameters { 
         private static final long serialVersionUID = 1L;
 
-    } 
-        
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
     
     /**
@@ -66,7 +60,7 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
      * @param conf 
      */
     public BayesianEnsembleMethod(String dbName, Configuration conf) {
-        super(dbName, conf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class, true);
+        super(dbName, conf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, true);
     }
     
     /** {@inheritDoc} */

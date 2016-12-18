@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.core.machinelearning.validators.RMSEValidator;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -63,7 +64,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
         //instance = null;
         instance = new CollaborativeFiltering(dbName, conf);
         
-        CollaborativeFiltering.ValidationMetrics vm = instance.validate(validationData);
+        RMSEValidator.ValidationMetrics vm = instance.validate(validationData);
         
         Map<Object, Double> expResult = new HashMap<>();
         expResult.put("pitta", 4.686394033077408);

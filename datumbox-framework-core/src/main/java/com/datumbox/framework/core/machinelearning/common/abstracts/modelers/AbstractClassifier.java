@@ -20,7 +20,9 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.validators.TemporaryKFold;
 
 import java.util.*;
 
@@ -104,10 +106,14 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
     public ClassifierValidator.ValidationMetrics validate(Dataframe testingData) {
         logger.info("validate()");
 
-        knowledgeBase.load();
-
         predict(testingData);
 
         return new ClassifierValidator().validate(testingData);
+    }
+    //TODO: remove this once we create the save/load
+    public ClassifierValidator.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
+        logger.info("kFoldCrossValidation()");
+
+        return new TemporaryKFold<>(new ClassifierValidator()).kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
     }
 }
