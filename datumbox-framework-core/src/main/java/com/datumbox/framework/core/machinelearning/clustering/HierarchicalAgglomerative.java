@@ -29,7 +29,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
 import com.datumbox.framework.core.mathematics.distances.Distance;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 

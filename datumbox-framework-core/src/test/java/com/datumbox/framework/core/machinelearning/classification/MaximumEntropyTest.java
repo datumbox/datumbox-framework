@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -84,11 +84,11 @@ public class MaximumEntropyTest extends AbstractTest {
 
 
     /**
-     * Test of kFoldCrossValidation method, of class MaximumEntropy.
+     * Test of validate method, of class MaximumEntropy.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("validate");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -105,7 +105,7 @@ public class MaximumEntropyTest extends AbstractTest {
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
 
-        ClassifierValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         double expResult = 0.6051098901098901;
         double result = vm.getMacroF1();

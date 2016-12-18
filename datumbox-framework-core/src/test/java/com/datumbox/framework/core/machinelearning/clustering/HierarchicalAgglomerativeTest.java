@@ -17,16 +17,12 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -78,7 +74,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         df = new DummyXYMinMaxNormalizer(dbName, conf);
         instance = new HierarchicalAgglomerative(dbName, conf);
 
-        ClustererValidator.ValidationMetrics vm = instance.validate(validationData);
+        ClusteringMetrics vm = instance.validate(validationData);
         
         df.denormalize(trainingData);
         df.denormalize(validationData);
@@ -96,11 +92,11 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
 
     
     /**
-     * Test of kFoldCrossValidation method, of class HierarchicalAgglomerative.
+     * Test of validate method, of class HierarchicalAgglomerative.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("validate");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -126,7 +122,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
 
-        ClustererValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClusteringMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
 

@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XYMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.validators.LinearRegressionValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -92,11 +92,11 @@ public class MatrixLinearRegressionTest extends AbstractTest {
 
 
     /**
-     * Test of kFoldCrossValidation method, of class MatrixLinearRegression.
+     * Test of validate method, of class MatrixLinearRegression.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("validate");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -116,7 +116,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
-        LinearRegressionValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        LinearRegressionMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
         
         df.denormalize(trainingData);
 

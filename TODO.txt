@@ -1,6 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
+- All ValidationMetrics should hava a serialization number
 - Validation (Validators, Validation Metrics, KnowledgeBase etc) and metrics need to move out of the model
 - Add save() load() methods in the models
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).

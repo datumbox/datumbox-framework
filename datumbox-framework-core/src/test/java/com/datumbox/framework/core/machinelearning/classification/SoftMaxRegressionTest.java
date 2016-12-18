@@ -20,7 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -102,11 +102,11 @@ public class SoftMaxRegressionTest extends AbstractTest {
 
 
     /**
-     * Test of kFoldCrossValidation method, of class SoftMaxRegression.
+     * Test of validate method, of class SoftMaxRegression.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("validate");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -128,7 +128,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         param.setL1(0.0001);
         param.setL2(0.0001);
 
-        ClassifierValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         df.denormalize(trainingData);
         

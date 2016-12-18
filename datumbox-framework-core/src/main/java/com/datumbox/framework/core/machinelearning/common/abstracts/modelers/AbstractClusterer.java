@@ -23,8 +23,8 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
-import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
-import com.datumbox.framework.core.machinelearning.validators.TemporaryKFold;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.TemporaryKFold;
 
 import java.util.*;
 
@@ -222,17 +222,17 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
     }
 
     //TODO: remove this once we create the save/load
-    public ClustererValidator.ValidationMetrics validate(Dataframe testingData) {
+    public ClusteringMetrics validate(Dataframe testingData) {
         logger.info("validate()");
 
         predict(testingData);
 
-        return new ClustererValidator().validate(testingData);
+        return new ClusteringMetrics(testingData);
     }
     //TODO: remove this once we create the save/load
-    public ClustererValidator.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("kFoldCrossValidation()");
+    public ClusteringMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
+        logger.info("validate()");
 
-        return new TemporaryKFold<>(new ClustererValidator()).kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new TemporaryKFold<>(ClusteringMetrics.class).validate(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
     }
 }

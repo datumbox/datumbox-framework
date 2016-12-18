@@ -77,7 +77,7 @@ public class ModelerTest extends AbstractTest {
         
         /*
         //TODO: restore this test
-        ClassifierValidator.ValidationMetrics vm = instance.validate(trainingData);
+        ClassificationMetrics.Metrics vm = instance.validate(trainingData);
 
         double expResult2 = 0.8;
         Assert.assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);

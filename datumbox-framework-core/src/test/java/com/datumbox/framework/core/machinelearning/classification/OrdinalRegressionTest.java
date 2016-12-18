@@ -19,7 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -100,11 +100,11 @@ public class OrdinalRegressionTest extends AbstractTest {
 
 
     /**
-     * Test of kFoldCrossValidation method, of class OrdinalRegression.
+     * Test of validate method, of class OrdinalRegression.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("validate");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -126,7 +126,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         param.setTotalIterations(100);
         param.setL2(0.001);
 
-        ClassifierValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClassificationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         	        
         df.denormalize(trainingData);

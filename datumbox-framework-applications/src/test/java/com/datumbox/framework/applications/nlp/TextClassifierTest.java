@@ -21,13 +21,10 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.classification.*;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.core.machinelearning.featureselection.categorical.ChisquareSelect;
 import com.datumbox.framework.core.machinelearning.featureselection.categorical.MutualInformation;
 import com.datumbox.framework.core.machinelearning.featureselection.scorebased.TFIDF;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
-import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
@@ -317,7 +314,7 @@ public class TextClassifierTest extends AbstractTest {
 
         /*
         //TODO: restore this test
-        ClassifierValidator.ValidationMetrics vm = instance.validate(dataset);
+        ClassificationMetrics.Metrics vm = instance.validate(dataset);
         assertEquals(expectedF1score, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
         */
         instance.close();

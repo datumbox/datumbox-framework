@@ -17,15 +17,12 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.core.machinelearning.validators.ClustererValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -66,7 +63,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         //instance = null;
         instance = new MultinomialDPMM(dbName, conf);
 
-        ClustererValidator.ValidationMetrics vm = instance.validate(validationData);
+        ClusteringMetrics vm = instance.validate(validationData);
 
         double expResult = 1.0;
         double result = vm.getPurity();
@@ -80,11 +77,11 @@ public class MultinomialDPMMTest extends AbstractTest {
 
     
     /**
-     * Test of kFoldCrossValidation method, of class MultinomialDPMM.
+     * Test of validate method, of class MultinomialDPMM.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("validate");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -104,7 +101,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
 
-        ClustererValidator.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        ClusteringMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
         
         double expResult = 1.0;

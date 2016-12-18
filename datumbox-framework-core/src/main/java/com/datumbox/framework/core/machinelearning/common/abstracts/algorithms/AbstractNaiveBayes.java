@@ -30,7 +30,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.*;

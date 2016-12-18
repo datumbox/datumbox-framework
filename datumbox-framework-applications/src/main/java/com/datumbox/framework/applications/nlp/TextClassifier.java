@@ -28,7 +28,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.featureselec
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.wrappers.AbstractWrapper;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 import com.datumbox.framework.core.utilities.text.extractors.AbstractTextExtractor;
 
 import java.net.URI;
@@ -36,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TextClassifier is a convenience class which can be used to train Text Classification
+ * TextClassifier is a convenience class which can be used to train Text ClassificationMetrics
  * models. It is a wrapper class which automatically takes care of the text parsing, 
  tokenization, feature selection and modeler training processes. It takes as input
  either a Dataframe object or multiple text files (one for each category) with 

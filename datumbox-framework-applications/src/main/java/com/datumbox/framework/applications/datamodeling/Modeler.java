@@ -24,7 +24,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.datatransfor
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.wrappers.AbstractWrapper;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
  * Modeler is a convenience class which can be used to train Machine Learning

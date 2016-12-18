@@ -17,8 +17,8 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.core.machinelearning.validators.RMSEValidator;
-import com.datumbox.framework.core.machinelearning.validators.TemporaryKFold;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.RecommendationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.TemporaryKFold;
 
 /**
  * Abstract Class for recommender algorithms.
@@ -41,17 +41,17 @@ public abstract class AbstractRecommender<MP extends AbstractRecommender.Abstrac
     }
 
     //TODO: remove this once we create the save/load
-    public RMSEValidator.ValidationMetrics validate(Dataframe testingData) {
+    public RecommendationMetrics validate(Dataframe testingData) {
         logger.info("validate()");
 
         predict(testingData);
 
-        return new RMSEValidator().validate(testingData);
+        return new RecommendationMetrics(testingData);
     }
     //TODO: remove this once we create the save/load
-    public RMSEValidator.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("kFoldCrossValidation()");
+    public RecommendationMetrics kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
+        logger.info("validate()");
 
-        return new TemporaryKFold<>(new RMSEValidator()).kFoldCrossValidation(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
+        return new TemporaryKFold<>(RecommendationMetrics.class).validate(trainingData, k, dbName, knowledgeBase.getConf(), this.getClass(), trainingParameters);
     }
 }

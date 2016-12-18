@@ -24,7 +24,6 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
-import com.datumbox.framework.core.machinelearning.validators.ClassifierValidator;
 import com.datumbox.framework.core.machinelearning.ensemblelearning.FixedCombinationRules;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;

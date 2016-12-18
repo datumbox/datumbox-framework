@@ -17,50 +17,33 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.validators;
 
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 /**
- * The AbstractValidator class is an abstract class responsible for the K-fold Cross
- Validation and for the estimation of the average validation metrics. Given that
- * different models use different validation metrics, each model family implements
- * its own validator.
+ * The AbstractMetrics class stores and estimates information about the performance of the algorithm.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
- * @param <VM>
  */
-public abstract class AbstractValidator<VM extends AbstractValidator.AbstractValidationMetrics> {
-    
-    /**
-     * The Logger of all Validators.
-     * We want this to be non-static in order to print the names of the inherited classes.
-     */
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-    /**
-     * The AbstractValidationMetrics class stores information about the performance of the algorithm.
-     */
-    public static abstract class AbstractValidationMetrics implements ValidationMetrics {
-
-    }
+public abstract class AbstractMetrics implements ValidationMetrics {
 
     /**
      * Estimates the validation metrics on the predicted data.
      *
      * @param predictedData
-     * @return
      */
-    public abstract VM validate(Dataframe predictedData);
+    protected AbstractMetrics(Dataframe predictedData) {
+
+    }
     
     /**
      * Calculates the average validation metrics by combining the results of the
      * provided list.
      * 
      * @param validationMetricsList
-     * @return 
      */
-    public abstract VM average(List<VM> validationMetricsList);
+    protected AbstractMetrics(List<? extends AbstractMetrics> validationMetricsList) {
+
+    }
 
 }
