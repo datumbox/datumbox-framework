@@ -17,6 +17,7 @@ package com.datumbox.framework.common.persistentstorage.interfaces;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * DatabaseConnectors that give access to a permanent storage should 
@@ -79,15 +80,24 @@ public interface DatabaseConnector extends AutoCloseable {
      * Clears all the data stored in the database while keeping the connection open.
      */
     public void clear();
+
+    /**
+     * Checks if an object exists with the particular name.
+     *
+     * @param name
+     * @return
+     */
+    public boolean existsObject(String name);
     
     /**
      * Stores a serializable object in the database.
      * 
      * @param <T>
      * @param name
-     * @param serializableObject 
+     * @param serializableObject
+     * @throws NoSuchElementException
      */
-    public <T extends Serializable> void saveObject(String name, T serializableObject);
+    public <T extends Serializable> void saveObject(String name, T serializableObject) throws NoSuchElementException;
     
     /**
      * Loads a serializable object from the database.

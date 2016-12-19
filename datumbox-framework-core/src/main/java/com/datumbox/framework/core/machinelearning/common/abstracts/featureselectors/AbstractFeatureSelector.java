@@ -59,8 +59,6 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        knowledgeBase.init();
-        
         _transform(newData);
     }
     

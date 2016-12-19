@@ -157,10 +157,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      */
     public void predict(Dataframe testDataset) {
         logger.info("predict()");
-        
-        //ensure db loaded
-        knowledgeBase.init();
-        
+
         preprocessTestDataset(testDataset);
         modeler.predict(testDataset);
     }
@@ -172,10 +169,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * @param datasetURI
      * @return 
      */
-    public Dataframe predict(URI datasetURI) {        
-        //ensure db loaded
-        knowledgeBase.init();
-        
+    public Dataframe predict(URI datasetURI) {
         //create a dummy dataset map
         Map<Object, URI> dataset = new HashMap<>();
         dataset.put(null, datasetURI);
@@ -200,10 +194,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * @param text
      * @return 
      */
-    public Record predict(String text) {         
-        //ensure db loaded
-        knowledgeBase.init();
-        
+    public Record predict(String text) {
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         Dataframe testDataset = new Dataframe(knowledgeBase.getConf());
@@ -232,9 +223,6 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     public ClassificationMetrics validate(Dataframe testDataset) {
         logger.info("validate()");
 
-        //ensure db loaded
-        knowledgeBase.init();
-
         preprocessTestDataset(testDataset);
         modeler.predict(testDataset);
 
@@ -253,9 +241,6 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * @return
      */
     public ClassificationMetrics validate(Map<Object, URI> datasets) {
-        //ensure db loaded
-        knowledgeBase.init();
-
         TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
 
         //build the testDataset

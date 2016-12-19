@@ -10,6 +10,8 @@ Version 0.8.0-SNAPSHOT - Build 20161218
     - A single KnowledgeBase implementation is now used.
 - Removed the unnecessary n & d model parameters from all models.
 - Random unseeded filenames are now produced using RandomGenerator.getThreadLocalRandomUnseeded().
+- Removing the need to call KnowledgeBase.init() in any predict/transform method.
+- Improved DatabaseConnector: existsObject method, InMemory now stores objects independently, MapDB stores all files in folder.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

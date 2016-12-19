@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -55,24 +56,26 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
         this.dbConf = dbConf;
         logger.trace("Opened db "+ database);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean existsObject(String name) {
+        assertConnectionOpen();
+        return new File(getRootPath().toFile(), name).exists();
+    }
     
     /** {@inheritDoc} */
     @Override
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         try { 
-            Path defaultPath = getDefaultPath();
-            
-            Map<String, Object> storedObjects;
-            if(Files.exists(defaultPath)) {
-                storedObjects = (Map<String, Object>) DeepCopy.deserialize(Files.readAllBytes(defaultPath));
+            Path rootPath = getRootPath();
+            if(!Files.exists(rootPath)) {
+                Files.createDirectory(rootPath);
             }
-            else {
-                storedObjects = new HashMap<>();
-            }
-            storedObjects.put(name, serializableObject);
-            
-            Files.write(defaultPath, DeepCopy.serialize(storedObjects));
+
+            Path objectPath = new File(rootPath.toFile(), name).toPath();
+            Files.write(objectPath, DeepCopy.serialize(serializableObject));
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -82,12 +85,17 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Serializable> T loadObject(String name, Class<T> klass) {
+    public <T extends Serializable> T loadObject(String name, Class<T> klass) throws NoSuchElementException {
         assertConnectionOpen();
-        try { 
-            //read the stored serialized object
-            Map<String, Object> storedObjects = (Map<String, Object>)DeepCopy.deserialize(Files.readAllBytes(getDefaultPath()));
-            return klass.cast(storedObjects.get(name));
+
+        if(!existsObject(name)) {
+            throw new NoSuchElementException("Can't find any object with name '"+name+"'");
+        }
+
+        try {
+            Path objectPath = new File(getRootPath().toFile(), name).toPath();
+            Object serializableObject = DeepCopy.deserialize(Files.readAllBytes(objectPath));
+            return klass.cast(serializableObject);
         }
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -109,13 +117,13 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     public void clear() {
         assertConnectionOpen();
         try {
-            deleteIfExistsRecursively(getDefaultPath());
+            deleteIfExistsRecursively(getRootPath());
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
@@ -145,7 +153,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
         return database;
     }
     
-    private Path getDefaultPath() {
+    private Path getRootPath() {
         //get the default filepath of the permanet db file
         String outputFolder = this.dbConf.getOutputFolder();
 

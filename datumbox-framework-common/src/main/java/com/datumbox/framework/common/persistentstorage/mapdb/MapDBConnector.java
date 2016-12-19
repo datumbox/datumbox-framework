@@ -23,12 +23,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -92,6 +90,15 @@ public class MapDBConnector extends AbstractDatabaseConnector {
 
     /** {@inheritDoc} */
     @Override
+    public boolean existsObject(String name) {
+        assertConnectionOpen();
+        DB db = openDB(DBType.PRIMARY_DB);
+
+        return db.exists(name);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         DB db = openDB(DBType.PRIMARY_DB);
@@ -108,10 +115,14 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Serializable> T loadObject(String name, Class<T> klass) {
+    public <T extends Serializable> T loadObject(String name, Class<T> klass) throws NoSuchElementException {
         assertConnectionOpen();
-        DB db = openDB(DBType.PRIMARY_DB);
 
+        if(!existsObject(name)) {
+            throw new NoSuchElementException("Can't find any object with name '"+name+"'");
+        }
+
+        DB db = openDB(DBType.PRIMARY_DB);
         Atomic.Var<T> atomicVar = db.getAtomicVar(name);
         T serializableObject = klass.cast(atomicVar.get());
 
@@ -140,10 +151,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         closeDBRegistry();
         
         try {
-            Path defaultPath = getDefaultPath();
-            deleteIfExistsRecursively(defaultPath);
-            deleteIfExistsRecursively(Paths.get(defaultPath.toString()+".p"));
-            deleteIfExistsRecursively(Paths.get(defaultPath.toString()+".t"));
+            deleteIfExistsRecursively(getRootPath());
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -312,7 +320,17 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             boolean permitCaching = true;
             if(dbType == DBType.PRIMARY_DB) {
                 //main storage
-                m = DBMaker.newFileDB(getDefaultPath().toFile());
+                Path rootPath = getRootPath();
+                if(!Files.exists(rootPath)) {
+                    try {
+                        Files.createDirectory(rootPath);
+                    }
+                    catch (IOException ex) {
+                        throw new UncheckedIOException(ex);
+                    }
+                }
+
+                m = DBMaker.newFileDB(new File(rootPath.toFile(), DBType.PRIMARY_DB.toString()) );
             }
             else if(dbType == DBType.TEMP_DB_CACHED || dbType == DBType.TEMP_DB_UNCACHED) {
                 //temporary storage
@@ -380,7 +398,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         dbRegistry.clear();
     }
     
-    private Path getDefaultPath() {
+    private Path getRootPath() {
         //get the default filepath of the permanet db file
         String outputFolder = this.dbConf.getOutputFolder();
 

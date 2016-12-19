@@ -78,6 +78,11 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
 
         this.mpClass = mpClass;
         this.tpClass = tpClass;
+
+        if(dbc.existsObject("modelParameters") && dbc.existsObject("trainingParameters")) {
+            modelParameters = dbc.loadObject("modelParameters", mpClass);
+            trainingParameters = dbc.loadObject("trainingParameters", tpClass);
+        }
     }
 
     /**
@@ -102,22 +107,12 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * Saves the KnowledgeBase to the permanent storage.
      */
     public void save() {
-        if(isInitialized()==false) {
+        if(modelParameters == null || trainingParameters == null) {
             throw new IllegalArgumentException("Can't save an empty KnowledgeBase.");
         }
 
         dbc.saveObject("modelParameters", modelParameters);
         dbc.saveObject("trainingParameters", trainingParameters);
-    }
-
-    /**
-     * Loads the KnowledgeBase from the permanent storage.
-     */
-    public void init() {
-        if(!isInitialized()) {
-            modelParameters = dbc.loadObject("modelParameters", mpClass);
-            trainingParameters = dbc.loadObject("trainingParameters", tpClass);
-        }
     }
 
     /**
@@ -161,7 +156,6 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
     /**
@@ -198,15 +192,6 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      */
     public void setModelParameters(MP modelParameters) {
         this.modelParameters = modelParameters;
-    }
-
-    /**
-     * Checks if the KnowledgeBase has not been initialized.
-     *
-     * @return
-     */
-    protected boolean isInitialized() {
-        return modelParameters != null && trainingParameters != null;
     }
 
 }

@@ -48,8 +48,6 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
     public void predict(Dataframe newData) {
         logger.info("predict()");
 
-        knowledgeBase.init();
-
         _predict(newData);
     }
 

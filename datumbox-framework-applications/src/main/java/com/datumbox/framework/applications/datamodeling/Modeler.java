@@ -77,7 +77,6 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
     public void predict(Dataframe newData) {
         logger.info("predict()");
 
-        knowledgeBase.init();
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
 
         Configuration conf = knowledgeBase.getConf();
