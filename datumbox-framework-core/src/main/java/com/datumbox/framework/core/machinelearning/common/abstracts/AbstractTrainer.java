@@ -127,14 +127,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      */
     protected  AbstractTrainer(String baseDBname, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
         //FIXME: do we really need the dbName here? Perhaps a temp name is good enough
-        String methodName = this.getClass().getSimpleName();
-        String dbNameSeparator = conf.getDbConfig().getDBnameSeparator();
-        if(!baseDBname.contains(methodName+dbNameSeparator)) { //patch for the K-fold cross validation which already contains the name of the algorithm in the dbname
-            baseDBname += dbNameSeparator + methodName;
-        }
-        
-        dbName = baseDBname;
-        
+        dbName = baseDBname + conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
         knowledgeBase = new KnowledgeBase<>(dbName, conf, mpClass, tpClass);
     }
     
@@ -165,13 +158,13 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         knowledgeBase.save(); //FIXME: this should be removed.
     }
 
-    //FIXME: save() and init() method need to go here
+    //FIXME: save() and load() method need to go here
 
     /** {@inheritDoc} */
     @Override
     public void delete() {
         knowledgeBase.delete();
-    }
+    } //FIXME: this method needs to go
             
     /** {@inheritDoc} */
     @Override

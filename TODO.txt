@@ -4,7 +4,7 @@ CODE IMPROVEMENTS
 - Add save() load() methods in the models
 
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
-- Write a ShuffleSplitValidator class similar to KFold.
+- Write a ShuffleSplitValidator class similar to KFold. Perhaps we need a single Validator class and separate Splitters.
 - Write generic optimizers instead of having optimization methods in the algorithms.
 
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.

@@ -41,7 +41,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * The connector to the Permanent Storage.
      */
-    protected final DatabaseConnector dbc;
+    private final DatabaseConnector dbc;
 
     /**
      * The class of the ModelParameters class of the algorithm.
@@ -119,7 +119,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * Deletes the database of the algorithm and closes the connection to the
      * permanent storage.
      */
-    public void delete() {
+    public void delete() { //FIXME: this method needs to go when we change the save mechanism
         dbc.clear();
         close();
 
