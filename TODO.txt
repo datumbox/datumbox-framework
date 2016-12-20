@@ -1,7 +1,8 @@
 CODE IMPROVEMENTS
 =================
 
-- Add save() load() methods in the models
+- TrainerBuilder: load(name, Configuration conf), create(TrainingParameters, Configuration conf). Trainable.newInstance is similar to create.
+- Add save() method in the models
 
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
 - Write a ShuffleSplitValidator class similar to KFold. Perhaps we need a single Validator class and separate Splitters.
