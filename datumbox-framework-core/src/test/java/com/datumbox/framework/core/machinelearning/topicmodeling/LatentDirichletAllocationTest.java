@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.topicmodeling;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegression;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
@@ -75,12 +76,12 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         trainingParameters.setBeta(0.01);
         trainingParameters.setK(25);
 
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, conf, trainingParameters);
+        LatentDirichletAllocation lda = MLBuilder.create(trainingParameters, dbName, conf);
         
         lda.fit(trainingData);
 
         lda.close();
-        lda = new LatentDirichletAllocation(dbName, conf);
+        lda = MLBuilder.load(LatentDirichletAllocation.class, dbName, conf);
 
         lda.predict(trainingData);
         

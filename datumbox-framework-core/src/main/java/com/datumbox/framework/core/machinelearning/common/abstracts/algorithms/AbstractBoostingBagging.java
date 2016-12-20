@@ -22,6 +22,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.ensemblelearning.FixedCombinationRules;
@@ -138,7 +139,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractBoostingBagging(String dbName, Configuration conf) {
         super(dbName, conf);
@@ -164,7 +165,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
-            try (AbstractClassifier mlclassifier = Trainable.newInstance(weakClassifierClass, prefix+t, knowledgeBase.getConf())) {
+            try (AbstractClassifier mlclassifier = MLBuilder.load(weakClassifierClass, prefix+t, knowledgeBase.getConf())) {
                 mlclassifier.predict(newData);
             }
             
@@ -234,7 +235,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             logger.debug("Training Weak learner {}", t);
 
             Dataframe validationDataset;
-            try (AbstractClassifier mlclassifier = Trainable.newInstance(weakClassifierTrainingParameters, prefix+t, knowledgeBase.getConf())) {
+            try (AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, prefix+t, knowledgeBase.getConf())) {
                 //We sample a list of Ids based on their weights
                 FlatDataList sampledIDs = SimpleRandomSampling.weightedSampling(observationWeights, n, true).toFlatDataList();
 
@@ -322,7 +323,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {
-            AbstractClassifier mlclassifier = Trainable.newInstance(weakClassifierClass, prefix+t, knowledgeBase.getConf());
+            AbstractClassifier mlclassifier = MLBuilder.load(weakClassifierClass, prefix+t, knowledgeBase.getConf());
             mlclassifier.delete();
         }
     }

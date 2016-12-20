@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -56,12 +57,12 @@ public class PCATest extends AbstractTest {
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
 
-        PCA instance = new PCA(dbName, conf, param);
+        PCA instance = MLBuilder.create(param, dbName, conf);
         instance.fit_transform(originalData);
         instance.close();
         //instance = null;
         
-        instance = new PCA(dbName, conf);
+        instance = MLBuilder.load(PCA.class, dbName, conf);
         
         instance.transform(validationdata);
         

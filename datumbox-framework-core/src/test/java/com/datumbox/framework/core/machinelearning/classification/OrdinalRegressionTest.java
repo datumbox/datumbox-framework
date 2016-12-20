@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
@@ -55,7 +56,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf, new DummyXMinMaxNormalizer.TrainingParameters());
+        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
         df.transform(validationData);
@@ -65,7 +66,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         param.setTotalIterations(100);
         param.setL2(0.001);
 
-        OrdinalRegression instance = new OrdinalRegression(dbName, conf, param);
+        OrdinalRegression instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
         
@@ -74,8 +75,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXMinMaxNormalizer(dbName, conf);
-        instance = new OrdinalRegression(dbName, conf);
+        df = MLBuilder.load(DummyXMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(OrdinalRegression.class, dbName, conf);
         
         instance.predict(validationData);
 
@@ -118,7 +119,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf, new DummyXMinMaxNormalizer.TrainingParameters());
+        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
 

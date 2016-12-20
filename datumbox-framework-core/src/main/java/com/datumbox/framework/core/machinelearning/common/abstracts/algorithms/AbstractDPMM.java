@@ -282,7 +282,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractDPMM(String dbName, Configuration conf) {
         super(dbName, conf);

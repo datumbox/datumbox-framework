@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
@@ -49,7 +50,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         String dbName = this.getClass().getSimpleName();
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
@@ -59,7 +60,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         param.setRegressionTrainingParameters(trainingParams);
 
 
-        StepwiseRegression instance = new StepwiseRegression(dbName, conf, param);
+        StepwiseRegression instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         df.denormalize(trainingData);
@@ -70,10 +71,10 @@ public class StepwiseRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         df.transform(validationData);
         
-        instance = new StepwiseRegression(dbName, conf);
+        instance = MLBuilder.load(StepwiseRegression.class, dbName, conf);
         instance.predict(validationData);
         
         df.denormalize(validationData);

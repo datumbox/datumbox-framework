@@ -200,7 +200,7 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractClusterer(String dbName, Configuration conf) {
         super(dbName, conf);

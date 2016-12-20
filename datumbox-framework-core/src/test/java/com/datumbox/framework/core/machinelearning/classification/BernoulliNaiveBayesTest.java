@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
@@ -54,13 +55,13 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, conf, new BernoulliNaiveBayes.TrainingParameters());
+        BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), dbName, conf);
         
         instance.fit(trainingData);
         
         instance.close();
         //instance = null;
-        instance = new BernoulliNaiveBayes(dbName, conf);
+        instance = MLBuilder.load(BernoulliNaiveBayes.class, dbName, conf);
         
         
         instance.predict(validationData);

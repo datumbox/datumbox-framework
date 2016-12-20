@@ -95,7 +95,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public ChisquareSelect(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected ChisquareSelect(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
@@ -103,9 +103,9 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public ChisquareSelect(String dbName, Configuration conf) {
+    protected ChisquareSelect(String dbName, Configuration conf) {
         super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }

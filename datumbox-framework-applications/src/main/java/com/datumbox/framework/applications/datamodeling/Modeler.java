@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
@@ -93,7 +94,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean transformData = dtParams!=null;
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = Trainable.newInstance(dtParams.getTClass(), dbName, conf);
+                dataTransformer = MLBuilder.load(dtParams.getTClass(), dbName, conf);
             }
             setParallelized(dataTransformer);
             dataTransformer.transform(newData);
@@ -103,14 +104,14 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         boolean selectFeatures = fsParams!=null;
         if(selectFeatures) {
             if(featureSelector==null) {
-                featureSelector = Trainable.newInstance(fsParams.getTClass(), dbName, conf);
+                featureSelector = MLBuilder.load(fsParams.getTClass(), dbName, conf);
             }
             setParallelized(featureSelector);
             featureSelector.transform(newData);
         }
 
         if(modeler==null) {
-            modeler = Trainable.newInstance(trainingParameters.getModelerTrainingParameters().getTClass(), dbName, conf);
+            modeler = MLBuilder.load(trainingParameters.getModelerTrainingParameters().getTClass(), dbName, conf);
         }
         setParallelized(modeler);
         modeler.predict(newData);
@@ -129,7 +130,7 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         AbstractTrainer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
         boolean transformData = dtParams!=null;
         if(transformData) {
-            dataTransformer = Trainable.newInstance(dtParams, dbName, conf);
+            dataTransformer = MLBuilder.create(dtParams, dbName, conf);
             setParallelized(dataTransformer);
             dataTransformer.fit_transform(trainingData);
         }
@@ -137,13 +138,13 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         AbstractTrainer.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
         boolean selectFeatures = fsParams!=null;
         if(selectFeatures) {
-            featureSelector = Trainable.newInstance(fsParams, dbName, conf);
+            featureSelector = MLBuilder.create(fsParams, dbName, conf);
             setParallelized(featureSelector);
             featureSelector.fit_transform(trainingData);
         }
 
         AbstractTrainer.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
-        modeler = Trainable.newInstance(mlParams, dbName, conf);
+        modeler = MLBuilder.create(mlParams, dbName, conf);
         setParallelized(modeler);
         modeler.fit(trainingData);
         

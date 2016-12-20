@@ -78,7 +78,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         private Integer rareFeatureThreshold = null;
         private Integer maxFeatures=null;
-        
+
         /**
          * Getter for the rare feature threshold. Any feature that exists
          * in the training dataset less times than this number will be removed
@@ -136,7 +136,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractCategoricalFeatureSelector(String dbName, Configuration conf) {
         super(dbName, conf);

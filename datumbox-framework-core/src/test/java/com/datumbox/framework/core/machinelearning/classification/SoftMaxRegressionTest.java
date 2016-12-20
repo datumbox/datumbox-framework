@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
@@ -56,7 +57,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
         df.transform(validationData);
@@ -66,7 +67,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         param.setTotalIterations(2000);
         param.setL2(0.001);
         
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, conf, param);
+        SoftMaxRegression instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
         
@@ -75,8 +76,8 @@ public class SoftMaxRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new SoftMaxRegression(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(SoftMaxRegression.class, dbName, conf);
         
         instance.predict(validationData);
         	        
@@ -119,7 +120,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, conf, new XMinMaxNormalizer.TrainingParameters());
+        XMinMaxNormalizer df = MLBuilder.create(new XMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
 
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();

@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
@@ -55,7 +56,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
         df.transform(validationData);
@@ -63,7 +64,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
         
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, conf, param);
+        MultinomialNaiveBayes instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
         
@@ -72,8 +73,8 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new MultinomialNaiveBayes(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(MultinomialNaiveBayes.class, dbName, conf);
         
         instance.predict(validationData);
         

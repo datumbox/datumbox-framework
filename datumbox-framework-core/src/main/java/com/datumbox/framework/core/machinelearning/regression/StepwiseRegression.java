@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
@@ -136,16 +137,16 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public StepwiseRegression(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected StepwiseRegression(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
     }
 
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public StepwiseRegression(String dbName, Configuration conf) {
+    protected StepwiseRegression(String dbName, Configuration conf) {
         super(dbName, conf);
     }
 
@@ -220,7 +221,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     }
 
     private AbstractRegressor createRegressor() {
-        return Trainable.newInstance(
+        return MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
                 dbName,
                 knowledgeBase.getConf()
@@ -228,7 +229,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     }
 
     private AbstractRegressor loadRegressor() {
-        return Trainable.newInstance(
+        return MLBuilder.load(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters().getTClass(),
                 dbName,
                 knowledgeBase.getConf()

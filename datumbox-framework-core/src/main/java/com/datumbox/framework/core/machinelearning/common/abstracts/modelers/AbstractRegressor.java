@@ -43,7 +43,7 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractRegressor(String dbName, Configuration conf) {
         super(dbName, conf);

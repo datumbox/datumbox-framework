@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
@@ -57,12 +58,12 @@ public class MultinomialDPMMTest extends AbstractTest {
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
 
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, conf, param);
+        MultinomialDPMM instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         instance.close();
         //instance = null;
-        instance = new MultinomialDPMM(dbName, conf);
+        instance = MLBuilder.load(MultinomialDPMM.class, dbName, conf);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);

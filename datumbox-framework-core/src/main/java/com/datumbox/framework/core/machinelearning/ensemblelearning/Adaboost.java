@@ -61,16 +61,16 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public Adaboost(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected Adaboost(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
     }
 
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public Adaboost(String dbName, Configuration conf) {
+    protected Adaboost(String dbName, Configuration conf) {
         super(dbName, conf);
     }
 

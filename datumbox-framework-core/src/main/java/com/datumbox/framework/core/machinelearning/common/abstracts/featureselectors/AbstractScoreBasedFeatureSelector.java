@@ -46,7 +46,7 @@ public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScore
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractScoreBasedFeatureSelector(String dbName, Configuration conf) {
         super(dbName, conf);

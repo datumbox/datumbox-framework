@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
@@ -54,13 +55,13 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, conf, new BinarizedNaiveBayes.TrainingParameters());
+        BinarizedNaiveBayes instance = MLBuilder.create(new BinarizedNaiveBayes.TrainingParameters(), dbName, conf);
 
         instance.fit(trainingData);
         
         instance.close();
         //instance = null;
-        instance = new BinarizedNaiveBayes(dbName, conf);
+        instance = MLBuilder.load(BinarizedNaiveBayes.class, dbName, conf);
         
         instance.predict(validationData);
         

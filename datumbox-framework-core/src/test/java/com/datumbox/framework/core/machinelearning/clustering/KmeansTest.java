@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
@@ -51,7 +52,7 @@ public class KmeansTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         
         df.transform(validationData);
@@ -67,7 +68,7 @@ public class KmeansTest extends AbstractTest {
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
 
-        Kmeans instance = new Kmeans(dbName, conf, param);
+        Kmeans instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         
@@ -76,8 +77,8 @@ public class KmeansTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new Kmeans(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(Kmeans.class, dbName, conf);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);
@@ -114,7 +115,7 @@ public class KmeansTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         
 

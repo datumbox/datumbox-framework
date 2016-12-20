@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
@@ -58,13 +59,13 @@ public class MaximumEntropyTest extends AbstractTest {
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
 
-        MaximumEntropy instance = new MaximumEntropy(dbName, conf, param);
+        MaximumEntropy instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
         
         instance.close();
         //instance = null;
-        instance = new MaximumEntropy(dbName, conf);
+        instance = MLBuilder.load(MaximumEntropy.class, dbName, conf);
         
         instance.predict(validationData);
         

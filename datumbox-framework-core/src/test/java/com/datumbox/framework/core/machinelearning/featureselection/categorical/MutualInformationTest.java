@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.featureselection.categorical
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class MutualInformationTest extends AbstractTest {
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
         
-        MutualInformation instance = new MutualInformation(dbName, conf, param);
+        MutualInformation instance = MLBuilder.create(param, dbName, conf);
         
         
         instance.fit_transform(trainingData);
@@ -60,7 +61,7 @@ public class MutualInformationTest extends AbstractTest {
         //instance = null;
         
         
-        instance = new MutualInformation(dbName, conf);
+        instance = MLBuilder.load(MutualInformation.class, dbName, conf);
         
         instance.transform(validationData);
         

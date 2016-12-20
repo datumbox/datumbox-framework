@@ -18,6 +18,7 @@ package com.datumbox.framework.applications.datamodeling;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
@@ -71,12 +72,12 @@ public class ModelerTest extends AbstractTest {
         //feature selection configuration
         trainingParameters.setFeatureSelectorTrainingParameters(null);
 
-        Modeler instance = new Modeler(dbName, conf, trainingParameters);
+        Modeler instance = MLBuilder.create(trainingParameters, dbName, conf);
         instance.fit(trainingData);
 
         instance.close();
 
-        instance = new Modeler(dbName, conf);
+        instance = MLBuilder.load(Modeler.class, dbName, conf);
 
         instance.predict(trainingData);
 
@@ -89,7 +90,7 @@ public class ModelerTest extends AbstractTest {
         //instance = null;
 
 
-        instance = new Modeler(dbName, conf);
+        instance = MLBuilder.load(Modeler.class, dbName, conf);
         
         instance.predict(validationData);
         

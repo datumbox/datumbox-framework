@@ -58,16 +58,16 @@ public class DummyXYMinMaxNormalizer extends AbstractDummyMinMaxTransformer<Dumm
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public DummyXYMinMaxNormalizer(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected DummyXYMinMaxNormalizer(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
     }
 
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public DummyXYMinMaxNormalizer(String dbName, Configuration conf) {
+    protected DummyXYMinMaxNormalizer(String dbName, Configuration conf) {
         super(dbName, conf);
     }
     

@@ -264,7 +264,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public PCA(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected PCA(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
@@ -272,9 +272,9 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public PCA(String dbName, Configuration conf) {
+    protected PCA(String dbName, Configuration conf) {
         super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }

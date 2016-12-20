@@ -31,42 +31,6 @@ import java.lang.reflect.InvocationTargetException;
 public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends AutoCloseable {
 
     /**
-     * Generates a new instance of a Trainable by providing the Class of
-     * the algorithm.
-     * 
-     * @param <T>
-     * @param aClass
-     * @param dbName
-     * @param conf
-     * @return 
-     */
-    public static <T extends Trainable> T newInstance(Class<T> aClass, String dbName, Configuration conf) {
-        try {
-            return aClass.getConstructor(String.class, Configuration.class).newInstance(dbName, conf);
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * Generates a new instance of a Trainable by providing the Class and the training parameters of the algorithm.
-     *
-     * @param <T>
-     * @param dbName
-     * @param conf
-     * @return
-     */
-    public static <T extends Trainable, TP extends Parameterizable> T newInstance(TP trainingParameters, String dbName, Configuration conf) {
-        try {
-            return (T) trainingParameters.getClass().getEnclosingClass().getConstructor(String.class, Configuration.class, trainingParameters.getClass()).newInstance(dbName, conf, trainingParameters);
-        }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    /**
      * Returns the model parameters that were estimated after training.
      * 
      * @return

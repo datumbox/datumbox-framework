@@ -24,6 +24,7 @@ import com.datumbox.framework.common.interfaces.Parameterizable;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
@@ -251,7 +252,7 @@ public class CETR {
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
 
-        Kmeans instance = new Kmeans(dbName, conf, param);
+        Kmeans instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(dataset);
         instance.predict(dataset);

@@ -41,7 +41,7 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractModeler(String dbName, Configuration conf) {
         super(dbName, conf);

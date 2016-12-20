@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.featureselection.categorical
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class ChisquareSelectTest extends AbstractTest {
         param.setMaxFeatures(5);
         param.setALevel(0.05);
         
-        ChisquareSelect instance = new ChisquareSelect(dbName, conf, param);
+        ChisquareSelect instance = MLBuilder.create(param, dbName, conf);
         
         
         instance.fit_transform(trainingData);
@@ -61,7 +62,7 @@ public class ChisquareSelectTest extends AbstractTest {
         //instance = null;
         
         
-        instance = new ChisquareSelect(dbName, conf);
+        instance = MLBuilder.load(ChisquareSelect.class, dbName, conf);
         
         instance.transform(validationData);
         

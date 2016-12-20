@@ -57,16 +57,16 @@ public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer<XYMinMaxN
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public XYMinMaxNormalizer(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected XYMinMaxNormalizer(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
     }
 
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public XYMinMaxNormalizer(String dbName, Configuration conf) {
+    protected XYMinMaxNormalizer(String dbName, Configuration conf) {
         super(dbName, conf);
     }
     

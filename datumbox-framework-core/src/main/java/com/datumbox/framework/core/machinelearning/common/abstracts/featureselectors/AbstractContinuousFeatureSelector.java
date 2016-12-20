@@ -40,7 +40,7 @@ public abstract class AbstractContinuousFeatureSelector<MP extends AbstractConti
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractContinuousFeatureSelector(String dbName, Configuration conf) {
         super(dbName, conf);

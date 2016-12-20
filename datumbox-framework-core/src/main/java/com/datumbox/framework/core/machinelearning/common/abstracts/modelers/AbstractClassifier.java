@@ -88,7 +88,7 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractClassifier(String dbName, Configuration conf) {
         super(dbName, conf);

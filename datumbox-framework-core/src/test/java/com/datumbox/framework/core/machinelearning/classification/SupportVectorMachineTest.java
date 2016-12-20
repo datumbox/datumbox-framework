@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
@@ -57,14 +58,14 @@ public class SupportVectorMachineTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         df.transform(validationData);
 
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
         
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, conf, param);
+        SupportVectorMachine instance = MLBuilder.create(param, dbName, conf);
 
         instance.fit(trainingData);
         
@@ -73,8 +74,8 @@ public class SupportVectorMachineTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new SupportVectorMachine(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(SupportVectorMachine.class, dbName, conf);
         
         instance.predict(validationData);
         

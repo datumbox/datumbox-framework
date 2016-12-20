@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
@@ -52,13 +53,13 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, conf, new XYMinMaxNormalizer.TrainingParameters());
+        XYMinMaxNormalizer df = MLBuilder.create(new XYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         
         df.transform(validationData);
 
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, conf, new MatrixLinearRegression.TrainingParameters());
+        MatrixLinearRegression instance = MLBuilder.create(new MatrixLinearRegression.TrainingParameters(), dbName, conf);
         instance.fit(trainingData);
         
         
@@ -67,8 +68,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new XYMinMaxNormalizer(dbName, conf);
-        instance = new MatrixLinearRegression(dbName, conf);
+        df = MLBuilder.load(XYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(MatrixLinearRegression.class, dbName, conf);
         
         instance.predict(validationData);
         
@@ -107,7 +108,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
                 
         String dbName = this.getClass().getSimpleName();
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
 
         

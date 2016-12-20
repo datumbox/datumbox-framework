@@ -65,7 +65,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public MutualInformation(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected MutualInformation(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
@@ -73,9 +73,9 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public MutualInformation(String dbName, Configuration conf) {
+    protected MutualInformation(String dbName, Configuration conf) {
         super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }

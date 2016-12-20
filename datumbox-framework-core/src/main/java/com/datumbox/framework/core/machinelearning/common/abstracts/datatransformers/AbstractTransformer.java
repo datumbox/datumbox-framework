@@ -41,7 +41,7 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractTransformer(String dbName, Configuration conf) {
         super(dbName, conf);

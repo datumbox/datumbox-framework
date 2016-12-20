@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
@@ -56,7 +57,7 @@ public class BootstrapAggregatingTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         df.transform(validationData);
 
@@ -73,7 +74,7 @@ public class BootstrapAggregatingTest extends AbstractTest {
 
 
 
-        BootstrapAggregating instance = new BootstrapAggregating(dbName, conf, param);
+        BootstrapAggregating instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         
@@ -82,8 +83,8 @@ public class BootstrapAggregatingTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new BootstrapAggregating(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(BootstrapAggregating.class, dbName, conf);
         
         instance.predict(validationData);
         

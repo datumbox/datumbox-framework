@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.featureselection.continuous.PCA;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
@@ -52,7 +53,7 @@ public class NLMSTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         
         df.transform(validationData);
@@ -64,7 +65,7 @@ public class NLMSTest extends AbstractTest {
 
 
 
-        NLMS instance = new NLMS(dbName, conf, param);
+        NLMS instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         
@@ -73,8 +74,8 @@ public class NLMSTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new NLMS(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(NLMS.class, dbName, conf);
         
         instance.predict(validationData);
         
@@ -109,7 +110,7 @@ public class NLMSTest extends AbstractTest {
         data[1].delete();
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
 
 
@@ -120,7 +121,7 @@ public class NLMSTest extends AbstractTest {
         featureSelectorParameters.setWhitened(false);
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
 
-        PCA featureSelector = new PCA(dbName, conf, featureSelectorParameters);
+        PCA featureSelector = MLBuilder.create(featureSelectorParameters, dbName, conf);
         featureSelector.fit_transform(trainingData);
         featureSelector.delete();
 

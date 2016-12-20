@@ -19,6 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.RecommendationMetrics;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
@@ -57,12 +58,12 @@ public class CollaborativeFilteringTest extends AbstractTest {
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
 
-        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, conf, param);
+        CollaborativeFiltering instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         instance.close();
         //instance = null;
-        instance = new CollaborativeFiltering(dbName, conf);
+        instance = MLBuilder.load(CollaborativeFiltering.class, dbName, conf);
 
         instance.predict(validationData);
         RecommendationMetrics vm = new RecommendationMetrics(validationData);

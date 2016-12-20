@@ -16,6 +16,7 @@ Version 0.8.0-SNAPSHOT - Build 20161220
 - TextClassifier inherits from Modeler.
 - Removed all unnecessary passing of class objects from Stepwise Regression, Wrappers and Ensumble learning classes.
 - Removed the ignoringNumericalFeatures variable from AbstractCategoricalFeatureSelector.
+- Moved the static methods of Trainable to MLBuilder. This is the prefered method for loading and initializing models.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

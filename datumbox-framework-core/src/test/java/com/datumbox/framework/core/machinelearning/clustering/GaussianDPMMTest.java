@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 import com.datumbox.framework.tests.Constants;
@@ -59,12 +60,12 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
 
-        GaussianDPMM instance = new GaussianDPMM(dbName, conf, param);
+        GaussianDPMM instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
         
         instance.close();
         //instance = null;
-        instance = new GaussianDPMM(dbName, conf);
+        instance = MLBuilder.load(GaussianDPMM.class, dbName, conf);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);

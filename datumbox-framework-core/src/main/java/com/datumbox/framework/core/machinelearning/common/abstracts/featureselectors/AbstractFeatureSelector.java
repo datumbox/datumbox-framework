@@ -41,7 +41,7 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractFeatureSelector(String dbName, Configuration conf) {
         super(dbName, conf);

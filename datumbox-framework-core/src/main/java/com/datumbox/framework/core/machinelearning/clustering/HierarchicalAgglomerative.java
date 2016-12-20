@@ -294,7 +294,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public HierarchicalAgglomerative(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected HierarchicalAgglomerative(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
@@ -302,9 +302,9 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public HierarchicalAgglomerative(String dbName, Configuration conf) {
+    protected HierarchicalAgglomerative(String dbName, Configuration conf) {
         super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }

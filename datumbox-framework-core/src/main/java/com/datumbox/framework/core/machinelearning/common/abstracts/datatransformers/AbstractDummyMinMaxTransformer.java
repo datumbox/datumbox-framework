@@ -142,7 +142,7 @@ public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMin
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
     protected AbstractDummyMinMaxTransformer(String dbName, Configuration conf) {
         super(dbName, conf);

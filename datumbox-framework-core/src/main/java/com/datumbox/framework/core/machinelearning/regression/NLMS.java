@@ -175,7 +175,7 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
      * @param trainingParameters
      * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    public NLMS(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+    protected NLMS(String dbName, Configuration conf, TrainingParameters trainingParameters) {
         super(dbName, conf, trainingParameters);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
@@ -183,9 +183,9 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
     /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public NLMS(String dbName, Configuration conf) {
+    protected NLMS(String dbName, Configuration conf) {
         super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }

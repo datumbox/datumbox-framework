@@ -18,6 +18,7 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -51,13 +52,13 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
         
         df.transform(validationData);
 
 
-        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, conf, new BayesianEnsembleMethod.TrainingParameters());
+        BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), dbName, conf);
 
         instance.fit(trainingData);
         
@@ -67,8 +68,8 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new BayesianEnsembleMethod(dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
+        instance = MLBuilder.load(BayesianEnsembleMethod.class, dbName, conf);
         
         instance.predict(validationData);
         
