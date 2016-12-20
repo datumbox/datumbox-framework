@@ -51,20 +51,20 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
         
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         df.transform(validationData);
-        
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf);
+
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        
-        instance.fit(trainingData, param);
+
+        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf, param);
+        instance.fit(trainingData);
         
         
         instance.close();
@@ -110,8 +110,8 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
 
         
         

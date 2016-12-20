@@ -288,8 +288,7 @@ public class TextClassifierTest extends AbstractTest {
             logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }
-        
-        TextClassifier instance = new TextClassifier(dbName, conf);
+
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         //Classifier configuration
@@ -310,8 +309,9 @@ public class TextClassifierTest extends AbstractTest {
         exParams.setMaxDistanceBetweenKwds(2);
         exParams.setExaminationWindowLength(6);
         trainingParameters.setTextExtractorParameters(exParams);
-        
-        instance.fit(dataset, trainingParameters);
+
+        TextClassifier instance = new TextClassifier(dbName, conf, trainingParameters);
+        instance.fit(dataset);
 
 
         ClassificationMetrics vm = instance.validate(dataset);

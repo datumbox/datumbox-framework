@@ -54,8 +54,7 @@ public class ModelerTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        
-        Modeler instance = new Modeler(dbName, conf);
+
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         
         
@@ -74,8 +73,13 @@ public class ModelerTest extends AbstractTest {
         //feature selection configuration
         trainingParameters.setFeatureSelectorClass(null);
         trainingParameters.setFeatureSelectorTrainingParameters(null);
-        
-        instance.fit(trainingData, trainingParameters);
+
+        Modeler instance = new Modeler(dbName, conf, trainingParameters);
+        instance.fit(trainingData);
+
+        instance.close();
+
+        instance = new Modeler(dbName, conf);
 
         instance.predict(trainingData);
 

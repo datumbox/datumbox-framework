@@ -43,12 +43,7 @@ import java.util.*;
  * @param <TP>
  */
 public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> implements PredictParallelizable, TrainParallelizable {
-    /**
-     * Flag that indicates whether the algorithm binarizes the provided activated 
-     * features.
-     */
-    private final boolean isBinarized;
-    
+
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractClassifier.AbstractModelParameters {
 
@@ -125,21 +120,36 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         public void setMultiProbabilityWeighted(boolean multiProbabilityWeighted) {
             this.multiProbabilityWeighted = multiProbabilityWeighted;
         }
-    } 
+    }
 
-    /** 
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @param isBinarized
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    protected AbstractNaiveBayes(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, boolean isBinarized) {
-        super(dbName, conf, mpClass, tpClass);
+    protected AbstractNaiveBayes(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
-        this.isBinarized = isBinarized;
-    } 
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractNaiveBayes(String dbName, Configuration conf) {
+        super(dbName, conf);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    }
+
+    /**
+     * Returns a flag that indicates whether the algorithm binarizes the provided activated
+     * features.
+     *
+     * @return
+     */
+    protected abstract boolean isBinarized();
     
     private boolean parallelized = true;
     
@@ -176,6 +186,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         Set<Object> classesSet = modelParameters.getClasses();
         
         Object someClass = classesSet.iterator().next();
+        boolean isBinarized = isBinarized();
         
         //initialize scores with the scores of the priors
         AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(logPriors)); 
@@ -230,6 +241,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
+        boolean isBinarized = isBinarized();
         
         //calculate first statistics about the classes
         Map<Object, Double> totalFeatureOccurrencesForEachClass = new HashMap<>();

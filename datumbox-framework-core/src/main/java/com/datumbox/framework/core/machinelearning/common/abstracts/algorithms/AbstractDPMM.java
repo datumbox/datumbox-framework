@@ -268,17 +268,25 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         }
         
     }
-    
-    /** 
+
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
      */
-    protected AbstractDPMM(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
-    } 
+    protected AbstractDPMM(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractDPMM(String dbName, Configuration conf) {
+        super(dbName, conf);
+    }
     
     private boolean parallelized = true;
     

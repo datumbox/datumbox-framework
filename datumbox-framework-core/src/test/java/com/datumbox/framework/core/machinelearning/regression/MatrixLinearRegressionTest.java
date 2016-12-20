@@ -52,16 +52,14 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new XYMinMaxNormalizer.TrainingParameters());
+        XYMinMaxNormalizer df = new XYMinMaxNormalizer(dbName, conf, new XYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         
         df.transform(validationData);
 
-        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, conf);
-        
-        MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
-        
-        instance.fit(trainingData, param);
+
+        MatrixLinearRegression instance = new MatrixLinearRegression(dbName, conf, new MatrixLinearRegression.TrainingParameters());
+        instance.fit(trainingData);
         
         
         instance.close();
@@ -109,9 +107,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
                 
         String dbName = this.getClass().getSimpleName();
 
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
 
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();

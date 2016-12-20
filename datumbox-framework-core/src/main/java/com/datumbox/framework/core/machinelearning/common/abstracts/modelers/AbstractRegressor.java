@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 
@@ -29,15 +30,24 @@ import com.datumbox.framework.core.machinelearning.modelselection.validators.KFo
  */
 public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractModelParameters, TP extends AbstractRegressor.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
 
-    /** 
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
      */
-    protected AbstractRegressor(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
+    protected AbstractRegressor(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
     }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractRegressor(String dbName, Configuration conf) {
+        super(dbName, conf);
+    }
+
 
 }

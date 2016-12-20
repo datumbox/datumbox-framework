@@ -54,11 +54,9 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, conf);
+        BernoulliNaiveBayes instance = new BernoulliNaiveBayes(dbName, conf, new BernoulliNaiveBayes.TrainingParameters());
         
-        BernoulliNaiveBayes.TrainingParameters param = new BernoulliNaiveBayes.TrainingParameters();
-        
-        instance.fit(trainingData, param);
+        instance.fit(trainingData);
         
         instance.close();
         //instance = null;
@@ -97,12 +95,8 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
-        
 
-        
-        BernoulliNaiveBayes.TrainingParameters param = new BernoulliNaiveBayes.TrainingParameters();
-        
-        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, new BernoulliNaiveBayes.TrainingParameters());
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();

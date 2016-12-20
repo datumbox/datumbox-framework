@@ -118,15 +118,24 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
 
     }
 
+
     /**
-     * Constructor for the TextClassifier class. It accepts as arguments the name of the
-     * database were the results are stored and the Database Configuration.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public TextClassifier(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public TextClassifier(String dbName, Configuration conf) {
-        super(dbName, conf, TextClassifier.ModelParameters.class, TextClassifier.TrainingParameters.class);
+        super(dbName, conf);
     }
     
     /**
@@ -136,16 +145,16 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
  per row.
      * 
      * @param datasets
-     * @param trainingParameters 
      */
-    public void fit(Map<Object, URI> datasets, TrainingParameters trainingParameters) { 
+    public void fit(Map<Object, URI> datasets) {
         //build trainingDataset
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets,
-                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
+                AbstractTextExtractor.newInstance(knowledgeBase.getTrainingParameters().getTextExtractorClass(),
+                knowledgeBase.getTrainingParameters().getTextExtractorParameters()),
                 knowledgeBase.getConf()
         );
         
-        fit(trainingData, trainingParameters);
+        fit(trainingData);
         
         trainingData.delete();
     }
@@ -266,18 +275,18 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
+            dataTransformer = (AbstractTransformer) Trainable.newInstance(dtClass, dbName, conf, trainingParameters.getDataTransformerTrainingParameters());
             
             setParallelized(dataTransformer);
             
-            dataTransformer.fit_transform(trainingDataset, trainingParameters.getDataTransformerTrainingParameters());
+            dataTransformer.fit_transform(trainingDataset);
         }
         
         Class fsClass = trainingParameters.getFeatureSelectorClass();
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            featureSelector = (AbstractFeatureSelector) Trainable.newInstance(fsClass, dbName, conf, trainingParameters.getFeatureSelectorTrainingParameters());
             AbstractFeatureSelector.AbstractTrainingParameters featureSelectorParameters = trainingParameters.getFeatureSelectorTrainingParameters();
             if(AbstractCategoricalFeatureSelector.AbstractTrainingParameters.class.isAssignableFrom(featureSelectorParameters.getClass())) {
                 ((AbstractCategoricalFeatureSelector.AbstractTrainingParameters)featureSelectorParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
@@ -286,16 +295,16 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
             setParallelized(featureSelector);
             
             //find the most popular features & remove unnecessary features
-            featureSelector.fit_transform(trainingDataset, trainingParameters.getFeatureSelectorTrainingParameters());   
+            featureSelector.fit_transform(trainingDataset);
         }
         
         //initialize modeler
-        modeler = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getModelerClass(), dbName, conf); 
+        modeler = Trainable.newInstance(trainingParameters.getModelerClass(), dbName, conf, trainingParameters.getModelerTrainingParameters());
             
         setParallelized(modeler);
         
         //train the modeler on the whole dataset
-        modeler.fit(trainingDataset, trainingParameters.getModelerTrainingParameters());
+        modeler.fit(trainingDataset);
         
         if(transformData) {
             dataTransformer.denormalize(trainingDataset); //optional denormalization

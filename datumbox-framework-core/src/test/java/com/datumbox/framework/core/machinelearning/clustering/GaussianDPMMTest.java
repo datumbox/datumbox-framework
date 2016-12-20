@@ -49,7 +49,6 @@ public class GaussianDPMMTest extends AbstractTest {
 
         
         String dbName = this.getClass().getSimpleName();
-        GaussianDPMM instance = new GaussianDPMM(dbName, conf);
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -59,8 +58,9 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setNu0(1);
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
-        
-        instance.fit(trainingData, param);
+
+        GaussianDPMM instance = new GaussianDPMM(dbName, conf, param);
+        instance.fit(trainingData);
         
         instance.close();
         //instance = null;

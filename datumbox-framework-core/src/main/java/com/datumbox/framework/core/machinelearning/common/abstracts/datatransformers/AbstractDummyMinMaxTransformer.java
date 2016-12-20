@@ -37,12 +37,10 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer<AbstractDummyMinMaxTransformer.ModelParameters, AbstractDummyMinMaxTransformer.TrainingParameters> implements Parallelizable {
+public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMinMaxTransformer.AbstractModelParameters, TP extends AbstractDummyMinMaxTransformer.AbstractTrainingParameters> extends AbstractTransformer<MP, TP> implements Parallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractTransformer.AbstractModelParameters {
-        private static final long serialVersionUID = 1L;
-        
+    public abstract static class AbstractModelParameters extends AbstractTransformer.AbstractModelParameters {
         /**
          * The reference levels of each categorical variable.
          */
@@ -65,7 +63,7 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
          * @param dbc
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
+        protected AbstractModelParameters(DatabaseConnector dbc) {
             super(dbc);
         }
 
@@ -126,18 +124,28 @@ public abstract class AbstractDummyMinMaxTransformer extends AbstractTransformer
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractTransformer.AbstractTrainingParameters {
-        private static final long serialVersionUID = 1L;
-        
+    public abstract static class AbstractTrainingParameters extends AbstractTransformer.AbstractTrainingParameters {
+
     }
-    
-    /** 
+
+    /**
      * @param dbName
      * @param conf
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    protected AbstractDummyMinMaxTransformer(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     protected AbstractDummyMinMaxTransformer(String dbName, Configuration conf) {
-        super(dbName, conf, AbstractDummyMinMaxTransformer.ModelParameters.class, AbstractDummyMinMaxTransformer.TrainingParameters.class);
+        super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     

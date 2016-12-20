@@ -121,14 +121,23 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     }
 
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public CollaborativeFiltering(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public CollaborativeFiltering(String dbName, Configuration conf) {
-        super(dbName, conf, CollaborativeFiltering.ModelParameters.class, CollaborativeFiltering.TrainingParameters.class);
-    } 
+        super(dbName, conf);
+    }
 
     /** {@inheritDoc} */
     @Override

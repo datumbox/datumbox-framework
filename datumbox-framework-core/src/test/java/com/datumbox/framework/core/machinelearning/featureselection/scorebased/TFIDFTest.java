@@ -53,9 +53,9 @@ public class TFIDFTest extends AbstractTest {
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        TFIDF instance = new TFIDF(dbName, conf);
+        TFIDF instance = new TFIDF(dbName, conf, param);
         
-        instance.fit_transform(trainingData, param);
+        instance.fit_transform(trainingData);
         instance.close();
         //instance = null;
         

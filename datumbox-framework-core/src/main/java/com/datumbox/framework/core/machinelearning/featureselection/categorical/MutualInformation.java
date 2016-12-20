@@ -58,15 +58,25 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         private static final long serialVersionUID = 1L;
 
     }
-    
+
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public MutualInformation(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public MutualInformation(String dbName, Configuration conf) {
-        super(dbName, conf, MutualInformation.ModelParameters.class, MutualInformation.TrainingParameters.class);
+        super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     

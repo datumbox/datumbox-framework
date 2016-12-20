@@ -56,19 +56,19 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
         
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         df.transform(validationData);
 
-        
-        SoftMaxRegression instance = new SoftMaxRegression(dbName, conf);
-        
+
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
         param.setL2(0.001);
         
-        instance.fit(trainingData, param);
+        SoftMaxRegression instance = new SoftMaxRegression(dbName, conf, param);
+        
+        instance.fit(trainingData);
         
         instance.close();
         df.close();
@@ -119,8 +119,8 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new XMinMaxNormalizer.TrainingParameters());
+        XMinMaxNormalizer df = new XMinMaxNormalizer(dbName, conf, new XMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
 
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);

@@ -177,16 +177,27 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         public void setL2(double l2) {
             this.l2 = l2;
         }
-    } 
+    }
+
 
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public OrdinalRegression(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public OrdinalRegression(String dbName, Configuration conf) {
-        super(dbName, conf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class);
+        super(dbName, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
     

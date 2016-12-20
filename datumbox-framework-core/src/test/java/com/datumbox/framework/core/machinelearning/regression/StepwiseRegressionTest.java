@@ -49,10 +49,8 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         String dbName = this.getClass().getSimpleName();
         
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
-        StepwiseRegression instance = new StepwiseRegression(dbName, conf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
@@ -60,8 +58,10 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         MatrixLinearRegression.TrainingParameters trainingParams = new MatrixLinearRegression.TrainingParameters();
         param.setRegressionTrainingParameters(trainingParams);
-                
-        instance.fit(trainingData, param);
+
+
+        StepwiseRegression instance = new StepwiseRegression(dbName, conf, param);
+        instance.fit(trainingData);
         
         df.denormalize(trainingData);
         

@@ -54,12 +54,9 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, conf);
-        
-        BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
-        
-        
-        instance.fit(trainingData, param);
+        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, conf, new BinarizedNaiveBayes.TrainingParameters());
+
+        instance.fit(trainingData);
         
         instance.close();
         //instance = null;
@@ -98,12 +95,8 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
         data[1].delete();
-        
 
-        
-        BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
-
-        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, new BinarizedNaiveBayes.TrainingParameters());
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();

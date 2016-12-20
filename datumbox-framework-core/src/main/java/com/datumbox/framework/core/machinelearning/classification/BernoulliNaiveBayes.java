@@ -81,13 +81,27 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
     }
 
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public BernoulliNaiveBayes(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public BernoulliNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, true);
+        super(dbName, conf);
+    }
+
+    /** {@inheritDoc} */
+    protected boolean isBinarized() {
+        return true;
     }
     
     /** {@inheritDoc} */

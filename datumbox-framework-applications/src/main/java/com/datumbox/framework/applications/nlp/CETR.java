@@ -242,8 +242,6 @@ public class CETR {
     }
 
     private void performClustering(Dataframe dataset, int numberOfClusters) {
-        Kmeans instance = new Kmeans(dbName, conf);
-        
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(numberOfClusters);
         param.setMaxIterations(200);
@@ -252,8 +250,10 @@ public class CETR {
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
+
+        Kmeans instance = new Kmeans(dbName, conf, param);
         
-        instance.fit(dataset, param);
+        instance.fit(dataset);
         instance.predict(dataset);
         //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
         

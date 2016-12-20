@@ -54,10 +54,10 @@ public class ChisquareSelectTest extends AbstractTest {
         param.setIgnoringNumericalFeatures(false);
         param.setALevel(0.05);
         
-        ChisquareSelect instance = new ChisquareSelect(dbName, conf);
+        ChisquareSelect instance = new ChisquareSelect(dbName, conf, param);
         
         
-        instance.fit_transform(trainingData, param);
+        instance.fit_transform(trainingData);
         instance.close();
         //instance = null;
         

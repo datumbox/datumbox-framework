@@ -58,15 +58,24 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
 
     }
 
+
     /**
-     * Constructor for the Modeler class. It accepts as arguments the name of the
-     * database were the results are stored and the Database Configuration.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public Modeler(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public Modeler(String dbName, Configuration conf) {
-        super(dbName, conf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
+        super(dbName, conf);
     }
 
     /**
@@ -138,11 +147,11 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         boolean transformData = (dtClass!=null);
         if(transformData) {
-            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
+            dataTransformer = (AbstractTransformer) Trainable.newInstance(dtClass, dbName, conf, trainingParameters.getDataTransformerTrainingParameters());
             
             setParallelized(dataTransformer);
             
-            dataTransformer.fit_transform(trainingData, trainingParameters.getDataTransformerTrainingParameters());
+            dataTransformer.fit_transform(trainingData);
         }
         
         
@@ -151,11 +160,11 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         boolean selectFeatures = (fsClass!=null);
         if(selectFeatures) {
-            featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+            featureSelector = (AbstractFeatureSelector) Trainable.newInstance(fsClass, dbName, conf, trainingParameters.getFeatureSelectorTrainingParameters());
             
             setParallelized(featureSelector);
             
-            featureSelector.fit_transform(trainingData, trainingParameters.getFeatureSelectorTrainingParameters()); 
+            featureSelector.fit_transform(trainingData);
         }
         
         
@@ -163,12 +172,12 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         
         //initialize modeler
         Class mlClass = trainingParameters.getModelerClass();
-        modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
+        modeler = (AbstractModeler) Trainable.newInstance(mlClass, dbName, conf, trainingParameters.getModelerTrainingParameters());
         
         setParallelized(modeler);
         
         //train the modeler on the whole dataset
-        modeler.fit(trainingData, trainingParameters.getModelerTrainingParameters());
+        modeler.fit(trainingData);
         
         if(transformData) {
             dataTransformer.denormalize(trainingData); //optional denormalization

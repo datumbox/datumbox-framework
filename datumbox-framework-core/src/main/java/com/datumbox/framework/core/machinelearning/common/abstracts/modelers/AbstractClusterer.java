@@ -22,6 +22,7 @@ import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
@@ -184,18 +185,26 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
             this.clusterMap = clusterMap;
         }
         
-    } 
+    }
 
-    /** 
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
      */
-    protected AbstractClusterer(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
-    } 
+    protected AbstractClusterer(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractClusterer(String dbName, Configuration conf) {
+        super(dbName, conf);
+    }
     
     /**
      * Clears the clusters from their internal caching parameters before storing

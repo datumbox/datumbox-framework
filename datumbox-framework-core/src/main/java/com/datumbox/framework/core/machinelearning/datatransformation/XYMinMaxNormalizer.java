@@ -17,6 +17,8 @@ package com.datumbox.framework.core.machinelearning.datatransformation;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers.AbstractDummyMinMaxTransformer;
 
 import java.util.Map;
@@ -27,13 +29,42 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer {
-    
+public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer<XYMinMaxNormalizer.ModelParameters, XYMinMaxNormalizer.TrainingParameters> {
+
+    /** {@inheritDoc} */
+    public static class ModelParameters extends AbstractDummyMinMaxTransformer.AbstractModelParameters {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * @param dbc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         */
+        protected ModelParameters(DatabaseConnector dbc) {
+            super(dbc);
+        }
+
+    }
+
+    /** {@inheritDoc} */
+    public static class TrainingParameters extends AbstractDummyMinMaxTransformer.AbstractTrainingParameters {
+        private static final long serialVersionUID = 1L;
+
+    }
+
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public XYMinMaxNormalizer(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public XYMinMaxNormalizer(String dbName, Configuration conf) {
         super(dbName, conf);

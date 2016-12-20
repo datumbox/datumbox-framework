@@ -55,18 +55,19 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf, new DummyXMinMaxNormalizer.TrainingParameters());
         
-        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         df.transform(validationData);
-        
-        OrdinalRegression instance = new OrdinalRegression(dbName, conf);
-        
+
+
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         param.setL2(0.001);
+
+        OrdinalRegression instance = new OrdinalRegression(dbName, conf, param);
         
-        instance.fit(trainingData, param);
+        instance.fit(trainingData);
         
         instance.close();
         df.close();
@@ -117,9 +118,9 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
+        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf, new DummyXMinMaxNormalizer.TrainingParameters());
         
-        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
 
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);

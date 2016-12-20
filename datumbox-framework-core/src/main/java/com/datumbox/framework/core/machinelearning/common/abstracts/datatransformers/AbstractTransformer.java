@@ -27,26 +27,33 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
  * @param <TP>
  */
 public abstract class AbstractTransformer<MP extends AbstractTransformer.AbstractModelParameters, TP extends AbstractTransformer.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
-    
-    /** 
+
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
      */
-    protected AbstractTransformer(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
+    protected AbstractTransformer(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractTransformer(String dbName, Configuration conf) {
+        super(dbName, conf);
     }
     
     /**
      * Fits, transforms and normalizes the data of the provided dataset.
      * 
      * @param trainingData
-     * @param trainingParameters 
      */
-    public void fit_transform(Dataframe trainingData, TP trainingParameters) {
-        fit(trainingData, trainingParameters); 
+    public void fit_transform(Dataframe trainingData) {
+        fit(trainingData);
         transform(trainingData);
     }
     

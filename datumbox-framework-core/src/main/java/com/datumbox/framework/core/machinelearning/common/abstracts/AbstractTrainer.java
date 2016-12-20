@@ -110,7 +110,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * The name of the Database where we persist our data.
      */
-    protected final String dbName;
+    protected final String dbName; //FIXME: do we really need the dbName here? Perhaps a temp name is good enough
     
     /**
      * The KnowledgeBase instance of the algorithm. 
@@ -118,22 +118,31 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     protected final KnowledgeBase<MP, TP> knowledgeBase;
     
     /**
-     * The basic Constructor of all BaseTrainable classes.
+     * Constructor which is called on model initialization before training.
      * 
      * @param baseDBname
      * @param conf 
-     * @param mpClass
-     * @param tpClass
+     * @param trainingParameters
      */
-    protected  AbstractTrainer(String baseDBname, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        //FIXME: do we really need the dbName here? Perhaps a temp name is good enough
+    protected AbstractTrainer(String baseDBname, Configuration conf, TP trainingParameters) {
         dbName = baseDBname + conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
-        knowledgeBase = new KnowledgeBase<>(dbName, conf, mpClass, tpClass);
+        knowledgeBase = new KnowledgeBase<>(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * Constructor which is called when we pre-trained load persisted models.
+     *
+     * @param baseDBname
+     * @param conf
+     */
+    protected AbstractTrainer(String baseDBname, Configuration conf) {
+        dbName = baseDBname + conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
+        knowledgeBase = new KnowledgeBase<>(dbName, conf);
     }
     
     /** {@inheritDoc} */
     @Override
-     public MP getModelParameters() {
+    public MP getModelParameters() {
         return knowledgeBase.getModelParameters();
     } 
     
@@ -145,26 +154,23 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     
     /** {@inheritDoc} */
     @Override
-    public void fit(Dataframe trainingData, TP trainingParameters) {
+    public void fit(Dataframe trainingData) {
         logger.info("fit()");
         
         //reset knowledge base
         knowledgeBase.clear();
-        knowledgeBase.setTrainingParameters(trainingParameters);
 
         _fit(trainingData);
         
         logger.info("Saving model");
-        knowledgeBase.save(); //FIXME: this should be removed.
+        knowledgeBase.save(); //FIXME: this should be removed and go to a separate save() method. The load() should be on a factory object.
     }
-
-    //FIXME: save() and load() method need to go here
 
     /** {@inheritDoc} */
     @Override
     public void delete() {
         knowledgeBase.delete();
-    } //FIXME: this method needs to go
+    }
             
     /** {@inheritDoc} */
     @Override

@@ -56,13 +56,12 @@ public class AdaboostTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         
         df.transform(validationData);
         
-        
-        Adaboost instance = new Adaboost(dbName, conf);
+
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -74,9 +73,10 @@ public class AdaboostTest extends AbstractTest {
         
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
+
+        Adaboost instance = new Adaboost(dbName, conf, param);
         
-        
-        instance.fit(trainingData, param);
+        instance.fit(trainingData);
         
         
         instance.close();

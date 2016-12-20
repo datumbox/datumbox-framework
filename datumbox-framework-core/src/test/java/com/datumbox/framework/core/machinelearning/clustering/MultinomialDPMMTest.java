@@ -50,15 +50,15 @@ public class MultinomialDPMMTest extends AbstractTest {
 
         
         String dbName = this.getClass().getSimpleName();
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, conf);
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        
-        instance.fit(trainingData, param);
+
+        MultinomialDPMM instance = new MultinomialDPMM(dbName, conf, param);
+        instance.fit(trainingData);
         
         instance.close();
         //instance = null;

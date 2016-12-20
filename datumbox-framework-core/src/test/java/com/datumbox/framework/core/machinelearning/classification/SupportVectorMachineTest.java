@@ -56,16 +56,16 @@ public class SupportVectorMachineTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         df.transform(validationData);
-        
-        SupportVectorMachine instance = new SupportVectorMachine(dbName, conf);
-        
+
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
         
-        instance.fit(trainingData, param);
+        SupportVectorMachine instance = new SupportVectorMachine(dbName, conf, param);
+
+        instance.fit(trainingData);
         
         instance.close();
         df.close();

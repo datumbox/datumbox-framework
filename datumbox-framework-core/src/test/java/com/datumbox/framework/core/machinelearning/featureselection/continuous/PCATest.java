@@ -52,12 +52,12 @@ public class PCATest extends AbstractTest {
         Dataframe expResult = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        PCA instance = new PCA(dbName, conf);
         
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
-        
-        instance.fit_transform(originalData, param);
+
+        PCA instance = new PCA(dbName, conf, param);
+        instance.fit_transform(originalData);
         instance.close();
         //instance = null;
         

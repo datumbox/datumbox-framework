@@ -53,10 +53,10 @@ public class MutualInformationTest extends AbstractTest {
         param.setMaxFeatures(5);
         param.setIgnoringNumericalFeatures(false);
         
-        MutualInformation instance = new MutualInformation(dbName, conf);
+        MutualInformation instance = new MutualInformation(dbName, conf, param);
         
         
-        instance.fit_transform(trainingData, param);
+        instance.fit_transform(trainingData);
         instance.close();
         //instance = null;
         

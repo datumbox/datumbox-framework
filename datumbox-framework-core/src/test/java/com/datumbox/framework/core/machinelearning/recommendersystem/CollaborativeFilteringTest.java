@@ -53,12 +53,12 @@ public class CollaborativeFilteringTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, conf);
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
-        
-        instance.fit(trainingData, param);
+
+        CollaborativeFiltering instance = new CollaborativeFiltering(dbName, conf, param);
+        instance.fit(trainingData);
         
         instance.close();
         //instance = null;

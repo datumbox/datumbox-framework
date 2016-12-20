@@ -52,20 +52,20 @@ public class NLMSTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         
         df.transform(validationData);
-        
 
-        NLMS instance = new NLMS(dbName, conf);
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
         param.setL1(0.00000001);
-        
-        
-        instance.fit(trainingData, param);
+
+
+
+        NLMS instance = new NLMS(dbName, conf, param);
+        instance.fit(trainingData);
         
         
         instance.close();
@@ -109,18 +109,19 @@ public class NLMSTest extends AbstractTest {
         data[1].delete();
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
 
 
         
 
-        PCA featureSelector = new PCA(dbName, conf);
         PCA.TrainingParameters featureSelectorParameters = new PCA.TrainingParameters();
         featureSelectorParameters.setMaxDimensions(trainingData.xColumnSize()-1);
         featureSelectorParameters.setWhitened(false);
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
-        featureSelector.fit_transform(trainingData, featureSelectorParameters);
+
+        PCA featureSelector = new PCA(dbName, conf, featureSelectorParameters);
+        featureSelector.fit_transform(trainingData);
         featureSelector.delete();
 
 

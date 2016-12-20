@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161218
+Version 0.8.0-SNAPSHOT - Build 20161220
 ---------------------------------------
 
 - Improved Validation:
@@ -12,6 +12,7 @@ Version 0.8.0-SNAPSHOT - Build 20161218
 - Random unseeded filenames are now produced using RandomGenerator.getThreadLocalRandomUnseeded().
 - Removing the need to call KnowledgeBase.init() in any predict/transform method.
 - Improved DatabaseConnector: existsObject method, InMemory now stores objects independently, MapDB stores all files in folder.
+- The training parameters are now provided on the constructor of the algorithms not with a setter.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

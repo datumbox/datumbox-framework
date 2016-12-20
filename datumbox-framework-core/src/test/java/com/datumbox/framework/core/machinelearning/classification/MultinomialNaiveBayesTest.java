@@ -55,17 +55,17 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
         
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         df.transform(validationData);
-        
-        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, conf);
-        
+
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
         
-        instance.fit(trainingData, param);
+        MultinomialNaiveBayes instance = new MultinomialNaiveBayes(dbName, conf, param);
+        
+        instance.fit(trainingData);
         
         instance.close();
         df.close();

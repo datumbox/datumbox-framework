@@ -67,18 +67,21 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, conf);
-        
-        
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, conf);
-        
+
+
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
         trainingParameters.setAlpha(0.01);
         trainingParameters.setBeta(0.01);
-        trainingParameters.setK(25);        
+        trainingParameters.setK(25);
+
+        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, conf, trainingParameters);
         
-        lda.fit(trainingData, trainingParameters); 
-        
+        lda.fit(trainingData);
+
+        lda.close();
+        lda = new LatentDirichletAllocation(dbName, conf);
+
         lda.predict(trainingData);
         
         Dataframe reducedTrainingData = new Dataframe(conf);

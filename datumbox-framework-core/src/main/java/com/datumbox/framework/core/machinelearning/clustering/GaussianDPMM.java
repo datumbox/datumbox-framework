@@ -373,14 +373,24 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
     }
 
+
     /**
-     * Public constructor of the algorithm.
-     *
      * @param dbName
      * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public GaussianDPMM(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public GaussianDPMM(String dbName, Configuration conf) {
-        super(dbName, conf, GaussianDPMM.ModelParameters.class, GaussianDPMM.TrainingParameters.class);
+        super(dbName, conf);
     }
 
     /** {@inheritDoc} */

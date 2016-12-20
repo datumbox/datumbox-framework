@@ -56,12 +56,10 @@ public class BootstrapAggregatingTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf, new DummyXYMinMaxNormalizer.TrainingParameters());
+        df.fit_transform(trainingData);
         df.transform(validationData);
-        
-        
-        BootstrapAggregating instance = new BootstrapAggregating(dbName, conf);
+
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
@@ -73,9 +71,11 @@ public class BootstrapAggregatingTest extends AbstractTest {
         
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
-        
-        
-        instance.fit(trainingData, param);
+
+
+
+        BootstrapAggregating instance = new BootstrapAggregating(dbName, conf, param);
+        instance.fit(trainingData);
         
         
         instance.close();

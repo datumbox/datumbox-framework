@@ -92,7 +92,7 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
         }
 
         //initialize modeler
-        AbstractModeler modeler = Trainable.newInstance(aClass, "kfold_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf);
+        AbstractModeler modeler = Trainable.newInstance(aClass, "kfold_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf, trainingParameters);
 
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {
@@ -127,7 +127,7 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
 
 
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
-            modeler.fit(trainingData, (AbstractTrainer.AbstractTrainingParameters) trainingParameters);
+            modeler.fit(trainingData);
             trainingData.delete();
 
 

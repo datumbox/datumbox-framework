@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 /**
  * Base Class for all the Topic Modeling algorithms.
@@ -25,16 +26,24 @@ import com.datumbox.framework.common.Configuration;
  * @param <TP>
  */
 public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.AbstractModelParameters, TP extends AbstractTopicModeler.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
-    
-    /** 
+
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
      */
-    protected AbstractTopicModeler(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
-    } 
-    
+    protected AbstractTopicModeler(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractTopicModeler(String dbName, Configuration conf) {
+        super(dbName, conf);
+    }
+
 }

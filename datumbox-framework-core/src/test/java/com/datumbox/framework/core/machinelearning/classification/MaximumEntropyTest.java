@@ -54,12 +54,13 @@ public class MaximumEntropyTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        MaximumEntropy instance = new MaximumEntropy(dbName, conf);
-        
+
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
+
+        MaximumEntropy instance = new MaximumEntropy(dbName, conf, param);
         
-        instance.fit(trainingData, param);
+        instance.fit(trainingData);
         
         instance.close();
         //instance = null;

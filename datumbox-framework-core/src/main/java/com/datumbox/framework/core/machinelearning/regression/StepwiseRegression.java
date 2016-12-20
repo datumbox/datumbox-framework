@@ -159,24 +159,34 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
     }
-    
-    
+
+
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public StepwiseRegression(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public StepwiseRegression(String dbName, Configuration conf) {
-        super(dbName, conf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class);
-    } 
-     
+        super(dbName, conf);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void delete() {
-        loadRegressor();
-        mlregressor.delete();
-        mlregressor = null;
+        if(mlregressor != null) {
+            mlregressor.delete();
+            mlregressor = null;
+        }
         
         super.delete();
     }
@@ -184,9 +194,10 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     /** {@inheritDoc} */
     @Override
     public void close() {
-        loadRegressor();
-        mlregressor.close();
-        mlregressor = null;
+        if(mlregressor != null) {
+            mlregressor.close();
+            mlregressor = null;
+        }
         
         super.close();
     }
@@ -194,7 +205,9 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        loadRegressor();
+        if(mlregressor==null) {
+            mlregressor = Trainable.newInstance(knowledgeBase.getTrainingParameters().getRegressionClass(), dbName, knowledgeBase.getConf());
+        }
         
         mlregressor.predict(newData);
     }
@@ -243,31 +256,28 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = generateRegressor();
+        mlregressor = Trainable.newInstance(
+            knowledgeBase.getTrainingParameters().getRegressionClass(),
+            dbName,
+            knowledgeBase.getConf(),
+            knowledgeBase.getTrainingParameters().getRegressionTrainingParameters()
+        );
         
-        mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
+        mlregressor.fit(copiedTrainingData);
         copiedTrainingData.delete();
-        //copiedTrainingData = null;
     }
 
-    private void loadRegressor() {
-        if(mlregressor==null) {
-            mlregressor = generateRegressor();
-        }
-    }
-    
-    private AbstractRegressor generateRegressor() {
-        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) knowledgeBase.getTrainingParameters().getRegressionClass(), dbName, knowledgeBase.getConf());
-    }
-    
     private Map<Object, Double> runRegression(Dataframe trainingData) {
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
         //initialize algorithm
-        mlregressor = generateRegressor();
+        mlregressor = Trainable.newInstance(
+                knowledgeBase.getTrainingParameters().getRegressionClass(),
+                dbName,
+                knowledgeBase.getConf(),
+                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters()
+        );
 
         //train the regressor
-        mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());
+        mlregressor.fit(trainingData);
 
         //get pvalues
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();

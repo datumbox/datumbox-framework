@@ -219,14 +219,24 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         
     }
 
+
     /**
-     * Public constructor of the algorithm.
-     * 
      * @param dbName
-     * @param conf 
+     * @param conf
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     */
+    public MultinomialDPMM(String dbName, Configuration conf, TrainingParameters trainingParameters) {
+        super(dbName, conf, trainingParameters);
+    }
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
     public MultinomialDPMM(String dbName, Configuration conf) {
-        super(dbName, conf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class);
+        super(dbName, conf);
     }
     
     /** {@inheritDoc} */

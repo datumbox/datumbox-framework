@@ -16,6 +16,10 @@
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.common.interfaces.Learnable;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * The ModelParameter objects stores the coefficients that were learned during
@@ -24,5 +28,24 @@ import com.datumbox.framework.common.interfaces.Learnable;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public interface ModelParameters extends Learnable {
-    
+
+    /**
+     * Generates a new instance of the Model Parameters by using the provided class.
+     *
+     * @param <MP>
+     * @param mpClass
+     * @param dbc
+     * @return
+     */
+    public static <MP extends ModelParameters> MP newInstance(Class<MP> mpClass, DatabaseConnector dbc) {
+        try {
+            Constructor<MP> c = mpClass.getDeclaredConstructor(DatabaseConnector.class);
+            c.setAccessible(true);
+            return c.newInstance(dbc);
+        }
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 }

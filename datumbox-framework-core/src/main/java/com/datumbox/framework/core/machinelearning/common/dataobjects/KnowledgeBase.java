@@ -44,16 +44,6 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     private final DatabaseConnector dbc;
 
     /**
-     * The class of the ModelParameters class of the algorithm.
-     */
-    private final Class<MP> mpClass;
-
-    /**
-     * The class of the TrainingParameters class of the algorithm.
-     */
-    private final Class<TP> tpClass;
-
-    /**
      * The ModelParameters object of the algorithm.
      */
     private MP modelParameters;
@@ -61,28 +51,36 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * The TrainingParameters object of the algorithm.
      */
-    private TP trainingParameters;
+    private final TP trainingParameters;
 
     /**
-     * Public constructor of the object.
+     * Constructor which is called on model initialization before training.
      *
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
+     * @param trainingParameters
      */
-    public KnowledgeBase(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
+    public KnowledgeBase(String dbName, Configuration conf, TP trainingParameters) { //FIXME: Perhaps this version will not get dbName and use a tmp instead. The other constructor will take the name used in the save().
         this.conf = conf;
-
         dbc = this.conf.getDbConfig().getConnector(dbName);
 
-        this.mpClass = mpClass;
-        this.tpClass = tpClass;
+        this.trainingParameters = trainingParameters;
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), dbc);
+    }
 
-        if(dbc.existsObject("modelParameters") && dbc.existsObject("trainingParameters")) {
-            modelParameters = dbc.loadObject("modelParameters", mpClass);
-            trainingParameters = dbc.loadObject("trainingParameters", tpClass);
-        }
+    /**
+     * Constructor which is called when we pre-trained load persisted models.
+     *
+     * @param dbName
+     * @param conf
+     */
+    @SuppressWarnings("unchecked")
+    public KnowledgeBase(String dbName, Configuration conf) {
+        this.conf = conf;
+        dbc = this.conf.getDbConfig().getConnector(dbName);
+
+        trainingParameters = (TP) dbc.loadObject("trainingParameters", TrainingParameters.class);
+        modelParameters = (MP) dbc.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
@@ -104,13 +102,27 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     }
 
     /**
+     * Getter for the Training Parameters.
+     *
+     * @return
+     */
+    public TP getTrainingParameters() {
+        return trainingParameters;
+    }
+
+    /**
+     * Getter for the Model Parameters.
+     *
+     * @return
+     */
+    public MP getModelParameters() {
+        return modelParameters;
+    }
+
+    /**
      * Saves the KnowledgeBase to the permanent storage.
      */
     public void save() {
-        if(modelParameters == null || trainingParameters == null) {
-            throw new IllegalArgumentException("Can't save an empty KnowledgeBase.");
-        }
-
         dbc.saveObject("modelParameters", modelParameters);
         dbc.saveObject("trainingParameters", trainingParameters);
     }
@@ -119,12 +131,9 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * Deletes the database of the algorithm and closes the connection to the
      * permanent storage.
      */
-    public void delete() { //FIXME: this method needs to go when we change the save mechanism
+    public void delete() {
         dbc.clear();
         close();
-
-        modelParameters = null;
-        trainingParameters = null;
     }
 
     /** {@inheritDoc} */
@@ -144,54 +153,6 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      */
     public void clear() {
         dbc.clear();
-        modelParameters = null;
-        trainingParameters = null;
-
-        try {
-            Constructor<MP> c = mpClass.getDeclaredConstructor(DatabaseConnector.class);
-            c.setAccessible(true);
-            modelParameters = c.newInstance(dbc);
-            trainingParameters = tpClass.getConstructor().newInstance();
-        }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), dbc);
     }
-
-    /**
-     * Getter for the Training Parameters.
-     *
-     * @return
-     */
-    public TP getTrainingParameters() {
-        return trainingParameters;
-    }
-
-    /**
-     * Setter for the Training Parameters.
-     *
-     * @param trainingParameters
-     */
-    public void setTrainingParameters(TP trainingParameters) {
-        this.trainingParameters = trainingParameters;
-    }
-
-    /**
-     * Getter for the Model Parameters.
-     *
-     * @return
-     */
-    public MP getModelParameters() {
-        return modelParameters;
-    }
-
-    /**
-     * Setter for the Model Parameters.
-     *
-     * @param modelParameters
-     */
-    public void setModelParameters(MP modelParameters) {
-        this.modelParameters = modelParameters;
-    }
-
 }

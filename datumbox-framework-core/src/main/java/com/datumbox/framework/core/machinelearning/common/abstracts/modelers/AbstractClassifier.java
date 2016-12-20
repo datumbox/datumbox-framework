@@ -17,11 +17,9 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
-import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
+import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 import java.util.*;
 
@@ -75,19 +73,27 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
             this.classes = classes;
         }
         
-    } 
+    }
 
-    /** 
+    /**
      * @param dbName
      * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractModeler#AbstractModeler(java.lang.String, Configuration, java.lang.Class, java.lang.Class)
+     * @param trainingParameters
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
      */
-    protected AbstractClassifier(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
+    protected AbstractClassifier(String dbName, Configuration conf, TP trainingParameters) {
+        super(dbName, conf, trainingParameters);
     }
-    
+
+    /**
+     * @param dbName
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
+     */
+    protected AbstractClassifier(String dbName, Configuration conf) {
+        super(dbName, conf);
+    }
+
     /**
      * Estimates the selected class from the prediction scores.
      * 
