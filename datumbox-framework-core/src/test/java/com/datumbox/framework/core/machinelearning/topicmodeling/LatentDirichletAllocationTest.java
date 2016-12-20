@@ -42,11 +42,11 @@ import static org.junit.Assert.assertEquals;
 public class LatentDirichletAllocationTest extends AbstractTest {
     
     /**
-     * Test of validate method, of class LatentDirichletAllocation.
+     * Test of predict method, of class LatentDirichletAllocation.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
         Configuration conf = Configuration.getConfiguration();
         

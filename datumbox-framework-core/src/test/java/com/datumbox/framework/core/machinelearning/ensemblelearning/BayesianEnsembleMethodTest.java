@@ -37,11 +37,11 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
 
 
     /**
-     * Test of validate method, of class BayesianEnsembleMethod.
+     * Test of predict method, of class BayesianEnsembleMethod.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
         Configuration conf = Configuration.getConfiguration();
         

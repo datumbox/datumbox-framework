@@ -87,11 +87,8 @@ public class ModelerTest extends AbstractTest {
 
         instance.close();
         //instance = null;
-        
-        
-        logger.info("validate");
-        
-        
+
+
         instance = new Modeler(dbName, conf);
         
         instance.predict(validationData);

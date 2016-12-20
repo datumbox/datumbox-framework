@@ -60,7 +60,8 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * @param conf
      * @param trainingParameters
      */
-    public KnowledgeBase(String dbName, Configuration conf, TP trainingParameters) { //FIXME: Perhaps this version will not get dbName and use a tmp instead. The other constructor will take the name used in the save().
+    //FIXME: Perhaps this version will not get dbName and use a tmp instead. The other constructor will take the name used in the save().
+    public KnowledgeBase(String dbName, Configuration conf, TP trainingParameters) {
         this.conf = conf;
         dbc = this.conf.getDbConfig().getConnector(dbName);
 

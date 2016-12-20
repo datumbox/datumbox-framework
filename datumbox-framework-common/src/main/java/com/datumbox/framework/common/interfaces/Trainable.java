@@ -59,7 +59,7 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      */
     public static <T extends Trainable, TP extends Parameterizable> T newInstance(TP trainingParameters, String dbName, Configuration conf) {
         try {
-            return (T) trainingParameters.getClass().getEnclosingClass().getConstructor(String.class, Configuration.class, trainingParameters.getClass()).newInstance(dbName, conf, trainingParameters); //FIXME: can we avoid passing the aClass and retrieve it from the trainingParameters?
+            return (T) trainingParameters.getClass().getEnclosingClass().getConstructor(String.class, Configuration.class, trainingParameters.getClass()).newInstance(dbName, conf, trainingParameters);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

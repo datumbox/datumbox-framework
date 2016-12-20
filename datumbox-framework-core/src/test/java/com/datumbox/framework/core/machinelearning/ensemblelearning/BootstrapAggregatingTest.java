@@ -40,11 +40,11 @@ import static org.junit.Assert.assertEquals;
 public class BootstrapAggregatingTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class BootstrapAggregating.
+     * Test of predict method, of class BootstrapAggregating.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -113,7 +113,7 @@ public class BootstrapAggregatingTest extends AbstractTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("validate");
+        logger.info("testKFoldCrossValidation");
         
         Configuration conf = Configuration.getConfiguration();
         

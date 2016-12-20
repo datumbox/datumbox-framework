@@ -78,7 +78,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         private Integer rareFeatureThreshold = null;
         private Integer maxFeatures=null;
-        //TODO: Validate the deletion of ignoringNumericalFeatures
+        
         /**
          * Getter for the rare feature threshold. Any feature that exists
          * in the training dataset less times than this number will be removed
@@ -218,10 +218,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
                 }
 
                 //feature counts
-                Double featureCounter = featureCounts.get(feature);
-                if(featureCounter==null) {
-                    featureCounter=0.0;
-                }
+                double featureCounter = featureCounts.getOrDefault(feature, 0.0);
                 featureCounts.put(feature, ++featureCounter);
                 
             }
@@ -259,10 +256,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
             Object theClass = r.getY();
 
             //class counts
-            Integer classCounter = classCounts.get(theClass);
-            if(classCounter==null) {
-                classCounter=0;
-            }
+            int classCounter = classCounts.getOrDefault(theClass, 0);
             classCounts.put(theClass, ++classCounter);
 
 

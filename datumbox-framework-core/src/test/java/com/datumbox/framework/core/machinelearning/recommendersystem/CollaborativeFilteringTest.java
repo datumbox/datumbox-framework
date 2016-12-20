@@ -38,11 +38,11 @@ import static org.junit.Assert.assertEquals;
 public class CollaborativeFilteringTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class CollaborativeFiltering.
+     * Test of predict method, of class CollaborativeFiltering.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
         Configuration conf = Configuration.getConfiguration();
         

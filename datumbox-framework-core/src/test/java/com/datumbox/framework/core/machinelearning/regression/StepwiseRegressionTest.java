@@ -34,11 +34,11 @@ import org.junit.Test;
 public class StepwiseRegressionTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class StepwiseRegression.
+     * Test of predict method, of class StepwiseRegression.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
         Configuration conf = Configuration.getConfiguration();
         

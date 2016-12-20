@@ -41,11 +41,12 @@ import static org.junit.Assert.assertEquals;
 public class SupportVectorMachineTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class SupportVectorMachine.
+     * Test of predict method, of class SupportVectorMachine.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
+
         Configuration conf = Configuration.getConfiguration();
         
         
@@ -105,7 +106,7 @@ public class SupportVectorMachineTest extends AbstractTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("validate");
+        logger.info("testKFoldCrossValidation");
         Configuration conf = Configuration.getConfiguration();
         
         int k = 5;

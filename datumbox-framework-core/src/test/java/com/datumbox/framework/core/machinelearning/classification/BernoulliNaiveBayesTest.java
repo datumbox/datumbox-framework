@@ -38,11 +38,11 @@ import static org.junit.Assert.assertEquals;
 public class BernoulliNaiveBayesTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class BernoulliNaiveBayes.
+     * Test of predict method, of class BernoulliNaiveBayes.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
         Configuration conf = Configuration.getConfiguration();
         
@@ -86,7 +86,7 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("validate");
+        logger.info("testKFoldCrossValidation");
         
         Configuration conf = Configuration.getConfiguration();
         
