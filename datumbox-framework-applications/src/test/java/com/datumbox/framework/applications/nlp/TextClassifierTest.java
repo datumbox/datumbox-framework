@@ -58,7 +58,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -82,7 +81,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -106,7 +104,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -130,7 +127,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -154,7 +150,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -178,7 +173,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -202,7 +196,6 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
@@ -292,19 +285,15 @@ public class TextClassifierTest extends AbstractTest {
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
         
         //Classifier configuration
-        trainingParameters.setModelerClass(modelerClass);
         trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
         
         //data transfomation configuration
-        trainingParameters.setDataTransformerClass(null);
         trainingParameters.setDataTransformerTrainingParameters(null);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectorClass(featureSelectorClass);
         trainingParameters.setFeatureSelectorTrainingParameters(featureSelectorTrainingParameters);
         
         //text extraction configuration
-        trainingParameters.setTextExtractorClass(NgramsExtractor.class);
         NgramsExtractor.Parameters exParams = new NgramsExtractor.Parameters();
         exParams.setMaxDistanceBetweenKwds(2);
         exParams.setExaminationWindowLength(6);

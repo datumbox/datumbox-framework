@@ -37,9 +37,7 @@ import java.util.Set;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters>  {
-    
-    private transient AbstractRegressor mlregressor = null;
-    
+
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
@@ -63,9 +61,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private Integer maxIterations = null;
         
         private Double aout = 0.05;
-        
-        //Classes
-        private Class<? extends AbstractRegressor> regressionClass;
 
         //Parameter Objects
         private AbstractRegressor.AbstractTrainingParameters regressionTrainingParameters;
@@ -112,32 +107,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         public void setAout(Double aout) {
             this.aout = aout;
         }
-        
-        /**
-         * Getter for the class of the regression algorithm that is used internally
-         * by the Stepwise Regression. The regressor must implement the StepwiseCompatible
-         * interface in order to be used in the analysis.
-         * 
-         * @return 
-         */
-        public Class<? extends AbstractRegressor> getRegressionClass() {
-            return regressionClass;
-        }
-        
-        /**
-         * Setter for the class of the regression algorithm that is used internally
-         * by the Stepwise Regression. The regressor must implement the StepwiseCompatible
-         * interface in order to be used in the analysis.
-         * 
-         * @param regressionClass 
-         */
-        public void setRegressionClass(Class<? extends AbstractRegressor> regressionClass) {
-            if(!StepwiseCompatible.class.isAssignableFrom(regressionClass)) {
-                throw new IllegalArgumentException("The regression model is not Stepwise Compatible.");
-            }
-            this.regressionClass = regressionClass;
-        }
-        
+
         /**
          * Getter for the training parameters of the regression algorithm that is
          * used internally by the Stepwise Regression.
@@ -159,7 +129,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
     }
-
 
     /**
      * @param dbName
@@ -183,33 +152,21 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     /** {@inheritDoc} */
     @Override
     public void delete() {
-        if(mlregressor != null) {
-            mlregressor.delete();
-            mlregressor = null;
-        }
-        
+        loadRegressor().delete();
         super.delete();
     }
          
     /** {@inheritDoc} */
     @Override
     public void close() {
-        if(mlregressor != null) {
-            mlregressor.close();
-            mlregressor = null;
-        }
-        
+        loadRegressor().close();
         super.close();
     }
 
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        if(mlregressor==null) {
-            mlregressor = Trainable.newInstance(knowledgeBase.getTrainingParameters().getRegressionClass(), dbName, knowledgeBase.getConf());
-        }
-        
-        mlregressor.predict(newData);
+        loadRegressor().predict(newData);
     }
     
     /** {@inheritDoc} */
@@ -256,31 +213,34 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = Trainable.newInstance(
-            knowledgeBase.getTrainingParameters().getRegressionClass(),
-            dbName,
-            knowledgeBase.getConf(),
-            knowledgeBase.getTrainingParameters().getRegressionTrainingParameters()
-        );
+        AbstractRegressor mlregressor = createRegressor();
         
         mlregressor.fit(copiedTrainingData);
         copiedTrainingData.delete();
     }
 
-    private Map<Object, Double> runRegression(Dataframe trainingData) {
-        //initialize algorithm
-        mlregressor = Trainable.newInstance(
-                knowledgeBase.getTrainingParameters().getRegressionClass(),
+    private AbstractRegressor createRegressor() {
+        return Trainable.newInstance(
+                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
                 dbName,
-                knowledgeBase.getConf(),
-                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters()
+                knowledgeBase.getConf()
         );
+    }
 
-        //train the regressor
+    private AbstractRegressor loadRegressor() {
+        return Trainable.newInstance(
+                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters().getTClass(),
+                dbName,
+                knowledgeBase.getConf()
+        );
+    }
+
+    private Map<Object, Double> runRegression(Dataframe trainingData) {
+        AbstractRegressor mlregressor = createRegressor();
         mlregressor.fit(trainingData);
 
-        //get pvalues
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
+
         mlregressor.delete();
         
         return pvalues;

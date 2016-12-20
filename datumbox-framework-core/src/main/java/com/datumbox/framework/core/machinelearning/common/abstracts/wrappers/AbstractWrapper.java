@@ -59,14 +59,7 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
      * @param <ML>
      */
     public static abstract class AbstractTrainingParameters<DT extends AbstractTransformer, FS extends AbstractFeatureSelector, ML extends AbstractModeler> extends AbstractTrainer.AbstractTrainingParameters {
-        
-        //Classes
-        private Class<? extends DT> dataTransformerClass;
 
-        private Class<? extends FS> featureSelectorClass;
-        
-        private Class<? extends ML> modelerClass;
-       
         //Parameter Objects
         private DT.AbstractTrainingParameters dataTransformerTrainingParameters;
         
@@ -74,62 +67,6 @@ public abstract class AbstractWrapper<MP extends AbstractWrapper.AbstractModelPa
         
         private ML.AbstractTrainingParameters modelerTrainingParameters;
 
-        /**
-         * Getter for the Java class of the Data Transformer.
-         * 
-         * @return 
-         */
-        public Class<? extends DT> getDataTransformerClass() {
-            return dataTransformerClass;
-        }
-        
-        /**
-         * Setter for the Java class of the Data Transformer. Pass null for none.
-         * 
-         * @param dataTransformerClass 
-         */
-        public void setDataTransformerClass(Class<? extends DT> dataTransformerClass) {
-            this.dataTransformerClass = dataTransformerClass;
-        }
-        
-        /**
-         * Getter for the Java class of the Feature Selector.
-         * 
-         * @return 
-         */
-        public Class<? extends FS> getFeatureSelectorClass() {
-            return featureSelectorClass;
-        }
-        
-        /**
-         * Setter for the Java class of the Feature Selector. Pass null for none.
-         * 
-         * @param featureSelectorClass 
-         */
-        public void setFeatureSelectorClass(Class<? extends FS> featureSelectorClass) {
-            this.featureSelectorClass = featureSelectorClass;
-        }
-        
-        /**
-         * Getter for the Java class of the Machine Learning modeler which will
- be used internally.
-         * 
-         * @return 
-         */
-        public Class<? extends ML> getModelerClass() {
-            return modelerClass;
-        }
-        
-        /**
-         * Setter for the Java class of the Machine Learning modeler which will
- be used internally.
-         * 
-         * @param modelerClass 
-         */
-        public void setModelerClass(Class<? extends ML> modelerClass) {
-            this.modelerClass = modelerClass;
-        }
-        
         /**
          * Getter for the Training Parameters of the Data Transformer.
          * 

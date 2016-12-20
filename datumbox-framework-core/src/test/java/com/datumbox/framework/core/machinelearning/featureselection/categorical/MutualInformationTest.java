@@ -51,7 +51,6 @@ public class MutualInformationTest extends AbstractTest {
         MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
-        param.setIgnoringNumericalFeatures(false);
         
         MutualInformation instance = new MutualInformation(dbName, conf, param);
         

@@ -63,7 +63,6 @@ public class BootstrapAggregatingTest extends AbstractTest {
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
-        param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
         
         MultinomialNaiveBayes.TrainingParameters trainingParameters = new MultinomialNaiveBayes.TrainingParameters();
@@ -128,7 +127,6 @@ public class BootstrapAggregatingTest extends AbstractTest {
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
         param.setMaxWeakClassifiers(5);
-        param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
         
         MultinomialNaiveBayes.TrainingParameters trainingParameters = new MultinomialNaiveBayes.TrainingParameters();

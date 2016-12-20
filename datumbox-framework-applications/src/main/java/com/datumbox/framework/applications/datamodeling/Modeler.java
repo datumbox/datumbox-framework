@@ -87,100 +87,68 @@ public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.Tr
         logger.info("predict()");
 
         Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-
         Configuration conf = knowledgeBase.getConf();
 
-        Class dtClass = trainingParameters.getDataTransformerClass();
-
-        boolean transformData = (dtClass!=null);
+        AbstractTrainer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
+        boolean transformData = dtParams!=null;
         if(transformData) {
             if(dataTransformer==null) {
-                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
+                dataTransformer = Trainable.newInstance(dtParams.getTClass(), dbName, conf);
             }
-
             setParallelized(dataTransformer);
-
             dataTransformer.transform(newData);
         }
 
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-
-        boolean selectFeatures = (fsClass!=null);
+        AbstractTrainer.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
+        boolean selectFeatures = fsParams!=null;
         if(selectFeatures) {
             if(featureSelector==null) {
-                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+                featureSelector = Trainable.newInstance(fsParams.getTClass(), dbName, conf);
             }
-
             setParallelized(featureSelector);
-
-            //remove unnecessary features
             featureSelector.transform(newData);
         }
 
-        //initialize modeler
         if(modeler==null) {
-            Class mlClass = trainingParameters.getModelerClass();
-            modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf);
+            modeler = Trainable.newInstance(trainingParameters.getModelerTrainingParameters().getTClass(), dbName, conf);
         }
-
         setParallelized(modeler);
-
-        //call predict of the modeler for the new dataset
         modeler.predict(newData);
 
         if(transformData) {
-            dataTransformer.denormalize(newData); //optional denormization
+            dataTransformer.denormalize(newData);
         }
     }
     
     /** {@inheritDoc} */
     @Override
-    protected void _fit(Dataframe trainingData) { 
-        
-        //get the training parameters
-        Modeler.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
+    protected void _fit(Dataframe trainingData) {
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
-        
-        //transform the training dataset
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
+
+        AbstractTrainer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
+        boolean transformData = dtParams!=null;
         if(transformData) {
-            dataTransformer = (AbstractTransformer) Trainable.newInstance(dtClass, dbName, conf, trainingParameters.getDataTransformerTrainingParameters());
-            
+            dataTransformer = Trainable.newInstance(dtParams, dbName, conf);
             setParallelized(dataTransformer);
-            
             dataTransformer.fit_transform(trainingData);
         }
-        
-        
-        //find the most popular features
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-        
-        boolean selectFeatures = (fsClass!=null);
+
+        AbstractTrainer.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
+        boolean selectFeatures = fsParams!=null;
         if(selectFeatures) {
-            featureSelector = (AbstractFeatureSelector) Trainable.newInstance(fsClass, dbName, conf, trainingParameters.getFeatureSelectorTrainingParameters());
-            
+            featureSelector = Trainable.newInstance(fsParams, dbName, conf);
             setParallelized(featureSelector);
-            
             featureSelector.fit_transform(trainingData);
         }
-        
-        
-        
-        
-        //initialize modeler
-        Class mlClass = trainingParameters.getModelerClass();
-        modeler = (AbstractModeler) Trainable.newInstance(mlClass, dbName, conf, trainingParameters.getModelerTrainingParameters());
-        
+
+        AbstractTrainer.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
+        modeler = Trainable.newInstance(mlParams, dbName, conf);
         setParallelized(modeler);
-        
-        //train the modeler on the whole dataset
         modeler.fit(trainingData);
         
         if(transformData) {
-            dataTransformer.denormalize(trainingData); //optional denormalization
+            dataTransformer.denormalize(trainingData);
         }
     }
 }

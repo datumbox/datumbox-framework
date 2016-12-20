@@ -51,7 +51,6 @@ public class ChisquareSelectTest extends AbstractTest {
         ChisquareSelect.TrainingParameters param = new ChisquareSelect.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
-        param.setIgnoringNumericalFeatures(false);
         param.setALevel(0.05);
         
         ChisquareSelect instance = new ChisquareSelect(dbName, conf, param);

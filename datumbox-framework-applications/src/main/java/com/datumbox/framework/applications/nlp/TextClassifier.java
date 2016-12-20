@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.applications.nlp;
 
+import com.datumbox.framework.applications.datamodeling.Modeler;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
@@ -44,12 +45,12 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParameters, TextClassifier.TrainingParameters> {
+public class TextClassifier extends Modeler {
     
     /**
      * It contains all the Model AbstractParameters which are learned during the training.
      */
-    public static class ModelParameters extends AbstractWrapper.AbstractModelParameters {
+    public static class ModelParameters extends Modeler.ModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
@@ -65,38 +66,16 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     /**
      * It contains the Training AbstractParameters of the Text Classifier.
      */
-    public static class TrainingParameters extends AbstractWrapper.AbstractTrainingParameters<AbstractTransformer, AbstractFeatureSelector, AbstractModeler> {
+    public static class TrainingParameters extends Modeler.TrainingParameters {
         private static final long serialVersionUID = 1L;
         
         //Classes
-
-        private Class<? extends AbstractTextExtractor> textExtractorClass;
 
         //Parameter Objects
 
         private AbstractTextExtractor.AbstractParameters textExtractorParameters;
 
         //Field Getters/Setters
-        
-        /**
-         * Getter for the Text Extractor class which we use during the analysis.
-         * 
-         * @return 
-         */
-        public Class<? extends AbstractTextExtractor> getTextExtractorClass() {
-            return textExtractorClass;
-        }
-        
-        /**
-         * Setter for the Text Extractor class which we use during the analysis.
-         * The Text Extractor is responsible for extracting the keywords from
-         * the text examples.
-         * 
-         * @param textExtractorClass 
-         */
-        public void setTextExtractorClass(Class<? extends AbstractTextExtractor> textExtractorClass) {
-            this.textExtractorClass = textExtractorClass;
-        }
         
         /**
          * Getter for the Text Extractor AbstractParameters.
@@ -147,10 +126,9 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * @param datasets
      */
     public void fit(Map<Object, URI> datasets) {
-        //build trainingDataset
+        TrainingParameters tp = (TrainingParameters) knowledgeBase.getTrainingParameters();
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets,
-                AbstractTextExtractor.newInstance(knowledgeBase.getTrainingParameters().getTextExtractorClass(),
-                knowledgeBase.getTrainingParameters().getTextExtractorParameters()),
+                AbstractTextExtractor.newInstance(tp.getTextExtractorParameters()),
                 knowledgeBase.getConf()
         );
         
@@ -158,19 +136,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         
         trainingData.delete();
     }
-    
-    /**
-     * Generates predictions for the provided dataset.
-     * 
-     * @param testDataset 
-     */
-    public void predict(Dataframe testDataset) {
-        logger.info("predict()");
 
-        preprocessTestDataset(testDataset);
-        modeler.predict(testDataset);
-    }
-    
     /**
      * Generates a Dataframe with the predictions for the provided data file. 
      * The data file should contain the text of one observation per row.
@@ -183,10 +149,10 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
         Map<Object, URI> dataset = new HashMap<>();
         dataset.put(null, datasetURI);
         
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = (TrainingParameters) knowledgeBase.getTrainingParameters();
         
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, 
-                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()), 
+                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorParameters()),
                 knowledgeBase.getConf()
         );
         
@@ -204,13 +170,16 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * @return 
      */
     public Record predict(String text) {
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = (TrainingParameters) knowledgeBase.getTrainingParameters();
         
         Dataframe testDataset = new Dataframe(knowledgeBase.getConf());
-        
-        testDataset.add(new Record(new AssociativeArray(
-                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters())
-                        .extract(StringCleaner.clear(text))), null)
+        testDataset.add(
+            new Record(
+                new AssociativeArray(
+                    AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorParameters()).extract(StringCleaner.clear(text))
+                ),
+                null
+            )
         );
         
         predict(testDataset);
@@ -223,8 +192,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     }
 
     /**
-     * It validates the modeler using the provided dataset and it returns the
-     AbstractValidationMetrics. The testDataset should contain the real target variables.
+     * It validates the modeler using the provided dataset and it returns the ClassificationMetrics. The testDataset should contain the real target variables.
      *
      * @param testDataset
      * @return
@@ -232,8 +200,7 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
     public ClassificationMetrics validate(Dataframe testDataset) {
         logger.info("validate()");
 
-        preprocessTestDataset(testDataset);
-        modeler.predict(testDataset);
+        predict(testDataset);
 
         ClassificationMetrics vm = new ClassificationMetrics(testDataset);
 
@@ -250,12 +217,12 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
      * @return
      */
     public ClassificationMetrics validate(Map<Object, URI> datasets) {
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        TrainingParameters trainingParameters = (TrainingParameters) knowledgeBase.getTrainingParameters();
 
         //build the testDataset
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(
                 datasets,
-                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorClass(), trainingParameters.getTextExtractorParameters()),
+                AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorParameters()),
                 knowledgeBase.getConf()
         );
 
@@ -265,89 +232,5 @@ public class TextClassifier extends AbstractWrapper<TextClassifier.ModelParamete
 
         return vm;
     }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected void _fit(Dataframe trainingDataset) {
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
-        if(transformData) {
-            dataTransformer = (AbstractTransformer) Trainable.newInstance(dtClass, dbName, conf, trainingParameters.getDataTransformerTrainingParameters());
-            
-            setParallelized(dataTransformer);
-            
-            dataTransformer.fit_transform(trainingDataset);
-        }
-        
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-        
-        boolean selectFeatures = (fsClass!=null);
-        if(selectFeatures) {
-            featureSelector = (AbstractFeatureSelector) Trainable.newInstance(fsClass, dbName, conf, trainingParameters.getFeatureSelectorTrainingParameters());
-            AbstractFeatureSelector.AbstractTrainingParameters featureSelectorParameters = trainingParameters.getFeatureSelectorTrainingParameters();
-            if(AbstractCategoricalFeatureSelector.AbstractTrainingParameters.class.isAssignableFrom(featureSelectorParameters.getClass())) {
-                ((AbstractCategoricalFeatureSelector.AbstractTrainingParameters)featureSelectorParameters).setIgnoringNumericalFeatures(false); //this should be turned off in feature selection
-            }
-            
-            setParallelized(featureSelector);
-            
-            //find the most popular features & remove unnecessary features
-            featureSelector.fit_transform(trainingDataset);
-        }
-        
-        //initialize modeler
-        modeler = Trainable.newInstance(trainingParameters.getModelerClass(), dbName, conf, trainingParameters.getModelerTrainingParameters());
-            
-        setParallelized(modeler);
-        
-        //train the modeler on the whole dataset
-        modeler.fit(trainingDataset);
-        
-        if(transformData) {
-            dataTransformer.denormalize(trainingDataset); //optional denormalization
-        }
-    }
-    
-    private void preprocessTestDataset(Dataframe testDataset) {
-        TextClassifier.TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
-        
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
-        if(transformData) {
-            if(dataTransformer==null) {
-                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
-            }        
-            
-            setParallelized(dataTransformer);
-            
-            dataTransformer.transform(testDataset);
-        }
 
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-        
-        boolean selectFeatures = (fsClass!=null);
-        if(selectFeatures) {
-            if(featureSelector==null) {
-                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
-            }
-            
-            setParallelized(featureSelector);
-
-            //remove unnecessary features
-            featureSelector.transform(testDataset);
-        }
-        
-        //initialize modeler
-        if(modeler==null) {
-            modeler = Trainable.<AbstractModeler>newInstance((Class<AbstractModeler>) trainingParameters.getModelerClass(), dbName, conf); 
-        }
-        
-        setParallelized(modeler);
-    }
-    
 }

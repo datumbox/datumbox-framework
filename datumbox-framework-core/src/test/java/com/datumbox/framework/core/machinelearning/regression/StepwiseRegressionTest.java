@@ -54,7 +54,6 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
-        param.setRegressionClass(MatrixLinearRegression.class);
         
         MatrixLinearRegression.TrainingParameters trainingParams = new MatrixLinearRegression.TrainingParameters();
         param.setRegressionTrainingParameters(trainingParams);

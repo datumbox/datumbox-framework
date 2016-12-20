@@ -1,6 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
+- rename all testValidate to testPredict including the loggers.
 - Can we make the two constructors of the Trainers to call a common constructor to eliminate duplicate code?
 - TrainerBuilder: load(name, Configuration conf), create(TrainingParameters, Configuration conf). Trainable.newInstance is similar to create.
 - Add save(dbName) method in the models

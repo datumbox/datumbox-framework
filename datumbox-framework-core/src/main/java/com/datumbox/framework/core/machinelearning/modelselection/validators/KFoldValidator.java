@@ -81,18 +81,8 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
         }
         PHPMethods.shuffle(ids);
 
-        Class<? extends AbstractModeler> aClass = null;
-        try {
-            //By convertion the training parameters are one level below the algorithm class. This allows us to retrieve the algorithm class from the training parameters.
-            String className = trainingParameters.getClass().getCanonicalName();
-            aClass = (Class<? extends AbstractModeler>) Class.forName(className.substring(0, className.lastIndexOf('.')));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(e);
-        }
-
         //initialize modeler
-        AbstractModeler modeler = Trainable.newInstance(aClass, "kfold_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf, trainingParameters);
+        AbstractModeler modeler = Trainable.newInstance(trainingParameters, "kfold_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf);
 
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {

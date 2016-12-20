@@ -53,14 +53,13 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      * Generates a new instance of a Trainable by providing the Class and the training parameters of the algorithm.
      *
      * @param <T>
-     * @param aClass
      * @param dbName
      * @param conf
      * @return
      */
-    public static <T extends Trainable, TP extends Parameterizable> T newInstance(Class<T> aClass, String dbName, Configuration conf, TP trainingParameters) {
+    public static <T extends Trainable, TP extends Parameterizable> T newInstance(TP trainingParameters, String dbName, Configuration conf) {
         try {
-            return aClass.getConstructor(String.class, Configuration.class, trainingParameters.getClass()).newInstance(dbName, conf, trainingParameters); //FIXME: can we avoid passing the aClass and retrieve it from the trainingParameters?
+            return (T) trainingParameters.getClass().getEnclosingClass().getConstructor(String.class, Configuration.class, trainingParameters.getClass()).newInstance(dbName, conf, trainingParameters); //FIXME: can we avoid passing the aClass and retrieve it from the trainingParameters?
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -80,14 +79,19 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      * @return 
      */
     public TP getTrainingParameters();
-    
+
     /**
      * Trains a model using the provided training parameters and data.
      * 
      * @param trainingData
      */
     public void fit(Dataframe trainingData);
-            
+
+    /**
+     * Saves the database of the algorithm.
+     */
+    public void save();
+
     /**
      * Deletes the database of the algorithm. 
      */

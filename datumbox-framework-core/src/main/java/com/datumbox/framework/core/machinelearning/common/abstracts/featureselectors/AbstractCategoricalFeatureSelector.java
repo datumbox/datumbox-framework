@@ -38,7 +38,7 @@ import java.util.*;
  * @param <TP>
  */
 public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCategoricalFeatureSelector.AbstractModelParameters, TP extends AbstractCategoricalFeatureSelector.AbstractTrainingParameters> extends AbstractFeatureSelector<MP, TP> {
-    
+
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
 
@@ -78,8 +78,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         private Integer rareFeatureThreshold = null;
         private Integer maxFeatures=null;
-        private boolean ignoringNumericalFeatures = true;
-        
+        //TODO: Validate the deletion of ignoringNumericalFeatures
         /**
          * Getter for the rare feature threshold. Any feature that exists
          * in the training dataset less times than this number will be removed
@@ -120,24 +119,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
          */
         public void setMaxFeatures(Integer maxFeatures) {
             this.maxFeatures = maxFeatures;
-        }
-        
-        /**
-         * Getter for whether the algorithm should ignore numerical features.
-         * 
-         * @return 
-         */
-        public boolean isIgnoringNumericalFeatures() {
-            return ignoringNumericalFeatures;
-        }
-        
-        /**
-         * Setter for whether the algorithm should ignore numerical features.
-         * 
-         * @param ignoringNumericalFeatures 
-         */
-        public void setIgnoringNumericalFeatures(boolean ignoringNumericalFeatures) {
-            this.ignoringNumericalFeatures = ignoringNumericalFeatures;
         }
         
     }
@@ -192,10 +173,10 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     @Override
     protected void _transform(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
-        filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores(), knowledgeBase.getTrainingParameters().isIgnoringNumericalFeatures());
+        filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores());
     }
     
-    private static void filterData(Dataframe data, DatabaseConnector dbc, Map<Object, Double> featureScores, boolean ignoringNumericalFeatures) {
+    private static void filterData(Dataframe data, DatabaseConnector dbc, Map<Object, Double> featureScores) {
         Logger logger = LoggerFactory.getLogger(AbstractCategoricalFeatureSelector.class);
         logger.debug("filterData()");
         
@@ -203,13 +184,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();
-            
-            if(ignoringNumericalFeatures) {
-                if(entry.getValue()==TypeInference.DataType.NUMERICAL) { //is it numerical? 
-                    continue; //skip any further analysis
-                }
-            }
-            
+
             if(!featureScores.containsKey(feature)) {
                 tmp_removedColumns.put(feature, true);
             }
@@ -220,9 +195,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         //Drop the temporary Collection
         dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
-        
-        
-        
     }
     
     private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
@@ -230,7 +202,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         DatabaseConnector dbc = knowledgeBase.getDbc();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
-        boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
         
@@ -240,20 +211,12 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         for(Record r : data) {
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                
-                if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(columnTypes.get(feature)==TypeInference.DataType.NUMERICAL) { //is it numerical? 
-                        continue; //skip any further analysis
-                    }
-                }
-                
+
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value==null || value==0.0) {
                     continue;
                 }
 
-
-                
                 //feature counts
                 Double featureCounter = featureCounts.get(feature);
                 if(featureCounter==null) {
@@ -277,14 +240,13 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
             }
             
             //then remove the features in dataset that do not appear in the list
-            filterData(data, dbc, featureCounts, ignoringNumericalFeatures);
+            filterData(data, dbc, featureCounts);
         }
     }
     
     private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         logger.debug("buildFeatureStatistics()");
         TP trainingParameters = knowledgeBase.getTrainingParameters();
-        boolean ignoringNumericalFeatures = trainingParameters.isIgnoringNumericalFeatures();
         
         //the method below does not only removes the rare features but also
         //first and formost calculates the contents of featureCounts map. 
@@ -306,12 +268,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
 
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                
-                if(ignoringNumericalFeatures) { //if we ignore the numerical features, investigate further if we must skip the feature
-                    if(columnTypes.get(feature)==TypeInference.DataType.NUMERICAL) { //is it numerical? 
-                        continue; //skip any further analysis
-                    }
-                }
                 
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value==null || value==0.0) {

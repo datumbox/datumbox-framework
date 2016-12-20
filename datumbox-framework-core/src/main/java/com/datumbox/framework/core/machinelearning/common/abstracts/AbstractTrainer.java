@@ -163,7 +163,13 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         _fit(trainingData);
         
         logger.info("Saving model");
-        knowledgeBase.save(); //FIXME: this should be removed and go to a separate save() method. The load() should be on a factory object.
+        knowledgeBase.save(); //TODO: remove this
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void save() {
+        knowledgeBase.save();
     }
 
     /** {@inheritDoc} */

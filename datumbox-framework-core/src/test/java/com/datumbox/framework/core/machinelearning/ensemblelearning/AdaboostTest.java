@@ -65,7 +65,6 @@ public class AdaboostTest extends AbstractTest {
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
-        param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
         
         MultinomialNaiveBayes.TrainingParameters trainingParameters = new MultinomialNaiveBayes.TrainingParameters();
@@ -131,7 +130,6 @@ public class AdaboostTest extends AbstractTest {
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
-        param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
         
         MultinomialNaiveBayes.TrainingParameters trainingParameters = new MultinomialNaiveBayes.TrainingParameters();
