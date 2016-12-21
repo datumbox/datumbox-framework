@@ -39,6 +39,8 @@ import java.util.Set;
  */
 public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters>  {
 
+    private static final String REG_KEY = "reg";
+
     private TrainableBundle bundle = new TrainableBundle();
 
     /** {@inheritDoc} */
@@ -158,7 +160,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         initBundle();
 
         //run the pipeline
-        AbstractRegressor mlregressor = (AbstractRegressor) bundle.get("mlregressor");
+        AbstractRegressor mlregressor = (AbstractRegressor) bundle.get(REG_KEY);
         mlregressor.predict(newData);
     }
     
@@ -167,7 +169,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
-        String dbName = knowledgeBase.getDbc().getDatabaseName();
 
         //reset previous entries on the bundle
         resetBundle();
@@ -217,7 +218,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
                 conf
         );
         mlregressor.fit(copiedTrainingData);
-        bundle.put("mlregressor", mlregressor);
+        bundle.put(REG_KEY, mlregressor);
 
         copiedTrainingData.delete();
     }
@@ -256,10 +257,10 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         Configuration conf = knowledgeBase.getConf();
         String dbName = knowledgeBase.getDbc().getDatabaseName();
 
-        if(!bundle.containsKey("mlregressor")) {
+        if(!bundle.containsKey(REG_KEY)) {
             AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
 
-            bundle.put("mlregressor", MLBuilder.load(mlParams.getTClass(), dbName, conf));
+            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), dbName + "_" + REG_KEY, conf));
         }
     }
 

@@ -167,12 +167,12 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         //using the weak classifiers
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
-        for(int t=0;t<totalWeakClassifiers;++t) {
+        for(int i=0;i<totalWeakClassifiers;++i) {
 
-            AbstractClassifier mlclassifier = (AbstractClassifier) bundle.get(String.valueOf(t));
+            AbstractClassifier mlclassifier = (AbstractClassifier) bundle.get(DB_INDICATOR + i);
             mlclassifier.predict(newData);
             
-            classifierWeightsArray.put(t, weakClassifierWeights.get(t));
+            classifierWeightsArray.put(i, weakClassifierWeights.get(i));
             
             for(Map.Entry<Integer, Record> e : newData.entries()) {
                 Integer rId = e.getKey();
@@ -180,7 +180,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
                 AssociativeArray classProbabilities = r.getYPredictedProbabilities();
                 
                 DataTable2D rDecisions = tmp_recordDecisions.get(rId);
-                rDecisions.put(t, classProbabilities);
+                rDecisions.put(i, classProbabilities);
                 
                 tmp_recordDecisions.put(rId, rDecisions); //WARNING: Do not remove this! We must put it back to the Map to persist it on Disk-backed maps
             }
@@ -258,7 +258,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
                 mlclassifier.close();
             }
             else {
-                bundle.put(String.valueOf(i), mlclassifier);
+                bundle.put(DB_INDICATOR + i, mlclassifier);
             }
 
             if(status==Status.STOP) {
@@ -319,13 +319,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     public void save(String dbName) {
         initBundle();
         String knowledgeBaseName = createKnowledgeBaseName(dbName);
-        //bundle.save(knowledgeBaseName);
-        for(String i : bundle.keySet()) { //TODO: remove this custom case if possible. try adding the key in the name.
-            Trainable t = bundle.get(i);
-            if(t != null) {
-                t.save(knowledgeBaseName + "_" + DB_INDICATOR + i);
-            }
-        }
+        bundle.save(knowledgeBaseName);
         super.save(dbName);
     }
 
@@ -359,8 +353,9 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size(), trainingParameters.getMaxWeakClassifiers());
         for(int i=0;i<totalWeakClassifiers;i++) {
-            if (!bundle.containsKey(String.valueOf(i))) {
-                bundle.put(String.valueOf(i), MLBuilder.load(weakClassifierClass, dbc.getDatabaseName() + "_" + DB_INDICATOR + i, conf));
+            String key = DB_INDICATOR + i;
+            if (!bundle.containsKey(key)) {
+                bundle.put(key, MLBuilder.load(weakClassifierClass, dbc.getDatabaseName() + "_" + key, conf));
             }
         }
     }

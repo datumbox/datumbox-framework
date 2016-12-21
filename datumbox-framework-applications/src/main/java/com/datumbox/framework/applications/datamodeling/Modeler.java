@@ -35,6 +35,10 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.Paralleliza
  */
 public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.TrainingParameters> implements Parallelizable {
 
+    private static final String DT_KEY = "dt";
+    private static final String FS_KEY = "fs";
+    private static final String ML_KEY = "ml";
+
     private TrainableBundle bundle = new TrainableBundle();
 
     /**
@@ -173,15 +177,15 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         bundle.setParallelized(isParallelized());
 
         //run the pipeline
-        AbstractTransformer dataTransformer = (AbstractTransformer) bundle.get("dataTransformer");
+        AbstractTransformer dataTransformer = (AbstractTransformer) bundle.get(DT_KEY);
         if(dataTransformer != null) {
             dataTransformer.transform(newData);
         }
-        AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get("featureSelector");
+        AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY);
         if(featureSelector != null) {
             featureSelector.transform(newData);
         }
-        AbstractModeler modeler = (AbstractModeler) bundle.get("modeler");
+        AbstractModeler modeler = (AbstractModeler) bundle.get(ML_KEY);
         modeler.predict(newData);
         if(dataTransformer != null) {
             dataTransformer.denormalize(newData);
@@ -193,7 +197,6 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
-        String dbName = knowledgeBase.getDbc().getDatabaseName();
 
         //reset previous entries on the bundle
         resetBundle();
@@ -203,19 +206,19 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         AbstractTransformer dataTransformer = null;
         if(dtParams != null) {
             dataTransformer = MLBuilder.create(dtParams, conf);
-            bundle.put("dataTransformer", dataTransformer);
+            bundle.put(DT_KEY, dataTransformer);
         }
 
         AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
         AbstractFeatureSelector featureSelector = null;
         if(fsParams != null) {
             featureSelector = MLBuilder.create(fsParams, conf);
-            bundle.put("featureSelector", featureSelector);
+            bundle.put(FS_KEY, featureSelector);
         }
 
         AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
         AbstractModeler modeler = MLBuilder.create(mlParams, conf);
-        bundle.put("modeler", modeler);
+        bundle.put(ML_KEY, modeler);
 
         //set the parallized flag to all algorithms
         bundle.setParallelized(isParallelized());
@@ -267,30 +270,30 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         Configuration conf = knowledgeBase.getConf();
         String dbName = knowledgeBase.getDbc().getDatabaseName();
 
-        if(!bundle.containsKey("dataTransformer")) {
+        if(!bundle.containsKey(DT_KEY)) {
             AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
 
             AbstractTransformer dataTransformer = null;
             if(dtParams != null) {
-                dataTransformer = MLBuilder.load(dtParams.getTClass(), dbName, conf);
+                dataTransformer = MLBuilder.load(dtParams.getTClass(), dbName + "_" + DT_KEY, conf);
             }
-            bundle.put("dataTransformer", dataTransformer);
+            bundle.put(DT_KEY, dataTransformer);
         }
 
-        if(!bundle.containsKey("featureSelector")) {
+        if(!bundle.containsKey(FS_KEY)) {
             AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
 
             AbstractFeatureSelector featureSelector = null;
             if(fsParams != null) {
-                featureSelector = MLBuilder.load(fsParams.getTClass(), dbName, conf);
+                featureSelector = MLBuilder.load(fsParams.getTClass(), dbName + "_" + FS_KEY, conf);
             }
-            bundle.put("featureSelector", featureSelector);
+            bundle.put(FS_KEY, featureSelector);
         }
 
-        if(!bundle.containsKey("modeler")) {
+        if(!bundle.containsKey(ML_KEY)) {
             AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
 
-            bundle.put("modeler", MLBuilder.load(mlParams.getTClass(), dbName, conf));
+            bundle.put(ML_KEY, MLBuilder.load(mlParams.getTClass(), dbName + "_" + ML_KEY, conf));
         }
     }
 

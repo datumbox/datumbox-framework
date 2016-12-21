@@ -89,9 +89,10 @@ public class TrainableBundle implements AutoCloseable {
 
     /** {@inheritDoc} */
     public void save(String dbName) {
-        for(Trainable t : bundle.values()) {
+        for(Map.Entry<String, Trainable> e : bundle.entrySet()) {
+            Trainable t = e.getValue();
             if(t != null) {
-                t.save(dbName);
+                t.save(dbName + "_" + e.getKey());
             }
         }
     }
