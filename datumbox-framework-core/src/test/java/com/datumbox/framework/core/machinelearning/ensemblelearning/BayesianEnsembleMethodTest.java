@@ -54,15 +54,17 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
-        
-        df.transform(validationData);
+        df.save();
 
 
         BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), dbName, conf);
 
         instance.fit(trainingData);
-        
-        
+        instance.save();
+
+        df.denormalize(trainingData);
+
+        trainingData.delete();
         instance.close();
         df.close();
         //instance = null;
@@ -70,10 +72,11 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(BayesianEnsembleMethod.class, dbName, conf);
+
+        df.transform(validationData);
         
         instance.predict(validationData);
-        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
@@ -88,8 +91,7 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 

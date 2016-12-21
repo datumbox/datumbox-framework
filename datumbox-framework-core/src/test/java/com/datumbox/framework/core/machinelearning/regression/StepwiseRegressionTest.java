@@ -52,6 +52,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
+        df.save();
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
@@ -62,8 +63,10 @@ public class StepwiseRegressionTest extends AbstractTest {
 
         StepwiseRegression instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
+        instance.save();
         
         df.denormalize(trainingData);
+        trainingData.delete();
         
         
         instance.close();
@@ -72,9 +75,9 @@ public class StepwiseRegressionTest extends AbstractTest {
         //df = null;
         
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
-        df.transform(validationData);
-        
         instance = MLBuilder.load(StepwiseRegression.class, dbName, conf);
+
+        df.transform(validationData);
         instance.predict(validationData);
         
         df.denormalize(validationData);
@@ -85,8 +88,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 

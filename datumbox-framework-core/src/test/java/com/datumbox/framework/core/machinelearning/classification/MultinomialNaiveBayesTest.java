@@ -59,7 +59,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
-        df.transform(validationData);
+        df.save();
 
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
@@ -67,6 +67,10 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         MultinomialNaiveBayes instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
         
         instance.close();
         df.close();
@@ -75,10 +79,10 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(MultinomialNaiveBayes.class, dbName, conf);
-        
+
+        df.transform(validationData);
         instance.predict(validationData);
-        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
 
 
@@ -95,8 +99,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 

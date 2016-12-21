@@ -79,6 +79,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         LatentDirichletAllocation lda = MLBuilder.create(trainingParameters, dbName, conf);
         
         lda.fit(trainingData);
+        lda.save();
 
         lda.close();
         lda = MLBuilder.load(LatentDirichletAllocation.class, dbName, conf);

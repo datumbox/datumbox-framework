@@ -58,6 +58,7 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         BinarizedNaiveBayes instance = MLBuilder.create(new BinarizedNaiveBayes.TrainingParameters(), dbName, conf);
 
         instance.fit(trainingData);
+        instance.save();
         
         instance.close();
         //instance = null;

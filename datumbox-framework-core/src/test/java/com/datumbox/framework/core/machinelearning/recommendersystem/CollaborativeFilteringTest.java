@@ -60,6 +60,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
 
         CollaborativeFiltering instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
+        instance.save();
         
         instance.close();
         //instance = null;

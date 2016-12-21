@@ -57,6 +57,9 @@ public class TFIDFTest extends AbstractTest {
         TFIDF instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit_transform(trainingData);
+        instance.save();
+
+        trainingData.delete();
         instance.close();
         //instance = null;
         
@@ -69,8 +72,7 @@ public class TFIDFTest extends AbstractTest {
         Set<Object> result = validationData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
     

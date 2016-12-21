@@ -60,7 +60,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
-        df.transform(validationData);
+        df.save();
 
 
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
@@ -70,7 +70,12 @@ public class SoftMaxRegressionTest extends AbstractTest {
         SoftMaxRegression instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
-        
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
+
+
         instance.close();
         df.close();
         //instance = null;
@@ -78,10 +83,10 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(SoftMaxRegression.class, dbName, conf);
-        
+
+        df.transform(validationData);
         instance.predict(validationData);
-        	        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
 
 
@@ -97,8 +102,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 
@@ -135,7 +139,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        df.delete();
+        df.close();
         
         trainingData.delete();
     }

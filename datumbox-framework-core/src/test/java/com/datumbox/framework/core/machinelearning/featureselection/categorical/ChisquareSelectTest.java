@@ -58,6 +58,8 @@ public class ChisquareSelectTest extends AbstractTest {
         
         
         instance.fit_transform(trainingData);
+        instance.save();
+
         instance.close();
         //instance = null;
         

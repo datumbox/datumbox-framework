@@ -58,6 +58,7 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), dbName, conf);
         
         instance.fit(trainingData);
+        instance.save();
         
         instance.close();
         //instance = null;

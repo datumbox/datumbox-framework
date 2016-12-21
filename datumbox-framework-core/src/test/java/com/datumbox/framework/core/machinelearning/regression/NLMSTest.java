@@ -55,8 +55,7 @@ public class NLMSTest extends AbstractTest {
         String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
-        
-        df.transform(validationData);
+        df.save();
 
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
@@ -67,7 +66,10 @@ public class NLMSTest extends AbstractTest {
 
         NLMS instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
-        
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
         
         instance.close();
         df.close();
@@ -76,10 +78,11 @@ public class NLMSTest extends AbstractTest {
         
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(NLMS.class, dbName, conf);
+
+        df.transform(validationData);
         
         instance.predict(validationData);
-        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
         
         for(Record r : validationData) {
@@ -88,8 +91,7 @@ public class NLMSTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 
@@ -123,7 +125,7 @@ public class NLMSTest extends AbstractTest {
 
         PCA featureSelector = MLBuilder.create(featureSelectorParameters, dbName, conf);
         featureSelector.fit_transform(trainingData);
-        featureSelector.delete();
+        featureSelector.close();
 
 
 
@@ -141,7 +143,7 @@ public class NLMSTest extends AbstractTest {
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        df.delete();
+        df.close();
         
         trainingData.delete();
     }

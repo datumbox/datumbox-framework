@@ -57,6 +57,8 @@ public class MutualInformationTest extends AbstractTest {
         
         
         instance.fit_transform(trainingData);
+        instance.save();
+
         instance.close();
         //instance = null;
         

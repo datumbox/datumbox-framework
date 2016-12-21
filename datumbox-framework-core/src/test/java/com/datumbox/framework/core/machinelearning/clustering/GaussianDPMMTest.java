@@ -62,7 +62,9 @@ public class GaussianDPMMTest extends AbstractTest {
 
         GaussianDPMM instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
-        
+        instance.save();
+
+        trainingData.delete();
         instance.close();
         //instance = null;
         instance = MLBuilder.load(GaussianDPMM.class, dbName, conf);
@@ -75,8 +77,7 @@ public class GaussianDPMMTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 

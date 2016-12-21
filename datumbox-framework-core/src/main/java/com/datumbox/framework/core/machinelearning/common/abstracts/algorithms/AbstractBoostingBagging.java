@@ -17,7 +17,6 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -25,6 +24,7 @@ import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
+import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableBundle;
 import com.datumbox.framework.core.machinelearning.ensemblelearning.FixedCombinationRules;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
@@ -42,6 +42,8 @@ import java.util.Set;
  * @param <TP>
  */
 public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.AbstractModelParameters, TP extends AbstractBoostingBagging.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> {
+
+    private TrainableBundle bundle = new TrainableBundle();
 
     private static final String DB_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
@@ -148,9 +150,10 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        Class<AbstractClassifier> weakClassifierClass = knowledgeBase.getTrainingParameters().getWeakClassifierTrainingParameters().getTClass();
+        //load all trainables on the bundles
+        initBundle();
+
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
-        String prefix = dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
 
         //create a temporary map for the observed probabilities in training set
         DatabaseConnector dbc = knowledgeBase.getDbc();
@@ -165,9 +168,9 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         AssociativeArray classifierWeightsArray = new AssociativeArray();
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int t=0;t<totalWeakClassifiers;++t) {
-            try (AbstractClassifier mlclassifier = MLBuilder.load(weakClassifierClass, prefix+t, knowledgeBase.getConf())) {
-                mlclassifier.predict(newData);
-            }
+
+            AbstractClassifier mlclassifier = (AbstractClassifier) bundle.get(String.valueOf(t));
+            mlclassifier.predict(newData);
             
             classifierWeightsArray.put(t, weakClassifierWeights.get(t));
             
@@ -201,15 +204,17 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
-        AbstractTrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        String prefix = dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
-        
-        int n = trainingData.size();
-        
-        Set<Object> classesSet = modelParameters.getClasses();
-        
+        Configuration conf = knowledgeBase.getConf();
+        TP trainingParameters = knowledgeBase.getTrainingParameters();
+        MP modelParameters = knowledgeBase.getModelParameters();
+
+        //reset previous entries on the bundle
+        resetBundle();
+
+
         //first we need to find all the classes
+        int n = trainingData.size();
+        Set<Object> classesSet = modelParameters.getClasses();
         for(Record r : trainingData) { 
             Object theClass=r.getY();
             
@@ -231,25 +236,31 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         //training the weak classifiers
         int t=0;
         int retryCounter = 0;
+        String prefix = dbName+conf.getDbConfig().getDBnameSeparator()+DB_INDICATOR;
         while(t<totalWeakClassifiers) {
             logger.debug("Training Weak learner {}", t);
 
-            Dataframe validationDataset;
-            try (AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, prefix+t, knowledgeBase.getConf())) {
-                //We sample a list of Ids based on their weights
-                FlatDataList sampledIDs = SimpleRandomSampling.weightedSampling(observationWeights, n, true).toFlatDataList();
+            //We sample a list of Ids based on their weights
+            FlatDataList sampledIDs = SimpleRandomSampling.weightedSampling(observationWeights, n, true).toFlatDataList();
 
-                //We construct a new Dataframe from the sampledIDs
-                Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
+            //We construct a new Dataframe from the sampledIDs
+            Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
 
-                mlclassifier.fit(sampledTrainingDataset);
-                sampledTrainingDataset.delete();
 
-                validationDataset = trainingData;
-                mlclassifier.predict(validationDataset); //FIXME: we need to store the classifier reference somewhere
-            }
+            AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, prefix+t, conf);
+            mlclassifier.fit(sampledTrainingDataset);
+            sampledTrainingDataset.delete();
+            mlclassifier.predict(trainingData);
+
             
-            Status status = updateObservationAndClassifierWeights(validationDataset, observationWeights);
+            Status status = updateObservationAndClassifierWeights(trainingData, observationWeights);
+            if(status == Status.IGNORE) {
+                mlclassifier.close();
+            }
+            else {
+                bundle.put(String.valueOf(t), mlclassifier);
+            }
+
             if(status==Status.STOP) {
                 logger.debug("Skipping further training due to low error");
                 break;
@@ -302,29 +313,48 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
      * @return 
      */
     protected abstract Status updateObservationAndClassifierWeights(Dataframe validationDataset, AssociativeArray observationWeights);
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public void save() {
+        initBundle();
+        bundle.save();
+        super.save();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void delete() {
-        deleteWeakClassifiers();
+        initBundle();
+        bundle.delete();
         super.delete();
     }
-    
-    private void deleteWeakClassifiers() {
-        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
-        AbstractTrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        String prefix = dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
 
-        if(modelParameters==null) {
-            return;
-        }
-        
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        initBundle();
+        bundle.close();
+        super.close();
+    }
+
+    private void resetBundle() {
+        bundle.delete();
+    }
+
+    private void initBundle() {
+        MP modelParameters = knowledgeBase.getModelParameters();
+        TP trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration conf = knowledgeBase.getConf();
+
+        //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
+        String prefix = dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
-        //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept +1 for the one that was abandoned due to high error
-        int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size()+1, trainingParameters.getMaxWeakClassifiers());
+        int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size(), trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {
-            AbstractClassifier mlclassifier = MLBuilder.load(weakClassifierClass, prefix+t, knowledgeBase.getConf());
-            mlclassifier.delete();
+            if (!bundle.containsKey(String.valueOf(t))) {
+                bundle.put(String.valueOf(t), MLBuilder.load(weakClassifierClass, prefix+t, conf));
+            }
         }
     }
 }

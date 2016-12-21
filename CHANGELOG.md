@@ -17,6 +17,9 @@ Version 0.8.0-SNAPSHOT - Build 20161220
 - Removed all unnecessary passing of class objects from Stepwise Regression, Wrappers and Ensumble learning classes.
 - Removed the ignoringNumericalFeatures variable from AbstractCategoricalFeatureSelector.
 - Moved the static methods of Trainable to MLBuilder. This is the prefered method for loading and initializing models.
+- Removed the AbstractWrapper and Modeler inherits directly from AbstractTrainer. 
+- Created a TrainableBundle to keep track of the Trainables of Modeler, AbstractBoostingBagging and StepwiseRegression.
+- Removed automatic save after fit, now save() must be called.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

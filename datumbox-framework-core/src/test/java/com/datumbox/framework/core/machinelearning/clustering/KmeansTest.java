@@ -54,9 +54,7 @@ public class KmeansTest extends AbstractTest {
         String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
-        
-        df.transform(validationData);
-        
+        df.save();
 
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
@@ -70,7 +68,10 @@ public class KmeansTest extends AbstractTest {
 
         Kmeans instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
-        
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
         
         instance.close();
         df.close();
@@ -80,10 +81,11 @@ public class KmeansTest extends AbstractTest {
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(Kmeans.class, dbName, conf);
 
+
+        df.transform(validationData);
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);
 
-        df.denormalize(trainingData);
         df.denormalize(validationData);
 
         double expResult = 1.0;
@@ -92,8 +94,7 @@ public class KmeansTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 
@@ -141,7 +142,7 @@ public class KmeansTest extends AbstractTest {
         double result = vm.getPurity();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        df.delete();
+        df.close();
         
         trainingData.delete();
     }

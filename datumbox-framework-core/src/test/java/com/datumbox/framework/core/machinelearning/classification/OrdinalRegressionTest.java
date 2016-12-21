@@ -59,7 +59,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
-        df.transform(validationData);
+        df.save();
 
 
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
@@ -69,7 +69,11 @@ public class OrdinalRegressionTest extends AbstractTest {
         OrdinalRegression instance = MLBuilder.create(param, dbName, conf);
         
         instance.fit(trainingData);
-        
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
+
         instance.close();
         df.close();
         //instance = null;
@@ -77,11 +81,11 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         df = MLBuilder.load(DummyXMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(OrdinalRegression.class, dbName, conf);
-        
+
+        df.transform(validationData);
         instance.predict(validationData);
 
-        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
 
         Map<Integer, Object> expResult = new HashMap<>();
@@ -96,8 +100,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 
@@ -138,7 +141,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        df.delete();
+        df.close();
         
         trainingData.delete();
     }

@@ -63,9 +63,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                BernoulliNaiveBayes.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.8393075950598075
         );
@@ -86,9 +84,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                BinarizedNaiveBayes.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.8413587159387832
         );
@@ -109,9 +105,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                MaximumEntropy.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.9411031042128604
         );
@@ -132,9 +126,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                MultinomialNaiveBayes.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.8685865263692268
         );
@@ -155,9 +147,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                OrdinalRegression.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.8290058479532163
         );
@@ -178,9 +168,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                SoftMaxRegression.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.7663106693454584
         );
@@ -201,9 +189,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                SupportVectorMachine.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
                 0.9803846153846154
         );
@@ -223,9 +209,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                MultinomialNaiveBayes.class,
                 mlParams,
-                MutualInformation.class,
                 fsParams,
                 0.8954671493044679
         );
@@ -244,9 +228,7 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setMaxFeatures(1000);
         
         trainAndValidate(
-                MultinomialNaiveBayes.class,
                 mlParams,
-                TFIDF.class,
                 fsParams,
                 0.80461962936161
         );
@@ -257,15 +239,11 @@ public class TextClassifierTest extends AbstractTest {
      * 
      * @param <ML>
      * @param <FS>
-     * @param modelerClass
      * @param modelerTrainingParameters
-     * @param featureSelectorClass
      * @param featureSelectorTrainingParameters 
      */
     private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector> void trainAndValidate(
-            Class<ML> modelerClass, 
             ML.AbstractTrainingParameters modelerTrainingParameters,
-            Class<FS> featureSelectorClass, 
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
             double expectedF1score) {
         Configuration conf = Configuration.getConfiguration();
@@ -302,6 +280,7 @@ public class TextClassifierTest extends AbstractTest {
 
         TextClassifier instance = MLBuilder.create(trainingParameters, dbName, conf);
         instance.fit(dataset);
+        instance.save();
 
 
         ClassificationMetrics vm = instance.validate(dataset);
@@ -313,7 +292,7 @@ public class TextClassifierTest extends AbstractTest {
         
         
         instance = MLBuilder.load(TextClassifier.class, dbName, conf);
-        Dataframe validationData = null;
+        Dataframe validationData;
         try {
             validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());
         }

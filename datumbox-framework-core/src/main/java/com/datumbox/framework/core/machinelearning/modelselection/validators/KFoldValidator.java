@@ -133,7 +133,7 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
             //add the validationMetrics in the list
             validationMetricsList.add(entrySample);
         }
-        modeler.delete();
+        modeler.close();
 
         VM avgValidationMetrics = ValidationMetrics.newInstance(vmClass, validationMetricsList);
 

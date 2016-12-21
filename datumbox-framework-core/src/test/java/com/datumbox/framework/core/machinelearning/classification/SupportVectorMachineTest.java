@@ -60,7 +60,7 @@ public class SupportVectorMachineTest extends AbstractTest {
         String dbName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         df.fit_transform(trainingData);
-        df.transform(validationData);
+        df.save();
 
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
@@ -68,6 +68,10 @@ public class SupportVectorMachineTest extends AbstractTest {
         SupportVectorMachine instance = MLBuilder.create(param, dbName, conf);
 
         instance.fit(trainingData);
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
         
         instance.close();
         df.close();
@@ -76,11 +80,11 @@ public class SupportVectorMachineTest extends AbstractTest {
         
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(SupportVectorMachine.class, dbName, conf);
-        
+
+        df.transform(validationData);
         instance.predict(validationData);
         
-        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
 
         
@@ -96,8 +100,7 @@ public class SupportVectorMachineTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 

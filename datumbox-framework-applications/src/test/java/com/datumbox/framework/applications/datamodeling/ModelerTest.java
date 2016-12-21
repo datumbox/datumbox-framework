@@ -74,6 +74,7 @@ public class ModelerTest extends AbstractTest {
 
         Modeler instance = MLBuilder.create(trainingParameters, dbName, conf);
         instance.fit(trainingData);
+        instance.save();
 
         instance.close();
 
@@ -86,6 +87,7 @@ public class ModelerTest extends AbstractTest {
         double expResult2 = 0.8;
         assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
 
+        trainingData.delete();
         instance.close();
         //instance = null;
 
@@ -107,8 +109,7 @@ public class ModelerTest extends AbstractTest {
         assertEquals(expResult, result);
         
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
     

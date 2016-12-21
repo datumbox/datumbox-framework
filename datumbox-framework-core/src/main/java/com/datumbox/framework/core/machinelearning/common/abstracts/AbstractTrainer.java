@@ -161,9 +161,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         knowledgeBase.clear();
 
         _fit(trainingData);
-        
-        logger.info("Saving model");
-        knowledgeBase.save(); //TODO: remove this
     }
 
     /** {@inheritDoc} */

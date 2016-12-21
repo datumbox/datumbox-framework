@@ -256,10 +256,7 @@ public class CETR {
         
         instance.fit(dataset);
         instance.predict(dataset);
-        //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
-        
-        instance.delete(); //delete immediately the result
-        //instance = null;
+        instance.close();
     }
     
     private List<Double> calculateTTRlist(List<String> rows) {

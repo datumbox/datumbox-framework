@@ -55,7 +55,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
         
         df.fit_transform(trainingData);
-        df.transform(validationData);
+        df.save();
 
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
@@ -66,7 +66,10 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
 
         HierarchicalAgglomerative instance = MLBuilder.create(param, dbName, conf);
         instance.fit(trainingData);
-        
+        instance.save();
+
+        df.denormalize(trainingData);
+        trainingData.delete();
         
         instance.close();
         df.close();
@@ -76,10 +79,10 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
         instance = MLBuilder.load(HierarchicalAgglomerative.class, dbName, conf);
 
+        df.transform(validationData);
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);
-        
-        df.denormalize(trainingData);
+
         df.denormalize(validationData);
 
         double expResult = 1.0;
@@ -88,8 +91,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         
         df.delete();
         instance.delete();
-        
-        trainingData.delete();
+
         validationData.delete();
     }
 
@@ -133,7 +135,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         double result = vm.getPurity();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        df.delete();
+        df.close();
         
         trainingData.delete();
     }

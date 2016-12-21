@@ -59,6 +59,9 @@ public class PCATest extends AbstractTest {
 
         PCA instance = MLBuilder.create(param, dbName, conf);
         instance.fit_transform(originalData);
+        instance.save();
+
+        originalData.delete();
         instance.close();
         //instance = null;
         
@@ -85,8 +88,7 @@ public class PCATest extends AbstractTest {
         }
         
         instance.delete();
-        
-        originalData.delete();
+
         validationdata.delete();
         expResult.delete();
     }

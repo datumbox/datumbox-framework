@@ -17,12 +17,12 @@ package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
+import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableBundle;
 import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
 
 import java.util.HashSet;
@@ -38,6 +38,8 @@ import java.util.Set;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters>  {
+
+    private TrainableBundle bundle = new TrainableBundle();
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
@@ -152,29 +154,25 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     /** {@inheritDoc} */
     @Override
-    public void delete() {
-        loadRegressor().delete();
-        super.delete();
-    }
-         
-    /** {@inheritDoc} */
-    @Override
-    public void close() {
-        loadRegressor().close();
-        super.close();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     protected void _predict(Dataframe newData) {
-        loadRegressor().predict(newData);
+        //load all trainables on the bundles
+        initBundle();
+
+        //run the pipeline
+        AbstractRegressor mlregressor = (AbstractRegressor) bundle.get("mlregressor");
+        mlregressor.predict(newData);
     }
     
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
+        Configuration conf = knowledgeBase.getConf();
+
+        //reset previous entries on the bundle
+        resetBundle();
+
+        //perform stepwise
         Integer maxIterations = trainingParameters.getMaxIterations();
         if(maxIterations==null) {
             maxIterations = Integer.MAX_VALUE;
@@ -214,35 +212,67 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        AbstractRegressor mlregressor = createRegressor();
-        
+        AbstractRegressor mlregressor = MLBuilder.create(
+                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
+                dbName,
+                conf
+        );
         mlregressor.fit(copiedTrainingData);
+        bundle.put("mlregressor", mlregressor);
+
         copiedTrainingData.delete();
     }
 
-    private AbstractRegressor createRegressor() {
-        return MLBuilder.create(
+    /** {@inheritDoc} */
+    @Override
+    public void save() {
+        initBundle();
+        bundle.save();
+        super.save();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete() {
+        initBundle();
+        bundle.delete();
+        super.delete();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        initBundle();
+        bundle.close();
+        super.close();
+    }
+
+    private void resetBundle() {
+        bundle.delete();
+    }
+
+    private void initBundle() {
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration conf = knowledgeBase.getConf();
+
+        if(!bundle.containsKey("mlregressor")) {
+            AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
+
+            bundle.put("mlregressor", MLBuilder.load(mlParams.getTClass(), dbName, conf));
+        }
+    }
+
+    private Map<Object, Double> runRegression(Dataframe trainingData) {
+        AbstractRegressor mlregressor = MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
                 dbName,
                 knowledgeBase.getConf()
         );
-    }
-
-    private AbstractRegressor loadRegressor() {
-        return MLBuilder.load(
-                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters().getTClass(),
-                dbName,
-                knowledgeBase.getConf()
-        );
-    }
-
-    private Map<Object, Double> runRegression(Dataframe trainingData) {
-        AbstractRegressor mlregressor = createRegressor();
         mlregressor.fit(trainingData);
 
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
 
-        mlregressor.delete();
+        mlregressor.close();
         
         return pvalues;
     }
