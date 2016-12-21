@@ -42,19 +42,19 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class InMemoryConnector extends AbstractDatabaseConnector {
         
-    private final String database;
+    private String dbName;
     private final InMemoryConfiguration dbConf;
     
     /** 
-     * @param database
+     * @param dbName
      * @param dbConf
      * @see AbstractDatabaseConnector#AbstractDatabaseConnector()
      */
-    protected InMemoryConnector(String database, InMemoryConfiguration dbConf) {  
+    protected InMemoryConnector(String dbName, InMemoryConfiguration dbConf) {
         super();
-        this.database = database;
+        this.dbName = dbName;
         this.dbConf = dbConf;
-        logger.trace("Opened db "+ database);
+        logger.trace("Opened db {}", dbName);
     }
 
     /** {@inheritDoc} */
@@ -109,9 +109,9 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
             return; 
         }
         super.close();
-        logger.trace("Closed db "+ database);
+        logger.trace("Closed db {}", dbName);
     }
-        
+
     /** {@inheritDoc} */
     @Override
     public void clear() {
@@ -150,7 +150,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     /** {@inheritDoc} */
     @Override
     public String getDatabaseName() {
-        return database;
+        return dbName;
     }
     
     private Path getRootPath() {
@@ -161,6 +161,6 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
             outputFolder = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
         }
 
-        return Paths.get(outputFolder + File.separator + database);
+        return Paths.get(outputFolder + File.separator + dbName);
     }
 }

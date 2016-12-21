@@ -194,6 +194,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
+        String dbName = knowledgeBase.getDbc().getDatabaseName();
 
         //reset previous entries on the bundle
         resetBundle();
@@ -264,6 +265,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
+        String dbName = knowledgeBase.getDbc().getDatabaseName();
 
         if(!bundle.containsKey("dataTransformer")) {
             AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();

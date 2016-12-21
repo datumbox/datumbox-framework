@@ -168,6 +168,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
+        String dbName = knowledgeBase.getDbc().getDatabaseName();
 
         //reset previous entries on the bundle
         resetBundle();
@@ -254,6 +255,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
+        String dbName = knowledgeBase.getDbc().getDatabaseName();
 
         if(!bundle.containsKey("mlregressor")) {
             AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
@@ -265,7 +267,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private Map<Object, Double> runRegression(Dataframe trainingData) {
         AbstractRegressor mlregressor = MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
-                dbName,
+                knowledgeBase.getDbc().getDatabaseName(),
                 knowledgeBase.getConf()
         );
         mlregressor.fit(trainingData);

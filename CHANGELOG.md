@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161220
+Version 0.8.0-SNAPSHOT - Build 20161221
 ---------------------------------------
 
 - Improved Validation:
@@ -20,6 +20,7 @@ Version 0.8.0-SNAPSHOT - Build 20161220
 - Removed the AbstractWrapper and Modeler inherits directly from AbstractTrainer. 
 - Created a TrainableBundle to keep track of the Trainables of Modeler, AbstractBoostingBagging and StepwiseRegression.
 - Removed automatic save after fit, now save() must be called.
+- AbstractTrainer no longer stores a local copy of dbName.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

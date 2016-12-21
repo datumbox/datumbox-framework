@@ -205,6 +205,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     @Override
     protected void _fit(Dataframe trainingData) {
         Configuration conf = knowledgeBase.getConf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         MP modelParameters = knowledgeBase.getModelParameters();
 
@@ -236,7 +237,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         //training the weak classifiers
         int t=0;
         int retryCounter = 0;
-        String prefix = dbName+conf.getDbConfig().getDBnameSeparator()+DB_INDICATOR;
+        String prefix = dbc.getDatabaseName()+conf.getDbConfig().getDBnameSeparator()+DB_INDICATOR;
         while(t<totalWeakClassifiers) {
             logger.debug("Training Weak learner {}", t);
 
@@ -343,12 +344,13 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     }
 
     private void initBundle() {
+        Configuration conf = knowledgeBase.getConf();
+        DatabaseConnector dbc = knowledgeBase.getDbc();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
 
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
-        String prefix = dbName+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
+        String prefix = dbc.getDatabaseName()+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size(), trainingParameters.getMaxWeakClassifiers());
         for(int t=0;t<totalWeakClassifiers;++t) {

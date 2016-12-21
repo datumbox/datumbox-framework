@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class MapDBConnector extends AbstractDatabaseConnector {
     
-    private final String database;
+    private String dbName;
     private final MapDBConfiguration dbConf;
     
     /**
@@ -77,15 +77,15 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     private final Map<DBType, DB> dbRegistry = new HashMap<>(); 
     
     /** 
-     * @param database
+     * @param dbName
      * @param dbConf
      * @see AbstractDatabaseConnector#AbstractDatabaseConnector()
      */
-    protected MapDBConnector(String database, MapDBConfiguration dbConf) {  
+    protected MapDBConnector(String dbName, MapDBConfiguration dbConf) {
         super();
-        this.database = database;
+        this.dbName = dbName;
         this.dbConf = dbConf;
-        logger.trace("Opened db "+ database);
+        logger.trace("Opened db {}", dbName);
     }
 
     /** {@inheritDoc} */
@@ -140,7 +140,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         super.close();
         
         closeDBRegistry();
-        logger.trace("Closed db "+ database);
+        logger.trace("Closed db {}", dbName);
     }
     
     /** {@inheritDoc} */
@@ -256,7 +256,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     /** {@inheritDoc} */
     @Override
     public String getDatabaseName() {
-        return database;
+        return dbName;
     }
     
     //private methods of connector class
@@ -406,6 +406,6 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             outputFolder = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
         }
 
-        return Paths.get(outputFolder + File.separator + database);
+        return Paths.get(outputFolder + File.separator + dbName);
     }
 }

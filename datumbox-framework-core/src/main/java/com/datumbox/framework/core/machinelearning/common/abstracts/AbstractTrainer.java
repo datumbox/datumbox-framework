@@ -108,11 +108,6 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     /**
-     * The name of the Database where we persist our data.
-     */
-    protected final String dbName; //FIXME: do we really need the dbName here? Perhaps a temp name is good enough
-    
-    /**
      * The KnowledgeBase instance of the algorithm. 
      */
     protected final KnowledgeBase<MP, TP> knowledgeBase;
@@ -120,23 +115,23 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * Constructor which is called on model initialization before training.
      * 
-     * @param baseDBname
+     * @param dbName
      * @param conf 
      * @param trainingParameters
      */
-    protected AbstractTrainer(String baseDBname, Configuration conf, TP trainingParameters) {
-        dbName = baseDBname + conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
+    protected AbstractTrainer(String dbName, Configuration conf, TP trainingParameters) {
+        dbName += conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
         knowledgeBase = new KnowledgeBase<>(dbName, conf, trainingParameters);
     }
 
     /**
      * Constructor which is called when we pre-trained load persisted models.
      *
-     * @param baseDBname
+     * @param dbName
      * @param conf
      */
-    protected AbstractTrainer(String baseDBname, Configuration conf) {
-        dbName = baseDBname + conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
+    protected AbstractTrainer(String dbName, Configuration conf) {
+        dbName += conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();;
         knowledgeBase = new KnowledgeBase<>(dbName, conf);
     }
     
