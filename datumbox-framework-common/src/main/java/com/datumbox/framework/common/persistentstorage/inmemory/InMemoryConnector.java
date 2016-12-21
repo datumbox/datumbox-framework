@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class InMemoryConnector extends AbstractDatabaseConnector {
         
-    private String dbName;
+    private final String dbName;
     private final InMemoryConfiguration dbConf;
     
     /** 
@@ -59,9 +59,33 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
 
     /** {@inheritDoc} */
     @Override
+    public boolean closeAndRename(String newDBName) {
+        assertConnectionOpen();
+        if(dbName.equals(newDBName)) {
+            return false;
+        }
+
+        close();
+
+        try {
+            Path rootPath = getRootPath(dbName);
+            if(Files.exists(rootPath)) {
+                Files.move(rootPath, getRootPath(newDBName));
+            }
+        }
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+
+        logger.trace("Renamed db {} to {}", dbName, newDBName);
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean existsObject(String name) {
         assertConnectionOpen();
-        return new File(getRootPath().toFile(), name).exists();
+        return new File(getRootPath(dbName).toFile(), name).exists();
     }
     
     /** {@inheritDoc} */
@@ -69,7 +93,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         try { 
-            Path rootPath = getRootPath();
+            Path rootPath = getRootPath(dbName);
             if(!Files.exists(rootPath)) {
                 Files.createDirectory(rootPath);
             }
@@ -93,7 +117,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
         }
 
         try {
-            Path objectPath = new File(getRootPath().toFile(), name).toPath();
+            Path objectPath = new File(getRootPath(dbName).toFile(), name).toPath();
             Object serializableObject = DeepCopy.deserialize(Files.readAllBytes(objectPath));
             return klass.cast(serializableObject);
         }
@@ -117,7 +141,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
     public void clear() {
         assertConnectionOpen();
         try {
-            deleteIfExistsRecursively(getRootPath());
+            deleteIfExistsRecursively(getRootPath(dbName));
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -153,9 +177,9 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
         return dbName;
     }
     
-    private Path getRootPath() {
+    private Path getRootPath(String dbName) {
         //get the default filepath of the permanet db file
-        String outputFolder = this.dbConf.getOutputFolder();
+        String outputFolder = dbConf.getOutputFolder();
 
         if(outputFolder == null || outputFolder.isEmpty()) {
             outputFolder = System.getProperty("java.io.tmpdir"); //write them to the tmp directory

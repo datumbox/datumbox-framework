@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class MapDBConnector extends AbstractDatabaseConnector {
     
-    private String dbName;
+    private final String dbName;
     private final MapDBConfiguration dbConf;
     
     /**
@@ -86,6 +86,30 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         this.dbName = dbName;
         this.dbConf = dbConf;
         logger.trace("Opened db {}", dbName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean closeAndRename(String newDBName) {
+        assertConnectionOpen();
+        if(dbName.equals(newDBName)) {
+            return false;
+        }
+
+        close();
+
+        try {
+            Path rootPath = getRootPath(dbName);
+            if(Files.exists(rootPath)) {
+                Files.move(rootPath, getRootPath(newDBName));
+            }
+        }
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+
+        logger.trace("Renamed db {} to {}", dbName, newDBName);
+        return true;
     }
 
     /** {@inheritDoc} */
@@ -151,7 +175,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         closeDBRegistry();
         
         try {
-            deleteIfExistsRecursively(getRootPath());
+            deleteIfExistsRecursively(getRootPath(dbName));
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -320,7 +344,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             boolean permitCaching = true;
             if(dbType == DBType.PRIMARY_DB) {
                 //main storage
-                Path rootPath = getRootPath();
+                Path rootPath = getRootPath(dbName);
                 if(!Files.exists(rootPath)) {
                     try {
                         Files.createDirectory(rootPath);
@@ -398,9 +422,9 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         dbRegistry.clear();
     }
     
-    private Path getRootPath() {
+    private Path getRootPath(String dbName) {
         //get the default filepath of the permanet db file
-        String outputFolder = this.dbConf.getOutputFolder();
+        String outputFolder = dbConf.getOutputFolder();
 
         if(outputFolder == null || outputFolder.isEmpty()) {
             outputFolder = System.getProperty("java.io.tmpdir"); //write them to the tmp directory

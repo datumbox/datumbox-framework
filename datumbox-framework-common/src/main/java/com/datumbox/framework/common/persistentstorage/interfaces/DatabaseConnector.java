@@ -68,6 +68,14 @@ public interface DatabaseConnector extends AutoCloseable {
          */
         IN_DISK;
     }
+
+    /**
+     * Closes and renames the database. Returns true if the operation was completed and false if it was not necessary.
+     *
+     * @param newDBName
+     * @return
+     */
+    public boolean closeAndRename(String newDBName);
     
     /**
      * Checks if the connector is closed.
