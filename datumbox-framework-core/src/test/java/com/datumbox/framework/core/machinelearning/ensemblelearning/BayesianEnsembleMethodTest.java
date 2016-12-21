@@ -52,15 +52,15 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save();
+        df.save(dbName);
 
 
-        BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), dbName, conf);
+        BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), conf);
 
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         df.denormalize(trainingData);
 

@@ -186,13 +186,12 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
 
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected SupportVectorMachine(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected SupportVectorMachine(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
         svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
 

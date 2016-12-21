@@ -115,13 +115,12 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
 
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected MaximumEntropy(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected MaximumEntropy(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
 

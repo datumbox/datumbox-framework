@@ -59,10 +59,10 @@ public class MaximumEntropyTest extends AbstractTest {
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
 
-        MaximumEntropy instance = MLBuilder.create(param, dbName, conf);
+        MaximumEntropy instance = MLBuilder.create(param, conf);
         
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
         
         instance.close();
         //instance = null;

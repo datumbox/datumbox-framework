@@ -58,9 +58,9 @@ public class MultinomialDPMMTest extends AbstractTest {
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
 
-        MultinomialDPMM instance = MLBuilder.create(param, dbName, conf);
+        MultinomialDPMM instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
         
         instance.close();
         //instance = null;

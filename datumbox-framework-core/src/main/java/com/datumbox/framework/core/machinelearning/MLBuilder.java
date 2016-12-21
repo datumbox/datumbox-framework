@@ -33,16 +33,15 @@ public class MLBuilder {
      * Creates a new algorithm based on the provided training parameters.
      *
      * @param <T>
-     * @param dbName
      * @param conf
      * @return
      */
-    public static <T extends Trainable, TP extends Parameterizable> T create(TP trainingParameters, String dbName, Configuration conf) {
+    public static <T extends Trainable, TP extends Parameterizable> T create(TP trainingParameters, Configuration conf) {
         try {
             Class<T> aClass = (Class<T>) trainingParameters.getClass().getEnclosingClass();
-            Constructor<T> constructor = aClass.getDeclaredConstructor(String.class, Configuration.class, trainingParameters.getClass());
+            Constructor<T> constructor = aClass.getDeclaredConstructor(trainingParameters.getClass(), Configuration.class);
             constructor.setAccessible(true);
-            return constructor.newInstance(dbName, conf, trainingParameters);
+            return constructor.newInstance(trainingParameters, conf);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

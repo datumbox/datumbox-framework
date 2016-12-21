@@ -20,6 +20,7 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.Paralleliza
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This object stores a bundle of Trainables and it is used by algorithms that have other Trainables internally.
@@ -32,6 +33,15 @@ public class TrainableBundle implements AutoCloseable {
      * Keeps a reference of all the wrapped algorithms.
      */
     private final Map<String, Trainable> bundle = new HashMap<>();
+
+    /**
+     * Returns a set with all the keys.
+     *
+     * @return
+     */
+    public Set<String> keySet() {
+         return bundle.keySet();
+    }
 
     /**
      * Returns whether the bundle contains the specified key.
@@ -78,10 +88,10 @@ public class TrainableBundle implements AutoCloseable {
     }
 
     /** {@inheritDoc} */
-    public void save() {
+    public void save(String dbName) {
         for(Trainable t : bundle.values()) {
             if(t != null) {
-                t.save();
+                t.save(dbName);
             }
         }
     }

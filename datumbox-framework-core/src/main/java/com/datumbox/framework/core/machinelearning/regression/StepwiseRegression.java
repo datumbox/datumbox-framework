@@ -134,13 +134,12 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected StepwiseRegression(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected StepwiseRegression(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**
@@ -215,7 +214,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
         AbstractRegressor mlregressor = MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
-                dbName,
                 conf
         );
         mlregressor.fit(copiedTrainingData);
@@ -226,10 +224,11 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     /** {@inheritDoc} */
     @Override
-    public void save() {
+    public void save(String dbName) {
         initBundle();
-        bundle.save();
-        super.save();
+        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        bundle.save(knowledgeBaseName);
+        super.save(dbName);
     }
 
     /** {@inheritDoc} */
@@ -267,7 +266,6 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private Map<Object, Double> runRegression(Dataframe trainingData) {
         AbstractRegressor mlregressor = MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
-                knowledgeBase.getDbc().getDatabaseName(),
                 knowledgeBase.getConf()
         );
         mlregressor.fit(trainingData);

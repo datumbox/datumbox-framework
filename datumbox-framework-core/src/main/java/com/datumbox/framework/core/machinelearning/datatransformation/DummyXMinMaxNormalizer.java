@@ -53,13 +53,12 @@ public class DummyXMinMaxNormalizer extends AbstractDummyMinMaxTransformer<Dummy
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected DummyXMinMaxNormalizer(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected DummyXMinMaxNormalizer(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

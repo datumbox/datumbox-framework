@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 
@@ -41,7 +42,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * The connector to the Permanent Storage.
      */
-    private final DatabaseConnector dbc;
+    private DatabaseConnector dbc;
 
     /**
      * The ModelParameters object of the algorithm.
@@ -60,7 +61,6 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * @param conf
      * @param trainingParameters
      */
-    //FIXME: Perhaps this version will not get dbName and use a tmp instead. The other constructor will take the name used in the save().
     public KnowledgeBase(String dbName, Configuration conf, TP trainingParameters) {
         this.conf = conf;
         dbc = this.conf.getDbConfig().getConnector(dbName);
@@ -123,9 +123,19 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * Saves the KnowledgeBase to the permanent storage.
      */
-    public void save() {
+    public void save(String dbName) {
+        //store the objects on database
         dbc.saveObject("modelParameters", modelParameters);
         dbc.saveObject("trainingParameters", trainingParameters);
+
+        //close connection and rename the database
+        dbc.closeAndRename(dbName);
+
+        //open new connection
+        dbc = this.conf.getDbConfig().getConnector(dbName);
+
+        //reload the model parameters
+        modelParameters = (MP) dbc.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**

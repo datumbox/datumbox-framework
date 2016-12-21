@@ -28,13 +28,12 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 public abstract class AbstractContinuousFeatureSelector<MP extends AbstractContinuousFeatureSelector.AbstractModelParameters, TP extends AbstractContinuousFeatureSelector.AbstractTrainingParameters> extends AbstractFeatureSelector<MP, TP> {
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, TP)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractContinuousFeatureSelector(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractContinuousFeatureSelector(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

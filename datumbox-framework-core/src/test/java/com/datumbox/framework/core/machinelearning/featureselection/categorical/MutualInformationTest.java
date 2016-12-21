@@ -53,11 +53,11 @@ public class MutualInformationTest extends AbstractTest {
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
         
-        MutualInformation instance = MLBuilder.create(param, dbName, conf);
+        MutualInformation instance = MLBuilder.create(param, conf);
         
         
         instance.fit_transform(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         instance.close();
         //instance = null;

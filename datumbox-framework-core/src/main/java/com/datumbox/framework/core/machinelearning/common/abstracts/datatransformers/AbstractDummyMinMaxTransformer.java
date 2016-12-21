@@ -129,13 +129,12 @@ public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMin
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractDummyMinMaxTransformer(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractDummyMinMaxTransformer(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
 

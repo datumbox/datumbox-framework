@@ -53,8 +53,10 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
 
     /**
      * Saves the database of the algorithm.
+     *
+     * @param dbName
      */
-    public void save();
+    public void save(String dbName);
 
     /**
      * Deletes the database of the algorithm. 

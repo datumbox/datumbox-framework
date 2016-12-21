@@ -278,9 +278,9 @@ public class TextClassifierTest extends AbstractTest {
         exParams.setExaminationWindowLength(6);
         trainingParameters.setTextExtractorParameters(exParams);
 
-        TextClassifier instance = MLBuilder.create(trainingParameters, dbName, conf);
+        TextClassifier instance = MLBuilder.create(trainingParameters, conf);
         instance.fit(dataset);
-        instance.save();
+        instance.save(dbName);
 
 
         ClassificationMetrics vm = instance.validate(dataset);

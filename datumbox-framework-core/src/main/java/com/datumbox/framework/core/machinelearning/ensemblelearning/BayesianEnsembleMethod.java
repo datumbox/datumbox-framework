@@ -54,13 +54,12 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected BayesianEnsembleMethod(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected BayesianEnsembleMethod(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

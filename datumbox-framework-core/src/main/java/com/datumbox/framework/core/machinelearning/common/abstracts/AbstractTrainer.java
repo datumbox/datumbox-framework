@@ -20,6 +20,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
@@ -111,17 +112,16 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * The KnowledgeBase instance of the algorithm. 
      */
     protected final KnowledgeBase<MP, TP> knowledgeBase;
-    
+
     /**
      * Constructor which is called on model initialization before training.
-     * 
-     * @param dbName
-     * @param conf 
+     *
      * @param trainingParameters
+     * @param conf
      */
-    protected AbstractTrainer(String dbName, Configuration conf, TP trainingParameters) {
-        dbName += conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();
-        knowledgeBase = new KnowledgeBase<>(dbName, conf, trainingParameters);
+    protected AbstractTrainer(TP trainingParameters, Configuration conf) {
+        String knowledgeBaseName = createKnowledgeBaseName("kb_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
+        knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf, trainingParameters);
     }
 
     /**
@@ -131,8 +131,8 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param conf
      */
     protected AbstractTrainer(String dbName, Configuration conf) {
-        dbName += conf.getDbConfig().getDBnameSeparator() + this.getClass().getSimpleName();;
-        knowledgeBase = new KnowledgeBase<>(dbName, conf);
+        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf);
     }
     
     /** {@inheritDoc} */
@@ -160,8 +160,9 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
 
     /** {@inheritDoc} */
     @Override
-    public void save() {
-        knowledgeBase.save();
+    public void save(String dbName) {
+        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        knowledgeBase.save(knowledgeBaseName);
     }
 
     /** {@inheritDoc} */
@@ -182,5 +183,14 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param trainingData 
      */
     protected abstract void _fit(Dataframe trainingData);
-    
+
+    /**
+     * Generates a name for the KnowledgeBase.
+     *
+     * @param dbName
+     * @return
+     */
+    protected final String createKnowledgeBaseName(String dbName) {
+        return dbName + "_" + getClass().getSimpleName();
+    }
 }

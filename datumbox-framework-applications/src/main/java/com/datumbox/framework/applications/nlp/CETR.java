@@ -252,7 +252,7 @@ public class CETR {
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
 
-        Kmeans instance = MLBuilder.create(param, dbName, conf);
+        Kmeans instance = MLBuilder.create(param, conf);
         
         instance.fit(dataset);
         instance.predict(dataset);

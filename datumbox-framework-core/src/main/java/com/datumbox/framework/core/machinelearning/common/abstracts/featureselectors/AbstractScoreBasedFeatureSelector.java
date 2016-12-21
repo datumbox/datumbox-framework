@@ -34,13 +34,12 @@ import java.util.Map;
 public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScoreBasedFeatureSelector.AbstractModelParameters, TP extends AbstractScoreBasedFeatureSelector.AbstractTrainingParameters> extends AbstractFeatureSelector<MP, TP> {
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, TP)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractScoreBasedFeatureSelector(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractScoreBasedFeatureSelector(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

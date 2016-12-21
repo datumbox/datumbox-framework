@@ -328,13 +328,12 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected LatentDirichletAllocation(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected LatentDirichletAllocation(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

@@ -58,17 +58,17 @@ public class SupportVectorMachineTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save();
+        df.save(dbName);
 
         SupportVectorMachine.TrainingParameters param = new SupportVectorMachine.TrainingParameters();
         param.getSvmParameter().kernel_type = svm_parameter.RBF;
         
-        SupportVectorMachine instance = MLBuilder.create(param, dbName, conf);
+        SupportVectorMachine instance = MLBuilder.create(param, conf);
 
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         df.denormalize(trainingData);
         trainingData.delete();

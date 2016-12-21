@@ -175,13 +175,12 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
 
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected SoftMaxRegression(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected SoftMaxRegression(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
         streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
     }
 

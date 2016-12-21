@@ -60,9 +60,9 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
 
-        GaussianDPMM instance = MLBuilder.create(param, dbName, conf);
+        GaussianDPMM instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         trainingData.delete();
         instance.close();

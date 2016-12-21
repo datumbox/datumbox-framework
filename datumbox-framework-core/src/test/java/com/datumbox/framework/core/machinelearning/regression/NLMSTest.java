@@ -53,9 +53,9 @@ public class NLMSTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save();
+        df.save(dbName);
 
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
@@ -64,9 +64,9 @@ public class NLMSTest extends AbstractTest {
 
 
 
-        NLMS instance = MLBuilder.create(param, dbName, conf);
+        NLMS instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         df.denormalize(trainingData);
         trainingData.delete();
@@ -112,7 +112,7 @@ public class NLMSTest extends AbstractTest {
         data[1].delete();
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
 
 
@@ -123,7 +123,7 @@ public class NLMSTest extends AbstractTest {
         featureSelectorParameters.setWhitened(false);
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
 
-        PCA featureSelector = MLBuilder.create(featureSelectorParameters, dbName, conf);
+        PCA featureSelector = MLBuilder.create(featureSelectorParameters, conf);
         featureSelector.fit_transform(trainingData);
         featureSelector.close();
 

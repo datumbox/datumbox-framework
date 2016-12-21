@@ -72,9 +72,9 @@ public class ModelerTest extends AbstractTest {
         //feature selection configuration
         trainingParameters.setFeatureSelectorTrainingParameters(null);
 
-        Modeler instance = MLBuilder.create(trainingParameters, dbName, conf);
+        Modeler instance = MLBuilder.create(trainingParameters, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         instance.close();
 

@@ -28,9 +28,6 @@ import java.util.Properties;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class InMemoryConfiguration implements DatabaseConfiguration {
-    
-    //Mandatory constants
-    private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
 
     //DB specific properties
     private String outputFolder = null;
@@ -46,12 +43,6 @@ public class InMemoryConfiguration implements DatabaseConfiguration {
     @Override
     public DatabaseConnector getConnector(String database) {
         return new InMemoryConnector(database, this);
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String getDBnameSeparator() {
-        return DBNAME_SEPARATOR;
     }
     
     /** {@inheritDoc} */

@@ -68,9 +68,12 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
         close();
 
         try {
-            Path rootPath = getRootPath(dbName);
-            if(Files.exists(rootPath)) {
-                Files.move(rootPath, getRootPath(newDBName));
+            Path targetPath = getRootPath(newDBName);
+            deleteIfExistsRecursively(targetPath);
+
+            Path srcPath = getRootPath(dbName);
+            if(Files.exists(srcPath)) {
+                Files.move(srcPath, targetPath);
             }
         }
         catch (IOException ex) {

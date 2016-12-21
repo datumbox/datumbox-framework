@@ -55,10 +55,10 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), dbName, conf);
+        BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), conf);
         
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
         
         instance.close();
         //instance = null;

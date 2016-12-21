@@ -17,6 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
+import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -129,13 +130,12 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractBoostingBagging(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractBoostingBagging(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**
@@ -235,11 +235,10 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         int totalWeakClassifiers = trainingParameters.getMaxWeakClassifiers();
         
         //training the weak classifiers
-        int t=0;
+        int i=0;
         int retryCounter = 0;
-        String prefix = dbc.getDatabaseName()+conf.getDbConfig().getDBnameSeparator()+DB_INDICATOR;
-        while(t<totalWeakClassifiers) {
-            logger.debug("Training Weak learner {}", t);
+        while(i<totalWeakClassifiers) {
+            logger.debug("Training Weak learner {}", i);
 
             //We sample a list of Ids based on their weights
             FlatDataList sampledIDs = SimpleRandomSampling.weightedSampling(observationWeights, n, true).toFlatDataList();
@@ -248,7 +247,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
 
 
-            AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, prefix+t, conf);
+            AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, conf);
             mlclassifier.fit(sampledTrainingDataset);
             sampledTrainingDataset.delete();
             mlclassifier.predict(trainingData);
@@ -259,7 +258,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
                 mlclassifier.close();
             }
             else {
-                bundle.put(String.valueOf(t), mlclassifier);
+                bundle.put(String.valueOf(i), mlclassifier);
             }
 
             if(status==Status.STOP) {
@@ -281,7 +280,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
                 retryCounter = 0; //reset the retry counter
             }
             
-            ++t; //increase counter here. This is because some times we might want to redo the 
+            i++;
         }
         
     }
@@ -317,10 +316,17 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     /** {@inheritDoc} */
     @Override
-    public void save() {
+    public void save(String dbName) {
         initBundle();
-        bundle.save();
-        super.save();
+        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        //bundle.save(knowledgeBaseName);
+        for(String i : bundle.keySet()) { //TODO: remove this custom case if possible. try adding the key in the name.
+            Trainable t = bundle.get(i);
+            if(t != null) {
+                t.save(knowledgeBaseName + "_" + DB_INDICATOR + i);
+            }
+        }
+        super.save(dbName);
     }
 
     /** {@inheritDoc} */
@@ -350,12 +356,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         TP trainingParameters = knowledgeBase.getTrainingParameters();
 
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
-        String prefix = dbc.getDatabaseName()+knowledgeBase.getConf().getDbConfig().getDBnameSeparator()+DB_INDICATOR;
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size(), trainingParameters.getMaxWeakClassifiers());
-        for(int t=0;t<totalWeakClassifiers;++t) {
-            if (!bundle.containsKey(String.valueOf(t))) {
-                bundle.put(String.valueOf(t), MLBuilder.load(weakClassifierClass, prefix+t, conf));
+        for(int i=0;i<totalWeakClassifiers;i++) {
+            if (!bundle.containsKey(String.valueOf(i))) {
+                bundle.put(String.valueOf(i), MLBuilder.load(weakClassifierClass, dbc.getDatabaseName() + "_" + DB_INDICATOR + i, conf));
             }
         }
     }

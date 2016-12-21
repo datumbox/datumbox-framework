@@ -270,13 +270,12 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractDPMM(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractDPMM(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

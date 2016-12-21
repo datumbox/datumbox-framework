@@ -29,9 +29,6 @@ import java.util.Properties;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class MapDBConfiguration implements DatabaseConfiguration {
-    
-    //Mandatory constants
-    private static final String DBNAME_SEPARATOR = "_"; //NOT permitted characters are: <>:"/\|?*
 
     //DB specific properties
     private String outputFolder = null;
@@ -53,12 +50,6 @@ public class MapDBConfiguration implements DatabaseConfiguration {
     @Override
     public DatabaseConnector getConnector(String database) {
         return new MapDBConnector(database, this);
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String getDBnameSeparator() {
-        return DBNAME_SEPARATOR;
     }
     
     /** {@inheritDoc} */

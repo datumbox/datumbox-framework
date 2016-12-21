@@ -57,9 +57,9 @@ public class AdaboostTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save();
+        df.save(dbName);
 
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
@@ -72,10 +72,10 @@ public class AdaboostTest extends AbstractTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
-        Adaboost instance = MLBuilder.create(param, dbName, conf);
+        Adaboost instance = MLBuilder.create(param, conf);
         
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         df.denormalize(trainingData);
         trainingData.delete();
@@ -139,7 +139,7 @@ public class AdaboostTest extends AbstractTest {
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
 
-        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);;
+        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
         
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();

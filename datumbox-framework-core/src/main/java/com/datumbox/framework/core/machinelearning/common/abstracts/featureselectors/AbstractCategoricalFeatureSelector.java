@@ -124,13 +124,12 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractCategoricalFeatureSelector(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractCategoricalFeatureSelector(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

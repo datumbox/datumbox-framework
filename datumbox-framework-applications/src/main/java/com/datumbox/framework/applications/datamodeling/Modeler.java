@@ -126,13 +126,12 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(String, Configuration, AbstractTrainer.AbstractTrainingParameters)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public Modeler(String dbName, Configuration conf, TrainingParameters trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    public Modeler(TrainingParameters trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**
@@ -203,19 +202,19 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
         AbstractTransformer dataTransformer = null;
         if(dtParams != null) {
-            dataTransformer = MLBuilder.create(dtParams, dbName, conf);
+            dataTransformer = MLBuilder.create(dtParams, conf);
             bundle.put("dataTransformer", dataTransformer);
         }
 
         AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
         AbstractFeatureSelector featureSelector = null;
         if(fsParams != null) {
-            featureSelector = MLBuilder.create(fsParams, dbName, conf);
+            featureSelector = MLBuilder.create(fsParams, conf);
             bundle.put("featureSelector", featureSelector);
         }
 
         AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
-        AbstractModeler modeler = MLBuilder.create(mlParams, dbName, conf);
+        AbstractModeler modeler = MLBuilder.create(mlParams, conf);
         bundle.put("modeler", modeler);
 
         //set the parallized flag to all algorithms
@@ -236,10 +235,11 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
     /** {@inheritDoc} */
     @Override
-    public void save() {
+    public void save(String dbName) {
         initBundle();
-        bundle.save();
-        super.save();
+        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        bundle.save(knowledgeBaseName);
+        super.save(dbName);
     }
 
     /** {@inheritDoc} */

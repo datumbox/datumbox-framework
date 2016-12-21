@@ -57,9 +57,9 @@ public class BootstrapAggregatingTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save();
+        df.save(dbName);
 
         
         BootstrapAggregating.TrainingParameters param = new BootstrapAggregating.TrainingParameters();
@@ -74,9 +74,9 @@ public class BootstrapAggregatingTest extends AbstractTest {
 
 
 
-        BootstrapAggregating instance = MLBuilder.create(param, dbName, conf);
+        BootstrapAggregating instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         df.denormalize(trainingData);
         trainingData.delete();

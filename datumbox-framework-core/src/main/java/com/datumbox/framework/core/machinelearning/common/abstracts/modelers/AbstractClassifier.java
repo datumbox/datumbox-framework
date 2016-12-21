@@ -76,13 +76,12 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractClassifier(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractClassifier(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

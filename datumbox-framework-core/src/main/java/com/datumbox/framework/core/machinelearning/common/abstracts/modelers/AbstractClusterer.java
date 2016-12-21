@@ -16,7 +16,6 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
@@ -24,8 +23,6 @@ import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnec
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
-import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
 
 import java.util.*;
 
@@ -188,13 +185,12 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
     }
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractClusterer(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractClusterer(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

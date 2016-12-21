@@ -58,9 +58,9 @@ public class CollaborativeFilteringTest extends AbstractTest {
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
 
-        CollaborativeFiltering instance = MLBuilder.create(param, dbName, conf);
+        CollaborativeFiltering instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
         
         instance.close();
         //instance = null;

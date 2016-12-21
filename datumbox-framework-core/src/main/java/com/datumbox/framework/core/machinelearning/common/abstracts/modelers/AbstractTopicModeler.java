@@ -28,13 +28,12 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.AbstractModelParameters, TP extends AbstractTopicModeler.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
 
     /**
-     * @param dbName
-     * @param conf
      * @param trainingParameters
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, TP)
+     * @param conf
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractTopicModeler(String dbName, Configuration conf, TP trainingParameters) {
-        super(dbName, conf, trainingParameters);
+    protected AbstractTopicModeler(TP trainingParameters, Configuration conf) {
+        super(trainingParameters, conf);
     }
 
     /**

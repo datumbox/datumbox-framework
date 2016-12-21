@@ -54,11 +54,11 @@ public class ChisquareSelectTest extends AbstractTest {
         param.setMaxFeatures(5);
         param.setALevel(0.05);
         
-        ChisquareSelect instance = MLBuilder.create(param, dbName, conf);
+        ChisquareSelect instance = MLBuilder.create(param, conf);
         
         
         instance.fit_transform(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         instance.close();
         //instance = null;

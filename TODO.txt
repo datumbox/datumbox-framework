@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Add save(dbName) method in the models.
 - Can we make the two constructors of the Trainers to call a common constructor to eliminate duplicate code?
 
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).

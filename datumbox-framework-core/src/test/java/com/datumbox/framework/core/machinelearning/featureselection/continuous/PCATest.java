@@ -57,9 +57,9 @@ public class PCATest extends AbstractTest {
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
 
-        PCA instance = MLBuilder.create(param, dbName, conf);
+        PCA instance = MLBuilder.create(param, conf);
         instance.fit_transform(originalData);
-        instance.save();
+        instance.save(dbName);
 
         originalData.delete();
         instance.close();

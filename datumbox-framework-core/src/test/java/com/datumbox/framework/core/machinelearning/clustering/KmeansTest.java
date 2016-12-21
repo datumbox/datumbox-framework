@@ -52,9 +52,9 @@ public class KmeansTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save();
+        df.save(dbName);
 
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
@@ -66,9 +66,9 @@ public class KmeansTest extends AbstractTest {
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
 
-        Kmeans instance = MLBuilder.create(param, dbName, conf);
+        Kmeans instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         df.denormalize(trainingData);
         trainingData.delete();
@@ -116,7 +116,7 @@ public class KmeansTest extends AbstractTest {
         
         
         String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), dbName, conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
         
 

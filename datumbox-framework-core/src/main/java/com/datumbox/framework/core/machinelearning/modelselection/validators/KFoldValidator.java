@@ -18,11 +18,8 @@ package com.datumbox.framework.core.machinelearning.modelselection.validators;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.utilities.PHPMethods;
-import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.validators.AbstractValidator;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
@@ -83,7 +80,7 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
         PHPMethods.shuffle(ids);
 
         //initialize modeler
-        AbstractModeler modeler = MLBuilder.create(trainingParameters, "kfold_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf);
+        AbstractModeler modeler = MLBuilder.create(trainingParameters, conf);
 
         List<VM> validationMetricsList = new LinkedList<>();
         for(int fold=0;fold<k;++fold) {

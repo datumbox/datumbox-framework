@@ -26,15 +26,6 @@ import com.datumbox.framework.common.interfaces.Configurable;
 public interface DatabaseConfiguration extends Configurable {
     
     /**
-     * Returns the separator that is used in the DB names. Usually the database
-     * names used by the algorithms are concatenations of various words separated
-     * by this character.
-     * 
-     * @return 
-     */
-    public String getDBnameSeparator();
-    
-    /**
      * Initializes and returns a connection to the Database.
      * 
      * @param database

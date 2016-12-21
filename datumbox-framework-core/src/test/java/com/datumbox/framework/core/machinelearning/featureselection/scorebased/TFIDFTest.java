@@ -54,10 +54,10 @@ public class TFIDFTest extends AbstractTest {
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        TFIDF instance = MLBuilder.create(param, dbName, conf);
+        TFIDF instance = MLBuilder.create(param, conf);
         
         instance.fit_transform(trainingData);
-        instance.save();
+        instance.save(dbName);
 
         trainingData.delete();
         instance.close();
