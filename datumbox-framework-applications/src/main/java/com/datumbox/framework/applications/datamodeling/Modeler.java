@@ -134,7 +134,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public Modeler(TrainingParameters trainingParameters, Configuration conf) {
+    protected Modeler(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
     }
 
@@ -143,7 +143,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    public Modeler(String dbName, Configuration conf) {
+    protected Modeler(String dbName, Configuration conf) {
         super(dbName, conf);
     }
 

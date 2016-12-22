@@ -66,15 +66,15 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
         /**
          * It builds a Dataframe object from a provided list of text files. The data
-         map should have as index the names of each class and as values the URIs
-         of the training files. The files should contain one training example
-         per row. If we want to parse a Text File of unknown category then
-         pass a single URI with null as key.
-
-         The method requires as arguments a file with the category names and locations
-         of the training files, an instance of a TextExtractor which is used
-         to extract the keywords from the documents and the Database Configuration
-         Object.
+         * map should have as index the names of each class and as values the URIs
+         * of the training files. The files should contain one training example
+         * per row. If we want to parse a Text File of unknown category then
+         * pass a single URI with null as key.
+         *
+         * The method requires as arguments a file with the category names and locations
+         * of the training files, an instance of a TextExtractor which is used
+         * to extract the keywords from the documents and the Database Configuration
+         * Object.
          *
          * @param textFilesMap
          * @param textExtractor
@@ -115,11 +115,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         }
 
         /**
-         * It builds a Dataframe object from a CSV file; the first line of the provided 
+         * It builds a Dataframe object from a CSV file; the first line of the provided
          * CSV file must have a header with the column names.
          *
          * The method accepts the following arguments: A Reader object from where
-         * we will read the contents of the csv file. The name column of the 
+         * we will read the contents of the csv file. The name column of the
          * response variable y. A map with the column names and their respective
          * DataTypes. The char delimiter for the columns, the char for quotes and
          * the string of the record/row separator. The Database Configuration
@@ -193,7 +193,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
                         Record r = new Record(xData, y);
 
-                        //use the internal unsafe methods to avoid the update of the Metas. 
+                        //use the internal unsafe methods to avoid the update of the Metas.
                         //The Metas are already set in the construction of the Dataframe.
                         dataset._unsafe_set(rId, r);
                     }
@@ -207,10 +207,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
     }
 
-    private TypeInference.DataType yDataType;
+    //The following variables store the data of the object
+    private TypeInference.DataType yDataType = null;
     private Map<Object, TypeInference.DataType> xDataTypes;
     private Map<Integer, Record> records;
-    private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
+    private AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
 
     private final DatabaseConnector dbc;
 
@@ -221,10 +222,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     protected final Configuration conf;
 
     /**
-     * This executor is used for the parallel processing of streams with custom 
+     * This executor is used for the parallel processing of streams with custom
      * Thread pool.
      */
-    protected final ForkJoinStream streamExecutor;
+    private final ForkJoinStream streamExecutor;
 
     /**
      * Public constructor of Dataframe.
@@ -288,13 +289,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     @Override
     public void clear() {
         yDataType = null;
-
+        atomicNextAvailableRecordId.set(0);
         xDataTypes.clear();
         records.clear();
     }
 
     /**
-     * Adds a record in the Dataframe and updates the Meta data. 
+     * Adds a record in the Dataframe and updates the Meta data.
      *
      * @param r
      * @return
@@ -377,7 +378,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     //Optional Collection Methods
 
     /**
-     * Removes the first occurrence of the specified element from this Dataframe, 
+     * Removes the first occurrence of the specified element from this Dataframe,
      * if it is present and it does not update the metadata.
      *
      * @param o
@@ -451,7 +452,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
 
     /**
-     * Returns the index of the first occurrence of the specified element in this 
+     * Returns the index of the first occurrence of the specified element in this
      * Dataframe, or null if this Dataframe does not contain the element.
      * WARNING: The Records are checked only for their X and Y values, not for
      * the yPredicted and yPredictedProbabilities values.
@@ -499,7 +500,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * exist it will be added with the specific id and the next added record will
      * have as id the next integer.
      *
-     * Note that the meta-data are partially updated. This means that if the replaced 
+     * Note that the meta-data are partially updated. This means that if the replaced
      * Record contained a column which is now no longer available in the dataset,
      * then the meta-data will not refect this update (the column will continue to exist
      * in the meta data). If this is a problem, you should call the recalculateMeta()
@@ -576,7 +577,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
 
     /**
-     * Removes completely a list of columns from the dataset. The meta-data of 
+     * Removes completely a list of columns from the dataset. The meta-data of
      * the Dataframe are updated. The method internally uses threads.
      *
      * @param columnSet
@@ -609,9 +610,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
 
     /**
-     * It generates and returns a new Dataframe which contains a subset of this Dataframe. 
-     * All the Records of the returned Dataframe are copies of the original Records. 
-     * The method is used for k-fold cross validation and sampling. Note that the 
+     * It generates and returns a new Dataframe which contains a subset of this Dataframe.
+     * All the Records of the returned Dataframe are copies of the original Records.
+     * The method is used for k-fold cross validation and sampling. Note that the
      * Records in the new Dataframe have DIFFERENT ids from the original ones.
      *
      * @param idsCollection
@@ -760,11 +761,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
     /**
      * Sets the record in a particular position in the dataset, WITHOUT updating
-     * the internal meta-info and returns the previous value (null if not existed). 
-     * This method is similar to set() and it allows quick updates 
-     * on the dataset. Nevertheless it is not advised to use this method because 
+     * the internal meta-info and returns the previous value (null if not existed).
+     * This method is similar to set() and it allows quick updates
+     * on the dataset. Nevertheless it is not advised to use this method because
      * unless you explicitly call the recalculateMeta() method, the meta data
-     * will be corrupted. If you do use this method, MAKE sure you perform the 
+     * will be corrupted. If you do use this method, MAKE sure you perform the
      * recalculation after you are done with the updates.
      *
      * @param rId
@@ -779,7 +780,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
 
     /**
-     * Adds the record in the dataset without updating the Meta. The add method 
+     * Adds the record in the dataset without updating the Meta. The add method
      * returns the id of the new record.
      *
      * @param r
@@ -793,17 +794,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
 
     /**
-     * Protected getter for the DatabaseConnector of the Dataframe. It is used
-     * by the DataframeMatrix.
-     *
-     * @return
-     */
-    public DatabaseConnector getDbc() {
-        return dbc;
-    }
-
-    /**
-     * Updates the meta data of the Dataframe using the provided Record. 
+     * Updates the meta data of the Dataframe using the provided Record.
      * The Meta-data include the supported columns and their DataTypes.
      *
      * @param r

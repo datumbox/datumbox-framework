@@ -43,7 +43,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfiguration> {
-    
+
+    //FIXME: add soft references to all the objects here so that we can clean them up afterwards.
+
     /** 
      * @param dbName
      * @param dbConf

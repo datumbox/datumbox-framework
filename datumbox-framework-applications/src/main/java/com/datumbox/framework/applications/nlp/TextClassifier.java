@@ -97,7 +97,7 @@ public class TextClassifier extends Modeler {
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public TextClassifier(TrainingParameters trainingParameters, Configuration conf) {
+    protected TextClassifier(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
     }
 
@@ -106,7 +106,7 @@ public class TextClassifier extends Modeler {
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    public TextClassifier(String dbName, Configuration conf) {
+    protected TextClassifier(String dbName, Configuration conf) {
         super(dbName, conf);
     }
     
