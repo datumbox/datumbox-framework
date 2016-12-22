@@ -24,7 +24,7 @@ import java.util.Properties;
 /**
  * The main Configuration object of the framework which information about the Database, the concurrency etc.
  *
- * @author vvryniotis
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Configuration implements Configurable {
     
