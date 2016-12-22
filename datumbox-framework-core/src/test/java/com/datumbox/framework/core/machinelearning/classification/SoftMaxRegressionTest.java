@@ -122,8 +122,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].delete();
         
-        
-        String dbName = this.getClass().getSimpleName();
+
         XMinMaxNormalizer df = MLBuilder.create(new XMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
 

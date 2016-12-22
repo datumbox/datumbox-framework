@@ -43,60 +43,60 @@ import java.util.stream.Stream;
  * Machine Learning algorithms get as argument Dataframe objects. The class has an
  * internal static Builder class which can be used to generate Dataframe objects 
  * from Text or CSV files.
- * 
+ *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
-    
+
     /**
      * Internal name of the response variable.
      */
     public static final String COLUMN_NAME_Y = "~Y";
-    
+
     /**
      * Internal name of the constant.
      */
     public static final String COLUMN_NAME_CONSTANT = "~CONSTANT";
-    
+
     /**
      * The Builder is a utility class which can help you build Dataframe from
- Text files and CSV files.
+     Text files and CSV files.
      */
     public static class Builder {
-        
+
         /**
          * It builds a Dataframe object from a provided list of text files. The data
- map should have as index the names of each class and as values the URIs
- of the training files. The files should contain one training example
- per row. If we want to parse a Text File of unknown category then
- pass a single URI with null as key.
- 
- The method requires as arguments a file with the category names and locations
- of the training files, an instance of a TextExtractor which is used
- to extract the keywords from the documents and the Database Configuration
- Object.
-         * 
+         map should have as index the names of each class and as values the URIs
+         of the training files. The files should contain one training example
+         per row. If we want to parse a Text File of unknown category then
+         pass a single URI with null as key.
+
+         The method requires as arguments a file with the category names and locations
+         of the training files, an instance of a TextExtractor which is used
+         to extract the keywords from the documents and the Database Configuration
+         Object.
+         *
          * @param textFilesMap
          * @param textExtractor
          * @param conf
-         * @return 
+         * @return
          */
         public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, Extractable textExtractor, Configuration conf) {
             Dataframe dataset = new Dataframe(conf);
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
-            
+
             for (Map.Entry<Object, URI> entry : textFilesMap.entrySet()) {
                 Object theClass = entry.getKey();
                 URI datasetURI = entry.getValue();
-                
+
                 logger.info("Dataset Parsing {} class", theClass);
-                
+
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(datasetURI)), "UTF8"))) {
                     final int baseCounter = dataset.size(); //because we read multiple files we need to keep track of all records added earlier
-                    ThreadMethods.throttledExecution(StreamMethods.enumerate(br.lines()), e -> { 
+                    ThreadMethods.throttledExecution(StreamMethods.enumerate(br.lines()), e -> {
                         Integer rId = baseCounter + e.getKey();
                         String line = e.getValue();
-                        
+
                         AssociativeArray xData = new AssociativeArray(
                                 textExtractor.extract(StringCleaner.clear(line))
                         );
@@ -105,26 +105,26 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                         //we call below the recalculateMeta()
                         dataset.set(rId, r);
                     }, conf.getConcurrencyConfig());
-                } 
+                }
                 catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
-            
+
             return dataset;
         }
-        
+
         /**
          * It builds a Dataframe object from a CSV file; the first line of the provided 
          * CSV file must have a header with the column names.
-         * 
+         *
          * The method accepts the following arguments: A Reader object from where
          * we will read the contents of the csv file. The name column of the 
          * response variable y. A map with the column names and their respective
          * DataTypes. The char delimiter for the columns, the char for quotes and
          * the string of the record/row separator. The Database Configuration
          * object.
-         * 
+         *
          * @param reader
          * @param yVariable
          * @param headerDataTypes
@@ -134,44 +134,44 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
          * @param skip
          * @param limit
          * @param conf
-         * @return 
+         * @return
          */
-        public static Dataframe parseCSVFile(Reader reader, String yVariable, LinkedHashMap<String, TypeInference.DataType> headerDataTypes, 
-                                           char delimiter, char quote, String recordSeparator, Long skip, Long limit, Configuration conf) {
+        public static Dataframe parseCSVFile(Reader reader, String yVariable, LinkedHashMap<String, TypeInference.DataType> headerDataTypes,
+                                             char delimiter, char quote, String recordSeparator, Long skip, Long limit, Configuration conf) {
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
-            
+
             if(skip == null) {
                 skip = 0L;
             }
-            
+
             if(limit == null) {
                 limit = Long.MAX_VALUE;
             }
-            
+
             logger.info("Parsing CSV file");
-            
+
             if (!headerDataTypes.containsKey(yVariable)) {
                 logger.warn("WARNING: The file is missing the response variable column {}.", yVariable);
             }
-            
+
             TypeInference.DataType yDataType = headerDataTypes.get(yVariable);
             Map<String, TypeInference.DataType> xDataTypes = new HashMap<>(headerDataTypes); //copy header types
             xDataTypes.remove(yVariable); //remove the response variable from xDataTypes
             Dataframe dataset = new Dataframe(conf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
-            
-            
+
+
             CSVFormat format = CSVFormat
-                                .RFC4180
-                                .withHeader()
-                                .withDelimiter(delimiter)
-                                .withQuote(quote)
-                                .withRecordSeparator(recordSeparator);
-            
-            try (final CSVParser parser = new CSVParser(reader, format)) { 
-                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false)).skip(skip).limit(limit), e -> { 
+                    .RFC4180
+                    .withHeader()
+                    .withDelimiter(delimiter)
+                    .withQuote(quote)
+                    .withRecordSeparator(recordSeparator);
+
+            try (final CSVParser parser = new CSVParser(reader, format)) {
+                ThreadMethods.throttledExecution(StreamMethods.enumerate(StreamMethods.stream(parser.spliterator(), false)).skip(skip).limit(limit), e -> {
                     Integer rId = e.getKey();
                     CSVRecord row = e.getValue();
-                
+
                     if (!row.isConsistent()) {
                         logger.warn("WARNING: Skipping row {} because its size does not match the header size.", row.getRecordNumber());
                     }
@@ -185,33 +185,33 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
                             Object value = TypeInference.DataType.parse(row.get(column), dataType); //parse the string value according to the DataType
                             if (yVariable != null && yVariable.equals(column)) {
                                 y = value;
-                            } 
+                            }
                             else {
                                 xData.put(column, value);
                             }
                         }
-                        
+
                         Record r = new Record(xData, y);
-                        
+
                         //use the internal unsafe methods to avoid the update of the Metas. 
                         //The Metas are already set in the construction of the Dataframe.
                         dataset._unsafe_set(rId, r);
                     }
                 }, conf.getConcurrencyConfig());
-            } 
+            }
             catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
             return dataset;
         }
 
-    }    
-    
-    private TypeInference.DataType yDataType; 
+    }
+
+    private TypeInference.DataType yDataType;
     private Map<Object, TypeInference.DataType> xDataTypes;
     private Map<Integer, Record> records;
     private final AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
-    
+
     private final DatabaseConnector dbc;
 
     /**
@@ -219,68 +219,68 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * that extend the Dataframe or the MatrixDataframe class which is on the same package.
      */
     protected final Configuration conf;
-    
+
     /**
      * This executor is used for the parallel processing of streams with custom 
      * Thread pool.
      */
     protected final ForkJoinStream streamExecutor;
-    
+
     /**
      * Public constructor of Dataframe.
-     * 
-     * @param conf 
+     *
+     * @param conf
      */
     public Dataframe(Configuration conf) {
         this.conf = conf;
 
-        String dbName = "dts_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
+        String dbName = "dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
         dbc = this.conf.getDbConfig().getConnector(dbName);
-        
+
         records = dbc.getBigMap("tmp_records", Integer.class, Record.class, MapType.TREEMAP, StorageHint.IN_DISK, true, true);
-        
+
         yDataType = null;
         xDataTypes = dbc.getBigMap("tmp_xDataTypes", Object.class, TypeInference.DataType.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-        
+
         streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
     }
-    
+
     /**
      * Private constructor used by the Builder inner static class.
-     * 
+     *
      * @param conf
      * @param yDataType
-     * @param xDataTypes 
+     * @param xDataTypes
      */
     private Dataframe(Configuration conf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
         this(conf);
         this.yDataType = yDataType;
         this.xDataTypes.putAll(xDataTypes);
     }
-    
-    
+
+
     //Mandatory Collection Methods
-    
+
     /**
      * Returns the total number of Records of the Dataframe.
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public int size() {
         return records.size();
     }
-    
+
     /**
      * Checks if the Dataframe is empty.
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public boolean isEmpty() {
         return records.isEmpty();
     }
-    
+
     /**
      * Clears all the internal Records of the Dataframe. The Dataframe can be used
      * after you clear it.
@@ -288,35 +288,35 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     @Override
     public void clear() {
         yDataType = null;
-        
+
         xDataTypes.clear();
         records.clear();
     }
 
     /**
      * Adds a record in the Dataframe and updates the Meta data. 
-     * 
+     *
      * @param r
-     * @return 
+     * @return
      */
     @Override
     public boolean add(Record r) {
         addRecord(r);
         return true;
     }
-    
+
     /**
      * Checks if the Record exists in the Dataframe. Note that the Record is checked only
      * for its x and y components.
-     * 
+     *
      * @param o
-     * @return 
+     * @return
      */
     @Override
     public boolean contains(Object o) {
         return records.containsValue((Record)o);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean addAll(Collection<? extends Record> c) {
@@ -325,13 +325,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         });
         return true;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean containsAll(Collection<?> c) {
         return records.values().containsAll(c);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Object[] toArray() {
@@ -342,8 +342,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         }
         return array;
     }
-    
-    /** {@inheritDoc} */      
+
+    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
@@ -357,31 +357,31 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         }
         return a;
     }
-    
+
     /**
      * Returns a read-only iterator on the values of the Dataframe.
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public Iterator<Record> iterator() {
         return values().iterator();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Stream<Record> stream() {
         return StreamMethods.stream(values(), false);
     }
-    
+
     //Optional Collection Methods
-    
+
     /**
      * Removes the first occurrence of the specified element from this Dataframe, 
      * if it is present and it does not update the metadata.
-     * 
+     *
      * @param o
-     * @return 
+     * @return
      */
     @Override
     public boolean remove(Object o) {
@@ -392,13 +392,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         remove(id);
         return true;
     }
-    
+
     /**
      * Removes all of this collection's elements that are also contained in the
      * specified collection and updates the metadata.
-     * 
+     *
      * @param c
-     * @return 
+     * @return
      */
     @Override
     public boolean removeAll(Collection<?> c) {
@@ -415,9 +415,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /**
      * Retains only the elements in this collection that are contained in the
      * specified collection and updates the meta data.
-     * 
+     *
      * @param c
-     * @return 
+     * @return
      */
     @Override
     public boolean retainAll(Collection<?> c) {
@@ -435,29 +435,29 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         }
         return modified;
     }
-    
-    
+
+
     //Other methods
 
     /**
      * Removes a record with a particular id from the Dataframe but does not update
      * the metadata.
-     * 
+     *
      * @param id
-     * @return 
+     * @return
      */
     public Record remove(Integer id) {
         return records.remove(id);
     }
-    
+
     /**
      * Returns the index of the first occurrence of the specified element in this 
      * Dataframe, or null if this Dataframe does not contain the element.
      * WARNING: The Records are checked only for their X and Y values, not for
      * the yPredicted and yPredictedProbabilities values.
-     * 
+     *
      * @param o
-     * @return 
+     * @return
      */
     public Integer indexOf(Record o) {
         if(o!=null) {
@@ -471,161 +471,161 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         }
         return null;
     }
-    
+
     /**
      * Returns a particular Record using its id.
-     * 
+     *
      * @param id
-     * @return 
+     * @return
      */
     public Record get(Integer id) {
         return records.get(id);
     }
-    
+
     /**
      * Adds a Record in the Dataframe and returns its id.
-     * 
+     *
      * @param r
-     * @return 
+     * @return
      */
     public Integer addRecord(Record r) {
         Integer rId = _unsafe_add(r);
         updateMeta(r);
         return rId;
     }
-    
+
     /**
      * Sets the record of a particular id in the dataset. If the record does not
      * exist it will be added with the specific id and the next added record will
      * have as id the next integer.
-     * 
+     *
      * Note that the meta-data are partially updated. This means that if the replaced 
      * Record contained a column which is now no longer available in the dataset,
      * then the meta-data will not refect this update (the column will continue to exist
      * in the meta data). If this is a problem, you should call the recalculateMeta()
      * method to force them being recalculated.
-     * 
+     *
      * @param rId
      * @param r
-     * @return 
+     * @return
      */
     public Integer set(Integer rId, Record r) {
         _unsafe_set(rId, r);
         updateMeta(r);
         return rId;
     }
-    
+
     /**
      * Returns the total number of X columns in the Dataframe.
-     * 
-     * @return 
+     *
+     * @return
      */
     public int xColumnSize() {
         return xDataTypes.size();
     }
-    
+
     /**
      * Returns the type of the response variable y.
-     * 
-     * @return 
+     *
+     * @return
      */
     public TypeInference.DataType getYDataType() {
         return yDataType;
     }
-    
+
     /**
      * Returns an Map with column names as index and DataTypes as values.
-     * 
-     * @return 
+     *
+     * @return
      */
     public Map<Object, TypeInference.DataType> getXDataTypes() {
         return Collections.unmodifiableMap(xDataTypes);
     }
-    
+
     /**
      * It extracts the values of a particular column from all records and
      * stores them into an FlatDataList.
-     * 
+     *
      * @param column
-     * @return 
+     * @return
      */
     public FlatDataList getXColumn(Object column) {
         FlatDataList flatDataList = new FlatDataList();
-        
+
         for(Record r : values()) {
             flatDataList.add(r.getX().get(column));
         }
-        
+
         return flatDataList;
     }
-    
+
     /**
      * It extracts the values of the response variables from all observations and
      * stores them into an FlatDataList.
-     * 
-     * @return 
+     *
+     * @return
      */
     public FlatDataList getYColumn() {
         FlatDataList flatDataList = new FlatDataList();
-        
+
         for(Record r : values()) {
             flatDataList.add(r.getY());
         }
-        
+
         return flatDataList;
     }
-    
+
     /**
      * Removes completely a list of columns from the dataset. The meta-data of 
      * the Dataframe are updated. The method internally uses threads.
-     * 
+     *
      * @param columnSet
      */
-    public void dropXColumns(Set<Object> columnSet) {  
+    public void dropXColumns(Set<Object> columnSet) {
         columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataframe
-        
+
         if(columnSet.isEmpty()) {
             return;
         }
-        
+
         //remove all the columns from the Meta data
         xDataTypes.keySet().removeAll(columnSet);
-        
-        streamExecutor.forEach(StreamMethods.stream(entries(), true), e -> { 
+
+        streamExecutor.forEach(StreamMethods.stream(entries(), true), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
-            
+
             AssociativeArray xData = r.getX().copy();
             boolean modified = xData.keySet().removeAll(columnSet);
-            
+
             if(modified) {
                 Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
-                
+
                 //safe to call in this context. we already updated the meta when we modified the xDataTypes
                 _unsafe_set(rId, newR);
             }
         });
-        
+
     }
-    
+
     /**
      * It generates and returns a new Dataframe which contains a subset of this Dataframe. 
      * All the Records of the returned Dataframe are copies of the original Records. 
      * The method is used for k-fold cross validation and sampling. Note that the 
      * Records in the new Dataframe have DIFFERENT ids from the original ones.
-     * 
+     *
      * @param idsCollection
-     * @return 
+     * @return
      */
     public Dataframe getSubset(FlatDataList idsCollection) {
         Dataframe d = new Dataframe(conf);
-        
+
         for(Object id : idsCollection) {
-            d.add(get((Integer)id)); 
-        }        
+            d.add(get((Integer)id));
+        }
         return d;
     }
-    
+
     /**
      * It forces the recalculation of Meta data using the Records of the dataset.
      */
@@ -636,20 +636,20 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             updateMeta(r);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Dataframe copy() {
         Dataframe d = new Dataframe(conf);
-        
+
         for(Map.Entry<Integer, Record> e : entries()) {
             Integer rId = e.getKey();
             Record r = e.getValue();
-            d.set(rId, r); 
-        }        
+            d.set(rId, r);
+        }
         return d;
     }
-    
+
     /**
      * Deletes the Dataframe and removes all internal variables. Once you delete a
      * dataset, the instance can no longer be used.
@@ -660,21 +660,21 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
         dbc.clear();
         try {
             dbc.close();
-        } 
+        }
         catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        
+
         //Ensures that the Dataframe can't be used after delete() is called.
         yDataType = null;
         xDataTypes = null;
         records = null;
     }
-    
+
     /**
      * Returns a read-only Iterable on the keys and Records of the Dataframe.
-     * 
-     * @return 
+     *
+     * @return
      */
     public Iterable<Map.Entry<Integer, Record>> entries() {
         return () -> new Iterator<Map.Entry<Integer, Record>>() {
@@ -699,28 +699,28 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             }
         };
     }
-    
+
     /**
      * Returns a read-only Iterable on the keys of the Dataframe.
-     * 
-     * @return 
+     *
+     * @return
      */
     public Iterable<Integer> index() {
         return () -> new Iterator<Integer>() {
             private final Iterator<Integer> it = records.keySet().iterator();
-            
+
             /** {@inheritDoc} */
             @Override
             public boolean hasNext() {
                 return it.hasNext();
             }
-            
+
             /** {@inheritDoc} */
             @Override
             public Integer next() {
                 return it.next();
             }
-            
+
             /** {@inheritDoc} */
             @Override
             public void remove() {
@@ -728,11 +728,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             }
         };
     }
-    
+
     /**
      * Returns a read-only Iterable on the values of the Dataframe.
-     * 
-     * @return 
+     *
+     * @return
      */
     public Iterable<Record> values() {
         return () -> new Iterator<Record>(){
@@ -757,7 +757,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             }
         };
     }
-    
+
     /**
      * Sets the record in a particular position in the dataset, WITHOUT updating
      * the internal meta-info and returns the previous value (null if not existed). 
@@ -766,10 +766,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * unless you explicitly call the recalculateMeta() method, the meta data
      * will be corrupted. If you do use this method, MAKE sure you perform the 
      * recalculation after you are done with the updates.
-     * 
+     *
      * @param rId
-     * @param r 
-     * @return  
+     * @param r
+     * @return
      */
     public Record _unsafe_set(Integer rId, Record r) {
         //move ahead the next id
@@ -777,13 +777,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
         return records.put(rId, r);
     }
-    
+
     /**
      * Adds the record in the dataset without updating the Meta. The add method 
      * returns the id of the new record.
-     * 
+     *
      * @param r
-     * @return 
+     * @return
      */
     private Integer _unsafe_add(Record r) {
         Integer newId = atomicNextAvailableRecordId.getAndIncrement();
@@ -791,33 +791,33 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
 
         return newId;
     }
-    
+
     /**
      * Protected getter for the DatabaseConnector of the Dataframe. It is used
      * by the DataframeMatrix.
-     * 
-     * @return 
+     *
+     * @return
      */
     public DatabaseConnector getDbc() {
         return dbc;
     }
-    
+
     /**
      * Updates the meta data of the Dataframe using the provided Record. 
      * The Meta-data include the supported columns and their DataTypes.
-     * 
-     * @param r 
+     *
+     * @param r
      */
     private void updateMeta(Record r) {
         for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
             Object column = entry.getKey();
             Object value = entry.getValue();
-            
+
             if(value!=null) {
                 xDataTypes.putIfAbsent(column, TypeInference.getDataType(value));
             }
         }
-        
+
         if(yDataType == null) {
             Object value = r.getY();
             if(value!=null) {
@@ -825,5 +825,5 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             }
         }
     }
-    
+
 }

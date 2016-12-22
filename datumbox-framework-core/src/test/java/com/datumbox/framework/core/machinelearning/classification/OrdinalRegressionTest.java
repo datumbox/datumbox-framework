@@ -120,8 +120,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].delete();
         
-        
-        String dbName = this.getClass().getSimpleName();
+
         DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), conf);
         
         df.fit_transform(trainingData);

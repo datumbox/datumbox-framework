@@ -16,6 +16,8 @@
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
 import com.datumbox.framework.common.persistentstorage.abstracts.AbstractDatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import org.mapdb.*;
 
@@ -29,6 +31,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -39,10 +42,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConnector extends AbstractDatabaseConnector {
-    
-    private String dbName;
-    private final MapDBConfiguration dbConf;
+public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> {
     
     /**
      * Enum class which stores the Database Type used for every collection.
@@ -79,13 +79,10 @@ public class MapDBConnector extends AbstractDatabaseConnector {
     /** 
      * @param dbName
      * @param dbConf
-     * @see AbstractDatabaseConnector#AbstractDatabaseConnector()
+     * @see AbstractDatabaseConnector#AbstractDatabaseConnector(String, DatabaseConfiguration)
      */
     protected MapDBConnector(String dbName, MapDBConfiguration dbConf) {
-        super();
-        this.dbName = dbName;
-        this.dbConf = dbConf;
-        logger.trace("Opened db {}", dbName);
+        super(dbName, dbConf);
     }
 
     /** {@inheritDoc} */
@@ -98,16 +95,27 @@ public class MapDBConnector extends AbstractDatabaseConnector {
 
         DB db = openDB(DBType.PRIMARY_DB);
         db.commit();
+
+        //find the underlying engine
+        Engine e = db.getEngine();
+        while(EngineWrapper.class.isAssignableFrom(e.getClass())) {
+            e = ((EngineWrapper)e).getWrappedEngine();
+        }
+
+        //close and wait until the close on the underlying engine is also finished
         db.close();
+        while(!e.isClosed()) {
+            logger.trace("Waiting for the engine to close");
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
 
         try {
-            Path targetPath = getRootPath(newDBName);
-            deleteIfExistsRecursively(targetPath);
-
-            Path srcPath = getRootPath(dbName);
-            if(Files.exists(srcPath)) {
-                Files.move(srcPath, targetPath);
-            }
+            moveDirectory(getRootPath(dbName), getRootPath(newDBName));
         }
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -181,7 +189,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         closeDBRegistry();
         
         try {
-            deleteIfExistsRecursively(getRootPath(dbName));
+            deleteDirectory(getRootPath(dbName), true);
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -282,13 +290,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             map.clear();
         }
     }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String getDatabaseName() {
-        return dbName;
-    }
-    
+
     //private methods of connector class
 
     /**
@@ -351,13 +353,11 @@ public class MapDBConnector extends AbstractDatabaseConnector {
             if(dbType == DBType.PRIMARY_DB) {
                 //main storage
                 Path rootPath = getRootPath(dbName);
-                if(!Files.exists(rootPath)) {
-                    try {
-                        Files.createDirectory(rootPath);
-                    }
-                    catch (IOException ex) {
-                        throw new UncheckedIOException(ex);
-                    }
+                try {
+                    createDirectoryIfNotExists(rootPath);
+                }
+                catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
                 }
 
                 m = DBMaker.newFileDB(new File(rootPath.toFile(), DBType.PRIMARY_DB.toString()) );
@@ -427,15 +427,5 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         }
         dbRegistry.clear();
     }
-    
-    private Path getRootPath(String dbName) {
-        //get the default filepath of the permanet db file
-        String outputFolder = dbConf.getOutputFolder();
 
-        if(outputFolder == null || outputFolder.isEmpty()) {
-            outputFolder = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
-        }
-
-        return Paths.get(outputFolder + File.separator + dbName);
-    }
 }

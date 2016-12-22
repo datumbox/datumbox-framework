@@ -115,19 +115,16 @@ public class CETR {
             this.smoothingAverageRadius = smoothingAverageRadius;
         }
     }
-    
-    private final String dbName;
+
     private final Configuration conf;
     
     /**
      * Constructor for the CETR class. It accepts as arguments the name of the
      * database were the temporary results are stored and the Database Configuration.
-     * 
-     * @param dbName
+     *
      * @param conf 
      */
-    public CETR(String dbName, Configuration conf) {
-        this.dbName = dbName;
+    public CETR(Configuration conf) {
         this.conf = conf;
     }
     

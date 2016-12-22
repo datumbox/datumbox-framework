@@ -41,7 +41,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     private static final String REG_KEY = "reg";
 
-    private TrainableBundle bundle = new TrainableBundle();
+    private final TrainableBundle bundle = new TrainableBundle();
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
@@ -227,9 +227,11 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     @Override
     public void save(String dbName) {
         initBundle();
-        String knowledgeBaseName = createKnowledgeBaseName(dbName);
-        bundle.save(knowledgeBaseName);
         super.save(dbName);
+
+        String separator = knowledgeBase.getConf().getDbConfig().getDBnameSeparator();
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, separator);
+        bundle.save(knowledgeBaseName, separator);
     }
 
     /** {@inheritDoc} */
@@ -256,11 +258,12 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
         String dbName = knowledgeBase.getDbc().getDatabaseName();
+        String separator = conf.getDbConfig().getDBnameSeparator();
 
         if(!bundle.containsKey(REG_KEY)) {
             AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
 
-            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), dbName + "_" + REG_KEY, conf));
+            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), dbName + separator + REG_KEY, conf));
         }
     }
 

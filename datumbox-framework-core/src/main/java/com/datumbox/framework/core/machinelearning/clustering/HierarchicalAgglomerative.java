@@ -378,7 +378,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     private double calculateDistance(Record r1, Record r2) {        
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        double distance = 0.0;
+        double distance;
         TrainingParameters.Distance distanceMethod = trainingParameters.getDistanceMethod();
         if(distanceMethod==TrainingParameters.Distance.EUCLIDIAN) {
             distance = Distance.euclidean(r1.getX(), r2.getX());

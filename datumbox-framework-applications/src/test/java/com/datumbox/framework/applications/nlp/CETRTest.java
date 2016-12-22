@@ -44,8 +44,6 @@ public class CETRTest extends AbstractTest {
          
         Configuration conf = Configuration.getConfiguration();
         
-        String dbName = this.getClass().getSimpleName();
-        
         String text;        
         try {
             List<String> lines = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("datasets/example.com.html").toURI()), StandardCharsets.UTF_8);
@@ -64,7 +62,7 @@ public class CETRTest extends AbstractTest {
         parameters.setNumberOfClusters(2);
         parameters.setAlphaWindowSizeFor2DModel(3);
         parameters.setSmoothingAverageRadius(2);
-        CETR instance = new CETR(dbName, conf);
+        CETR instance = new CETR(conf);
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
         String result = instance.extract(text, parameters);
         assertEquals(expResult, result);

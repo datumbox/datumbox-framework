@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.common.persistentstorage.inmemory;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConfiguration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 
 import java.util.Properties;
@@ -27,45 +27,18 @@ import java.util.Properties;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class InMemoryConfiguration implements DatabaseConfiguration {
+public class InMemoryConfiguration extends AbstractFileDBConfiguration {
 
-    //DB specific properties
-    private String outputFolder = null;
-    
-    /**
-     * Default Constructor.
-     */
-    public InMemoryConfiguration() {
-        
-    }
-    
     /** {@inheritDoc} */
     @Override
-    public DatabaseConnector getConnector(String database) {
-        return new InMemoryConnector(database, this);
+    public DatabaseConnector getConnector(String dbName) {
+        return new InMemoryConnector(dbName, this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        outputFolder = properties.getProperty("dbConfig.InMemoryConfiguration.outputFolder");
+        outputDirectory = properties.getProperty("dbConfig.InMemoryConfiguration.outputDirectory");
     }
-    
-    /**
-     * Getter for the output folder where the InMemory data files are stored.
-     * 
-     * @return 
-     */
-    public String getOutputFolder() {
-        return outputFolder;
-    }
-    
-    /**
-     * Setter for the output folder where the InMemory data files are stored.
-     * 
-     * @param outputFolder 
-     */
-    public void setOutputFolder(String outputFolder) {
-        this.outputFolder = outputFolder;
-    }
+
 }

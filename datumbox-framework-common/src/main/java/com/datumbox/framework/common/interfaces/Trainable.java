@@ -15,10 +15,7 @@
  */
 package com.datumbox.framework.common.interfaces;
 
-import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * This interface is used to mark classes that can be trained. This interface 

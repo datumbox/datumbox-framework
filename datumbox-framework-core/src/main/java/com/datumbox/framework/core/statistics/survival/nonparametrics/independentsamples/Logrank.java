@@ -116,7 +116,6 @@ public class Logrank {
             }
             
             for(Map.Entry<Object, FlatDataCollection> entry : transposeDataCollection.entrySet()) {
-                Object j = entry.getKey();
                 FlatDataCollection flatDataCollection = entry.getValue();
                 
                 for(Object value2 : flatDataCollection) {

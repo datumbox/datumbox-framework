@@ -201,9 +201,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         DatabaseConnector dbc = knowledgeBase.getDbc();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
-        
-        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
-        
+
         //find the featureCounts
         
         logger.debug("Estimating featureCounts");
@@ -242,13 +240,11 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
         logger.debug("buildFeatureStatistics()");
-        TP trainingParameters = knowledgeBase.getTrainingParameters();
         
         //the method below does not only removes the rare features but also
         //first and formost calculates the contents of featureCounts map. 
         removeRareFeatures(data, featureCounts);
-        
-        Map<Object, TypeInference.DataType> columnTypes = data.getXDataTypes();
+
         //now find the classCounts and the featureClassCounts
         logger.debug("Estimating classCounts and featureClassCounts");
         for(Record r : data) {

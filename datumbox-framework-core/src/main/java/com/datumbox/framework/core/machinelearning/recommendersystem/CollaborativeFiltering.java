@@ -217,7 +217,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     private double calculateSimilarity(Record r1, Record r2) {        
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
-        double similarity = 0.0;
+        double similarity;
         TrainingParameters.SimilarityMeasure similarityMethod = trainingParameters.getSimilarityMethod();
         if(similarityMethod==TrainingParameters.SimilarityMeasure.EUCLIDIAN) {
             similarity = Distance.euclidean(r1.getX(), r2.getX());

@@ -114,13 +114,18 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     protected final KnowledgeBase<MP, TP> knowledgeBase;
 
     /**
+     * Flag that indicates whether the trainer has been saved or loaded from disk.
+     */
+    private boolean persisted = false;
+
+    /**
      * Constructor which is called on model initialization before training.
      *
      * @param trainingParameters
      * @param conf
      */
     protected AbstractTrainer(TP trainingParameters, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName("kb_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
+        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getDbConfig().getDBnameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf, trainingParameters);
     }
 
@@ -131,8 +136,9 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param conf
      */
     protected AbstractTrainer(String dbName, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, conf.getDbConfig().getDBnameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf);
+        persisted = true;
     }
     
     /** {@inheritDoc} */
@@ -161,20 +167,34 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /** {@inheritDoc} */
     @Override
     public void save(String dbName) {
-        String knowledgeBaseName = createKnowledgeBaseName(dbName);
+        logger.info("save()");
+
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBnameSeparator());
         knowledgeBase.save(knowledgeBaseName);
+        persisted = true;
     }
 
     /** {@inheritDoc} */
     @Override
     public void delete() {
+        logger.info("delete()");
+
         knowledgeBase.delete();
     }
             
     /** {@inheritDoc} */
     @Override
     public void close() {
-        knowledgeBase.close();
+        logger.info("close()");
+
+        if(persisted) {
+            //if the trainer is persisted in disk, just close the connection
+            knowledgeBase.close();
+        }
+        else {
+            //if not try to delete it in case temporary files remained on disk
+            knowledgeBase.delete();
+        }
     }
     
     /**
@@ -188,9 +208,10 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * Generates a name for the KnowledgeBase.
      *
      * @param dbName
+     * @param separator
      * @return
      */
-    protected final String createKnowledgeBaseName(String dbName) {
-        return dbName + "_" + getClass().getSimpleName();
+    protected final String createKnowledgeBaseName(String dbName, String separator) {
+        return dbName + separator + getClass().getSimpleName();
     }
 }

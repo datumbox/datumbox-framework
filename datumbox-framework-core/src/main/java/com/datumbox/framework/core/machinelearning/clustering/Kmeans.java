@@ -588,7 +588,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Object, Double> featureWeights = modelParameters.getFeatureWeights();
         
-        double distance = 0.0;
+        double distance;
         TrainingParameters.Distance distanceMethod = trainingParameters.getDistanceMethod();
         if(distanceMethod==TrainingParameters.Distance.EUCLIDIAN) {
             distance = Distance.euclideanWeighted(r1.getX(), r2.getX(), featureWeights);

@@ -17,7 +17,6 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -44,7 +43,7 @@ import java.util.Set;
  */
 public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.AbstractModelParameters, TP extends AbstractBoostingBagging.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> {
 
-    private TrainableBundle bundle = new TrainableBundle();
+    private final TrainableBundle bundle = new TrainableBundle();
 
     private static final String DB_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
@@ -205,7 +204,6 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     @Override
     protected void _fit(Dataframe trainingData) {
         Configuration conf = knowledgeBase.getConf();
-        DatabaseConnector dbc = knowledgeBase.getDbc();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         MP modelParameters = knowledgeBase.getModelParameters();
 
@@ -318,9 +316,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     @Override
     public void save(String dbName) {
         initBundle();
-        String knowledgeBaseName = createKnowledgeBaseName(dbName);
-        bundle.save(knowledgeBaseName);
         super.save(dbName);
+
+        String separator = knowledgeBase.getConf().getDbConfig().getDBnameSeparator();
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, separator);
+        bundle.save(knowledgeBaseName, separator);
     }
 
     /** {@inheritDoc} */
@@ -348,6 +348,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         DatabaseConnector dbc = knowledgeBase.getDbc();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
+        String separator = conf.getDbConfig().getDBnameSeparator();
 
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
@@ -355,7 +356,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int i=0;i<totalWeakClassifiers;i++) {
             String key = DB_INDICATOR + i;
             if (!bundle.containsKey(key)) {
-                bundle.put(key, MLBuilder.load(weakClassifierClass, dbc.getDatabaseName() + "_" + key, conf));
+                bundle.put(key, MLBuilder.load(weakClassifierClass, dbc.getDatabaseName() + separator + key, conf));
             }
         }
     }

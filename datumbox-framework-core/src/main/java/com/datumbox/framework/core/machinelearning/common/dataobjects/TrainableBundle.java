@@ -87,17 +87,24 @@ public class TrainableBundle implements AutoCloseable {
         }
     }
 
-    /** {@inheritDoc} */
-    public void save(String dbName) {
+    /**
+     * Saves all the trainables in the bundle.
+     *
+     * @param dbName
+     * @param separator
+     */
+    public void save(String dbName, String separator) {
         for(Map.Entry<String, Trainable> e : bundle.entrySet()) {
             Trainable t = e.getValue();
             if(t != null) {
-                t.save(dbName + "_" + e.getKey());
+                t.save(dbName + separator + e.getKey());
             }
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Deletes all the trainables in the bundle.
+     */
     public void delete() {
         for(Trainable t : bundle.values()) {
             if(t != null) {

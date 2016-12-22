@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161221
+Version 0.8.0-SNAPSHOT - Build 20161222
 ---------------------------------------
 
 - Improved Validation:
@@ -9,9 +9,9 @@ Version 0.8.0-SNAPSHOT - Build 20161221
     - Removed the kFold validation from Algorithms. Now we offer a new validator mechanism.
     - A single KnowledgeBase implementation is now used.
 - Removed the unnecessary n & d model parameters from all models.
-- Random unseeded filenames are now produced using RandomGenerator.getThreadLocalRandomUnseeded().
+- Random unseeded filenames are now produced using RandomGenerator.getRandomUnseeded().
 - Removing the need to call KnowledgeBase.init() in any predict/transform method.
-- Improved DatabaseConnector: existsObject method, InMemory now stores objects independently, MapDB stores all files in folder.
+- Improved DatabaseConnector: existsObject method, InMemory now stores objects independently, MapDB stores all files in directory.
 - The training parameters are now provided on the constructor of the algorithms not with a setter.
 - TextClassifier inherits from Modeler.
 - Removed all unnecessary passing of class objects from Stepwise Regression, Wrappers and Ensumble learning classes.
@@ -21,8 +21,16 @@ Version 0.8.0-SNAPSHOT - Build 20161221
 - Created a TrainableBundle to keep track of the Trainables of Modeler, AbstractBoostingBagging and StepwiseRegression.
 - Removed automatic save after fit, now save() must be called.
 - AbstractTrainer no longer stores a local copy of dbName. The save method accepts a dbName.
-- The DatabaseConfiguration.getDBnameSeparator() method was removed.
 - The rename() is created in DatabaseConnectors and it's used by KnowledgeBase to saveAs the models.
+- Restored the DatabaseConfiguration.getDBnameSeparator() method.
+- Changed the RandomGenerator.getThreadLocalRandomUnseeded() to ensure we get different random numbers across threads.
+- CERT no longer received any dbName parameter as we don't store anything on disk.
+- Removed underscores from all temporary names in the framework.
+- When we close() a Trainer that has not be loaded or saved the knowledgeBase will be deleted to remove any temporary files. 
+- The models of a specific dbName are added in a directory structure.
+- Created an other level of abstraction for File-based Database Connectors and Configurations.
+- Rename Folder to Directory on comments, methods, vars and config files.
+- Empty parent directories of the algorithm output are automatically cleaned up.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

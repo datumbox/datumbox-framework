@@ -68,7 +68,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.rowDimension = rowDimension;
         this.columnDimension = columnDimension;
 
-        String dbName = "mrm_" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
+        String dbName = "mrm" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
         dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
         entries = dbc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }

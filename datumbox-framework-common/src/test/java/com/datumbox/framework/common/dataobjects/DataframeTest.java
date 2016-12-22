@@ -217,8 +217,7 @@ public class DataframeTest extends AbstractTest {
         logger.info("extractColumnValuesByY");
         
         Configuration conf = Configuration.getConfiguration();
-        
-        Object column = "height";
+
         Dataframe dataset = new Dataframe(conf);
         
         AssociativeArray xData1 = new AssociativeArray();

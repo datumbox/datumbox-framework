@@ -61,13 +61,13 @@ public class ClassificationMetrics extends AbstractMetrics {
     private double macroRecall = 0.0;
     private double macroF1 = 0.0;
 
-    private Map<Object, Double> microPrecision = new HashMap<>(); //this is small. Size equal to 4*class numbers
+    private final Map<Object, Double> microPrecision = new HashMap<>(); //this is small. Size equal to 4*class numbers
 
-    private Map<Object, Double> microRecall = new HashMap<>(); //this is small. Size equal to 4*class numbers
+    private final Map<Object, Double> microRecall = new HashMap<>(); //this is small. Size equal to 4*class numbers
 
-    private Map<Object, Double> microF1 = new HashMap<>(); //this is small. Size equal to 4*class numbers
+    private final Map<Object, Double> microF1 = new HashMap<>(); //this is small. Size equal to 4*class numbers
 
-    private Map<List<Object>, Double> contingencyTable = new HashMap<>(); //this is small. Size equal to 4*class numbers
+    private final Map<List<Object>, Double> contingencyTable = new HashMap<>(); //this is small. Size equal to 4*class numbers
 
     /**
      * Getter for Accuracy.

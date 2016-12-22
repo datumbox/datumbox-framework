@@ -1,8 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Can we add all the files of a model in a single folder.
-- Can we make the two constructors of the Trainers to call a common constructor to eliminate duplicate code?
+- Save and load method for Dataset.
 
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
 - Write a ShuffleSplitValidator class similar to KFold. Perhaps we need a single Validator class and separate Splitters.

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConfiguration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 
 import java.util.Properties;
@@ -28,55 +28,27 @@ import java.util.Properties;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConfiguration implements DatabaseConfiguration {
+public class MapDBConfiguration extends AbstractFileDBConfiguration {
 
-    //DB specific properties
-    private String outputFolder = null;
-    
     private int cacheSize = 10000;
     
     private boolean compressed = true;
 
     private boolean hybridized = true;
-    
-    /**
-     * Default Constructor.
-     */
-    public MapDBConfiguration() {
-        
-    }
-    
+
     /** {@inheritDoc} */
     @Override
-    public DatabaseConnector getConnector(String database) {
-        return new MapDBConnector(database, this);
+    public DatabaseConnector getConnector(String dbName) {
+        return new MapDBConnector(dbName, this);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        outputFolder = properties.getProperty("dbConfig.MapDBConfiguration.outputFolder");
+        outputDirectory = properties.getProperty("dbConfig.MapDBConfiguration.outputDirectory");
         cacheSize = Integer.parseInt(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
         compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
         hybridized = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.hybridized"));
-    }
-
-    /**
-     * Getter for the output folder where the MapDB data files are stored.
-     * 
-     * @return 
-     */
-    public String getOutputFolder() {
-        return outputFolder;
-    }
-
-    /**
-     * Setter for the output folder where the MapDB data files are stored.
-     * 
-     * @param outputFolder 
-     */
-    public void setOutputFolder(String outputFolder) {
-        this.outputFolder = outputFolder;
     }
     
     /**
