@@ -32,7 +32,7 @@ public interface DatabaseConfiguration extends Configurable {
      *
      * @return
      */
-    public String getDBnameSeparator();
+    public String getDBNameSeparator();
 
     /**
      * Initializes and returns a connection to the Database.

@@ -15,6 +15,7 @@
  */
 package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
+import com.datumbox.framework.common.interfaces.Savable;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
@@ -27,7 +28,21 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TrainableBundle implements AutoCloseable {
+public class TrainableBundle implements Savable {
+
+    /**
+     * The database name separator used in the underlying Trainables.
+     */
+    private final String dbNameSeparator;
+
+    /**
+     * Public constructor.
+     *
+     * @param dbNameSeparator
+     */
+    public TrainableBundle(String dbNameSeparator) {
+        this.dbNameSeparator = dbNameSeparator;
+    }
 
     /**
      * Keeps a reference of all the wrapped algorithms.
@@ -87,24 +102,19 @@ public class TrainableBundle implements AutoCloseable {
         }
     }
 
-    /**
-     * Saves all the trainables in the bundle.
-     *
-     * @param dbName
-     * @param separator
-     */
-    public void save(String dbName, String separator) {
+    /** {@inheritDoc} */
+    @Override
+    public void save(String dbName) {
         for(Map.Entry<String, Trainable> e : bundle.entrySet()) {
             Trainable t = e.getValue();
             if(t != null) {
-                t.save(dbName + separator + e.getKey());
+                t.save(dbName + dbNameSeparator + e.getKey());
             }
         }
     }
 
-    /**
-     * Deletes all the trainables in the bundle.
-     */
+    /** {@inheritDoc} */
+    @Override
     public void delete() {
         for(Trainable t : bundle.values()) {
             if(t != null) {

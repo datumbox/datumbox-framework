@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging.AbstractModelParameters, TP extends AbstractBoostingBagging.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> {
 
-    private final TrainableBundle bundle = new TrainableBundle();
+    private final TrainableBundle bundle;
 
     private static final String DB_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
@@ -135,6 +135,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
      */
     protected AbstractBoostingBagging(TP trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
+        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
     }
 
     /**
@@ -144,6 +145,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
      */
     protected AbstractBoostingBagging(String dbName, Configuration conf) {
         super(dbName, conf);
+        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
     }
     
     /** {@inheritDoc} */
@@ -318,9 +320,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         initBundle();
         super.save(dbName);
 
-        String separator = knowledgeBase.getConf().getDbConfig().getDBnameSeparator();
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, separator);
-        bundle.save(knowledgeBaseName, separator);
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        bundle.save(knowledgeBaseName);
     }
 
     /** {@inheritDoc} */
@@ -348,7 +349,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         DatabaseConnector dbc = knowledgeBase.getDbc();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
-        String separator = conf.getDbConfig().getDBnameSeparator();
+        String separator = conf.getDbConfig().getDBNameSeparator();
 
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();

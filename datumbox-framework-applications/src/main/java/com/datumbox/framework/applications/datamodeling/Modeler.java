@@ -39,7 +39,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
     private static final String FS_KEY = "fs";
     private static final String ML_KEY = "ml";
 
-    private final TrainableBundle bundle = new TrainableBundle();
+    private final TrainableBundle bundle;
 
     /**
      * It contains all the Model Parameters which are learned during the training.
@@ -136,6 +136,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
      */
     protected Modeler(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
+        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
     }
 
     /**
@@ -145,6 +146,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
      */
     protected Modeler(String dbName, Configuration conf) {
         super(dbName, conf);
+        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
     }
 
 
@@ -242,9 +244,8 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         initBundle();
         super.save(dbName);
 
-        String separator = knowledgeBase.getConf().getDbConfig().getDBnameSeparator();
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, separator);
-        bundle.save(knowledgeBaseName, separator);
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        bundle.save(knowledgeBaseName);
     }
 
     /** {@inheritDoc} */
@@ -271,7 +272,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
         String dbName = knowledgeBase.getDbc().getDatabaseName();
-        String separator = conf.getDbConfig().getDBnameSeparator();
+        String separator = conf.getDbConfig().getDBNameSeparator();
 
         if(!bundle.containsKey(DT_KEY)) {
             AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();

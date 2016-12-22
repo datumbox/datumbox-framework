@@ -33,7 +33,7 @@ public abstract class AbstractFileDBConfiguration implements DatabaseConfigurati
 
     /** {@inheritDoc} */
     @Override
-    public String getDBnameSeparator() {
+    public String getDBNameSeparator() {
         return File.separator;
     }
 

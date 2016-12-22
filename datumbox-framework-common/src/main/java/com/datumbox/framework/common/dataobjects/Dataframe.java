@@ -21,6 +21,7 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.concurrency.ThreadMethods;
 import com.datumbox.framework.common.interfaces.Copyable;
 import com.datumbox.framework.common.interfaces.Extractable;
+import com.datumbox.framework.common.interfaces.Savable;
 import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
@@ -48,7 +49,7 @@ import java.util.stream.Stream;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Dataframe implements Collection<Record>, Copyable<Dataframe>, AutoCloseable {
+public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savable {
 
     /**
      * Internal name of the response variable.

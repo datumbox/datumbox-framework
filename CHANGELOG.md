@@ -32,6 +32,7 @@ Version 0.8.0-SNAPSHOT - Build 20161222
 - Rename Folder to Directory on comments, methods, vars and config files.
 - Empty parent directories of the algorithm output are automatically cleaned up.
 - The Dataset can now be saved and loaded.
+- All objects that save, delete and close implement the savable interfrace.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

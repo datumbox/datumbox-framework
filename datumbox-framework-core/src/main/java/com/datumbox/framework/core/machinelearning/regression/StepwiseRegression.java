@@ -41,7 +41,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     private static final String REG_KEY = "reg";
 
-    private final TrainableBundle bundle = new TrainableBundle();
+    private final TrainableBundle bundle;
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
@@ -142,6 +142,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
      */
     protected StepwiseRegression(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
+        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
     }
 
     /**
@@ -151,6 +152,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
      */
     protected StepwiseRegression(String dbName, Configuration conf) {
         super(dbName, conf);
+        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
     }
 
     /** {@inheritDoc} */
@@ -229,9 +231,8 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         initBundle();
         super.save(dbName);
 
-        String separator = knowledgeBase.getConf().getDbConfig().getDBnameSeparator();
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, separator);
-        bundle.save(knowledgeBaseName, separator);
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        bundle.save(knowledgeBaseName);
     }
 
     /** {@inheritDoc} */
@@ -258,7 +259,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
         String dbName = knowledgeBase.getDbc().getDatabaseName();
-        String separator = conf.getDbConfig().getDBnameSeparator();
+        String separator = conf.getDbConfig().getDBNameSeparator();
 
         if(!bundle.containsKey(REG_KEY)) {
             AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();

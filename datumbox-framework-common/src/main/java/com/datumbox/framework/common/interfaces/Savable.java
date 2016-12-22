@@ -15,37 +15,23 @@
  */
 package com.datumbox.framework.common.interfaces;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
-
 /**
- * This interface is used to mark classes that can be trained. This interface 
- * used for classes that perform training/analysis and learn parameters. 
- * 
+ * The Savable interface is implemented by all the objects that can be persisted.
+ *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
- * @param <MP>
- * @param <TP>
  */
-public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends Savable {
+public interface Savable extends AutoCloseable {
 
     /**
-     * Returns the model parameters that were estimated after training.
-     * 
-     * @return
+     * Saves the database of the object.
+     *
+     * @param dbName
      */
-    public MP getModelParameters();
+    public void save(String dbName);
 
     /**
-     * It returns the training parameters that configure the algorithm.
-     * 
-     * @return 
+     * Deletes the database of the object.
      */
-    public TP getTrainingParameters();
+    public void delete();
 
-    /**
-     * Trains a model using the provided training parameters and data.
-     * 
-     * @param trainingData
-     */
-    public void fit(Dataframe trainingData);
-    
 }

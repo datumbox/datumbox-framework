@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.interfaces.Savable;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
@@ -28,7 +29,7 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingPar
  * @param <MP>
  * @param <TP>
  */
-public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements AutoCloseable {
+public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements Savable {
 
     /**
      * The database configuration of the Permanent Storage.

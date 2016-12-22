@@ -25,8 +25,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 /**
  * Parent class of all File-based Database Connectors.
  *
- * @param <DC>
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * @param <DC>
  */
 public abstract class AbstractFileDBConnector<DC extends AbstractFileDBConfiguration> extends AbstractDatabaseConnector<DC> {
 

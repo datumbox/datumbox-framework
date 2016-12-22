@@ -85,7 +85,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param conf
      */
     protected AbstractTrainer(TP trainingParameters, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getDbConfig().getDBnameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getDbConfig().getDBNameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf, trainingParameters);
         persisted = false;
     }
@@ -97,7 +97,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param conf
      */
     protected AbstractTrainer(String dbName, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, conf.getDbConfig().getDBnameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, conf.getDbConfig().getDBNameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf);
         persisted = true;
     }
@@ -130,7 +130,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     public void save(String dbName) {
         logger.info("save()");
 
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBnameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
         knowledgeBase.save(knowledgeBaseName);
         persisted = true;
     }
