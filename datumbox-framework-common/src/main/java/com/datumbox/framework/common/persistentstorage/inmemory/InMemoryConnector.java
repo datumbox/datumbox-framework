@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class InMemoryConnector extends AbstractDatabaseConnector {
         
-    private final String dbName;
+    private String dbName;
     private final InMemoryConfiguration dbConf;
     
     /** 
@@ -59,13 +59,11 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
 
     /** {@inheritDoc} */
     @Override
-    public boolean closeAndRename(String newDBName) {
+    public boolean rename(String newDBName) {
         assertConnectionOpen();
         if(dbName.equals(newDBName)) {
             return false;
         }
-
-        close();
 
         try {
             Path targetPath = getRootPath(newDBName);
@@ -81,6 +79,7 @@ public class InMemoryConnector extends AbstractDatabaseConnector {
         }
 
         logger.trace("Renamed db {} to {}", dbName, newDBName);
+        dbName = newDBName;
         return true;
     }
 

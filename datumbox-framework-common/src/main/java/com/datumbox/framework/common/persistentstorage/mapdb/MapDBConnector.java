@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class MapDBConnector extends AbstractDatabaseConnector {
     
-    private final String dbName;
+    private String dbName;
     private final MapDBConfiguration dbConf;
     
     /**
@@ -90,13 +90,15 @@ public class MapDBConnector extends AbstractDatabaseConnector {
 
     /** {@inheritDoc} */
     @Override
-    public boolean closeAndRename(String newDBName) {
+    public boolean rename(String newDBName) {
         assertConnectionOpen();
         if(dbName.equals(newDBName)) {
             return false;
         }
 
-        close();
+        DB db = openDB(DBType.PRIMARY_DB);
+        db.commit();
+        db.close();
 
         try {
             Path targetPath = getRootPath(newDBName);
@@ -112,6 +114,7 @@ public class MapDBConnector extends AbstractDatabaseConnector {
         }
 
         logger.trace("Renamed db {} to {}", dbName, newDBName);
+        dbName = newDBName;
         return true;
     }
 

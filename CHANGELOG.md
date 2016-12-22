@@ -22,7 +22,7 @@ Version 0.8.0-SNAPSHOT - Build 20161221
 - Removed automatic save after fit, now save() must be called.
 - AbstractTrainer no longer stores a local copy of dbName. The save method accepts a dbName.
 - The DatabaseConfiguration.getDBnameSeparator() method was removed.
-- The closeAndRename() is created in DatabaseConnectors and it's used by KnowledgeBase to saveAs the models.
+- The rename() is created in DatabaseConnectors and it's used by KnowledgeBase to saveAs the models.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

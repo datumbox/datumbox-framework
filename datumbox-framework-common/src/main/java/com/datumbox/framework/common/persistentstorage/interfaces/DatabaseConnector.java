@@ -70,12 +70,12 @@ public interface DatabaseConnector extends AutoCloseable {
     }
 
     /**
-     * Closes and renames the database. Returns true if the operation was completed and false if it was not necessary.
+     * Renames the database. Returns true if the operation was completed and false if it was not necessary.
      *
      * @param newDBName
      * @return
      */
-    public boolean closeAndRename(String newDBName);
+    public boolean rename(String newDBName);
     
     /**
      * Checks if the connector is closed.

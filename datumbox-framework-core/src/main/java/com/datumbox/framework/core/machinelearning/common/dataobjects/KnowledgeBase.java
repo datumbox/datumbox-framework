@@ -17,12 +17,8 @@ package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -42,7 +38,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * The connector to the Permanent Storage.
      */
-    private DatabaseConnector dbc;
+    private final DatabaseConnector dbc;
 
     /**
      * The ModelParameters object of the algorithm.
@@ -128,13 +124,10 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
         dbc.saveObject("modelParameters", modelParameters);
         dbc.saveObject("trainingParameters", trainingParameters);
 
-        //close connection and rename the database
-        dbc.closeAndRename(dbName);
+        //rename the database
+        dbc.rename(dbName);
 
-        //open new connection
-        dbc = this.conf.getDbConfig().getConnector(dbName);
-
-        //reload the model parameters
+        //reload the model parameters, necessary for the maps to point to the new location
         modelParameters = (MP) dbc.loadObject("modelParameters", ModelParameters.class);
     }
 
