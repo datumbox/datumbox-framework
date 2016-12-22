@@ -256,7 +256,7 @@ public class CETR {
         
         instance.fit(dataset);
         instance.predict(dataset);
-        instance.close();
+        instance.delete();
     }
     
     private List<Double> calculateTTRlist(List<String> rows) {

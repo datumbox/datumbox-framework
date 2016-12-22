@@ -273,7 +273,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
 
-        mlregressor.close();
+        mlregressor.delete();
         
         return pvalues;
     }

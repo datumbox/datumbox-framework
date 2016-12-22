@@ -255,7 +255,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             
             Status status = updateObservationAndClassifierWeights(trainingData, observationWeights);
             if(status == Status.IGNORE) {
-                mlclassifier.close();
+                mlclassifier.delete();
             }
             else {
                 bundle.put(DB_INDICATOR + i, mlclassifier);
