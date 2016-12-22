@@ -31,6 +31,7 @@ Version 0.8.0-SNAPSHOT - Build 20161222
 - Created an other level of abstraction for File-based Database Connectors and Configurations.
 - Rename Folder to Directory on comments, methods, vars and config files.
 - Empty parent directories of the algorithm output are automatically cleaned up.
+- The Dataset can now be saved and loaded.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

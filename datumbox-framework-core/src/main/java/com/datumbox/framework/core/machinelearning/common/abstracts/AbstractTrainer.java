@@ -18,18 +18,14 @@ package com.datumbox.framework.core.machinelearning.common.abstracts;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
+import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.utilities.RandomGenerator;
-import com.datumbox.framework.common.utilities.ReflectionMethods;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.util.LinkedList;
 
 /**
  * Base class for every Trainable Algorithm of the Framework. This includes Machine Learning
@@ -44,54 +40,18 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * Base class for every ModelParameter class in the framework. It automatically
      * initializes all the BidMap fields by using reflection.
-     * 
-     * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
      */
-    public static abstract class AbstractModelParameters implements ModelParameters {
+    public static abstract class AbstractModelParameters extends BigMapHolder implements ModelParameters {
 
         /**
-         * Protected constructor which accepts as argument the DatabaseConnector.
+         * Constructor of the ModelParameters that accepts a Database Connector.
          * 
          * @param dbc 
          */
-        public AbstractModelParameters(DatabaseConnector dbc) {
-            //Initialize all the BigMap fields
-            bigMapInitializer(dbc);
+        protected AbstractModelParameters(DatabaseConnector dbc) {
+            super(dbc);
         }
 
-        /**
-         * Initializes all the fields of the class which are marked with the BigMap
-         * annotation automatically.
-         * 
-         * @param dbc 
-         */
-        private void bigMapInitializer(DatabaseConnector dbc) {
-            //get all the fields from all the inherited classes
-            for(Field field : ReflectionMethods.getAllFields(new LinkedList<>(), this.getClass())){
-                //if the field is annotated with BigMap
-                if (field.isAnnotationPresent(BigMap.class)) {
-                    initializeBigMapField(dbc, field);
-                }
-            }
-        }
-
-        /**
-         * Initializes a field which is marked as BigMap.
-         *
-         * @param dbc
-         * @param field
-         */
-        private void initializeBigMapField(DatabaseConnector dbc, Field field) {
-            field.setAccessible(true);
-
-            try {
-                BigMap a = field.getAnnotation(BigMap.class);
-                field.set(this, dbc.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
-            }
-            catch (IllegalArgumentException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
     }
 
     /**
@@ -116,7 +76,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * Flag that indicates whether the trainer has been saved or loaded from disk.
      */
-    private boolean persisted = false;
+    private boolean persisted;
 
     /**
      * Constructor which is called on model initialization before training.
@@ -127,6 +87,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     protected AbstractTrainer(TP trainingParameters, Configuration conf) {
         String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getDbConfig().getDBnameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf, trainingParameters);
+        persisted = false;
     }
 
     /**

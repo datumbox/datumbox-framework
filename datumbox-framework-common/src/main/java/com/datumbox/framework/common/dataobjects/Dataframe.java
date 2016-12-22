@@ -21,6 +21,8 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.concurrency.ThreadMethods;
 import com.datumbox.framework.common.interfaces.Copyable;
 import com.datumbox.framework.common.interfaces.Extractable;
+import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
+import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
 import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
@@ -46,7 +48,7 @@ import java.util.stream.Stream;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
+public class Dataframe implements Collection<Record>, Copyable<Dataframe>, AutoCloseable {
 
     /**
      * Internal name of the response variable.
@@ -59,8 +61,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     public static final String COLUMN_NAME_CONSTANT = "~CONSTANT";
 
     /**
-     * The Builder is a utility class which can help you build Dataframe from
-     Text files and CSV files.
+     * The Builder is a utility class which can help you build Dataframe from Text files, CSV files or load it from disk.
      */
     public static class Builder {
 
@@ -205,14 +206,55 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             return dataset;
         }
 
+        /**
+         * It loads a dataframe that has already been persisted.
+         *
+         * @param dbName
+         * @param conf
+         * @return
+         */
+        public static Dataframe load(String dbName, Configuration conf) {
+            return new Dataframe(dbName, conf);
+        }
+
     }
 
-    //The following variables store the data of the object
-    private TypeInference.DataType yDataType = null;
-    private Map<Object, TypeInference.DataType> xDataTypes;
-    private Map<Integer, Record> records;
-    private AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
+    /**
+     * This class stores the data of the Dataframe.
+     */
+    private static class Data extends BigMapHolder {
+        private TypeInference.DataType yDataType = null;
+        private AtomicInteger atomicNextAvailableRecordId = new AtomicInteger();
 
+        @BigMap(keyClass=Object.class, valueClass=TypeInference.DataType.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        private Map<Object, TypeInference.DataType> xDataTypes;
+
+        @BigMap(keyClass=Integer.class, valueClass=Record.class, mapType=MapType.TREEMAP, storageHint=StorageHint.IN_DISK, concurrent=true)
+        private Map<Integer, Record> records;
+
+        /**
+         * Initializes the state of the Data object.
+         *
+         * @param dbc
+         */
+        private Data(DatabaseConnector dbc) {
+            super(dbc);
+        }
+    }
+
+    /**
+     * Contains all the data of the dataframe.
+     */
+    private Data data;
+
+    /**
+     * Flag that indicates whether the trainer has been saved or loaded from disk.
+     */
+    private boolean persisted;
+
+    /**
+     * The connection with the database.
+     */
     private final DatabaseConnector dbc;
 
     /**
@@ -234,16 +276,26 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Dataframe(Configuration conf) {
         this.conf = conf;
-
-        String dbName = "dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
-        dbc = this.conf.getDbConfig().getConnector(dbName);
-
-        records = dbc.getBigMap("tmp_records", Integer.class, Record.class, MapType.TREEMAP, StorageHint.IN_DISK, true, true);
-
-        yDataType = null;
-        xDataTypes = dbc.getBigMap("tmp_xDataTypes", Object.class, TypeInference.DataType.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-
+        dbc = this.conf.getDbConfig().getConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
         streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
+
+        data = new Data(dbc);
+        persisted = false;
+    }
+
+    /**
+     * Private constructor used by the Builder inner static class.
+     *
+     * @param dbName
+     * @param conf
+     */
+    private Dataframe(String dbName, Configuration conf) {
+        this.conf = conf;
+        dbc = this.conf.getDbConfig().getConnector(dbName);
+        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
+
+        data = dbc.loadObject("data", Data.class);
+        persisted = true;
     }
 
     /**
@@ -255,8 +307,68 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     private Dataframe(Configuration conf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
         this(conf);
-        this.yDataType = yDataType;
-        this.xDataTypes.putAll(xDataTypes);
+        this.data.yDataType = yDataType;
+        this.data.xDataTypes.putAll(xDataTypes);
+    }
+
+
+    //Storage Methods
+
+    /**
+     * Saves the Dataframe to disk.
+     *
+     * @param dbName
+     */
+    public void save(String dbName) {
+        //store the objects on database
+        dbc.saveObject("data", data);
+
+        //rename the database
+        dbc.rename(dbName);
+
+        //reload the data of the object
+        data = dbc.loadObject("data", Data.class);
+
+        //mark it as persisted
+        persisted = true;
+    }
+
+    /**
+     * Deletes the Dataframe and removes all internal variables. Once you delete a
+     * dataset, the instance can no longer be used.
+     */
+    public void delete() {
+        dbc.clear();
+        _close();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        if(persisted) {
+            //if the dataset is persisted in disk, just close the connection
+            _close();
+        }
+        else {
+            //if not try to delete it in case temporary files remained on disk
+            delete();
+        }
+    }
+
+    /**
+     * Closes the connection with the database.
+     */
+    private void _close() {
+        try {
+            dbc.close();
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        finally {
+            //Ensures that the Dataframe can't be used after _close() is called.
+            data = null;
+        }
     }
 
 
@@ -269,7 +381,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     @Override
     public int size() {
-        return records.size();
+        return data.records.size();
     }
 
     /**
@@ -279,7 +391,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     @Override
     public boolean isEmpty() {
-        return records.isEmpty();
+        return data.records.isEmpty();
     }
 
     /**
@@ -288,10 +400,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     @Override
     public void clear() {
-        yDataType = null;
-        atomicNextAvailableRecordId.set(0);
-        xDataTypes.clear();
-        records.clear();
+        data.yDataType = null;
+        data.atomicNextAvailableRecordId.set(0);
+        data.xDataTypes.clear();
+        data.records.clear();
     }
 
     /**
@@ -315,7 +427,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     @Override
     public boolean contains(Object o) {
-        return records.containsValue((Record)o);
+        return data.records.containsValue((Record)o);
     }
 
     /** {@inheritDoc} */
@@ -330,7 +442,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     /** {@inheritDoc} */
     @Override
     public boolean containsAll(Collection<?> c) {
-        return records.values().containsAll(c);
+        return data.records.values().containsAll(c);
     }
 
     /** {@inheritDoc} */
@@ -448,7 +560,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return
      */
     public Record remove(Integer id) {
-        return records.remove(id);
+        return data.records.remove(id);
     }
 
     /**
@@ -480,7 +592,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return
      */
     public Record get(Integer id) {
-        return records.get(id);
+        return data.records.get(id);
     }
 
     /**
@@ -522,7 +634,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return
      */
     public int xColumnSize() {
-        return xDataTypes.size();
+        return data.xDataTypes.size();
     }
 
     /**
@@ -531,7 +643,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return
      */
     public TypeInference.DataType getYDataType() {
-        return yDataType;
+        return data.yDataType;
     }
 
     /**
@@ -540,7 +652,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return
      */
     public Map<Object, TypeInference.DataType> getXDataTypes() {
-        return Collections.unmodifiableMap(xDataTypes);
+        return Collections.unmodifiableMap(data.xDataTypes);
     }
 
     /**
@@ -583,14 +695,14 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @param columnSet
      */
     public void dropXColumns(Set<Object> columnSet) {
-        columnSet.retainAll(xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataframe
+        columnSet.retainAll(data.xDataTypes.keySet()); //keep only those columns that are already known to the Meta data of the Dataframe
 
         if(columnSet.isEmpty()) {
             return;
         }
 
         //remove all the columns from the Meta data
-        xDataTypes.keySet().removeAll(columnSet);
+        data.xDataTypes.keySet().removeAll(columnSet);
 
         streamExecutor.forEach(StreamMethods.stream(entries(), true), e -> {
             Integer rId = e.getKey();
@@ -631,8 +743,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * It forces the recalculation of Meta data using the Records of the dataset.
      */
     public void recalculateMeta() {
-        yDataType = null;
-        xDataTypes.clear();
+        data.yDataType = null;
+        data.xDataTypes.clear();
         for(Record r : values()) {
             updateMeta(r);
         }
@@ -652,34 +764,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
     }
 
     /**
-     * Deletes the Dataframe and removes all internal variables. Once you delete a
-     * dataset, the instance can no longer be used.
-     */
-    public void delete() {
-        dbc.dropBigMap("tmp_records", records);
-        dbc.dropBigMap("tmp_xDataTypes", xDataTypes);
-        dbc.clear();
-        try {
-            dbc.close();
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
-        //Ensures that the Dataframe can't be used after delete() is called.
-        yDataType = null;
-        xDataTypes = null;
-        records = null;
-    }
-
-    /**
      * Returns a read-only Iterable on the keys and Records of the Dataframe.
      *
      * @return
      */
     public Iterable<Map.Entry<Integer, Record>> entries() {
         return () -> new Iterator<Map.Entry<Integer, Record>>() {
-            private final Iterator<Map.Entry<Integer, Record>> it = records.entrySet().iterator();
+            private final Iterator<Map.Entry<Integer, Record>> it = data.records.entrySet().iterator();
 
             /** {@inheritDoc} */
             @Override
@@ -708,7 +799,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Iterable<Integer> index() {
         return () -> new Iterator<Integer>() {
-            private final Iterator<Integer> it = records.keySet().iterator();
+            private final Iterator<Integer> it = data.records.keySet().iterator();
 
             /** {@inheritDoc} */
             @Override
@@ -737,7 +828,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Iterable<Record> values() {
         return () -> new Iterator<Record>(){
-            private final Iterator<Record> it = records.values().iterator();
+            private final Iterator<Record> it = data.records.values().iterator();
 
             /** {@inheritDoc} */
             @Override
@@ -774,9 +865,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      */
     public Record _unsafe_set(Integer rId, Record r) {
         //move ahead the next id
-        atomicNextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
+        data.atomicNextAvailableRecordId.updateAndGet(x -> (x<rId)?Math.max(x+1,rId+1):x);
 
-        return records.put(rId, r);
+        return data.records.put(rId, r);
     }
 
     /**
@@ -787,8 +878,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
      * @return
      */
     private Integer _unsafe_add(Record r) {
-        Integer newId = atomicNextAvailableRecordId.getAndIncrement();
-        records.put(newId, r);
+        Integer newId = data.atomicNextAvailableRecordId.getAndIncrement();
+        data.records.put(newId, r);
 
         return newId;
     }
@@ -805,14 +896,14 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe> {
             Object value = entry.getValue();
 
             if(value!=null) {
-                xDataTypes.putIfAbsent(column, TypeInference.getDataType(value));
+                data.xDataTypes.putIfAbsent(column, TypeInference.getDataType(value));
             }
         }
 
-        if(yDataType == null) {
+        if(data.yDataType == null) {
             Object value = r.getY();
             if(value!=null) {
-                yDataType = TypeInference.getDataType(r.getY());
+                data.yDataType = TypeInference.getDataType(r.getY());
             }
         }
     }

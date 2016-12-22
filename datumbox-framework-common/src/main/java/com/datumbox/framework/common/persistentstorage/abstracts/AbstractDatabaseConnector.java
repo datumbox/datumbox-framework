@@ -126,7 +126,7 @@ public abstract class AbstractDatabaseConnector<DC extends DatabaseConfiguration
 
                 try {
                     Object value = field.get(serializableObject);
-                    if(!Serializable.class.isAssignableFrom(value.getClass())) { //if the field is annotated with BigMap AND the value is not serializable
+                    if(!isSerializableBigMap(value)) { //if the field is annotated with BigMap AND the value is not serializable
                         //extract the reference to the object and put it in the map.
                         objReferences.put(field.getName(), value);
                         //then replace the reference with null to avoid serialization.
@@ -140,6 +140,30 @@ public abstract class AbstractDatabaseConnector<DC extends DatabaseConfiguration
         }
 
         return objReferences;
+    }
+
+    private boolean isSerializableBigMap(Object value) {
+        //Check if the class is not serializable directly
+        if(!Serializable.class.isAssignableFrom(value.getClass())) {
+            return false;
+        }
+
+        //Also check that we are not dealing with a SynchronizedMap that has a non-serializable map inside.
+        if(value.getClass().getCanonicalName().equals("java.util.Collections.SynchronizedMap")) {
+            try {
+                Field field = value.getClass().getDeclaredField("m");
+                field.setAccessible(true);
+                if(!Serializable.class.isAssignableFrom(field.get(value).getClass())) {
+                    return false;
+                }
+            }
+            catch (IllegalAccessException | NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+
+        return true;
     }
 
     /**
@@ -163,7 +187,7 @@ public abstract class AbstractDatabaseConnector<DC extends DatabaseConfiguration
                     //restore the reference in the object
                     field.set(serializableObject, ref);
                 }
-                catch (IllegalArgumentException | IllegalAccessException ex) {
+                catch (IllegalAccessException ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -194,7 +218,7 @@ public abstract class AbstractDatabaseConnector<DC extends DatabaseConfiguration
                         ReflectionMethods.invokeMethod(serializableObject, method, this, field);
                     }
                 }
-                catch (IllegalArgumentException | IllegalAccessException ex) {
+                catch (IllegalAccessException ex) {
                     throw new RuntimeException(ex);
                 }
             }

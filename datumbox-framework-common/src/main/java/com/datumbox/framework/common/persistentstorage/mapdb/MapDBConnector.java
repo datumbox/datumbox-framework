@@ -47,25 +47,31 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
      */
     private enum DBType {
         /**
-         * Primary DB stores all the BigMaps maps and atomic variables which will 
-         * be persisted after the connection closes; the DB maintains an separate 
+         * Primary DB stores all the cached BigMaps and atomic variables which will
+         * be persisted after the connection closes. The DB maintains a separate
          * LRU cache to speed up the operations.
          */
         PRIMARY_DB,
+
+        /**
+         * Secondary DB stores all the uncached BigMaps which will be persisted
+         * after the connection closes. The DB does not maintain any LRU cache.
+         */
+        SECONDARY_DB,
         
         /**
-         * Temp DB cached is used to store temporary medium-sized BigMaps which 
-         * will not be persisted after the connection closes; the DB maintains 
-         * an separate LRU cache to speed up the operations.
+         * Temp primary db is a cached database used to store temporary medium-sized
+         * BigMaps which will not be persisted after the connection closes. The DB
+         * maintains an separate LRU cache to speed up the operations.
          */
-        TEMP_DB_CACHED,
-        
+        TEMP_PRIMARY_DB,
+
         /**
-         * Temp DB uncached is used to store temporary large-sized BigMaps which 
-         * will not be persisted after the connection closes; the DB does not
-         * maintain any cache.
+         * Temp secondary db is an uncached database used to store temporary
+         * large-sized BigMaps which will not be persisted after the connection closes.
+         * The DB does not maintain any LRU cache.
          */
-        TEMP_DB_UNCACHED;
+        TEMP_SECONDARY_DB;
     }
     
     /**
@@ -91,26 +97,8 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             return false;
         }
 
-        DB db = openDB(DBType.PRIMARY_DB);
-        db.commit();
-
-        //find the underlying engine
-        Engine e = db.getEngine();
-        while(EngineWrapper.class.isAssignableFrom(e.getClass())) {
-            e = ((EngineWrapper)e).getWrappedEngine();
-        }
-
-        //close and wait until the close on the underlying engine is also finished
-        db.close();
-        while(!e.isClosed()) {
-            logger.trace("Waiting for the engine to close");
-            try {
-                TimeUnit.MILLISECONDS.sleep(100);
-            }
-            catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        blockedDBClose(DBType.PRIMARY_DB);
+        blockedDBClose(DBType.SECONDARY_DB);
 
         try {
             moveDirectory(getRootPath(dbName), getRootPath(newDBName));
@@ -220,16 +208,26 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             if(dbType == null) {
                 //the map does not exist. Find where it should be created.
                 if(isTemporary == false) {
-                    dbType = DBType.PRIMARY_DB;
+                    if(storageHint == DatabaseConnector.StorageHint.IN_MEMORY || storageHint == DatabaseConnector.StorageHint.IN_CACHE) {
+                        //we will use the LRU cache option
+                        dbType = DBType.PRIMARY_DB;
+                    }
+                    else if(storageHint == DatabaseConnector.StorageHint.IN_DISK) {
+                        //no cache at all
+                        dbType = DBType.SECONDARY_DB;
+                    }
+                    else {
+                        throw new IllegalArgumentException("Unsupported StorageHint.");
+                    }
                 }
                 else {
                     if(storageHint == DatabaseConnector.StorageHint.IN_MEMORY || storageHint == DatabaseConnector.StorageHint.IN_CACHE) {
                         //we will use the LRU cache option
-                        dbType = DBType.TEMP_DB_CACHED;
+                        dbType = DBType.TEMP_PRIMARY_DB;
                     }
                     else if(storageHint == DatabaseConnector.StorageHint.IN_DISK) {
                         //no cache at all
-                        dbType = DBType.TEMP_DB_UNCACHED;
+                        dbType = DBType.TEMP_SECONDARY_DB;
                     }
                     else {
                         throw new IllegalArgumentException("Unsupported StorageHint.");
@@ -346,9 +344,7 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
         DB db = dbRegistry.get(dbType);
         if(!isOpenDB(db)) {
             DBMaker m;
-            
-            boolean permitCaching = true;
-            if(dbType == DBType.PRIMARY_DB) {
+            if(dbType == DBType.PRIMARY_DB || dbType == DBType.SECONDARY_DB) {
                 //main storage
                 Path rootPath = getRootPath(dbName);
                 try {
@@ -358,15 +354,11 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
                     throw new UncheckedIOException(ex);
                 }
 
-                m = DBMaker.newFileDB(new File(rootPath.toFile(), DBType.PRIMARY_DB.toString()) );
+                m = DBMaker.newFileDB(new File(rootPath.toFile(), dbType.toString()));
             }
-            else if(dbType == DBType.TEMP_DB_CACHED || dbType == DBType.TEMP_DB_UNCACHED) {
+            else if(dbType == DBType.TEMP_PRIMARY_DB || dbType == DBType.TEMP_SECONDARY_DB) {
                 //temporary storage
                 m = DBMaker.newTempFileDB().deleteFilesAfterClose();
-                
-                if(dbType == DBType.TEMP_DB_UNCACHED) {
-                    permitCaching = false;
-                }
             }
             else {
                 throw new IllegalArgumentException("Unsupported DatabaseType.");
@@ -375,7 +367,8 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             if(dbConf.isCompressed()) {
                 m = m.compressionEnable();
             }
-            
+
+            boolean permitCaching = dbType == DBType.PRIMARY_DB || dbType == DBType.TEMP_PRIMARY_DB;
             if(permitCaching && dbConf.getCacheSize()>0) {
                 m = m.cacheLRUEnable().cacheSize(dbConf.getCacheSize()) ;
             }
@@ -424,6 +417,43 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             }
         }
         dbRegistry.clear();
+    }
+
+    /**
+     * Closes the provided DB and waits until all changes are written to disk. It should be used when
+     * we move the database to a different location. Returns true if the db needed to be closed and
+     * false if it was not necessary.
+     *
+     * @param dbType
+     * @return
+     */
+    private boolean blockedDBClose(DBType dbType) {
+        DB db = dbRegistry.get(dbType);
+        if(isOpenDB(db)) {
+            db.commit();
+
+            //find the underlying engine
+            Engine e = db.getEngine();
+            while (EngineWrapper.class.isAssignableFrom(e.getClass())) {
+                e = ((EngineWrapper) e).getWrappedEngine();
+            }
+
+            //close and wait until the close on the underlying engine is also finished
+            db.close();
+            while (!e.isClosed()) {
+                logger.trace("Waiting for the engine to close");
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

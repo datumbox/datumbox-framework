@@ -61,13 +61,17 @@ public class OrdinalRegressionTest extends AbstractTest {
         df.fit_transform(trainingData);
         df.save(dbName);
 
+        String datasetName = "winesOrdinal";
+        trainingData.save(datasetName);
+        trainingData.close();
 
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         param.setL2(0.001);
 
         OrdinalRegression instance = MLBuilder.create(param, conf);
-        
+        trainingData = Dataframe.Builder.load(datasetName,conf);
+
         instance.fit(trainingData);
         instance.save(dbName);
 
