@@ -4,6 +4,7 @@ CODE IMPROVEMENTS
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
 - Write a ShuffleSplitValidator class similar to KFold. Perhaps we need a single Validator class and separate Splitters.
 - Write generic optimizers instead of having optimization methods in the algorithms.
+- Refactor the statistics package and replace all the static methods with proper inheritance.
 
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
 - Try to separate persistent storage in a separate module that is inherited by common.

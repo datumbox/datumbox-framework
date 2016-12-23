@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
-import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.validators.AbstractValidator;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.AbstractValidator;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 

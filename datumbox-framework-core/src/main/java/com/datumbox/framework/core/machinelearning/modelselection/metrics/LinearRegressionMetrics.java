@@ -19,7 +19,7 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.metrics.AbstractMetrics;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.AbstractMetrics;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.core.statistics.nonparametrics.onesample.Lilliefors;
 import com.datumbox.framework.core.statistics.parametrics.onesample.DurbinWatson;
