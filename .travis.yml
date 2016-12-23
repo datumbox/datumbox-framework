@@ -17,4 +17,4 @@ install:
 script:
   - mvn clean install
 notifications:
-  email: false
+  email: true
