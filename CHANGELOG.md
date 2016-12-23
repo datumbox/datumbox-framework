@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161222
+Version 0.8.0-SNAPSHOT - Build 20161223
 ---------------------------------------
 
 - Improved Validation:
@@ -33,6 +33,7 @@ Version 0.8.0-SNAPSHOT - Build 20161222
 - Empty parent directories of the algorithm output are automatically cleaned up.
 - The Dataset can now be saved and loaded.
 - All objects that save, delete and close implement the savable interfrace.
+- The InMemoryConnector now keeps a catalog of every item in a WeakReference Map.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

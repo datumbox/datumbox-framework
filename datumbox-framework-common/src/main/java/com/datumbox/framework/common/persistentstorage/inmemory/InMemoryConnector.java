@@ -24,9 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -44,7 +44,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfiguration> {
 
-    //FIXME: add soft references to all the objects here so that we can clean them up afterwards.
+    /**
+     * The catalog stores weak references to all the items that are stored in the db (objects and big maps).
+     */
+    private Map<String, WeakReference<?>> catalog = new HashMap<>();
 
     /** 
      * @param dbName
@@ -63,6 +66,8 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
             return false;
         }
 
+        catalog.clear();
+
         try {
             moveDirectory(getRootPath(dbName), getRootPath(newDBName));
         }
@@ -79,6 +84,9 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
     @Override
     public boolean existsObject(String name) {
         assertConnectionOpen();
+        if(catalog.containsKey(name)) {
+            return true;
+        }
         return new File(getRootPath(dbName).toFile(), name).exists();
     }
     
@@ -96,6 +104,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
+        catalog.put(name, new WeakReference<>(serializableObject));
     }
 
     /** {@inheritDoc} */
@@ -108,14 +117,17 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
             throw new NoSuchElementException("Can't find any object with name '"+name+"'");
         }
 
+        T obj;
         try {
             Path objectPath = new File(getRootPath(dbName).toFile(), name).toPath();
             Object serializableObject = DeepCopy.deserialize(Files.readAllBytes(objectPath));
-            return klass.cast(serializableObject);
+            obj = klass.cast(serializableObject);
         }
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
+        catalog.put(name, new WeakReference<>(obj));
+        return obj;
     }
     
     /** {@inheritDoc} */
@@ -125,6 +137,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
             return; 
         }
         super.close();
+        catalog = null;
         logger.trace("Closed db {}", dbName);
     }
 
@@ -132,6 +145,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
     @Override
     public void clear() {
         assertConnectionOpen();
+        catalog.clear();
         try {
             deleteDirectory(getRootPath(dbName), true);
         } 
@@ -144,16 +158,20 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
     @Override
     public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, MapType type, StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
-        
+
+        Map<K,V> m;
         if(MapType.HASHMAP.equals(type)) {
-            return isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
+            m = isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
         }
         else if(MapType.TREEMAP.equals(type)) {
-            return isConcurrent?new ConcurrentSkipListMap<>():new TreeMap<>();
+            m = isConcurrent?new ConcurrentSkipListMap<>():new TreeMap<>();
         }
         else {
             throw new IllegalArgumentException("Unsupported MapType.");
         }
+
+        catalog.put(name, new WeakReference<>(m));
+        return m;
     }  
     
     /** {@inheritDoc} */
@@ -161,6 +179,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
     public <T extends Map> void dropBigMap(String name, T map) {
         assertConnectionOpen();
         map.clear();
+        catalog.remove(name);
     }
 
 }
