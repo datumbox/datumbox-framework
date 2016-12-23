@@ -87,7 +87,7 @@ public class ModelerTest extends AbstractTest {
         double expResult2 = 0.8;
         assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
 
-        trainingData.delete();
+        trainingData.close();
         instance.close();
         //instance = null;
 
@@ -110,7 +110,7 @@ public class ModelerTest extends AbstractTest {
         
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
     
 }

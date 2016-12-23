@@ -70,7 +70,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         instance.save(dbName);
 
         df.denormalize(trainingData);
-        trainingData.delete();
+        trainingData.close();
         
         instance.close();
         df.close();
@@ -100,7 +100,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
 
@@ -117,7 +117,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
 
         
@@ -130,7 +130,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        trainingData.delete();
+        trainingData.close();
     }
     
 }

@@ -82,8 +82,8 @@ public class MaximumEntropyTest extends AbstractTest {
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
 
@@ -100,7 +100,7 @@ public class MaximumEntropyTest extends AbstractTest {
         
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
 
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
@@ -112,7 +112,7 @@ public class MaximumEntropyTest extends AbstractTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

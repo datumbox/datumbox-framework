@@ -71,7 +71,7 @@ public class KmeansTest extends AbstractTest {
         instance.save(dbName);
 
         df.denormalize(trainingData);
-        trainingData.delete();
+        trainingData.close();
         
         instance.close();
         df.close();
@@ -95,7 +95,7 @@ public class KmeansTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
     
@@ -112,7 +112,7 @@ public class KmeansTest extends AbstractTest {
         
         Dataframe[] data = Datasets.heartDiseaseClusters(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
 
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
@@ -143,7 +143,7 @@ public class KmeansTest extends AbstractTest {
         
         df.close();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

@@ -249,13 +249,13 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
             AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, conf);
             mlclassifier.fit(sampledTrainingDataset);
-            sampledTrainingDataset.delete();
+            sampledTrainingDataset.close();
             mlclassifier.predict(trainingData);
 
             
             Status status = updateObservationAndClassifierWeights(trainingData, observationWeights);
             if(status == Status.IGNORE) {
-                mlclassifier.delete();
+                mlclassifier.close();
             }
             else {
                 bundle.put(DB_INDICATOR + i, mlclassifier);

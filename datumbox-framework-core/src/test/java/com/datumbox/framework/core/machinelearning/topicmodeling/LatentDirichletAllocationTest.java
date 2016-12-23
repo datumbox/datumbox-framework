@@ -103,9 +103,9 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 
         lda.delete();
-        reducedTrainingData.delete();
+        reducedTrainingData.close();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

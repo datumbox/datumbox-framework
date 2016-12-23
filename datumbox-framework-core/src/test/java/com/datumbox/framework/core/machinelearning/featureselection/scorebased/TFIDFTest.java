@@ -59,7 +59,7 @@ public class TFIDFTest extends AbstractTest {
         instance.fit_transform(trainingData);
         instance.save(dbName);
 
-        trainingData.delete();
+        trainingData.close();
         instance.close();
         //instance = null;
         
@@ -73,7 +73,7 @@ public class TFIDFTest extends AbstractTest {
         assertEquals(expResult, result);
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
     
 }

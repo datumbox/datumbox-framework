@@ -66,7 +66,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         instance.save(dbName);
         
         df.denormalize(trainingData);
-        trainingData.delete();
+        trainingData.close();
         
         
         instance.close();
@@ -89,7 +89,7 @@ public class StepwiseRegressionTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
 

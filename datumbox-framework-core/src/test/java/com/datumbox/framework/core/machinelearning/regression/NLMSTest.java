@@ -69,7 +69,7 @@ public class NLMSTest extends AbstractTest {
         instance.save(dbName);
 
         df.denormalize(trainingData);
-        trainingData.delete();
+        trainingData.close();
         
         instance.close();
         df.close();
@@ -92,7 +92,7 @@ public class NLMSTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
 
@@ -109,7 +109,7 @@ public class NLMSTest extends AbstractTest {
         
         Dataframe[] data = Datasets.housingNumerical(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
 
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
@@ -144,7 +144,7 @@ public class NLMSTest extends AbstractTest {
         
         df.close();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
 }

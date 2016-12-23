@@ -75,8 +75,8 @@ public class MultinomialDPMMTest extends AbstractTest {
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
     
@@ -93,7 +93,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         
         Dataframe[] data = Datasets.multinomialClusters(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
 
         
@@ -110,7 +110,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         double result = vm.getPurity();
         Assert.assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

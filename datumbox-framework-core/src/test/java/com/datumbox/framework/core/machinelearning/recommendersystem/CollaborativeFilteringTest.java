@@ -91,8 +91,8 @@ public class CollaborativeFilteringTest extends AbstractTest {
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
     

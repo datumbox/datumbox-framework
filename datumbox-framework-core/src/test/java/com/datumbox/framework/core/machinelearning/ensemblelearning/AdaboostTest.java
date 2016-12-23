@@ -78,7 +78,7 @@ public class AdaboostTest extends AbstractTest {
         instance.save(dbName);
 
         df.denormalize(trainingData);
-        trainingData.delete();
+        trainingData.close();
         
         instance.close();
         df.close();
@@ -109,7 +109,7 @@ public class AdaboostTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
     
 
@@ -126,7 +126,7 @@ public class AdaboostTest extends AbstractTest {
         
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
 
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
@@ -145,7 +145,7 @@ public class AdaboostTest extends AbstractTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        trainingData.delete();
+        trainingData.close();
     }
     
 }

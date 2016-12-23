@@ -49,7 +49,7 @@ public class PCATest extends AbstractTest {
         Dataframe[] data = Datasets.featureTransformationPCA(conf);
         
         Dataframe originalData = data[0];
-        Dataframe validationdata = data[0].copy();
+        Dataframe validationData = data[0].copy();
         Dataframe expResult = data[1];
         
         String dbName = this.getClass().getSimpleName();
@@ -61,17 +61,17 @@ public class PCATest extends AbstractTest {
         instance.fit_transform(originalData);
         instance.save(dbName);
 
-        originalData.delete();
+        originalData.close();
         instance.close();
         //instance = null;
         
         instance = MLBuilder.load(PCA.class, dbName, conf);
         
-        instance.transform(validationdata);
+        instance.transform(validationData);
         
-        assertEquals(validationdata.size(), expResult.size());
+        assertEquals(validationData.size(), expResult.size());
         
-        Iterator<Record> itResult = validationdata.iterator();
+        Iterator<Record> itResult = validationData.iterator();
         Iterator<Record> itExpectedResult = expResult.iterator();
         
         
@@ -89,8 +89,8 @@ public class PCATest extends AbstractTest {
         
         instance.delete();
 
-        validationdata.delete();
-        expResult.delete();
+        validationData.close();
+        expResult.close();
     }
     
 }

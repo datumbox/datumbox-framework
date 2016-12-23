@@ -78,8 +78,8 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
 
@@ -96,7 +96,7 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
 
         ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, new BinarizedNaiveBayes.TrainingParameters());
         
@@ -104,7 +104,7 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        trainingData.delete();
+        trainingData.close();
     }
     
 }

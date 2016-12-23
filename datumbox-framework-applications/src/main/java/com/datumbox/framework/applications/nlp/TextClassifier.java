@@ -127,7 +127,7 @@ public class TextClassifier extends Modeler {
         
         fit(trainingData);
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     /**
@@ -179,7 +179,7 @@ public class TextClassifier extends Modeler {
         
         Record r = testDataset.iterator().next();
         
-        testDataset.delete();
+        testDataset.close();
         
         return r;
     }
@@ -221,7 +221,7 @@ public class TextClassifier extends Modeler {
 
         ClassificationMetrics vm = validate(testDataset);
 
-        testDataset.delete();
+        testDataset.close();
 
         return vm;
     }

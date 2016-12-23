@@ -116,7 +116,7 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
 
             Dataframe trainingData = dataset.getSubset(foldTrainingIds);
             modeler.fit(trainingData);
-            trainingData.delete();
+            trainingData.close();
 
 
             Dataframe validationData = dataset.getSubset(foldValidationIds);
@@ -125,12 +125,12 @@ public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValida
             modeler.predict(validationData);
 
             VM entrySample = ValidationMetrics.newInstance(vmClass, validationData);
-            validationData.delete();
+            validationData.close();
 
             //add the validationMetrics in the list
             validationMetricsList.add(entrySample);
         }
-        modeler.delete();
+        modeler.close();
 
         VM avgValidationMetrics = ValidationMetrics.newInstance(vmClass, validationMetricsList);
 

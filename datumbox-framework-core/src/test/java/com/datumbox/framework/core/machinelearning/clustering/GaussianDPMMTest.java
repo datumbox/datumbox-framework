@@ -64,7 +64,7 @@ public class GaussianDPMMTest extends AbstractTest {
         instance.fit(trainingData);
         instance.save(dbName);
 
-        trainingData.delete();
+        trainingData.close();
         instance.close();
         //instance = null;
         instance = MLBuilder.load(GaussianDPMM.class, dbName, conf);
@@ -78,7 +78,7 @@ public class GaussianDPMMTest extends AbstractTest {
         
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
     
@@ -95,7 +95,7 @@ public class GaussianDPMMTest extends AbstractTest {
         
         Dataframe[] data = Datasets.gaussianClusters(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
 
         
@@ -115,7 +115,7 @@ public class GaussianDPMMTest extends AbstractTest {
         double result = vm.getPurity();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

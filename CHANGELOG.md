@@ -35,6 +35,7 @@ Version 0.8.0-SNAPSHOT - Build 20161223
 - All objects that save, delete and close implement the savable interfrace.
 - The InMemoryConnector now keeps a catalog of every item in a WeakReference Map.
 - In MapDBConfiguration it is now feasible to turn on/off the asynchronous writes.
+- Replaced unnecessary delete() calls with close() when no save() is called.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------

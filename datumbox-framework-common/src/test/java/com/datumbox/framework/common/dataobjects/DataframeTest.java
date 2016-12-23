@@ -117,8 +117,8 @@ public class DataframeTest extends AbstractTest {
         
         assertEquals(expResult.getXDataTypes().equals(dataset.getXDataTypes()),true);
         
-        expResult.delete();
-        dataset.delete();
+        expResult.close();
+        dataset.close();
     }
     
     /**
@@ -170,7 +170,7 @@ public class DataframeTest extends AbstractTest {
         
         assertEquals(dataset.getYDataType(), null);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -206,7 +206,7 @@ public class DataframeTest extends AbstractTest {
         FlatDataList result = dataset.getXColumn(column);
         assertEquals(expResult, result);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -235,7 +235,7 @@ public class DataframeTest extends AbstractTest {
         xData3.put("weight", null);
         dataset.add(new Record(xData3, "Class2"));
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -269,7 +269,7 @@ public class DataframeTest extends AbstractTest {
         
         assertEquals(3, dataset.size());
         
-        dataset.delete();
+        dataset.close();
     }
 
 }

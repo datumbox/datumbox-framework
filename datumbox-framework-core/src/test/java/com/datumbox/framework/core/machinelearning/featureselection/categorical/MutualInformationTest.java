@@ -72,8 +72,8 @@ public class MutualInformationTest extends AbstractTest {
         assertEquals(expResult, result);
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
 }

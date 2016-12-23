@@ -180,7 +180,7 @@ public class BivariateTest extends AbstractTest {
         DataTable2D result = Bivariate.covarianceMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -214,7 +214,7 @@ public class BivariateTest extends AbstractTest {
         DataTable2D result = Bivariate.pearsonMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -249,7 +249,7 @@ public class BivariateTest extends AbstractTest {
         DataTable2D result = Bivariate.spearmanMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -283,7 +283,7 @@ public class BivariateTest extends AbstractTest {
         DataTable2D result = Bivariate.kendalltauMatrix(dataset);
         TestUtils.assertDoubleDataTable2D(expResult, result);
         
-        dataset.delete();
+        dataset.close();
     }
     
 }

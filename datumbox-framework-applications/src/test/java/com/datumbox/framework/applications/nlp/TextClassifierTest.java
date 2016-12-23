@@ -309,7 +309,7 @@ public class TextClassifierTest extends AbstractTest {
         }
         
         instance.delete();
-        validationData.delete();
+        validationData.close();
     }
 
 }

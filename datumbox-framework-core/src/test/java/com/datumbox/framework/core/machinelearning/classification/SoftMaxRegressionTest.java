@@ -73,7 +73,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         instance.save(dbName);
 
         df.denormalize(trainingData);
-        trainingData.delete();
+        trainingData.close();
 
 
         instance.close();
@@ -103,7 +103,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
 
@@ -120,7 +120,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
 
         XMinMaxNormalizer df = MLBuilder.create(new XMinMaxNormalizer.TrainingParameters(), conf);
@@ -140,7 +140,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         df.close();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

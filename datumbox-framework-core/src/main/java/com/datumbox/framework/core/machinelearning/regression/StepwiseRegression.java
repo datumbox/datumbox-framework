@@ -222,7 +222,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         mlregressor.fit(copiedTrainingData);
         bundle.put(REG_KEY, mlregressor);
 
-        copiedTrainingData.delete();
+        copiedTrainingData.close();
     }
 
     /** {@inheritDoc} */
@@ -277,7 +277,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
 
-        mlregressor.delete();
+        mlregressor.close();
         
         return pvalues;
     }

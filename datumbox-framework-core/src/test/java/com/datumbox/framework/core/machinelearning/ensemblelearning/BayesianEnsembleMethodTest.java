@@ -64,7 +64,7 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
 
         df.denormalize(trainingData);
 
-        trainingData.delete();
+        trainingData.close();
         instance.close();
         df.close();
         //instance = null;
@@ -92,7 +92,7 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
 }

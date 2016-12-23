@@ -105,7 +105,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         df.delete();
         instance.delete();
 
-        validationData.delete();
+        validationData.close();
     }
 
 
@@ -122,7 +122,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         Dataframe[] data = Datasets.winesOrdinal(conf);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
 
         DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), conf);
@@ -146,7 +146,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         df.close();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
 }

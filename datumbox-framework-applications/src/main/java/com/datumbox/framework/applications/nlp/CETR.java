@@ -234,7 +234,7 @@ public class CETR {
             }
         }
         
-        dataset.delete();
+        dataset.close();
         
         return selectedRows;
     }
@@ -253,7 +253,7 @@ public class CETR {
         
         instance.fit(dataset);
         instance.predict(dataset);
-        instance.delete();
+        instance.close();
     }
     
     private List<Double> calculateTTRlist(List<String> rows) {
