@@ -1,5 +1,5 @@
 language: java
-sudo: false
+sudo: required
 before_install:
    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export JAVA_HOME=$(/usr/libexec/java_home); fi
    - echo $JAVA_HOME
@@ -11,7 +11,8 @@ matrix:
       jdk: openjdk8
     - os: osx
       env: JAVA_HOME=/usr/libexec/java_home
-install: mvn clean install -DskipTests=true
+install:
+  - mvn clean install -DskipTests=true
 script:
   - mvn clean install
 notifications:
