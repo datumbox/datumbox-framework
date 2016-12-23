@@ -11,9 +11,6 @@ matrix:
       jdk: openjdk8
     - os: osx
       env: JAVA_HOME=/usr/libexec/java_home
-os:
-  - linux
-  - osx
 install: mvn clean install -DskipTests=true
 script:
   - mvn clean install
