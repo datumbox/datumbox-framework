@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for all Validators.
  *
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <VM>
  */
 public abstract class AbstractValidator<VM extends ValidationMetrics> {

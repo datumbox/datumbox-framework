@@ -32,6 +32,7 @@ import java.util.List;
 /**
  * Performs K-fold cross validation.
  *
+ * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <VM>
  */
 public class KFoldValidator<VM extends ValidationMetrics> extends AbstractValidator<VM> {
