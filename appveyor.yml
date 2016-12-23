@@ -1,4 +1,4 @@
-version: '{build}-{branch}'
+version: '{branch}-{commit}'
 os: Windows Server 2012
 environment:
   matrix:
