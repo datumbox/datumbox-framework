@@ -375,10 +375,12 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             else {
                 m = m.cacheDisable();
             }
+
+            if(dbConf.isAsynchronous()) {
+                m = m.asyncWriteEnable();
+            }
             
             m = m.transactionDisable();
-
-            m = m.asyncWriteEnable();
             
             m = m.closeOnJvmShutdown();
             

@@ -36,6 +36,8 @@ public class MapDBConfiguration extends AbstractFileDBConfiguration {
 
     private boolean hybridized = true;
 
+    private boolean asynchronous = true;
+
     /** {@inheritDoc} */
     @Override
     public DatabaseConnector getConnector(String dbName) {
@@ -49,6 +51,7 @@ public class MapDBConfiguration extends AbstractFileDBConfiguration {
         cacheSize = Integer.parseInt(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
         compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
         hybridized = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.hybridized"));
+        asynchronous = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.asynchronous"));
     }
     
     /**
@@ -109,5 +112,24 @@ public class MapDBConfiguration extends AbstractFileDBConfiguration {
     public void setHybridized(boolean hybridized) {
         this.hybridized = hybridized;
     }
-    
+
+    /**
+     * Getter for the asynchronous option.
+     *
+     * @return
+     */
+    public boolean isAsynchronous() {
+        return asynchronous;
+    }
+
+    /**
+     * Setter for the asynchronous option. If turned on, it will write the
+     * data asynchronously leading to speed improvements.
+     *
+     * @param asynchronous
+     */
+    public void setAsynchronous(boolean asynchronous) {
+        this.asynchronous = asynchronous;
+    }
+
 }
