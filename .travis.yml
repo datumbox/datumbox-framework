@@ -14,9 +14,6 @@ matrix:
 os:
   - linux
   - osx
-jdk:
-  - openjdk8
-  - oraclejdk8
 install: mvn clean install -DskipTests=true
 script:
   - mvn clean install
