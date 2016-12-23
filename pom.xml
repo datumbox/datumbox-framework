@@ -275,6 +275,8 @@
                             <exclude>NOTICE</exclude>
                             <exclude>README.md</exclude>
                             <exclude>TODO.txt</exclude>
+                            <exclude>.travis.yml</exclude>
+                            <exclude>appveyor.yml</exclude>
                             <exclude>**/license.txt</exclude>
                             <exclude>**/datasets/*</exclude>
                         </excludes>
