@@ -203,7 +203,7 @@
                     <version>${maven-surefire-plugin-version}</version>
                     <configuration>
                         <threadCount>3</threadCount>
-                        <parallel>classes</parallel>
+                        <parallel>all</parallel>
                         <argLine>-Xmx512M -Dfile.encoding=${project.build.sourceEncoding} -DskipAfterFailureCount=false</argLine>
                     </configuration>
                 </plugin>

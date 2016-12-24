@@ -65,7 +65,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.8393075950598075
+                0.8393075950598075,
+                1
         );
     }
 
@@ -86,7 +87,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.8413587159387832
+                0.8413587159387832,
+                2
         );
     }
 
@@ -107,7 +109,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.9411031042128604
+                0.9411031042128604,
+                3
         );
     }
 
@@ -128,7 +131,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.8685865263692268
+                0.8685865263692268,
+                4
         );
     }
 
@@ -149,7 +153,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.8290058479532163
+                0.8290058479532163,
+                5
         );
     }
 
@@ -170,7 +175,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.7663106693454584
+                0.7663106693454584,
+                6
         );
     }
 
@@ -191,7 +197,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.9803846153846154
+                0.9803846153846154,
+                7
         );
     }
 
@@ -211,7 +218,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.8954671493044679
+                0.8954671493044679,
+                8
         );
     }
 
@@ -230,7 +238,8 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.80461962936161
+                0.80461962936161,
+                9
         );
     }
     
@@ -240,16 +249,18 @@ public class TextClassifierTest extends AbstractTest {
      * @param <ML>
      * @param <FS>
      * @param modelerTrainingParameters
-     * @param featureSelectorTrainingParameters 
+     * @param featureSelectorTrainingParameters
+     * @param testId
      */
     private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector> void trainAndValidate(
             ML.AbstractTrainingParameters modelerTrainingParameters,
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
-            double expectedF1score) {
+            double expectedF1score,
+            int testId) {
         Configuration configuration = Configuration.getConfiguration();
         
         
-        String storageName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName() + testId;
         
         Map<Object, URI> dataset = new HashMap<>();
         try {
