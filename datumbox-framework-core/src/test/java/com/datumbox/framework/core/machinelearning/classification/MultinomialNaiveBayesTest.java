@@ -22,7 +22,7 @@ import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
-import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.ShuffleSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -109,12 +109,13 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
      * Test of validate method, of class MultinomialNaiveBayes.
      */
     @Test
-    public void testKFoldCrossValidation() {
-        logger.info("testKFoldCrossValidation");
+    public void testShuffleValidation() {
+        logger.info("testShuffleValidation");
         
         Configuration conf = Configuration.getConfiguration();
-        
-        int k = 5;
+
+        double proportion = 0.8;
+        int splits = 5;
         
         Dataframe[] data = Datasets.carsNumeric(conf);
         Dataframe trainingData = data[0];
@@ -126,9 +127,9 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         param.setMultiProbabilityWeighted(true);
 
         ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
-                .validate(new KFoldSplitter(k).split(trainingData), param);
+                .validate(new ShuffleSplitter(proportion, splits).split(trainingData), param);
         
-        double expResult = 0.6631318681318682;
+        double expResult = 0.5983838383838384;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         

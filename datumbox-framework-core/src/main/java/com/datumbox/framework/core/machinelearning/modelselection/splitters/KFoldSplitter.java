@@ -23,7 +23,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.modelselecti
 import java.util.*;
 
 /**
- * The KFoldSplitter class splits the data in K folds.
+ * The KFoldSplitter partitions the data in K folds.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

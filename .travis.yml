@@ -17,4 +17,6 @@ install:
 script:
   - mvn clean install
 notifications:
-  email: true
+  email:
+    on_success: never
+    on_failure: always

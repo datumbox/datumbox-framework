@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161223
+Version 0.8.0-SNAPSHOT - Build 20161224
 ---------------------------------------
 
 - Improved Validation:
@@ -38,6 +38,7 @@ Version 0.8.0-SNAPSHOT - Build 20161223
 - Replaced unnecessary delete() calls with close() when no save() is called.
 - Change the Validation mechanism to support Splitters. The AbstractValidator is now a single Validator class. 
 - K-fold cross validation is now performed by combining the KFoldSplitter and the Validator classes. 
+- Added support of a ShuffleSplitter.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------
