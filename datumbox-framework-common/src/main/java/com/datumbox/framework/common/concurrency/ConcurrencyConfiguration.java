@@ -94,8 +94,8 @@ public class ConcurrencyConfiguration implements Configurable {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        setParallelized("true".equalsIgnoreCase(properties.getProperty("concurrencyConfig.parallelized")));
-        setMaxNumberOfThreadsPerTask(Integer.parseInt(properties.getProperty("concurrencyConfig.maxNumberOfThreadsPerTask")));
+        setParallelized("true".equalsIgnoreCase(properties.getProperty("concurrencyConf.parallelized")));
+        setMaxNumberOfThreadsPerTask(Integer.parseInt(properties.getProperty("concurrencyConf.maxNumberOfThreadsPerTask")));
         if(isParallelized()==false) {
             setMaxNumberOfThreadsPerTask(1);
         }

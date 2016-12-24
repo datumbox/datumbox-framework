@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.common.persistentstorage.inmemory;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractDatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractStorageConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
 import com.datumbox.framework.common.utilities.DeepCopy;
 
 import java.io.File;
@@ -42,41 +42,41 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfiguration> {
+public class InMemoryConnector extends AbstractFileStorageConnector<InMemoryConfiguration> {
 
     /**
-     * The catalog stores weak references to all the items that are stored in the db (objects and big maps).
+     * The catalog stores weak references to all the items that are stored in the storage (objects and big maps).
      */
     private Map<String, WeakReference<?>> catalog = new HashMap<>();
 
     /** 
-     * @param dbName
-     * @param dbConf
-     * @see AbstractDatabaseConnector#AbstractDatabaseConnector(String, DatabaseConfiguration)
+     * @param storageName
+     * @param storageConf
+     * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
      */
-    protected InMemoryConnector(String dbName, InMemoryConfiguration dbConf) {
-        super(dbName, dbConf);
+    protected InMemoryConnector(String storageName, InMemoryConfiguration storageConf) {
+        super(storageName, storageConf);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean rename(String newDBName) {
+    public boolean rename(String newStorageName) {
         assertConnectionOpen();
-        if(dbName.equals(newDBName)) {
+        if(storageName.equals(newStorageName)) {
             return false;
         }
 
         catalog.clear();
 
         try {
-            moveDirectory(getRootPath(dbName), getRootPath(newDBName));
+            moveDirectory(getRootPath(storageName), getRootPath(newStorageName));
         }
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
 
-        logger.trace("Renamed db {} to {}", dbName, newDBName);
-        dbName = newDBName;
+        logger.trace("Renamed storage {} to {}", storageName, newStorageName);
+        storageName = newStorageName;
         return true;
     }
 
@@ -87,7 +87,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
         if(catalog.containsKey(name)) {
             return true;
         }
-        return new File(getRootPath(dbName).toFile(), name).exists();
+        return new File(getRootPath(storageName).toFile(), name).exists();
     }
     
     /** {@inheritDoc} */
@@ -95,7 +95,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         try { 
-            Path rootPath = getRootPath(dbName);
+            Path rootPath = getRootPath(storageName);
             createDirectoryIfNotExists(rootPath);
 
             Path objectPath = new File(rootPath.toFile(), name).toPath();
@@ -119,7 +119,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
 
         T obj;
         try {
-            Path objectPath = new File(getRootPath(dbName).toFile(), name).toPath();
+            Path objectPath = new File(getRootPath(storageName).toFile(), name).toPath();
             Object serializableObject = DeepCopy.deserialize(Files.readAllBytes(objectPath));
             obj = klass.cast(serializableObject);
         }
@@ -138,7 +138,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
         }
         super.close();
         catalog = null;
-        logger.trace("Closed db {}", dbName);
+        logger.trace("Closed storage {}", storageName);
     }
 
     /** {@inheritDoc} */
@@ -147,7 +147,7 @@ public class InMemoryConnector extends AbstractFileDBConnector<InMemoryConfigura
         assertConnectionOpen();
         catalog.clear();
         try {
-            deleteDirectory(getRootPath(dbName), true);
+            deleteDirectory(getRootPath(storageName), true);
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);

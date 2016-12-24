@@ -19,7 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
 import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
@@ -44,12 +44,12 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     public static abstract class AbstractModelParameters extends BigMapHolder implements ModelParameters {
 
         /**
-         * Constructor of the ModelParameters that accepts a Database Connector.
+         * Constructor of the ModelParameters that accepts a Storage Connector.
          * 
-         * @param dbc 
+         * @param sc
          */
-        protected AbstractModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected AbstractModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
     }
@@ -85,7 +85,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * @param conf
      */
     protected AbstractTrainer(TP trainingParameters, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getDbConfig().getDBNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getStorageConf().getStorageNameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf, trainingParameters);
         persisted = false;
     }
@@ -93,11 +93,11 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * Constructor which is called when we pre-trained load persisted models.
      *
-     * @param dbName
+     * @param storageName
      * @param conf
      */
-    protected AbstractTrainer(String dbName, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, conf.getDbConfig().getDBNameSeparator());
+    protected AbstractTrainer(String storageName, Configuration conf) {
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, conf.getStorageConf().getStorageNameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf);
         persisted = true;
     }
@@ -127,10 +127,10 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
 
     /** {@inheritDoc} */
     @Override
-    public void save(String dbName) {
+    public void save(String storageName) {
         logger.info("save()");
 
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
         knowledgeBase.save(knowledgeBaseName);
         persisted = true;
     }
@@ -168,11 +168,11 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * Generates a name for the KnowledgeBase.
      *
-     * @param dbName
+     * @param storageName
      * @param separator
      * @return
      */
-    protected final String createKnowledgeBaseName(String dbName, String separator) {
-        return dbName + separator + getClass().getSimpleName();
+    protected final String createKnowledgeBaseName(String storageName, String separator) {
+        return storageName + separator + getClass().getSimpleName();
     }
 }

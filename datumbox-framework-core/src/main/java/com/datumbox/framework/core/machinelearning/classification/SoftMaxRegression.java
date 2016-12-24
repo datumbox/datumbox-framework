@@ -23,9 +23,9 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
@@ -63,11 +63,11 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -181,17 +181,17 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
      */
     protected SoftMaxRegression(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected SoftMaxRegression(String dbName, Configuration conf) {
-        super(dbName, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    protected SoftMaxRegression(String storageName, Configuration conf) {
+        super(storageName, conf);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
     
     private boolean parallelized = true;
@@ -217,7 +217,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getDbc(), knowledgeBase.getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /** {@inheritDoc} */
@@ -273,12 +273,12 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<List<Object>, Double> tmp_newThitas = sc.getBigMap("tmp_newThitas", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             
             tmp_newThitas.putAll(thitas);
             batchGradientDescent(trainingData, tmp_newThitas, learningRate);
@@ -299,7 +299,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
+            sc.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
 

@@ -37,12 +37,12 @@ public abstract class AbstractContinuousFeatureSelector<MP extends AbstractConti
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractContinuousFeatureSelector(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractContinuousFeatureSelector(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
 }

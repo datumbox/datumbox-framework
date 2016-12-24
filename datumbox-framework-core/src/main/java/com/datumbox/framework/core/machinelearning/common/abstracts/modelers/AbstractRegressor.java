@@ -37,12 +37,12 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractRegressor(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractRegressor(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
 

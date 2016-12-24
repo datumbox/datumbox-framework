@@ -21,9 +21,9 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
@@ -64,11 +64,11 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         private svm_model svmModel; //the parameters of the svm model
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -196,12 +196,12 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected SupportVectorMachine(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected SupportVectorMachine(String storageName, Configuration conf) {
+        super(storageName, conf);
         svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
     
@@ -222,7 +222,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getDbc(), knowledgeBase.getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /** {@inheritDoc} */

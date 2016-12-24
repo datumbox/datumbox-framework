@@ -17,9 +17,9 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -45,7 +45,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     private final TrainableBundle bundle;
 
-    private static final String DB_INDICATOR = "Cmp";
+    private static final String STORAGE_INDICATOR = "Cmp";
     private static final int MAX_NUM_OF_RETRIES = 2;
     
     /** {@inheritDoc} */
@@ -54,11 +54,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         private List<Double> weakClassifierWeights = new ArrayList<>();
 
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected AbstractModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -135,17 +135,17 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
      */
     protected AbstractBoostingBagging(TP trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
+        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractBoostingBagging(String dbName, Configuration conf) {
-        super(dbName, conf);
-        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
+    protected AbstractBoostingBagging(String storageName, Configuration conf) {
+        super(storageName, conf);
+        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
     }
     
     /** {@inheritDoc} */
@@ -157,8 +157,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
 
         //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, DataTable2D> tmp_recordDecisions = dbc.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        StorageConnector sc = knowledgeBase.getStorageConnector();
+        Map<Object, DataTable2D> tmp_recordDecisions = sc.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
         
         //initialize array of recordDecisions
         for(Integer rId : newData.index()) {
@@ -170,7 +170,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         int totalWeakClassifiers = weakClassifierWeights.size();
         for(int i=0;i<totalWeakClassifiers;++i) {
 
-            AbstractClassifier mlclassifier = (AbstractClassifier) bundle.get(DB_INDICATOR + i);
+            AbstractClassifier mlclassifier = (AbstractClassifier) bundle.get(STORAGE_INDICATOR + i);
             mlclassifier.predict(newData);
             
             classifierWeightsArray.put(i, weakClassifierWeights.get(i));
@@ -199,7 +199,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
+        sc.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
     }
     
     /** {@inheritDoc} */
@@ -258,7 +258,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
                 mlclassifier.close();
             }
             else {
-                bundle.put(DB_INDICATOR + i, mlclassifier);
+                bundle.put(STORAGE_INDICATOR + i, mlclassifier);
             }
 
             if(status==Status.STOP) {
@@ -316,11 +316,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     /** {@inheritDoc} */
     @Override
-    public void save(String dbName) {
+    public void save(String storageName) {
         initBundle();
-        super.save(dbName);
+        super.save(storageName);
 
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
         bundle.save(knowledgeBaseName);
     }
 
@@ -346,18 +346,18 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     private void initBundle() {
         Configuration conf = knowledgeBase.getConf();
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
-        String separator = conf.getDbConfig().getDBNameSeparator();
+        String separator = conf.getStorageConf().getStorageNameSeparator();
 
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
         int totalWeakClassifiers = Math.min(modelParameters.getWeakClassifierWeights().size(), trainingParameters.getMaxWeakClassifiers());
         for(int i=0;i<totalWeakClassifiers;i++) {
-            String key = DB_INDICATOR + i;
+            String key = STORAGE_INDICATOR + i;
             if (!bundle.containsKey(key)) {
-                bundle.put(key, MLBuilder.load(weakClassifierClass, dbc.getDatabaseName() + separator + key, conf));
+                bundle.put(key, MLBuilder.load(weakClassifierClass, sc.getStorageName() + separator + key, conf));
             }
         }
     }

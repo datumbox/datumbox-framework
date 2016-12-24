@@ -52,20 +52,20 @@ public class PCATest extends AbstractTest {
         Dataframe validationData = data[0].copy();
         Dataframe expResult = data[1];
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
 
         PCA instance = MLBuilder.create(param, conf);
         instance.fit_transform(originalData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         originalData.close();
         instance.close();
         //instance = null;
         
-        instance = MLBuilder.load(PCA.class, dbName, conf);
+        instance = MLBuilder.load(PCA.class, storageName, conf);
         
         instance.transform(validationData);
         

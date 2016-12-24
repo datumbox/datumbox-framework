@@ -22,9 +22,9 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
@@ -53,11 +53,11 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -134,17 +134,17 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
      */
     protected TFIDF(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected TFIDF(String dbName, Configuration conf) {
-        super(dbName, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    protected TFIDF(String storageName, Configuration conf) {
+        super(storageName, conf);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
     
     private boolean parallelized = true;
@@ -178,8 +178,8 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         
         int n = trainingData.size();
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<Object, Double> tmp_idfMap = dbc.getBigMap("tmp_idf", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        StorageConnector sc = knowledgeBase.getStorageConnector();
+        Map<Object, Double> tmp_idfMap = sc.getBigMap("tmp_idf", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
         //in idf map. this help us avoid using twice much memory comparing to
@@ -251,7 +251,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         });
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_idf", tmp_idfMap);
+        sc.dropBigMap("tmp_idf", tmp_idfMap);
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<maxFeatureScores.size()) {
@@ -262,10 +262,10 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newData) {
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<Object, Boolean> tmp_removedColumns = sc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         for(Object feature: newData.getXDataTypes().keySet()) {
             if(!maxTFIDFfeatureScores.containsKey(feature)) {
@@ -276,7 +276,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         newData.dropXColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+        sc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
         
     }
     

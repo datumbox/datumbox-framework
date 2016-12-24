@@ -15,16 +15,16 @@
  */
 package com.datumbox.framework.common.persistentstorage.abstracts;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
 
 import java.io.File;
 
 /**
- * Parent class of all File-based Database Configurations.
+ * Parent class of all File-based Storage Configurations.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public abstract class AbstractFileDBConfiguration implements DatabaseConfiguration {
+public abstract class AbstractFileStorageConfiguration implements StorageConfiguration {
 
     /**
      * The output directory of the models.
@@ -33,7 +33,7 @@ public abstract class AbstractFileDBConfiguration implements DatabaseConfigurati
 
     /** {@inheritDoc} */
     @Override
-    public String getDBNameSeparator() {
+    public String getStorageNameSeparator() {
         return File.separator;
     }
 

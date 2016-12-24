@@ -16,7 +16,7 @@
 package com.datumbox.framework.core.machinelearning.classification;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -37,11 +37,11 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
     } 
@@ -62,12 +62,12 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MultinomialNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected MultinomialNaiveBayes(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /** {@inheritDoc} */

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.common.persistentstorage.abstracts;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,20 +23,20 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * Parent class of all File-based Database Connectors.
+ * Parent class of all File-based Storage Connectors.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
- * @param <DC>
+ * @param <SC>
  */
-public abstract class AbstractFileDBConnector<DC extends AbstractFileDBConfiguration> extends AbstractDatabaseConnector<DC> {
+public abstract class AbstractFileStorageConnector<SC extends AbstractFileStorageConfiguration> extends AbstractStorageConnector<SC> {
 
     /**
-     * @param dbName
-     * @param dbConf
-     * @see AbstractDatabaseConnector#AbstractDatabaseConnector(String, DatabaseConfiguration)
+     * @param storageName
+     * @param storageConf
+     * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
      */
-    protected AbstractFileDBConnector(String dbName, DC dbConf) {
-        super(dbName, dbConf);
+    protected AbstractFileStorageConnector(String storageName, SC storageConf) {
+        super(storageName, storageConf);
     }
 
     /**
@@ -45,8 +45,8 @@ public abstract class AbstractFileDBConnector<DC extends AbstractFileDBConfigura
      * @return
      */
     protected String getOutputDirectory() {
-        //get the default filepath of the permanet db file
-        String outputDirectory = dbConf.getOutputDirectory();
+        //get the default filepath of the permanet storage file
+        String outputDirectory = storageConf.getOutputDirectory();
 
         if(outputDirectory == null || outputDirectory.isEmpty()) {
             outputDirectory = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
@@ -56,13 +56,13 @@ public abstract class AbstractFileDBConnector<DC extends AbstractFileDBConfigura
     }
 
     /**
-     * Returns the root path of the database.
+     * Returns the root path of the storage.
      *
-     * @param dbName
+     * @param storageName
      * @return
      */
-    protected Path getRootPath(String dbName) {
-        return Paths.get(getOutputDirectory() + File.separator + dbName);
+    protected Path getRootPath(String storageName) {
+        return Paths.get(getOutputDirectory() + File.separator + storageName);
     }
 
     /**

@@ -56,11 +56,11 @@ public class OrdinalRegressionTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), conf);
         
         df.fit_transform(trainingData);
-        df.save(dbName);
+        df.save(storageName);
 
         String datasetName = "winesOrdinal";
         trainingData.save(datasetName);
@@ -74,7 +74,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         trainingData = Dataframe.Builder.load(datasetName,conf);
 
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         df.denormalize(trainingData);
         trainingData.delete();
@@ -84,8 +84,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXMinMaxNormalizer.class, dbName, conf);
-        instance = MLBuilder.load(OrdinalRegression.class, dbName, conf);
+        df = MLBuilder.load(DummyXMinMaxNormalizer.class, storageName, conf);
+        instance = MLBuilder.load(OrdinalRegression.class, storageName, conf);
 
         df.transform(validationData);
         instance.predict(validationData);

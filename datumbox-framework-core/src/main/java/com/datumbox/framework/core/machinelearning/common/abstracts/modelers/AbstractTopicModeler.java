@@ -37,12 +37,12 @@ public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.Abstr
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractTopicModeler(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractTopicModeler(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
 }

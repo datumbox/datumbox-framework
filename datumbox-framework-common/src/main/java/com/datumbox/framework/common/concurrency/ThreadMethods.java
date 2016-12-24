@@ -34,11 +34,11 @@ public class ThreadMethods {
      * @param <T>
      * @param stream
      * @param consumer 
-     * @param concurrencyConfig 
+     * @param concurrencyConf
      */
-    public static <T> void throttledExecution(Stream<T> stream, Consumer<T> consumer, ConcurrencyConfiguration concurrencyConfig) {
-        if(concurrencyConfig.isParallelized()) {
-            int maxThreads = concurrencyConfig.getMaxNumberOfThreadsPerTask();
+    public static <T> void throttledExecution(Stream<T> stream, Consumer<T> consumer, ConcurrencyConfiguration concurrencyConf) {
+        if(concurrencyConf.isParallelized()) {
+            int maxThreads = concurrencyConf.getMaxNumberOfThreadsPerTask();
             int maxTasks = 2*maxThreads; 
 
             ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
@@ -70,14 +70,14 @@ public class ThreadMethods {
      * 
      * @param <T>
      * @param callable 
-     * @param concurrencyConfig 
+     * @param concurrencyConf
      * @param parallelStream 
      * @return  
      */
-    public static <T> T forkJoinExecution(Callable<T> callable, ConcurrencyConfiguration concurrencyConfig, boolean parallelStream) {
-        if(parallelStream && concurrencyConfig.isParallelized()) {
+    public static <T> T forkJoinExecution(Callable<T> callable, ConcurrencyConfiguration concurrencyConf, boolean parallelStream) {
+        if(parallelStream && concurrencyConf.isParallelized()) {
             try {
-                ForkJoinPool pool = new ForkJoinPool(concurrencyConfig.getMaxNumberOfThreadsPerTask());
+                ForkJoinPool pool = new ForkJoinPool(concurrencyConf.getMaxNumberOfThreadsPerTask());
                 
                 T results = pool.submit(callable).get();
                 pool.shutdown();
@@ -102,13 +102,13 @@ public class ThreadMethods {
      * pool.
      * 
      * @param runnable 
-     * @param concurrencyConfig 
+     * @param concurrencyConf
      * @param parallelStream 
      */
-    public static void forkJoinExecution(Runnable runnable, ConcurrencyConfiguration concurrencyConfig, boolean parallelStream) {
-        if(parallelStream && concurrencyConfig.isParallelized()) {
+    public static void forkJoinExecution(Runnable runnable, ConcurrencyConfiguration concurrencyConf, boolean parallelStream) {
+        if(parallelStream && concurrencyConf.isParallelized()) {
             try {
-                ForkJoinPool pool = new ForkJoinPool(concurrencyConfig.getMaxNumberOfThreadsPerTask());
+                ForkJoinPool pool = new ForkJoinPool(concurrencyConf.getMaxNumberOfThreadsPerTask());
                 pool.submit(runnable).get();
                 pool.shutdown();
             } 

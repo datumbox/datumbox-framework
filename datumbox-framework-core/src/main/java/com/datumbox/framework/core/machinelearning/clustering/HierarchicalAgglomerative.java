@@ -21,9 +21,9 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
@@ -149,11 +149,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         private static final long serialVersionUID = 1L;
           
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
     } 
@@ -295,17 +295,17 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
      */
     protected HierarchicalAgglomerative(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected HierarchicalAgglomerative(String dbName, Configuration conf) {
-        super(dbName, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    protected HierarchicalAgglomerative(String storageName, Configuration conf) {
+        super(storageName, conf);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
     
     private boolean parallelized = true;
@@ -331,7 +331,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getDbc(), knowledgeBase.getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /** {@inheritDoc} */
@@ -407,10 +407,10 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
 
-        Map<List<Object>, Double> tmp_distanceArray = dbc.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = dbc.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = sc.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = sc.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -483,8 +483,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_distanceArray", tmp_distanceArray);
-        dbc.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
+        sc.dropBigMap("tmp_distanceArray", tmp_distanceArray);
+        sc.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

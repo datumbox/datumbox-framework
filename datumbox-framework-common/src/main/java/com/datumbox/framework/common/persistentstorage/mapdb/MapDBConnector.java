@@ -15,10 +15,10 @@
  */
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractDatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractStorageConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import org.mapdb.*;
 
 import java.io.File;
@@ -40,75 +40,75 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> {
+public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfiguration> {
     
     /**
-     * Enum class which stores the Database Type used for every collection.
+     * Enum class which stores the Storage Type used for every collection.
      */
-    private enum DBType {
+    private enum StorageType {
         /**
-         * Primary DB stores all the cached BigMaps and atomic variables which will
-         * be persisted after the connection closes. The DB maintains a separate
+         * Primary storage stores all the cached BigMaps and atomic variables which will
+         * be persisted after the connection closes. The storage maintains a separate
          * LRU cache to speed up the operations.
          */
-        PRIMARY_DB,
+        PRIMARY_STORAGE,
 
         /**
-         * Secondary DB stores all the uncached BigMaps which will be persisted
-         * after the connection closes. The DB does not maintain any LRU cache.
+         * Secondary storage stores all the uncached BigMaps which will be persisted
+         * after the connection closes. The storage does not maintain any LRU cache.
          */
-        SECONDARY_DB,
+        SECONDARY_STORAGE,
         
         /**
-         * Temp primary db is a cached database used to store temporary medium-sized
-         * BigMaps which will not be persisted after the connection closes. The DB
+         * Temp primary storage is a cached storage used to store temporary medium-sized
+         * BigMaps which will not be persisted after the connection closes. The storage
          * maintains an separate LRU cache to speed up the operations.
          */
-        TEMP_PRIMARY_DB,
+        TEMP_PRIMARY_STORAGE,
 
         /**
-         * Temp secondary db is an uncached database used to store temporary
+         * Temp secondary storage is an uncached storage used to store temporary
          * large-sized BigMaps which will not be persisted after the connection closes.
-         * The DB does not maintain any LRU cache.
+         * The storage does not maintain any LRU cache.
          */
-        TEMP_SECONDARY_DB;
+        TEMP_SECONDARY_STORAGE;
     }
     
     /**
-     * This list stores all the DB objects which are used to persist the data. This
-     * library uses one default and one temporary db.
+     * This list stores all the storage objects which are used to persist the data. This
+     * library uses one default and one temporary storage.
      */
-    private final Map<DBType, DB> dbRegistry = new HashMap<>(); 
+    private final Map<StorageType, DB> storageRegistry = new HashMap<>();
     
     /** 
-     * @param dbName
-     * @param dbConf
-     * @see AbstractDatabaseConnector#AbstractDatabaseConnector(String, DatabaseConfiguration)
+     * @param storageName
+     * @param storageConf
+     * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
      */
-    protected MapDBConnector(String dbName, MapDBConfiguration dbConf) {
-        super(dbName, dbConf);
+    protected MapDBConnector(String storageName, MapDBConfiguration storageConf) {
+        super(storageName, storageConf);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean rename(String newDBName) {
+    public boolean rename(String newStorageName) {
         assertConnectionOpen();
-        if(dbName.equals(newDBName)) {
+        if(storageName.equals(newStorageName)) {
             return false;
         }
 
-        blockedDBClose(DBType.PRIMARY_DB);
-        blockedDBClose(DBType.SECONDARY_DB);
+        blockedStorageClose(StorageType.PRIMARY_STORAGE);
+        blockedStorageClose(StorageType.SECONDARY_STORAGE);
 
         try {
-            moveDirectory(getRootPath(dbName), getRootPath(newDBName));
+            moveDirectory(getRootPath(storageName), getRootPath(newStorageName));
         }
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
 
-        logger.trace("Renamed db {} to {}", dbName, newDBName);
-        dbName = newDBName;
+        logger.trace("Renamed storage {} to {}", storageName, newStorageName);
+        storageName = newStorageName;
         return true;
     }
 
@@ -116,22 +116,22 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
     @Override
     public boolean existsObject(String name) {
         assertConnectionOpen();
-        DB db = openDB(DBType.PRIMARY_DB);
+        DB storage = openStorage(StorageType.PRIMARY_STORAGE);
 
-        return db.exists(name);
+        return storage.exists(name);
     }
 
     /** {@inheritDoc} */
     @Override
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
-        DB db = openDB(DBType.PRIMARY_DB);
-        Atomic.Var<T> atomicVar = db.getAtomicVar(name);
+        DB storage = openStorage(StorageType.PRIMARY_STORAGE);
+        Atomic.Var<T> atomicVar = storage.getAtomicVar(name);
 
         Map<String, Object> objRefs = preSerializer(serializableObject);
 
         atomicVar.set(serializableObject);
-        db.commit();
+        storage.commit();
 
         postSerializer(serializableObject, objRefs);
     }
@@ -146,8 +146,8 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             throw new NoSuchElementException("Can't find any object with name '"+name+"'");
         }
 
-        DB db = openDB(DBType.PRIMARY_DB);
-        Atomic.Var<T> atomicVar = db.getAtomicVar(name);
+        DB storage = openStorage(StorageType.PRIMARY_STORAGE);
+        Atomic.Var<T> atomicVar = storage.getAtomicVar(name);
         T serializableObject = klass.cast(atomicVar.get());
 
         postDeserializer(serializableObject);
@@ -163,8 +163,8 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
         }
         super.close();
         
-        closeDBRegistry();
-        logger.trace("Closed db {}", dbName);
+        closeStorageRegistry();
+        logger.trace("Closed storage {}", storageName);
     }
     
     /** {@inheritDoc} */
@@ -172,10 +172,10 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
     public void clear() {
         assertConnectionOpen();
         
-        closeDBRegistry();
+        closeStorageRegistry();
         
         try {
-            deleteDirectory(getRootPath(dbName), true);
+            deleteDirectory(getRootPath(storageName), true);
         } 
         catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -184,15 +184,15 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
     
     /** {@inheritDoc} */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, DatabaseConnector.MapType type, DatabaseConnector.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, StorageConnector.MapType type, StorageConnector.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
-        if(storageHint == DatabaseConnector.StorageHint.IN_MEMORY && dbConf.isHybridized()) {
+        if(storageHint == StorageConnector.StorageHint.IN_MEMORY && storageConf.isHybridized()) {
             //store in memory
-            if(DatabaseConnector.MapType.HASHMAP.equals(type)) {
+            if(StorageConnector.MapType.HASHMAP.equals(type)) {
                 return isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
             }
-            else if(DatabaseConnector.MapType.TREEMAP.equals(type)) {
+            else if(StorageConnector.MapType.TREEMAP.equals(type)) {
                 return isConcurrent?new ConcurrentSkipListMap<>():new TreeMap<>();
             }
             else {
@@ -202,32 +202,32 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
         else {
             //store in disk with optional LRU cache
             
-            //first find if the particular collection exists and retrieve its dbType
-            DBType dbType = getDatabaseTypeFromName(name);
+            //first find if the particular collection exists and retrieve its storageType
+            StorageType storageType = getStorageTypeFromName(name);
             
-            if(dbType == null) {
+            if(storageType == null) {
                 //the map does not exist. Find where it should be created.
                 if(isTemporary == false) {
-                    if(storageHint == DatabaseConnector.StorageHint.IN_MEMORY || storageHint == DatabaseConnector.StorageHint.IN_CACHE) {
+                    if(storageHint == StorageConnector.StorageHint.IN_MEMORY || storageHint == StorageConnector.StorageHint.IN_CACHE) {
                         //we will use the LRU cache option
-                        dbType = DBType.PRIMARY_DB;
+                        storageType = StorageType.PRIMARY_STORAGE;
                     }
-                    else if(storageHint == DatabaseConnector.StorageHint.IN_DISK) {
+                    else if(storageHint == StorageConnector.StorageHint.IN_DISK) {
                         //no cache at all
-                        dbType = DBType.SECONDARY_DB;
+                        storageType = StorageType.SECONDARY_STORAGE;
                     }
                     else {
                         throw new IllegalArgumentException("Unsupported StorageHint.");
                     }
                 }
                 else {
-                    if(storageHint == DatabaseConnector.StorageHint.IN_MEMORY || storageHint == DatabaseConnector.StorageHint.IN_CACHE) {
+                    if(storageHint == StorageConnector.StorageHint.IN_MEMORY || storageHint == StorageConnector.StorageHint.IN_CACHE) {
                         //we will use the LRU cache option
-                        dbType = DBType.TEMP_PRIMARY_DB;
+                        storageType = StorageType.TEMP_PRIMARY_STORAGE;
                     }
-                    else if(storageHint == DatabaseConnector.StorageHint.IN_DISK) {
+                    else if(storageHint == StorageConnector.StorageHint.IN_DISK) {
                         //no cache at all
-                        dbType = DBType.TEMP_SECONDARY_DB;
+                        storageType = StorageType.TEMP_SECONDARY_STORAGE;
                     }
                     else {
                         throw new IllegalArgumentException("Unsupported StorageHint.");
@@ -235,20 +235,20 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
                 }
             }
 
-            //ensure the DB is open 
-            DB db = openDB(dbType);
+            //ensure the storage is open
+            DB storage = openStorage(storageType);
             
             //return the appropriate type
             Map<K,V> map;
-            if(DatabaseConnector.MapType.HASHMAP.equals(type)) {
-                map = db.createHashMap(name)
+            if(StorageConnector.MapType.HASHMAP.equals(type)) {
+                map = storage.createHashMap(name)
                 .counterEnable()
                 .keySerializer(getSerializerFromClass(keyClass))
                 .valueSerializer(getSerializerFromClass(valueClass))
                 .makeOrGet();
             }
-            else if(DatabaseConnector.MapType.TREEMAP.equals(type)) {
-                map = db.createTreeMap(name)
+            else if(StorageConnector.MapType.TREEMAP.equals(type)) {
+                map = storage.createTreeMap(name)
                 .valuesOutsideNodesEnable()
                 .counterEnable()
                 .keySerializer(getBTreeKeySerializerFromClass(keyClass))
@@ -272,16 +272,16 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
     public <T extends Map> void dropBigMap(String name, T map) {
         assertConnectionOpen();
         
-        DBType dbType = getDatabaseTypeFromName(name);
+        StorageType storageType = getStorageTypeFromName(name);
         
-        if(dbType != null) {
-            DB db = dbRegistry.get(dbType);
-            if(isOpenDB(db)) {
-                db.delete(name);
+        if(storageType != null) {
+            DB storage = storageRegistry.get(storageType);
+            if(isOpenStorage(storage)) {
+                storage.delete(name);
             }
         }
         else {
-            //The dbType can be null in two cases: a) the map was never created 
+            //The storageType can be null in two cases: a) the map was never created
             //or b) it was stored in memory. In either case just clear the map.
             map.clear();
         }
@@ -330,23 +330,23 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
         return null; //Default POJO serializer
     }
 
-    private boolean isOpenDB(DB db) {
-        return !(db == null || db.isClosed());
+    private boolean isOpenStorage(DB storage) {
+        return !(storage == null || storage.isClosed());
     }
     
     /**
-     * Opens the DB (if not already open) and returns the DB object.
+     * Opens the storage (if not already open) and returns the storage object.
      * 
-     * @param dbType
+     * @param storageType
      * @return 
      */
-    private DB openDB(DBType dbType) {
-        DB db = dbRegistry.get(dbType);
-        if(!isOpenDB(db)) {
+    private DB openStorage(StorageType storageType) {
+        DB storage = storageRegistry.get(storageType);
+        if(!isOpenStorage(storage)) {
             DBMaker m;
-            if(dbType == DBType.PRIMARY_DB || dbType == DBType.SECONDARY_DB) {
+            if(storageType == StorageType.PRIMARY_STORAGE || storageType == StorageType.SECONDARY_STORAGE) {
                 //main storage
-                Path rootPath = getRootPath(dbName);
+                Path rootPath = getRootPath(storageName);
                 try {
                     createDirectoryIfNotExists(rootPath);
                 }
@@ -354,29 +354,29 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
                     throw new UncheckedIOException(ex);
                 }
 
-                m = DBMaker.newFileDB(new File(rootPath.toFile(), dbType.toString()));
+                m = DBMaker.newFileDB(new File(rootPath.toFile(), storageType.toString()));
             }
-            else if(dbType == DBType.TEMP_PRIMARY_DB || dbType == DBType.TEMP_SECONDARY_DB) {
+            else if(storageType == StorageType.TEMP_PRIMARY_STORAGE || storageType == StorageType.TEMP_SECONDARY_STORAGE) {
                 //temporary storage
                 m = DBMaker.newTempFileDB().deleteFilesAfterClose();
             }
             else {
-                throw new IllegalArgumentException("Unsupported DatabaseType.");
+                throw new IllegalArgumentException("Unsupported StorageType.");
             }
             
-            if(dbConf.isCompressed()) {
+            if(storageConf.isCompressed()) {
                 m = m.compressionEnable();
             }
 
-            boolean permitCaching = dbType == DBType.PRIMARY_DB || dbType == DBType.TEMP_PRIMARY_DB;
-            if(permitCaching && dbConf.getCacheSize()>0) {
-                m = m.cacheLRUEnable().cacheSize(dbConf.getCacheSize()) ;
+            boolean permitCaching = storageType == StorageType.PRIMARY_STORAGE || storageType == StorageType.TEMP_PRIMARY_STORAGE;
+            if(permitCaching && storageConf.getCacheSize()>0) {
+                m = m.cacheLRUEnable().cacheSize(storageConf.getCacheSize()) ;
             }
             else {
                 m = m.cacheDisable();
             }
 
-            if(dbConf.isAsynchronous()) {
+            if(storageConf.isAsynchronous()) {
                 m = m.asyncWriteEnable();
             }
             
@@ -384,23 +384,23 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
             
             m = m.closeOnJvmShutdown();
             
-            db = m.make();
-            dbRegistry.put(dbType, db);
+            storage = m.make();
+            storageRegistry.put(storageType, storage);
         }
-        return db;
+        return storage;
     }
     
     /**
-     * Returns the DatabaseType using the name of the map. It assumes that names 
-     * are unique across all DatabaseType. If not found null is returned.
+     * Returns the StorageType using the name of the map. It assumes that names
+     * are unique across all StorageType. If not found null is returned.
      * 
      * @param name
      * @return 
      */
-    private DBType getDatabaseTypeFromName(String name) {
-        for(Map.Entry<DBType, DB> entry : dbRegistry.entrySet()) {
-            DB db = entry.getValue();
-            if(isOpenDB(db) && db.exists(name)) {
+    private StorageType getStorageTypeFromName(String name) {
+        for(Map.Entry<StorageType, DB> entry : storageRegistry.entrySet()) {
+            DB storage = entry.getValue();
+            if(isOpenStorage(storage) && storage.exists(name)) {
                 return entry.getKey();
             }
         }
@@ -409,39 +409,38 @@ public class MapDBConnector extends AbstractFileDBConnector<MapDBConfiguration> 
     }
     
     /**
-     * It closes all the DBs stored in the registry.
+     * It closes all the storages in the registry.
      */
-    private void closeDBRegistry() {
-        //close all dbs stored in dbRegistry
-        for(DB db : dbRegistry.values()) {
-            if(isOpenDB(db)) {
-                db.close();
+    private void closeStorageRegistry() {
+        for(DB storage : storageRegistry.values()) {
+            if(isOpenStorage(storage)) {
+                storage.close();
             }
         }
-        dbRegistry.clear();
+        storageRegistry.clear();
     }
 
     /**
-     * Closes the provided DB and waits until all changes are written to disk. It should be used when
-     * we move the database to a different location. Returns true if the db needed to be closed and
+     * Closes the provided storage and waits until all changes are written to disk. It should be used when
+     * we move the storage to a different location. Returns true if the storage needed to be closed and
      * false if it was not necessary.
      *
-     * @param dbType
+     * @param storageType
      * @return
      */
-    private boolean blockedDBClose(DBType dbType) {
-        DB db = dbRegistry.get(dbType);
-        if(isOpenDB(db)) {
-            db.commit();
+    private boolean blockedStorageClose(StorageType storageType) {
+        DB storage = storageRegistry.get(storageType);
+        if(isOpenStorage(storage)) {
+            storage.commit();
 
             //find the underlying engine
-            Engine e = db.getEngine();
+            Engine e = storage.getEngine();
             while (EngineWrapper.class.isAssignableFrom(e.getClass())) {
                 e = ((EngineWrapper) e).getWrappedEngine();
             }
 
             //close and wait until the close on the underlying engine is also finished
-            db.close();
+            storage.close();
             while (!e.isClosed()) {
                 logger.trace("Waiting for the engine to close");
                 try {

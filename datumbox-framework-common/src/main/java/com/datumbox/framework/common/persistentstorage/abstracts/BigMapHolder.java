@@ -16,7 +16,7 @@
 package com.datumbox.framework.common.persistentstorage.abstracts;
 
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 
 import java.io.Serializable;
@@ -31,27 +31,27 @@ import java.util.LinkedList;
 public abstract class BigMapHolder implements Serializable {
 
     /**
-     * Protected constructor which accepts as argument the DatabaseConnector.
+     * Protected constructor which accepts as argument the StorageConnector.
      *
-     * @param dbc
+     * @param sc
      */
-    protected BigMapHolder(DatabaseConnector dbc) {
+    protected BigMapHolder(StorageConnector sc) {
         //Initialize all the BigMap fields
-        bigMapInitializer(dbc);
+        bigMapInitializer(sc);
     }
 
     /**
      * Initializes all the fields of the class which are marked with the BigMap
      * annotation automatically.
      *
-     * @param dbc
+     * @param sc
      */
-    private void bigMapInitializer(DatabaseConnector dbc) {
+    private void bigMapInitializer(StorageConnector sc) {
         //get all the fields from all the inherited classes
         for(Field field : ReflectionMethods.getAllFields(new LinkedList<>(), this.getClass())){
             //if the field is annotated with BigMap
             if (field.isAnnotationPresent(BigMap.class)) {
-                initializeBigMapField(dbc, field);
+                initializeBigMapField(sc, field);
             }
         }
     }
@@ -59,15 +59,15 @@ public abstract class BigMapHolder implements Serializable {
     /**
      * Initializes a field which is marked as BigMap.
      *
-     * @param dbc
+     * @param sc
      * @param field
      */
-    private void initializeBigMapField(DatabaseConnector dbc, Field field) {
+    private void initializeBigMapField(StorageConnector sc, Field field) {
         field.setAccessible(true);
 
         try {
             BigMap a = field.getAnnotation(BigMap.class);
-            field.set(this, dbc.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
+            field.set(this, sc.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
         }
         catch (IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException(ex);

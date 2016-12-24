@@ -51,7 +51,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         Dataframe validationData = data[1];
 
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -61,11 +61,11 @@ public class MultinomialDPMMTest extends AbstractTest {
 
         MultinomialDPMM instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(MultinomialDPMM.class, dbName, conf);
+        instance = MLBuilder.load(MultinomialDPMM.class, storageName, conf);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);

@@ -19,27 +19,27 @@ import com.datumbox.framework.common.interfaces.Configurable;
 
 /**
  * This interface should be implemented by objects that store the configuration 
- * of DB connectors.
+ * of storage connectors.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface DatabaseConfiguration extends Configurable {
+public interface StorageConfiguration extends Configurable {
     
     /**
-     * Returns the separator that is used in the DB names. Usually the database
+     * Returns the separator that is used in the storage names. Usually the storage
      * names used by the algorithms are concatenations of various words separated
      * by this character.
      *
      * @return
      */
-    public String getDBNameSeparator();
+    public String getStorageNameSeparator();
 
     /**
-     * Initializes and returns a connection to the Database.
+     * Initializes and returns a connection to the storage.
      * 
-     * @param dbName
+     * @param storageName
      * @return 
      */
-    public DatabaseConnector getConnector(String dbName);
+    public StorageConnector getStorageConnector(String storageName);
     
 }

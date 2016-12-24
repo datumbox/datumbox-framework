@@ -54,7 +54,7 @@ public class ModelerTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
 
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         
@@ -74,11 +74,11 @@ public class ModelerTest extends AbstractTest {
 
         Modeler instance = MLBuilder.create(trainingParameters, conf);
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         instance.close();
 
-        instance = MLBuilder.load(Modeler.class, dbName, conf);
+        instance = MLBuilder.load(Modeler.class, storageName, conf);
 
         instance.predict(trainingData);
 
@@ -92,7 +92,7 @@ public class ModelerTest extends AbstractTest {
         //instance = null;
 
 
-        instance = MLBuilder.load(Modeler.class, dbName, conf);
+        instance = MLBuilder.load(Modeler.class, storageName, conf);
         
         instance.predict(validationData);
         

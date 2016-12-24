@@ -17,7 +17,7 @@ package com.datumbox.framework.applications.datamodeling;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
@@ -48,11 +48,11 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         private static final long serialVersionUID = 1L;
         
         /**
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
     }
@@ -136,17 +136,17 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
      */
     protected Modeler(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
+        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    protected Modeler(String dbName, Configuration conf) {
-        super(dbName, conf);
-        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
+    protected Modeler(String storageName, Configuration conf) {
+        super(storageName, conf);
+        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
     }
 
 
@@ -240,11 +240,11 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
     /** {@inheritDoc} */
     @Override
-    public void save(String dbName) {
+    public void save(String storageName) {
         initBundle();
-        super.save(dbName);
+        super.save(storageName);
 
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
         bundle.save(knowledgeBaseName);
     }
 
@@ -271,15 +271,15 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
-        String dbName = knowledgeBase.getDbc().getDatabaseName();
-        String separator = conf.getDbConfig().getDBNameSeparator();
+        String storageName = knowledgeBase.getStorageConnector().getStorageName();
+        String separator = conf.getStorageConf().getStorageNameSeparator();
 
         if(!bundle.containsKey(DT_KEY)) {
             AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
 
             AbstractTransformer dataTransformer = null;
             if(dtParams != null) {
-                dataTransformer = MLBuilder.load(dtParams.getTClass(), dbName + separator + DT_KEY, conf);
+                dataTransformer = MLBuilder.load(dtParams.getTClass(), storageName + separator + DT_KEY, conf);
             }
             bundle.put(DT_KEY, dataTransformer);
         }
@@ -289,7 +289,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
             AbstractFeatureSelector featureSelector = null;
             if(fsParams != null) {
-                featureSelector = MLBuilder.load(fsParams.getTClass(), dbName + separator + FS_KEY, conf);
+                featureSelector = MLBuilder.load(fsParams.getTClass(), storageName + separator + FS_KEY, conf);
             }
             bundle.put(FS_KEY, featureSelector);
         }
@@ -297,7 +297,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         if(!bundle.containsKey(ML_KEY)) {
             AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
 
-            bundle.put(ML_KEY, MLBuilder.load(mlParams.getTClass(), dbName + separator + ML_KEY, conf));
+            bundle.put(ML_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + ML_KEY, conf));
         }
     }
 

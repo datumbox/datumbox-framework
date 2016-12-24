@@ -17,19 +17,19 @@ package com.datumbox.framework.common;
 
 import com.datumbox.framework.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.framework.common.interfaces.Configurable;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
 
 import java.util.Properties;
 
 /**
- * The main Configuration object of the framework which information about the Database, the concurrency etc.
+ * The main Configuration object of the framework which information about the storage, the concurrency etc.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Configuration implements Configurable {
     
-    private DatabaseConfiguration dbConfig;
-    private ConcurrencyConfiguration concurrencyConfig;
+    private StorageConfiguration storageConf;
+    private ConcurrencyConfiguration concurrencyConf;
     
     /**
      * Protected constructor. Use the static getConfiguration method instead.
@@ -39,21 +39,21 @@ public class Configuration implements Configurable {
     }
     
     /**
-     * Getter for the Database Configuration object.
+     * Getter for the Storage Configuration object.
      * 
      * @return 
      */
-    public DatabaseConfiguration getDbConfig() {
-        return dbConfig;
+    public StorageConfiguration getStorageConf() {
+        return storageConf;
     }
     
     /**
-     * Setter for the Database Configuration object.
+     * Setter for the Storage Configuration object.
      * 
-     * @param dbConfig 
+     * @param storageConf
      */
-    public void setDbConfig(DatabaseConfiguration dbConfig) {
-        this.dbConfig = dbConfig;
+    public void setStorageConf(StorageConfiguration storageConf) {
+        this.storageConf = storageConf;
     }
     
     /**
@@ -61,30 +61,30 @@ public class Configuration implements Configurable {
      * 
      * @return 
      */
-    public ConcurrencyConfiguration getConcurrencyConfig() {
-        return concurrencyConfig;
+    public ConcurrencyConfiguration getConcurrencyConf() {
+        return concurrencyConf;
     }
     
     /**
      * Setter for the Concurrency Configuration object.
      * 
-     * @param concurrencyConfig 
+     * @param concurrencyConf
      */
-    public void setConcurrencyConfig(ConcurrencyConfiguration concurrencyConfig) {
-        this.concurrencyConfig = concurrencyConfig;
+    public void setConcurrencyConfig(ConcurrencyConfiguration concurrencyConf) {
+        this.concurrencyConf = concurrencyConf;
     }
     
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        String dbConfigClassName = properties.getProperty("dbConfig.className");
+        String storageConfClassName = properties.getProperty("storageConf.className");
         try {
-            dbConfig = ConfigurableFactory.getConfiguration((Class<DatabaseConfiguration>) Class.forName(dbConfigClassName));
+            storageConf = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfClassName));
         }
         catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
-        concurrencyConfig = ConfigurableFactory.getConfiguration(ConcurrencyConfiguration.class);
+        concurrencyConf = ConfigurableFactory.getConfiguration(ConcurrencyConfiguration.class);
     }
     
     /**

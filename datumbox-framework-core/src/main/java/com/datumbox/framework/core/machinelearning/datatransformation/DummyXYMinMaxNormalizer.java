@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.datatransformation;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers.AbstractDummyMinMaxTransformer;
 
@@ -37,11 +37,11 @@ public class DummyXYMinMaxNormalizer extends AbstractDummyMinMaxTransformer<Dumm
         private static final long serialVersionUID = 1L;
 
         /**
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
     }
@@ -62,12 +62,12 @@ public class DummyXYMinMaxNormalizer extends AbstractDummyMinMaxTransformer<Dumm
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected DummyXYMinMaxNormalizer(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected DummyXYMinMaxNormalizer(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /** {@inheritDoc} */

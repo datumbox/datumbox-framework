@@ -117,11 +117,11 @@ public class DataEnvelopmentAnalysis {
     /**
      * Estimates the efficiency of the records by running DEA
      * 
-     * @param id2DeaRecordMapDatabase   AssociativeArray with the DeaRecords
-     * @param id2DeaRecordMapEvaluation
+     * @param id2DeaRecordMapInput   AssociativeArray with the DeaRecords
+     * @param id2DeaRecordMapOutput
      * @return          Map with the scores of the records 
      */
-    public AssociativeArray estimateEfficiency(Map<Object, DeaRecord> id2DeaRecordMapDatabase, Map<Object, DeaRecord> id2DeaRecordMapEvaluation) {
+    public AssociativeArray estimateEfficiency(Map<Object, DeaRecord> id2DeaRecordMapInput, Map<Object, DeaRecord> id2DeaRecordMapOutput) {
         AssociativeArray evaluatedResults = new AssociativeArray();
         
         List<LPSolver.LPConstraint> constraints = new ArrayList<>();
@@ -129,7 +129,7 @@ public class DataEnvelopmentAnalysis {
         //initialize the constraints list
         Integer totalColumns = null;
         boolean hasInput = false;
-        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapDatabase.entrySet()) {
+        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapInput.entrySet()) {
             DeaRecord currentRecord = entry.getValue();
             int currentColumns = currentRecord.getInput().length; //add the size of input array
             boolean currentHasInput=(currentColumns > 0); //check if the input is defined
@@ -181,7 +181,7 @@ public class DataEnvelopmentAnalysis {
         }
         
         
-        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapEvaluation.entrySet()) {
+        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapOutput.entrySet()) {
             Object currentRecordId = entry.getKey();
             DeaRecord currentRecord = entry.getValue();
             

@@ -23,14 +23,14 @@ package com.datumbox.framework.common.interfaces;
 public interface Savable extends AutoCloseable {
 
     /**
-     * Saves the database of the object.
+     * Saves the data of the object.
      *
-     * @param dbName
+     * @param storageName
      */
-    public void save(String dbName);
+    public void save(String storageName);
 
     /**
-     * Deletes the database of the object.
+     * Deletes the data of the object.
      */
     public void delete();
 

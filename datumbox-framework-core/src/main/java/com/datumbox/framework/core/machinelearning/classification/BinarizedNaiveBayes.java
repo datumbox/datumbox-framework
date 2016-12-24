@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -39,11 +39,11 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
     } 
@@ -64,12 +64,12 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected BinarizedNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected BinarizedNaiveBayes(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /** {@inheritDoc} */

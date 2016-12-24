@@ -16,7 +16,7 @@
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.common.interfaces.Learnable;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -34,14 +34,14 @@ public interface ModelParameters extends Learnable {
      *
      * @param <MP>
      * @param mpClass
-     * @param dbc
+     * @param sc
      * @return
      */
-    public static <MP extends ModelParameters> MP newInstance(Class<MP> mpClass, DatabaseConnector dbc) {
+    public static <MP extends ModelParameters> MP newInstance(Class<MP> mpClass, StorageConnector sc) {
         try {
-            Constructor<MP> c = mpClass.getDeclaredConstructor(DatabaseConnector.class);
+            Constructor<MP> c = mpClass.getDeclaredConstructor(StorageConnector.class);
             c.setAccessible(true);
-            return c.newInstance(dbc);
+            return c.newInstance(sc);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

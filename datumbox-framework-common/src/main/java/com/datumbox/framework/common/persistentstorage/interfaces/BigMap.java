@@ -15,15 +15,15 @@
  */
 package com.datumbox.framework.common.persistentstorage.interfaces;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 
 import java.lang.annotation.*;
 
 /**
  * BigMap annotation is used to declare large Maps in the ModelParameters classes.
  * Fields that are annotated with this annotation, are automatically initialized
- * by the BaseModelParameters object.
+ * by the BigMapHolder object.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

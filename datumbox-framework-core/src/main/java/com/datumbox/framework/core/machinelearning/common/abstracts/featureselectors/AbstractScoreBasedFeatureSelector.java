@@ -43,12 +43,12 @@ public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScore
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractScoreBasedFeatureSelector(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractScoreBasedFeatureSelector(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /**

@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.common.persistentstorage.mapdb;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 
 import java.util.Properties;
 
@@ -28,7 +28,7 @@ import java.util.Properties;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConfiguration extends AbstractFileDBConfiguration {
+public class MapDBConfiguration extends AbstractFileStorageConfiguration {
 
     private int cacheSize = 10000;
     
@@ -40,18 +40,18 @@ public class MapDBConfiguration extends AbstractFileDBConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public DatabaseConnector getConnector(String dbName) {
-        return new MapDBConnector(dbName, this);
+    public StorageConnector getStorageConnector(String storageName) {
+        return new MapDBConnector(storageName, this);
     }
 
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        outputDirectory = properties.getProperty("dbConfig.MapDBConfiguration.outputDirectory");
-        cacheSize = Integer.parseInt(properties.getProperty("dbConfig.MapDBConfiguration.cacheSize"));
-        compressed = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.compressed"));
-        hybridized = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.hybridized"));
-        asynchronous = "true".equalsIgnoreCase(properties.getProperty("dbConfig.MapDBConfiguration.asynchronous"));
+        outputDirectory = properties.getProperty("storageConf.MapDBConfiguration.outputDirectory");
+        cacheSize = Integer.parseInt(properties.getProperty("storageConf.MapDBConfiguration.cacheSize"));
+        compressed = "true".equalsIgnoreCase(properties.getProperty("storageConf.MapDBConfiguration.compressed"));
+        hybridized = "true".equalsIgnoreCase(properties.getProperty("storageConf.MapDBConfiguration.hybridized"));
+        asynchronous = "true".equalsIgnoreCase(properties.getProperty("storageConf.MapDBConfiguration.asynchronous"));
     }
     
     /**

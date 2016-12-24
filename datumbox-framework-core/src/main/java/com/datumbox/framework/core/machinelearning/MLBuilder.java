@@ -49,19 +49,19 @@ public class MLBuilder {
     }
 
     /**
-     * Loads an algorithm from the database.
+     * Loads an algorithm from the storage.
      *
      * @param <T>
      * @param aClass
-     * @param dbName
+     * @param storageName
      * @param conf
      * @return
      */
-    public static <T extends Trainable> T load(Class<T> aClass, String dbName, Configuration conf) {
+    public static <T extends Trainable> T load(Class<T> aClass, String storageName, Configuration conf) {
         try {
             Constructor<T> constructor = aClass.getDeclaredConstructor(String.class, Configuration.class);
             constructor.setAccessible(true);
-            return constructor.newInstance(dbName, conf);
+            return constructor.newInstance(storageName, conf);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

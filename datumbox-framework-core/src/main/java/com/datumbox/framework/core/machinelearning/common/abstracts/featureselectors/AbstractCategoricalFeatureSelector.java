@@ -21,9 +21,9 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.dataobjects.TypeInference.DataType;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +46,11 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected AbstractModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -133,23 +133,23 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractCategoricalFeatureSelector(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractCategoricalFeatureSelector(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         
         Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
-        Map<List<Object>, Integer> tmp_featureClassCounts = dbc.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> tmp_featureCounts = dbc.getBigMap("tmp_featureCounts", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
+        Map<List<Object>, Integer> tmp_featureClassCounts = sc.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> tmp_featureCounts = sc.getBigMap("tmp_featureCounts", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
 
         
         //build the maps with the feature statistics and counts
@@ -164,22 +164,22 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
 
         //drop the unnecessary stastistics tables
-        dbc.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
-        dbc.dropBigMap("tmp_featureCounts", tmp_featureCounts);
+        sc.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
+        sc.dropBigMap("tmp_featureCounts", tmp_featureCounts);
     }
     
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
-        filterData(newdata, knowledgeBase.getDbc(), knowledgeBase.getModelParameters().getFeatureScores());
+        filterData(newdata, knowledgeBase.getStorageConnector(), knowledgeBase.getModelParameters().getFeatureScores());
     }
     
-    private static void filterData(Dataframe data, DatabaseConnector dbc, Map<Object, Double> featureScores) {
+    private static void filterData(Dataframe data, StorageConnector sc, Map<Object, Double> featureScores) {
         Logger logger = LoggerFactory.getLogger(AbstractCategoricalFeatureSelector.class);
         logger.debug("filterData()");
         
-        Map<Object, Boolean> tmp_removedColumns = dbc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<Object, Boolean> tmp_removedColumns = sc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();
@@ -193,12 +193,12 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         data.dropXColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+        sc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
     }
     
     private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
 
@@ -234,7 +234,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
             }
             
             //then remove the features in dataset that do not appear in the list
-            filterData(data, dbc, featureCounts);
+            filterData(data, sc, featureCounts);
         }
     }
     

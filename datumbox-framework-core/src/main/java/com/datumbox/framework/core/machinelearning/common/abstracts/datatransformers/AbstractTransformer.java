@@ -38,12 +38,12 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractTransformer(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractTransformer(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /**

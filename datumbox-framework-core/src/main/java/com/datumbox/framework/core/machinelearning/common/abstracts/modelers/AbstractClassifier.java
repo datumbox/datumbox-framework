@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
@@ -39,11 +39,11 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
         private Set<Object> classes = new LinkedHashSet<>();
         
         /** 
-         * @param dbc
-         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected AbstractModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -85,12 +85,12 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractClassifier(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractClassifier(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /**

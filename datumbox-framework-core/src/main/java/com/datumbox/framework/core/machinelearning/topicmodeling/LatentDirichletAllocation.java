@@ -18,9 +18,9 @@ package com.datumbox.framework.core.machinelearning.topicmodeling;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -81,11 +81,11 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
         /**
@@ -337,12 +337,12 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected LatentDirichletAllocation(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected LatentDirichletAllocation(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /**
@@ -579,13 +579,13 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = sc.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = sc.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = sc.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<Integer, Integer> tmp_topicCounts = sc.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -723,9 +723,9 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        dbc.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
-        dbc.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
-        dbc.dropBigMap("tmp_topicCounts", tmp_topicCounts);
+        sc.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        sc.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
+        sc.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
+        sc.dropBigMap("tmp_topicCounts", tmp_topicCounts);
     }
 }

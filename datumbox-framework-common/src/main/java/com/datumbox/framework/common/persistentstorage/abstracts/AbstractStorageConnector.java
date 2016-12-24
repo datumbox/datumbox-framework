@@ -16,8 +16,8 @@
 package com.datumbox.framework.common.persistentstorage.abstracts;
 
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The AbstractDatabaseConnector is the base class for all concrete database connectors.
+ * The AbstractStorageConnector is the base class for all concrete storage connectors.
  * Those classes can be used in a try-with-resources statement block. Moreover this class
  * setups a shutdown hook which ensures that the Connector will automatically call close()
  * before the JVM is terminated. Finally it contains methods to persist complex objects
@@ -39,10 +39,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public abstract class AbstractDatabaseConnector<DC extends DatabaseConfiguration> implements DatabaseConnector {
+public abstract class AbstractStorageConnector<DC extends StorageConfiguration> implements StorageConnector {
 
-    protected String dbName;
-    protected final DC dbConf;
+    protected String storageName;
+    protected final DC storageConf;
 
     /**
      * Logger for all Connectors.
@@ -54,31 +54,31 @@ public abstract class AbstractDatabaseConnector<DC extends DatabaseConfiguration
     private Thread hook;
 
     /**
-     * Protected Constructor which is responsible for adding the Shutdown hook and storing the database name and configuration.
+     * Protected Constructor which is responsible for adding the Shutdown hook and storing the storage name and configuration.
      *
-     * @param dbName
-     * @param dbConf
+     * @param storageName
+     * @param storageConf
      */
-    protected AbstractDatabaseConnector(String dbName, DC dbConf) {
-        this.dbName = dbName;
-        this.dbConf = dbConf;
+    protected AbstractStorageConnector(String storageName, DC storageConf) {
+        this.storageName = storageName;
+        this.storageConf = storageConf;
 
         hook = new Thread(() -> {
-            AbstractDatabaseConnector.this.hook = null;
-            if(AbstractDatabaseConnector.this.isClosed()) {
+            AbstractStorageConnector.this.hook = null;
+            if(AbstractStorageConnector.this.isClosed()) {
                 return;
             }
-            AbstractDatabaseConnector.this.close();
+            AbstractStorageConnector.this.close();
         });
         Runtime.getRuntime().addShutdownHook(hook);
 
-        logger.trace("Opened db {}", dbName);
+        logger.trace("Opened storage {}", storageName);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getDatabaseName() {
-        return dbName;
+    public String getStorageName() {
+        return storageName;
     }
     
     /** {@inheritDoc} */

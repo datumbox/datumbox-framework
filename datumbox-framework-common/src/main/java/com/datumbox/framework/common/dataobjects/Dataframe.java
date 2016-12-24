@@ -24,9 +24,9 @@ import com.datumbox.framework.common.interfaces.Extractable;
 import com.datumbox.framework.common.interfaces.Savable;
 import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import org.apache.commons.csv.CSVFormat;
@@ -75,7 +75,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
          *
          * The method requires as arguments a file with the category names and locations
          * of the training files, an instance of a TextExtractor which is used
-         * to extract the keywords from the documents and the Database Configuration
+         * to extract the keywords from the documents and the Storage Configuration
          * Object.
          *
          * @param textFilesMap
@@ -106,7 +106,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
 
                         //we call below the recalculateMeta()
                         dataset.set(rId, r);
-                    }, conf.getConcurrencyConfig());
+                    }, conf.getConcurrencyConf());
                 }
                 catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -124,7 +124,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
          * we will read the contents of the csv file. The name column of the
          * response variable y. A map with the column names and their respective
          * DataTypes. The char delimiter for the columns, the char for quotes and
-         * the string of the record/row separator. The Database Configuration
+         * the string of the record/row separator. The Storage Configuration
          * object.
          *
          * @param reader
@@ -199,7 +199,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
                         //The Metas are already set in the construction of the Dataframe.
                         dataset._unsafe_set(rId, r);
                     }
-                }, conf.getConcurrencyConfig());
+                }, conf.getConcurrencyConf());
             }
             catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -210,12 +210,12 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         /**
          * It loads a dataframe that has already been persisted.
          *
-         * @param dbName
+         * @param storageName
          * @param conf
          * @return
          */
-        public static Dataframe load(String dbName, Configuration conf) {
-            return new Dataframe(dbName, conf);
+        public static Dataframe load(String storageName, Configuration conf) {
+            return new Dataframe(storageName, conf);
         }
 
     }
@@ -236,10 +236,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         /**
          * Initializes the state of the Data object.
          *
-         * @param dbc
+         * @param sc
          */
-        private Data(DatabaseConnector dbc) {
-            super(dbc);
+        private Data(StorageConnector sc) {
+            super(sc);
         }
     }
 
@@ -254,9 +254,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     private boolean persisted;
 
     /**
-     * The connection with the database.
+     * The connection with the storage.
      */
-    private final DatabaseConnector dbc;
+    private final StorageConnector sc;
 
     /**
      * The configuration object used to create the Dataframe. It is defined as protected to be accessible by classes
@@ -277,25 +277,25 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     public Dataframe(Configuration conf) {
         this.conf = conf;
-        dbc = this.conf.getDbConfig().getConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
-        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
+        sc = this.conf.getStorageConf().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
+        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConf());
 
-        data = new Data(dbc);
+        data = new Data(sc);
         persisted = false;
     }
 
     /**
      * Private constructor used by the Builder inner static class.
      *
-     * @param dbName
+     * @param storageName
      * @param conf
      */
-    private Dataframe(String dbName, Configuration conf) {
+    private Dataframe(String storageName, Configuration conf) {
         this.conf = conf;
-        dbc = this.conf.getDbConfig().getConnector(dbName);
-        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConfig());
+        sc = this.conf.getStorageConf().getStorageConnector(storageName);
+        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConf());
 
-        data = dbc.loadObject("data", Data.class);
+        data = sc.loadObject("data", Data.class);
         persisted = true;
     }
 
@@ -318,17 +318,17 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /**
      * Saves the Dataframe to disk.
      *
-     * @param dbName
+     * @param storageName
      */
-    public void save(String dbName) {
-        //store the objects on database
-        dbc.saveObject("data", data);
+    public void save(String storageName) {
+        //store the objects on storage
+        sc.saveObject("data", data);
 
-        //rename the database
-        dbc.rename(dbName);
+        //rename the storage
+        sc.rename(storageName);
 
         //reload the data of the object
-        data = dbc.loadObject("data", Data.class);
+        data = sc.loadObject("data", Data.class);
 
         //mark it as persisted
         persisted = true;
@@ -339,7 +339,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      * dataset, the instance can no longer be used.
      */
     public void delete() {
-        dbc.clear();
+        sc.clear();
         _close();
     }
 
@@ -357,11 +357,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     }
 
     /**
-     * Closes the connection with the database.
+     * Closes the connection with the storage.
      */
     private void _close() {
         try {
-            dbc.close();
+            sc.close();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);

@@ -55,15 +55,15 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), conf);
         
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(BernoulliNaiveBayes.class, dbName, conf);
+        instance = MLBuilder.load(BernoulliNaiveBayes.class, storageName, conf);
         
         
         instance.predict(validationData);

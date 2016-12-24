@@ -38,12 +38,12 @@ public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelPa
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractModeler(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractModeler(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /**

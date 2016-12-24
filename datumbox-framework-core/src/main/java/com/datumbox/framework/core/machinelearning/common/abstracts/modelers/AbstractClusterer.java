@@ -18,9 +18,9 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
 
@@ -127,11 +127,11 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         private Map<Integer, CL> clusterMap;
 
         /** 
-         * @param dbc
-         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected AbstractModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -194,12 +194,12 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractClusterer(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractClusterer(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /**

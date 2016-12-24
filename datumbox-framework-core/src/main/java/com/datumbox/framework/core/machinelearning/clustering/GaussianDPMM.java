@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
@@ -280,11 +280,11 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private static final long serialVersionUID = 1L;
 
         /**
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
     }
@@ -384,12 +384,12 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected GaussianDPMM(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected GaussianDPMM(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /** {@inheritDoc} */

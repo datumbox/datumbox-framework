@@ -18,9 +18,9 @@ package com.datumbox.framework.core.machinelearning.recommendersystem;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRecommender;
@@ -45,11 +45,11 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
         private Map<List<Object>, Double> similarities; //the similarity map among observations
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         //Getters / Setters
@@ -130,12 +130,12 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected CollaborativeFiltering(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected CollaborativeFiltering(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /** {@inheritDoc} */

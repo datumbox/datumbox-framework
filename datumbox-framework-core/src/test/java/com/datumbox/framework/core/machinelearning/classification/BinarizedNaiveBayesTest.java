@@ -55,15 +55,15 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         BinarizedNaiveBayes instance = MLBuilder.create(new BinarizedNaiveBayes.TrainingParameters(), conf);
 
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(BinarizedNaiveBayes.class, dbName, conf);
+        instance = MLBuilder.load(BinarizedNaiveBayes.class, storageName, conf);
         
         instance.predict(validationData);
         

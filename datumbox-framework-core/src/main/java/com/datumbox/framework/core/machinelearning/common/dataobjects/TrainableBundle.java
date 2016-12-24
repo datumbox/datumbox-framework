@@ -31,17 +31,17 @@ import java.util.Set;
 public class TrainableBundle implements Savable {
 
     /**
-     * The database name separator used in the underlying Trainables.
+     * The storage name separator used in the underlying Trainables.
      */
-    private final String dbNameSeparator;
+    private final String storageNameSeparator;
 
     /**
      * Public constructor.
      *
-     * @param dbNameSeparator
+     * @param storageNameSeparator
      */
-    public TrainableBundle(String dbNameSeparator) {
-        this.dbNameSeparator = dbNameSeparator;
+    public TrainableBundle(String storageNameSeparator) {
+        this.storageNameSeparator = storageNameSeparator;
     }
 
     /**
@@ -104,11 +104,11 @@ public class TrainableBundle implements Savable {
 
     /** {@inheritDoc} */
     @Override
-    public void save(String dbName) {
+    public void save(String storageName) {
         for(Map.Entry<String, Trainable> e : bundle.entrySet()) {
             Trainable t = e.getValue();
             if(t != null) {
-                t.save(dbName + dbNameSeparator + e.getKey());
+                t.save(storageName + storageNameSeparator + e.getKey());
             }
         }
     }

@@ -53,15 +53,15 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         XYMinMaxNormalizer df = MLBuilder.create(new XYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save(dbName);
+        df.save(storageName);
 
 
         MatrixLinearRegression instance = MLBuilder.create(new MatrixLinearRegression.TrainingParameters(), conf);
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         df.denormalize(trainingData);
         trainingData.close();
@@ -71,8 +71,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(XYMinMaxNormalizer.class, dbName, conf);
-        instance = MLBuilder.load(MatrixLinearRegression.class, dbName, conf);
+        df = MLBuilder.load(XYMinMaxNormalizer.class, storageName, conf);
+        instance = MLBuilder.load(MatrixLinearRegression.class, storageName, conf);
 
 
         df.transform(validationData);

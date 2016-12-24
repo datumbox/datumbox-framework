@@ -21,7 +21,7 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -93,10 +93,10 @@ public interface PredictParallelizable extends Parallelizable {
      * 
      * @param newData 
      * @param resultsBuffer 
-     * @param concurrencyConfig 
+     * @param concurrencyConf
      */
-    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer, ConcurrencyConfiguration concurrencyConfig) {
-        ForkJoinStream streamExecutor = new ForkJoinStream(concurrencyConfig);
+    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer, ConcurrencyConfiguration concurrencyConf) {
+        ForkJoinStream streamExecutor = new ForkJoinStream(concurrencyConf);
         
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             resultsBuffer.put(e.getKey(), _predictRecord(e.getValue())); //the key is unique across threads and the map is concurrent
@@ -120,12 +120,12 @@ public interface PredictParallelizable extends Parallelizable {
      * Estimates the predictions for a new Dataframe in a parallel way.
      *
      * @param newData
-     * @param dbc
-     * @param concurrencyConfig
+     * @param sc
+     * @param concurrencyConf
      */
-    default public void _predictDatasetParallel(Dataframe newData, DatabaseConnector dbc, ConcurrencyConfiguration concurrencyConfig) {
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, DatabaseConnector.MapType.HASHMAP, DatabaseConnector.StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, concurrencyConfig);
-        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+    default public void _predictDatasetParallel(Dataframe newData, StorageConnector sc, ConcurrencyConfiguration concurrencyConf) {
+        Map<Integer, Prediction> resultsBuffer = sc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageConnector.MapType.HASHMAP, StorageConnector.StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer, concurrencyConf);
+        sc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 }

@@ -53,18 +53,18 @@ public class CollaborativeFilteringTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
 
         CollaborativeFiltering instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(CollaborativeFiltering.class, dbName, conf);
+        instance = MLBuilder.load(CollaborativeFiltering.class, storageName, conf);
 
         instance.predict(validationData);
         RecommendationMetrics vm = new RecommendationMetrics(validationData);

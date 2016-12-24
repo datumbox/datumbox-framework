@@ -119,8 +119,7 @@ public class CETR {
     private final Configuration conf;
     
     /**
-     * Constructor for the CETR class. It accepts as arguments the name of the
-     * database were the temporary results are stored and the Database Configuration.
+     * Constructor for the CETR class.
      *
      * @param conf 
      */

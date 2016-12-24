@@ -49,7 +49,7 @@ public class TFIDFTest extends AbstractTest {
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();
         param.setBinarized(false);
         param.setMaxFeatures(3);
@@ -57,14 +57,14 @@ public class TFIDFTest extends AbstractTest {
         TFIDF instance = MLBuilder.create(param, conf);
         
         instance.fit_transform(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         trainingData.close();
         instance.close();
         //instance = null;
         
         
-        instance = MLBuilder.load(TFIDF.class, dbName, conf);
+        instance = MLBuilder.load(TFIDF.class, storageName, conf);
         
         instance.transform(validationData);
         

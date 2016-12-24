@@ -4,6 +4,7 @@ CHANGELOG
 Version 0.8.0-SNAPSHOT - Build 20161224
 ---------------------------------------
 
+- Renamed data base to storage in the entire framework.
 - Improved Validation:
     - Removed the ValidationMetrics from the Algorithms. Now it is a separate object called Metrics.
     - Removed the kFold validation from Algorithms. Now we offer a new validator mechanism.
@@ -20,16 +21,16 @@ Version 0.8.0-SNAPSHOT - Build 20161224
 - Removed the AbstractWrapper and Modeler inherits directly from AbstractTrainer. 
 - Created a TrainableBundle to keep track of the Trainables of Modeler, AbstractBoostingBagging and StepwiseRegression.
 - Removed automatic save after fit, now save() must be called.
-- AbstractTrainer no longer stores a local copy of dbName. The save method accepts a dbName.
+- AbstractTrainer no longer stores a local copy of storageName. The save method accepts a storageName.
 - The rename() is created in DatabaseConnectors and it's used by KnowledgeBase to saveAs the models.
-- Restored the DatabaseConfiguration.getDBnameSeparator() method.
+- Restored the DatabaseConfiguration.getStorageNameSeparator() method.
 - Changed the RandomGenerator.getThreadLocalRandomUnseeded() to ensure we get different random numbers across threads.
-- CERT no longer received any dbName parameter as we don't store anything on disk.
+- CERT no longer received any storageName parameter as we don't store anything on disk.
 - Removed underscores from all temporary names in the framework.
 - When we close() a Trainer that has not be loaded or saved the knowledgeBase will be deleted to remove any temporary files. 
-- The models of a specific dbName are added in a directory structure.
+- The models of a specific storageName are added in a directory structure.
 - Created an other level of abstraction for File-based Database Connectors and Configurations.
-- Rename Folder to Directory on comments, methods, vars and config files.
+- Rename Folder to Directory on comments, methods, vars and configuration files.
 - Empty parent directories of the algorithm output are automatically cleaned up.
 - The Dataset can now be saved and loaded.
 - All objects that save, delete and close implement the savable interfrace.

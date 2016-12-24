@@ -38,12 +38,12 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractFeatureSelector(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractFeatureSelector(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
 

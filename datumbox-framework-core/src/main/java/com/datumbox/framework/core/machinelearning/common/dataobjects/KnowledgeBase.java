@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.interfaces.Savable;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 
@@ -32,14 +32,14 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingPar
 public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements Savable {
 
     /**
-     * The database configuration of the Permanent Storage.
+     * The storage Configuration of the Permanent Storage.
      */
     private final Configuration conf;
 
     /**
      * The connector to the Permanent Storage.
      */
-    private final DatabaseConnector dbc;
+    private final StorageConnector sc;
 
     /**
      * The ModelParameters object of the algorithm.
@@ -54,40 +54,40 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * Constructor which is called on model initialization before training.
      *
-     * @param dbName
+     * @param storageName
      * @param conf
      * @param trainingParameters
      */
-    public KnowledgeBase(String dbName, Configuration conf, TP trainingParameters) {
+    public KnowledgeBase(String storageName, Configuration conf, TP trainingParameters) {
         this.conf = conf;
-        dbc = this.conf.getDbConfig().getConnector(dbName);
+        sc = this.conf.getStorageConf().getStorageConnector(storageName);
 
         this.trainingParameters = trainingParameters;
-        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), dbc);
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), sc);
     }
 
     /**
      * Constructor which is called when we pre-trained load persisted models.
      *
-     * @param dbName
+     * @param storageName
      * @param conf
      */
     @SuppressWarnings("unchecked")
-    public KnowledgeBase(String dbName, Configuration conf) {
+    public KnowledgeBase(String storageName, Configuration conf) {
         this.conf = conf;
-        dbc = this.conf.getDbConfig().getConnector(dbName);
+        sc = this.conf.getStorageConf().getStorageConnector(storageName);
 
-        trainingParameters = (TP) dbc.loadObject("trainingParameters", TrainingParameters.class);
-        modelParameters = (MP) dbc.loadObject("modelParameters", ModelParameters.class);
+        trainingParameters = (TP) sc.loadObject("trainingParameters", TrainingParameters.class);
+        modelParameters = (MP) sc.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
-     * Getter for the Database Connector.
+     * Getter for the Storage Connector.
      *
      * @return
      */
-    public DatabaseConnector getDbc() {
-        return dbc;
+    public StorageConnector getStorageConnector() {
+        return sc;
     }
 
     /**
@@ -120,24 +120,24 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * Saves the KnowledgeBase to the permanent storage.
      */
-    public void save(String dbName) {
-        //store the objects on database
-        dbc.saveObject("modelParameters", modelParameters);
-        dbc.saveObject("trainingParameters", trainingParameters);
+    public void save(String storageName) {
+        //store the objects on storage
+        sc.saveObject("modelParameters", modelParameters);
+        sc.saveObject("trainingParameters", trainingParameters);
 
-        //rename the database
-        dbc.rename(dbName);
+        //rename the storage
+        sc.rename(storageName);
 
         //reload the model parameters, necessary for the maps to point to the new location
-        modelParameters = (MP) dbc.loadObject("modelParameters", ModelParameters.class);
+        modelParameters = (MP) sc.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
-     * Deletes the database of the algorithm and closes the connection to the
+     * Deletes the storage of the algorithm and closes the connection to the
      * permanent storage.
      */
     public void delete() {
-        dbc.clear();
+        sc.clear();
         close();
     }
 
@@ -145,7 +145,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     @Override
     public void close() {
         try {
-            dbc.close();
+            sc.close();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -157,7 +157,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * open the connection to the permanent storage.
      */
     public void clear() {
-        dbc.clear();
-        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), dbc);
+        sc.clear();
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), sc);
     }
 }

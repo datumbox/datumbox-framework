@@ -37,12 +37,12 @@ public abstract class AbstractRecommender<MP extends AbstractRecommender.Abstrac
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractRecommender(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected AbstractRecommender(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
 }

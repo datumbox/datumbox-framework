@@ -20,9 +20,9 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
@@ -57,11 +57,11 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
     
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
 
         /**
@@ -142,12 +142,12 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MatrixLinearRegression(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected MatrixLinearRegression(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
 
     /** {@inheritDoc} */
@@ -238,7 +238,7 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
         Map<Integer, Object> idsFeatures = PHPMethods.array_flip(featureIds);
 
 
-        Map<Object, Double> pvalues = new HashMap<>(); //This is not small, but it does not make sense to store it in the db
+        Map<Object, Double> pvalues = new HashMap<>(); //This is not small, but it does not make sense to store it in the storage
         for(int i =0;i<(d+1);++i) {
             double error = SE.getEntry(i, i);
             Object feature = idsFeatures.get(i);

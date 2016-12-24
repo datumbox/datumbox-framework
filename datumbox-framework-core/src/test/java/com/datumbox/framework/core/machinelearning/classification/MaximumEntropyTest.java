@@ -55,7 +55,7 @@ public class MaximumEntropyTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
 
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
@@ -63,11 +63,11 @@ public class MaximumEntropyTest extends AbstractTest {
         MaximumEntropy instance = MLBuilder.create(param, conf);
         
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(MaximumEntropy.class, dbName, conf);
+        instance = MLBuilder.load(MaximumEntropy.class, storageName, conf);
         
         instance.predict(validationData);
         

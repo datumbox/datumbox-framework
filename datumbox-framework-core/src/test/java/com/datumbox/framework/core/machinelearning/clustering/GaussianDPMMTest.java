@@ -50,7 +50,7 @@ public class GaussianDPMMTest extends AbstractTest {
         Dataframe validationData = data[1];
 
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         
         GaussianDPMM.TrainingParameters param = new GaussianDPMM.TrainingParameters();
         param.setAlpha(0.01);
@@ -63,12 +63,12 @@ public class GaussianDPMMTest extends AbstractTest {
 
         GaussianDPMM instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         trainingData.close();
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(GaussianDPMM.class, dbName, conf);
+        instance = MLBuilder.load(GaussianDPMM.class, storageName, conf);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);

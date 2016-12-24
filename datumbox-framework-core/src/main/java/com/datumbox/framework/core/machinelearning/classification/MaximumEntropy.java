@@ -23,9 +23,9 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
@@ -60,11 +60,11 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
         /**
@@ -121,17 +121,17 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
      */
     protected MaximumEntropy(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MaximumEntropy(String dbName, Configuration conf) {
-        super(dbName, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConfig());
+    protected MaximumEntropy(String storageName, Configuration conf) {
+        super(storageName, conf);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
     }
     
     private boolean parallelized = true;
@@ -157,7 +157,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getDbc(), knowledgeBase.getConf().getConcurrencyConfig());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
     }
     
     /** {@inheritDoc} */
@@ -206,8 +206,8 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         }
         
         //create a temporary map for the observed probabilities in training set
-        DatabaseConnector dbc = knowledgeBase.getDbc();
-        Map<List<Object>, Double> tmp_EpFj_observed = dbc.getBigMap("tmp_EpFj_observed", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        StorageConnector sc = knowledgeBase.getStorageConnector();
+        Map<List<Object>, Double> tmp_EpFj_observed = sc.getBigMap("tmp_EpFj_observed", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
         //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
         //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
@@ -247,7 +247,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
+        sc.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
     }
     
     private void IIS(Dataframe trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
@@ -260,12 +260,12 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         
         int n = trainingData.size();
         
-        DatabaseConnector dbc = knowledgeBase.getDbc();
+        StorageConnector sc = knowledgeBase.getStorageConnector();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_EpFj_model = dbc.getBigMap("tmp_EpFj_model", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<List<Object>, Double> tmp_EpFj_model = sc.getBigMap("tmp_EpFj_model", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             //calculate the model probabilities
             streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { //slow parallel loop
@@ -401,7 +401,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             
             //Drop the temporary Collection
-            dbc.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
+            sc.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
         }
         
     }

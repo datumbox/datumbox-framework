@@ -53,10 +53,10 @@ public class NLMSTest extends AbstractTest {
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
         df.fit_transform(trainingData);
-        df.save(dbName);
+        df.save(storageName);
 
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
@@ -67,7 +67,7 @@ public class NLMSTest extends AbstractTest {
 
         NLMS instance = MLBuilder.create(param, conf);
         instance.fit(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         df.denormalize(trainingData);
         trainingData.close();
@@ -77,8 +77,8 @@ public class NLMSTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, dbName, conf);
-        instance = MLBuilder.load(NLMS.class, dbName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
+        instance = MLBuilder.load(NLMS.class, storageName, conf);
 
         df.transform(validationData);
         

@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -48,14 +48,13 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private static final long serialVersionUID = 1L;
 
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
-        
-        //EMPTY Model parameters. It relies on the mlregressor DB instead        
+
     } 
 
     /** {@inheritDoc} */
@@ -142,17 +141,17 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
      */
     protected StepwiseRegression(TrainingParameters trainingParameters, Configuration conf) {
         super(trainingParameters, conf);
-        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
+        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected StepwiseRegression(String dbName, Configuration conf) {
-        super(dbName, conf);
-        bundle  = new TrainableBundle(conf.getDbConfig().getDBNameSeparator());
+    protected StepwiseRegression(String storageName, Configuration conf) {
+        super(storageName, conf);
+        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
     }
 
     /** {@inheritDoc} */
@@ -227,11 +226,11 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     /** {@inheritDoc} */
     @Override
-    public void save(String dbName) {
+    public void save(String storageName) {
         initBundle();
-        super.save(dbName);
+        super.save(storageName);
 
-        String knowledgeBaseName = createKnowledgeBaseName(dbName, knowledgeBase.getConf().getDbConfig().getDBNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
         bundle.save(knowledgeBaseName);
     }
 
@@ -258,13 +257,13 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration conf = knowledgeBase.getConf();
-        String dbName = knowledgeBase.getDbc().getDatabaseName();
-        String separator = conf.getDbConfig().getDBNameSeparator();
+        String storageName = knowledgeBase.getStorageConnector().getStorageName();
+        String separator = conf.getStorageConf().getStorageNameSeparator();
 
         if(!bundle.containsKey(REG_KEY)) {
             AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
 
-            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), dbName + separator + REG_KEY, conf));
+            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + REG_KEY, conf));
         }
     }
 

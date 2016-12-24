@@ -53,7 +53,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         Configuration conf = Configuration.getConfiguration();
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
 
         
         Map<Object, URI> dataset = new HashMap<>();
@@ -80,10 +80,10 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         LatentDirichletAllocation lda = MLBuilder.create(trainingParameters, conf);
         
         lda.fit(trainingData);
-        lda.save(dbName);
+        lda.save(storageName);
 
         lda.close();
-        lda = MLBuilder.load(LatentDirichletAllocation.class, dbName, conf);
+        lda = MLBuilder.load(LatentDirichletAllocation.class, storageName, conf);
 
         lda.predict(trainingData);
         

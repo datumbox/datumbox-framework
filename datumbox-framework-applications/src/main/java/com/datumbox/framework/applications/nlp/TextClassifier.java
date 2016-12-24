@@ -20,7 +20,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
@@ -48,11 +48,11 @@ public class TextClassifier extends Modeler {
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param sc
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageConnector sc) {
+            super(sc);
         }
         
     }
@@ -102,12 +102,12 @@ public class TextClassifier extends Modeler {
     }
 
     /**
-     * @param dbName
+     * @param storageName
      * @param conf
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    protected TextClassifier(String dbName, Configuration conf) {
-        super(dbName, conf);
+    protected TextClassifier(String storageName, Configuration conf) {
+        super(storageName, conf);
     }
     
     /**

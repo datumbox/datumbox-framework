@@ -34,7 +34,7 @@ public class MatrixDataframe {
     /**
      * A reference to the most recently used Configuration object. It is necessary to define it static because
      * some methods of the RealMatrix require generating new object without passing the configuration file.
-     * To have access on the config and build the data map, we require setting this static field with the latest Configuration
+     * To have access on the configuration and build the data map, we require setting this static field with the latest Configuration
      * object. It is package protected inorder to be accessible from the MapRealMatrix class.
      */
     static Configuration conf;
@@ -202,7 +202,7 @@ public class MatrixDataframe {
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value!=null) {
                     Integer featureId = featureIdsReference.get(feature);
-                    if(featureId!=null) {//if the feature exists in our database
+                    if(featureId!=null) {//if the feature exists
                         m.X.setEntry(rowId, featureId, value);
                     }
                 }//else the X matrix maintains the 0.0 default value
@@ -242,7 +242,7 @@ public class MatrixDataframe {
             Double value = TypeInference.toDouble(entry.getValue());
             if(value!=null) {
                 Integer featureId = featureIdsReference.get(feature);
-                if(featureId!=null) {//if the feature exists in our database
+                if(featureId!=null) {//if the feature exists
                     v.setEntry(featureId, value);
                 }
             }

@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
@@ -51,9 +51,9 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     private final Map<Long, Double> entries;
 
     /**
-     * The database connector.
+     * The storage connector.
      */
-    private final DatabaseConnector dbc;
+    private final StorageConnector sc;
 
     /**
      * Protected constructor with the provided the dimension arguments.
@@ -68,21 +68,21 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.rowDimension = rowDimension;
         this.columnDimension = columnDimension;
 
-        String dbName = "mrm" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
-        dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
-        entries = dbc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        String storageName = "mrm" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
+        sc = MatrixDataframe.conf.getStorageConf().getStorageConnector(storageName);
+        entries = sc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**
      * When we perform matrix operations, we often lose the reference to the original matrix and we are unable to
-     * close its database. Even though the JVM will close the db before shutdown, by adding a close method in the finalize
+     * close its storage. Even though the JVM will close the storage before shutdown, by adding a close method in the finalize
      * we ensure that if the object is gc, we will release the connection sooner.
      * @throws java.lang.Throwable
      */
     @Override
     protected void finalize() throws Throwable {
         try {
-            dbc.close();
+            sc.close();
         }
         finally {
             super.finalize();

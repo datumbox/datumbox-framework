@@ -48,7 +48,7 @@ public class ChisquareSelectTest extends AbstractTest {
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         ChisquareSelect.TrainingParameters param = new ChisquareSelect.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
@@ -58,13 +58,13 @@ public class ChisquareSelectTest extends AbstractTest {
         
         
         instance.fit_transform(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         instance.close();
         //instance = null;
         
         
-        instance = MLBuilder.load(ChisquareSelect.class, dbName, conf);
+        instance = MLBuilder.load(ChisquareSelect.class, storageName, conf);
         
         instance.transform(validationData);
         

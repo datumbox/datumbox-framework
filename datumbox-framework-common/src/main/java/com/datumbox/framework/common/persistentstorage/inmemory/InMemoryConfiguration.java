@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.common.persistentstorage.inmemory;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileDBConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConfiguration;
+import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
 
 import java.util.Properties;
 
@@ -27,18 +27,18 @@ import java.util.Properties;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class InMemoryConfiguration extends AbstractFileDBConfiguration {
+public class InMemoryConfiguration extends AbstractFileStorageConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public DatabaseConnector getConnector(String dbName) {
-        return new InMemoryConnector(dbName, this);
+    public StorageConnector getStorageConnector(String storageName) {
+        return new InMemoryConnector(storageName, this);
     }
 
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        outputDirectory = properties.getProperty("dbConfig.InMemoryConfiguration.outputDirectory");
+        outputDirectory = properties.getProperty("storageConf.InMemoryConfiguration.outputDirectory");
     }
 
 }

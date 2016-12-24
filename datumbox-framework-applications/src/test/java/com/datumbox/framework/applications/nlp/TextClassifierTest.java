@@ -249,7 +249,7 @@ public class TextClassifierTest extends AbstractTest {
         Configuration conf = Configuration.getConfiguration();
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         
         Map<Object, URI> dataset = new HashMap<>();
         try {
@@ -280,7 +280,7 @@ public class TextClassifierTest extends AbstractTest {
 
         TextClassifier instance = MLBuilder.create(trainingParameters, conf);
         instance.fit(dataset);
-        instance.save(dbName);
+        instance.save(storageName);
 
 
         ClassificationMetrics vm = instance.validate(dataset);
@@ -291,7 +291,7 @@ public class TextClassifierTest extends AbstractTest {
         
         
         
-        instance = MLBuilder.load(TextClassifier.class, dbName, conf);
+        instance = MLBuilder.load(TextClassifier.class, storageName, conf);
         Dataframe validationData;
         try {
             validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());

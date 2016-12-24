@@ -48,7 +48,7 @@ public class MutualInformationTest extends AbstractTest {
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
         MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
@@ -57,13 +57,13 @@ public class MutualInformationTest extends AbstractTest {
         
         
         instance.fit_transform(trainingData);
-        instance.save(dbName);
+        instance.save(storageName);
 
         instance.close();
         //instance = null;
         
         
-        instance = MLBuilder.load(MutualInformation.class, dbName, conf);
+        instance = MLBuilder.load(MutualInformation.class, storageName, conf);
         
         instance.transform(validationData);
         
