@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.interfaces.Savable;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 
@@ -32,14 +32,14 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingPar
 public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParameters> implements Savable {
 
     /**
-     * The storage Configuration of the Permanent Storage.
+     * The Configuration of the Storage Engine.
      */
     private final Configuration configuration;
 
     /**
-     * The connector to the Permanent Storage.
+     * The storage engine.
      */
-    private final StorageConnector storageConnector;
+    private final StorageEngine storageEngine;
 
     /**
      * The ModelParameters object of the algorithm.
@@ -60,10 +60,10 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      */
     public KnowledgeBase(String storageName, Configuration configuration, TP trainingParameters) {
         this.configuration = configuration;
-        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        storageEngine = this.configuration.getStorageConfiguration().createStorageEngine(storageName);
 
         this.trainingParameters = trainingParameters;
-        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), storageConnector);
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), storageEngine);
     }
 
     /**
@@ -75,19 +75,19 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     @SuppressWarnings("unchecked")
     public KnowledgeBase(String storageName, Configuration configuration) {
         this.configuration = configuration;
-        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        storageEngine = this.configuration.getStorageConfiguration().createStorageEngine(storageName);
 
-        trainingParameters = (TP) storageConnector.loadObject("trainingParameters", TrainingParameters.class);
-        modelParameters = (MP) storageConnector.loadObject("modelParameters", ModelParameters.class);
+        trainingParameters = (TP) storageEngine.loadObject("trainingParameters", TrainingParameters.class);
+        modelParameters = (MP) storageEngine.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
-     * Getter for the Storage Connector.
+     * Getter for the Storage Engine.
      *
      * @return
      */
-    public StorageConnector getStorageConnector() {
-        return storageConnector;
+    public StorageEngine getStorageEngine() {
+        return storageEngine;
     }
 
     /**
@@ -118,26 +118,25 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     }
 
     /**
-     * Saves the KnowledgeBase to the permanent storage.
+     * Saves the KnowledgeBase using the storage engine.
      */
     public void save(String storageName) {
         //store the objects on storage
-        storageConnector.saveObject("modelParameters", modelParameters);
-        storageConnector.saveObject("trainingParameters", trainingParameters);
+        storageEngine.saveObject("modelParameters", modelParameters);
+        storageEngine.saveObject("trainingParameters", trainingParameters);
 
         //rename the storage
-        storageConnector.rename(storageName);
+        storageEngine.rename(storageName);
 
         //reload the model parameters, necessary for the maps to point to the new location
-        modelParameters = (MP) storageConnector.loadObject("modelParameters", ModelParameters.class);
+        modelParameters = (MP) storageEngine.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
-     * Deletes the storage of the algorithm and closes the connection to the
-     * permanent storage.
+     * Deletes the storage of the algorithm and closes the storage engine.
      */
     public void delete() {
-        storageConnector.clear();
+        storageEngine.clear();
         close();
     }
 
@@ -145,7 +144,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     @Override
     public void close() {
         try {
-            storageConnector.close();
+            storageEngine.close();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -154,10 +153,10 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
 
     /**
      * Clears the KnowledgeBase object by deleting all its data, while keeping
-     * open the connection to the permanent storage.
+     * open the connection to the storage engine.
      */
     public void clear() {
-        storageConnector.clear();
-        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), storageConnector);
+        storageEngine.clear();
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), storageEngine);
     }
 }

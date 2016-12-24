@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.interfaces;
+package com.datumbox.framework.common.storageengines.interfaces;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
- * StorageConnectors that give access to a permanent storage should
- * implement this interface. The connector should open the connection on its
- * constructor and be responsible for managing and storing the data on the
- * permanent storage.
+ * StorageEngines that give access to a permanent storage should
+ * implement this interface. The storage engine should open the connection on its
+ * constructor and be responsible for managing and storing the data.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface StorageConnector extends AutoCloseable {
+public interface StorageEngine extends AutoCloseable {
     
     /**
      * The supported MapTypes.
@@ -46,7 +45,7 @@ public interface StorageConnector extends AutoCloseable {
     
     /**
      * A hint on where to ideally store the map. There are no guarantees over how
-     * the StorageConnector will actually store the data, but some engines will
+     * the StorageEngine will actually store the data, but some engines will
      * use this info to keep as many important data in memory as possible.
      */
     public enum StorageHint {
@@ -78,7 +77,7 @@ public interface StorageConnector extends AutoCloseable {
     public boolean rename(String newStorageName);
     
     /**
-     * Checks if the connector is closed.
+     * Checks if the storage engine is closed.
      * 
      * @return 
      */

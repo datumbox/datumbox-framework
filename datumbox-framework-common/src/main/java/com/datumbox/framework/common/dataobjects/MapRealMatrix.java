@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
@@ -51,9 +51,9 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     private final Map<Long, Double> entries;
 
     /**
-     * The storage connector.
+     * The storage storage engine.
      */
-    private final StorageConnector storageConnector;
+    private final StorageEngine storageEngine;
 
     /**
      * Protected constructor with the provided the dimension arguments.
@@ -69,20 +69,20 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.columnDimension = columnDimension;
 
         String storageName = "mrm" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
-        storageConnector = MatrixDataframe.configuration.getStorageConfiguration().getStorageConnector(storageName);
-        entries = storageConnector.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        storageEngine = MatrixDataframe.configuration.getStorageConfiguration().createStorageEngine(storageName);
+        entries = storageEngine.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**
      * When we perform matrix operations, we often lose the reference to the original matrix and we are unable to
      * close its storage. Even though the JVM will close the storage before shutdown, by adding a close method in the finalize
-     * we ensure that if the object is gc, we will release the connection sooner.
+     * we ensure that if the object is gc, we will close the storage engine sooner.
      * @throws java.lang.Throwable
      */
     @Override
     protected void finalize() throws Throwable {
         try {
-            storageConnector.close();
+            storageEngine.close();
         }
         finally {
             super.finalize();

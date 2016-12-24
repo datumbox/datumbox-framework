@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -48,11 +48,11 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private static final long serialVersionUID = 1L;
 
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
     } 
@@ -257,7 +257,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Configuration configuration = knowledgeBase.getConfiguration();
-        String storageName = knowledgeBase.getStorageConnector().getStorageName();
+        String storageName = knowledgeBase.getStorageEngine().getStorageName();
         String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
 
         if(!bundle.containsKey(REG_KEY)) {

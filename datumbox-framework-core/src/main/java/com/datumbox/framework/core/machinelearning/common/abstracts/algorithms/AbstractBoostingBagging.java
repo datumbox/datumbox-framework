@@ -17,9 +17,9 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -54,11 +54,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         private List<Double> weakClassifierWeights = new ArrayList<>();
 
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected AbstractModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**
@@ -157,8 +157,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
 
         //create a temporary map for the observed probabilities in training set
-        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
-        Map<Object, DataTable2D> tmp_recordDecisions = storageConnector.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
+        Map<Object, DataTable2D> tmp_recordDecisions = storageEngine.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
         
         //initialize array of recordDecisions
         for(Integer rId : newData.index()) {
@@ -199,7 +199,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         }
         
         //Drop the temporary Collection
-        storageConnector.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
+        storageEngine.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
     }
     
     /** {@inheritDoc} */
@@ -346,7 +346,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     private void initBundle() {
         Configuration configuration = knowledgeBase.getConfiguration();
-        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
@@ -357,7 +357,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int i=0;i<totalWeakClassifiers;i++) {
             String key = STORAGE_INDICATOR + i;
             if (!bundle.containsKey(key)) {
-                bundle.put(key, MLBuilder.load(weakClassifierClass, storageConnector.getStorageName() + separator + key, configuration));
+                bundle.put(key, MLBuilder.load(weakClassifierClass, storageEngine.getStorageName() + separator + key, configuration));
             }
         }
     }

@@ -20,7 +20,7 @@ import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.DataTable2D;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
@@ -48,11 +48,11 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         private static final long serialVersionUID = 1L;
 
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
     }

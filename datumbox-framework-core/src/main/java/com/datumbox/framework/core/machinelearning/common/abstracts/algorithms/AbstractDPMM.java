@@ -19,10 +19,10 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -119,11 +119,11 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         private Map<Object, Integer> featureIds; //list of all the supported features
         
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected AbstractModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
         /**
@@ -304,7 +304,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /** {@inheritDoc} */

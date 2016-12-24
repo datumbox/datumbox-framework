@@ -22,10 +22,10 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
@@ -70,11 +70,11 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         private Map<Object, Double> thitas = new HashMap<>(); 
 
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**
@@ -223,7 +223,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     /** {@inheritDoc} */
@@ -275,14 +275,14 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
             Map<Object, Double> tmp_newThitas = new HashMap<>();
             
-            Map<Object, Double> tmp_newWeights = storageConnector.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newWeights = storageEngine.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);
@@ -308,7 +308,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             }
             
             //Drop the temporary Collections
-            storageConnector.dropBigMap("tmp_newWeights", tmp_newWeights);
+            storageEngine.dropBigMap("tmp_newWeights", tmp_newWeights);
         }
     }
 

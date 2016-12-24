@@ -19,10 +19,10 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
@@ -60,11 +60,11 @@ public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMin
         private Map<Object, Double> maxColumnValues;
 
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected AbstractModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
         /**

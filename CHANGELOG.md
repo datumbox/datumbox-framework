@@ -12,7 +12,7 @@ Version 0.8.0-SNAPSHOT - Build 20161224
 - Removed the unnecessary n & d model parameters from all models.
 - Random unseeded filenames are now produced using RandomGenerator.getRandomUnseeded().
 - Removing the need to call KnowledgeBase.init() in any predict/transform method.
-- Improved StorageConnector: existsObject method, InMemory now stores objects independently, MapDB stores all files in directory.
+- Improved StorageEngine: existsObject method, InMemory now stores objects independently, MapDB stores all files in directory.
 - The training parameters are now provided on the constructor of the algorithms not with a setter.
 - TextClassifier inherits from Modeler.
 - Removed all unnecessary passing of class objects from Stepwise Regression, Wrappers and Ensumble learning classes.
@@ -22,19 +22,19 @@ Version 0.8.0-SNAPSHOT - Build 20161224
 - Created a TrainableBundle to keep track of the Trainables of Modeler, AbstractBoostingBagging and StepwiseRegression.
 - Removed automatic save after fit, now save() must be called.
 - AbstractTrainer no longer stores a local copy of storageName. The save method accepts a storageName.
-- The rename() is created in StorageConnectors and it's used by KnowledgeBase to saveAs the models.
+- The rename() is created in Storage Engines and it's used by KnowledgeBase to saveAs the models.
 - Restored the StorageConfiguration.getStorageNameSeparator() method.
 - Changed the RandomGenerator.getThreadLocalRandomUnseeded() to ensure we get different random numbers across threads.
 - CERT no longer received any storageName parameter as we don't store anything on disk.
 - Removed underscores from all temporary names in the framework.
 - When we close() a Trainer that has not be saved or loaded the knowledgeBase will be deleted to remove any temporary files. 
 - The models of a specific storageName are added in a directory structure.
-- Created an other level of abstraction for File-based Storage Connectors and Configurations.
+- Created an other level of abstraction for File-based Storage Engines and Configurations.
 - Rename Folder to Directory on comments, methods, vars and configuration files.
 - Empty parent directories of the algorithm output are automatically cleaned up.
 - The Dataset can now be saved and loaded.
 - All objects that save, delete and close implement the savable interfrace.
-- The InMemoryConnector now keeps a catalog of every item in a WeakReference Map.
+- The InMemoryEngine now keeps a catalog of every item in a WeakReference Map.
 - In MapDBConfiguration it is now feasible to turn on/off the asynchronous writes.
 - Replaced unnecessary delete() calls with close() when no save() is called.
 - Change the Validation mechanism to support Splitters. The AbstractValidator is now a single Validator class. 

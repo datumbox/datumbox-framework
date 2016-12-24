@@ -21,9 +21,9 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
@@ -149,11 +149,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         private static final long serialVersionUID = 1L;
           
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
     } 
@@ -331,7 +331,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /** {@inheritDoc} */
@@ -407,10 +407,10 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
-        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
 
-        Map<List<Object>, Double> tmp_distanceArray = storageConnector.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = storageConnector.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = storageEngine.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = storageEngine.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -483,8 +483,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         }
         
         //Drop the temporary Collection
-        storageConnector.dropBigMap("tmp_distanceArray", tmp_distanceArray);
-        storageConnector.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
+        storageEngine.dropBigMap("tmp_distanceArray", tmp_distanceArray);
+        storageEngine.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

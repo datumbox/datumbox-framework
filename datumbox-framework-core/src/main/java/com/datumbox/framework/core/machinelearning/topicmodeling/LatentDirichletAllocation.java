@@ -17,10 +17,10 @@ package com.datumbox.framework.core.machinelearning.topicmodeling;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -81,11 +81,11 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
         /**
@@ -579,13 +579,13 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = storageConnector.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = storageConnector.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = storageConnector.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<Integer, Integer> tmp_topicCounts = storageConnector.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = storageEngine.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = storageEngine.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = storageEngine.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<Integer, Integer> tmp_topicCounts = storageEngine.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -723,9 +723,9 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         }
         
         //Drop the temporary Collection
-        storageConnector.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        storageConnector.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
-        storageConnector.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
-        storageConnector.dropBigMap("tmp_topicCounts", tmp_topicCounts);
+        storageEngine.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        storageEngine.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
+        storageEngine.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
+        storageEngine.dropBigMap("tmp_topicCounts", tmp_topicCounts);
     }
 }

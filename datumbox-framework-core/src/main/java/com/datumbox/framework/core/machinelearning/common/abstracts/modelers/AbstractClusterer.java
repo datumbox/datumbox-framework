@@ -17,10 +17,10 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
 
@@ -127,11 +127,11 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         private Map<Integer, CL> clusterMap;
 
         /** 
-         * @param storageConnector
-         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected AbstractModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**

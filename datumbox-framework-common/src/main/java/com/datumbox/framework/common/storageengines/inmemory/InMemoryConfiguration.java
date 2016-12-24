@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.inmemory;
+package com.datumbox.framework.common.storageengines.inmemory;
 
-import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConfiguration;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.abstracts.AbstractFileStorageConfiguration;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 
 import java.util.Properties;
 
 /**
  * The InMemoryConfiguration class is used to configure the InMemory storage
- * and generate new storage connections. InMemory storage loads all the
+ * and generate new storage engines. InMemory storage loads all the
  * data in memory and stores them in serialized files.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
@@ -31,8 +31,8 @@ public class InMemoryConfiguration extends AbstractFileStorageConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public StorageConnector getStorageConnector(String storageName) {
-        return new InMemoryConnector(storageName, this);
+    public StorageEngine createStorageEngine(String storageName) {
+        return new InMemoryEngine(storageName, this);
     }
 
     /** {@inheritDoc} */

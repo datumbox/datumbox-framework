@@ -22,11 +22,11 @@ import com.datumbox.framework.common.concurrency.ThreadMethods;
 import com.datumbox.framework.common.interfaces.Copyable;
 import com.datumbox.framework.common.interfaces.Extractable;
 import com.datumbox.framework.common.interfaces.Savable;
-import com.datumbox.framework.common.storages.abstracts.BigMapHolder;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.abstracts.BigMapHolder;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import org.apache.commons.csv.CSVFormat;
@@ -236,10 +236,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         /**
          * Initializes the state of the Data object.
          *
-         * @param storageConnector
+         * @param storageEngine
          */
-        private Data(StorageConnector storageConnector) {
-            super(storageConnector);
+        private Data(StorageEngine storageEngine) {
+            super(storageEngine);
         }
     }
 
@@ -254,9 +254,9 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     private boolean stored;
 
     /**
-     * The connection with the storage.
+     * The storage engine.
      */
-    private final StorageConnector storageConnector;
+    private final StorageEngine storageEngine;
 
     /**
      * The configuration object used to create the Dataframe. It is defined as protected to be accessible by classes
@@ -277,10 +277,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     public Dataframe(Configuration configuration) {
         this.configuration = configuration;
-        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
+        storageEngine = this.configuration.getStorageConfiguration().createStorageEngine("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
         streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
-        data = new Data(storageConnector);
+        data = new Data(storageEngine);
         stored = false;
     }
 
@@ -292,10 +292,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     private Dataframe(String storageName, Configuration configuration) {
         this.configuration = configuration;
-        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        storageEngine = this.configuration.getStorageConfiguration().createStorageEngine(storageName);
         streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
-        data = storageConnector.loadObject("data", Data.class);
+        data = storageEngine.loadObject("data", Data.class);
         stored = true;
     }
 
@@ -322,13 +322,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     public void save(String storageName) {
         //store the objects on storage
-        storageConnector.saveObject("data", data);
+        storageEngine.saveObject("data", data);
 
         //rename the storage
-        storageConnector.rename(storageName);
+        storageEngine.rename(storageName);
 
         //reload the data of the object
-        data = storageConnector.loadObject("data", Data.class);
+        data = storageEngine.loadObject("data", Data.class);
 
         //mark it as stored
         stored = true;
@@ -339,7 +339,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      * dataset, the instance can no longer be used.
      */
     public void delete() {
-        storageConnector.clear();
+        storageEngine.clear();
         _close();
     }
 
@@ -347,7 +347,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     @Override
     public void close() {
         if(stored) {
-            //if the dataset is stored in disk, just close the connection
+            //if the dataset is stored in disk, just close the storage
             _close();
         }
         else {
@@ -357,11 +357,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     }
 
     /**
-     * Closes the connection with the storage.
+     * Closes the storage engine.
      */
     private void _close() {
         try {
-            storageConnector.close();
+            storageEngine.close();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);

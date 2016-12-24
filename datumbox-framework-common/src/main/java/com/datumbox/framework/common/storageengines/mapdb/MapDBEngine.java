@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.mapdb;
+package com.datumbox.framework.common.storageengines.mapdb;
 
-import com.datumbox.framework.common.storages.abstracts.AbstractStorageConnector;
-import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.abstracts.AbstractFileStorageEngine;
+import com.datumbox.framework.common.storageengines.abstracts.AbstractStorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import org.mapdb.*;
 
 import java.io.File;
@@ -33,14 +33,14 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * The MapDBConnector is responsible for saving and loading data from MapDB files,
- * creating BigMaps which are backed by files and storing data. The MapDBConnector
+ * The MapDBEngine is responsible for saving and loading data from MapDB files,
+ * creating BigMaps which are backed by files and storing data. The MapDBEngine
  * does not load all the contents of BigMaps in memory, maintains an LRU cache
  * to speed up data retrieval and stores all data in MapDB files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfiguration> {
+public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
     
     /**
      * Enum class which stores the Storage Type used for every collection.
@@ -83,9 +83,9 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
     /** 
      * @param storageName
      * @param storageConfiguration
-     * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
+     * @see AbstractStorageEngine#AbstractStorageEngine(String, StorageConfiguration)
      */
-    protected MapDBConnector(String storageName, MapDBConfiguration storageConfiguration) {
+    protected MapDBEngine(String storageName, MapDBConfiguration storageConfiguration) {
         super(storageName, storageConfiguration);
     }
 
@@ -184,15 +184,15 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
     
     /** {@inheritDoc} */
     @Override
-    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, StorageConnector.MapType type, StorageConnector.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
+    public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, StorageEngine.MapType type, StorageEngine.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
-        if(storageHint == StorageConnector.StorageHint.IN_MEMORY && storageConfiguration.isHybridized()) {
+        if(storageHint == StorageEngine.StorageHint.IN_MEMORY && storageConfiguration.isHybridized()) {
             //store in memory
-            if(StorageConnector.MapType.HASHMAP.equals(type)) {
+            if(StorageEngine.MapType.HASHMAP.equals(type)) {
                 return isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
             }
-            else if(StorageConnector.MapType.TREEMAP.equals(type)) {
+            else if(StorageEngine.MapType.TREEMAP.equals(type)) {
                 return isConcurrent?new ConcurrentSkipListMap<>():new TreeMap<>();
             }
             else {
@@ -208,11 +208,11 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
             if(storageType == null) {
                 //the map does not exist. Find where it should be created.
                 if(isTemporary == false) {
-                    if(storageHint == StorageConnector.StorageHint.IN_MEMORY || storageHint == StorageConnector.StorageHint.IN_CACHE) {
+                    if(storageHint == StorageEngine.StorageHint.IN_MEMORY || storageHint == StorageEngine.StorageHint.IN_CACHE) {
                         //we will use the LRU cache option
                         storageType = StorageType.PRIMARY_STORAGE;
                     }
-                    else if(storageHint == StorageConnector.StorageHint.IN_DISK) {
+                    else if(storageHint == StorageEngine.StorageHint.IN_DISK) {
                         //no cache at all
                         storageType = StorageType.SECONDARY_STORAGE;
                     }
@@ -221,11 +221,11 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
                     }
                 }
                 else {
-                    if(storageHint == StorageConnector.StorageHint.IN_MEMORY || storageHint == StorageConnector.StorageHint.IN_CACHE) {
+                    if(storageHint == StorageEngine.StorageHint.IN_MEMORY || storageHint == StorageEngine.StorageHint.IN_CACHE) {
                         //we will use the LRU cache option
                         storageType = StorageType.TEMP_PRIMARY_STORAGE;
                     }
-                    else if(storageHint == StorageConnector.StorageHint.IN_DISK) {
+                    else if(storageHint == StorageEngine.StorageHint.IN_DISK) {
                         //no cache at all
                         storageType = StorageType.TEMP_SECONDARY_STORAGE;
                     }
@@ -240,14 +240,14 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
             
             //return the appropriate type
             Map<K,V> map;
-            if(StorageConnector.MapType.HASHMAP.equals(type)) {
+            if(StorageEngine.MapType.HASHMAP.equals(type)) {
                 map = storage.createHashMap(name)
                 .counterEnable()
                 .keySerializer(getSerializerFromClass(keyClass))
                 .valueSerializer(getSerializerFromClass(valueClass))
                 .makeOrGet();
             }
-            else if(StorageConnector.MapType.TREEMAP.equals(type)) {
+            else if(StorageEngine.MapType.TREEMAP.equals(type)) {
                 map = storage.createTreeMap(name)
                 .valuesOutsideNodesEnable()
                 .counterEnable()
@@ -287,7 +287,7 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
         }
     }
 
-    //private methods of connector class
+    //private methods of storage engine class
 
     /**
      * Returns the appropriate Serializer (if one exists) else null.
@@ -409,7 +409,7 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
     }
     
     /**
-     * It closes all the storages in the registry.
+     * It closes all the storageengines in the registry.
      */
     private void closeStorageRegistry() {
         for(DB storage : storageRegistry.values()) {

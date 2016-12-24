@@ -21,7 +21,7 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -120,12 +120,12 @@ public interface PredictParallelizable extends Parallelizable {
      * Estimates the predictions for a new Dataframe in a parallel way.
      *
      * @param newData
-     * @param storageConnector
+     * @param storageEngine
      * @param concurrencyConfiguration
      */
-    default public void _predictDatasetParallel(Dataframe newData, StorageConnector storageConnector, ConcurrencyConfiguration concurrencyConfiguration) {
-        Map<Integer, Prediction> resultsBuffer = storageConnector.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageConnector.MapType.HASHMAP, StorageConnector.StorageHint.IN_DISK, true, true);
+    default public void _predictDatasetParallel(Dataframe newData, StorageEngine storageEngine, ConcurrencyConfiguration concurrencyConfiguration) {
+        Map<Integer, Prediction> resultsBuffer = storageEngine.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageEngine.MapType.HASHMAP, StorageEngine.StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, concurrencyConfiguration);
-        storageConnector.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+        storageEngine.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 }

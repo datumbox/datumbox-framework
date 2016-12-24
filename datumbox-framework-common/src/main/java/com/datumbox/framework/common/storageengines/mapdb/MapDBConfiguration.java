@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.mapdb;
+package com.datumbox.framework.common.storageengines.mapdb;
 
-import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConfiguration;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.abstracts.AbstractFileStorageConfiguration;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 
 import java.util.Properties;
 
 /**
  * The MapDBConfiguration class is used to configure the MapDB storage
- * and generate new storage connections. MapDB storage uses collections
+ * and generate new storage engines. MapDB storage uses collections
  * which are backed by file and thus it does not load all the data in memory. 
  * The data are stored in MapDB files.
  *
@@ -40,8 +40,8 @@ public class MapDBConfiguration extends AbstractFileStorageConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public StorageConnector getStorageConnector(String storageName) {
-        return new MapDBConnector(storageName, this);
+    public StorageEngine createStorageEngine(String storageName) {
+        return new MapDBEngine(storageName, this);
     }
 
     /** {@inheritDoc} */

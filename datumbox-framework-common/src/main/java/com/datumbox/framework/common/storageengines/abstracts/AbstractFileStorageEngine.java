@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.abstracts;
+package com.datumbox.framework.common.storageengines.abstracts;
 
-import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,19 +23,19 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * Parent class of all File-based Storage Connectors.
+ * Parent class of all File-based Storage Engines.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <SC>
  */
-public abstract class AbstractFileStorageConnector<SC extends AbstractFileStorageConfiguration> extends AbstractStorageConnector<SC> {
+public abstract class AbstractFileStorageEngine<SC extends AbstractFileStorageConfiguration> extends AbstractStorageEngine<SC> {
 
     /**
      * @param storageName
      * @param storageConfiguration
-     * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
+     * @see AbstractStorageEngine#AbstractStorageEngine(String, StorageConfiguration)
      */
-    protected AbstractFileStorageConnector(String storageName, SC storageConfiguration) {
+    protected AbstractFileStorageEngine(String storageName, SC storageConfiguration) {
         super(storageName, storageConfiguration);
     }
 

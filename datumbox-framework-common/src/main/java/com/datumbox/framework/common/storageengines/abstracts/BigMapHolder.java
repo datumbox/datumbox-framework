@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.abstracts;
+package com.datumbox.framework.common.storageengines.abstracts;
 
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 
 import java.io.Serializable;
@@ -31,27 +31,27 @@ import java.util.LinkedList;
 public abstract class BigMapHolder implements Serializable {
 
     /**
-     * Protected constructor which accepts as argument the StorageConnector.
+     * Protected constructor which accepts as argument the StorageEngine.
      *
-     * @param storageConnector
+     * @param storageEngine
      */
-    protected BigMapHolder(StorageConnector storageConnector) {
+    protected BigMapHolder(StorageEngine storageEngine) {
         //Initialize all the BigMap fields
-        bigMapInitializer(storageConnector);
+        bigMapInitializer(storageEngine);
     }
 
     /**
      * Initializes all the fields of the class which are marked with the BigMap
      * annotation automatically.
      *
-     * @param storageConnector
+     * @param storageEngine
      */
-    private void bigMapInitializer(StorageConnector storageConnector) {
+    private void bigMapInitializer(StorageEngine storageEngine) {
         //get all the fields from all the inherited classes
         for(Field field : ReflectionMethods.getAllFields(new LinkedList<>(), this.getClass())){
             //if the field is annotated with BigMap
             if (field.isAnnotationPresent(BigMap.class)) {
-                initializeBigMapField(storageConnector, field);
+                initializeBigMapField(storageEngine, field);
             }
         }
     }
@@ -59,15 +59,15 @@ public abstract class BigMapHolder implements Serializable {
     /**
      * Initializes a field which is marked as BigMap.
      *
-     * @param storageConnector
+     * @param storageEngine
      * @param field
      */
-    private void initializeBigMapField(StorageConnector storageConnector, Field field) {
+    private void initializeBigMapField(StorageEngine storageEngine, Field field) {
         field.setAccessible(true);
 
         try {
             BigMap a = field.getAnnotation(BigMap.class);
-            field.set(this, storageConnector.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
+            field.set(this, storageEngine.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
         }
         catch (IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException(ex);

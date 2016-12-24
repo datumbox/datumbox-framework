@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.interfaces;
+package com.datumbox.framework.common.storageengines.interfaces;
 
 import com.datumbox.framework.common.interfaces.Configurable;
 
 /**
  * This interface should be implemented by objects that store the configuration 
- * of storage connectors.
+ * of storage engines.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -35,11 +35,11 @@ public interface StorageConfiguration extends Configurable {
     public String getStorageNameSeparator();
 
     /**
-     * Initializes and returns a connection to the storage.
+     * Initializes and returns a storage engine.
      * 
      * @param storageName
      * @return 
      */
-    public StorageConnector getStorageConnector(String storageName);
+    public StorageEngine createStorageEngine(String storageName);
     
 }

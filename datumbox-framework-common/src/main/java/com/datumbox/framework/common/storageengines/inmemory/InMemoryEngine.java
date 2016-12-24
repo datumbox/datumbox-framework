@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storages.inmemory;
+package com.datumbox.framework.common.storageengines.inmemory;
 
-import com.datumbox.framework.common.storages.abstracts.AbstractStorageConnector;
-import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storageengines.abstracts.AbstractFileStorageEngine;
+import com.datumbox.framework.common.storageengines.abstracts.AbstractStorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
 import com.datumbox.framework.common.utilities.DeepCopy;
 
 import java.io.File;
@@ -36,13 +36,13 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 
 /**
- * The InMemoryConnector is responsible for saving and loading data in memory,
- * creating BigMaps and storing data. The InMemoryConnector loads all the
+ * The InMemoryEngine is responsible for saving and loading data in memory,
+ * creating BigMaps and storing data. The InMemoryEngine loads all the
  * data in memory and stores all data in serialized files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class InMemoryConnector extends AbstractFileStorageConnector<InMemoryConfiguration> {
+public class InMemoryEngine extends AbstractFileStorageEngine<InMemoryConfiguration> {
 
     /**
      * The catalog stores weak references to all the items that are stored in the storage (objects and big maps).
@@ -52,9 +52,9 @@ public class InMemoryConnector extends AbstractFileStorageConnector<InMemoryConf
     /** 
      * @param storageName
      * @param storageConfiguration
-     * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
+     * @see AbstractStorageEngine#AbstractStorageEngine(String, StorageConfiguration)
      */
-    protected InMemoryConnector(String storageName, InMemoryConfiguration storageConfiguration) {
+    protected InMemoryEngine(String storageName, InMemoryConfiguration storageConfiguration) {
         super(storageName, storageConfiguration);
     }
 

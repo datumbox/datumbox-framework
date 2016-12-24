@@ -18,8 +18,8 @@ package com.datumbox.framework.core.machinelearning.common.abstracts;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
-import com.datumbox.framework.common.storages.abstracts.BigMapHolder;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storageengines.abstracts.BigMapHolder;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
@@ -44,12 +44,12 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     public static abstract class AbstractModelParameters extends BigMapHolder implements ModelParameters {
 
         /**
-         * Constructor of the ModelParameters that accepts a Storage Connector.
+         * Constructor of the ModelParameters that accepts a Storage Engine.
          * 
-         * @param storageConnector
+         * @param storageEngine
          */
-        protected AbstractModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
     }
@@ -149,7 +149,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         logger.info("close()");
 
         if(stored) {
-            //if the trainer is stored in disk, just close the connection
+            //if the trainer is stored in disk, just close the storage
             knowledgeBase.close();
         }
         else {

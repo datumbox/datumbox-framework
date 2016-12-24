@@ -22,10 +22,10 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.storages.interfaces.BigMap;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -146,11 +146,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         private Map<Object, Double> featureWeights; 
         
         /** 
-         * @param storageConnector
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(StorageConnector storageConnector) {
-            super(storageConnector);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**
@@ -443,7 +443,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /** {@inheritDoc} */
@@ -519,11 +519,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             
             int n = trainingData.size();
             
-            StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+            StorageEngine storageEngine = knowledgeBase.getStorageEngine();
             
-            Map<Object, Double> tmp_categoricalFrequencies = storageConnector.getBigMap("tmp_categoricalFrequencies", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-            Map<Object, Double> tmp_varianceSumX = storageConnector.getBigMap("tmp_varianceSumX", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-            Map<Object, Double> tmp_varianceSumXsquare = storageConnector.getBigMap("tmp_varianceSumXsquare", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_categoricalFrequencies = storageEngine.getBigMap("tmp_categoricalFrequencies", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumX = storageEngine.getBigMap("tmp_varianceSumX", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumXsquare = storageEngine.getBigMap("tmp_varianceSumXsquare", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
@@ -577,9 +577,9 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             });
             
             //Drop the temporary Collection
-            storageConnector.dropBigMap("tmp_categoricalFrequencies", tmp_categoricalFrequencies);
-            storageConnector.dropBigMap("tmp_varianceSumX", tmp_categoricalFrequencies);
-            storageConnector.dropBigMap("tmp_varianceSumXsquare", tmp_categoricalFrequencies);
+            storageEngine.dropBigMap("tmp_categoricalFrequencies", tmp_categoricalFrequencies);
+            storageEngine.dropBigMap("tmp_varianceSumX", tmp_categoricalFrequencies);
+            storageEngine.dropBigMap("tmp_varianceSumXsquare", tmp_categoricalFrequencies);
         }
     }
     
@@ -709,10 +709,10 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             //alreadyAddedPoints = null;
         }
         else if(initializationMethod==TrainingParameters.Initialization.PLUS_PLUS) {
-            StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+            StorageEngine storageEngine = knowledgeBase.getStorageEngine();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = storageConnector.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+                Map<Object, Object> tmp_minClusterDistance = storageEngine.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
                 
                 streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
@@ -738,7 +738,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 Descriptives.normalize(minClusterDistanceArray);
                 Integer selectedRecordId = (Integer) SimpleRandomSampling.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
                 
-                storageConnector.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
+                storageEngine.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
                 //minClusterDistanceArray = null;
                 
                 
@@ -775,7 +775,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             }
             
             //assign records to clusters
-            Map<Integer, Integer> tmp_clusterAssignments = knowledgeBase.getStorageConnector().getBigMap("tmp_clusterAssignments", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Integer, Integer> tmp_clusterAssignments = knowledgeBase.getStorageEngine().getBigMap("tmp_clusterAssignments", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
                 Integer rId = e.getKey();
                 Record r = e.getValue();
@@ -802,7 +802,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 selectedCluster.add(r);
                 clusterMap.put(selectedClusterId, selectedCluster);
             }
-            knowledgeBase.getStorageConnector().dropBigMap("tmp_clusterAssignments", tmp_clusterAssignments);
+            knowledgeBase.getStorageEngine().dropBigMap("tmp_clusterAssignments", tmp_clusterAssignments);
             
             //update clusters
             boolean changed=false;
