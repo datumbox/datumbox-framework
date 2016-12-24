@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.inmemory;
+package com.datumbox.framework.common.storages.inmemory;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractStorageConnector;
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storages.abstracts.AbstractStorageConnector;
+import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
 import com.datumbox.framework.common.utilities.DeepCopy;
 
 import java.io.File;
@@ -37,8 +37,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * The InMemoryConnector is responsible for saving and loading data in memory,
- * creating BigMaps and persisting data. The InMemoryConnector loads all the
- * data in memory and persists all data in serialized files.
+ * creating BigMaps and storing data. The InMemoryConnector loads all the
+ * data in memory and stores all data in serialized files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

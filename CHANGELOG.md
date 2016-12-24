@@ -27,7 +27,7 @@ Version 0.8.0-SNAPSHOT - Build 20161224
 - Changed the RandomGenerator.getThreadLocalRandomUnseeded() to ensure we get different random numbers across threads.
 - CERT no longer received any storageName parameter as we don't store anything on disk.
 - Removed underscores from all temporary names in the framework.
-- When we close() a Trainer that has not be loaded or saved the knowledgeBase will be deleted to remove any temporary files. 
+- When we close() a Trainer that has not be saved or loaded the knowledgeBase will be deleted to remove any temporary files. 
 - The models of a specific storageName are added in a directory structure.
 - Created an other level of abstraction for File-based Storage Connectors and Configurations.
 - Rename Folder to Directory on comments, methods, vars and configuration files.
@@ -49,7 +49,7 @@ Version 0.7.1-SNAPSHOT - Build 20161217
     - Removed commons-lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
     - Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
 - Memory & Storage:
-    - The persistence mechanism was rewritten to avoid serializing BigMaps that exist within Serializable objects.
+    - The storage mechanism was rewritten to avoid serializing BigMaps that exist within Serializable objects.
     - Extended the BigMap to pass Key and Value classes and enable the use of custom serializers.
     - Replaced the ArrayRealVector with MapRealVector and the OpenMapRealMatrix with MapRealMatrix which are sparse implementations storing the data in Maps. As a result all methods that used RealMatrixes can benefit from disk-based training.
 - Performance:

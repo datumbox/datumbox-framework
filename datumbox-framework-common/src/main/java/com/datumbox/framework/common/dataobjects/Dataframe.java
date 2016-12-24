@@ -22,11 +22,11 @@ import com.datumbox.framework.common.concurrency.ThreadMethods;
 import com.datumbox.framework.common.interfaces.Copyable;
 import com.datumbox.framework.common.interfaces.Extractable;
 import com.datumbox.framework.common.interfaces.Savable;
-import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storages.abstracts.BigMapHolder;
+import com.datumbox.framework.common.storages.interfaces.BigMap;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import org.apache.commons.csv.CSVFormat;
@@ -208,7 +208,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         }
 
         /**
-         * It loads a dataframe that has already been persisted.
+         * It loads a dataframe that has already been stored.
          *
          * @param storageName
          * @param configuration
@@ -251,7 +251,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /**
      * Flag that indicates whether the trainer has been saved or loaded from disk.
      */
-    private boolean persisted;
+    private boolean stored;
 
     /**
      * The connection with the storage.
@@ -281,7 +281,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
         data = new Data(storageConnector);
-        persisted = false;
+        stored = false;
     }
 
     /**
@@ -296,7 +296,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
         data = storageConnector.loadObject("data", Data.class);
-        persisted = true;
+        stored = true;
     }
 
     /**
@@ -330,8 +330,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         //reload the data of the object
         data = storageConnector.loadObject("data", Data.class);
 
-        //mark it as persisted
-        persisted = true;
+        //mark it as stored
+        stored = true;
     }
 
     /**
@@ -346,8 +346,8 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /** {@inheritDoc} */
     @Override
     public void close() {
-        if(persisted) {
-            //if the dataset is persisted in disk, just close the connection
+        if(stored) {
+            //if the dataset is stored in disk, just close the connection
             _close();
         }
         else {

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.mapdb;
+package com.datumbox.framework.common.storages.mapdb;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConfiguration;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 
 import java.util.Properties;
 
 /**
- * The MapDBConfiguration class is used to configure the MapDB persistence
- * storage and generate new storage connections. MapDB storage uses collections 
+ * The MapDBConfiguration class is used to configure the MapDB storage
+ * and generate new storage connections. MapDB storage uses collections
  * which are backed by file and thus it does not load all the data in memory. 
- * The data are persisted in MapDB files.
+ * The data are stored in MapDB files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

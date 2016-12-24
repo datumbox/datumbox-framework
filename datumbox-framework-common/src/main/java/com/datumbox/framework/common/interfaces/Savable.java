@@ -16,7 +16,7 @@
 package com.datumbox.framework.common.interfaces;
 
 /**
- * The Savable interface is implemented by all the objects that can be persisted.
+ * The Savable interface is implemented by all the objects that can be stored.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

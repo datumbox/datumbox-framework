@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.abstracts;
+package com.datumbox.framework.common.storages.abstracts;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.BigMap;
+import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * The AbstractStorageConnector is the base class for all concrete storage connectors.
  * Those classes can be used in a try-with-resources statement block. Moreover this class
  * setups a shutdown hook which ensures that the Connector will automatically call close()
- * before the JVM is terminated. Finally it contains methods to persist complex objects
+ * before the JVM is terminated. Finally it contains methods to store complex objects
  * with fields that point to other serialized objects.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>

@@ -18,8 +18,8 @@ package com.datumbox.framework.core.machinelearning.common.abstracts;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.interfaces.Trainable;
-import com.datumbox.framework.common.persistentstorage.abstracts.BigMapHolder;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.abstracts.BigMapHolder;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.KnowledgeBase;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
@@ -76,7 +76,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     /**
      * Flag that indicates whether the trainer has been saved or loaded from disk.
      */
-    private boolean persisted;
+    private boolean stored;
 
     /**
      * Constructor which is called on model initialization before training.
@@ -87,11 +87,11 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     protected AbstractTrainer(TP trainingParameters, Configuration configuration) {
         String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), configuration.getStorageConfiguration().getStorageNameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, configuration, trainingParameters);
-        persisted = false;
+        stored = false;
     }
 
     /**
-     * Constructor which is called when we pre-trained load persisted models.
+     * Constructor which is called when we pre-trained load stored models.
      *
      * @param storageName
      * @param configuration
@@ -99,7 +99,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     protected AbstractTrainer(String storageName, Configuration configuration) {
         String knowledgeBaseName = createKnowledgeBaseName(storageName, configuration.getStorageConfiguration().getStorageNameSeparator());
         knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, configuration);
-        persisted = true;
+        stored = true;
     }
     
     /** {@inheritDoc} */
@@ -132,7 +132,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
 
         String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
         knowledgeBase.save(knowledgeBaseName);
-        persisted = true;
+        stored = true;
     }
 
     /** {@inheritDoc} */
@@ -148,8 +148,8 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     public void close() {
         logger.info("close()");
 
-        if(persisted) {
-            //if the trainer is persisted in disk, just close the connection
+        if(stored) {
+            //if the trainer is stored in disk, just close the connection
             knowledgeBase.close();
         }
         else {

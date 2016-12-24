@@ -6,7 +6,7 @@ CODE IMPROVEMENTS
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
-- Try to separate persistent storage in a separate module that is inherited by common.
+- Try to separate storages in a separate module that is inherited by common.
 
 
 NEW FEATURES

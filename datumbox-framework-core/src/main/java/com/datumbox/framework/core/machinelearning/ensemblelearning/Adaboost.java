@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;

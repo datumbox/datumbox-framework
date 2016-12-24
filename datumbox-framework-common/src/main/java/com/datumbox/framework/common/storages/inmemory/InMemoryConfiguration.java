@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.inmemory;
+package com.datumbox.framework.common.storages.inmemory;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConfiguration;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 
 import java.util.Properties;
 
 /**
- * The InMemoryConfiguration class is used to configure the InMemory persistence
- * storage and generate new storage connections. InMemory storage loads all the
- * data in memory and persists them in serialized files.
+ * The InMemoryConfiguration class is used to configure the InMemory storage
+ * and generate new storage connections. InMemory storage loads all the
+ * data in memory and stores them in serialized files.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

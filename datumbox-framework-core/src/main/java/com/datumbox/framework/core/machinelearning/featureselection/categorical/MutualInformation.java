@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.featureselection.categorical
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.abstracts;
+package com.datumbox.framework.common.storages.abstracts;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
 
 import java.io.File;
 

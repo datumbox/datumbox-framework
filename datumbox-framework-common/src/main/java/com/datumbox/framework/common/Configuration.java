@@ -17,7 +17,7 @@ package com.datumbox.framework.common;
 
 import com.datumbox.framework.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.framework.common.interfaces.Configurable;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
 
 import java.util.Properties;
 

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.mapdb;
+package com.datumbox.framework.common.storages.mapdb;
 
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractStorageConnector;
-import com.datumbox.framework.common.persistentstorage.abstracts.AbstractFileStorageConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConfiguration;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.abstracts.AbstractStorageConnector;
+import com.datumbox.framework.common.storages.abstracts.AbstractFileStorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import org.mapdb.*;
 
 import java.io.File;
@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * The MapDBConnector is responsible for saving and loading data from MapDB files,
- * creating BigMaps which are backed by files and persisting data. The MapDBConnector 
+ * creating BigMaps which are backed by files and storing data. The MapDBConnector
  * does not load all the contents of BigMaps in memory, maintains an LRU cache
- * to speed up data retrieval and persists all data in MapDB files.
+ * to speed up data retrieval and stores all data in MapDB files.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
@@ -48,34 +48,34 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
     private enum StorageType {
         /**
          * Primary storage stores all the cached BigMaps and atomic variables which will
-         * be persisted after the connection closes. The storage maintains a separate
+         * be stored after the connection closes. The storage maintains a separate
          * LRU cache to speed up the operations.
          */
         PRIMARY_STORAGE,
 
         /**
-         * Secondary storage stores all the uncached BigMaps which will be persisted
+         * Secondary storage stores all the uncached BigMaps which will be stored
          * after the connection closes. The storage does not maintain any LRU cache.
          */
         SECONDARY_STORAGE,
         
         /**
          * Temp primary storage is a cached storage used to store temporary medium-sized
-         * BigMaps which will not be persisted after the connection closes. The storage
+         * BigMaps which will not be stored after the connection closes. The storage
          * maintains an separate LRU cache to speed up the operations.
          */
         TEMP_PRIMARY_STORAGE,
 
         /**
          * Temp secondary storage is an uncached storage used to store temporary
-         * large-sized BigMaps which will not be persisted after the connection closes.
+         * large-sized BigMaps which will not be stored after the connection closes.
          * The storage does not maintain any LRU cache.
          */
         TEMP_SECONDARY_STORAGE;
     }
     
     /**
-     * This list stores all the storage objects which are used to persist the data. This
+     * This list stores all the storage objects which are used to store the data. This
      * library uses one default and one temporary storage.
      */
     private final Map<StorageType, DB> storageRegistry = new HashMap<>();

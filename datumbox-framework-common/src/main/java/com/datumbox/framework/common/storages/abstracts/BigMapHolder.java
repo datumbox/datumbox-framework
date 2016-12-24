@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.abstracts;
+package com.datumbox.framework.common.storages.abstracts;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.BigMap;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 
 import java.io.Serializable;

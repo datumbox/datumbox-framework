@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;

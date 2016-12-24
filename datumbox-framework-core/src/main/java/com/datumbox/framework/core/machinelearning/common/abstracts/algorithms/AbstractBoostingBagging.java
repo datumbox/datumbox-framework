@@ -17,9 +17,9 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.algorithms;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
@@ -183,7 +183,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
                 DataTable2D rDecisions = tmp_recordDecisions.get(rId);
                 rDecisions.put(i, classProbabilities);
                 
-                tmp_recordDecisions.put(rId, rDecisions); //WARNING: Do not remove this! We must put it back to the Map to persist it on Disk-backed maps
+                tmp_recordDecisions.put(rId, rDecisions); //WARNING: Do not remove this! We must put it back to the Map to store it on Disk-backed maps
             }
         }
         

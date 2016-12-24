@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.persistentstorage.interfaces;
+package com.datumbox.framework.common.storages.interfaces;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector.StorageHint;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.MapType;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector.StorageHint;
 
 import java.lang.annotation.*;
 

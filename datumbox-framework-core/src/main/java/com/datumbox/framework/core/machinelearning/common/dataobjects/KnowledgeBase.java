@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.interfaces.Savable;
-import com.datumbox.framework.common.persistentstorage.interfaces.StorageConnector;
+import com.datumbox.framework.common.storages.interfaces.StorageConnector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ModelParameters;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainingParameters;
 
@@ -67,7 +67,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     }
 
     /**
-     * Constructor which is called when we pre-trained load persisted models.
+     * Constructor which is called when we pre-trained load stored models.
      *
      * @param storageName
      * @param configuration
