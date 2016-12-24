@@ -39,7 +39,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * The connector to the Permanent Storage.
      */
-    private final StorageConnector sc;
+    private final StorageConnector storageConnector;
 
     /**
      * The ModelParameters object of the algorithm.
@@ -60,10 +60,10 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      */
     public KnowledgeBase(String storageName, Configuration configuration, TP trainingParameters) {
         this.configuration = configuration;
-        sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
 
         this.trainingParameters = trainingParameters;
-        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), sc);
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), storageConnector);
     }
 
     /**
@@ -75,10 +75,10 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     @SuppressWarnings("unchecked")
     public KnowledgeBase(String storageName, Configuration configuration) {
         this.configuration = configuration;
-        sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
 
-        trainingParameters = (TP) sc.loadObject("trainingParameters", TrainingParameters.class);
-        modelParameters = (MP) sc.loadObject("modelParameters", ModelParameters.class);
+        trainingParameters = (TP) storageConnector.loadObject("trainingParameters", TrainingParameters.class);
+        modelParameters = (MP) storageConnector.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
@@ -87,7 +87,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * @return
      */
     public StorageConnector getStorageConnector() {
-        return sc;
+        return storageConnector;
     }
 
     /**
@@ -122,14 +122,14 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      */
     public void save(String storageName) {
         //store the objects on storage
-        sc.saveObject("modelParameters", modelParameters);
-        sc.saveObject("trainingParameters", trainingParameters);
+        storageConnector.saveObject("modelParameters", modelParameters);
+        storageConnector.saveObject("trainingParameters", trainingParameters);
 
         //rename the storage
-        sc.rename(storageName);
+        storageConnector.rename(storageName);
 
         //reload the model parameters, necessary for the maps to point to the new location
-        modelParameters = (MP) sc.loadObject("modelParameters", ModelParameters.class);
+        modelParameters = (MP) storageConnector.loadObject("modelParameters", ModelParameters.class);
     }
 
     /**
@@ -137,7 +137,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * permanent storage.
      */
     public void delete() {
-        sc.clear();
+        storageConnector.clear();
         close();
     }
 
@@ -145,7 +145,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     @Override
     public void close() {
         try {
-            sc.close();
+            storageConnector.close();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -157,7 +157,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * open the connection to the permanent storage.
      */
     public void clear() {
-        sc.clear();
-        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), sc);
+        storageConnector.clear();
+        modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), storageConnector);
     }
 }

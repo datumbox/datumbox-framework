@@ -64,11 +64,11 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         private svm_model svmModel; //the parameters of the svm model
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**

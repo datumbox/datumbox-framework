@@ -127,11 +127,11 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
         private Map<Integer, CL> clusterMap;
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**

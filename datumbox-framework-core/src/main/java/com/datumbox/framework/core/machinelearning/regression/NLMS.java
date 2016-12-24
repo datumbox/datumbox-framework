@@ -59,11 +59,11 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
         private Map<Object, Double> thitas; //the thita parameters of the model
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
         /**
@@ -244,12 +244,12 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = sc.getBigMap("tmp_newThitas", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newThitas = storageConnector.getBigMap("tmp_newThitas", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             
@@ -271,7 +271,7 @@ public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingP
             }
             
             //Drop the temporary Collection
-            sc.dropBigMap("tmp_newThitas", tmp_newThitas);
+            storageConnector.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
 

@@ -60,11 +60,11 @@ public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMin
         private Map<Object, Double> maxColumnValues;
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
         /**

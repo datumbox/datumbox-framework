@@ -34,14 +34,14 @@ public interface ModelParameters extends Learnable {
      *
      * @param <MP>
      * @param mpClass
-     * @param sc
+     * @param storageConnector
      * @return
      */
-    public static <MP extends ModelParameters> MP newInstance(Class<MP> mpClass, StorageConnector sc) {
+    public static <MP extends ModelParameters> MP newInstance(Class<MP> mpClass, StorageConnector storageConnector) {
         try {
             Constructor<MP> c = mpClass.getDeclaredConstructor(StorageConnector.class);
             c.setAccessible(true);
-            return c.newInstance(sc);
+            return c.newInstance(storageConnector);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

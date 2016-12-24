@@ -54,11 +54,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         private List<Double> weakClassifierWeights = new ArrayList<>();
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**
@@ -157,8 +157,8 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
 
         //create a temporary map for the observed probabilities in training set
-        StorageConnector sc = knowledgeBase.getStorageConnector();
-        Map<Object, DataTable2D> tmp_recordDecisions = sc.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+        Map<Object, DataTable2D> tmp_recordDecisions = storageConnector.getBigMap("tmp_recordDecisions", Object.class, DataTable2D.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
         
         //initialize array of recordDecisions
         for(Integer rId : newData.index()) {
@@ -199,7 +199,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         }
         
         //Drop the temporary Collection
-        sc.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
+        storageConnector.dropBigMap("tmp_recordDecisions", tmp_recordDecisions);
     }
     
     /** {@inheritDoc} */
@@ -346,7 +346,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     private void initBundle() {
         Configuration configuration = knowledgeBase.getConfiguration();
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
@@ -357,7 +357,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int i=0;i<totalWeakClassifiers;i++) {
             String key = STORAGE_INDICATOR + i;
             if (!bundle.containsKey(key)) {
-                bundle.put(key, MLBuilder.load(weakClassifierClass, sc.getStorageName() + separator + key, configuration));
+                bundle.put(key, MLBuilder.load(weakClassifierClass, storageConnector.getStorageName() + separator + key, configuration));
             }
         }
     }

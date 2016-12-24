@@ -33,25 +33,25 @@ public abstract class BigMapHolder implements Serializable {
     /**
      * Protected constructor which accepts as argument the StorageConnector.
      *
-     * @param sc
+     * @param storageConnector
      */
-    protected BigMapHolder(StorageConnector sc) {
+    protected BigMapHolder(StorageConnector storageConnector) {
         //Initialize all the BigMap fields
-        bigMapInitializer(sc);
+        bigMapInitializer(storageConnector);
     }
 
     /**
      * Initializes all the fields of the class which are marked with the BigMap
      * annotation automatically.
      *
-     * @param sc
+     * @param storageConnector
      */
-    private void bigMapInitializer(StorageConnector sc) {
+    private void bigMapInitializer(StorageConnector storageConnector) {
         //get all the fields from all the inherited classes
         for(Field field : ReflectionMethods.getAllFields(new LinkedList<>(), this.getClass())){
             //if the field is annotated with BigMap
             if (field.isAnnotationPresent(BigMap.class)) {
-                initializeBigMapField(sc, field);
+                initializeBigMapField(storageConnector, field);
             }
         }
     }
@@ -59,15 +59,15 @@ public abstract class BigMapHolder implements Serializable {
     /**
      * Initializes a field which is marked as BigMap.
      *
-     * @param sc
+     * @param storageConnector
      * @param field
      */
-    private void initializeBigMapField(StorageConnector sc, Field field) {
+    private void initializeBigMapField(StorageConnector storageConnector, Field field) {
         field.setAccessible(true);
 
         try {
             BigMap a = field.getAnnotation(BigMap.class);
-            field.set(this, sc.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
+            field.set(this, storageConnector.getBigMap(field.getName(), a.keyClass(), a.valueClass(), a.mapType(), a.storageHint(), a.concurrent(), false));
         }
         catch (IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException(ex);

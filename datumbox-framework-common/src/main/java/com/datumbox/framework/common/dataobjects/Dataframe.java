@@ -236,10 +236,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         /**
          * Initializes the state of the Data object.
          *
-         * @param sc
+         * @param storageConnector
          */
-        private Data(StorageConnector sc) {
-            super(sc);
+        private Data(StorageConnector storageConnector) {
+            super(storageConnector);
         }
     }
 
@@ -256,7 +256,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /**
      * The connection with the storage.
      */
-    private final StorageConnector sc;
+    private final StorageConnector storageConnector;
 
     /**
      * The configuration object used to create the Dataframe. It is defined as protected to be accessible by classes
@@ -277,10 +277,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     public Dataframe(Configuration configuration) {
         this.configuration = configuration;
-        sc = this.configuration.getStorageConfiguration().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
+        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
         streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
-        data = new Data(sc);
+        data = new Data(storageConnector);
         persisted = false;
     }
 
@@ -292,10 +292,10 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     private Dataframe(String storageName, Configuration configuration) {
         this.configuration = configuration;
-        sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        storageConnector = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
         streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
-        data = sc.loadObject("data", Data.class);
+        data = storageConnector.loadObject("data", Data.class);
         persisted = true;
     }
 
@@ -322,13 +322,13 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     public void save(String storageName) {
         //store the objects on storage
-        sc.saveObject("data", data);
+        storageConnector.saveObject("data", data);
 
         //rename the storage
-        sc.rename(storageName);
+        storageConnector.rename(storageName);
 
         //reload the data of the object
-        data = sc.loadObject("data", Data.class);
+        data = storageConnector.loadObject("data", Data.class);
 
         //mark it as persisted
         persisted = true;
@@ -339,7 +339,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      * dataset, the instance can no longer be used.
      */
     public void delete() {
-        sc.clear();
+        storageConnector.clear();
         _close();
     }
 
@@ -361,7 +361,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      */
     private void _close() {
         try {
-            sc.close();
+            storageConnector.close();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);

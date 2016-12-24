@@ -149,11 +149,11 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         private static final long serialVersionUID = 1L;
           
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
     } 
@@ -407,10 +407,10 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Map<Integer, Cluster> clusterMap = modelParameters.getClusterMap();
         
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
 
-        Map<List<Object>, Double> tmp_distanceArray = sc.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
-        Map<Integer, Integer> tmp_minClusterDistanceId = sc.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
+        Map<List<Object>, Double> tmp_distanceArray = storageConnector.getBigMap("tmp_distanceArray", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the distances between clusters
+        Map<Integer, Integer> tmp_minClusterDistanceId = storageConnector.getBigMap("tmp_minClusterDistanceId", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, true, true); //it holds the ids of the min distances
         
         
         //initialize clusters, foreach point create a cluster
@@ -483,8 +483,8 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
         }
         
         //Drop the temporary Collection
-        sc.dropBigMap("tmp_distanceArray", tmp_distanceArray);
-        sc.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
+        storageConnector.dropBigMap("tmp_distanceArray", tmp_distanceArray);
+        storageConnector.dropBigMap("tmp_minClusterDistanceId", tmp_minClusterDistanceId);
     }
     
     private boolean mergeClosest(Map<Integer, Integer> minClusterDistanceId, Map<List<Object>, Double> distanceArray) {

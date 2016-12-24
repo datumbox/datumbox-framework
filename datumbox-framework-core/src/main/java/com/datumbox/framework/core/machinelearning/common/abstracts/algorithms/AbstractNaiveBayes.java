@@ -53,11 +53,11 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
         /**

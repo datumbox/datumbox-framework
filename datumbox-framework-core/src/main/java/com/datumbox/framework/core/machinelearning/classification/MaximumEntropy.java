@@ -60,11 +60,11 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         private Map<List<Object>, Double> lambdas; //the lambda parameters of the model
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**
@@ -206,8 +206,8 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         }
         
         //create a temporary map for the observed probabilities in training set
-        StorageConnector sc = knowledgeBase.getStorageConnector();
-        Map<List<Object>, Double> tmp_EpFj_observed = sc.getBigMap("tmp_EpFj_observed", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
+        Map<List<Object>, Double> tmp_EpFj_observed = storageConnector.getBigMap("tmp_EpFj_observed", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
         //Loop through all the classes to ensure that the feature-class combination is initialized for ALL the classes
         //The math REQUIRE us to have scores for all classes to make the probabilities comparable.
@@ -247,7 +247,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         
         
         //Drop the temporary Collection
-        sc.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
+        storageConnector.dropBigMap("tmp_EpFj_observed", tmp_EpFj_observed);
     }
     
     private void IIS(Dataframe trainingData, Map<List<Object>, Double> EpFj_observed, double Cmax) {
@@ -260,12 +260,12 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
         
         int n = trainingData.size();
         
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_EpFj_model = sc.getBigMap("tmp_EpFj_model", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<List<Object>, Double> tmp_EpFj_model = storageConnector.getBigMap("tmp_EpFj_model", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             //calculate the model probabilities
             streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { //slow parallel loop
@@ -401,7 +401,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
             
             
             //Drop the temporary Collection
-            sc.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
+            storageConnector.dropBigMap("tmp_EpFj_model", tmp_EpFj_model);
         }
         
     }

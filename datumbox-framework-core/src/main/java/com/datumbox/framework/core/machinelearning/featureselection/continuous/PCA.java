@@ -68,11 +68,11 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         private double[][] components; //components weights 
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**

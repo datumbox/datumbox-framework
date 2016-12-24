@@ -39,11 +39,11 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
         private Set<Object> classes = new LinkedHashSet<>();
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractModeler.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**

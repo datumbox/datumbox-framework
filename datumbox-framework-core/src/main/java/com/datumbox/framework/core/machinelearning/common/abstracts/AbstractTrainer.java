@@ -46,10 +46,10 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
         /**
          * Constructor of the ModelParameters that accepts a Storage Connector.
          * 
-         * @param sc
+         * @param storageConnector
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
     }

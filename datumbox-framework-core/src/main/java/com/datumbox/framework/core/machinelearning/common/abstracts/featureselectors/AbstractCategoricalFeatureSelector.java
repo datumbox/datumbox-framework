@@ -46,11 +46,11 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         private Map<Object, Double> featureScores; //map which stores the scores of the features
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**
@@ -145,11 +145,11 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     @Override
     protected void _fit(Dataframe trainingData) {
         
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
         
         Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
-        Map<List<Object>, Integer> tmp_featureClassCounts = sc.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
-        Map<Object, Double> tmp_featureCounts = sc.getBigMap("tmp_featureCounts", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
+        Map<List<Object>, Integer> tmp_featureClassCounts = storageConnector.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
+        Map<Object, Double> tmp_featureCounts = storageConnector.getBigMap("tmp_featureCounts", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
 
         
         //build the maps with the feature statistics and counts
@@ -164,8 +164,8 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
 
         //drop the unnecessary stastistics tables
-        sc.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
-        sc.dropBigMap("tmp_featureCounts", tmp_featureCounts);
+        storageConnector.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
+        storageConnector.dropBigMap("tmp_featureCounts", tmp_featureCounts);
     }
     
     /** {@inheritDoc} */
@@ -175,11 +175,11 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         filterData(newdata, knowledgeBase.getStorageConnector(), knowledgeBase.getModelParameters().getFeatureScores());
     }
     
-    private static void filterData(Dataframe data, StorageConnector sc, Map<Object, Double> featureScores) {
+    private static void filterData(Dataframe data, StorageConnector storageConnector, Map<Object, Double> featureScores) {
         Logger logger = LoggerFactory.getLogger(AbstractCategoricalFeatureSelector.class);
         logger.debug("filterData()");
         
-        Map<Object, Boolean> tmp_removedColumns = sc.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<Object, Boolean> tmp_removedColumns = storageConnector.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();
@@ -193,12 +193,12 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         data.dropXColumns(tmp_removedColumns.keySet());
         
         //Drop the temporary Collection
-        sc.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+        storageConnector.dropBigMap("tmp_removedColumns", tmp_removedColumns);
     }
     
     private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
 
@@ -234,7 +234,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
             }
             
             //then remove the features in dataset that do not appear in the list
-            filterData(data, sc, featureCounts);
+            filterData(data, storageConnector, featureCounts);
         }
     }
     

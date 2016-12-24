@@ -120,12 +120,12 @@ public interface PredictParallelizable extends Parallelizable {
      * Estimates the predictions for a new Dataframe in a parallel way.
      *
      * @param newData
-     * @param sc
+     * @param storageConnector
      * @param concurrencyConfiguration
      */
-    default public void _predictDatasetParallel(Dataframe newData, StorageConnector sc, ConcurrencyConfiguration concurrencyConfiguration) {
-        Map<Integer, Prediction> resultsBuffer = sc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageConnector.MapType.HASHMAP, StorageConnector.StorageHint.IN_DISK, true, true);
+    default public void _predictDatasetParallel(Dataframe newData, StorageConnector storageConnector, ConcurrencyConfiguration concurrencyConfiguration) {
+        Map<Integer, Prediction> resultsBuffer = storageConnector.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageConnector.MapType.HASHMAP, StorageConnector.StorageHint.IN_DISK, true, true);
         _predictDatasetParallel(newData, resultsBuffer, concurrencyConfiguration);
-        sc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+        storageConnector.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 }

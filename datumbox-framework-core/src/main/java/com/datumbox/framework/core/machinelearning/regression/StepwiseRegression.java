@@ -48,11 +48,11 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private static final long serialVersionUID = 1L;
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
     } 

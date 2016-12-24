@@ -57,11 +57,11 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
         private Map<Object, Double> featurePvalues; //array with all the pvalues of the features
     
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
         /**

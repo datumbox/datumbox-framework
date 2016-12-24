@@ -53,7 +53,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     /**
      * The storage connector.
      */
-    private final StorageConnector sc;
+    private final StorageConnector storageConnector;
 
     /**
      * Protected constructor with the provided the dimension arguments.
@@ -69,8 +69,8 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.columnDimension = columnDimension;
 
         String storageName = "mrm" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
-        sc = MatrixDataframe.configuration.getStorageConfiguration().getStorageConnector(storageName);
-        entries = sc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        storageConnector = MatrixDataframe.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        entries = storageConnector.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**
@@ -82,7 +82,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     @Override
     protected void finalize() throws Throwable {
         try {
-            sc.close();
+            storageConnector.close();
         }
         finally {
             super.finalize();

@@ -45,11 +45,11 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
         private Map<List<Object>, Double> similarities; //the similarity map among observations
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         //Getters / Setters

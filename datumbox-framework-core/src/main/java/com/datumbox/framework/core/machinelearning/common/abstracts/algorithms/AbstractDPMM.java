@@ -119,11 +119,11 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
         private Map<Object, Integer> featureIds; //list of all the supported features
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected AbstractModelParameters(StorageConnector sc) {
-            super(sc);
+        protected AbstractModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
 
         /**

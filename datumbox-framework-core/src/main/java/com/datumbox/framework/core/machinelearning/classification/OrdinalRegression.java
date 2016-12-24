@@ -70,11 +70,11 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         private Map<Object, Double> thitas = new HashMap<>(); 
 
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**
@@ -275,14 +275,14 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        StorageConnector sc = knowledgeBase.getStorageConnector();
+        StorageConnector storageConnector = knowledgeBase.getStorageConnector();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
             Map<Object, Double> tmp_newThitas = new HashMap<>();
             
-            Map<Object, Double> tmp_newWeights = sc.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newWeights = storageConnector.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);
@@ -308,7 +308,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             }
             
             //Drop the temporary Collections
-            sc.dropBigMap("tmp_newWeights", tmp_newWeights);
+            storageConnector.dropBigMap("tmp_newWeights", tmp_newWeights);
         }
     }
 

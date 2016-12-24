@@ -146,11 +146,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
         private Map<Object, Double> featureWeights; 
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**
@@ -519,11 +519,11 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             
             int n = trainingData.size();
             
-            StorageConnector sc = knowledgeBase.getStorageConnector();
+            StorageConnector storageConnector = knowledgeBase.getStorageConnector();
             
-            Map<Object, Double> tmp_categoricalFrequencies = sc.getBigMap("tmp_categoricalFrequencies", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-            Map<Object, Double> tmp_varianceSumX = sc.getBigMap("tmp_varianceSumX", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-            Map<Object, Double> tmp_varianceSumXsquare = sc.getBigMap("tmp_varianceSumXsquare", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_categoricalFrequencies = storageConnector.getBigMap("tmp_categoricalFrequencies", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumX = storageConnector.getBigMap("tmp_varianceSumX", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<Object, Double> tmp_varianceSumXsquare = storageConnector.getBigMap("tmp_varianceSumXsquare", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
         
             //calculate variance and frequencies
             for(Record r : trainingData) { 
@@ -577,9 +577,9 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             });
             
             //Drop the temporary Collection
-            sc.dropBigMap("tmp_categoricalFrequencies", tmp_categoricalFrequencies);
-            sc.dropBigMap("tmp_varianceSumX", tmp_categoricalFrequencies);
-            sc.dropBigMap("tmp_varianceSumXsquare", tmp_categoricalFrequencies);
+            storageConnector.dropBigMap("tmp_categoricalFrequencies", tmp_categoricalFrequencies);
+            storageConnector.dropBigMap("tmp_varianceSumX", tmp_categoricalFrequencies);
+            storageConnector.dropBigMap("tmp_varianceSumXsquare", tmp_categoricalFrequencies);
         }
     }
     
@@ -709,10 +709,10 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             //alreadyAddedPoints = null;
         }
         else if(initializationMethod==TrainingParameters.Initialization.PLUS_PLUS) {
-            StorageConnector sc = knowledgeBase.getStorageConnector();
+            StorageConnector storageConnector = knowledgeBase.getStorageConnector();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = sc.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+                Map<Object, Object> tmp_minClusterDistance = storageConnector.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
                 AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
                 
                 streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
@@ -738,7 +738,7 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 Descriptives.normalize(minClusterDistanceArray);
                 Integer selectedRecordId = (Integer) SimpleRandomSampling.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
                 
-                sc.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
+                storageConnector.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
                 //minClusterDistanceArray = null;
                 
                 

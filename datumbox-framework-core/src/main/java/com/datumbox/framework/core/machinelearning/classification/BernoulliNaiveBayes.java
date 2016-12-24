@@ -48,11 +48,11 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         private Map<Object, Double> sumOfLog1minusProb = new HashMap<>(); //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
         
         /** 
-         * @param sc
+         * @param storageConnector
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageConnector)
          */
-        protected ModelParameters(StorageConnector sc) {
-            super(sc);
+        protected ModelParameters(StorageConnector storageConnector) {
+            super(storageConnector);
         }
         
         /**

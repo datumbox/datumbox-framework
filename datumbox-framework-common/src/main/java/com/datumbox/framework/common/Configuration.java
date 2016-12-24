@@ -77,9 +77,9 @@ public class Configuration implements Configurable {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        String storageConfClassName = properties.getProperty("storageConfiguration.className");
+        String storageConfigurationClassName = properties.getProperty("storageConfiguration.className");
         try {
-            storageConfiguration = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfClassName));
+            storageConfiguration = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfigurationClassName));
         }
         catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
