@@ -135,7 +135,7 @@ public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMin
      */
     protected AbstractDummyMinMaxTransformer(TP trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -145,7 +145,7 @@ public abstract class AbstractDummyMinMaxTransformer<MP extends AbstractDummyMin
      */
     protected AbstractDummyMinMaxTransformer(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     private boolean parallelized = true;

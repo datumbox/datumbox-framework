@@ -106,7 +106,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
 
                         //we call below the recalculateMeta()
                         dataset.set(rId, r);
-                    }, configuration.getConcurrencyConfuration());
+                    }, configuration.getConcurrencyConfiguration());
                 }
                 catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -199,7 +199,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
                         //The Metas are already set in the construction of the Dataframe.
                         dataset._unsafe_set(rId, r);
                     }
-                }, configuration.getConcurrencyConfuration());
+                }, configuration.getConcurrencyConfiguration());
             }
             catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -278,7 +278,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     public Dataframe(Configuration configuration) {
         this.configuration = configuration;
         sc = this.configuration.getStorageConfiguration().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
-        streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
         data = new Data(sc);
         persisted = false;
@@ -293,7 +293,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     private Dataframe(String storageName, Configuration configuration) {
         this.configuration = configuration;
         sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
-        streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfiguration());
 
         data = sc.loadObject("data", Data.class);
         persisted = true;

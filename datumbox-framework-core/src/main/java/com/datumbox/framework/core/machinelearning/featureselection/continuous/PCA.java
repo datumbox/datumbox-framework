@@ -265,7 +265,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
      */
     protected PCA(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -275,7 +275,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
      */
     protected PCA(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     private boolean parallelized = true;

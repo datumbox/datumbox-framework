@@ -61,7 +61,7 @@ public class Configuration implements Configurable {
      * 
      * @return 
      */
-    public ConcurrencyConfiguration getConcurrencyConfuration() {
+    public ConcurrencyConfiguration getConcurrencyConfiguration() {
         return concurrencyConfiguration;
     }
     

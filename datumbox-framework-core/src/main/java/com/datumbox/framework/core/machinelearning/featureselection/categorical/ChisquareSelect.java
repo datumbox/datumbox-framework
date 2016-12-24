@@ -96,7 +96,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      */
     protected ChisquareSelect(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -106,7 +106,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      */
     protected ChisquareSelect(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     private boolean parallelized = true;
