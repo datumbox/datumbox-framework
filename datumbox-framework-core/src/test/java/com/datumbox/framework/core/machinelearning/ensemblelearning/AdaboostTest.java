@@ -22,7 +22,8 @@ import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -139,7 +140,8 @@ public class AdaboostTest extends AbstractTest {
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
 
-        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
         
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();

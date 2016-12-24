@@ -20,7 +20,8 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -98,7 +99,8 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].close();
 
-        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, new BernoulliNaiveBayes.TrainingParameters());
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+                .validate(new KFoldSplitter(k).split(trainingData), new BernoulliNaiveBayes.TrainingParameters());
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();

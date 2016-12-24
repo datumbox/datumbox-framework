@@ -20,7 +20,8 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -132,7 +133,8 @@ public class KmeansTest extends AbstractTest {
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
 
-        ClusteringMetrics vm = new KFoldValidator<>(ClusteringMetrics.class, conf, k).validate(trainingData, param);
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, conf)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
 
         df.denormalize(trainingData);
 

@@ -226,17 +226,27 @@ public class PHPMethods {
         }
         return flipped;
     }
-    
+
     /**
      * Shuffles the values of any array in place.
-     * 
+     *
      * @param <T>
-     * @param array 
+     * @param array
      */
     public static <T> void shuffle(T[] array) {
+        shuffle(array, RandomGenerator.getThreadLocalRandom());
+    }
+    
+    /**
+     * Shuffles the values of any array in place using the provided random generator.
+     * 
+     * @param <T>
+     * @param array
+     * @param rnd
+     */
+    public static <T> void shuffle(T[] array, Random rnd) {
         //Implementing Fisher-Yates shuffle
         T tmp;
-        Random rnd = RandomGenerator.getThreadLocalRandom();
         for (int i = array.length - 1; i > 0; --i) {
             int index = rnd.nextInt(i + 1);
             

@@ -21,7 +21,8 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -133,7 +134,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         param.setTotalIterations(100);
         param.setL2(0.001);
 
-        ClassificationMetrics vm = new KFoldValidator<>(ClassificationMetrics.class, conf, k).validate(trainingData, param);
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
 
         	        
         df.denormalize(trainingData);

@@ -2,7 +2,7 @@ CODE IMPROVEMENTS
 =================
 
 - Support of better Transformers (Zscore, decouple boolean transforming from numeric etc).
-- Write a ShuffleSplitValidator class similar to KFold. Perhaps we need a single Validator class and separate Splitters.
+- Write a ShuffleSplitValidator class similar to KFold.
 - Write generic optimizers instead of having optimization methods in the algorithms.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 

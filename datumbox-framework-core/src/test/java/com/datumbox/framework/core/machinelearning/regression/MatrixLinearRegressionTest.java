@@ -23,7 +23,8 @@ import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.datatransformation.XYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
-import com.datumbox.framework.core.machinelearning.modelselection.validators.KFoldValidator;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -115,7 +116,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
-        LinearRegressionMetrics vm = new KFoldValidator<>(LinearRegressionMetrics.class, conf, k).validate(trainingData, param);
+        LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, conf)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
         
         df.denormalize(trainingData);
 
