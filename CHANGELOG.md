@@ -4,7 +4,7 @@ CHANGELOG
 Version 0.8.0-SNAPSHOT - Build 20161224
 ---------------------------------------
 
-- Renamed data base to storage in the entire framework. The same applies with conf, config which is renames to configuration.
+- Renamed data base to storage engines in the entire framework. The same applies with conf, config which is renames to configuration.
 - Improved Validation:
     - Removed the ValidationMetrics from the Algorithms. Now it is a separate object called Metrics.
     - Removed the kFold validation from Algorithms. Now we offer a new validator mechanism.

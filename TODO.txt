@@ -7,6 +7,7 @@ CODE IMPROVEMENTS
 
 - Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
 - Try to separate storages in a separate module that is inherited by common.
+- Run the tests with different configurations for the storage engines.
 
 
 NEW FEATURES
