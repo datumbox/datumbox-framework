@@ -39,10 +39,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public abstract class AbstractStorageEngine<DC extends StorageConfiguration> implements StorageEngine {
+public abstract class AbstractStorageEngine<SC extends StorageConfiguration> implements StorageEngine {
 
     protected String storageName;
-    protected final DC storageConfiguration;
+    protected final SC storageConfiguration;
 
     /**
      * Logger for all Storage Engines.
@@ -59,7 +59,7 @@ public abstract class AbstractStorageEngine<DC extends StorageConfiguration> imp
      * @param storageName
      * @param storageConfiguration
      */
-    protected AbstractStorageEngine(String storageName, DC storageConfiguration) {
+    protected AbstractStorageEngine(String storageName, SC storageConfiguration) {
         this.storageName = storageName;
         this.storageConfiguration = storageConfiguration;
 
