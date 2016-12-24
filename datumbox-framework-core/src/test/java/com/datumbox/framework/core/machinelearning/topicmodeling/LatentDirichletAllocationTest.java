@@ -50,7 +50,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
         String storageName = this.getClass().getSimpleName();
@@ -68,7 +68,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         
-        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, conf);
+        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, configuration);
 
 
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
@@ -77,17 +77,17 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         trainingParameters.setBeta(0.01);
         trainingParameters.setK(25);
 
-        LatentDirichletAllocation lda = MLBuilder.create(trainingParameters, conf);
+        LatentDirichletAllocation lda = MLBuilder.create(trainingParameters, configuration);
         
         lda.fit(trainingData);
         lda.save(storageName);
 
         lda.close();
-        lda = MLBuilder.load(LatentDirichletAllocation.class, storageName, conf);
+        lda = MLBuilder.load(LatentDirichletAllocation.class, storageName, configuration);
 
         lda.predict(trainingData);
         
-        Dataframe reducedTrainingData = new Dataframe(conf);
+        Dataframe reducedTrainingData = new Dataframe(configuration);
         for(Record r : trainingData) {
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
@@ -97,7 +97,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
 
-        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(1).split(reducedTrainingData), tp);
         
         double expResult = 0.6843125117743629;

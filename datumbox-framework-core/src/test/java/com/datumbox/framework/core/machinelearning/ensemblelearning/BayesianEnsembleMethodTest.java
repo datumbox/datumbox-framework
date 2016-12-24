@@ -44,20 +44,20 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.ensembleLearningResponses(conf);
+        Dataframe[] data = Datasets.ensembleLearningResponses(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
         df.save(storageName);
 
 
-        BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), conf);
+        BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), configuration);
 
         instance.fit(trainingData);
         instance.save(storageName);
@@ -70,8 +70,8 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(BayesianEnsembleMethod.class, storageName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(BayesianEnsembleMethod.class, storageName, configuration);
 
         df.transform(validationData);
         

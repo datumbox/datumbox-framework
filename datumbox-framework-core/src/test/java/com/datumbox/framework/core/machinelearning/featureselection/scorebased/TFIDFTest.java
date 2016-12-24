@@ -42,9 +42,9 @@ public class TFIDFTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.featureSelectorTFIDF(conf);
+        Dataframe[] data = Datasets.featureSelectorTFIDF(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
@@ -54,7 +54,7 @@ public class TFIDFTest extends AbstractTest {
         param.setBinarized(false);
         param.setMaxFeatures(3);
         
-        TFIDF instance = MLBuilder.create(param, conf);
+        TFIDF instance = MLBuilder.create(param, configuration);
         
         instance.fit_transform(trainingData);
         instance.save(storageName);
@@ -64,7 +64,7 @@ public class TFIDFTest extends AbstractTest {
         //instance = null;
         
         
-        instance = MLBuilder.load(TFIDF.class, storageName, conf);
+        instance = MLBuilder.load(TFIDF.class, storageName, configuration);
         
         instance.transform(validationData);
         

@@ -43,17 +43,17 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         
         df.fit_transform(trainingData);
         df.save(storageName);
@@ -65,7 +65,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
 
-        HierarchicalAgglomerative instance = MLBuilder.create(param, conf);
+        HierarchicalAgglomerative instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
@@ -77,8 +77,8 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(HierarchicalAgglomerative.class, storageName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(HierarchicalAgglomerative.class, storageName, configuration);
 
         df.transform(validationData);
         instance.predict(validationData);
@@ -104,16 +104,16 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
 
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
 
         
@@ -126,7 +126,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
 
-        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, conf)
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         df.denormalize(trainingData);

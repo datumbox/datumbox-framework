@@ -52,20 +52,20 @@ public class XMinMaxNormalizer extends AbstractDummyMinMaxTransformer<XMinMaxNor
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected XMinMaxNormalizer(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected XMinMaxNormalizer(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected XMinMaxNormalizer(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected XMinMaxNormalizer(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /** {@inheritDoc} */

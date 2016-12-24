@@ -46,9 +46,9 @@ public class ModelerTest extends AbstractTest {
     public void testTrainAndValidate() {
         logger.info("testTrainAndValidate");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
         
         Dataframe validationData = data[1];
@@ -72,13 +72,13 @@ public class ModelerTest extends AbstractTest {
         //feature selection configuration
         trainingParameters.setFeatureSelectorTrainingParameters(null);
 
-        Modeler instance = MLBuilder.create(trainingParameters, conf);
+        Modeler instance = MLBuilder.create(trainingParameters, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
         instance.close();
 
-        instance = MLBuilder.load(Modeler.class, storageName, conf);
+        instance = MLBuilder.load(Modeler.class, storageName, configuration);
 
         instance.predict(trainingData);
 
@@ -92,7 +92,7 @@ public class ModelerTest extends AbstractTest {
         //instance = null;
 
 
-        instance = MLBuilder.load(Modeler.class, storageName, conf);
+        instance = MLBuilder.load(Modeler.class, storageName, configuration);
         
         instance.predict(validationData);
         

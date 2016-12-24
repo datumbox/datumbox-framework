@@ -43,9 +43,9 @@ public class MultinomialDPMMTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.multinomialClusters(conf);
+        Dataframe[] data = Datasets.multinomialClusters(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
@@ -59,13 +59,13 @@ public class MultinomialDPMMTest extends AbstractTest {
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
 
-        MultinomialDPMM instance = MLBuilder.create(param, conf);
+        MultinomialDPMM instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(MultinomialDPMM.class, storageName, conf);
+        instance = MLBuilder.load(MultinomialDPMM.class, storageName, configuration);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);
@@ -88,11 +88,11 @@ public class MultinomialDPMMTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.multinomialClusters(conf);
+        Dataframe[] data = Datasets.multinomialClusters(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
@@ -104,7 +104,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
 
-        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, conf)
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         

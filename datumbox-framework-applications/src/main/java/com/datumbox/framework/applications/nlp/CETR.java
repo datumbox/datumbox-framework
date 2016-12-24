@@ -116,15 +116,15 @@ public class CETR {
         }
     }
 
-    private final Configuration conf;
+    private final Configuration configuration;
     
     /**
      * Constructor for the CETR class.
      *
-     * @param conf 
+     * @param configuration
      */
-    public CETR(Configuration conf) {
-        this.conf = conf;
+    public CETR(Configuration configuration) {
+        this.configuration = configuration;
     }
     
     /**
@@ -162,7 +162,7 @@ public class CETR {
         
         boolean use2Dmodel = (parameters.getAlphaWindowSizeFor2DModel()>0);
         
-        Dataframe dataset = new Dataframe(conf);
+        Dataframe dataset = new Dataframe(configuration);
         if(use2Dmodel) {
             List<Double> G = computeDerivatives(TTRlist, parameters.getAlphaWindowSizeFor2DModel());
             gaussianSmoothing(G);
@@ -248,7 +248,7 @@ public class CETR {
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
 
-        Kmeans instance = MLBuilder.create(param, conf);
+        Kmeans instance = MLBuilder.create(param, configuration);
         
         instance.fit(dataset);
         instance.predict(dataset);

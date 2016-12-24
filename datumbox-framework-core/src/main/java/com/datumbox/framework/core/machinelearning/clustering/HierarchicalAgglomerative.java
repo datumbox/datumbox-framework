@@ -290,22 +290,22 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected HierarchicalAgglomerative(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
+    protected HierarchicalAgglomerative(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected HierarchicalAgglomerative(String storageName, Configuration conf) {
-        super(storageName, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
+    protected HierarchicalAgglomerative(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
     
     private boolean parallelized = true;
@@ -331,7 +331,7 @@ public class HierarchicalAgglomerative extends AbstractClusterer<HierarchicalAgg
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
 
     /** {@inheritDoc} */

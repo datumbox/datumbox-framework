@@ -47,11 +47,11 @@ public class MapDBConfiguration extends AbstractFileStorageConfiguration {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        outputDirectory = properties.getProperty("storageConf.MapDBConfiguration.outputDirectory");
-        cacheSize = Integer.parseInt(properties.getProperty("storageConf.MapDBConfiguration.cacheSize"));
-        compressed = "true".equalsIgnoreCase(properties.getProperty("storageConf.MapDBConfiguration.compressed"));
-        hybridized = "true".equalsIgnoreCase(properties.getProperty("storageConf.MapDBConfiguration.hybridized"));
-        asynchronous = "true".equalsIgnoreCase(properties.getProperty("storageConf.MapDBConfiguration.asynchronous"));
+        outputDirectory = properties.getProperty("storageConfiguration.MapDBConfiguration.outputDirectory");
+        cacheSize = Integer.parseInt(properties.getProperty("storageConfiguration.MapDBConfiguration.cacheSize"));
+        compressed = "true".equalsIgnoreCase(properties.getProperty("storageConfiguration.MapDBConfiguration.compressed"));
+        hybridized = "true".equalsIgnoreCase(properties.getProperty("storageConfiguration.MapDBConfiguration.hybridized"));
+        asynchronous = "true".equalsIgnoreCase(properties.getProperty("storageConfiguration.MapDBConfiguration.asynchronous"));
     }
     
     /**

@@ -33,15 +33,15 @@ public class MLBuilder {
      * Creates a new algorithm based on the provided training parameters.
      *
      * @param <T>
-     * @param conf
+     * @param configuration
      * @return
      */
-    public static <T extends Trainable, TP extends Parameterizable> T create(TP trainingParameters, Configuration conf) {
+    public static <T extends Trainable, TP extends Parameterizable> T create(TP trainingParameters, Configuration configuration) {
         try {
             Class<T> aClass = (Class<T>) trainingParameters.getClass().getEnclosingClass();
             Constructor<T> constructor = aClass.getDeclaredConstructor(trainingParameters.getClass(), Configuration.class);
             constructor.setAccessible(true);
-            return constructor.newInstance(trainingParameters, conf);
+            return constructor.newInstance(trainingParameters, configuration);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -54,14 +54,14 @@ public class MLBuilder {
      * @param <T>
      * @param aClass
      * @param storageName
-     * @param conf
+     * @param configuration
      * @return
      */
-    public static <T extends Trainable> T load(Class<T> aClass, String storageName, Configuration conf) {
+    public static <T extends Trainable> T load(Class<T> aClass, String storageName, Configuration configuration) {
         try {
             Constructor<T> constructor = aClass.getDeclaredConstructor(String.class, Configuration.class);
             constructor.setAccessible(true);
-            return constructor.newInstance(storageName, conf);
+            return constructor.newInstance(storageName, configuration);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);

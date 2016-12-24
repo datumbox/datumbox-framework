@@ -31,15 +31,15 @@ import java.util.stream.Stream;
  */
 public class ForkJoinStream {
     
-    private final ConcurrencyConfiguration concurrencyConf;
+    private final ConcurrencyConfiguration concurrencyConfiguration;
     
     /**
      * Default constructor which receives the Concurrency Configuration object.
      * 
-     * @param concurrencyConf
+     * @param concurrencyConfiguration
      */
-    public ForkJoinStream(ConcurrencyConfiguration concurrencyConf) {
-        this.concurrencyConf = concurrencyConf;
+    public ForkJoinStream(ConcurrencyConfiguration concurrencyConfiguration) {
+        this.concurrencyConfiguration = concurrencyConfiguration;
     } 
     
     /**
@@ -53,7 +53,7 @@ public class ForkJoinStream {
      */
     public <T> void forEach(Stream<T> stream, Consumer<? super T> action) {
         Runnable runnable = () -> stream.forEach(action);
-        ThreadMethods.forkJoinExecution(runnable, concurrencyConf, stream.isParallel());
+        ThreadMethods.forkJoinExecution(runnable, concurrencyConfiguration, stream.isParallel());
     }
     
     /**
@@ -69,7 +69,7 @@ public class ForkJoinStream {
      */
     public <T, R> Stream<R> map(Stream<T> stream, Function<? super T, ? extends R> mapper) {
         Callable<Stream<R>> callable = () -> stream.map(mapper);
-        return ThreadMethods.forkJoinExecution(callable, concurrencyConf, stream.isParallel());
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfiguration, stream.isParallel());
     }
     
     
@@ -87,7 +87,7 @@ public class ForkJoinStream {
      */
     public <T, R, A> R collect(Stream<T> stream, Collector<? super T, A, R> collector) {
         Callable<R> callable = () -> stream.collect(collector);
-        return ThreadMethods.forkJoinExecution(callable, concurrencyConf, stream.isParallel());
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfiguration, stream.isParallel());
     }
     
     /**
@@ -102,7 +102,7 @@ public class ForkJoinStream {
      */
     public <T> Optional<T> min(Stream<T> stream, Comparator<? super T> comparator) {
         Callable<Optional<T>> callable = () -> stream.min(comparator);
-        return ThreadMethods.forkJoinExecution(callable, concurrencyConf, stream.isParallel());
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfiguration, stream.isParallel());
     }
     
     /**
@@ -117,7 +117,7 @@ public class ForkJoinStream {
      */
     public <T> Optional<T> max(Stream<T> stream, Comparator<? super T> comparator) {
         Callable<Optional<T>> callable = () -> stream.max(comparator);
-        return ThreadMethods.forkJoinExecution(callable, concurrencyConf, stream.isParallel());
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfiguration, stream.isParallel());
     }
     
     /**
@@ -130,6 +130,6 @@ public class ForkJoinStream {
      */
     public double sum(DoubleStream stream) {
         Callable<Double> callable = () -> stream.sum();
-        return ThreadMethods.forkJoinExecution(callable, concurrencyConf, stream.isParallel());
+        return ThreadMethods.forkJoinExecution(callable, concurrencyConfiguration, stream.isParallel());
     }
 }

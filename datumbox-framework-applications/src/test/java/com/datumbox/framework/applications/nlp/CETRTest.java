@@ -42,7 +42,7 @@ public class CETRTest extends AbstractTest {
     public void testExtract() {
         logger.info("extract");
          
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         String text;        
         try {
@@ -62,7 +62,7 @@ public class CETRTest extends AbstractTest {
         parameters.setNumberOfClusters(2);
         parameters.setAlphaWindowSizeFor2DModel(3);
         parameters.setSmoothingAverageRadius(2);
-        CETR instance = new CETR(conf);
+        CETR instance = new CETR(configuration);
         String expResult = "This domain is established to be used for illustrative examples in documents. You may use this domain in examples without prior coordination or asking for permission.";
         String result = instance.extract(text, parameters);
         assertEquals(expResult, result);

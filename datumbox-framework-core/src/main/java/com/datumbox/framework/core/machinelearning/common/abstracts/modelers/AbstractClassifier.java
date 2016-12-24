@@ -77,20 +77,20 @@ public abstract class AbstractClassifier<MP extends AbstractClassifier.AbstractM
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractClassifier(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractClassifier(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractClassifier(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractClassifier(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /**

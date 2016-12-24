@@ -56,20 +56,20 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected BinarizedNaiveBayes(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected BinarizedNaiveBayes(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected BinarizedNaiveBayes(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected BinarizedNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

@@ -54,20 +54,20 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected MultinomialNaiveBayes(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected MultinomialNaiveBayes(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MultinomialNaiveBayes(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected MultinomialNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

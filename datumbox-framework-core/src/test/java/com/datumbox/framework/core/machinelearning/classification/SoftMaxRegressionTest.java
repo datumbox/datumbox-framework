@@ -48,17 +48,17 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsCategorical(conf);
+        Dataframe[] data = Datasets.carsCategorical(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         
         df.fit_transform(trainingData);
         df.save(storageName);
@@ -68,7 +68,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         param.setTotalIterations(2000);
         param.setL2(0.001);
         
-        SoftMaxRegression instance = MLBuilder.create(param, conf);
+        SoftMaxRegression instance = MLBuilder.create(param, configuration);
         
         instance.fit(trainingData);
         instance.save(storageName);
@@ -82,8 +82,8 @@ public class SoftMaxRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(SoftMaxRegression.class, storageName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(SoftMaxRegression.class, storageName, configuration);
 
         df.transform(validationData);
         instance.predict(validationData);
@@ -115,16 +115,16 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
 
-        XMinMaxNormalizer df = MLBuilder.create(new XMinMaxNormalizer.TrainingParameters(), conf);
+        XMinMaxNormalizer df = MLBuilder.create(new XMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
 
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
@@ -132,7 +132,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
         param.setL1(0.0001);
         param.setL2(0.0001);
 
-        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         df.denormalize(trainingData);

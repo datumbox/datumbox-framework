@@ -46,15 +46,15 @@ public class NLMSTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.regressionNumeric(conf);
+        Dataframe[] data = Datasets.regressionNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
         df.save(storageName);
 
@@ -65,7 +65,7 @@ public class NLMSTest extends AbstractTest {
 
 
 
-        NLMS instance = MLBuilder.create(param, conf);
+        NLMS instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
@@ -77,8 +77,8 @@ public class NLMSTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(NLMS.class, storageName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(NLMS.class, storageName, configuration);
 
         df.transform(validationData);
         
@@ -104,15 +104,15 @@ public class NLMSTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.housingNumerical(conf);
+        Dataframe[] data = Datasets.housingNumerical(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
 
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
 
 
@@ -123,7 +123,7 @@ public class NLMSTest extends AbstractTest {
         featureSelectorParameters.setWhitened(false);
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
 
-        PCA featureSelector = MLBuilder.create(featureSelectorParameters, conf);
+        PCA featureSelector = MLBuilder.create(featureSelectorParameters, configuration);
         featureSelector.fit_transform(trainingData);
         featureSelector.close();
 
@@ -134,7 +134,7 @@ public class NLMSTest extends AbstractTest {
         param.setL1(0.001);
         param.setL2(0.001);
         
-        LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, conf)
+        LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         df.denormalize(trainingData);

@@ -136,22 +136,22 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected StepwiseRegression(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
-        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
+    protected StepwiseRegression(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected StepwiseRegression(String storageName, Configuration conf) {
-        super(storageName, conf);
-        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
+    protected StepwiseRegression(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
     /** {@inheritDoc} */
@@ -169,7 +169,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
     @Override
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
+        Configuration configuration = knowledgeBase.getConfiguration();
 
         //reset previous entries on the bundle
         resetBundle();
@@ -216,7 +216,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
         AbstractRegressor mlregressor = MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
-                conf
+                configuration
         );
         mlregressor.fit(copiedTrainingData);
         bundle.put(REG_KEY, mlregressor);
@@ -230,7 +230,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         initBundle();
         super.save(storageName);
 
-        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
         bundle.save(knowledgeBaseName);
     }
 
@@ -256,21 +256,21 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
 
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
+        Configuration configuration = knowledgeBase.getConfiguration();
         String storageName = knowledgeBase.getStorageConnector().getStorageName();
-        String separator = conf.getStorageConf().getStorageNameSeparator();
+        String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
 
         if(!bundle.containsKey(REG_KEY)) {
             AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
 
-            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + REG_KEY, conf));
+            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + REG_KEY, configuration));
         }
     }
 
     private Map<Object, Double> runRegression(Dataframe trainingData) {
         AbstractRegressor mlregressor = MLBuilder.create(
                 knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
-                knowledgeBase.getConf()
+                knowledgeBase.getConfiguration()
         );
         mlregressor.fit(trainingData);
 

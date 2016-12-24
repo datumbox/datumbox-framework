@@ -57,20 +57,20 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected Adaboost(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected Adaboost(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected Adaboost(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected Adaboost(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

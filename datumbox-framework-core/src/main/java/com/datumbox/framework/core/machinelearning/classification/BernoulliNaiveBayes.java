@@ -82,20 +82,20 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected BernoulliNaiveBayes(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected BernoulliNaiveBayes(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected BernoulliNaiveBayes(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected BernoulliNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

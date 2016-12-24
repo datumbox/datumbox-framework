@@ -122,20 +122,20 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected CollaborativeFiltering(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected CollaborativeFiltering(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected CollaborativeFiltering(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected CollaborativeFiltering(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

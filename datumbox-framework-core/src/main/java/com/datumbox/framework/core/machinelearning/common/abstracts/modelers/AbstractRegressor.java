@@ -29,20 +29,20 @@ public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractMod
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractRegressor(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractRegressor(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractRegressor(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractRegressor(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
 

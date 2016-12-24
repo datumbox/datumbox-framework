@@ -82,11 +82,11 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
     
     /** 
      * @param storageName
-     * @param storageConf
+     * @param storageConfiguration
      * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
      */
-    protected MapDBConnector(String storageName, MapDBConfiguration storageConf) {
-        super(storageName, storageConf);
+    protected MapDBConnector(String storageName, MapDBConfiguration storageConfiguration) {
+        super(storageName, storageConfiguration);
     }
 
     /** {@inheritDoc} */
@@ -187,7 +187,7 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
     public <K,V> Map<K,V> getBigMap(String name, Class<K> keyClass, Class<V> valueClass, StorageConnector.MapType type, StorageConnector.StorageHint storageHint, boolean isConcurrent, boolean isTemporary) {
         assertConnectionOpen();
         
-        if(storageHint == StorageConnector.StorageHint.IN_MEMORY && storageConf.isHybridized()) {
+        if(storageHint == StorageConnector.StorageHint.IN_MEMORY && storageConfiguration.isHybridized()) {
             //store in memory
             if(StorageConnector.MapType.HASHMAP.equals(type)) {
                 return isConcurrent?new ConcurrentHashMap<>():new HashMap<>();
@@ -364,19 +364,19 @@ public class MapDBConnector extends AbstractFileStorageConnector<MapDBConfigurat
                 throw new IllegalArgumentException("Unsupported StorageType.");
             }
             
-            if(storageConf.isCompressed()) {
+            if(storageConfiguration.isCompressed()) {
                 m = m.compressionEnable();
             }
 
             boolean permitCaching = storageType == StorageType.PRIMARY_STORAGE || storageType == StorageType.TEMP_PRIMARY_STORAGE;
-            if(permitCaching && storageConf.getCacheSize()>0) {
-                m = m.cacheLRUEnable().cacheSize(storageConf.getCacheSize()) ;
+            if(permitCaching && storageConfiguration.getCacheSize()>0) {
+                m = m.cacheLRUEnable().cacheSize(storageConfiguration.getCacheSize()) ;
             }
             else {
                 m = m.cacheDisable();
             }
 
-            if(storageConf.isAsynchronous()) {
+            if(storageConfiguration.isAsynchronous()) {
                 m = m.asyncWriteEnable();
             }
             

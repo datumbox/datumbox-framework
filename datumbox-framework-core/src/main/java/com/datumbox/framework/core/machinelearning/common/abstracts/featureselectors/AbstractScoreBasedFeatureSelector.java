@@ -35,20 +35,20 @@ public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScore
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractScoreBasedFeatureSelector(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractScoreBasedFeatureSelector(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractScoreBasedFeatureSelector(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractScoreBasedFeatureSelector(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /**

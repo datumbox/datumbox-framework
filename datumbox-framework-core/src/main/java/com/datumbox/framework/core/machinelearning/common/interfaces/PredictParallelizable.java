@@ -93,10 +93,10 @@ public interface PredictParallelizable extends Parallelizable {
      * 
      * @param newData 
      * @param resultsBuffer 
-     * @param concurrencyConf
+     * @param concurrencyConfiguration
      */
-    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer, ConcurrencyConfiguration concurrencyConf) {
-        ForkJoinStream streamExecutor = new ForkJoinStream(concurrencyConf);
+    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer, ConcurrencyConfiguration concurrencyConfiguration) {
+        ForkJoinStream streamExecutor = new ForkJoinStream(concurrencyConfiguration);
         
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             resultsBuffer.put(e.getKey(), _predictRecord(e.getValue())); //the key is unique across threads and the map is concurrent
@@ -121,11 +121,11 @@ public interface PredictParallelizable extends Parallelizable {
      *
      * @param newData
      * @param sc
-     * @param concurrencyConf
+     * @param concurrencyConfiguration
      */
-    default public void _predictDatasetParallel(Dataframe newData, StorageConnector sc, ConcurrencyConfiguration concurrencyConf) {
+    default public void _predictDatasetParallel(Dataframe newData, StorageConnector sc, ConcurrencyConfiguration concurrencyConfiguration) {
         Map<Integer, Prediction> resultsBuffer = sc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageConnector.MapType.HASHMAP, StorageConnector.StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, concurrencyConf);
+        _predictDatasetParallel(newData, resultsBuffer, concurrencyConfiguration);
         sc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 }

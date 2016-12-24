@@ -222,20 +222,20 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected MultinomialDPMM(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected MultinomialDPMM(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MultinomialDPMM(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected MultinomialDPMM(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /** {@inheritDoc} */

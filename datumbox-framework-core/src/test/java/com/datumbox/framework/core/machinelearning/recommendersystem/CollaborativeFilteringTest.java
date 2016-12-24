@@ -45,9 +45,9 @@ public class CollaborativeFilteringTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.recommenderSystemFood(conf);
+        Dataframe[] data = Datasets.recommenderSystemFood(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
@@ -58,13 +58,13 @@ public class CollaborativeFilteringTest extends AbstractTest {
         CollaborativeFiltering.TrainingParameters param = new CollaborativeFiltering.TrainingParameters();
         param.setSimilarityMethod(CollaborativeFiltering.TrainingParameters.SimilarityMeasure.PEARSONS_CORRELATION);
 
-        CollaborativeFiltering instance = MLBuilder.create(param, conf);
+        CollaborativeFiltering instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(CollaborativeFiltering.class, storageName, conf);
+        instance = MLBuilder.load(CollaborativeFiltering.class, storageName, configuration);
 
         instance.predict(validationData);
         RecommendationMetrics vm = new RecommendationMetrics(validationData);

@@ -30,20 +30,20 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractFeatureSelector(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractFeatureSelector(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractFeatureSelector(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractFeatureSelector(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
 

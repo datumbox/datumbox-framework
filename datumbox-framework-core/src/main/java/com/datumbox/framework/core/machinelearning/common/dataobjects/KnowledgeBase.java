@@ -34,7 +34,7 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
     /**
      * The storage Configuration of the Permanent Storage.
      */
-    private final Configuration conf;
+    private final Configuration configuration;
 
     /**
      * The connector to the Permanent Storage.
@@ -55,12 +55,12 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * Constructor which is called on model initialization before training.
      *
      * @param storageName
-     * @param conf
+     * @param configuration
      * @param trainingParameters
      */
-    public KnowledgeBase(String storageName, Configuration conf, TP trainingParameters) {
-        this.conf = conf;
-        sc = this.conf.getStorageConf().getStorageConnector(storageName);
+    public KnowledgeBase(String storageName, Configuration configuration, TP trainingParameters) {
+        this.configuration = configuration;
+        sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
 
         this.trainingParameters = trainingParameters;
         modelParameters = ModelParameters.newInstance(trainingParameters.getMPClass(), sc);
@@ -70,12 +70,12 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      * Constructor which is called when we pre-trained load persisted models.
      *
      * @param storageName
-     * @param conf
+     * @param configuration
      */
     @SuppressWarnings("unchecked")
-    public KnowledgeBase(String storageName, Configuration conf) {
-        this.conf = conf;
-        sc = this.conf.getStorageConf().getStorageConnector(storageName);
+    public KnowledgeBase(String storageName, Configuration configuration) {
+        this.configuration = configuration;
+        sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
 
         trainingParameters = (TP) sc.loadObject("trainingParameters", TrainingParameters.class);
         modelParameters = (MP) sc.loadObject("modelParameters", ModelParameters.class);
@@ -95,8 +95,8 @@ public class KnowledgeBase<MP extends ModelParameters, TP extends TrainingParame
      *
      * @return
      */
-    public Configuration getConf() {
-        return conf;
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     /**

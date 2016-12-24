@@ -134,20 +134,20 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected MatrixLinearRegression(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected MatrixLinearRegression(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MatrixLinearRegression(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected MatrixLinearRegression(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

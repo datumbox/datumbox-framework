@@ -116,22 +116,22 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected MaximumEntropy(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
+    protected MaximumEntropy(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MaximumEntropy(String storageName, Configuration conf) {
-        super(storageName, conf);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConf().getConcurrencyConf());
+    protected MaximumEntropy(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
     
     private boolean parallelized = true;
@@ -157,7 +157,7 @@ public class MaximumEntropy extends AbstractClassifier<MaximumEntropy.ModelParam
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
     
     /** {@inheritDoc} */

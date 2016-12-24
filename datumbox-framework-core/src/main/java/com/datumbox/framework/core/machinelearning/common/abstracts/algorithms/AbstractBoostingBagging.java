@@ -130,22 +130,22 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractBoostingBagging(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
-        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
+    protected AbstractBoostingBagging(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractBoostingBagging(String storageName, Configuration conf) {
-        super(storageName, conf);
-        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
+    protected AbstractBoostingBagging(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
     
     /** {@inheritDoc} */
@@ -205,7 +205,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        Configuration conf = knowledgeBase.getConf();
+        Configuration configuration = knowledgeBase.getConfiguration();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         MP modelParameters = knowledgeBase.getModelParameters();
 
@@ -247,7 +247,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
             Dataframe sampledTrainingDataset = trainingData.getSubset(sampledIDs);
 
 
-            AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, conf);
+            AbstractClassifier mlclassifier = MLBuilder.create(weakClassifierTrainingParameters, configuration);
             mlclassifier.fit(sampledTrainingDataset);
             sampledTrainingDataset.close();
             mlclassifier.predict(trainingData);
@@ -320,7 +320,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         initBundle();
         super.save(storageName);
 
-        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
         bundle.save(knowledgeBaseName);
     }
 
@@ -345,11 +345,11 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
     }
 
     private void initBundle() {
-        Configuration conf = knowledgeBase.getConf();
+        Configuration configuration = knowledgeBase.getConfiguration();
         StorageConnector sc = knowledgeBase.getStorageConnector();
         MP modelParameters = knowledgeBase.getModelParameters();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
-        String separator = conf.getStorageConf().getStorageNameSeparator();
+        String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
 
         //the number of weak classifiers is the minimum between the classifiers that were defined in training parameters AND the number of the weak classifiers that were kept
         Class<AbstractClassifier> weakClassifierClass = trainingParameters.getWeakClassifierTrainingParameters().getTClass();
@@ -357,7 +357,7 @@ public abstract class AbstractBoostingBagging<MP extends AbstractBoostingBagging
         for(int i=0;i<totalWeakClassifiers;i++) {
             String key = STORAGE_INDICATOR + i;
             if (!bundle.containsKey(key)) {
-                bundle.put(key, MLBuilder.load(weakClassifierClass, sc.getStorageName() + separator + key, conf));
+                bundle.put(key, MLBuilder.load(weakClassifierClass, sc.getStorageName() + separator + key, configuration));
             }
         }
     }

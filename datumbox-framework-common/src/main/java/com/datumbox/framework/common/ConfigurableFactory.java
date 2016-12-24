@@ -40,11 +40,11 @@ public class ConfigurableFactory {
      */
     public static <C extends Configurable> C getConfiguration(Class<C> klass) {
         //Initialize configuration object
-        C conf;
+        C configuration;
         try {
             Constructor<C> constructor = klass.getDeclaredConstructor();
             constructor.setAccessible(true);
-            conf = constructor.newInstance();
+            configuration = constructor.newInstance();
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -73,8 +73,8 @@ public class ConfigurableFactory {
             }
         }
         
-        conf.load(properties);
+        configuration.load(properties);
         
-        return conf;
+        return configuration;
     }
 }

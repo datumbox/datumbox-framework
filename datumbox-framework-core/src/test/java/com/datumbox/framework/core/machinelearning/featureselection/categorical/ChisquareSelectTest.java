@@ -42,9 +42,9 @@ public class ChisquareSelectTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.featureSelectorCategorical(conf, 1000);
+        Dataframe[] data = Datasets.featureSelectorCategorical(configuration, 1000);
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
@@ -54,7 +54,7 @@ public class ChisquareSelectTest extends AbstractTest {
         param.setMaxFeatures(5);
         param.setALevel(0.05);
         
-        ChisquareSelect instance = MLBuilder.create(param, conf);
+        ChisquareSelect instance = MLBuilder.create(param, configuration);
         
         
         instance.fit_transform(trainingData);
@@ -64,7 +64,7 @@ public class ChisquareSelectTest extends AbstractTest {
         //instance = null;
         
         
-        instance = MLBuilder.load(ChisquareSelect.class, storageName, conf);
+        instance = MLBuilder.load(ChisquareSelect.class, storageName, configuration);
         
         instance.transform(validationData);
         

@@ -131,22 +131,22 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected Modeler(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
-        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
+    protected Modeler(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    protected Modeler(String storageName, Configuration conf) {
-        super(storageName, conf);
-        bundle  = new TrainableBundle(conf.getStorageConf().getStorageNameSeparator());
+    protected Modeler(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
 
@@ -198,7 +198,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
     @Override
     protected void _fit(Dataframe trainingData) {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
+        Configuration configuration = knowledgeBase.getConfiguration();
 
         //reset previous entries on the bundle
         resetBundle();
@@ -207,19 +207,19 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
         AbstractTransformer dataTransformer = null;
         if(dtParams != null) {
-            dataTransformer = MLBuilder.create(dtParams, conf);
+            dataTransformer = MLBuilder.create(dtParams, configuration);
             bundle.put(DT_KEY, dataTransformer);
         }
 
         AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
         AbstractFeatureSelector featureSelector = null;
         if(fsParams != null) {
-            featureSelector = MLBuilder.create(fsParams, conf);
+            featureSelector = MLBuilder.create(fsParams, configuration);
             bundle.put(FS_KEY, featureSelector);
         }
 
         AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
-        AbstractModeler modeler = MLBuilder.create(mlParams, conf);
+        AbstractModeler modeler = MLBuilder.create(mlParams, configuration);
         bundle.put(ML_KEY, modeler);
 
         //set the parallized flag to all algorithms
@@ -244,7 +244,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         initBundle();
         super.save(storageName);
 
-        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
         bundle.save(knowledgeBaseName);
     }
 
@@ -270,16 +270,16 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
     private void initBundle() {
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        Configuration conf = knowledgeBase.getConf();
+        Configuration configuration = knowledgeBase.getConfiguration();
         String storageName = knowledgeBase.getStorageConnector().getStorageName();
-        String separator = conf.getStorageConf().getStorageNameSeparator();
+        String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
 
         if(!bundle.containsKey(DT_KEY)) {
             AbstractTransformer.AbstractTrainingParameters dtParams = trainingParameters.getDataTransformerTrainingParameters();
 
             AbstractTransformer dataTransformer = null;
             if(dtParams != null) {
-                dataTransformer = MLBuilder.load(dtParams.getTClass(), storageName + separator + DT_KEY, conf);
+                dataTransformer = MLBuilder.load(dtParams.getTClass(), storageName + separator + DT_KEY, configuration);
             }
             bundle.put(DT_KEY, dataTransformer);
         }
@@ -289,7 +289,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
 
             AbstractFeatureSelector featureSelector = null;
             if(fsParams != null) {
-                featureSelector = MLBuilder.load(fsParams.getTClass(), storageName + separator + FS_KEY, conf);
+                featureSelector = MLBuilder.load(fsParams.getTClass(), storageName + separator + FS_KEY, configuration);
             }
             bundle.put(FS_KEY, featureSelector);
         }
@@ -297,7 +297,7 @@ public class Modeler extends AbstractTrainer<Modeler.ModelParameters, Modeler.Tr
         if(!bundle.containsKey(ML_KEY)) {
             AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
 
-            bundle.put(ML_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + ML_KEY, conf));
+            bundle.put(ML_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + ML_KEY, configuration));
         }
     }
 

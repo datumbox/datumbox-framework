@@ -38,7 +38,7 @@ public class InMemoryConfiguration extends AbstractFileStorageConfiguration {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        outputDirectory = properties.getProperty("storageConf.InMemoryConfiguration.outputDirectory");
+        outputDirectory = properties.getProperty("storageConfiguration.InMemoryConfiguration.outputDirectory");
     }
 
 }

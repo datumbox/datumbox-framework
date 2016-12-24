@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class AbstractStorageConnector<DC extends StorageConfiguration> implements StorageConnector {
 
     protected String storageName;
-    protected final DC storageConf;
+    protected final DC storageConfiguration;
 
     /**
      * Logger for all Connectors.
@@ -57,11 +57,11 @@ public abstract class AbstractStorageConnector<DC extends StorageConfiguration> 
      * Protected Constructor which is responsible for adding the Shutdown hook and storing the storage name and configuration.
      *
      * @param storageName
-     * @param storageConf
+     * @param storageConfiguration
      */
-    protected AbstractStorageConnector(String storageName, DC storageConf) {
+    protected AbstractStorageConnector(String storageName, DC storageConfiguration) {
         this.storageName = storageName;
-        this.storageConf = storageConf;
+        this.storageConfiguration = storageConfiguration;
 
         hook = new Thread(() -> {
             AbstractStorageConnector.this.hook = null;

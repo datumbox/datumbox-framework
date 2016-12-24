@@ -187,21 +187,21 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected SupportVectorMachine(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected SupportVectorMachine(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
         svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected SupportVectorMachine(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected SupportVectorMachine(String storageName, Configuration configuration) {
+        super(storageName, configuration);
         svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
     
@@ -222,7 +222,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
 
     /** {@inheritDoc} */

@@ -47,17 +47,17 @@ public class OrdinalRegressionTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.winesOrdinal(conf);
+        Dataframe[] data = Datasets.winesOrdinal(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), configuration);
         
         df.fit_transform(trainingData);
         df.save(storageName);
@@ -70,8 +70,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         param.setTotalIterations(100);
         param.setL2(0.001);
 
-        OrdinalRegression instance = MLBuilder.create(param, conf);
-        trainingData = Dataframe.Builder.load(datasetName,conf);
+        OrdinalRegression instance = MLBuilder.create(param, configuration);
+        trainingData = Dataframe.Builder.load(datasetName,configuration);
 
         instance.fit(trainingData);
         instance.save(storageName);
@@ -84,8 +84,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(OrdinalRegression.class, storageName, conf);
+        df = MLBuilder.load(DummyXMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(OrdinalRegression.class, storageName, configuration);
 
         df.transform(validationData);
         instance.predict(validationData);
@@ -117,16 +117,16 @@ public class OrdinalRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.winesOrdinal(conf);
+        Dataframe[] data = Datasets.winesOrdinal(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
 
-        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), configuration);
         
         df.fit_transform(trainingData);
 
@@ -134,7 +134,7 @@ public class OrdinalRegressionTest extends AbstractTest {
         param.setTotalIterations(100);
         param.setL2(0.001);
 
-        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         	        

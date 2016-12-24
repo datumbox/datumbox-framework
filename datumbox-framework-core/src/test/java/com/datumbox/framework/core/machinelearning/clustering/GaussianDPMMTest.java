@@ -42,9 +42,9 @@ public class GaussianDPMMTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.gaussianClusters(conf);
+        Dataframe[] data = Datasets.gaussianClusters(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
@@ -61,14 +61,14 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
 
-        GaussianDPMM instance = MLBuilder.create(param, conf);
+        GaussianDPMM instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
         trainingData.close();
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(GaussianDPMM.class, storageName, conf);
+        instance = MLBuilder.load(GaussianDPMM.class, storageName, configuration);
 
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);
@@ -90,11 +90,11 @@ public class GaussianDPMMTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
          
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.gaussianClusters(conf);
+        Dataframe[] data = Datasets.gaussianClusters(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
@@ -109,7 +109,7 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setMu0(new double[]{0.0, 0.0});
         param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
 
-        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, conf)
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         

@@ -53,20 +53,20 @@ public class XYMinMaxNormalizer extends AbstractDummyMinMaxTransformer<XYMinMaxN
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected XYMinMaxNormalizer(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected XYMinMaxNormalizer(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected XYMinMaxNormalizer(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected XYMinMaxNormalizer(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /** {@inheritDoc} */

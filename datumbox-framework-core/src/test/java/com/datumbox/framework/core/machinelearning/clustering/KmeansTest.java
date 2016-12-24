@@ -43,17 +43,17 @@ public class KmeansTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
 
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
         df.save(storageName);
 
@@ -67,7 +67,7 @@ public class KmeansTest extends AbstractTest {
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
 
-        Kmeans instance = MLBuilder.create(param, conf);
+        Kmeans instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
@@ -79,8 +79,8 @@ public class KmeansTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(Kmeans.class, storageName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(Kmeans.class, storageName, configuration);
 
 
         df.transform(validationData);
@@ -107,16 +107,16 @@ public class KmeansTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
 
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
         
 
@@ -133,7 +133,7 @@ public class KmeansTest extends AbstractTest {
         param.setCategoricalGamaMultiplier(1.0);
         param.setSubsetFurthestFirstcValue(2.0);
 
-        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, conf)
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
         df.denormalize(trainingData);

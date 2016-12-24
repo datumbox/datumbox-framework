@@ -37,7 +37,7 @@ public class MatrixDataframe {
      * To have access on the configuration and build the data map, we require setting this static field with the latest Configuration
      * object. It is package protected inorder to be accessible from the MapRealMatrix class.
      */
-    static Configuration conf;
+    static Configuration configuration;
     
     private final RealMatrix X;
     private final RealVector Y;
@@ -101,7 +101,7 @@ public class MatrixDataframe {
             ++d;
         }
 
-        conf = dataset.conf;
+        configuration = dataset.configuration;
         MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(dataset.isEmpty()) {
@@ -171,7 +171,7 @@ public class MatrixDataframe {
         int n = newData.size();
         int d = featureIdsReference.size();
 
-        conf = newData.conf;
+        configuration = newData.configuration;
         MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(newData.isEmpty()) {
@@ -228,8 +228,8 @@ public class MatrixDataframe {
         
         int d = featureIdsReference.size();
 
-        //create an Map-backed vector only if we have available info about conf.
-        RealVector v = (conf != null)?new MapRealVector(d):new OpenMapRealVector(d);
+        //create an Map-backed vector only if we have available info about configuration.
+        RealVector v = (configuration != null)?new MapRealVector(d):new OpenMapRealVector(d);
         
         boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         

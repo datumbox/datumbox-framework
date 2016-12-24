@@ -29,20 +29,20 @@ public abstract class AbstractTopicModeler<MP extends AbstractTopicModeler.Abstr
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractTopicModeler(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractTopicModeler(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractTopicModeler(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractTopicModeler(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
 }

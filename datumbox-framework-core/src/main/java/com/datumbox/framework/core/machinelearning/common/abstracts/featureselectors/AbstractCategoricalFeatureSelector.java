@@ -125,20 +125,20 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractCategoricalFeatureSelector(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractCategoricalFeatureSelector(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractCategoricalFeatureSelector(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractCategoricalFeatureSelector(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /** {@inheritDoc} */

@@ -28,8 +28,8 @@ import java.util.Properties;
  */
 public class Configuration implements Configurable {
     
-    private StorageConfiguration storageConf;
-    private ConcurrencyConfiguration concurrencyConf;
+    private StorageConfiguration storageConfiguration;
+    private ConcurrencyConfiguration concurrencyConfiguration;
     
     /**
      * Protected constructor. Use the static getConfiguration method instead.
@@ -43,17 +43,17 @@ public class Configuration implements Configurable {
      * 
      * @return 
      */
-    public StorageConfiguration getStorageConf() {
-        return storageConf;
+    public StorageConfiguration getStorageConfiguration() {
+        return storageConfiguration;
     }
     
     /**
      * Setter for the Storage Configuration object.
      * 
-     * @param storageConf
+     * @param storageConfiguration
      */
-    public void setStorageConf(StorageConfiguration storageConf) {
-        this.storageConf = storageConf;
+    public void setStorageConfiguration(StorageConfiguration storageConfiguration) {
+        this.storageConfiguration = storageConfiguration;
     }
     
     /**
@@ -61,30 +61,30 @@ public class Configuration implements Configurable {
      * 
      * @return 
      */
-    public ConcurrencyConfiguration getConcurrencyConf() {
-        return concurrencyConf;
+    public ConcurrencyConfiguration getConcurrencyConfuration() {
+        return concurrencyConfiguration;
     }
     
     /**
      * Setter for the Concurrency Configuration object.
      * 
-     * @param concurrencyConf
+     * @param concurrencyConfiguration
      */
-    public void setConcurrencyConfig(ConcurrencyConfiguration concurrencyConf) {
-        this.concurrencyConf = concurrencyConf;
+    public void setConcurrencyConfiguration(ConcurrencyConfiguration concurrencyConfiguration) {
+        this.concurrencyConfiguration = concurrencyConfiguration;
     }
     
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        String storageConfClassName = properties.getProperty("storageConf.className");
+        String storageConfClassName = properties.getProperty("storageConfiguration.className");
         try {
-            storageConf = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfClassName));
+            storageConfiguration = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfClassName));
         }
         catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
-        concurrencyConf = ConfigurableFactory.getConfiguration(ConcurrencyConfiguration.class);
+        concurrencyConfiguration = ConfigurableFactory.getConfiguration(ConcurrencyConfiguration.class);
     }
     
     /**

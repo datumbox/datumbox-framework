@@ -186,20 +186,20 @@ public abstract class AbstractClusterer<CL extends AbstractClusterer.AbstractClu
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractClusterer(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractClusterer(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractClusterer(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractClusterer(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /**

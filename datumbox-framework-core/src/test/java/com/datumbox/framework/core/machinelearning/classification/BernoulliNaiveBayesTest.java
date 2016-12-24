@@ -46,24 +46,24 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), conf);
+        BernoulliNaiveBayes instance = MLBuilder.create(new BernoulliNaiveBayes.TrainingParameters(), configuration);
         
         instance.fit(trainingData);
         instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(BernoulliNaiveBayes.class, storageName, conf);
+        instance = MLBuilder.load(BernoulliNaiveBayes.class, storageName, configuration);
         
         
         instance.predict(validationData);
@@ -91,15 +91,15 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
 
-        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), new BernoulliNaiveBayes.TrainingParameters());
         
         double expResult = 0.6631318681318682;

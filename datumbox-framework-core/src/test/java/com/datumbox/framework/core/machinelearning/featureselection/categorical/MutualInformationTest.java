@@ -42,9 +42,9 @@ public class MutualInformationTest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.featureSelectorCategorical(conf, 1000);
+        Dataframe[] data = Datasets.featureSelectorCategorical(configuration, 1000);
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
@@ -53,7 +53,7 @@ public class MutualInformationTest extends AbstractTest {
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
         
-        MutualInformation instance = MLBuilder.create(param, conf);
+        MutualInformation instance = MLBuilder.create(param, configuration);
         
         
         instance.fit_transform(trainingData);
@@ -63,7 +63,7 @@ public class MutualInformationTest extends AbstractTest {
         //instance = null;
         
         
-        instance = MLBuilder.load(MutualInformation.class, storageName, conf);
+        instance = MLBuilder.load(MutualInformation.class, storageName, configuration);
         
         instance.transform(validationData);
         

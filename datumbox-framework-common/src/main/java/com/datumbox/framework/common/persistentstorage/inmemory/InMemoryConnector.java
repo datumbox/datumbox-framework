@@ -51,11 +51,11 @@ public class InMemoryConnector extends AbstractFileStorageConnector<InMemoryConf
 
     /** 
      * @param storageName
-     * @param storageConf
+     * @param storageConfiguration
      * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
      */
-    protected InMemoryConnector(String storageName, InMemoryConfiguration storageConf) {
-        super(storageName, storageConf);
+    protected InMemoryConnector(String storageName, InMemoryConfiguration storageConfiguration) {
+        super(storageName, storageConfiguration);
     }
 
     /** {@inheritDoc} */

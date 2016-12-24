@@ -31,8 +31,8 @@ import org.junit.Test;
  */
 public class BivariateTest extends AbstractTest {
 
-    private Dataframe generateDataset(Configuration conf) {
-        Dataframe dataset = new Dataframe(conf);
+    private Dataframe generateDataset(Configuration configuration) {
+        Dataframe dataset = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put(0, 6);
@@ -156,9 +156,9 @@ public class BivariateTest extends AbstractTest {
     public void testCovarianceMatrix() {
         logger.info("covarianceMatrix");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe dataset = generateDataset(conf);
+        Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 4.5625);
         expResult.put2d(0, 1, 0.5875);
@@ -190,9 +190,9 @@ public class BivariateTest extends AbstractTest {
     public void testPearsonMatrix() {
         logger.info("pearsonMatrix");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe dataset = generateDataset(conf);
+        Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.18561229707779);
@@ -224,9 +224,9 @@ public class BivariateTest extends AbstractTest {
     public void testSpearmanMatrix() {
         logger.info("spearmanMatrix");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe dataset = generateDataset(conf);
+        Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
         expResult.put(0, new AssociativeArray());
         expResult.put2d(0, 0, 1.0);
@@ -259,9 +259,9 @@ public class BivariateTest extends AbstractTest {
     public void testKendalltauMatrix() {
         logger.info("kendalltauMatrix");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe dataset = generateDataset(conf);
+        Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
         expResult.put2d(0, 0, 1.0);
         expResult.put2d(0, 1, 0.066666666666667);

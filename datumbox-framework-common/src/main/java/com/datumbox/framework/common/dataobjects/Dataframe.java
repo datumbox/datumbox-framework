@@ -80,11 +80,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
          *
          * @param textFilesMap
          * @param textExtractor
-         * @param conf
+         * @param configuration
          * @return
          */
-        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, Extractable textExtractor, Configuration conf) {
-            Dataframe dataset = new Dataframe(conf);
+        public static Dataframe parseTextFiles(Map<Object, URI> textFilesMap, Extractable textExtractor, Configuration configuration) {
+            Dataframe dataset = new Dataframe(configuration);
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
 
             for (Map.Entry<Object, URI> entry : textFilesMap.entrySet()) {
@@ -106,7 +106,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
 
                         //we call below the recalculateMeta()
                         dataset.set(rId, r);
-                    }, conf.getConcurrencyConf());
+                    }, configuration.getConcurrencyConfuration());
                 }
                 catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -135,11 +135,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
          * @param recordSeparator
          * @param skip
          * @param limit
-         * @param conf
+         * @param configuration
          * @return
          */
         public static Dataframe parseCSVFile(Reader reader, String yVariable, LinkedHashMap<String, TypeInference.DataType> headerDataTypes,
-                                             char delimiter, char quote, String recordSeparator, Long skip, Long limit, Configuration conf) {
+                                             char delimiter, char quote, String recordSeparator, Long skip, Long limit, Configuration configuration) {
             Logger logger = LoggerFactory.getLogger(Dataframe.Builder.class);
 
             if(skip == null) {
@@ -159,7 +159,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
             TypeInference.DataType yDataType = headerDataTypes.get(yVariable);
             Map<String, TypeInference.DataType> xDataTypes = new HashMap<>(headerDataTypes); //copy header types
             xDataTypes.remove(yVariable); //remove the response variable from xDataTypes
-            Dataframe dataset = new Dataframe(conf, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
+            Dataframe dataset = new Dataframe(configuration, yDataType, xDataTypes); //use the private constructor to pass DataTypes directly and avoid updating them on the fly
 
 
             CSVFormat format = CSVFormat
@@ -199,7 +199,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
                         //The Metas are already set in the construction of the Dataframe.
                         dataset._unsafe_set(rId, r);
                     }
-                }, conf.getConcurrencyConf());
+                }, configuration.getConcurrencyConfuration());
             }
             catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -211,11 +211,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
          * It loads a dataframe that has already been persisted.
          *
          * @param storageName
-         * @param conf
+         * @param configuration
          * @return
          */
-        public static Dataframe load(String storageName, Configuration conf) {
-            return new Dataframe(storageName, conf);
+        public static Dataframe load(String storageName, Configuration configuration) {
+            return new Dataframe(storageName, configuration);
         }
 
     }
@@ -262,7 +262,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      * The configuration object used to create the Dataframe. It is defined as protected to be accessible by classes
      * that extend the Dataframe or the MatrixDataframe class which is on the same package.
      */
-    protected final Configuration conf;
+    protected final Configuration configuration;
 
     /**
      * This executor is used for the parallel processing of streams with custom
@@ -273,12 +273,12 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /**
      * Public constructor of Dataframe.
      *
-     * @param conf
+     * @param configuration
      */
-    public Dataframe(Configuration conf) {
-        this.conf = conf;
-        sc = this.conf.getStorageConf().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
-        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConf());
+    public Dataframe(Configuration configuration) {
+        this.configuration = configuration;
+        sc = this.configuration.getStorageConfiguration().getStorageConnector("dts" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong());
+        streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfuration());
 
         data = new Data(sc);
         persisted = false;
@@ -288,12 +288,12 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      * Private constructor used by the Builder inner static class.
      *
      * @param storageName
-     * @param conf
+     * @param configuration
      */
-    private Dataframe(String storageName, Configuration conf) {
-        this.conf = conf;
-        sc = this.conf.getStorageConf().getStorageConnector(storageName);
-        streamExecutor = new ForkJoinStream(this.conf.getConcurrencyConf());
+    private Dataframe(String storageName, Configuration configuration) {
+        this.configuration = configuration;
+        sc = this.configuration.getStorageConfiguration().getStorageConnector(storageName);
+        streamExecutor = new ForkJoinStream(this.configuration.getConcurrencyConfuration());
 
         data = sc.loadObject("data", Data.class);
         persisted = true;
@@ -302,12 +302,12 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /**
      * Private constructor used by the Builder inner static class.
      *
-     * @param conf
+     * @param configuration
      * @param yDataType
      * @param xDataTypes
      */
-    private Dataframe(Configuration conf, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
-        this(conf);
+    private Dataframe(Configuration configuration, TypeInference.DataType yDataType, Map<String, TypeInference.DataType> xDataTypes) {
+        this(configuration);
         this.data.yDataType = yDataType;
         this.data.xDataTypes.putAll(xDataTypes);
     }
@@ -732,7 +732,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
      * @return
      */
     public Dataframe getSubset(FlatDataList idsCollection) {
-        Dataframe d = new Dataframe(conf);
+        Dataframe d = new Dataframe(configuration);
 
         for(Object id : idsCollection) {
             d.add(get((Integer)id));
@@ -754,7 +754,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
     /** {@inheritDoc} */
     @Override
     public Dataframe copy() {
-        Dataframe d = new Dataframe(conf);
+        Dataframe d = new Dataframe(configuration);
 
         for(Map.Entry<Integer, Record> e : entries()) {
             Integer rId = e.getKey();

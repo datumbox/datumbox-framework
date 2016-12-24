@@ -46,24 +46,24 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        BinarizedNaiveBayes instance = MLBuilder.create(new BinarizedNaiveBayes.TrainingParameters(), conf);
+        BinarizedNaiveBayes instance = MLBuilder.create(new BinarizedNaiveBayes.TrainingParameters(), configuration);
 
         instance.fit(trainingData);
         instance.save(storageName);
         
         instance.close();
         //instance = null;
-        instance = MLBuilder.load(BinarizedNaiveBayes.class, storageName, conf);
+        instance = MLBuilder.load(BinarizedNaiveBayes.class, storageName, configuration);
         
         instance.predict(validationData);
         
@@ -91,15 +91,15 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
 
-        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), new BinarizedNaiveBayes.TrainingParameters());
         
         double expResult = 0.6631318681318682;

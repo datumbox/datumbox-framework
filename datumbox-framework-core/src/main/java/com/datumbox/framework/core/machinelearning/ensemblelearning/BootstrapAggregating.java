@@ -60,20 +60,20 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected BootstrapAggregating(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected BootstrapAggregating(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected BootstrapAggregating(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected BootstrapAggregating(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
     /** {@inheritDoc} */

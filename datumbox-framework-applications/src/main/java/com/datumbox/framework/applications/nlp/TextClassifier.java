@@ -94,20 +94,20 @@ public class TextClassifier extends Modeler {
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected TextClassifier(TrainingParameters trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected TextClassifier(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    protected TextClassifier(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected TextClassifier(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /**
@@ -122,7 +122,7 @@ public class TextClassifier extends Modeler {
         TrainingParameters tp = (TrainingParameters) knowledgeBase.getTrainingParameters();
         Dataframe trainingData = Dataframe.Builder.parseTextFiles(datasets,
                 AbstractTextExtractor.newInstance(tp.getTextExtractorParameters()),
-                knowledgeBase.getConf()
+                knowledgeBase.getConfiguration()
         );
         
         fit(trainingData);
@@ -146,7 +146,7 @@ public class TextClassifier extends Modeler {
         
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(dataset, 
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorParameters()),
-                knowledgeBase.getConf()
+                knowledgeBase.getConfiguration()
         );
         
         predict(testDataset);
@@ -165,7 +165,7 @@ public class TextClassifier extends Modeler {
     public Record predict(String text) {
         TrainingParameters trainingParameters = (TrainingParameters) knowledgeBase.getTrainingParameters();
         
-        Dataframe testDataset = new Dataframe(knowledgeBase.getConf());
+        Dataframe testDataset = new Dataframe(knowledgeBase.getConfiguration());
         testDataset.add(
             new Record(
                 new AssociativeArray(
@@ -216,7 +216,7 @@ public class TextClassifier extends Modeler {
         Dataframe testDataset = Dataframe.Builder.parseTextFiles(
                 datasets,
                 AbstractTextExtractor.newInstance(trainingParameters.getTextExtractorParameters()),
-                knowledgeBase.getConf()
+                knowledgeBase.getConfiguration()
         );
 
         ClassificationMetrics vm = validate(testDataset);

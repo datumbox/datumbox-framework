@@ -246,7 +246,7 @@ public class TextClassifierTest extends AbstractTest {
             ML.AbstractTrainingParameters modelerTrainingParameters,
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
             double expectedF1score) {
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
         String storageName = this.getClass().getSimpleName();
@@ -278,7 +278,7 @@ public class TextClassifierTest extends AbstractTest {
         exParams.setExaminationWindowLength(6);
         trainingParameters.setTextExtractorParameters(exParams);
 
-        TextClassifier instance = MLBuilder.create(trainingParameters, conf);
+        TextClassifier instance = MLBuilder.create(trainingParameters, configuration);
         instance.fit(dataset);
         instance.save(storageName);
 
@@ -291,7 +291,7 @@ public class TextClassifierTest extends AbstractTest {
         
         
         
-        instance = MLBuilder.load(TextClassifier.class, storageName, conf);
+        instance = MLBuilder.load(TextClassifier.class, storageName, configuration);
         Dataframe validationData;
         try {
             validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());

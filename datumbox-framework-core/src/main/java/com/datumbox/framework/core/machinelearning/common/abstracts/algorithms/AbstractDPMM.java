@@ -271,20 +271,20 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractDPMM(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractDPMM(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractDPMM(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractDPMM(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     private boolean parallelized = true;
@@ -304,7 +304,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     /** {@inheritDoc} */
     @Override
     protected void _predict(Dataframe newData) {
-        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConf().getConcurrencyConf());
+        _predictDatasetParallel(newData, knowledgeBase.getStorageConnector(), knowledgeBase.getConfiguration().getConcurrencyConfuration());
     }
 
     /** {@inheritDoc} */

@@ -29,20 +29,20 @@ public abstract class AbstractContinuousFeatureSelector<MP extends AbstractConti
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractContinuousFeatureSelector(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractContinuousFeatureSelector(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractContinuousFeatureSelector(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractContinuousFeatureSelector(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
 }

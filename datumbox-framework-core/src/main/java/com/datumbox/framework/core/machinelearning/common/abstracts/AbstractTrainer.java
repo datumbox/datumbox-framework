@@ -82,11 +82,11 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * Constructor which is called on model initialization before training.
      *
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      */
-    protected AbstractTrainer(TP trainingParameters, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), conf.getStorageConf().getStorageNameSeparator());
-        knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf, trainingParameters);
+    protected AbstractTrainer(TP trainingParameters, Configuration configuration) {
+        String knowledgeBaseName = createKnowledgeBaseName("kb" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong(), configuration.getStorageConfiguration().getStorageNameSeparator());
+        knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, configuration, trainingParameters);
         persisted = false;
     }
 
@@ -94,11 +94,11 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
      * Constructor which is called when we pre-trained load persisted models.
      *
      * @param storageName
-     * @param conf
+     * @param configuration
      */
-    protected AbstractTrainer(String storageName, Configuration conf) {
-        String knowledgeBaseName = createKnowledgeBaseName(storageName, conf.getStorageConf().getStorageNameSeparator());
-        knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, conf);
+    protected AbstractTrainer(String storageName, Configuration configuration) {
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, configuration.getStorageConfiguration().getStorageNameSeparator());
+        knowledgeBase = new KnowledgeBase<>(knowledgeBaseName, configuration);
         persisted = true;
     }
     
@@ -130,7 +130,7 @@ public abstract class AbstractTrainer<MP extends AbstractTrainer.AbstractModelPa
     public void save(String storageName) {
         logger.info("save()");
 
-        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConf().getStorageConf().getStorageNameSeparator());
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
         knowledgeBase.save(knowledgeBaseName);
         persisted = true;
     }

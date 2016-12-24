@@ -30,20 +30,20 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractTransformer(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractTransformer(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractTransformer(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractTransformer(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /**

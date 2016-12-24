@@ -41,16 +41,16 @@ import java.util.List;
 public class Validator<VM extends ValidationMetrics> {
 
     private final Class<VM> vmClass;
-    private final Configuration conf;
+    private final Configuration configuration;
 
     /**
      * The constructor of the K-Fold cross validator.
      *
      * @param vmClass
      */
-    public Validator(Class<VM> vmClass, Configuration conf) {
+    public Validator(Class<VM> vmClass, Configuration configuration) {
         this.vmClass = vmClass;
-        this.conf = conf;
+        this.configuration = configuration;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Validator<VM extends ValidationMetrics> {
      * @return
      */
     public VM validate(Iterator<Split> dataSplits, TrainingParameters trainingParameters) {
-        AbstractModeler modeler = MLBuilder.create(trainingParameters, conf);
+        AbstractModeler modeler = MLBuilder.create(trainingParameters, configuration);
 
         List<VM> validationMetricsList = new LinkedList<>();
         while (dataSplits.hasNext()) {

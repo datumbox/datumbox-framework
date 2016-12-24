@@ -47,17 +47,17 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsCategorical(conf);
+        Dataframe[] data = Datasets.carsCategorical(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         
         df.fit_transform(trainingData);
         df.save(storageName);
@@ -65,7 +65,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
         
-        MultinomialNaiveBayes instance = MLBuilder.create(param, conf);
+        MultinomialNaiveBayes instance = MLBuilder.create(param, configuration);
         
         instance.fit(trainingData);
         instance.save(storageName);
@@ -78,8 +78,8 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(MultinomialNaiveBayes.class, storageName, conf);
+        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(MultinomialNaiveBayes.class, storageName, configuration);
 
         df.transform(validationData);
         instance.predict(validationData);
@@ -112,12 +112,12 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
     public void testShuffleValidation() {
         logger.info("testShuffleValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
 
         double proportion = 0.8;
         int splits = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
         
@@ -126,7 +126,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
         MultinomialNaiveBayes.TrainingParameters param = new MultinomialNaiveBayes.TrainingParameters();
         param.setMultiProbabilityWeighted(true);
 
-        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, conf)
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new ShuffleSplitter(proportion, splits).split(trainingData), param);
         
         double expResult = 0.5983838383838384;

@@ -29,20 +29,20 @@ public abstract class AbstractRecommender<MP extends AbstractRecommender.Abstrac
 
     /**
      * @param trainingParameters
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractRecommender(TP trainingParameters, Configuration conf) {
-        super(trainingParameters, conf);
+    protected AbstractRecommender(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
      * @param storageName
-     * @param conf
+     * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractRecommender(String storageName, Configuration conf) {
-        super(storageName, conf);
+    protected AbstractRecommender(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
 
 }

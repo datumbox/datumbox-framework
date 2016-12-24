@@ -46,20 +46,20 @@ public class MatrixLinearRegressionTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.regressionNumeric(conf);
+        Dataframe[] data = Datasets.regressionNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        XYMinMaxNormalizer df = MLBuilder.create(new XYMinMaxNormalizer.TrainingParameters(), conf);
+        XYMinMaxNormalizer df = MLBuilder.create(new XYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
         df.save(storageName);
 
 
-        MatrixLinearRegression instance = MLBuilder.create(new MatrixLinearRegression.TrainingParameters(), conf);
+        MatrixLinearRegression instance = MLBuilder.create(new MatrixLinearRegression.TrainingParameters(), configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
@@ -71,8 +71,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         //instance = null;
         //df = null;
         
-        df = MLBuilder.load(XYMinMaxNormalizer.class, storageName, conf);
-        instance = MLBuilder.load(MatrixLinearRegression.class, storageName, conf);
+        df = MLBuilder.load(XYMinMaxNormalizer.class, storageName, configuration);
+        instance = MLBuilder.load(MatrixLinearRegression.class, storageName, configuration);
 
 
         df.transform(validationData);
@@ -101,22 +101,22 @@ public class MatrixLinearRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.regressionMixed(conf);
+        Dataframe[] data = Datasets.regressionMixed(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
 
 
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), conf);
+        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
         df.fit_transform(trainingData);
 
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
-        LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, conf)
+        LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
         
         df.denormalize(trainingData);

@@ -44,9 +44,9 @@ public class PCATest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.featureTransformationPCA(conf);
+        Dataframe[] data = Datasets.featureTransformationPCA(configuration);
         
         Dataframe originalData = data[0];
         Dataframe validationData = data[0].copy();
@@ -57,7 +57,7 @@ public class PCATest extends AbstractTest {
         PCA.TrainingParameters param = new PCA.TrainingParameters();
         param.setMaxDimensions(null);
 
-        PCA instance = MLBuilder.create(param, conf);
+        PCA instance = MLBuilder.create(param, configuration);
         instance.fit_transform(originalData);
         instance.save(storageName);
 
@@ -65,7 +65,7 @@ public class PCATest extends AbstractTest {
         instance.close();
         //instance = null;
         
-        instance = MLBuilder.load(PCA.class, storageName, conf);
+        instance = MLBuilder.load(PCA.class, storageName, configuration);
         
         instance.transform(validationData);
         

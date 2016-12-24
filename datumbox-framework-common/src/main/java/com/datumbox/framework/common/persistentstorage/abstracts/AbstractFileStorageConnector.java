@@ -32,11 +32,11 @@ public abstract class AbstractFileStorageConnector<SC extends AbstractFileStorag
 
     /**
      * @param storageName
-     * @param storageConf
+     * @param storageConfiguration
      * @see AbstractStorageConnector#AbstractStorageConnector(String, StorageConfiguration)
      */
-    protected AbstractFileStorageConnector(String storageName, SC storageConf) {
-        super(storageName, storageConf);
+    protected AbstractFileStorageConnector(String storageName, SC storageConfiguration) {
+        super(storageName, storageConfiguration);
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class AbstractFileStorageConnector<SC extends AbstractFileStorag
      */
     protected String getOutputDirectory() {
         //get the default filepath of the permanet storage file
-        String outputDirectory = storageConf.getOutputDirectory();
+        String outputDirectory = storageConfiguration.getOutputDirectory();
 
         if(outputDirectory == null || outputDirectory.isEmpty()) {
             outputDirectory = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
