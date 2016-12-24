@@ -1,20 +1,21 @@
 CODE IMPROVEMENTS
 =================
 
-- Support of better Transformers (Add notion of Standardizers such as ZeroOne and Zscore, decouple boolean transforming from numeric, add OneHotEncoder etc).
-- Write generic optimizers instead of having optimization methods in the algorithms. Add them under mathematics and move regularization there too.
-- Refactor the statistics package and replace all the static methods with proper inheritance.
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
+- Support of better Transformers: Add the notion of Standardizers such as ZeroOne and Zscore, decouple OneHotEncoding from Standardization.
+- Improve the API of Feature Selection and how we handle different data types.
+- Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
+- Refactor the statistics package and replace all the static methods with proper inheritance.
 
-- Try to move storages in a separate module that is inherited by common.
+- Consider moving storages in a separate module that is inherited by common.
 - Consider moving all tests in a separate module.
-- Run the tests with different configurations (one for each storage engine).
-- Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
+- Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
 
 
 NEW FEATURES
 ============
 
+- Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
 - Create a storage engine for BerkeleyDB.
 - Add the ability to call Machine Learning algorithms from command line or Python:
     - https://pypi.python.org/pypi/javabridge
@@ -27,6 +28,7 @@ DOCUMENTATION
 
 - Improve the code documentation.
 - Write How-to blog posts on building Text Classification models.
+- Update the website and link directly to the latest and previous documentations.
 
 
 NEW ALGORITHMS
