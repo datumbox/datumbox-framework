@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,11 +60,12 @@ public class Validator<VM extends ValidationMetrics> {
      * @param trainingParameters
      * @return
      */
-    public VM validate(Iterable<Split> dataSplits, TrainingParameters trainingParameters) {
+    public VM validate(Iterator<Split> dataSplits, TrainingParameters trainingParameters) {
         AbstractModeler modeler = MLBuilder.create(trainingParameters, conf);
 
         List<VM> validationMetricsList = new LinkedList<>();
-        for(Split s : dataSplits) {
+        while (dataSplits.hasNext()) {
+            Split s = dataSplits.next();
             Dataframe trainData = s.getTrain();
             Dataframe testData = s.getTest();
 

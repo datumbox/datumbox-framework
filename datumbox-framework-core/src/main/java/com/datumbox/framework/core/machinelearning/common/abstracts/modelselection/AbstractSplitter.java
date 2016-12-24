@@ -20,6 +20,7 @@ import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -91,6 +92,6 @@ public abstract class AbstractSplitter {
      * @param dataset
      * @return
      */
-    public abstract Iterable<Split> split(Dataframe dataset);
+    public abstract Iterator<Split> split(Dataframe dataset);
 
 }

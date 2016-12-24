@@ -54,14 +54,14 @@ public class KFoldSplitter extends AbstractSplitter {
 
     /** {@inheritDoc} */
     @Override
-    public Iterable<KFoldSplitter.Split> split(final Dataframe dataset) {
+    public Iterator<KFoldSplitter.Split> split(final Dataframe dataset) {
         final int n = dataset.size();
         if(k<=0 || n<=k) {
             throw new IllegalArgumentException("Invalid number of folds.");
         }
         else if(k == 1) {
             //by convention we the train and test datasets are the same. we need to copy both of them to ensure the original data won't be modified.
-            return () -> Arrays.asList(new Split(dataset.copy(), dataset.copy())).iterator();
+            return Arrays.asList(new Split(dataset.copy(), dataset.copy())).iterator();
         }
 
         //shuffle the ids of the records
@@ -75,7 +75,7 @@ public class KFoldSplitter extends AbstractSplitter {
         //estimate the size of fold. we floor the number here
         final int foldSize= n/k;
 
-        return () -> new Iterator<Split>() {
+        return new Iterator<Split>() {
 
             private int counter = 0;
 

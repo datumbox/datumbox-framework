@@ -59,7 +59,7 @@ public class ShuffleSplitter extends AbstractSplitter {
     }
 
     @Override
-    public Iterable<ShuffleSplitter.Split> split(Dataframe dataset) {
+    public Iterator<ShuffleSplitter.Split> split(Dataframe dataset) {
         final int n = dataset.size();
         if(proportion <=0.0 || proportion >=1.0) {
             throw new IllegalArgumentException("The train size should be between 0.0 and 1.0.");
@@ -67,7 +67,7 @@ public class ShuffleSplitter extends AbstractSplitter {
 
         final int trainSize = (int) (n*proportion);
 
-        return () -> new Iterator<Split>() {
+        return new Iterator<Split>() {
 
             private int counter = 0;
 
