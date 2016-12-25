@@ -144,7 +144,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        
         StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         
         Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
@@ -154,9 +153,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         
         //build the maps with the feature statistics and counts
         buildFeatureStatistics(trainingData, tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
-        
-        
-        
+
         
         //call the overriden method to get the scores of the features.
         //WARNING: do not use feature scores for any weighting. Sometimes the features are selected based on a minimum and others on a maximum criterion.
@@ -172,15 +169,14 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     @Override
     protected void _transform(Dataframe newdata) {
         //now filter the data by removing all the features that are not selected
-        filterData(newdata, knowledgeBase.getStorageEngine(), knowledgeBase.getModelParameters().getFeatureScores());
+        filterData(newdata, knowledgeBase.getModelParameters().getFeatureScores());
     }
-    
-    private static void filterData(Dataframe data, StorageEngine storageEngine, Map<Object, Double> featureScores) {
-        Logger logger = LoggerFactory.getLogger(AbstractCategoricalFeatureSelector.class);
+
+    private void filterData(Dataframe data, Map<Object, Double> featureScores) {
         logger.debug("filterData()");
-        
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        
+
         for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
             Object feature = entry.getKey();
 
@@ -198,7 +194,6 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
         logger.debug("removeRareFeatures()");
-        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
 
@@ -234,7 +229,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
             }
             
             //then remove the features in dataset that do not appear in the list
-            filterData(data, storageEngine, featureCounts);
+            filterData(data, featureCounts);
         }
     }
     
