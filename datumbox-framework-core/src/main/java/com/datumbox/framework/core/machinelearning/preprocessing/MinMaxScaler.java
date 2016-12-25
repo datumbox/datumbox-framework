@@ -180,10 +180,8 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
                     normalizedValue = (value-min)/(max-min);
                 }
 
-                if(normalizedValue != 0.0) { //don't store zero values for memory reasons
-                    xData.put(column, normalizedValue);
-                    modified = true;
-                }
+                xData.put(column, normalizedValue);
+                modified = true;
             }
 
             if(scaleResponse && yData != null) {
