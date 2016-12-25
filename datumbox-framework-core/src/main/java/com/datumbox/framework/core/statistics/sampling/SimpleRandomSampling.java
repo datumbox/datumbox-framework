@@ -60,11 +60,8 @@ public class SimpleRandomSampling {
                 Object pointID = entry.getKey();
                 cumulativeFrequency+= TypeInference.toDouble(entry.getValue());
                 if(cumulativeFrequency>=randomFrequency) {
-                    if(withReplacement==false) {
-                        /* if replacement is not allowed check if the point already exists */
-                        if(sampledIds.contains(pointID)) {
-                            continue;
-                        }
+                    if(withReplacement==false && sampledIds.contains(pointID)) {
+                        continue;
                     }
                     
                     sampledIds.add(pointID);
@@ -99,11 +96,8 @@ public class SimpleRandomSampling {
             
             Object pointID = idList.get(randomPosition);
             
-            if(withReplacement==false) {
-                /* if replacement is not allowed check if the point already exists */
-                if(sampledIds.contains(pointID)) {
-                    continue;
-                }
+            if(withReplacement==false && sampledIds.contains(pointID)) {
+                continue;
             }
 
             sampledIds.add(pointID);

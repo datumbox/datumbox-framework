@@ -2,9 +2,13 @@
 engines:
   fixme:
     enabled: true
+    exclude_fingerprints:
+    - f4fdfaaab3dfb8670a495ee1f2b9e20e
   pmd:
     enabled: true
     channel: "beta"
+    exclude_fingerprints:
+    - da318026c3b8f2eaaaae8d9645a4dda3
 ratings:
   paths:
   - "**.java"
