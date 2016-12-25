@@ -36,6 +36,11 @@ import java.util.Map;
 public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatrix {
 
     /**
+     * The id of this Matrix.
+     */
+    private final int id;
+
+    /**
      * The number of rows of the matrix.
      */
     private final int rowDimension;
@@ -51,11 +56,6 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     private final Map<Long, Double> entries;
 
     /**
-     * The storage storage engine.
-     */
-    private final StorageEngine storageEngine;
-
-    /**
      * Protected constructor with the provided the dimension arguments.
      *
      * @param rowDimension
@@ -68,21 +68,24 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.rowDimension = rowDimension;
         this.columnDimension = columnDimension;
 
-        String storageName = "mrm" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
-        storageEngine = MatrixDataframe.configuration.getStorageConfiguration().createStorageEngine(storageName);
-        entries = storageEngine.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        if(MatrixDataframe.storageEngine == null) {
+            throw new NullPointerException("The MatrixDataframe storage engine is not initialized.");
+        }
+
+        id = MatrixDataframe.storageId.getAndIncrement();
+        entries = MatrixDataframe.storageEngine.getBigMap("tmp_mrmentries"+id, Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**
      * When we perform matrix operations, we often lose the reference to the original matrix and we are unable to
-     * close its storage. Even though the JVM will close the storage before shutdown, by adding a close method in the finalize
-     * we ensure that if the object is gc, we will close the storage engine sooner.
+     * clear its storage. Even though the JVM will close the storage before shutdown, by adding a close method in the finalize
+     * we ensure that if the object is gc, we will clear the unnecessary entries of the storage engine sooner.
      * @throws java.lang.Throwable
      */
     @Override
     protected void finalize() throws Throwable {
         try {
-            storageEngine.close();
+            MatrixDataframe.storageEngine.dropBigMap("tmp_mrmentries"+id, entries);
         }
         finally {
             super.finalize();

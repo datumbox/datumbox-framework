@@ -40,6 +40,7 @@ Version 0.8.0-SNAPSHOT - Build 20161224
 - Change the Validation mechanism to support Splitters. The AbstractValidator is now a single Validator class. 
 - K-fold cross validation is now performed by combining the KFoldSplitter and the Validator classes. 
 - Added support of a ShuffleSplitter.
+- The MapRealMatrix instances don't initialize their own storage engines any more. Instead they use a single engine stored in MatrixDataframe.
 
 Version 0.7.1-SNAPSHOT - Build 20161217
 ---------------------------------------
