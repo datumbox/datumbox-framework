@@ -110,7 +110,6 @@ public class MatrixLinearRegressionTest extends AbstractTest {
 
 
         MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
-        nsParams.setScaleResponse(true);
         MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
 
         numericalScaler.fit_transform(trainingData);

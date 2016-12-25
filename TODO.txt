@@ -1,8 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Update the failing tests and examples.
-
 - Improve the API of Feature Selection and how we handle different data types.
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.

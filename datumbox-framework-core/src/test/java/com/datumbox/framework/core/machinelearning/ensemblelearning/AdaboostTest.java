@@ -61,7 +61,6 @@ public class AdaboostTest extends AbstractTest {
         String storageName = this.getClass().getSimpleName();
 
         MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
-        nsParams.setScaleResponse(true);
         MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
 
         numericalScaler.fit_transform(trainingData);
