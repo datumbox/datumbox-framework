@@ -273,15 +273,18 @@ public class TextClassifierTest extends AbstractTest {
         }
 
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
-        
-        //Classifier configuration
-        trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
-        
-        //data transfomation configuration
-        trainingParameters.setDataTransformerTrainingParameters(null);
+
+        //numerical scaling configuration
+        trainingParameters.setNumericalScalerTrainingParameters(null);
+
+        //categorical encoding configuration
+        trainingParameters.setCategoricalEncoderTrainingParameters(null);
         
         //feature selection configuration
         trainingParameters.setFeatureSelectorTrainingParameters(featureSelectorTrainingParameters);
+
+        //classifier configuration
+        trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
         
         //text extraction configuration
         NgramsExtractor.Parameters exParams = new NgramsExtractor.Parameters();
@@ -298,7 +301,6 @@ public class TextClassifierTest extends AbstractTest {
         assertEquals(expectedF1score, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
 
         instance.close();
-        //instance = null;
         
         
         

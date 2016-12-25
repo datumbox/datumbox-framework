@@ -62,7 +62,7 @@ public class BernoulliNaiveBayesTest extends AbstractTest {
         instance.save(storageName);
         
         instance.close();
-        //instance = null;
+
         instance = MLBuilder.load(BernoulliNaiveBayes.class, storageName, configuration);
         
         

@@ -19,7 +19,8 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
@@ -52,9 +53,19 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
-        df.save(storageName);
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
 
 
         BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), configuration);
@@ -62,22 +73,21 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         instance.fit(trainingData);
         instance.save(storageName);
 
-        df.denormalize(trainingData);
-
         trainingData.close();
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
         instance = MLBuilder.load(BayesianEnsembleMethod.class, storageName, configuration);
 
-        df.transform(validationData);
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         
         instance.predict(validationData);
-
-        df.denormalize(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -88,8 +98,9 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
 
         validationData.close();

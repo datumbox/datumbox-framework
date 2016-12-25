@@ -61,7 +61,7 @@ public class TFIDFTest extends AbstractTest {
 
         trainingData.close();
         instance.close();
-        //instance = null;
+
         
         
         instance = MLBuilder.load(TFIDF.class, storageName, configuration);

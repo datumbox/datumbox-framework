@@ -66,7 +66,7 @@ public class MaximumEntropyTest extends AbstractTest {
         instance.save(storageName);
         
         instance.close();
-        //instance = null;
+
         instance = MLBuilder.load(MaximumEntropy.class, storageName, configuration);
         
         instance.predict(validationData);

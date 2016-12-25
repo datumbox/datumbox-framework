@@ -62,7 +62,7 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         instance.save(storageName);
         
         instance.close();
-        //instance = null;
+
         instance = MLBuilder.load(BinarizedNaiveBayes.class, storageName, configuration);
         
         instance.predict(validationData);

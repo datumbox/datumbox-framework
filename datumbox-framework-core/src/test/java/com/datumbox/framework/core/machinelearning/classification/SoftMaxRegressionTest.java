@@ -19,11 +19,11 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.datatransformation.XMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -58,11 +58,19 @@ public class SoftMaxRegressionTest extends AbstractTest {
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
-        
-        df.fit_transform(trainingData);
-        df.save(storageName);
 
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
 
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(2000);
@@ -73,22 +81,22 @@ public class SoftMaxRegressionTest extends AbstractTest {
         instance.fit(trainingData);
         instance.save(storageName);
 
-        df.denormalize(trainingData);
         trainingData.close();
 
 
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
         instance = MLBuilder.load(SoftMaxRegression.class, storageName, configuration);
 
-        df.transform(validationData);
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         instance.predict(validationData);
-
-        df.denormalize(validationData);
 
 
         Map<Integer, Object> expResult = new HashMap<>();
@@ -100,8 +108,9 @@ public class SoftMaxRegressionTest extends AbstractTest {
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
 
         validationData.close();
@@ -122,10 +131,10 @@ public class SoftMaxRegressionTest extends AbstractTest {
         Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
-        
 
-        XMinMaxNormalizer df = MLBuilder.create(new XMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
+
+        MinMaxScaler scaler = MLBuilder.create(new MinMaxScaler.TrainingParameters(), configuration);
+        scaler.fit_transform(trainingData);
 
         SoftMaxRegression.TrainingParameters param = new SoftMaxRegression.TrainingParameters();
         param.setTotalIterations(30);
@@ -134,13 +143,11 @@ public class SoftMaxRegressionTest extends AbstractTest {
 
         ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
-
-        df.denormalize(trainingData);
         
         double expResult = 0.7557492507492508;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        df.close();
+        scaler.close();
         
         trainingData.close();
     }

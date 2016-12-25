@@ -19,10 +19,11 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -57,10 +58,18 @@ public class OrdinalRegressionTest extends AbstractTest {
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), configuration);
-        
-        df.fit_transform(trainingData);
-        df.save(storageName);
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
 
         String datasetName = "winesOrdinal";
         trainingData.save(datasetName);
@@ -76,22 +85,23 @@ public class OrdinalRegressionTest extends AbstractTest {
         instance.fit(trainingData);
         instance.save(storageName);
 
-        df.denormalize(trainingData);
         trainingData.delete();
 
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = MLBuilder.load(DummyXMinMaxNormalizer.class, storageName, configuration);
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
+
         instance = MLBuilder.load(OrdinalRegression.class, storageName, configuration);
 
-        df.transform(validationData);
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         instance.predict(validationData);
 
-
-        df.denormalize(validationData);
 
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -102,8 +112,9 @@ public class OrdinalRegressionTest extends AbstractTest {
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
 
         validationData.close();
@@ -124,11 +135,15 @@ public class OrdinalRegressionTest extends AbstractTest {
         Dataframe[] data = Datasets.winesOrdinal(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
-        
 
-        DummyXMinMaxNormalizer df = MLBuilder.create(new DummyXMinMaxNormalizer.TrainingParameters(), configuration);
-        
-        df.fit_transform(trainingData);
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+        numericalScaler.fit_transform(trainingData);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+        categoricalEncoder.fit_transform(trainingData);
 
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
@@ -137,16 +152,13 @@ public class OrdinalRegressionTest extends AbstractTest {
         ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
-        	        
-        df.denormalize(trainingData);
 
-
-        
         double expResult = 0.9823403146614675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        
-        df.close();
+
+        numericalScaler.close();
+        categoricalEncoder.close();
         
         trainingData.close();
     }

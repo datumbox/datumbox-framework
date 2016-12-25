@@ -67,7 +67,7 @@ public class GaussianDPMMTest extends AbstractTest {
 
         trainingData.close();
         instance.close();
-        //instance = null;
+
         instance = MLBuilder.load(GaussianDPMM.class, storageName, configuration);
 
         instance.predict(validationData);

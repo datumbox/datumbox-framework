@@ -20,7 +20,8 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -49,10 +50,18 @@ public class StepwiseRegressionTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
-        df.save(storageName);
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
@@ -64,29 +73,30 @@ public class StepwiseRegressionTest extends AbstractTest {
         StepwiseRegression instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
         instance.save(storageName);
-        
-        df.denormalize(trainingData);
+
         trainingData.close();
         
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
         instance = MLBuilder.load(StepwiseRegression.class, storageName, configuration);
 
-        df.transform(validationData);
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         instance.predict(validationData);
-        
-        df.denormalize(validationData);
         
         for(Record r : validationData) {
             Assert.assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
 
         validationData.close();

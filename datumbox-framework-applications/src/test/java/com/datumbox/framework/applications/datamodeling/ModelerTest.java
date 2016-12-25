@@ -20,8 +20,9 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -58,19 +59,22 @@ public class ModelerTest extends AbstractTest {
 
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         
-        
-        //Model Configuration
 
-        MultinomialNaiveBayes.TrainingParameters modelTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
-        modelTrainingParameters.setMultiProbabilityWeighted(true);
-        trainingParameters.setModelerTrainingParameters(modelTrainingParameters);
+        //numerical scaling configuration
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        trainingParameters.setNumericalScalerTrainingParameters(nsParams);
 
-        //data transfomation configuration
-        DummyXMinMaxNormalizer.TrainingParameters dtParams = new DummyXMinMaxNormalizer.TrainingParameters();
-        trainingParameters.setDataTransformerTrainingParameters(dtParams);
+        //categorical encoding configuration
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        trainingParameters.setCategoricalEncoderTrainingParameters(ceParams);
         
         //feature selection configuration
         trainingParameters.setFeatureSelectorTrainingParameters(null);
+
+        //model Configuration
+        MultinomialNaiveBayes.TrainingParameters modelTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
+        modelTrainingParameters.setMultiProbabilityWeighted(true);
+        trainingParameters.setModelerTrainingParameters(modelTrainingParameters);
 
         Modeler instance = MLBuilder.create(trainingParameters, configuration);
         instance.fit(trainingData);
@@ -89,7 +93,6 @@ public class ModelerTest extends AbstractTest {
 
         trainingData.close();
         instance.close();
-        //instance = null;
 
 
         instance = MLBuilder.load(Modeler.class, storageName, configuration);

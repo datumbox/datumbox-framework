@@ -1,11 +1,8 @@
 CODE IMPROVEMENTS
 =================
 
-- New preprocessing package:
-    - Remove the old datatransformation package but maintain the AbstractTransformer.
-    - Create the following numerical Scalers: StandardScaler, MinMaxScaler, MaxAbsScaler, Binarization and PercentileScaler. All classes should indicate if Y is scaled except of the binarizer.
-    - Create the following categorical methods: OneHotEncoder (no reference levels) and CornerConstraintsEncoder (or set-to-zero that use reference levels).
-    - Creata a DataTransformer class that receives the TP for the numerical and categorical transformers and applies them in one step.
+- Update the failing tests and examples.
+
 - Improve the API of Feature Selection and how we handle different data types.
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
@@ -18,6 +15,9 @@ CODE IMPROVEMENTS
 
 NEW FEATURES
 ============
+
+- Create the following Numerical Scalers: StandardScaler, MaxAbsScaler, PercentileScaler and Binarization.
+- Create a OneHotEncoder categorical encoder.
 
 - Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
 - Create a storage engine for BerkeleyDB.

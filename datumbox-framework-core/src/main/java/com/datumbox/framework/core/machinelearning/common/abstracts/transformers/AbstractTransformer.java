@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers;
+package com.datumbox.framework.core.machinelearning.common.abstracts.transformers;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 /**
  * Base class for all the Data Transformers of the framework.
@@ -26,7 +28,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractTransformer<MP extends AbstractTransformer.AbstractModelParameters, TP extends AbstractTransformer.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
+public abstract class AbstractTransformer<MP extends AbstractTransformer.AbstractModelParameters, TP extends AbstractTransformer.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> implements Parallelizable {
 
     /**
      * @param trainingParameters
@@ -35,6 +37,7 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
      */
     protected AbstractTransformer(TP trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -44,8 +47,29 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
      */
     protected AbstractTransformer(String storageName, Configuration configuration) {
         super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
-    
+
+    private boolean parallelized = true;
+
+    /**
+     * This executor is used for the parallel processing of streams with custom
+     * Thread pool.
+     */
+    protected final ForkJoinStream streamExecutor;
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+
     /**
      * Fits, transforms and normalizes the data of the provided dataset.
      * 
@@ -57,51 +81,21 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
     }
     
     /**
-     * Transforms and Normalizes the data of the provided dataset. The transformations are
-     * non-reversible operations of on the dataset, while normalizations are 
-     * are reversible.
+     * Applies an irreversible trasformation to the the provided dataset.
      * 
      * @param newData 
      */
     public void transform(Dataframe newData) {
         logger.info("transform()");
 
-        _convert(newData); 
-        _normalize(newData);
+        _transform(newData);
     }
-    
-    /**
-     * Denormalizes the data of the provided dataset.
-     * 
-     * @param data 
-     */
-    public void denormalize(Dataframe data) {
-        logger.info("denormalize()");
 
-        _denormalize(data);
-    }
-    
     /**
-     * Converts the data (adding/modifying/removing columns). The conversions 
-     * are not possible to be rolledback.
-     * 
-     * @param data 
+     * The actual implementation of the transformation.
+     *
+     * @param newData
      */
-    protected abstract void _convert(Dataframe data);
-    
-    /**
-     * Normalizes the data by modifying the columns. The changes should be 
-     * possible to be rolledback (denormalized). 
-     * 
-     * @param data 
-     */
-    protected abstract void _normalize(Dataframe data);
-    
-    /**
-     * Denormalizes the data by undoing the modifications performed by normilize().
-     * 
-     * @param data 
-     */
-    protected abstract void _denormalize(Dataframe data);
-    
+    protected abstract void _transform(Dataframe newData);
+
 }

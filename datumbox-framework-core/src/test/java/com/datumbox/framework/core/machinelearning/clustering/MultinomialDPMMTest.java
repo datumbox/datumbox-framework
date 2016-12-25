@@ -64,7 +64,7 @@ public class MultinomialDPMMTest extends AbstractTest {
         instance.save(storageName);
         
         instance.close();
-        //instance = null;
+
         instance = MLBuilder.load(MultinomialDPMM.class, storageName, configuration);
 
         instance.predict(validationData);

@@ -63,7 +63,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
         instance.save(storageName);
         
         instance.close();
-        //instance = null;
+
         instance = MLBuilder.load(CollaborativeFiltering.class, storageName, configuration);
 
         instance.predict(validationData);

@@ -20,11 +20,11 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.datatransformation.XYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -54,40 +54,39 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        XYMinMaxNormalizer df = MLBuilder.create(new XYMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
-        df.save(storageName);
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+
+        MinMaxScaler scaler = MLBuilder.create(nsParams, configuration);
+        scaler.fit_transform(trainingData);
+        scaler.save(storageName);
 
 
         MatrixLinearRegression instance = MLBuilder.create(new MatrixLinearRegression.TrainingParameters(), configuration);
         instance.fit(trainingData);
         instance.save(storageName);
 
-        df.denormalize(trainingData);
         trainingData.close();
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = MLBuilder.load(XYMinMaxNormalizer.class, storageName, configuration);
+        scaler.close();
+
+
+
+        scaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
         instance = MLBuilder.load(MatrixLinearRegression.class, storageName, configuration);
 
 
-        df.transform(validationData);
+        scaler.transform(validationData);
         instance.predict(validationData);
-        
-        
-
-        df.denormalize(validationData);
 
 
         for(Record r : validationData) {
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
-        
-        df.delete();
+
+        scaler.delete();
         instance.delete();
 
         validationData.close();
@@ -110,22 +109,29 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         data[1].close();
 
 
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
 
         
         MatrixLinearRegression.TrainingParameters param = new MatrixLinearRegression.TrainingParameters();
         
         LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
-        
-        df.denormalize(trainingData);
 
         double expResult = 1;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        
-        df.close();
+
+        numericalScaler.close();
+        categoricalEncoder.close();
         
         trainingData.close();
     }

@@ -61,7 +61,7 @@ public class ChisquareSelectTest extends AbstractTest {
         instance.save(storageName);
 
         instance.close();
-        //instance = null;
+
         
         
         instance = MLBuilder.load(ChisquareSelect.class, storageName, configuration);

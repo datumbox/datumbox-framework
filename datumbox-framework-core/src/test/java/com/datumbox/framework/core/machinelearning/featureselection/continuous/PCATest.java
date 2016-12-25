@@ -63,7 +63,7 @@ public class PCATest extends AbstractTest {
 
         originalData.close();
         instance.close();
-        //instance = null;
+
         
         instance = MLBuilder.load(PCA.class, storageName, configuration);
         

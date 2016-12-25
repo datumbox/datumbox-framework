@@ -18,10 +18,11 @@ package com.datumbox.framework.core.machinelearning.clustering;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -53,10 +54,19 @@ public class KmeansTest extends AbstractTest {
         
         
         String storageName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
-        df.save(storageName);
 
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
         
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(2);
@@ -71,29 +81,29 @@ public class KmeansTest extends AbstractTest {
         instance.fit(trainingData);
         instance.save(storageName);
 
-        df.denormalize(trainingData);
         trainingData.close();
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = MLBuilder.load(DummyXYMinMaxNormalizer.class, storageName, configuration);
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
         instance = MLBuilder.load(Kmeans.class, storageName, configuration);
 
 
-        df.transform(validationData);
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         instance.predict(validationData);
         ClusteringMetrics vm = new ClusteringMetrics(validationData);
-
-        df.denormalize(validationData);
 
         double expResult = 1.0;
         double result = vm.getPurity();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
 
         validationData.close();
@@ -114,10 +124,19 @@ public class KmeansTest extends AbstractTest {
         Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         Dataframe trainingData = data[0];
         data[1].close();
-        
 
-        DummyXYMinMaxNormalizer df = MLBuilder.create(new DummyXYMinMaxNormalizer.TrainingParameters(), configuration);
-        df.fit_transform(trainingData);
+
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
         
 
         
@@ -136,14 +155,13 @@ public class KmeansTest extends AbstractTest {
         ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
-        df.denormalize(trainingData);
 
-        
         double expResult = 0.7888888888888889;
         double result = vm.getPurity();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        
-        df.close();
+
+        numericalScaler.close();
+        categoricalEncoder.close();
         
         trainingData.close();
     }
