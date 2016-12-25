@@ -58,6 +58,8 @@ Version 0.8.0-SNAPSHOT - Build 20161225
     - K-fold cross validation is now performed by combining the KFoldSplitter and the Validator classes. 
     - Added support of a ShuffleSplitter.
     - The MapRealMatrix instances don't initialize their own storage engines any more. Instead they use a single engine stored in MatrixDataframe.
+    - The recommendersystem package is renamed to recommendation.
+    - The old datatransformation package is replaced with the preprocessing package which decouples Numerical Scaling from Categorical variable encoding.
 
 Version 0.7.0 - Build 20160319
 ------------------------------
