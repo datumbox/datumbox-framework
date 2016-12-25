@@ -5,9 +5,6 @@ engines:
   pmd:
     enabled: true
     channel: "beta"
-  checkstyle:
-    enabled: true
-    channel: "beta"
 ratings:
   paths:
   - "**.java"
