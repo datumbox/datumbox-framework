@@ -24,7 +24,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.metrics.Linear
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
-import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
+import com.datumbox.framework.core.machinelearning.preprocessing.MaxAbsScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -55,10 +55,10 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         
         String storageName = this.getClass().getSimpleName();
 
-        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MaxAbsScaler.TrainingParameters nsParams = new MaxAbsScaler.TrainingParameters();
         nsParams.setScaleResponse(true);
 
-        MinMaxScaler scaler = MLBuilder.create(nsParams, configuration);
+        MaxAbsScaler scaler = MLBuilder.create(nsParams, configuration);
         scaler.fit_transform(trainingData);
         scaler.save(storageName);
 
@@ -74,7 +74,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
 
 
 
-        scaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        scaler = MLBuilder.load(MaxAbsScaler.class, storageName, configuration);
         instance = MLBuilder.load(MatrixLinearRegression.class, storageName, configuration);
 
 
@@ -109,8 +109,8 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         data[1].close();
 
 
-        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
-        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+        MaxAbsScaler.TrainingParameters nsParams = new MaxAbsScaler.TrainingParameters();
+        MaxAbsScaler numericalScaler = MLBuilder.create(nsParams, configuration);
 
         numericalScaler.fit_transform(trainingData);
 

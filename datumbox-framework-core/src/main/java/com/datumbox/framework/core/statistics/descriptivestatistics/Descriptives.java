@@ -194,17 +194,17 @@ public class Descriptives {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
 
-        double max=0.0;
+        double maxAbs=0.0;
 
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = Math.abs(it.next());
-            if(v!=null && max < v) {
-                max=v;
+            if(v!=null && maxAbs < v) {
+                maxAbs=v;
             }
         }
 
-        return max;
+        return maxAbs;
     }
     
     /**

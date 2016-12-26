@@ -169,7 +169,15 @@ public class StandardScaler extends AbstractNumericalScaler<StandardScaler.Model
 
                 double normalizedValue;
                 if(std.equals(0.0)) {
-                    normalizedValue = (mean!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
+                    if(value == 0.0) {
+                        normalizedValue = 0.0;
+                    }
+                    else if(value >= mean) {
+                        normalizedValue = 1.0;
+                    }
+                    else {
+                        normalizedValue = -1.0;
+                    }
                 }
                 else {
                     normalizedValue = (value-mean)/std;
@@ -183,11 +191,21 @@ public class StandardScaler extends AbstractNumericalScaler<StandardScaler.Model
                 Double mean = meanColumnValues.get(Dataframe.COLUMN_NAME_Y);
                 Double std = stdColumnValues.get(Dataframe.COLUMN_NAME_Y);
 
+                Double value = TypeInference.toDouble(yData);
+
                 if(std.equals(0.0)) {
-                    yData = (mean!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
+                    if(value == 0.0) {
+                        yData = 0.0;
+                    }
+                    else if(value >= mean) {
+                        yData = 1.0;
+                    }
+                    else {
+                        yData = -1.0;
+                    }
                 }
                 else {
-                    yData = (TypeInference.toDouble(yData)-mean)/std;
+                    yData = (value-mean)/std;
                 }
 
                 modified = true;

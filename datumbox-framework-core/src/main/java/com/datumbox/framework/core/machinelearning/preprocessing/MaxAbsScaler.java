@@ -27,27 +27,21 @@ import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives
 import java.util.Map;
 
 /**
- * Rescales the numerical features of the dataset between 0 and 1.
+ * Rescales the numerical features of the dataset between -1 and 1.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelParameters, MinMaxScaler.TrainingParameters> {
+public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelParameters, MaxAbsScaler.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNumericalScaler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
-         * The minimum value of each numerical variable.
+         * The maximum absolute value of each numerical variable.
          */
         @BigMap(keyClass=Object.class, valueClass=Double.class, mapType= StorageEngine.MapType.HASHMAP, storageHint= StorageEngine.StorageHint.IN_MEMORY, concurrent=true)
-        private Map<Object, Double> minColumnValues;
-
-        /**
-         * The maximum value of each numerical variable.
-         */
-        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType= StorageEngine.MapType.HASHMAP, storageHint= StorageEngine.StorageHint.IN_MEMORY, concurrent=true)
-        private Map<Object, Double> maxColumnValues;
+        private Map<Object, Double> maxAbsoluteColumnValues;
 
         /**
          * @param storageEngine
@@ -58,39 +52,21 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
         }
 
         /**
-         * Getter for the minimum values of the columns.
-         *
-         * @return
-         */
-        public Map<Object, Double> getMinColumnValues() {
-            return minColumnValues;
-        }
-
-        /**
-         * Setter for the minimum values of the columns.
-         *
-         * @param minColumnValues
-         */
-        protected void setMinColumnValues(Map<Object, Double> minColumnValues) {
-            this.minColumnValues = minColumnValues;
-        }
-
-        /**
          * Getter for the maximum values of the columns.
          *
          * @return
          */
-        public Map<Object, Double> getMaxColumnValues() {
-            return maxColumnValues;
+        public Map<Object, Double> getMaxAbsoluteColumnValues() {
+            return maxAbsoluteColumnValues;
         }
 
         /**
          * Setter for the maximum values of the columns.
          *
-         * @param maxColumnValues
+         * @param maxAbsoluteColumnValues
          */
-        protected void setMaxColumnValues(Map<Object, Double> maxColumnValues) {
-            this.maxColumnValues = maxColumnValues;
+        protected void setMaxAbsoluteColumnValues(Map<Object, Double> maxAbsoluteColumnValues) {
+            this.maxAbsoluteColumnValues = maxAbsoluteColumnValues;
         }
 
     }
@@ -106,7 +82,7 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected MinMaxScaler(TrainingParameters trainingParameters, Configuration configuration) {
+    protected MaxAbsScaler(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
     }
 
@@ -115,7 +91,7 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MinMaxScaler(String storageName, Configuration configuration) {
+    protected MaxAbsScaler(String storageName, Configuration configuration) {
         super(storageName, configuration);
     }
 
@@ -123,23 +99,20 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Double> minColumnValues = modelParameters.getMinColumnValues();
-        Map<Object, Double> maxColumnValues = modelParameters.getMaxColumnValues();
+        Map<Object, Double> maxAbsoluteColumnValues = modelParameters.getMaxAbsoluteColumnValues();
         boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse();
 
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().entrySet().stream().filter(entry -> entry.getValue() == TypeInference.DataType.NUMERICAL), isParallelized()), entry -> {
             Object column = entry.getKey();
             FlatDataCollection columnValues = trainingData.getXColumn(column).toFlatDataCollection();
 
-            minColumnValues.put(column, Descriptives.min(columnValues));
-            maxColumnValues.put(column, Descriptives.max(columnValues));
+            maxAbsoluteColumnValues.put(column, Descriptives.maxAbsolute(columnValues));
         });
 
         if(scaleResponse && trainingData.getYDataType() == TypeInference.DataType.NUMERICAL) {
             FlatDataCollection columnValues = trainingData.getYColumn().toFlatDataCollection();
 
-            minColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.min(columnValues));
-            maxColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.max(columnValues));
+            maxAbsoluteColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.maxAbsolute(columnValues));
         }
     }
 
@@ -147,9 +120,8 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
     @Override
     protected void _transform(Dataframe newData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Double> minColumnValues = modelParameters.getMinColumnValues();
-        Map<Object, Double> maxColumnValues = modelParameters.getMaxColumnValues();
-        boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse() && minColumnValues.containsKey(Dataframe.COLUMN_NAME_Y);
+        Map<Object, Double> maxAbsoluteColumnValues = modelParameters.getMaxAbsoluteColumnValues();
+        boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse() && maxAbsoluteColumnValues.containsKey(Dataframe.COLUMN_NAME_Y);
 
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             Record r = e.getValue();
@@ -157,22 +129,21 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object,Double> entry : minColumnValues.entrySet()) {
+            for(Map.Entry<Object,Double> entry : maxAbsoluteColumnValues.entrySet()) {
                 Object column = entry.getKey();
                 Double value = xData.getDouble(column);
                 if(value == null) { //if we have a missing value don't perform any scaling
                     continue;
                 }
 
-                Double min = entry.getValue();
-                Double max = maxColumnValues.get(column);
+                Double maxAbsolute = entry.getValue();
 
                 double normalizedValue;
-                if(min.equals(max)) {
-                    normalizedValue = (value>max || (value==max && value!=0.0))?1.0:0.0;
+                if(maxAbsolute.equals(0.0)) {
+                    normalizedValue = Math.signum(value);
                 }
                 else {
-                    normalizedValue = (value-min)/(max-min);
+                    normalizedValue = value/maxAbsolute;
                 }
 
                 xData.put(column, normalizedValue);
@@ -180,16 +151,15 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
             }
 
             if(scaleResponse && yData != null) {
-                Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
-                Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
+                Double maxAbsolute = maxAbsoluteColumnValues.get(Dataframe.COLUMN_NAME_Y);
 
                 Double value = TypeInference.toDouble(yData);
 
-                if(min.equals(max)) {
-                    yData = (value>max || (value==max && value!=0.0))?1.0:0.0;
+                if(maxAbsolute.equals(0.0)) {
+                    yData = Math.signum(value);
                 }
                 else {
-                    yData = (value-min)/(max-min);
+                    yData = TypeInference.toDouble(yData)/maxAbsolute;
                 }
 
                 modified = true;
