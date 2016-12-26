@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161225
+Version 0.8.0-SNAPSHOT - Build 20161226
 ---------------------------------------
 
 - Initial Updates:
@@ -60,6 +60,7 @@ Version 0.8.0-SNAPSHOT - Build 20161225
     - The MapRealMatrix instances don't initialize their own storage engines any more. Instead they use a single engine stored in MatrixDataframe.
     - The recommendersystem package is renamed to recommendation.
     - The old datatransformation package is replaced with the preprocessing package which decouples Numerical Scaling from Categorical variable encoding.
+    - Create a new OneHotEncoder preprocessing class.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

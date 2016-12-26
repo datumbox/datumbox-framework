@@ -198,6 +198,7 @@ public class LinearRegressionMetrics extends AbstractMetrics {
         SST = SSR+SSE;
         RSquare = SSR/SST;
 
+        //The d number is a proxy for the number of weights in the model but it could be wrong especially if categorical with unknown levels exist in the testset
         int d = predictedData.xColumnSize()+1;//add one for the constant
         int p = d - 1; //exclude constant
 

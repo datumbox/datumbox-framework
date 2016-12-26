@@ -19,7 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -60,8 +60,8 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
         numericalScaler.fit_transform(trainingData);
         numericalScaler.save(storageName);
 
-        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
-        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
 
         categoricalEncoder.fit_transform(trainingData);
         categoricalEncoder.save(storageName);
@@ -80,7 +80,7 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
 
 
         numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
-        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(OneHotEncoder.class, storageName, configuration);
         instance = MLBuilder.load(BayesianEnsembleMethod.class, storageName, configuration);
 
         numericalScaler.transform(validationData);

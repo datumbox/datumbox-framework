@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.transformers;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 /**
@@ -43,6 +44,17 @@ public abstract class AbstractCategoricalEncoder<MP extends AbstractCategoricalE
      */
     protected AbstractCategoricalEncoder(String storageName, Configuration configuration) {
         super(storageName, configuration);
+    }
+
+    /**
+     * Checks whether the variable should be converted into dummy (boolean). Only
+     * categorical and ordinal values are converted.
+     *
+     * @param columnType
+     * @return
+     */
+    protected boolean covert2dummy(TypeInference.DataType columnType) {
+        return columnType==TypeInference.DataType.CATEGORICAL || columnType==TypeInference.DataType.ORDINAL;
     }
 
 }

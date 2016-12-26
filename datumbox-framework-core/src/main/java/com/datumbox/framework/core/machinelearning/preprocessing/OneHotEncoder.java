@@ -18,7 +18,6 @@ package com.datumbox.framework.core.machinelearning.preprocessing;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractCategoricalEncoder;
@@ -28,22 +27,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Encodes the categorical columns of the dataset into booleans using the Corner Constraints encoding (also known
- * as set-to-zero).
+ * Encodes the categorical columns of the dataset into booleans using the One Hot Encoding method.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerConstraintsEncoder.ModelParameters, CornerConstraintsEncoder.TrainingParameters> {
+public class OneHotEncoder extends AbstractCategoricalEncoder<OneHotEncoder.ModelParameters, OneHotEncoder.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractCategoricalEncoder.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * The reference levels of each categorical variable.
-         */
-        @BigMap(keyClass=Object.class, valueClass=Object.class, mapType= StorageEngine.MapType.HASHMAP, storageHint= StorageEngine.StorageHint.IN_MEMORY, concurrent=true)
-        private Map<Object, Object> referenceLevels;
 
         /**
          * @param storageEngine
@@ -53,23 +45,6 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
             super(storageEngine);
         }
 
-        /**
-         * Getter for the reference levels of the categorical variables.
-         *
-         * @return
-         */
-        public Map<Object, Object> getReferenceLevels() {
-            return referenceLevels;
-        }
-
-        /**
-         * Setter for the reference levels of the categorical variables.
-         *
-         * @param referenceLevels
-         */
-        protected void setReferenceLevels(Map<Object, Object> referenceLevels) {
-            this.referenceLevels = referenceLevels;
-        }
     }
 
     /** {@inheritDoc} */
@@ -83,7 +58,7 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected CornerConstraintsEncoder(TrainingParameters trainingParameters, Configuration configuration) {
+    protected OneHotEncoder(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
     }
 
@@ -92,35 +67,19 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected CornerConstraintsEncoder(String storageName, Configuration configuration) {
+    protected OneHotEncoder(String storageName, Configuration configuration) {
         super(storageName, configuration);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Object> referenceLevels = modelParameters.getReferenceLevels();
-
-        Map<Object, TypeInference.DataType> columnTypes = trainingData.getXDataTypes();
-
-        //find the referenceLevels for each categorical variable
-        for(Record r : trainingData) {
-            for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
-                Object column = entry.getKey();
-                if(covert2dummy(columnTypes.get(column))) {
-                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized is needed.
-                }
-            }
-        }
+        //does not learn anything
     }
 
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newData) {
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Object> referenceLevels = modelParameters.getReferenceLevels();
-
         Map<Object, TypeInference.DataType> columnTypes = newData.getXDataTypes();
 
         //Replace variables with dummy versions
@@ -138,17 +97,11 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
                 Object value = xData.remove(column); //remove the original column
                 modified = true;
 
-                Object referenceLevel= referenceLevels.get(column);
+                //create a new column
+                List<Object> newColumn = Arrays.asList(column,value);
 
-                if(referenceLevel != null && //not unknown variable
-                        !referenceLevel.equals(value)) { //not equal to reference level
-
-                    //create a new column
-                    List<Object> newColumn = Arrays.asList(column,value);
-
-                    //add a new dummy variable for this column-value combination
-                    xData.put(newColumn, true);
-                }
+                //add a new dummy variable for this column-value combination
+                xData.put(newColumn, true);
             }
 
             if(modified) {

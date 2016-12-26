@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
-import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
@@ -65,7 +65,7 @@ public class ModelerTest extends AbstractTest {
         trainingParameters.setNumericalScalerTrainingParameters(nsParams);
 
         //categorical encoding configuration
-        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
         trainingParameters.setCategoricalEncoderTrainingParameters(ceParams);
         
         //feature selection configuration

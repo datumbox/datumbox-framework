@@ -22,7 +22,7 @@ import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
-import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
@@ -65,8 +65,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         numericalScaler.fit_transform(trainingData);
         numericalScaler.save(storageName);
 
-        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
-        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
 
         categoricalEncoder.fit_transform(trainingData);
         categoricalEncoder.save(storageName);
@@ -94,7 +94,7 @@ public class OrdinalRegressionTest extends AbstractTest {
 
 
         numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
-        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(OneHotEncoder.class, storageName, configuration);
 
         instance = MLBuilder.load(OrdinalRegression.class, storageName, configuration);
 
@@ -141,8 +141,8 @@ public class OrdinalRegressionTest extends AbstractTest {
         MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
         numericalScaler.fit_transform(trainingData);
 
-        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
-        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
         categoricalEncoder.fit_transform(trainingData);
 
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
