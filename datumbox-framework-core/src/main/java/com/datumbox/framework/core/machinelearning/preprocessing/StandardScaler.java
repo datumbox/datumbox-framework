@@ -27,27 +27,27 @@ import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives
 import java.util.Map;
 
 /**
- * Rescales the numerical features of the dataset between 0 and 1.
+ * Rescales the numerical features of the dataset by subtracting the mean and dividing by the standard deviation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelParameters, MinMaxScaler.TrainingParameters> {
+public class StandardScaler extends AbstractNumericalScaler<StandardScaler.ModelParameters, StandardScaler.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNumericalScaler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
-         * The minimum value of each numerical variable.
+         * The mean value of each numerical variable.
          */
         @BigMap(keyClass=Object.class, valueClass=Double.class, mapType= StorageEngine.MapType.HASHMAP, storageHint= StorageEngine.StorageHint.IN_MEMORY, concurrent=true)
-        private Map<Object, Double> minColumnValues;
+        private Map<Object, Double> meanColumnValues;
 
         /**
-         * The maximum value of each numerical variable.
+         * The standard deviation value of each numerical variable.
          */
         @BigMap(keyClass=Object.class, valueClass=Double.class, mapType= StorageEngine.MapType.HASHMAP, storageHint= StorageEngine.StorageHint.IN_MEMORY, concurrent=true)
-        private Map<Object, Double> maxColumnValues;
+        private Map<Object, Double> stdColumnValues;
 
         /**
          * @param storageEngine
@@ -58,39 +58,39 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
         }
 
         /**
-         * Getter for the minimum values of the columns.
+         * Getter for the mean values of the columns.
          *
          * @return
          */
-        public Map<Object, Double> getMinColumnValues() {
-            return minColumnValues;
+        public Map<Object, Double> getMeanColumnValues() {
+            return meanColumnValues;
         }
 
         /**
-         * Setter for the minimum values of the columns.
+         * Setter for the mean values of the columns.
          *
-         * @param minColumnValues
+         * @param meanColumnValues
          */
-        protected void setMinColumnValues(Map<Object, Double> minColumnValues) {
-            this.minColumnValues = minColumnValues;
+        protected void setMeanColumnValues(Map<Object, Double> meanColumnValues) {
+            this.meanColumnValues = meanColumnValues;
         }
 
         /**
-         * Getter for the maximum values of the columns.
+         * Getter for the std values of the columns.
          *
          * @return
          */
-        public Map<Object, Double> getMaxColumnValues() {
-            return maxColumnValues;
+        public Map<Object, Double> getStdColumnValues() {
+            return stdColumnValues;
         }
 
         /**
-         * Setter for the maximum values of the columns.
+         * Setter for the std values of the columns.
          *
-         * @param maxColumnValues
+         * @param stdColumnValues
          */
-        protected void setMaxColumnValues(Map<Object, Double> maxColumnValues) {
-            this.maxColumnValues = maxColumnValues;
+        protected void setStdColumnValues(Map<Object, Double> stdColumnValues) {
+            this.stdColumnValues = stdColumnValues;
         }
 
     }
@@ -106,7 +106,7 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected MinMaxScaler(TrainingParameters trainingParameters, Configuration configuration) {
+    protected StandardScaler(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
     }
 
@@ -115,7 +115,7 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected MinMaxScaler(String storageName, Configuration configuration) {
+    protected StandardScaler(String storageName, Configuration configuration) {
         super(storageName, configuration);
     }
 
@@ -123,23 +123,23 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
     @Override
     protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Double> minColumnValues = modelParameters.getMinColumnValues();
-        Map<Object, Double> maxColumnValues = modelParameters.getMaxColumnValues();
+        Map<Object, Double> meanColumnValues = modelParameters.getMeanColumnValues();
+        Map<Object, Double> stdColumnValues = modelParameters.getStdColumnValues();
         boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse();
 
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().entrySet().stream().filter(entry -> entry.getValue() == TypeInference.DataType.NUMERICAL), isParallelized()), entry -> {
             Object column = entry.getKey();
             FlatDataCollection columnValues = trainingData.getXColumn(column).toFlatDataCollection();
 
-            minColumnValues.put(column, Descriptives.min(columnValues));
-            maxColumnValues.put(column, Descriptives.max(columnValues));
+            meanColumnValues.put(column, Descriptives.mean(columnValues));
+            stdColumnValues.put(column, Descriptives.std(columnValues, true));
         });
 
         if(scaleResponse && trainingData.getYDataType() == TypeInference.DataType.NUMERICAL) {
             FlatDataCollection columnValues = trainingData.getYColumn().toFlatDataCollection();
 
-            minColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.min(columnValues));
-            maxColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.max(columnValues));
+            meanColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.mean(columnValues));
+            stdColumnValues.put(Dataframe.COLUMN_NAME_Y, Descriptives.std(columnValues, true));
         }
     }
 
@@ -147,9 +147,9 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
     @Override
     protected void _transform(Dataframe newData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        Map<Object, Double> minColumnValues = modelParameters.getMinColumnValues();
-        Map<Object, Double> maxColumnValues = modelParameters.getMaxColumnValues();
-        boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse() && minColumnValues.containsKey(Dataframe.COLUMN_NAME_Y);
+        Map<Object, Double> meanColumnValues = modelParameters.getMeanColumnValues();
+        Map<Object, Double> stdColumnValues = modelParameters.getStdColumnValues();
+        boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse() && meanColumnValues.containsKey(Dataframe.COLUMN_NAME_Y);
 
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             Record r = e.getValue();
@@ -157,22 +157,22 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object,Double> entry : minColumnValues.entrySet()) {
+            for(Map.Entry<Object,Double> entry : meanColumnValues.entrySet()) {
                 Object column = entry.getKey();
                 Double value = xData.getDouble(column);
                 if(value == null) { //if we have a missing value don't perform any scaling
                     continue;
                 }
 
-                Double min = entry.getValue();
-                Double max = maxColumnValues.get(column);
+                Double mean = entry.getValue();
+                Double std = stdColumnValues.get(column);
 
                 double normalizedValue;
-                if(min.equals(max)) {
-                    normalizedValue = (min>0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
+                if(std.equals(0.0)) {
+                    normalizedValue = (mean!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
                 }
                 else {
-                    normalizedValue = (value-min)/(max-min);
+                    normalizedValue = (value-mean)/std;
                 }
 
                 xData.put(column, normalizedValue);
@@ -180,14 +180,14 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
             }
 
             if(scaleResponse && yData != null) {
-                Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
-                Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
+                Double mean = meanColumnValues.get(Dataframe.COLUMN_NAME_Y);
+                Double std = stdColumnValues.get(Dataframe.COLUMN_NAME_Y);
 
-                if(min.equals(max)) {
-                    yData = (min!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
+                if(std.equals(0.0)) {
+                    yData = (mean!=0.0)?1.0:0.0; //set it 0.0 ONLY if the feature is always inactive and 1.0 if it has a non-zero value
                 }
                 else {
-                    yData = (TypeInference.toDouble(yData) -min)/(max-min);
+                    yData = (TypeInference.toDouble(yData)-mean)/std;
                 }
 
                 modified = true;

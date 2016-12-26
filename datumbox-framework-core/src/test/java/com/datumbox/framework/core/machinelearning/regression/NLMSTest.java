@@ -25,7 +25,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.metrics.Linear
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
-import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
+import com.datumbox.framework.core.machinelearning.preprocessing.StandardScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -57,8 +57,8 @@ public class NLMSTest extends AbstractTest {
         String storageName = this.getClass().getSimpleName();
 
 
-        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
-        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+        StandardScaler.TrainingParameters nsParams = new StandardScaler.TrainingParameters();
+        StandardScaler numericalScaler = MLBuilder.create(nsParams, configuration);
 
         numericalScaler.fit_transform(trainingData);
         numericalScaler.save(storageName);
@@ -88,7 +88,7 @@ public class NLMSTest extends AbstractTest {
 
 
 
-        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        numericalScaler = MLBuilder.load(StandardScaler.class, storageName, configuration);
         categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
         instance = MLBuilder.load(NLMS.class, storageName, configuration);
 
@@ -124,9 +124,9 @@ public class NLMSTest extends AbstractTest {
         Dataframe trainingData = data[0];
         data[1].close();
 
-        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        StandardScaler.TrainingParameters nsParams = new StandardScaler.TrainingParameters();
         nsParams.setScaleResponse(true);
-        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+        StandardScaler numericalScaler = MLBuilder.create(nsParams, configuration);
 
         numericalScaler.fit_transform(trainingData);
 
@@ -155,7 +155,7 @@ public class NLMSTest extends AbstractTest {
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
 
-        double expResult = 0.7748106446239166;
+        double expResult = 0.7756605227695315;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 
