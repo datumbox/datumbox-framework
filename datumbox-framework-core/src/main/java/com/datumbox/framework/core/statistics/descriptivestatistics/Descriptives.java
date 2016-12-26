@@ -118,13 +118,11 @@ public class Descriptives {
      * @return
      */
     public static double min(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
+        if(flatDataCollection.isEmpty()) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
-        double min=Double.MAX_VALUE;
-        
+        double min=Double.POSITIVE_INFINITY;
         
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
@@ -144,8 +142,7 @@ public class Descriptives {
      * @return
      */
     public static double max(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
+        if(flatDataCollection.isEmpty()) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
@@ -159,6 +156,54 @@ public class Descriptives {
             }
         }          
         
+        return max;
+    }
+
+    /**
+     * Calculates Minimum absolute value - Nulls are ignored.
+     *
+     * @param flatDataCollection
+     * @return
+     */
+    public static double minAbsolute(FlatDataCollection flatDataCollection) {
+        if(flatDataCollection.isEmpty()) {
+            throw new IllegalArgumentException("The provided collection can't be empty.");
+        }
+
+        double minAbs=Double.POSITIVE_INFINITY;
+
+        Iterator<Double> it = flatDataCollection.iteratorDouble();
+        while(it.hasNext()) {
+            Double v = Math.abs(it.next());
+            if(v!=null && minAbs > v) {
+                minAbs=v;
+            }
+        }
+
+        return minAbs;
+    }
+
+    /**
+     * Calculates Maximum absolute value - Nulls are ignored.
+     *
+     * @param flatDataCollection
+     * @return
+     */
+    public static double maxAbsolute(FlatDataCollection flatDataCollection) {
+        if(flatDataCollection.isEmpty()) {
+            throw new IllegalArgumentException("The provided collection can't be empty.");
+        }
+
+        double max=0.0;
+
+        Iterator<Double> it = flatDataCollection.iteratorDouble();
+        while(it.hasNext()) {
+            Double v = Math.abs(it.next());
+            if(v!=null && max < v) {
+                max=v;
+            }
+        }
+
         return max;
     }
     

@@ -61,6 +61,7 @@ Version 0.8.0-SNAPSHOT - Build 20161226
     - The recommendersystem package is renamed to recommendation.
     - The old datatransformation package is replaced with the preprocessing package which decouples Numerical Scaling from Categorical variable encoding.
     - Added the following preprocessing algorithms: OneHotEncoder, StandardScaler.
+    - Added minAbsolute and maxAbsolute methods in Descriptives.
 
 Version 0.7.0 - Build 20160319
 ------------------------------
