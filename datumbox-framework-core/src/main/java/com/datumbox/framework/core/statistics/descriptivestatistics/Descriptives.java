@@ -112,7 +112,7 @@ public class Descriptives {
     }
     
     /**
-     * Calculates Minimum - Nulls are handled as zeros.
+     * Calculates Minimum - Nulls are ignored.
      * 
      * @param flatDataCollection
      * @return
@@ -129,10 +129,7 @@ public class Descriptives {
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = it.next();
-            if(v==null) {
-                v=0.0;
-            }
-            if(min>v) {
+            if(v!=null && min > v) {
                 min=v;
             }
         } 
@@ -141,7 +138,7 @@ public class Descriptives {
     }
     
     /**
-     * Calculates Maximum - Nulls are handled as zeros.
+     * Calculates Maximum - Nulls are ignored.
      * 
      * @param flatDataCollection
      * @return
@@ -157,10 +154,7 @@ public class Descriptives {
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = it.next();
-            if(v==null) {
-                v=0.0;
-            }
-            if(max<v) {
+            if(v!=null && max < v) {
                 max=v;
             }
         }          
