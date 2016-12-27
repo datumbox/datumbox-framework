@@ -157,17 +157,19 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object,Double> entry : minColumnValues.entrySet()) {
-                Object column = entry.getKey();
-                Double value = xData.getDouble(column);
+            for(Map.Entry<Object,Object> entry : xData.entrySet()) {
+                Object value = entry.getValue();
                 if(value == null) { //if we have a missing value don't perform any scaling
                     continue;
                 }
-
-                Double min = entry.getValue();
+                Object column = entry.getKey();
+                Double min = minColumnValues.get(column);
+                if(min == null) { //unknown column
+                    continue;
+                }
                 Double max = maxColumnValues.get(column);
 
-                xData.put(column, scale(value, min, max));
+                xData.put(column, scale(TypeInference.toDouble(value), min, max));
                 modified = true;
             }
 

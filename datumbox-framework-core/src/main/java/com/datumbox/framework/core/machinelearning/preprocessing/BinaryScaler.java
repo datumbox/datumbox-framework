@@ -111,12 +111,12 @@ public class BinaryScaler extends AbstractNumericalScaler<BinaryScaler.ModelPara
             boolean modified = false;
             for(Map.Entry<Object, Object> entry : xData.entrySet()) {
                 Object column = entry.getKey();
-                Double value = xData.getDouble(column);
+                Object value = entry.getValue();
                 if(value == null || columnTypes.get(column)!=TypeInference.DataType.NUMERICAL) {
                     continue;
                 }
 
-                xData.put(column, scale(value, threshold));
+                xData.put(column, scale(TypeInference.toDouble(value), threshold));
                 modified = true;
             }
 

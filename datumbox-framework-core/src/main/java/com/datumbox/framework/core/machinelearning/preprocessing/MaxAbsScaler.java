@@ -25,6 +25,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Rescales the numerical features of the dataset between -1 and 1.
@@ -129,16 +130,18 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object,Double> entry : maxAbsoluteColumnValues.entrySet()) {
-                Object column = entry.getKey();
-                Double value = xData.getDouble(column);
+            for(Map.Entry<Object,Object> entry : xData.entrySet()) {
+                Object value = entry.getValue();
                 if(value == null) { //if we have a missing value don't perform any scaling
                     continue;
                 }
+                Object column = entry.getKey();
+                Double maxAbsolute = maxAbsoluteColumnValues.get(column);
+                if(maxAbsolute == null) { //unknown column
+                    continue;
+                }
 
-                Double maxAbsolute = entry.getValue();
-
-                xData.put(column, scale(value, maxAbsolute));
+                xData.put(column, scale(TypeInference.toDouble(value), maxAbsolute));
                 modified = true;
             }
 
