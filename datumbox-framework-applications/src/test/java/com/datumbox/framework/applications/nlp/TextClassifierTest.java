@@ -22,10 +22,12 @@ import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.*;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractNumericalScaler;
 import com.datumbox.framework.core.machinelearning.featureselection.categorical.ChisquareSelect;
 import com.datumbox.framework.core.machinelearning.featureselection.categorical.MutualInformation;
 import com.datumbox.framework.core.machinelearning.featureselection.scorebased.TFIDF;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.preprocessing.BinaryScaler;
 import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -65,6 +67,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.8393075950598075,
                 1
         );
@@ -87,6 +90,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.8413587159387832,
                 2
         );
@@ -109,6 +113,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.9411031042128604,
                 3
         );
@@ -131,6 +136,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.8685865263692268,
                 4
         );
@@ -149,11 +155,16 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setALevel(0.05);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
-        
+
+        BinaryScaler.TrainingParameters nsParams = new BinaryScaler.TrainingParameters();
+        nsParams.setScaleResponse(false);
+        nsParams.setThreshold(0.0);
+
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.8290058479532163,
+                nsParams,
+                0.9272762308507563,
                 5
         );
     }
@@ -171,11 +182,16 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setALevel(0.05);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
+
+        BinaryScaler.TrainingParameters nsParams = new BinaryScaler.TrainingParameters();
+        nsParams.setScaleResponse(false);
+        nsParams.setThreshold(0.0);
         
         trainAndValidate(
                 mlParams,
                 fsParams,
-                0.7663106693454584,
+                nsParams,
+                0.8979999999999999,
                 6
         );
     }
@@ -197,6 +213,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.9803846153846154,
                 7
         );
@@ -218,6 +235,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.8954671493044679,
                 8
         );
@@ -238,6 +256,7 @@ public class TextClassifierTest extends AbstractTest {
         trainAndValidate(
                 mlParams,
                 fsParams,
+                null,
                 0.80461962936161,
                 9
         );
@@ -248,13 +267,16 @@ public class TextClassifierTest extends AbstractTest {
      * 
      * @param <ML>
      * @param <FS>
+     * @param <NS>
      * @param modelerTrainingParameters
      * @param featureSelectorTrainingParameters
+     * @param numericalScalerTrainingParameters
      * @param testId
      */
-    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector> void trainAndValidate(
+    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector, NS extends AbstractNumericalScaler> void trainAndValidate(
             ML.AbstractTrainingParameters modelerTrainingParameters,
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
+            NS.AbstractTrainingParameters numericalScalerTrainingParameters,
             double expectedF1score,
             int testId) {
         Configuration configuration = Configuration.getConfiguration();
@@ -275,7 +297,7 @@ public class TextClassifierTest extends AbstractTest {
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
 
         //numerical scaling configuration
-        trainingParameters.setNumericalScalerTrainingParameters(null);
+        trainingParameters.setNumericalScalerTrainingParameters(numericalScalerTrainingParameters);
 
         //categorical encoding configuration
         trainingParameters.setCategoricalEncoderTrainingParameters(null);

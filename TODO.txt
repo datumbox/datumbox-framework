@@ -18,8 +18,7 @@ CODE IMPROVEMENTS
 NEW FEATURES
 ============
 
-- Create the following Numerical Scalers: PercentileScaler.
-
+- Create a PercentileScaler numerical scaler.
 - Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
 - Create a storage engine for BerkeleyDB.
 - Add the ability to call Machine Learning algorithms from command line or Python:
