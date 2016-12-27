@@ -538,11 +538,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
      * @param key 
      */
     private <K> void increase(Map<K, Integer> map, K key) {
-        Integer previousValue = map.get(key);
-        if(previousValue==null) {
-            previousValue=0;
-        }
-        map.put(key, previousValue+1);
+        map.put(key, map.getOrDefault(key, 0)+1);
     }
 
     /**
@@ -552,11 +548,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
      * @param key 
      */
     private <K> void decrease(Map<K, Integer> map, K key) {
-        Integer previousValue = map.get(key);
-        if(previousValue==null) {
-            previousValue=0;
-        }
-        map.put(key, previousValue-1);
+        map.put(key, map.getOrDefault(key, 0)-1);
     }
 
     /** {@inheritDoc} */

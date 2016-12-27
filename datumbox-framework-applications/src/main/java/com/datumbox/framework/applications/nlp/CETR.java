@@ -198,13 +198,9 @@ public class CETR {
             Integer clusterId = (Integer)r.getYPredicted();
             Double ttr = r.getX().getDouble(0); //the first value is always set the TTR as you can see above
             
-            Double previousValue = avgTTRscorePerCluster.get(clusterId);
-            Integer counter = clusterCounts.get(clusterId);
-            if(previousValue==null) {
-                previousValue=0.0;
-                counter = 0;
-            }
-            
+            Double previousValue = avgTTRscorePerCluster.getOrDefault(clusterId, 0.0);
+            Integer counter = clusterCounts.getOrDefault(clusterId, 0);
+
             avgTTRscorePerCluster.put(clusterId, previousValue+ttr);
             clusterCounts.put(clusterId, counter+1);
         }

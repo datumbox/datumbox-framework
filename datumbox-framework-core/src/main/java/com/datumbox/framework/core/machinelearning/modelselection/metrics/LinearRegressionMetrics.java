@@ -44,7 +44,7 @@ public class LinearRegressionMetrics extends AbstractMetrics {
     private double dfTotal = 0.0;
     private double F = 0.0;
     private double FPValue = 0.0;
-    private Double StdErrorOfEstimate = 0.0; //this can have null value if dfResidual is 0
+    private double StdErrorOfEstimate = 0.0; //this can have null value if dfResidual is 0
     private double DW = 0.0; //Durbin–Watson statistic
     private double NormalResiduals = 0.0; //Test on whether the residuals can be considered Normal
 
@@ -143,7 +143,7 @@ public class LinearRegressionMetrics extends AbstractMetrics {
      *
      * @return
      */
-    public Double getStdErrorOfEstimate() {
+    public double getStdErrorOfEstimate() {
         return StdErrorOfEstimate;
     }
 
@@ -216,7 +216,6 @@ public class LinearRegressionMetrics extends AbstractMetrics {
             FPValue = ContinuousDistributions.fCdf(F, (int)dfRegression, (int)dfResidual);
         }
 
-        StdErrorOfEstimate = null;
         if(dfResidual > 0.0) {
             StdErrorOfEstimate = Math.sqrt(SSE/dfResidual);
         }
@@ -242,11 +241,7 @@ public class LinearRegressionMetrics extends AbstractMetrics {
                 dfTotal += vmSample.getDfTotal() / k;
                 F += vmSample.getF() / k;
                 FPValue += vmSample.getFPValue() / k;
-                Double stdErrorOfEstimate = vmSample.getStdErrorOfEstimate();
-                if (stdErrorOfEstimate == null) {
-                    stdErrorOfEstimate = 0.0;
-                }
-                StdErrorOfEstimate += stdErrorOfEstimate / k;
+                StdErrorOfEstimate += vmSample.getStdErrorOfEstimate() / k;
                 DW += vmSample.getDW() / k;
                 NormalResiduals += vmSample.getNormalResiduals() / k; //percentage of samples that found the residuals to be normal
             }

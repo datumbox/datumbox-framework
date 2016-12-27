@@ -147,7 +147,7 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
         for(Map.Entry<Integer, Record> e : newData.entries()) {
             Integer rId = e.getKey();
             Record r = e.getValue();
-            Map<Object, Object> recommendations = new HashMap<>();
+            Map<Object, Double> recommendations = new HashMap<>();
             
             Map<Object, Double> simSums = new HashMap<>();
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -162,12 +162,8 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
                     
                     Object column = tpk.get(1);
                     
-                    Double previousRecValue = TypeInference.toDouble(recommendations.get(column));
-                    Double previousSimsumValue = simSums.get(column);
-                    if(previousRecValue==null) {
-                        previousRecValue=0.0;
-                        previousSimsumValue=0.0;
-                    }
+                    Double previousRecValue = recommendations.getOrDefault(column, 0.0);
+                    Double previousSimsumValue = simSums.getOrDefault(column, 0.0);
                     
                     Double similarity = entry2.getValue();
 
@@ -176,16 +172,16 @@ public class CollaborativeFiltering extends AbstractRecommender<CollaborativeFil
                 }
             }
             
-            for(Map.Entry<Object, Object> entry : recommendations.entrySet()) {
+            for(Map.Entry<Object, Double> entry : recommendations.entrySet()) {
                 Object column = entry.getKey();
-                Double score = TypeInference.toDouble(entry.getValue());
+                Double score = entry.getValue();
                 
                 recommendations.put(column, score/simSums.get(column));
             }
             //simSums = null;
             
             recommendations = MapMethods.sortNumberMapByValueDescending(recommendations);
-            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray(recommendations)));
+            newData._unsafe_set(rId, new Record(r.getX(), r.getY(), recommendations.keySet().iterator().next(), new AssociativeArray((Map)recommendations)));
         }
     }
     

@@ -262,10 +262,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
 
                 //featureClass counts
                 List<Object> featureClassTuple = Arrays.asList(feature, theClass);
-                Integer featureClassCounter = featureClassCounts.get(featureClassTuple);
-                if(featureClassCounter==null) {
-                    featureClassCounter=0;
-                }
+                Integer featureClassCounter = featureClassCounts.getOrDefault(featureClassTuple, 0);
                 featureClassCounts.put(featureClassTuple, ++featureClassCounter);
             }
 

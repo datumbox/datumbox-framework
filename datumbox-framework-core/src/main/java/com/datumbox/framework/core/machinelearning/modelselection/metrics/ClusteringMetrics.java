@@ -155,10 +155,6 @@ public class ClusteringMetrics extends AbstractMetrics {
         //estimate average values
         int k = 0;
         for(ClusteringMetrics vmSample : validationMetricsList) {
-            if(vmSample.getNMI()==null) { //it is null when we don't have goldStandardClass information
-                continue;
-            }
-
             NMI += vmSample.getNMI();
             purity += vmSample.getPurity();
             k++;

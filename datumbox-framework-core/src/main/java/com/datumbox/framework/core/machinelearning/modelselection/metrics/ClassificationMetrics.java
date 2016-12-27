@@ -260,11 +260,7 @@ public class ClassificationMetrics extends AbstractMetrics {
                 for(SensitivityRates sr : SensitivityRates.values()) {
                     List<Object> tpk = Arrays.asList(theClass, sr);
                     
-                    Double previousValue = contingencyTable.get(tpk);
-                    if(previousValue==null) {
-                        previousValue=0.0;
-                    }
-
+                    Double previousValue = contingencyTable.getOrDefault(tpk, 0.0);
                     contingencyTable.put(tpk, previousValue + ctEntryMap.get(tpk)/k);
                 }
                 

@@ -160,7 +160,6 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
                 Double previousValue = predictionScores.getDouble(theClass);
                 predictionScores.put(theClass, previousValue + Math.log(probability)-Math.log(1.0-probability));
             }
-            //classLogScoresForThisFeature=null;
         }
 
         Object predictedClass=getSelectedClassFromClassScores(predictionScores);

@@ -62,9 +62,9 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private static final long serialVersionUID = 1L;
         
         //primitives/wrappers
-        private Integer maxIterations = null;
+        private int maxIterations = Integer.MAX_VALUE;
         
-        private Double aout = 0.05;
+        private double aout = 0.05;
 
         //Parameter Objects
         private AbstractRegressor.AbstractTrainingParameters regressionTrainingParameters;
@@ -76,7 +76,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @return 
          */
-        public Integer getMaxIterations() {
+        public int getMaxIterations() {
             return maxIterations;
         }
 
@@ -85,7 +85,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @param maxIterations 
          */
-        public void setMaxIterations(Integer maxIterations) {
+        public void setMaxIterations(int maxIterations) {
             this.maxIterations = maxIterations;
         }
         
@@ -97,7 +97,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @return 
          */
-        public Double getAout() {
+        public double getAout() {
             return aout;
         }
         
@@ -108,7 +108,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @param aout 
          */
-        public void setAout(Double aout) {
+        public void setAout(double aout) {
             this.aout = aout;
         }
 
@@ -175,10 +175,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         resetBundle();
 
         //perform stepwise
-        Integer maxIterations = trainingParameters.getMaxIterations();
-        if(maxIterations==null) {
-            maxIterations = Integer.MAX_VALUE;
-        }
+        int maxIterations = trainingParameters.getMaxIterations();
         double aOut = trainingParameters.getAout();
         
         //copy data before starting

@@ -18,6 +18,7 @@ package com.datumbox.framework.core.statistics.descriptivestatistics;
 import com.datumbox.framework.common.dataobjects.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -629,19 +630,14 @@ public class Descriptives {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
-        AssociativeArray frequencies = new AssociativeArray();
+        Map<Object, Integer> frequencies = new HashMap<>();
         
         for (Object value : flatDataCollection) {
-            Object counter = frequencies.get(value);
-            if(counter==null) {
-                frequencies.put(value, 1);
-            }
-            else {
-                frequencies.put(value, ((Number)counter).intValue()+1);
-            }
+            Integer counter = frequencies.getOrDefault(value, 0);
+            frequencies.put(value, counter+1);
         }
         
-        return frequencies;
+        return new AssociativeArray((Map)frequencies);
     }
     
     /**
