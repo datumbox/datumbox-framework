@@ -198,7 +198,7 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
      * @param max
      * @return
      */
-    private double scale(Double value, Double min, Double max) {
+    private Double scale(Double value, Double min, Double max) {
         if(min.equals(max)) {
             if(value>max) {
                 return 1.0;

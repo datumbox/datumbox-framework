@@ -60,7 +60,7 @@ Version 0.8.0-SNAPSHOT - Build 20161227
     - The MapRealMatrix instances don't initialize their own storage engines any more. Instead they use a single engine stored in MatrixDataframe.
     - The recommendersystem package is renamed to recommendation.
     - The old datatransformation package is replaced with the preprocessing package which decouples Numerical Scaling from Categorical variable encoding.
-    - Added the following preprocessing algorithms: OneHotEncoder, StandardScaler, MaxAbsScaler.
+    - Added the following preprocessing algorithms: OneHotEncoder, StandardScaler, MaxAbsScaler, BinaryScaler.
     - Added minAbsolute and maxAbsolute methods in Descriptives.
 
 Version 0.7.0 - Build 20160319

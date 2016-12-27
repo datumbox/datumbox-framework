@@ -167,7 +167,7 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
      * @param maxAbsolute
      * @return
      */
-    private double scale(Double value, Double maxAbsolute) {
+    private Double scale(Double value, Double maxAbsolute) {
         if(maxAbsolute.equals(0.0)) {
             return Math.signum(value);
         }

@@ -198,7 +198,7 @@ public class StandardScaler extends AbstractNumericalScaler<StandardScaler.Model
      * @param std
      * @return
      */
-    private double scale(Double value, Double mean, Double std) {
+    private Double scale(Double value, Double mean, Double std) {
         if(std.equals(0.0)) {
             if(value > mean) {
                 return 1.0;
