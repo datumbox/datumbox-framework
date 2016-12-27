@@ -138,30 +138,15 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
 
                 Double maxAbsolute = entry.getValue();
 
-                double normalizedValue;
-                if(maxAbsolute.equals(0.0)) {
-                    normalizedValue = Math.signum(value);
-                }
-                else {
-                    normalizedValue = value/maxAbsolute;
-                }
-
-                xData.put(column, normalizedValue);
+                xData.put(column, scale(value, maxAbsolute));
                 modified = true;
             }
 
             if(scaleResponse && yData != null) {
+                Double value = TypeInference.toDouble(yData);
                 Double maxAbsolute = maxAbsoluteColumnValues.get(Dataframe.COLUMN_NAME_Y);
 
-                Double value = TypeInference.toDouble(yData);
-
-                if(maxAbsolute.equals(0.0)) {
-                    yData = Math.signum(value);
-                }
-                else {
-                    yData = TypeInference.toDouble(yData)/maxAbsolute;
-                }
-
+                yData = scale(value, maxAbsolute);
                 modified = true;
             }
 
@@ -175,4 +160,19 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
         });
     }
 
+    /**
+     * Performs the actual rescaling handling corner cases.
+     *
+     * @param value
+     * @param maxAbsolute
+     * @return
+     */
+    private double scale(Double value, Double maxAbsolute) {
+        if(maxAbsolute.equals(0.0)) {
+            return Math.signum(value);
+        }
+        else {
+            return value/maxAbsolute;
+        }
+    }
 }

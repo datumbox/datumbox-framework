@@ -167,31 +167,16 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
                 Double min = entry.getValue();
                 Double max = maxColumnValues.get(column);
 
-                double normalizedValue;
-                if(min.equals(max)) {
-                    normalizedValue = (value>max || (value==max && value!=0.0))?1.0:0.0;
-                }
-                else {
-                    normalizedValue = (value-min)/(max-min);
-                }
-
-                xData.put(column, normalizedValue);
+                xData.put(column, scale(value, min, max));
                 modified = true;
             }
 
             if(scaleResponse && yData != null) {
+                Double value = TypeInference.toDouble(yData);
                 Double min = minColumnValues.get(Dataframe.COLUMN_NAME_Y);
                 Double max = maxColumnValues.get(Dataframe.COLUMN_NAME_Y);
 
-                Double value = TypeInference.toDouble(yData);
-
-                if(min.equals(max)) {
-                    yData = (value>max || (value==max && value!=0.0))?1.0:0.0;
-                }
-                else {
-                    yData = (value-min)/(max-min);
-                }
-
+                yData = scale(value, min, max);
                 modified = true;
             }
 
@@ -203,6 +188,31 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
                 newData._unsafe_set(rId, newR);
             }
         });
+    }
+
+    /**
+     * Performs the actual rescaling handling corner cases.
+     *
+     * @param value
+     * @param min
+     * @param max
+     * @return
+     */
+    private double scale(Double value, Double min, Double max) {
+        if(min.equals(max)) {
+            if(value>max) {
+                return 1.0;
+            }
+            else if(value==max && value!=0.0) {
+                return 1.0;
+            }
+            else {
+                return 0.0;
+            }
+        }
+        else {
+            return (value-min)/(max-min);
+        }
     }
 
 }

@@ -167,47 +167,16 @@ public class StandardScaler extends AbstractNumericalScaler<StandardScaler.Model
                 Double mean = entry.getValue();
                 Double std = stdColumnValues.get(column);
 
-                double normalizedValue;
-                if(std.equals(0.0)) {
-                    if(value == 0.0) {
-                        normalizedValue = 0.0;
-                    }
-                    else if(value >= mean) {
-                        normalizedValue = 1.0;
-                    }
-                    else {
-                        normalizedValue = -1.0;
-                    }
-                }
-                else {
-                    normalizedValue = (value-mean)/std;
-                }
-
-                xData.put(column, normalizedValue);
+                xData.put(column, scale(value, mean, std));
                 modified = true;
             }
 
             if(scaleResponse && yData != null) {
+                Double value = TypeInference.toDouble(yData);
                 Double mean = meanColumnValues.get(Dataframe.COLUMN_NAME_Y);
                 Double std = stdColumnValues.get(Dataframe.COLUMN_NAME_Y);
 
-                Double value = TypeInference.toDouble(yData);
-
-                if(std.equals(0.0)) {
-                    if(value == 0.0) {
-                        yData = 0.0;
-                    }
-                    else if(value >= mean) {
-                        yData = 1.0;
-                    }
-                    else {
-                        yData = -1.0;
-                    }
-                }
-                else {
-                    yData = (value-mean)/std;
-                }
-
+                yData = scale(value, mean, std);
                 modified = true;
             }
 
@@ -219,6 +188,31 @@ public class StandardScaler extends AbstractNumericalScaler<StandardScaler.Model
                 newData._unsafe_set(rId, newR);
             }
         });
+    }
+
+    /**
+     * Performs the actual rescaling handling corner cases.
+     *
+     * @param value
+     * @param mean
+     * @param std
+     * @return
+     */
+    private double scale(Double value, Double mean, Double std) {
+        if(std.equals(0.0)) {
+            if(value > mean) {
+                return 1.0;
+            }
+            else if(value < mean) {
+                return -1.0;
+            }
+            else {
+                return Math.signum(value);
+            }
+        }
+        else {
+            return (value-mean)/std;
+        }
     }
 
 }
