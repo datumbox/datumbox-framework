@@ -31,10 +31,10 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.PredictPara
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -527,7 +527,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
     }
     
     private AssociativeArray clusterProbabilities(Record r, int n, Map<Integer, CL> clusterMap) {
-        Map<Object, Object> condProbCiGivenXiAndOtherCi = new ConcurrentHashMap<>();
+        Map<Integer, Double> condProbCiGivenXiAndOtherCi = new HashMap<>();
         double alpha = knowledgeBase.getTrainingParameters().getAlpha();
         
         //Probabilities that appear on https://www.cs.cmu.edu/~kbe/dp_tutorial.pdf
@@ -543,7 +543,7 @@ public abstract class AbstractDPMM<CL extends AbstractDPMM.AbstractCluster, MP e
             condProbCiGivenXiAndOtherCi.put(clusterId, marginalLogLikelihoodXi+Math.log(mixingXi)); //concurrent map and non-overlapping keys for each thread
         }
         
-        return new AssociativeArray(condProbCiGivenXiAndOtherCi);
+        return new AssociativeArray((Map)condProbCiGivenXiAndOtherCi);
     }
     
     private Object getSelectedClusterFromScores(AssociativeArray clusterScores) {

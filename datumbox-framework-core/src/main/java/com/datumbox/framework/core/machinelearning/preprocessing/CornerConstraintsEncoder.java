@@ -109,7 +109,7 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 if(covert2dummy(columnTypes.get(column))) {
-                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is an implementation of ConcurrentHashMap and we don't need a synchronized is needed.
+                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is thread safe and we don't need a synchronized is needed.
                 }
             }
         }

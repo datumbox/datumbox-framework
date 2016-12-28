@@ -21,7 +21,7 @@ import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -40,7 +40,7 @@ public class RanksTest extends AbstractTest {
         logger.info("getRanksFromValues");
         FlatDataList flatDataCollection =  new FlatDataList(Arrays.asList(new Object[]{50,10,10,30,40}));
         FlatDataList expResult = new FlatDataList(Arrays.asList(new Object[]{5.0,1.5,1.5,3.0,4.0}));
-        AssociativeArray expResult2 = new AssociativeArray(new ConcurrentSkipListMap<>());
+        AssociativeArray expResult2 = new AssociativeArray(new HashMap<>());
         expResult2.put(10, 2);
         AssociativeArray tiesCounter = Ranks.getRanksFromValues(flatDataCollection);
         assertEquals(expResult, flatDataCollection);

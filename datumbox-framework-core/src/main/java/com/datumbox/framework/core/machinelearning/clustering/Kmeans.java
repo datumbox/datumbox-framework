@@ -712,8 +712,8 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
             StorageEngine storageEngine = knowledgeBase.getStorageEngine();
             Set<Integer> alreadyAddedPoints = new HashSet(); //this is small. equal to k
             for(int i = 0; i < k; ++i) {
-                Map<Object, Object> tmp_minClusterDistance = storageEngine.getBigMap("tmp_minClusterDistance", Object.class, Object.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
-                AssociativeArray minClusterDistanceArray = new AssociativeArray(tmp_minClusterDistance);
+                Map<Object, Double> tmp_minClusterDistance = storageEngine.getBigMap("tmp_minClusterDistance", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+                AssociativeArray minClusterDistanceArray = new AssociativeArray((Map)tmp_minClusterDistance);
                 
                 streamExecutor.forEach(StreamMethods.stream(trainingData.entries(), isParallelized()), e -> {
                     Integer rId = e.getKey();
@@ -739,7 +739,6 @@ public class Kmeans extends AbstractClusterer<Kmeans.Cluster, Kmeans.ModelParame
                 Integer selectedRecordId = (Integer) SimpleRandomSampling.weightedSampling(minClusterDistanceArray, 1, true).iterator().next();
                 
                 storageEngine.dropBigMap("tmp_minClusterDistance", tmp_minClusterDistance);
-                //minClusterDistanceArray = null;
                 
                 
                 alreadyAddedPoints.add(selectedRecordId);
