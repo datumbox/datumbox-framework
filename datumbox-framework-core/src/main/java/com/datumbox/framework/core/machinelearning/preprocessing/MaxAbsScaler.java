@@ -132,7 +132,7 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
             boolean modified = false;
             for(Map.Entry<Object,Object> entry : xData.entrySet()) {
                 Object value = entry.getValue();
-                if(value == null) { //if we have a missing value don't perform any scaling
+                if(value == null) { //missing value
                     continue;
                 }
                 Object column = entry.getKey();
