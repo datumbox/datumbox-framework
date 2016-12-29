@@ -65,6 +65,7 @@ Version 0.8.0-SNAPSHOT - Build 20161229
     - All the preprocessors have the ability to limit the transformed columns.
     - Refactored PCA to use Vectors and Matrices instead of double arrays.
     - Refactored GaussianDPMM to use Vectors and Matrices instead of double arrays.
+    - Removed unnecessary dimension variable from the MultinomialDPMM.Cluster class.
     - Flattening the featureselection package.
 
 Version 0.7.0 - Build 20160319

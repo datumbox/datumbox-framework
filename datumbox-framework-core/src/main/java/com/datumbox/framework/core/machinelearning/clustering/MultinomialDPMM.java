@@ -47,10 +47,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
      * The AbstractCluster class of the MultinomialDPMM model.
      */
     public static class Cluster extends AbstractDPMM.AbstractCluster {
-        private static final long serialVersionUID = 1L;
-        
-        //informational fields
-        private final int dimensions;
+        private static final long serialVersionUID = 2L;
         
         //hyper parameters
         private final double alphaWords; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
@@ -68,9 +65,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
          */
         protected Cluster(Integer clusterId, int dimensions, double alphaWords) {
             super(clusterId);
-            
-            
-            this.dimensions = dimensions;
+
             this.alphaWords = alphaWords;
             
             wordCounts = new OpenMapRealVector(dimensions);
