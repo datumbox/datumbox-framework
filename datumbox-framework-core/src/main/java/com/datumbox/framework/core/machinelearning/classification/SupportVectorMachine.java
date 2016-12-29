@@ -72,10 +72,7 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         }
         
         /**
-         * Getter for the mapping of the column names to column ids. The implementation
-         * internally converts the data into double[] and as a result we need to 
-         * estimate and store the mapping between the column names and their 
-         * positions in the array. This mapping is estimated during training.
+         * Getter for the mapping of the column names to column ids. This mapping is estimated during training.
          * 
          * @return 
          */

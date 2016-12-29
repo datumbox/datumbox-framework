@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.featureselection.continuous;
+package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
@@ -26,12 +26,10 @@ import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
-import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractContinuousFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import org.apache.commons.math3.linear.*;
-import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
 import java.util.HashMap;

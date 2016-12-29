@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.featureselection.scorebased;
+package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
@@ -29,14 +29,14 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for TFIDF.
+ * Test cases for MutualInformation.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDFTest extends AbstractTest {
+public class MutualInformationTest extends AbstractTest {
 
     /**
-     * Test of shortMethodName method, of class TFIDF.
+     * Test of fit_transform method, of class MutualInformation.
      */
     @Test
     public void testSelectFeatures() {
@@ -44,36 +44,36 @@ public class TFIDFTest extends AbstractTest {
         
         Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.featureSelectorTFIDF(configuration);
-        
+        Dataframe[] data = Datasets.featureSelectorCategorical(configuration, 1000);
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();
-        param.setBinarized(false);
-        param.setMaxFeatures(3);
+        MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
+        param.setRareFeatureThreshold(2);
+        param.setMaxFeatures(5);
         
-        TFIDF instance = MLBuilder.create(param, configuration);
+        MutualInformation instance = MLBuilder.create(param, configuration);
+        
         
         instance.fit_transform(trainingData);
         instance.save(storageName);
 
-        trainingData.close();
         instance.close();
 
         
         
-        instance = MLBuilder.load(TFIDF.class, storageName, configuration);
+        instance = MLBuilder.load(MutualInformation.class, storageName, configuration);
         
         instance.transform(validationData);
         
-        Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
-        Set<Object> result = validationData.getXDataTypes().keySet();
+        Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));
+        Set<Object> result = trainingData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.delete();
-
+        
+        trainingData.close();
         validationData.close();
     }
-    
+
 }

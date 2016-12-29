@@ -1,6 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
+- Remove double arrays from GaussianDPMM with Vectors and Matrices.
 - Rewrite the FeatureSelection package:
     - Improve the API of Feature Selection and how we handle different data types.
     - Refactor AbstractCategoricalFeatureSelector and simplify the method calls.

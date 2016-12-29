@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.featureselection.categorical;
+package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
@@ -29,14 +29,14 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for ChisquareSelect.
+ * Test cases for TFIDF.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareSelectTest extends AbstractTest {
-    
+public class TFIDFTest extends AbstractTest {
+
     /**
-     * Test of fit_transform method, of class ChisquareSelect.
+     * Test of shortMethodName method, of class TFIDF.
      */
     @Test
     public void testSelectFeatures() {
@@ -44,36 +44,35 @@ public class ChisquareSelectTest extends AbstractTest {
         
         Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.featureSelectorCategorical(configuration, 1000);
+        Dataframe[] data = Datasets.featureSelectorTFIDF(configuration);
+        
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        ChisquareSelect.TrainingParameters param = new ChisquareSelect.TrainingParameters();
-        param.setRareFeatureThreshold(2);
-        param.setMaxFeatures(5);
-        param.setALevel(0.05);
+        TFIDF.TrainingParameters param = new TFIDF.TrainingParameters();
+        param.setBinarized(false);
+        param.setMaxFeatures(3);
         
-        ChisquareSelect instance = MLBuilder.create(param, configuration);
-        
+        TFIDF instance = MLBuilder.create(param, configuration);
         
         instance.fit_transform(trainingData);
         instance.save(storageName);
 
+        trainingData.close();
         instance.close();
 
         
         
-        instance = MLBuilder.load(ChisquareSelect.class, storageName, configuration);
+        instance = MLBuilder.load(TFIDF.class, storageName, configuration);
         
         instance.transform(validationData);
         
-        Set<Object> expResult = new HashSet<>(Arrays.asList("high_paid", "has_boat", "has_luxury_car", "has_butler", "has_pool"));
-        Set<Object> result = trainingData.getXDataTypes().keySet();
+        Set<Object> expResult = new HashSet<>(Arrays.asList("important1", "important2", "important3"));
+        Set<Object> result = validationData.getXDataTypes().keySet();
         assertEquals(expResult, result);
         instance.delete();
-        
-        trainingData.close();
+
         validationData.close();
     }
     

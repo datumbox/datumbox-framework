@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.machinelearning.featureselection.categorical;
+package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
@@ -29,14 +29,14 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for MutualInformation.
+ * Test cases for ChisquareSelect.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MutualInformationTest extends AbstractTest {
-
+public class ChisquareSelectTest extends AbstractTest {
+    
     /**
-     * Test of fit_transform method, of class MutualInformation.
+     * Test of fit_transform method, of class ChisquareSelect.
      */
     @Test
     public void testSelectFeatures() {
@@ -49,11 +49,12 @@ public class MutualInformationTest extends AbstractTest {
         Dataframe validationData = data[1];
         
         String storageName = this.getClass().getSimpleName();
-        MutualInformation.TrainingParameters param = new MutualInformation.TrainingParameters();
+        ChisquareSelect.TrainingParameters param = new ChisquareSelect.TrainingParameters();
         param.setRareFeatureThreshold(2);
         param.setMaxFeatures(5);
+        param.setALevel(0.05);
         
-        MutualInformation instance = MLBuilder.create(param, configuration);
+        ChisquareSelect instance = MLBuilder.create(param, configuration);
         
         
         instance.fit_transform(trainingData);
@@ -63,7 +64,7 @@ public class MutualInformationTest extends AbstractTest {
 
         
         
-        instance = MLBuilder.load(MutualInformation.class, storageName, configuration);
+        instance = MLBuilder.load(ChisquareSelect.class, storageName, configuration);
         
         instance.transform(validationData);
         
@@ -75,5 +76,5 @@ public class MutualInformationTest extends AbstractTest {
         trainingData.close();
         validationData.close();
     }
-
+    
 }
