@@ -137,7 +137,7 @@ public class NLMSTest extends AbstractTest {
 
         PCA.TrainingParameters featureSelectorParameters = new PCA.TrainingParameters();
         featureSelectorParameters.setMaxDimensions(trainingData.xColumnSize()-1);
-        featureSelectorParameters.setWhitened(false);
+        featureSelectorParameters.setWhitened(true);
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
 
         PCA featureSelector = MLBuilder.create(featureSelectorParameters, configuration);
@@ -155,7 +155,7 @@ public class NLMSTest extends AbstractTest {
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
 
-        double expResult = 0.7756605227695315;
+        double expResult = 0.7780829672538567;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 

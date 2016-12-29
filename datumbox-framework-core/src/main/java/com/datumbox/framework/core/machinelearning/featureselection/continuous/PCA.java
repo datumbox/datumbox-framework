@@ -30,11 +30,9 @@ import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractContinuousFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
-import org.apache.commons.math3.linear.BlockRealMatrix;
-import org.apache.commons.math3.linear.DiagonalMatrix;
-import org.apache.commons.math3.linear.EigenDecomposition;
-import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.*;
 import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,18 +52,15 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractContinuousFeatureSelector.AbstractModelParameters {
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 2L;
         
         @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
         private Map<Object, Integer> featureIds;
         
-        private int rows; //rows of the eigenvector matrix
-        private int cols; //cols of the eigenvector matrix
+        private RealVector mean; //mean values for each column
+        private RealVector eigenValues; //eigenvalues
         
-        private double[] mean; //mean values for each column
-        private double[] eigenValues; //eigenvalues
-        
-        private double[][] components; //components weights 
+        private RealMatrix components; //components weights
         
         /** 
          * @param storageEngine
@@ -76,10 +71,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         }
         
         /**
-         * Getter for the mapping of the column names to column ids. The implementation
-         * internally converts the data into double[] and as a result we need to 
-         * estimate and store the mapping between the column names and their 
-         * positions in the array. This mapping is estimated during training.
+         * Getter for the mapping of the column names to column ids.  This mapping is estimated during training.
          * 
          * @return 
          */
@@ -95,50 +87,14 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         protected void setFeatureIds(Map<Object, Integer> featureIds) {
             this.featureIds = featureIds;
         }
-        
-        /**
-         * Getter for the number of rows of the eigenvector matrix.
-         * 
-         * @return 
-         */
-        public int getRows() {
-            return rows;
-        }
-        
-        /**
-         * Setter for the number of rows of the eigenvector matrix.
-         * 
-         * @param rows 
-         */
-        protected void setRows(int rows) {
-            this.rows = rows;
-        }
-        
-        /**
-         * Getter for the number of columns of the eigenvector matrix.
-         * 
-         * @return 
-         */
-        public int getCols() {
-            return cols;
-        }
-        
-        /**
-         * Setter for the number of columns of the eigenvector matrix.
-         * 
-         * @param cols 
-         */
-        protected void setCols(int cols) {
-            this.cols = cols;
-        }
-        
+
         /**
          * Getter for the mean values of each column.
          * 
          * @return 
          */
-        public double[] getMean() {
-            return PHPMethods.array_clone(mean);
+        public RealVector getMean() {
+            return mean;
         }
         
         /**
@@ -146,8 +102,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
          * 
          * @param mean 
          */
-        protected void setMean(double[] mean) {
-            this.mean = PHPMethods.array_clone(mean);
+        protected void setMean(RealVector mean) {
+            this.mean = mean;
         }
         
         /**
@@ -155,8 +111,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
          * 
          * @return 
          */
-        public double[] getEigenValues() {
-            return PHPMethods.array_clone(eigenValues);
+        public RealVector getEigenValues() {
+            return eigenValues;
         }
         
         /**
@@ -164,8 +120,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
          * 
          * @param eigenValues 
          */
-        protected void setEigenValues(double[] eigenValues) {
-            this.eigenValues = PHPMethods.array_clone(eigenValues);
+        protected void setEigenValues(RealVector eigenValues) {
+            this.eigenValues = eigenValues;
         }
         
         /**
@@ -173,8 +129,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
          * 
          * @return 
          */
-        public double[][] getComponents() {
-            return PHPMethods.array_clone(components);
+        public RealMatrix getComponents() {
+            return components;
         }
         
         /**
@@ -182,8 +138,8 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
          * 
          * @param components 
          */
-        protected void setComponents(double[][] components) {
-            this.components = PHPMethods.array_clone(components);
+        protected void setComponents(RealMatrix components) {
+            this.components = components;
         }
     
     }
@@ -312,18 +268,19 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
-        double[] meanValues = new double[d];
+        RealVector meanValues = new OpenMapRealVector(d);
         for(Integer columnId : featureIds.values()) {
-            
-            meanValues[columnId] = 0.0;
-            for(double v : X.getColumn(columnId)) {
-                meanValues[columnId] += v;
-            }
-            meanValues[columnId] /= n;
-            
+            double mean = 0.0;
             for(int row=0;row<n;row++) {
-                X.addToEntry(row, columnId, -meanValues[columnId]);
+                mean += X.getEntry(row, columnId);
             }
+            mean /= n;
+
+            for(int row=0;row<n;row++) {
+                X.addToEntry(row, columnId, -mean);
+            }
+
+            meanValues.setEntry(columnId, mean);
         }
         modelParameters.setMean(meanValues);
 
@@ -331,30 +288,34 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         RealMatrix covarianceDD = (X.transpose().multiply(X)).scalarMultiply(1.0/(n-1.0)); 
 
         EigenDecomposition decomposition = new EigenDecomposition(covarianceDD);
-        double[] eigenValues = decomposition.getRealEigenvalues();
+        RealVector eigenValues = new ArrayRealVector(decomposition.getRealEigenvalues(), false);
 
         RealMatrix components = decomposition.getV();
         
         //Whiten Components W = U*L^0.5; To whiten them we multiply with L^0.5.
         if(knowledgeBase.getTrainingParameters().isWhitened()) {
 
-            double[] sqrtEigenValues = new double[eigenValues.length];
-            for(int i=0;i<eigenValues.length;i++) {
-                sqrtEigenValues[i] = Math.sqrt(eigenValues[i]);
+            RealMatrix sqrtEigenValues = new DiagonalMatrix(d);
+            for(int i=0;i<d;i++) {
+                sqrtEigenValues.setEntry(i, i, FastMath.sqrt(eigenValues.getEntry(i)));
             }
 
-            components = components.multiply(new DiagonalMatrix(sqrtEigenValues));
+            components = components.multiply(sqrtEigenValues);
         }
         
         //the eigenvalues and their components are sorted by descending order no need to resort them
         Integer maxDimensions = knowledgeBase.getTrainingParameters().getMaxDimensions();
         Double variancePercentageThreshold = knowledgeBase.getTrainingParameters().getVariancePercentageThreshold();
         if(variancePercentageThreshold!=null && variancePercentageThreshold<=1) {
+            double totalVariance = 0.0;
+            for(int i=0;i<d;i++) {
+                totalVariance += eigenValues.getEntry(i);
+            }
+
             double sum=0.0;
-            double totalVariance = StatUtils.sum(eigenValues);
             int varCounter=0;
-            for(double l : eigenValues) {
-                sum+=l/totalVariance;
+            for(int i=0;i<d;i++) {
+                sum+=eigenValues.getEntry(i)/totalVariance;
                 varCounter++;
                 if(sum>=variancePercentageThreshold) {
                     break;
@@ -368,19 +329,15 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         
         if(maxDimensions!=null && maxDimensions<d) {  
             //keep only the maximum selected eigenvalues
-            double[] newEigenValues = new double[maxDimensions];            
-            System.arraycopy(eigenValues, 0, newEigenValues, 0, maxDimensions);
-            eigenValues=newEigenValues;
+            eigenValues=eigenValues.getSubVector(0, maxDimensions);
+
             
             //keep only the maximum selected eigenvectors
             components = components.getSubMatrix(0, components.getRowDimension()-1, 0, maxDimensions-1);
         }
         
-        modelParameters.setRows(components.getRowDimension());
-        modelParameters.setCols(components.getColumnDimension());
-        
         modelParameters.setEigenValues(eigenValues);
-        modelParameters.setComponents(components.getData());      
+        modelParameters.setComponents(components);
     }
 
     /** {@inheritDoc} */
@@ -394,7 +351,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
         MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(dataset, recordIdsReference, featureIds);
         
-        RealMatrix components = new BlockRealMatrix(modelParameters.getComponents());
+        RealMatrix components = modelParameters.getComponents();
         
         
         //multiplying the data with components
