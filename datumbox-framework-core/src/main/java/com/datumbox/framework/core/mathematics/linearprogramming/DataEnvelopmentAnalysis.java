@@ -155,7 +155,7 @@ public class DataEnvelopmentAnalysis {
             //The mathematical model is formulated differently depending the case
             if(hasInput==false) {
                 //if no input then change the way that the linear problem formulates
-                constraints.add(new LPSolver.LPConstraint(currentRecord.getOutput(), "<=", 1.0)); //less than 1
+                constraints.add(new LPSolver.LPConstraint(currentRecord.getOutput(), LPSolver.LEQ, 1.0)); //less than 1
             }
             else {
                 //create a double[] with size both of the input and output
@@ -176,7 +176,7 @@ public class DataEnvelopmentAnalysis {
                 //conInput=null;
                 
                 //add the constrain on the list
-                constraints.add(new LPSolver.LPConstraint(currentConstraintBody, "<=", 0.0)); //less than 0
+                constraints.add(new LPSolver.LPConstraint(currentConstraintBody, LPSolver.LEQ, 0.0)); //less than 0
             }    
         }
         
@@ -212,7 +212,7 @@ public class DataEnvelopmentAnalysis {
                 //conOutput=null;
                 
                 //set the denominator equal to 1
-                constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, "=", 1.0));
+                constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, LPSolver.EQ, 1.0));
             }
             
             //RUN SOLVE
