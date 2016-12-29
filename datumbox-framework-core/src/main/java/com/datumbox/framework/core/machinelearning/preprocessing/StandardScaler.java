@@ -25,6 +25,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Rescales the numerical features of the dataset by subtracting the mean and dividing by the standard deviation.
@@ -127,8 +128,8 @@ public class StandardScaler extends AbstractNumericalScaler<StandardScaler.Model
         Map<Object, Double> stdColumnValues = modelParameters.getStdColumnValues();
         boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse();
 
-        streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().entrySet().stream().filter(entry -> entry.getValue() == TypeInference.DataType.NUMERICAL), isParallelized()), entry -> {
-            Object column = entry.getKey();
+        Stream<Object> transformedColumns = getTransformedColumns(trainingData);
+        streamExecutor.forEach(StreamMethods.stream(transformedColumns, isParallelized()), column -> {
             FlatDataCollection columnValues = trainingData.getXColumn(column).toFlatDataCollection();
 
             meanColumnValues.put(column, Descriptives.mean(columnValues));

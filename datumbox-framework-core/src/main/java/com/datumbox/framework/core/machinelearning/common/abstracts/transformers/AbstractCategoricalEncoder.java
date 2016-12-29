@@ -19,6 +19,11 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Base class for all categorical encoders of the framework.
  *
@@ -46,15 +51,11 @@ public abstract class AbstractCategoricalEncoder<MP extends AbstractCategoricalE
         super(storageName, configuration);
     }
 
-    /**
-     * Checks whether the variable should be converted into dummy (boolean). Only
-     * categorical and ordinal values are converted.
-     *
-     * @param columnType
-     * @return
-     */
-    protected boolean covert2dummy(TypeInference.DataType columnType) {
-        return columnType==TypeInference.DataType.CATEGORICAL || columnType==TypeInference.DataType.ORDINAL;
-    }
+    private static Set<TypeInference.DataType> supportedTypes = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL)));
 
+    /** {@inheritDoc} */
+    @Override
+    protected Set<TypeInference.DataType> getSupportedTypes() {
+        return supportedTypes;
+    }
 }

@@ -25,6 +25,8 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Encodes the categorical columns of the dataset into booleans using the One Hot Encoding method.
@@ -80,7 +82,7 @@ public class OneHotEncoder extends AbstractCategoricalEncoder<OneHotEncoder.Mode
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newData) {
-        Map<Object, TypeInference.DataType> columnTypes = newData.getXDataTypes();
+        Set<Object> transformedColumns = getTransformedColumns(newData).collect(Collectors.toSet());
 
         //Replace variables with dummy versions
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
@@ -91,7 +93,7 @@ public class OneHotEncoder extends AbstractCategoricalEncoder<OneHotEncoder.Mode
 
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
-                if(covert2dummy(columnTypes.get(column))==false) {
+                if(!transformedColumns.contains(column)) {
                     continue;
                 }
                 Object value = xData.remove(column); //remove the original column

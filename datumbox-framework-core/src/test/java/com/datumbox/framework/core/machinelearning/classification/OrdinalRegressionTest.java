@@ -29,7 +29,9 @@ import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -138,6 +140,7 @@ public class OrdinalRegressionTest extends AbstractTest {
 
 
         MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        nsParams.setTransformedColumns(new HashSet<>(Arrays.asList("c1", "c2", "c3")));
         MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
         numericalScaler.fit_transform(trainingData);
 

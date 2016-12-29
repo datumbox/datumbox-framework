@@ -26,6 +26,7 @@ import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * Rescales the numerical features of the dataset between -1 and 1.
@@ -103,8 +104,8 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
         Map<Object, Double> maxAbsoluteColumnValues = modelParameters.getMaxAbsoluteColumnValues();
         boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse();
 
-        streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().entrySet().stream().filter(entry -> entry.getValue() == TypeInference.DataType.NUMERICAL), isParallelized()), entry -> {
-            Object column = entry.getKey();
+        Stream<Object> transformedColumns = getTransformedColumns(trainingData);
+        streamExecutor.forEach(StreamMethods.stream(transformedColumns, isParallelized()), column -> {
             FlatDataCollection columnValues = trainingData.getXColumn(column).toFlatDataCollection();
 
             maxAbsoluteColumnValues.put(column, Descriptives.maxAbsolute(columnValues));

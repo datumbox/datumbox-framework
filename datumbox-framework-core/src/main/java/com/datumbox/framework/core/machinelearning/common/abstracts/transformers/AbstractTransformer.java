@@ -18,8 +18,14 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.transformer
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Base class for all the Data Transformers of the framework.
@@ -30,10 +36,47 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.Paralleliza
  */
 public abstract class AbstractTransformer<MP extends AbstractTransformer.AbstractModelParameters, TP extends AbstractTransformer.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> implements Parallelizable {
 
+    /** {@inheritDoc} */
+    public abstract static class AbstractModelParameters extends AbstractTrainer.AbstractModelParameters {
+
+        /**
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
+         */
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
+        }
+
+    }
+
+    /** {@inheritDoc} */
+    public static abstract class AbstractTrainingParameters extends AbstractTrainer.AbstractTrainingParameters {
+        private Set<Object> transformedColumns;
+
+        /**
+         * Getter for the transformed columns.
+         *
+         * @return
+         */
+        public Set<Object> getTransformedColumns() {
+            return transformedColumns;
+        }
+
+        /**
+         * Setter for the set of transformed columns. This option limits the columns on which we apply the transformation.
+         * If this is null then the transformation is applied to all the eligible columns of the Dataset.
+         *
+         * @param transformedColumns
+         */
+        public void setTransformedColumns(Set<Object> transformedColumns) {
+            this.transformedColumns = transformedColumns;
+        }
+    }
+
     /**
      * @param trainingParameters
      * @param configuration
-     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
     protected AbstractTransformer(TP trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
@@ -68,6 +111,35 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
     @Override
     public void setParallelized(boolean parallelized) {
         this.parallelized = parallelized;
+    }
+
+    /**
+     * Returns a set with the supported DataTypes of the transformer.
+     *
+     * @return
+     */
+    protected abstract Set<TypeInference.DataType> getSupportedTypes();
+
+    /**
+     * Returns a Stream with the columns that should be transformed.
+     *
+     * @param data
+     * @return
+     */
+    protected Stream<Object> getTransformedColumns(Dataframe data) {
+        Set<Object> transformedColumns = knowledgeBase.getTrainingParameters().getTransformedColumns();
+        Map<Object, TypeInference.DataType> xDataTypes = data.getXDataTypes();
+        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+
+        if(transformedColumns == null) {
+            return xDataTypes.entrySet().stream()
+                .filter(e -> supportedTypes.contains(e.getValue()))
+                .map(e -> e.getKey());
+        }
+        else {
+            return transformedColumns.stream()
+                .filter(c -> supportedTypes.contains(xDataTypes.get(c)));
+        }
     }
 
     /**

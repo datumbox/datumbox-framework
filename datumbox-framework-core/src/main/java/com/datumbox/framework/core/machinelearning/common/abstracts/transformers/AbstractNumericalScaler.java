@@ -16,8 +16,14 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.transformers;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Base class for all numeric scalers of the framework.
@@ -81,6 +87,14 @@ public abstract class AbstractNumericalScaler<MP extends AbstractNumericalScaler
      */
     protected AbstractNumericalScaler(String storageName, Configuration configuration) {
         super(storageName, configuration);
+    }
+
+    private static Set<TypeInference.DataType> supportedTypes = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.NUMERICAL)));
+
+    /** {@inheritDoc} */
+    @Override
+    protected Set<TypeInference.DataType> getSupportedTypes() {
+        return supportedTypes;
     }
 
 }

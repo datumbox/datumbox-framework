@@ -26,6 +26,8 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Encodes the categorical columns of the dataset into booleans using the Corner Constraints encoding (also known
@@ -102,14 +104,15 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Object, Object> referenceLevels = modelParameters.getReferenceLevels();
 
-        Map<Object, TypeInference.DataType> columnTypes = trainingData.getXDataTypes();
+        Set<Object> transformedColumns = getTransformedColumns(trainingData).collect(Collectors.toSet());
 
         //find the referenceLevels for each categorical variable
         for(Record r : trainingData) {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
-                if(covert2dummy(columnTypes.get(column))) {
-                    referenceLevels.putIfAbsent(column, entry.getValue()); //This Map is thread safe and we don't need a synchronized is needed.
+                Object value = entry.getValue();
+                if(transformedColumns.contains(column) && value != null) {
+                    referenceLevels.putIfAbsent(column, value);
                 }
             }
         }
@@ -132,17 +135,14 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
 
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
-                if(covert2dummy(columnTypes.get(column))==false) {
+                Object referenceLevel = referenceLevels.get(column);
+                if(referenceLevel == null) { //unknown variable
                     continue;
                 }
                 Object value = xData.remove(column); //remove the original column
                 modified = true;
 
-                Object referenceLevel= referenceLevels.get(column);
-
-                if(referenceLevel != null && //not unknown variable
-                        !referenceLevel.equals(value)) { //not equal to reference level
-
+                if(!referenceLevel.equals(value)) { //not equal to reference level
                     //create a new column
                     List<Object> newColumn = Arrays.asList(column,value);
 

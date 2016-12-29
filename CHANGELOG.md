@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161227
+Version 0.8.0-SNAPSHOT - Build 20161229
 ---------------------------------------
 
 - Initial Updates:
@@ -62,6 +62,7 @@ Version 0.8.0-SNAPSHOT - Build 20161227
     - The old datatransformation package is replaced with the preprocessing package which decouples Numerical Scaling from Categorical variable encoding.
     - Added the following preprocessing algorithms: OneHotEncoder, StandardScaler, MaxAbsScaler, BinaryScaler.
     - Added minAbsolute and maxAbsolute methods in Descriptives.
+    - All the preprocessors have the ability to limit the transformed columns.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

@@ -49,9 +49,9 @@ public class ModelerTest extends AbstractTest {
         
         Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.carsNumeric(configuration);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
+
         Dataframe trainingData = data[0];
-        
         Dataframe validationData = data[1];
         
         
@@ -88,7 +88,7 @@ public class ModelerTest extends AbstractTest {
 
         ClassificationMetrics vm = new ClassificationMetrics(trainingData);
 
-        double expResult2 = 0.8;
+        double expResult2 = 0.7867564534231202;
         assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
 
         trainingData.close();
