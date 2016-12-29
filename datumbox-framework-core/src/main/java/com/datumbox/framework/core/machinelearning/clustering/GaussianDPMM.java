@@ -19,7 +19,6 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
-import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
@@ -57,19 +56,19 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
         private final int kappa0;
         private final int nu0;
         private final RealVector mu0;
-        private final OpenMapRealMatrix psi0;
+        private final RealMatrix psi0;
 
         //cluster parameters
         private RealVector mean;
-        private OpenMapRealMatrix covariance;
+        private RealMatrix covariance;
 
         //validation - confidence interval vars
-        private OpenMapRealMatrix meanError;
+        private RealMatrix meanError;
         private int meanDf;
 
         //internal vars for calculation
         private RealVector xi_sum;
-        private OpenMapRealMatrix xi_square_sum;
+        private RealMatrix xi_square_sum;
 
         //Cache
         private volatile Double cache_covariance_determinant;
@@ -84,23 +83,18 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          * @param psi0
          * @see AbstractClusterer.AbstractCluster
          */
-        protected Cluster(Integer clusterId, int dimensions, int kappa0, int nu0, RealVector mu0, OpenMapRealMatrix psi0) {
+        protected Cluster(Integer clusterId, int dimensions, int kappa0, int nu0, RealVector mu0, RealMatrix psi0) {
             super(clusterId);
 
             if(nu0<dimensions) {
                 nu0 = dimensions;
             }
 
-            if(mu0==null) {
-                mu0 = new OpenMapRealVector(dimensions); //0 vector
-            }
-
-            if(psi0==null) {
-                psi0 = createIdentityOpenMapRealMatrix(dimensions); //identity matrix
-            }
-
             mean = new OpenMapRealVector(dimensions);
-            covariance = createIdentityOpenMapRealMatrix(dimensions);
+            covariance = new OpenMapRealMatrix(dimensions, dimensions);
+            for(int i=0;i<dimensions;i++) {
+                covariance.setEntry(i, i, 1.0);
+            }
 
             meanError = calculateMeanError(psi0, kappa0, nu0);
             meanDf = nu0-dimensions+1;
@@ -108,28 +102,14 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
             this.kappa0 = kappa0;
             this.nu0 = nu0;
-            this.mu0 = mu0;
-            this.psi0 = psi0;
+            this.mu0 = new OpenMapRealVector(mu0);
+            this.psi0 = new OpenMapRealMatrix(dimensions, dimensions).add(psi0);
             this.dimensions = dimensions;
 
             xi_sum = new OpenMapRealVector(dimensions);
             xi_square_sum = new OpenMapRealMatrix(dimensions,dimensions);
             cache_covariance_determinant = null;
             cache_covariance_inverse = null;
-        }
-
-        /**
-         * Creates an Identity matrix of OpenMapRealMatrix type.
-         *
-         * @param n
-         * @return
-         */
-        private OpenMapRealMatrix createIdentityOpenMapRealMatrix(int n) {
-            OpenMapRealMatrix id = new OpenMapRealMatrix(n,n);
-            for(int i=0;i<n;i++) {
-                id.setEntry(i,i,1.0);
-            }
-            return id;
         }
 
         /**
@@ -203,8 +183,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
-            xi_sum=xi_sum.add(rv);
-            xi_square_sum= (OpenMapRealMatrix) xi_square_sum.add(rv.outerProduct(rv));
+            xi_sum = xi_sum.add(rv);
+            xi_square_sum = xi_square_sum.add(rv.outerProduct(rv));
 
             size++;
 
@@ -230,9 +210,9 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
             updateClusterParameters();
         }
 
-        private OpenMapRealMatrix calculateMeanError(OpenMapRealMatrix Psi, int kappa, int nu) {
+        private RealMatrix calculateMeanError(RealMatrix Psi, int kappa, int nu) {
             //Reference: page 18, equation 228 at http://www.cs.ubc.ca/~murphyk/Papers/bayesGauss.pdf
-            return (OpenMapRealMatrix)Psi.scalarMultiply(1.0/(kappa*(nu-dimensions+1.0)));
+            return Psi.scalarMultiply(1.0/(kappa*(nu-dimensions+1.0)));
         }
 
         /** {@inheritDoc} */
@@ -258,14 +238,12 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
             RealMatrix C = xi_square_sum.subtract( ( mu.outerProduct(mu) ).scalarMultiply(size) );
 
-            OpenMapRealMatrix psi = (OpenMapRealMatrix)psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*size/(double)kappa_n) ));
-            //C = null;
-            //mu_mu0 = null;
+            RealMatrix psi = psi0.add( C.add( ( mu_mu0.outerProduct(mu_mu0) ).scalarMultiply(kappa0*size/(double)kappa_n) ));//
 
             mean = ( mu0.mapMultiply(kappa0) ).add( mu.mapMultiply(size) ).mapDivide(kappa_n);
 
             synchronized(this) {
-                covariance = (OpenMapRealMatrix)psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
+                covariance = psi.scalarMultiply(  (kappa_n+1.0)/(kappa_n*(nu - dimensions + 1.0))  );
                 cache_covariance_determinant = null;
                 cache_covariance_inverse = null;
             }
@@ -291,13 +269,13 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
 
     /** {@inheritDoc} */
     public static class TrainingParameters extends AbstractDPMM.AbstractTrainingParameters {
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 2L;
 
         private int kappa0 = 0;
         private int nu0 = 1;
-        private double[] mu0;
+        private RealVector mu0;
 
-        private double[][] psi0;
+        private RealMatrix psi0;
 
         /**
          * Getter for Kappa0 hyperparameter.
@@ -340,8 +318,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          *
          * @return
          */
-        public double[] getMu0() {
-            return PHPMethods.array_clone(mu0);
+        public RealVector getMu0() {
+            return mu0;
         }
 
         /**
@@ -349,8 +327,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          *
          * @param mu0
          */
-        public void setMu0(double[] mu0) {
-            this.mu0 = PHPMethods.array_clone(mu0);
+        public void setMu0(RealVector mu0) {
+            this.mu0 = mu0;
         }
 
         /**
@@ -358,8 +336,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          *
          * @return
          */
-        public double[][] getPsi0() {
-            return PHPMethods.array_clone(psi0);
+        public RealMatrix getPsi0() {
+            return psi0;
         }
 
         /**
@@ -367,8 +345,8 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
          *
          * @param psi0
          */
-        public void setPsi0(double[][] psi0) {
-            this.psi0 = PHPMethods.array_clone(psi0);
+        public void setPsi0(RealMatrix psi0) {
+            this.psi0 = psi0;
         }
 
     }
@@ -397,22 +375,14 @@ public class GaussianDPMM extends AbstractDPMM<GaussianDPMM.Cluster, GaussianDPM
     protected Cluster createNewCluster(Integer clusterId) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        double[] mu0 = trainingParameters.getMu0();
-        double[][] psi0 = trainingParameters.getPsi0();
-
-        OpenMapRealMatrix mPsi0 = null;
-        if(psi0 != null) {
-            mPsi0 = new OpenMapRealMatrix(psi0.length, psi0.length);
-            mPsi0.setSubMatrix(psi0, 0, 0);
-        }
 
         Cluster c = new Cluster(
                 clusterId,
                 modelParameters.getD(),
                 trainingParameters.getKappa0(),
                 trainingParameters.getNu0(),
-                mu0!=null?new OpenMapRealVector(mu0):null,
-                mPsi0
+                trainingParameters.getMu0(),
+                trainingParameters.getPsi0()
 
         );
         c.setFeatureIds(modelParameters.getFeatureIds());

@@ -64,6 +64,7 @@ Version 0.8.0-SNAPSHOT - Build 20161229
     - Added minAbsolute and maxAbsolute methods in Descriptives.
     - All the preprocessors have the ability to limit the transformed columns.
     - Refactored PCA to use Vectors and Matrices instead of double arrays.
+    - Refactored GaussianDPMM to use Vectors and Matrices instead of double arrays.
     - Flattening the featureselection package.
 
 Version 0.7.0 - Build 20160319

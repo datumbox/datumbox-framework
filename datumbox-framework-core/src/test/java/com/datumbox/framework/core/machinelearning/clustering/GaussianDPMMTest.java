@@ -24,6 +24,8 @@ import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFol
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.OpenMapRealVector;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -58,8 +60,8 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setInitializationMethod(GaussianDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setKappa0(0);
         param.setNu0(1);
-        param.setMu0(new double[]{0.0, 0.0});
-        param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
+        param.setMu0(new OpenMapRealVector(2));
+        param.setPsi0(MatrixUtils.createRealIdentityMatrix(2));
 
         GaussianDPMM instance = MLBuilder.create(param, configuration);
         instance.fit(trainingData);
@@ -106,8 +108,8 @@ public class GaussianDPMMTest extends AbstractTest {
         param.setInitializationMethod(GaussianDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setKappa0(0);
         param.setNu0(1);
-        param.setMu0(new double[]{0.0, 0.0});
-        param.setPsi0(new double[][]{{1.0,0.0},{0.0,1.0}});
+        param.setMu0(new OpenMapRealVector(2));
+        param.setPsi0(MatrixUtils.createRealIdentityMatrix(2));
 
         ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
