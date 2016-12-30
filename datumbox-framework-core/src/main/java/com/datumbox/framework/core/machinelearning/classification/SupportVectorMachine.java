@@ -181,6 +181,10 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         }
     }
 
+    //Instance initialization block
+    {
+        svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
+    }
 
     /**
      * @param trainingParameters
@@ -189,7 +193,6 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
      */
     protected SupportVectorMachine(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
 
     /**
@@ -199,7 +202,6 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
      */
     protected SupportVectorMachine(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        svm.rand.setSeed(RandomGenerator.getThreadLocalRandom().nextLong()); //seed the internal random of the SVM class
     }
     
     private boolean parallelized = true;
