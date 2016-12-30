@@ -3,7 +3,7 @@ CODE IMPROVEMENTS
 
 - Rewrite the FeatureSelection package:
     - Improve the API of Feature Selection and how we handle different data types.
-    - Refactor AbstractCategoricalFeatureSelector and simplify the method calls.
+    - Convert AbstractCategoricalFeatureSelector to Boolean.
     - In AbstractCategoricalFeatureSelector and TFIDF we should keep track of the kept columns not the removedColumns.
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.

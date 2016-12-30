@@ -68,6 +68,7 @@ Version 0.8.0-SNAPSHOT - Build 20161230
     - Removed unnecessary dimension variable from the MultinomialDPMM.Cluster class.
     - Flattening the featureselection package.
     - Removed unnecessary Score-Based and Numerical abstract feature selectors.
+    - Simplified and refactored the logic of AbstractFeatureSelector and AbstractCategoricalFeatureSelector. 
 
 Version 0.7.0 - Build 20160319
 ------------------------------

@@ -16,14 +16,12 @@
 package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.DataTable2D;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
-import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.core.statistics.nonparametrics.independentsamples.Chisquare;
 
@@ -40,7 +38,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareSelect extends AbstractCategoricalFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters> implements Parallelizable {
+public class ChisquareSelect extends AbstractCategoricalFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
@@ -95,7 +93,6 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      */
     protected ChisquareSelect(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -105,39 +102,14 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
      */
     protected ChisquareSelect(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
-    }
-    
-    private boolean parallelized = true;
-    
-    /**
-     * This executor is used for the parallel processing of streams with custom 
-     * Thread pool.
-     */
-    protected final ForkJoinStream streamExecutor;
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean isParallelized() {
-        return parallelized;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setParallelized(boolean parallelized) {
-        this.parallelized = parallelized;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected void estimateFeatureScores(int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
+    protected void estimateFeatureScores(Map<Object, Double> featureScores, int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        Map<Object, Double> featureScores = modelParameters.getFeatureScores();
-        
-        double criticalValue = ContinuousDistributions.chisquareInverseCdf(trainingParameters.getALevel(), 1); //one degree of freedom because the tables below are 2x2
+
+        double criticalValue = ContinuousDistributions.chisquareInverseCdf(knowledgeBase.getTrainingParameters().getALevel(), 1); //one degree of freedom because the tables below are 2x2
 
         streamExecutor.forEach(StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()), featureCount -> {
             Object feature = featureCount.getKey();
@@ -176,12 +148,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
             if (bestScore>=criticalValue) { //if the score is larger than the critical value, then select the feature
                 featureScores.put(feature, bestScore); //This Map is concurrent and there are no overlaping keys between threads
             }
-        }); 
-        
-        Integer maxFeatures = trainingParameters.getMaxFeatures();
-        if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            selectHighScoreFeatures(featureScores, maxFeatures);
-        }
+        });
     }
     
 }

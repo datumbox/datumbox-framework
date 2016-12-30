@@ -16,7 +16,6 @@
 package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
@@ -27,7 +26,6 @@ import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.Map
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
-import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -43,7 +41,7 @@ import java.util.function.BiFunction;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> implements Parallelizable {
+public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
@@ -134,7 +132,6 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
      */
     protected TFIDF(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -144,29 +141,8 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
      */
     protected TFIDF(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
-    }
-    
-    private boolean parallelized = true;
-    
-    /**
-     * This executor is used for the parallel processing of streams with custom 
-     * Thread pool.
-     */
-    protected final ForkJoinStream streamExecutor;
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean isParallelized() {
-        return parallelized;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setParallelized(boolean parallelized) {
-        this.parallelized = parallelized;
-    }
-    
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
@@ -204,11 +180,11 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         });
         
         
-        final Map<Object, Double> maxFeatureScores = modelParameters.getMaxTFIDFfeatureScores();
+        final Map<Object, Double> featureScores = modelParameters.getMaxTFIDFfeatureScores();
         
         //this lambda checks if the new score is larger than the current max score of the feature
         BiFunction<Object, Double, Boolean> isGreaterThanMax = (feature, newScore) -> {
-            Double maxScore = maxFeatureScores.get(feature);
+            Double maxScore = featureScores.get(feature);
             return maxScore==null || maxScore<newScore;
         };
         
@@ -238,9 +214,9 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
                         //the maximum score. Thus they will stop in this if statement
                         //and they will not go into the synced block.
                         if(isGreaterThanMax.apply(keyword, tfidf)) {
-                            synchronized(maxFeatureScores) {
+                            synchronized(featureScores) {
                                 if(isGreaterThanMax.apply(keyword, tfidf)) {
-                                    maxFeatureScores.put(keyword, tfidf);
+                                    featureScores.put(keyword, tfidf);
                                 }
                             }
                         }
@@ -252,10 +228,12 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         
         //Drop the temporary Collection
         storageEngine.dropBigMap("tmp_idf", tmp_idfMap);
-        
+
+
+        //keep only the top features
         Integer maxFeatures = trainingParameters.getMaxFeatures();
-        if(maxFeatures!=null && maxFeatures<maxFeatureScores.size()) {
-            selectHighScoreFeatures(maxFeatureScores, maxFeatures);
+        if(maxFeatures!=null && maxFeatures<featureScores.size()) {
+            selectTopFeatures(featureScores, maxFeatures);
         }
     }
 

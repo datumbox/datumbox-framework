@@ -16,12 +16,10 @@
 package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
-import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +34,7 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters> implements Parallelizable {
+public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
@@ -65,7 +63,6 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
      */
     protected MutualInformation(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -75,38 +72,12 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
      */
     protected MutualInformation(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
-    }
-    
-    private boolean parallelized = true;
-    
-    /**
-     * This executor is used for the parallel processing of streams with custom 
-     * Thread pool.
-     */
-    protected final ForkJoinStream streamExecutor;
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean isParallelized() {
-        return parallelized;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setParallelized(boolean parallelized) {
-        this.parallelized = parallelized;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected void estimateFeatureScores(int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
+    protected void estimateFeatureScores(Map<Object, Double> featureScores, int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {
         logger.debug("estimateFeatureScores()");
-        ModelParameters modelParameters = knowledgeBase.getModelParameters();
-        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
-        
-        Map<Object, Double> featureScores = modelParameters.getFeatureScores();
-
         final double log2 = Math.log(2.0);
         
         streamExecutor.forEach(StreamMethods.stream(featureCounts.entrySet().stream(), isParallelized()), featureCount -> {
@@ -152,13 +123,6 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
             
             featureScores.put(feature, bestScore); //This Map is concurrent and there are no overlaping keys between threads
         });
-        
-        Integer maxFeatures = trainingParameters.getMaxFeatures();
-        if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            selectHighScoreFeatures(featureScores, maxFeatures);
-        }
-        
-
     }
     
 }

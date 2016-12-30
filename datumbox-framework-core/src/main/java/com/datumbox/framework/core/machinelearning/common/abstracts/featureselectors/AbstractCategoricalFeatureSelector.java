@@ -25,8 +25,6 @@ import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -145,62 +143,16 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     @Override
     protected void _fit(Dataframe trainingData) {
         StorageEngine storageEngine = knowledgeBase.getStorageEngine();
+        TP trainingParameters = knowledgeBase.getTrainingParameters();
+        MP modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Integer> tmp_classCounts = new HashMap<>(); //map which stores the counts of the classes
         Map<List<Object>, Integer> tmp_featureClassCounts = storageEngine.getBigMap("tmp_featureClassCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of feature-class combinations.
         Map<Object, Double> tmp_featureCounts = storageEngine.getBigMap("tmp_featureCounts", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true); //map which stores the counts of the features
 
-        
-        //build the maps with the feature statistics and counts
-        buildFeatureStatistics(trainingData, tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
-
-        
-        //call the overriden method to get the scores of the features.
-        //WARNING: do not use feature scores for any weighting. Sometimes the features are selected based on a minimum and others on a maximum criterion.
-        estimateFeatureScores(trainingData.size(), tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
-        
-
-        //drop the unnecessary stastistics tables
-        storageEngine.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
-        storageEngine.dropBigMap("tmp_featureCounts", tmp_featureCounts);
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected void _transform(Dataframe newdata) {
-        //now filter the data by removing all the features that are not selected
-        filterData(newdata, knowledgeBase.getModelParameters().getFeatureScores());
-    }
-
-    private void filterData(Dataframe data, Map<Object, Double> featureScores) {
-        logger.debug("filterData()");
-        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
-        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-
-        for(Map.Entry<Object, DataType> entry: data.getXDataTypes().entrySet()) {
-            Object feature = entry.getKey();
-
-            if(!featureScores.containsKey(feature)) {
-                tmp_removedColumns.put(feature, true);
-            }
-        }
-        
-        logger.debug("Removing Columns");
-        data.dropXColumns(tmp_removedColumns.keySet());
-        
-        //Drop the temporary Collection
-        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
-    }
-    
-    private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
-        logger.debug("buildFeatureStatistics()");
-
-        TP trainingParameters = knowledgeBase.getTrainingParameters();
-        Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
-
         //find the featureCounts
         logger.debug("Estimating featureCounts");
-        for(Record r : data) {
+        for(Record r : trainingData) {
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
 
@@ -210,67 +162,100 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
                 }
 
                 //feature counts
-                double featureCounter = featureCounts.getOrDefault(feature, 0.0);
-                featureCounts.put(feature, ++featureCounter);
+                double featureCounter = tmp_featureCounts.getOrDefault(feature, 0.0);
+                tmp_featureCounts.put(feature, ++featureCounter);
 
             }
         }
 
         //remove rare features
+        Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
         if(rareFeatureThreshold != null && rareFeatureThreshold>0) {
             logger.debug("Removing rare features");
             //remove features from the featureCounts list
-            Iterator<Map.Entry<Object, Double>> it = featureCounts.entrySet().iterator();
+            Iterator<Map.Entry<Object, Double>> it = tmp_featureCounts.entrySet().iterator();
             while(it.hasNext()) {
                 Map.Entry<Object, Double> entry = it.next();
                 if(entry.getValue()<=rareFeatureThreshold) {
                     it.remove();
                 }
             }
-
-            //then remove the features in dataset that do not appear in the list
-            filterData(data, featureCounts);
         }
 
         //now find the classCounts and the featureClassCounts
         logger.debug("Estimating classCounts and featureClassCounts");
-        for(Record r : data) {
+        for(Record r : trainingData) {
             Object theClass = r.getY();
 
             //class counts
-            int classCounter = classCounts.getOrDefault(theClass, 0);
-            classCounts.put(theClass, ++classCounter);
+            int classCounter = tmp_classCounts.getOrDefault(theClass, 0);
+            tmp_classCounts.put(theClass, ++classCounter);
 
 
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object feature = entry.getKey();
-                
+
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value==null || value==0.0) {
                     continue;
                 }
 
-
-
                 //featureClass counts
                 List<Object> featureClassTuple = Arrays.asList(feature, theClass);
-                Integer featureClassCounter = featureClassCounts.getOrDefault(featureClassTuple, 0);
-                featureClassCounts.put(featureClassTuple, ++featureClassCounter);
+                Integer featureClassCounter = tmp_featureClassCounts.getOrDefault(featureClassTuple, 0);
+                tmp_featureClassCounts.put(featureClassTuple, ++featureClassCounter);
             }
-
-
         }
+
+
+        //call the overriden method to get the scores of the features.
+        final Map<Object, Double> featureScores = modelParameters.getFeatureScores();
+        estimateFeatureScores(featureScores, trainingData.size(), tmp_classCounts, tmp_featureClassCounts, tmp_featureCounts);
         
+
+        //drop the unnecessary stastistics tables
+        tmp_classCounts.clear();
+        storageEngine.dropBigMap("tmp_featureClassCounts", tmp_featureClassCounts);
+        storageEngine.dropBigMap("tmp_featureCounts", tmp_featureCounts);
+
+
+        //keep only the top features
+        Integer maxFeatures = trainingParameters.getMaxFeatures();
+        if(maxFeatures!=null && maxFeatures<featureScores.size()) {
+            selectTopFeatures(featureScores, maxFeatures);
+        }
     }
     
+    /** {@inheritDoc} */
+    @Override
+    protected void _transform(Dataframe newdata) {
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
+        Map<Object, Double> featureScores = knowledgeBase.getModelParameters().getFeatureScores();
+        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+
+        for(Map.Entry<Object, DataType> entry: newdata.getXDataTypes().entrySet()) {
+            Object feature = entry.getKey();
+
+            if(!featureScores.containsKey(feature)) {
+                tmp_removedColumns.put(feature, true);
+            }
+        }
+        
+        logger.debug("Removing Columns");
+        newdata.dropXColumns(tmp_removedColumns.keySet());
+        
+        //Drop the temporary Collection
+        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+    }
+
     /**
-     * Abstract method which is responsible for estimating the score of each
-     * Feature.
+     * Abstract method which is responsible for estimating the score of each Feature.
      *
+     * @param featureScores
      * @param N
      * @param classCounts
      * @param featureClassCounts
      * @param featureCounts 
      */
-    protected abstract void estimateFeatureScores(int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts);
+    protected abstract void estimateFeatureScores(Map<Object, Double> featureScores, int N, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts);
 }

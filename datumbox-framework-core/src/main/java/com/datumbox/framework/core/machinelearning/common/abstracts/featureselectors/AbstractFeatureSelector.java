@@ -16,9 +16,11 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.utilities.SelectKth;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +32,7 @@ import java.util.Map;
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
+public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> implements Parallelizable {
 
     /**
      * @param trainingParameters
@@ -39,6 +41,7 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
      */
     protected AbstractFeatureSelector(TP trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -48,8 +51,28 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
      */
     protected AbstractFeatureSelector(String storageName, Configuration configuration) {
         super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
+    private boolean parallelized = true;
+
+    /**
+     * This executor is used for the parallel processing of streams with custom
+     * Thread pool.
+     */
+    protected final ForkJoinStream streamExecutor;
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
 
     /**
      * Fits and transforms the data of the provided dataset. 
@@ -87,8 +110,8 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
      * @param featureScores
      * @param maxFeatures
      */
-    protected void selectHighScoreFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
-        logger.debug("selectHighScoreFeatures()");
+    protected void selectTopFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
+        logger.debug("selectTopFeatures()");
 
         logger.debug("Estimating the minPermittedScore");
         Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
