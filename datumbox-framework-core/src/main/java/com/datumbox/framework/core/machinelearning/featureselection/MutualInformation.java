@@ -85,7 +85,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
             
-            double bestScore = Double.NEGATIVE_INFINITY; //REMEMBER! larger scores means more important feature.
+            double bestScore = Double.NEGATIVE_INFINITY;
             
             for(Map.Entry<Object, Integer> classCount : classCounts.entrySet()) {
                 Object theClass = classCount.getKey();

@@ -32,52 +32,52 @@ import java.util.function.BiFunction;
 
 
 /**
- * Implementation of the TF-IDF Feature Selection algorithm. * 
- * 
- * References: 
+ * Implementation of the TF-IDF Feature Selection algorithm. *
+ *
+ * References:
  * http://en.wikipedia.org/wiki/Tf%E2%80%93idf
  * https://gist.github.com/AloneRoad/1605037
  * http://www.tfidf.com/
- * 
+ *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
-        private static final long serialVersionUID = 1L;
-        
+        private static final long serialVersionUID = 2L;
+
         @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
-        private Map<Object, Double> maxTFIDFfeatureScores; //map which stores the max tfidf of the features
-        
-        /** 
+        private Map<Object, Double> featureScores; //map which stores the max tfidf of the features
+
+        /**
          * @param storageEngine
          * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
         protected ModelParameters(StorageEngine storageEngine) {
             super(storageEngine);
         }
-        
+
         /**
          * Getter for the maximum TFIDF scores of each keyword in the vocabulary.
-         * 
-         * @return 
+         *
+         * @return
          */
-        public Map<Object, Double> getMaxTFIDFfeatureScores() {
-            return maxTFIDFfeatureScores;
+        public Map<Object, Double> getFeatureScores() {
+            return featureScores;
         }
-        
+
         /**
          * Setter for the maximum TFIDF scores of each keyword in the vocabulary.
-         * 
-         * @param maxTFIDFfeatureScores 
+         *
+         * @param featureScores
          */
-        protected void setMaxTFIDFfeatureScores(Map<Object, Double> maxTFIDFfeatureScores) {
-            this.maxTFIDFfeatureScores = maxTFIDFfeatureScores;
+        protected void setFeatureScores(Map<Object, Double> featureScores) {
+            this.featureScores = featureScores;
         }
 
     }
-    
+
     /** {@inheritDoc} */
     public static class TrainingParameters extends AbstractFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
@@ -180,7 +180,7 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         });
         
         
-        final Map<Object, Double> featureScores = modelParameters.getMaxTFIDFfeatureScores();
+        final Map<Object, Double> featureScores = modelParameters.getFeatureScores();
         
         //this lambda checks if the new score is larger than the current max score of the feature
         BiFunction<Object, Double, Boolean> isGreaterThanMax = (feature, newScore) -> {
@@ -240,22 +240,7 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newData) {
-        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
-        Map<Object, Double> maxTFIDFfeatureScores = knowledgeBase.getModelParameters().getMaxTFIDFfeatureScores();
-        
-        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        
-        for(Object feature: newData.getXDataTypes().keySet()) {
-            if(!maxTFIDFfeatureScores.containsKey(feature)) {
-                tmp_removedColumns.put(feature, true);
-            }
-        }
-        
-        newData.dropXColumns(tmp_removedColumns.keySet());
-        
-        //Drop the temporary Collection
-        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
-        
+        dropFeatures(newData, knowledgeBase.getModelParameters().getFeatureScores().keySet());
     }
     
 }

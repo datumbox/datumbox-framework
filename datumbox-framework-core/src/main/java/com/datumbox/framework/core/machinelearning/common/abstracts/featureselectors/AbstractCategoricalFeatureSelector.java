@@ -19,7 +19,6 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.dataobjects.TypeInference.DataType;
 import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
@@ -29,7 +28,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import java.util.*;
 
 /**
- * Abstract class which is the base of every Categorical Feature Selection algorithm.
+ * Abstract class which is the base of every Score Based Feature Selection algorithm.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -228,24 +227,8 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
     
     /** {@inheritDoc} */
     @Override
-    protected void _transform(Dataframe newdata) {
-        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
-        Map<Object, Double> featureScores = knowledgeBase.getModelParameters().getFeatureScores();
-        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-
-        for(Map.Entry<Object, DataType> entry: newdata.getXDataTypes().entrySet()) {
-            Object feature = entry.getKey();
-
-            if(!featureScores.containsKey(feature)) {
-                tmp_removedColumns.put(feature, true);
-            }
-        }
-        
-        logger.debug("Removing Columns");
-        newdata.dropXColumns(tmp_removedColumns.keySet());
-        
-        //Drop the temporary Collection
-        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+    protected void _transform(Dataframe newData) {
+        dropFeatures(newData, knowledgeBase.getModelParameters().getFeatureScores().keySet());
     }
 
     /**

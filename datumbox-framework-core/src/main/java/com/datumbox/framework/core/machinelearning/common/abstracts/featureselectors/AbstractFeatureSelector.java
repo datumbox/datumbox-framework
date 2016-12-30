@@ -18,12 +18,14 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.SelectKth;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base class for all the Feature Selectors of the framework.
@@ -102,7 +104,6 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
      */
     protected abstract void _transform(Dataframe newdata);
 
-
     /**
      * This method keeps the highest scoring features of the provided feature map
      * and removes all the others.
@@ -139,5 +140,27 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
                 }
             }
         }
+    }
+
+    /**
+     * Drops any column of the Dataframe that is not included in the selected features.
+     *
+     * @param data
+     * @param selectedFeatures
+     */
+    protected void dropFeatures(Dataframe data, Set<Object> selectedFeatures) {
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
+        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, StorageEngine.MapType.HASHMAP, StorageEngine.StorageHint.IN_MEMORY, false, true);
+
+        for(Object feature: data.getXDataTypes().keySet()) {
+            if(!selectedFeatures.contains(feature)) {
+                tmp_removedColumns.put(feature, true);
+            }
+        }
+
+        logger.debug("Removing Columns");
+        data.dropXColumns(tmp_removedColumns.keySet());
+
+        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
     }
 }

@@ -79,7 +79,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
          * @param aLevel 
          */
         public void setALevel(double aLevel) {
-            if(aLevel>1 || aLevel<0) {
+            if(aLevel>1.0 || aLevel<0.0) {
                 throw new IllegalArgumentException("Invalid value for the level of statistical significance.");
             }
             this.aLevel = aLevel;
@@ -116,7 +116,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
             double N1_ = featureCount.getValue(); //calculate the N1. (number of records that has the feature)
             double N0_ = N - N1_; //also the N0. (number of records that DONT have the feature)
             
-            double bestScore = Double.NEGATIVE_INFINITY; //REMEMBER! larger scores means more important feature.
+            double bestScore = Double.NEGATIVE_INFINITY;
             
             DataTable2D contingencyTable = new DataTable2D();
             contingencyTable.put(0, new AssociativeArray());
@@ -132,10 +132,10 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
                 double N00 = N0_ - N01;
                 double N10 = N1_ - N11;
                 
-                contingencyTable.get(0).put(0, N00);
-                contingencyTable.get(0).put(1, N01);
-                contingencyTable.get(1).put(0, N10);
-                contingencyTable.get(1).put(1, N11);
+                contingencyTable.put2d(0, 0, N00);
+                contingencyTable.put2d(0, 1, N01);
+                contingencyTable.put2d(1, 0, N10);
+                contingencyTable.put2d(1, 1, N11);
                 
                 double scorevalue = Chisquare.getScoreValue(contingencyTable);
                 //contingencyTable = null;
