@@ -26,7 +26,7 @@ import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
+import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Map;
@@ -43,10 +43,10 @@ import java.util.function.BiFunction;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> implements Parallelizable {
+public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> implements Parallelizable {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractScoreBasedFeatureSelector.AbstractModelParameters {
+    public static class ModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -81,7 +81,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     }
     
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractScoreBasedFeatureSelector.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean binarized = false;
@@ -255,7 +255,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<maxFeatureScores.size()) {
-            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(maxFeatureScores, maxFeatures);
+            selectHighScoreFeatures(maxFeatureScores, maxFeatures);
         }
     }
 

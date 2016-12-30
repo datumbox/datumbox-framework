@@ -67,6 +67,7 @@ Version 0.8.0-SNAPSHOT - Build 20161230
     - Refactored GaussianDPMM to use Vectors and Matrices instead of double arrays.
     - Removed unnecessary dimension variable from the MultinomialDPMM.Cluster class.
     - Flattening the featureselection package.
+    - Removed unnecessary Score-Based and Numerical abstract feature selectors.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

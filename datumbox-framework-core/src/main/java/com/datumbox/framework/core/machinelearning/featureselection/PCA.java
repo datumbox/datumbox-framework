@@ -27,7 +27,7 @@ import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractContinuousFeatureSelector;
+import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import org.apache.commons.math3.linear.*;
 import org.apache.commons.math3.util.FastMath;
@@ -46,10 +46,10 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> implements Parallelizable {
+public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> implements Parallelizable {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractContinuousFeatureSelector.AbstractModelParameters {
+    public static class ModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 2L;
         
         @BigMap(keyClass=Object.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
@@ -143,7 +143,7 @@ public class PCA extends AbstractContinuousFeatureSelector<PCA.ModelParameters, 
     }
 
     /** {@inheritDoc} */  
-    public static class TrainingParameters extends AbstractContinuousFeatureSelector.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean whitened = false;

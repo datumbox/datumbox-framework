@@ -23,7 +23,6 @@ import com.datumbox.framework.common.dataobjects.DataTable2D;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.core.statistics.nonparametrics.independentsamples.Chisquare;
@@ -181,7 +180,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(featureScores, maxFeatures);
+            selectHighScoreFeatures(featureScores, maxFeatures);
         }
     }
     

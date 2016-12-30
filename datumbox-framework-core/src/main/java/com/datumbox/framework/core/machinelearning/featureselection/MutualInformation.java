@@ -21,7 +21,6 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.Arrays;
@@ -156,7 +155,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
         
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            AbstractScoreBasedFeatureSelector.selectHighScoreFeatures(featureScores, maxFeatures);
+            selectHighScoreFeatures(featureScores, maxFeatures);
         }
         
 

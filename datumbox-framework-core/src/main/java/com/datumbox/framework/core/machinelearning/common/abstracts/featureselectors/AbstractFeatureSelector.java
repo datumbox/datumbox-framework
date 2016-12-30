@@ -17,7 +17,11 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.utilities.SelectKth;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Base class for all the Feature Selectors of the framework.
@@ -74,4 +78,43 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
      * @param newdata 
      */
     protected abstract void _transform(Dataframe newdata);
+
+
+    /**
+     * This method keeps the highest scoring features of the provided feature map
+     * and removes all the others.
+     *
+     * @param featureScores
+     * @param maxFeatures
+     */
+    protected void selectHighScoreFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
+        logger.debug("selectHighScoreFeatures()");
+
+        logger.debug("Estimating the minPermittedScore");
+        Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
+
+        //remove any entry with score less than the minimum permitted one
+        logger.debug("Removing features with scores less than threshold");
+        Iterator<Map.Entry<Object, Double>> it = featureScores.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<Object, Double> entry = it.next();
+            if(entry.getValue()<minPermittedScore) {
+                it.remove();
+            }
+        }
+
+        //if some extra features still exist (due to ties on the scores) remove some of those extra features
+        int numOfExtraFeatures = featureScores.size()-maxFeatures;
+        if(numOfExtraFeatures>0) {
+            logger.debug("Removing extra features caused by ties");
+            it = featureScores.entrySet().iterator();
+            while(it.hasNext() && numOfExtraFeatures>0) {
+                Map.Entry<Object, Double> entry = it.next();
+                if(entry.getValue()-minPermittedScore<=0.0) { //DO NOT COMPARE THEM DIRECTLY USE SUBTRACTION!
+                    it.remove();
+                    --numOfExtraFeatures;
+                }
+            }
+        }
+    }
 }
