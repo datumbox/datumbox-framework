@@ -111,14 +111,14 @@ public class BinaryScaler extends AbstractScaler<BinaryScaler.ModelParameters, B
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object, Object> entry : xData.entrySet()) {
-                Object column = entry.getKey();
-                Object value = entry.getValue();
-                if(value == null || !transformedColumns.contains(column)) {
+            for(Object column : r.getX().keySet()) {
+                if(!transformedColumns.contains(column)) {
                     continue;
                 }
-
-                xData.put(column, scale(TypeInference.toDouble(value), threshold));
+                Object value = xData.remove(column);
+                if(value != null) {
+                    xData.put(column, scale(TypeInference.toDouble(value), threshold));
+                }
                 modified = true;
             }
 

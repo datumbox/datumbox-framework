@@ -155,7 +155,7 @@ public class NLMSTest extends AbstractTest {
                 .validate(new KFoldSplitter(k).split(trainingData), param);
 
 
-        double expResult = 0.7780829672538567;
+        double expResult = 0.7773836265592338;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 

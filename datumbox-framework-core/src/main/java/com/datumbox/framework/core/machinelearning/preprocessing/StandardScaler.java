@@ -158,19 +158,16 @@ public class StandardScaler extends AbstractScaler<StandardScaler.ModelParameter
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object,Object> entry : xData.entrySet()) {
-                Object value = entry.getValue();
-                if(value == null) { //missing value
-                    continue;
-                }
-                Object column = entry.getKey();
+            for(Object column : r.getX().keySet()) {
                 Double mean = meanColumnValues.get(column);
-                if(mean == null) { //unknown column
+                if(mean == null) {
                     continue;
                 }
-                Double std = stdColumnValues.get(column);
-
-                xData.put(column, scale(TypeInference.toDouble(value), mean, std));
+                Object value = xData.remove(column);
+                if(value != null) {
+                    Double std = stdColumnValues.get(column);
+                    xData.put(column, scale(TypeInference.toDouble(value), mean, std));
+                }
                 modified = true;
             }
 

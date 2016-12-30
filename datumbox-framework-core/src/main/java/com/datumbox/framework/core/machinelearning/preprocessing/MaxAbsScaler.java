@@ -130,18 +130,15 @@ public class MaxAbsScaler extends AbstractScaler<MaxAbsScaler.ModelParameters, M
             Object yData = r.getY();
 
             boolean modified = false;
-            for(Map.Entry<Object,Object> entry : xData.entrySet()) {
-                Object value = entry.getValue();
-                if(value == null) { //missing value
-                    continue;
-                }
-                Object column = entry.getKey();
+            for(Object column : r.getX().keySet()) {
                 Double maxAbsolute = maxAbsoluteColumnValues.get(column);
-                if(maxAbsolute == null) { //unknown column
+                if(maxAbsolute == null) {
                     continue;
                 }
-
-                xData.put(column, scale(TypeInference.toDouble(value), maxAbsolute));
+                Object value = xData.remove(column);
+                if(value != null) {
+                    xData.put(column, scale(TypeInference.toDouble(value), maxAbsolute));
+                }
                 modified = true;
             }
 

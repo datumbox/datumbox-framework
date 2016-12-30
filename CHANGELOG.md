@@ -69,6 +69,7 @@ Version 0.8.0-SNAPSHOT - Build 20161230
     - Flattening the featureselection package.
     - Removed unnecessary Score-Based and Numerical abstract feature selectors.
     - Simplified and refactored the logic of AbstractFeatureSelector and AbstractCategoricalFeatureSelector. 
+    - All the Scalers and Encoders drop null values of known columns. 
 
 Version 0.7.0 - Build 20160319
 ------------------------------

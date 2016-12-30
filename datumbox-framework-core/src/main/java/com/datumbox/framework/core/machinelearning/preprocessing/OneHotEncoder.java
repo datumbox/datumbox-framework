@@ -95,14 +95,12 @@ public class OneHotEncoder extends AbstractEncoder<OneHotEncoder.ModelParameters
                 if(!transformedColumns.contains(column)) {
                     continue;
                 }
-                Object value = xData.remove(column); //remove the original column
+                Object value = xData.remove(column);
+                if(value != null) {
+                    //add a new dummy variable for this column-value combination
+                    xData.put(Arrays.asList(column,value), true);
+                }
                 modified = true;
-
-                //create a new column
-                List<Object> newColumn = Arrays.asList(column,value);
-
-                //add a new dummy variable for this column-value combination
-                xData.put(newColumn, true);
             }
 
             if(modified) {

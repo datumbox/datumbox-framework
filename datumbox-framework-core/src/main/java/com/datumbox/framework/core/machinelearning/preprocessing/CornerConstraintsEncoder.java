@@ -136,19 +136,15 @@ public class CornerConstraintsEncoder extends AbstractEncoder<CornerConstraintsE
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
                 Object referenceLevel = referenceLevels.get(column);
-                if(referenceLevel == null) { //unknown variable
+                if(referenceLevel == null) {
                     continue;
                 }
-                Object value = xData.remove(column); //remove the original column
-                modified = true;
-
-                if(!referenceLevel.equals(value)) { //not equal to reference level
-                    //create a new column
-                    List<Object> newColumn = Arrays.asList(column,value);
-
+                Object value = xData.remove(column);
+                if(value!= null && !referenceLevel.equals(value)) {
                     //add a new dummy variable for this column-value combination
-                    xData.put(newColumn, true);
+                    xData.put(Arrays.asList(column,value), true);
                 }
+                modified = true;
             }
 
             if(modified) {
