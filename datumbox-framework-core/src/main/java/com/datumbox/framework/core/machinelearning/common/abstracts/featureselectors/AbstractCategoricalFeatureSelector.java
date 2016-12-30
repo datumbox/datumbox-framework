@@ -192,13 +192,13 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
         storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
     }
     
-    private void removeRareFeatures(Dataframe data, Map<Object, Double> featureCounts) {
-        logger.debug("removeRareFeatures()");
+    private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
+        logger.debug("buildFeatureStatistics()");
+
         TP trainingParameters = knowledgeBase.getTrainingParameters();
         Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
 
         //find the featureCounts
-        
         logger.debug("Estimating featureCounts");
         for(Record r : data) {
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
@@ -212,7 +212,7 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
                 //feature counts
                 double featureCounter = featureCounts.getOrDefault(feature, 0.0);
                 featureCounts.put(feature, ++featureCounter);
-                
+
             }
         }
 
@@ -224,21 +224,13 @@ public abstract class AbstractCategoricalFeatureSelector<MP extends AbstractCate
             while(it.hasNext()) {
                 Map.Entry<Object, Double> entry = it.next();
                 if(entry.getValue()<=rareFeatureThreshold) {
-                    it.remove(); 
+                    it.remove();
                 }
             }
-            
+
             //then remove the features in dataset that do not appear in the list
             filterData(data, featureCounts);
         }
-    }
-    
-    private void buildFeatureStatistics(Dataframe data, Map<Object, Integer> classCounts, Map<List<Object>, Integer> featureClassCounts, Map<Object, Double> featureCounts) {        
-        logger.debug("buildFeatureStatistics()");
-        
-        //the method below does not only removes the rare features but also
-        //first and formost calculates the contents of featureCounts map. 
-        removeRareFeatures(data, featureCounts);
 
         //now find the classCounts and the featureClassCounts
         logger.debug("Estimating classCounts and featureClassCounts");
