@@ -46,7 +46,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> implements Parallelizable {
+public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
@@ -219,7 +219,6 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
      */
     protected PCA(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /**
@@ -229,27 +228,6 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
      */
     protected PCA(String storageName, Configuration configuration) {
         super(storageName, configuration);
-        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
-    }
-
-    private boolean parallelized = true;
-    
-    /**
-     * This executor is used for the parallel processing of streams with custom 
-     * Thread pool.
-     */
-    protected final ForkJoinStream streamExecutor;
-    
-    /** {@inheritDoc} */
-    @Override
-    public boolean isParallelized() {
-        return parallelized;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setParallelized(boolean parallelized) {
-        this.parallelized = parallelized;
     }
     
     /** {@inheritDoc} */
