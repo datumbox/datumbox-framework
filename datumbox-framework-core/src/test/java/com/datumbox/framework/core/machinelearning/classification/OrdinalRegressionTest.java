@@ -140,7 +140,6 @@ public class OrdinalRegressionTest extends AbstractTest {
 
 
         MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
-        nsParams.setTransformedColumns(new HashSet<>(Arrays.asList("c1", "c2", "c3")));
         MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
         numericalScaler.fit_transform(trainingData);
 

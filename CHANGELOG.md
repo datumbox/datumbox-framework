@@ -62,7 +62,6 @@ Version 0.8.0-SNAPSHOT - Build 20161230
     - The old datatransformation package is replaced with the preprocessing package which decouples Numerical Scaling from Categorical variable encoding.
     - Added the following preprocessing algorithms: OneHotEncoder, StandardScaler, MaxAbsScaler, BinaryScaler.
     - Added minAbsolute and maxAbsolute methods in Descriptives.
-    - All the preprocessors have the ability to limit the transformed columns.
     - Refactored PCA to use Vectors and Matrices instead of double arrays.
     - Refactored GaussianDPMM to use Vectors and Matrices instead of double arrays.
     - Removed unnecessary dimension variable from the MultinomialDPMM.Cluster class.

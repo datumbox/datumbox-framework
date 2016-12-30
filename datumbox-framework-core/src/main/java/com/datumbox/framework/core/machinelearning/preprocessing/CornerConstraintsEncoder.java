@@ -104,14 +104,15 @@ public class CornerConstraintsEncoder extends AbstractEncoder<CornerConstraintsE
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Object, Object> referenceLevels = modelParameters.getReferenceLevels();
 
-        Set<Object> transformedColumns = getTransformedColumns(trainingData).collect(Collectors.toSet());
+        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Map<Object, TypeInference.DataType> xDataTypes = trainingData.getXDataTypes();
 
-        //find the referenceLevels for each categorical variable
+        //find the referenceLevels for each supported variable
         for(Record r : trainingData) {
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 Object value = entry.getValue();
-                if(transformedColumns.contains(column) && value != null) {
+                if(value != null && supportedTypes.contains(xDataTypes.get(column)) ) {
                     referenceLevels.putIfAbsent(column, value);
                 }
             }

@@ -24,6 +24,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -81,7 +82,8 @@ public class OneHotEncoder extends AbstractEncoder<OneHotEncoder.ModelParameters
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newData) {
-        Set<Object> transformedColumns = getTransformedColumns(newData).collect(Collectors.toSet());
+        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Map<Object, TypeInference.DataType> xDataTypes = newData.getXDataTypes();
 
         //Replace variables with dummy versions
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
@@ -92,7 +94,7 @@ public class OneHotEncoder extends AbstractEncoder<OneHotEncoder.ModelParameters
 
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
-                if(!transformedColumns.contains(column)) {
+                if(!supportedTypes.contains(xDataTypes.get(column))) {
                     continue;
                 }
                 Object value = xData.remove(column);

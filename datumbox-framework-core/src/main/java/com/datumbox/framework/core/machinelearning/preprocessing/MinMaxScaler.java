@@ -25,6 +25,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -128,7 +129,11 @@ public class MinMaxScaler extends AbstractScaler<MinMaxScaler.ModelParameters, M
         Map<Object, Double> maxColumnValues = modelParameters.getMaxColumnValues();
         boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse();
 
-        Stream<Object> transformedColumns = getTransformedColumns(trainingData);
+        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Stream<Object> transformedColumns = trainingData.getXDataTypes().entrySet().stream()
+                .filter(e -> supportedTypes.contains(e.getValue()))
+                .map(e -> e.getKey());
+
         streamExecutor.forEach(StreamMethods.stream(transformedColumns, isParallelized()), column -> {
             FlatDataCollection columnValues = trainingData.getXColumn(column).toFlatDataCollection();
 

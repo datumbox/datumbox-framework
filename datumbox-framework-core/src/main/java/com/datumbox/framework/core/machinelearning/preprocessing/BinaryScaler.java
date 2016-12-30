@@ -103,7 +103,9 @@ public class BinaryScaler extends AbstractScaler<BinaryScaler.ModelParameters, B
         TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         boolean scaleResponse = trainingParameters.getScaleResponse() && newData.getYDataType() == TypeInference.DataType.NUMERICAL;
         double threshold = trainingParameters.getThreshold();
-        Set<Object> transformedColumns = getTransformedColumns(newData).collect(Collectors.toSet());
+
+        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Map<Object, TypeInference.DataType> xDataTypes = newData.getXDataTypes();
 
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             Record r = e.getValue();
@@ -112,7 +114,7 @@ public class BinaryScaler extends AbstractScaler<BinaryScaler.ModelParameters, B
 
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
-                if(!transformedColumns.contains(column)) {
+                if(!supportedTypes.contains(xDataTypes.get(column))) {
                     continue;
                 }
                 Object value = xData.remove(column);
