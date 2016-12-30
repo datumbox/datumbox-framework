@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractNumericalScaler;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Map;
@@ -32,10 +32,10 @@ import java.util.stream.Stream;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelParameters, MinMaxScaler.TrainingParameters> {
+public class MinMaxScaler extends AbstractScaler<MinMaxScaler.ModelParameters, MinMaxScaler.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractNumericalScaler.AbstractModelParameters {
+    public static class ModelParameters extends AbstractScaler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -97,7 +97,7 @@ public class MinMaxScaler extends AbstractNumericalScaler<MinMaxScaler.ModelPara
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractNumericalScaler.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractScaler.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }

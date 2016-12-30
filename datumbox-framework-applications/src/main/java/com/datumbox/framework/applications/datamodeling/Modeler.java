@@ -20,8 +20,8 @@ import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractCategoricalEncoder;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractNumericalScaler;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableBundle;
@@ -66,8 +66,8 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         private static final long serialVersionUID = 1L;
 
         //Parameter Objects
-        private AbstractNumericalScaler.AbstractTrainingParameters numericalScalerTrainingParameters;
-        private AbstractCategoricalEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters;
+        private AbstractScaler.AbstractTrainingParameters numericalScalerTrainingParameters;
+        private AbstractEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters;
         private AbstractFeatureSelector.AbstractTrainingParameters featureSelectorTrainingParameters;
         private AbstractModeler.AbstractTrainingParameters modelerTrainingParameters;
 
@@ -76,7 +76,7 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
          *
          * @return
          */
-        public AbstractNumericalScaler.AbstractTrainingParameters getNumericalScalerTrainingParameters() {
+        public AbstractScaler.AbstractTrainingParameters getNumericalScalerTrainingParameters() {
             return numericalScalerTrainingParameters;
         }
 
@@ -85,7 +85,7 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
          *
          * @param numericalScalerTrainingParameters
          */
-        public void setNumericalScalerTrainingParameters(AbstractNumericalScaler.AbstractTrainingParameters numericalScalerTrainingParameters) {
+        public void setNumericalScalerTrainingParameters(AbstractScaler.AbstractTrainingParameters numericalScalerTrainingParameters) {
             this.numericalScalerTrainingParameters = numericalScalerTrainingParameters;
         }
 
@@ -94,7 +94,7 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
          *
          * @return
          */
-        public AbstractCategoricalEncoder.AbstractTrainingParameters getCategoricalEncoderTrainingParameters() {
+        public AbstractEncoder.AbstractTrainingParameters getCategoricalEncoderTrainingParameters() {
             return categoricalEncoderTrainingParameters;
         }
 
@@ -103,7 +103,7 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
          *
          * @param categoricalEncoderTrainingParameters
          */
-        public void setCategoricalEncoderTrainingParameters(AbstractCategoricalEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters) {
+        public void setCategoricalEncoderTrainingParameters(AbstractEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters) {
             this.categoricalEncoderTrainingParameters = categoricalEncoderTrainingParameters;
         }
 
@@ -191,11 +191,11 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         bundle.setParallelized(isParallelized());
 
         //run the pipeline
-        AbstractNumericalScaler numericalScaler = (AbstractNumericalScaler) bundle.get(NS_KEY);
+        AbstractScaler numericalScaler = (AbstractScaler) bundle.get(NS_KEY);
         if(numericalScaler != null) {
             numericalScaler.transform(newData);
         }
-        AbstractCategoricalEncoder categoricalEncoder = (AbstractCategoricalEncoder) bundle.get(CE_KEY);
+        AbstractEncoder categoricalEncoder = (AbstractEncoder) bundle.get(CE_KEY);
         if(categoricalEncoder != null) {
             categoricalEncoder.transform(newData);
         }
@@ -217,15 +217,15 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         resetBundle();
 
         //initialize the parts of the pipeline
-        AbstractNumericalScaler.AbstractTrainingParameters nsParams = trainingParameters.getNumericalScalerTrainingParameters();
-        AbstractNumericalScaler numericalScaler = null;
+        AbstractScaler.AbstractTrainingParameters nsParams = trainingParameters.getNumericalScalerTrainingParameters();
+        AbstractScaler numericalScaler = null;
         if(nsParams != null) {
             numericalScaler = MLBuilder.create(nsParams, configuration);
         }
         bundle.put(NS_KEY, numericalScaler);
 
-        AbstractCategoricalEncoder.AbstractTrainingParameters ceParams = trainingParameters.getCategoricalEncoderTrainingParameters();
-        AbstractCategoricalEncoder categoricalEncoder = null;
+        AbstractEncoder.AbstractTrainingParameters ceParams = trainingParameters.getCategoricalEncoderTrainingParameters();
+        AbstractEncoder categoricalEncoder = null;
         if(ceParams != null) {
             categoricalEncoder = MLBuilder.create(ceParams, configuration);
         }
@@ -295,9 +295,9 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
 
         if(!bundle.containsKey(NS_KEY)) {
-            AbstractNumericalScaler.AbstractTrainingParameters nsParams = trainingParameters.getNumericalScalerTrainingParameters();
+            AbstractScaler.AbstractTrainingParameters nsParams = trainingParameters.getNumericalScalerTrainingParameters();
 
-            AbstractNumericalScaler numericalScaler = null;
+            AbstractScaler numericalScaler = null;
             if(nsParams != null) {
                 numericalScaler = MLBuilder.load(nsParams.getTClass(), storageName + separator + NS_KEY, configuration);
             }
@@ -305,9 +305,9 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         }
 
         if(!bundle.containsKey(CE_KEY)) {
-            AbstractCategoricalEncoder.AbstractTrainingParameters ceParams = trainingParameters.getCategoricalEncoderTrainingParameters();
+            AbstractEncoder.AbstractTrainingParameters ceParams = trainingParameters.getCategoricalEncoderTrainingParameters();
 
-            AbstractCategoricalEncoder categoricalEncoder = null;
+            AbstractEncoder categoricalEncoder = null;
             if(ceParams != null) {
                 categoricalEncoder = MLBuilder.load(ceParams.getTClass(), storageName + separator + CE_KEY, configuration);
             }

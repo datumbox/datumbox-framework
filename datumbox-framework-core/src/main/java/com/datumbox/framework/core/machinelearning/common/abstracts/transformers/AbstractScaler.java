@@ -26,13 +26,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Base class for all numeric scalers of the framework.
+ * Base class for all numerical scalers of the framework.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractNumericalScaler<MP extends AbstractNumericalScaler.AbstractModelParameters, TP extends AbstractNumericalScaler.AbstractTrainingParameters> extends AbstractTransformer<MP, TP> {
+public abstract class AbstractScaler<MP extends AbstractScaler.AbstractModelParameters, TP extends AbstractScaler.AbstractTrainingParameters> extends AbstractTransformer<MP, TP> {
 
     /** {@inheritDoc} */
     public abstract static class AbstractModelParameters extends AbstractTransformer.AbstractModelParameters {
@@ -76,7 +76,7 @@ public abstract class AbstractNumericalScaler<MP extends AbstractNumericalScaler
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractNumericalScaler(TP trainingParameters, Configuration configuration) {
+    protected AbstractScaler(TP trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
     }
 
@@ -85,7 +85,7 @@ public abstract class AbstractNumericalScaler<MP extends AbstractNumericalScaler
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractNumericalScaler(String storageName, Configuration configuration) {
+    protected AbstractScaler(String storageName, Configuration configuration) {
         super(storageName, configuration);
     }
 

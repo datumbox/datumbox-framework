@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractCategoricalEncoder;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerConstraintsEncoder.ModelParameters, CornerConstraintsEncoder.TrainingParameters> {
+public class CornerConstraintsEncoder extends AbstractEncoder<CornerConstraintsEncoder.ModelParameters, CornerConstraintsEncoder.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractCategoricalEncoder.AbstractModelParameters {
+    public static class ModelParameters extends AbstractEncoder.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -75,7 +75,7 @@ public class CornerConstraintsEncoder extends AbstractCategoricalEncoder<CornerC
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractCategoricalEncoder.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractEncoder.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }

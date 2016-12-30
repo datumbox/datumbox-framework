@@ -21,11 +21,10 @@ import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractNumericalScaler;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -33,10 +32,10 @@ import java.util.stream.Stream;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelParameters, MaxAbsScaler.TrainingParameters> {
+public class MaxAbsScaler extends AbstractScaler<MaxAbsScaler.ModelParameters, MaxAbsScaler.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractNumericalScaler.AbstractModelParameters {
+    public static class ModelParameters extends AbstractScaler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -74,7 +73,7 @@ public class MaxAbsScaler extends AbstractNumericalScaler<MaxAbsScaler.ModelPara
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractNumericalScaler.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractScaler.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }

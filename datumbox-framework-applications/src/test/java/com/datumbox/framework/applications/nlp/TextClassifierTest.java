@@ -22,7 +22,7 @@ import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.*;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractNumericalScaler;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
 import com.datumbox.framework.core.machinelearning.featureselection.ChisquareSelect;
 import com.datumbox.framework.core.machinelearning.featureselection.MutualInformation;
 import com.datumbox.framework.core.machinelearning.featureselection.TFIDF;
@@ -273,7 +273,7 @@ public class TextClassifierTest extends AbstractTest {
      * @param numericalScalerTrainingParameters
      * @param testId
      */
-    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector, NS extends AbstractNumericalScaler> void trainAndValidate(
+    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector, NS extends AbstractScaler> void trainAndValidate(
             ML.AbstractTrainingParameters modelerTrainingParameters,
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
             NS.AbstractTrainingParameters numericalScalerTrainingParameters,

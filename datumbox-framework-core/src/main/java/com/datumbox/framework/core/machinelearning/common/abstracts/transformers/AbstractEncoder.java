@@ -25,20 +25,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Base class for all categorical encoders of the framework.
+ * Base class for all categorical/ordinal encoders of the framework.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractCategoricalEncoder<MP extends AbstractCategoricalEncoder.AbstractModelParameters, TP extends AbstractCategoricalEncoder.AbstractTrainingParameters> extends AbstractTransformer<MP, TP> {
+public abstract class AbstractEncoder<MP extends AbstractEncoder.AbstractModelParameters, TP extends AbstractEncoder.AbstractTrainingParameters> extends AbstractTransformer<MP, TP> {
 
     /**
      * @param trainingParameters
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractCategoricalEncoder(TP trainingParameters, Configuration configuration) {
+    protected AbstractEncoder(TP trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractCategoricalEncoder<MP extends AbstractCategoricalE
      * @param configuration
      * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractCategoricalEncoder(String storageName, Configuration configuration) {
+    protected AbstractEncoder(String storageName, Configuration configuration) {
         super(storageName, configuration);
     }
 

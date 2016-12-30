@@ -20,11 +20,10 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractCategoricalEncoder;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,10 +32,10 @@ import java.util.stream.Collectors;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class OneHotEncoder extends AbstractCategoricalEncoder<OneHotEncoder.ModelParameters, OneHotEncoder.TrainingParameters> {
+public class OneHotEncoder extends AbstractEncoder<OneHotEncoder.ModelParameters, OneHotEncoder.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractCategoricalEncoder.AbstractModelParameters {
+    public static class ModelParameters extends AbstractEncoder.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -50,7 +49,7 @@ public class OneHotEncoder extends AbstractCategoricalEncoder<OneHotEncoder.Mode
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractCategoricalEncoder.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractEncoder.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }

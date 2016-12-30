@@ -20,11 +20,10 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractNumericalScaler;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -32,10 +31,10 @@ import java.util.stream.Collectors;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BinaryScaler extends AbstractNumericalScaler<BinaryScaler.ModelParameters, BinaryScaler.TrainingParameters> {
+public class BinaryScaler extends AbstractScaler<BinaryScaler.ModelParameters, BinaryScaler.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractNumericalScaler.AbstractModelParameters {
+    public static class ModelParameters extends AbstractScaler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -49,7 +48,7 @@ public class BinaryScaler extends AbstractNumericalScaler<BinaryScaler.ModelPara
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractNumericalScaler.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractScaler.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
         private double threshold = 0.0;
