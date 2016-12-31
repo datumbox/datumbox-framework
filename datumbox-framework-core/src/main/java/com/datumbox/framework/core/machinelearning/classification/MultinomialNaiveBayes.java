@@ -16,7 +16,7 @@
 package com.datumbox.framework.core.machinelearning.classification;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -30,18 +30,18 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters, MultinomialNaiveBayes.ValidationMetrics> {
+public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBayes.ModelParameters, MultinomialNaiveBayes.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
     } 
@@ -50,22 +50,28 @@ public class MultinomialNaiveBayes extends AbstractNaiveBayes<MultinomialNaiveBa
     public static class TrainingParameters extends AbstractNaiveBayes.AbstractTrainingParameters {    
         private static final long serialVersionUID = 1L;
         
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
 
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    public MultinomialNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, MultinomialNaiveBayes.ModelParameters.class, MultinomialNaiveBayes.TrainingParameters.class, MultinomialNaiveBayes.ValidationMetrics.class, false);
+    protected MultinomialNaiveBayes(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
-    
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected MultinomialNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+    /** {@inheritDoc} */
+    protected boolean isBinarized() {
+        return false;
+    }
 }

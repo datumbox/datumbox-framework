@@ -22,15 +22,14 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.OrdinalRegressionValidator;
 import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
 
 import java.util.HashMap;
@@ -56,7 +55,7 @@ import java.util.TreeSet;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters, OrdinalRegression.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.ModelParameters, OrdinalRegression.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -71,11 +70,11 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         private Map<Object, Double> thitas = new HashMap<>(); 
 
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**
@@ -178,62 +177,27 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         public void setL2(double l2) {
             this.l2 = l2;
         }
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double SSE = 0.0; 
-        private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
-        
-        /**
-         * Getter for the SSE metric.
-         * 
-         * @return 
-         */
-        public double getSSE() {
-            return SSE;
-        }
-        
-        /**
-         * Setter for the SSE metric.
-         * 
-         * @param SSE 
-         */
-        public void setSSE(double SSE) {
-            this.SSE = SSE;
-        }
-        
-        /**
-         * Getter for the Count R^2 metric.
-         * 
-         * @return 
-         */
-        public double getCountRSquare() {
-            return CountRSquare;
-        }
-        
-        /**
-         * Setter for the Count R^2 metric.
-         * 
-         * @param CountRSquare 
-         */
-        public void setCountRSquare(double CountRSquare) {
-            this.CountRSquare = CountRSquare;
-        }
-        
     }
-    
+
+
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public OrdinalRegression(String dbName, Configuration conf) {
-        super(dbName, conf, OrdinalRegression.ModelParameters.class, OrdinalRegression.TrainingParameters.class, OrdinalRegression.ValidationMetrics.class, new OrdinalRegressionValidator());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+    protected OrdinalRegression(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected OrdinalRegression(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     private boolean parallelized = true;
@@ -258,17 +222,14 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
-        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+    protected void _predict(Dataframe newData) {
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) { 
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         AssociativeArray predictionProbabilities = hypothesisFunction(r.getX(), getPreviousThitaMappings(), modelParameters.getWeights(), modelParameters.getThitas());
 
@@ -280,8 +241,8 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
                 
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
@@ -314,14 +275,14 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = kb().getDbc();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
             Map<Object, Double> tmp_newThitas = new HashMap<>();
             
-            Map<Object, Double> tmp_newWeights = dbc.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newWeights = storageEngine.getBigMap("tmp_newWeights", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             tmp_newWeights.putAll(weights);
@@ -347,31 +308,14 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             }
             
             //Drop the temporary Collections
-            dbc.dropBigMap("tmp_newWeights", tmp_newWeights);
+            storageEngine.dropBigMap("tmp_newWeights", tmp_newWeights);
         }
-    }
-   
-    /** {@inheritDoc} */
-    @Override
-    protected ValidationMetrics validateModel(Dataframe validationData) {
-        ValidationMetrics validationMetrics = super.validateModel(validationData);
-        
-        
-        //mapping between the thita and the exact previous thita value
-        Map<Object, Object> previousThitaMapping = getPreviousThitaMappings();
-        
-        validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
-        
-        double SSE = calculateError(validationData, previousThitaMapping, kb().getModelParameters().getWeights(), kb().getModelParameters().getThitas());
-        validationMetrics.setSSE(SSE);
-        
-        return validationMetrics;
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Object> previousThitaMapping, Map<Object, Double> newWeights, Map<Object, Double> newThitas, double learningRate) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        double multiplier = -learningRate/modelParameters.getN();
+        double multiplier = -learningRate/trainingData.size();
         Map<Object, Double> weights = modelParameters.getWeights();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -410,7 +354,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             }
         });
 
-        L2Regularizer.updateWeights(kb().getTrainingParameters().getL2(), learningRate, weights, newWeights);
+        L2Regularizer.updateWeights(knowledgeBase.getTrainingParameters().getL2(), learningRate, weights, newWeights);
 
     }
     
@@ -421,7 +365,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
         //first calculate the commonly used dot product between weights and x
         double xTw = xTw(x, weights);
         
-        Set<Object> classesSet = kb().getModelParameters().getClasses();
+        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
         
         for(Object theClass : classesSet) {
             Object previousClass = previousThitaMapping.get(theClass);
@@ -457,9 +401,9 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
             
             return e;
         }));
-        error /= kb().getModelParameters().getN();
+        error /= trainingData.size();
 
-        error += L2Regularizer.estimatePenalty(kb().getTrainingParameters().getL2(), weights);
+        error += L2Regularizer.estimatePenalty(knowledgeBase.getTrainingParameters().getL2(), weights);
         
         return error;
     }
@@ -505,7 +449,7 @@ public class OrdinalRegression extends AbstractClassifier<OrdinalRegression.Mode
     private Map<Object, Object> getPreviousThitaMappings() {
         Map<Object, Object> previousThitaMapping = new HashMap<>();
         Object previousThita = null; //null = the left bound thita0 which has thita equal to -inf
-        for(Object thita : kb().getModelParameters().getClasses()) {
+        for(Object thita : knowledgeBase.getModelParameters().getClasses()) {
             previousThitaMapping.put(thita, previousThita);
             previousThita = thita;
         }

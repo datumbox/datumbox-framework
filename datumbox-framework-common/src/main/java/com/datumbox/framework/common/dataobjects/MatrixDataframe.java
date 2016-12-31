@@ -15,12 +15,14 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.linear.OpenMapRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The MatrixDataframe class is responsible for converting a Dataframe object to a
@@ -32,12 +34,17 @@ import java.util.Map;
 public class MatrixDataframe {
 
     /**
-     * A reference to the most recently used Configuration object. It is necessary to define it static because
-     * some methods of the RealMatrix require generating new object without passing the configuration file.
-     * To have access on the config and build the data map, we require setting this static field with the latest Configuration
-     * object. It is package protected inorder to be accessible from the MapRealMatrix class.
+     * We create a single storage engine for all MatrixDataframe and MapRealMatrix objects. It is necessary to define it static
+     * and package protected to make it accessible to other classes such as the MapRealMatrix. This is because
+     * some methods of the RealMatrix require generating new object without passing the configuration file. The engine
+     * is created only once to avoid hurting performance. Thus the storageEngine is initialized once in a thread-safe manner.
      */
-    static Configuration conf;
+    static StorageEngine storageEngine;
+
+    /**
+     * Keeps record how many usages were made on the storageEngine to avoid conflicting names.
+     */
+    static final AtomicInteger storageId = new AtomicInteger();
     
     private final RealMatrix X;
     private final RealVector Y;
@@ -75,6 +82,23 @@ public class MatrixDataframe {
         this.Y = Y;
         this.X = X;
     }
+
+    /**
+     * Initializes the static storage engine if it's not already set.
+     *
+     * @param dataset
+     */
+    private static void setStorageEngine(Dataframe dataset) {
+        //create a single storage engine for all the MapRealMatrixes
+        if (storageEngine == null) {
+            synchronized(MatrixDataframe.class) {
+                if (storageEngine == null) {
+                    String storageName = "mdf" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
+                    storageEngine = dataset.configuration.getStorageConfiguration().createStorageEngine(storageName);
+                }
+            }
+        }
+    }
     
     /**
      * Method used to generate a training Dataframe to a MatrixDataframe and extracts its contents
@@ -92,6 +116,8 @@ public class MatrixDataframe {
         if(!featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should be empty.");
         }
+
+        setStorageEngine(dataset);
         
         
         int n = dataset.size();
@@ -101,7 +127,6 @@ public class MatrixDataframe {
             ++d;
         }
 
-        conf = dataset.conf;
         MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(dataset.isEmpty()) {
@@ -167,11 +192,12 @@ public class MatrixDataframe {
         if(featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should not be empty.");
         }
+
+        setStorageEngine(newData);
         
         int n = newData.size();
         int d = featureIdsReference.size();
 
-        conf = newData.conf;
         MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(newData.isEmpty()) {
@@ -202,7 +228,7 @@ public class MatrixDataframe {
                 Double value = TypeInference.toDouble(entry.getValue());
                 if(value!=null) {
                     Integer featureId = featureIdsReference.get(feature);
-                    if(featureId!=null) {//if the feature exists in our database
+                    if(featureId!=null) {//if the feature exists
                         m.X.setEntry(rowId, featureId, value);
                     }
                 }//else the X matrix maintains the 0.0 default value
@@ -228,8 +254,8 @@ public class MatrixDataframe {
         
         int d = featureIdsReference.size();
 
-        //create an Map-backed vector only if we have available info about conf.
-        RealVector v = (conf != null)?new MapRealVector(d):new OpenMapRealVector(d);
+        //create an Map-backed vector only if we have available info about configuration.
+        RealVector v = (storageEngine != null)?new MapRealVector(d):new OpenMapRealVector(d);
         
         boolean addConstantColumn = featureIdsReference.containsKey(Dataframe.COLUMN_NAME_CONSTANT);
         
@@ -242,7 +268,7 @@ public class MatrixDataframe {
             Double value = TypeInference.toDouble(entry.getValue());
             if(value!=null) {
                 Integer featureId = featureIdsReference.get(feature);
-                if(featureId!=null) {//if the feature exists in our database
+                if(featureId!=null) {//if the feature exists
                     v.setEntry(featureId, value);
                 }
             }

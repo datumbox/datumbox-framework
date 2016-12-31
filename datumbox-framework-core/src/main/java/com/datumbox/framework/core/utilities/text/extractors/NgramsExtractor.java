@@ -20,7 +20,7 @@ import java.util.*;
 /**
  * The NgramsExtractor class can be used to tokenize a string, extract its keyword
  * combinations and estimate their occurrence scores in the original string. This
- * extractor is ideal for the feature extraction phase of Text Classification.
+ * extractor is ideal for the feature extraction phase of Text ClassificationMetrics.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

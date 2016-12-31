@@ -15,9 +15,10 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.linear.AbstractRealMatrix;
@@ -35,6 +36,11 @@ import java.util.Map;
 public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatrix {
 
     /**
+     * The id of this Matrix.
+     */
+    private final int id;
+
+    /**
      * The number of rows of the matrix.
      */
     private final int rowDimension;
@@ -50,11 +56,6 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     private final Map<Long, Double> entries;
 
     /**
-     * The database connector.
-     */
-    private final DatabaseConnector dbc;
-
-    /**
      * Protected constructor with the provided the dimension arguments.
      *
      * @param rowDimension
@@ -67,21 +68,24 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.rowDimension = rowDimension;
         this.columnDimension = columnDimension;
 
-        String dbName = "mrm_"+System.nanoTime();
-        dbc = MatrixDataframe.conf.getDbConfig().getConnector(dbName);
-        entries = dbc.getBigMap("tmp_entries", Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        if(MatrixDataframe.storageEngine == null) {
+            throw new NullPointerException("The MatrixDataframe storage engine is not initialized.");
+        }
+
+        id = MatrixDataframe.storageId.getAndIncrement();
+        entries = MatrixDataframe.storageEngine.getBigMap("tmp_mrmentries"+id, Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**
      * When we perform matrix operations, we often lose the reference to the original matrix and we are unable to
-     * close its database. Even though the JVM will close the db before shutdown, by adding a close method in the finalize
-     * we ensure that if the object is gc, we will release the connection sooner.
+     * clear its storage. Even though the JVM will close the storage before shutdown, by adding a close method in the finalize
+     * we ensure that if the object is gc, we will clear the unnecessary entries of the storage engine sooner.
      * @throws java.lang.Throwable
      */
     @Override
     protected void finalize() throws Throwable {
         try {
-            dbc.close();
+            MatrixDataframe.storageEngine.dropBigMap("tmp_mrmentries"+id, entries);
         }
         finally {
             super.finalize();

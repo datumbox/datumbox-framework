@@ -17,15 +17,14 @@ package com.datumbox.framework.core.machinelearning.topicmodeling;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractTopicModeler;
-import com.datumbox.framework.core.machinelearning.common.validators.LatentDirichletAllocationValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.statistics.sampling.SimpleRandomSampling;
 
@@ -55,12 +54,15 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters, LatentDirichletAllocation.ValidationMetrics> {
+public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirichletAllocation.ModelParameters, LatentDirichletAllocation.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractTopicModeler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
-        
+
+        //number of features in data points used for training
+        private Integer d = 0;
+
         private int totalIterations;
         
         @BigMap(keyClass=List.class, valueClass=Integer.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_CACHE, concurrent=false)
@@ -79,11 +81,29 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         private Map<Integer, Integer> topicCounts; //the nj(.) in the papers
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
+        }
+
+        /**
+         * Getter for the dimension of the dataset used in training.
+         *
+         * @return
+         */
+        public Integer getD() {
+            return d;
+        }
+
+        /**
+         * Setter for the dimension of the dataset used in training.
+         *
+         * @param d
+         */
+        protected void setD(Integer d) {
+            this.d = d;
         }
         
         /**
@@ -305,42 +325,24 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
             this.beta = beta;
         }
         
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractTopicModeler.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double perplexity = 0.0;
-        
-        /**
-         * Getter for the perplexity metric.
-         * 
-         * @return 
-         */
-        public double getPerplexity() {
-            return perplexity;
-        }
-        
-        /**
-         * Setter for the perplexity metric.
-         * 
-         * @param perplexity 
-         */
-        public void setPerplexity(double perplexity) {
-            this.perplexity = perplexity;
-        }
-
     }
-    
+
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public LatentDirichletAllocation(String dbName, Configuration conf) {
-        super(dbName, conf, LatentDirichletAllocation.ModelParameters.class, LatentDirichletAllocation.TrainingParameters.class, LatentDirichletAllocation.ValidationMetrics.class, new LatentDirichletAllocationValidator());
+    protected LatentDirichletAllocation(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected LatentDirichletAllocation(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /**
@@ -351,8 +353,8 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     public AssociativeArray2D getWordProbabilitiesPerTopic() {
         AssociativeArray2D ptw = new AssociativeArray2D();
         
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         //initialize a probability list for every topic
         int k = trainingParameters.getK();
@@ -387,18 +389,14 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        predictAndValidate(newData);
-    }
-    
-    /** {@inheritDoc} */
-    @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        modelParameters.setD(trainingData.xColumnSize());
+
         int d = modelParameters.getD();
         
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+
         
         //get model parameters
         int k = trainingParameters.getK(); //number of topics
@@ -531,12 +529,6 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         modelParameters.setTotalIterations(iteration);
         
     }
-
-    /** {@inheritDoc} */
-    @Override
-    protected ValidationMetrics validateModel(Dataframe validationData) {
-        return predictAndValidate(validationData);
-    }
     
     /**
      * Utility method that increases the map value by 1.
@@ -546,11 +538,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
      * @param key 
      */
     private <K> void increase(Map<K, Integer> map, K key) {
-        Integer previousValue = map.get(key);
-        if(previousValue==null) {
-            previousValue=0;
-        }
-        map.put(key, previousValue+1);
+        map.put(key, map.getOrDefault(key, 0)+1);
     }
 
     /**
@@ -560,26 +548,20 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
      * @param key 
      */
     private <K> void decrease(Map<K, Integer> map, K key) {
-        Integer previousValue = map.get(key);
-        if(previousValue==null) {
-            previousValue=0;
-        }
-        map.put(key, previousValue-1);
+        map.put(key, map.getOrDefault(key, 0)-1);
     }
-    
-    private ValidationMetrics predictAndValidate(Dataframe newData) {
+
+    /** {@inheritDoc} */
+    @Override
+    protected void _predict(Dataframe newData) {
         //This method uses similar approach to the training but the most important
         //difference is that we do not wish to modify the original training params.
         //as a result we need to modify the code to use additional temporary
         //counts for the testing data and merge them with the parameters from the
         //training data in order to make a decision
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        
-        //create new validation metrics object
-        ValidationMetrics validationMetrics = kb().getEmptyValidationMetricsObject();
-        
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+
         //get model parameters
         int d = modelParameters.getD();
         int k = trainingParameters.getK(); //number of topics
@@ -589,13 +571,13 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         Map<Integer, Integer> topicCounts = modelParameters.getTopicCounts();
         
         
-        DatabaseConnector dbc = kb().getDbc();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         
         //we create temporary maps for the prediction sets to avoid modifing the maps that we already learned
-        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = dbc.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<List<Integer>, Integer> tmp_documentTopicCounts = dbc.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
-        Map<List<Object>, Integer> tmp_topicWordCounts = dbc.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
-        Map<Integer, Integer> tmp_topicCounts = dbc.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicAssignmentOfDocumentWord = storageEngine.getBigMap("tmp_topicAssignmentOfDocumentWord", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<List<Integer>, Integer> tmp_documentTopicCounts = storageEngine.getBigMap("tmp_documentTopicCounts", (Class<List<Integer>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+        Map<List<Object>, Integer> tmp_topicWordCounts = storageEngine.getBigMap("tmp_topicWordCounts", (Class<List<Object>>)(Class<?>)List.class, Integer.class, MapType.HASHMAP, StorageHint.IN_CACHE, false, true);
+        Map<Integer, Integer> tmp_topicCounts = storageEngine.getBigMap("tmp_topicCounts", Integer.class, Integer.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
         
         //initialize topic assignments of each word randomly and update the counters
         for(Map.Entry<Integer, Record> e : newData.entries()) {
@@ -606,7 +588,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object wordPosition = entry.getKey();
                 Object word = entry.getValue();
-                
+
                 //sample a topic
                 Integer topic = PHPMethods.mt_rand(0,k-1);
                 
@@ -622,8 +604,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         double beta = trainingParameters.getBeta();
         
         int maxIterations = trainingParameters.getMaxIterations();
-        
-        double perplexity = Double.MAX_VALUE;
+
         for(int iteration=0;iteration<maxIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
@@ -631,7 +612,7 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
             
             //collapsed gibbs sampler
             int changedCounter = 0;
-            perplexity = 0.0;
+            double perplexity = 0.0;
             double totalDatasetWords = 0.0;
             for(Map.Entry<Integer, Record> e : newData.entries()) {
                 Integer rId = e.getKey();
@@ -734,14 +715,9 @@ public class LatentDirichletAllocation extends AbstractTopicModeler<LatentDirich
         }
         
         //Drop the temporary Collection
-        dbc.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
-        dbc.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
-        dbc.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
-        dbc.dropBigMap("tmp_topicCounts", tmp_topicCounts);
-        
-        
-        validationMetrics.setPerplexity(perplexity);
-        
-        return validationMetrics;
+        storageEngine.dropBigMap("tmp_topicAssignmentOfDocumentWord", tmp_topicAssignmentOfDocumentWord);
+        storageEngine.dropBigMap("tmp_documentTopicCounts", tmp_documentTopicCounts);
+        storageEngine.dropBigMap("tmp_topicWordCounts", tmp_topicWordCounts);
+        storageEngine.dropBigMap("tmp_topicCounts", tmp_topicCounts);
     }
 }

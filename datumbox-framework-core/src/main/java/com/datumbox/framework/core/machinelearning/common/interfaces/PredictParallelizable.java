@@ -21,6 +21,7 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -92,10 +93,10 @@ public interface PredictParallelizable extends Parallelizable {
      * 
      * @param newData 
      * @param resultsBuffer 
-     * @param concurrencyConfig 
+     * @param concurrencyConfiguration
      */
-    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer, ConcurrencyConfiguration concurrencyConfig) {
-        ForkJoinStream streamExecutor = new ForkJoinStream(concurrencyConfig);
+    default public void _predictDatasetParallel(Dataframe newData, final Map<Integer, Prediction> resultsBuffer, ConcurrencyConfiguration concurrencyConfiguration) {
+        ForkJoinStream streamExecutor = new ForkJoinStream(concurrencyConfiguration);
         
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             resultsBuffer.put(e.getKey(), _predictRecord(e.getValue())); //the key is unique across threads and the map is concurrent
@@ -113,5 +114,18 @@ public interface PredictParallelizable extends Parallelizable {
             newData._unsafe_set(rId, newR);
         });
         
+    }
+
+    /**
+     * Estimates the predictions for a new Dataframe in a parallel way.
+     *
+     * @param newData
+     * @param storageEngine
+     * @param concurrencyConfiguration
+     */
+    default public void _predictDatasetParallel(Dataframe newData, StorageEngine storageEngine, ConcurrencyConfiguration concurrencyConfiguration) {
+        Map<Integer, Prediction> resultsBuffer = storageEngine.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, StorageEngine.MapType.HASHMAP, StorageEngine.StorageHint.IN_DISK, true, true);
+        _predictDatasetParallel(newData, resultsBuffer, concurrencyConfiguration);
+        storageEngine.dropBigMap("tmp_resultsBuffer", resultsBuffer);
     }
 }

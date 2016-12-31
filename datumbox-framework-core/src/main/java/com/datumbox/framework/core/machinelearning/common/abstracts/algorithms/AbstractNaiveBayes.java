@@ -22,15 +22,14 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.ClassifierValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 
 import java.util.*;
@@ -42,15 +41,9 @@ import java.util.*;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters, VM extends AbstractNaiveBayes.AbstractValidationMetrics> extends AbstractClassifier<MP, TP, VM> implements PredictParallelizable, TrainParallelizable {
-    /**
-     * Flag that indicates whether the algorithm binarizes the provided activated 
-     * features.
-     */
-    private final boolean isBinarized;
-    
+public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractModelParameters, TP extends AbstractNaiveBayes.AbstractTrainingParameters> extends AbstractClassifier<MP, TP> implements PredictParallelizable, TrainParallelizable {
+
     /** {@inheritDoc} */
     public static abstract class AbstractModelParameters extends AbstractClassifier.AbstractModelParameters {
 
@@ -60,11 +53,11 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         private Map<List<Object>, Double> logLikelihoods; //posterior log probabilities of features-classes combination
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected AbstractModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
         /**
@@ -127,22 +120,35 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         public void setMultiProbabilityWeighted(boolean multiProbabilityWeighted) {
             this.multiProbabilityWeighted = multiProbabilityWeighted;
         }
-    } 
+    }
 
-    /** 
-     * @param dbName
-     * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass
-     * @param isBinarized
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+    /**
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    protected AbstractNaiveBayes(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, boolean isBinarized) {
-        super(dbName, conf, mpClass, tpClass, vmClass, new ClassifierValidator<>());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
-        this.isBinarized = isBinarized;
-    } 
+    protected AbstractNaiveBayes(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected AbstractNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+    }
+
+    /**
+     * Returns a flag that indicates whether the algorithm binarizes the provided activated
+     * features.
+     *
+     * @return
+     */
+    protected abstract boolean isBinarized();
     
     private boolean parallelized = true;
     
@@ -166,22 +172,20 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
-        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+    protected void _predict(Dataframe newData) {
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
         
         Object someClass = classesSet.iterator().next();
+        boolean isBinarized = isBinarized();
         
         //initialize scores with the scores of the priors
         AssociativeArray predictionScores = new AssociativeArray(new HashMap<>(logPriors)); 
@@ -193,7 +197,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             //So if the feature has no value for one random class (someClass has 
             //no particular significance), then it will not have for any class
             //and thus the feature is not in the dictionary and can be ignored.
-            if(!logLikelihoods.containsKey(Arrays.<Object>asList(feature, someClass))) {
+            if(!logLikelihoods.containsKey(Arrays.asList(feature, someClass))) {
                 continue;
             }
 
@@ -201,13 +205,13 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
             AssociativeArray classLogScoresForThisFeature = new AssociativeArray();
 
             for(Object theClass : classesSet) {
-                Double logScore = logLikelihoods.get(Arrays.<Object>asList(feature, theClass));
+                Double logScore = logLikelihoods.get(Arrays.asList(feature, theClass));
                 classLogScoresForThisFeature.put(theClass, logScore);
             }
 
 
             Double occurrences=TypeInference.toDouble(entry.getValue());
-            if((!kb().getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
+            if((!knowledgeBase.getTrainingParameters().isMultiProbabilityWeighted() || isBinarized) && occurrences>0) {
                 occurrences=1.0;
             }
 
@@ -229,13 +233,14 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        AbstractModelParameters modelParameters = kb().getModelParameters();
-        int n = modelParameters.getN();
-        int d = modelParameters.getD();
+        AbstractModelParameters modelParameters = knowledgeBase.getModelParameters();
+        int n = trainingData.size();
+        int d = trainingData.xColumnSize();
         
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
+        boolean isBinarized = isBinarized();
         
         //calculate first statistics about the classes
         Map<Object, Double> totalFeatureOccurrencesForEachClass = new HashMap<>();
@@ -263,7 +268,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
         */
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 logLikelihoods.put(featureClassTuple, 0.0); //the key is unique across threads and the map is concurrent
             }
         });
@@ -283,7 +288,7 @@ public abstract class AbstractNaiveBayes<MP extends AbstractNaiveBayes.AbstractM
                         occurrences=1.0;
                     }
                     
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                    List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                     logLikelihoods.put(featureClassTuple, logLikelihoods.get(featureClassTuple)+occurrences); //each thread updates a unique key and the map is cuncurrent
                     
                     sumOfOccurrences+=occurrences;

@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.common.interfaces.Parameterizable;
+import com.datumbox.framework.common.interfaces.Trainable;
 
 /**
  * The TrainingParameters objects store all the initial parameters provided
@@ -25,5 +26,32 @@ import com.datumbox.framework.common.interfaces.Parameterizable;
  */
 
 public interface TrainingParameters extends Parameterizable {
+
+    /**
+     * Retrieves the ModelParameters class.
+     *
+     * @param <MP>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    default public <MP extends ModelParameters> Class<MP> getMPClass() {
+        try {
+            //By convention the training and model parameters are one level below the algorithm class.;
+            return (Class<MP>) Class.forName(getTClass().getCanonicalName() + "$ModelParameters");
+        }
+        catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Retrives the Trainable class.
+     *
+     * @param <T>
+     * @return
+     */
+    default public <T extends Trainable> Class<T> getTClass() {
+        return (Class<T>) this.getClass().getEnclosingClass();
+    }
 
 }

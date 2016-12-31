@@ -24,6 +24,7 @@ import com.datumbox.framework.common.interfaces.Parameterizable;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
@@ -114,20 +115,16 @@ public class CETR {
             this.smoothingAverageRadius = smoothingAverageRadius;
         }
     }
-    
-    private final String dbName;
-    private final Configuration conf;
+
+    private final Configuration configuration;
     
     /**
-     * Constructor for the CETR class. It accepts as arguments the name of the
-     * database were the temporary results are stored and the Database Configuration.
-     * 
-     * @param dbName
-     * @param conf 
+     * Constructor for the CETR class.
+     *
+     * @param configuration
      */
-    public CETR(String dbName, Configuration conf) {
-        this.dbName = dbName;
-        this.conf = conf;
+    public CETR(Configuration configuration) {
+        this.configuration = configuration;
     }
     
     /**
@@ -165,7 +162,7 @@ public class CETR {
         
         boolean use2Dmodel = (parameters.getAlphaWindowSizeFor2DModel()>0);
         
-        Dataframe dataset = new Dataframe(conf);
+        Dataframe dataset = new Dataframe(configuration);
         if(use2Dmodel) {
             List<Double> G = computeDerivatives(TTRlist, parameters.getAlphaWindowSizeFor2DModel());
             gaussianSmoothing(G);
@@ -201,13 +198,9 @@ public class CETR {
             Integer clusterId = (Integer)r.getYPredicted();
             Double ttr = r.getX().getDouble(0); //the first value is always set the TTR as you can see above
             
-            Double previousValue = avgTTRscorePerCluster.get(clusterId);
-            Integer counter = clusterCounts.get(clusterId);
-            if(previousValue==null) {
-                previousValue=0.0;
-                counter = 0;
-            }
-            
+            Double previousValue = avgTTRscorePerCluster.getOrDefault(clusterId, 0.0);
+            Integer counter = clusterCounts.getOrDefault(clusterId, 0);
+
             avgTTRscorePerCluster.put(clusterId, previousValue+ttr);
             clusterCounts.put(clusterId, counter+1);
         }
@@ -236,14 +229,12 @@ public class CETR {
             }
         }
         
-        dataset.delete();
+        dataset.close();
         
         return selectedRows;
     }
 
     private void performClustering(Dataframe dataset, int numberOfClusters) {
-        Kmeans instance = new Kmeans(dbName, conf);
-        
         Kmeans.TrainingParameters param = new Kmeans.TrainingParameters();
         param.setK(numberOfClusters);
         param.setMaxIterations(200);
@@ -252,13 +243,12 @@ public class CETR {
         param.setWeighted(false);
         param.setCategoricalGamaMultiplier(1.0);
         //param.setSubsetFurthestFirstcValue(2.0);
+
+        Kmeans instance = MLBuilder.create(param, configuration);
         
-        instance.fit(dataset, param);
+        instance.fit(dataset);
         instance.predict(dataset);
-        //Map<Integer, BaseMLclusterer.Cluster> clusters = instance.getClusters();
-        
-        instance.delete(); //delete immediately the result
-        //instance = null;
+        instance.close();
     }
     
     private List<Double> calculateTTRlist(List<String> rows) {

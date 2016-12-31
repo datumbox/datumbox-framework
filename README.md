@@ -1,6 +1,6 @@
 Datumbox Machine Learning Framework
 ===================================
-[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.svg)](https://travis-ci.org/datumbox/datumbox-framework) [![Dependency Status](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.1-SNAPSHOT/badge.svg)](https://www.versioneye.com/java/com.datumbox:datumbox-framework/0.7.1-SNAPSHOT) [![License](https://img.shields.io/:license-apache-blue.svg)](./LICENSE)
+[![Build Status](https://api.travis-ci.org/datumbox/datumbox-framework.svg)](https://travis-ci.org/datumbox/datumbox-framework) [![Windows Build status](https://ci.appveyor.com/api/projects/status/2aqkak8kmt8ooj4i?svg=true)](https://ci.appveyor.com/project/datumbox/datumbox-framework) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.datumbox/datumbox-framework-lib/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.datumbox/datumbox-framework-lib) [![License](https://img.shields.io/:license-apache-brightgreen.svg)](./LICENSE)
 
 [![Datumbox](http://www.datumbox.com/img/logo.png)](http://www.datumbox.com/)
 
@@ -16,23 +16,23 @@ The code is licensed under the [Apache License, Version 2.0](./LICENSE).
 Version
 -------
 
-The latest version is 0.7.1-SNAPSHOT (Build 20161217).
+The latest version is 0.8.0-SNAPSHOT (Build 20161231).
 
-The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) is the latest stable version of the framework. The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch. All the previous stable versions are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
+The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch (default github branch). The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) contains the latest stable version of the framework. All the stable releases are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
 The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](./CHANGELOG.md).
 
 Installation
 ------------
 
-Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#artifactdetails%7Ccom.datumbox%7Cdatumbox-framework-lib%7C0.7.1-SNAPSHOT%7Cjar). 
+Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.datumbox%22%20AND%20a%3A%22datumbox-framework-lib%22). 
 
 Maven:
 ```
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework-lib</artifactId>
-        <version>0.7.1-SNAPSHOT</version>
+        <version>0.8.0-SNAPSHOT</version>
     </dependency>
 ```
 

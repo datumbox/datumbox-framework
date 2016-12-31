@@ -19,8 +19,13 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
-import com.datumbox.framework.core.machinelearning.featureselection.continuous.PCA;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.featureselection.PCA;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.StandardScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -36,112 +41,128 @@ import static org.junit.Assert.assertEquals;
 public class NLMSTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class NLMS.
+     * Test of predict method, of class NLMS.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.regressionNumeric(conf);
+        Dataframe[] data = Datasets.regressionNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
-        df.transform(validationData);
-        
+        String storageName = this.getClass().getSimpleName();
 
-        NLMS instance = new NLMS(dbName, conf);
+
+        StandardScaler.TrainingParameters nsParams = new StandardScaler.TrainingParameters();
+        StandardScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
+
         
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(1600);
         param.setL1(0.00000001);
-        
-        
-        instance.fit(trainingData, param);
-        
+
+
+
+        NLMS instance = MLBuilder.create(param, configuration);
+        instance.fit(trainingData);
+        instance.save(storageName);
+
+        trainingData.close();
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(StandardScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
+        instance = MLBuilder.load(NLMS.class, storageName, configuration);
+
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new NLMS(dbName, conf);
-        
-        instance.validate(validationData);
-        
-        df.denormalize(trainingData);
-        df.denormalize(validationData);
-        
+        instance.predict(validationData);
+
         for(Record r : validationData) {
             assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
 
 
     /**
-     * Test of kFoldCrossValidation method, of class NLMS.
+     * Test of validate method, of class NLMS.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.housingNumerical(conf);
+        Dataframe[] data = Datasets.housingNumerical(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
-        
-        String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        data[1].close();
 
+        StandardScaler.TrainingParameters nsParams = new StandardScaler.TrainingParameters();
+        nsParams.setScaleResponse(true);
+        StandardScaler numericalScaler = MLBuilder.create(nsParams, configuration);
 
-        
+        numericalScaler.fit_transform(trainingData);
 
-        PCA featureSelector = new PCA(dbName, conf);
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+
         PCA.TrainingParameters featureSelectorParameters = new PCA.TrainingParameters();
         featureSelectorParameters.setMaxDimensions(trainingData.xColumnSize()-1);
-        featureSelectorParameters.setWhitened(false);
+        featureSelectorParameters.setWhitened(true);
         featureSelectorParameters.setVariancePercentageThreshold(0.99999995);
-        featureSelector.fit_transform(trainingData, featureSelectorParameters);
-        featureSelector.delete();
 
-        
-        NLMS instance = new NLMS(dbName, conf);
+        PCA featureSelector = MLBuilder.create(featureSelectorParameters, configuration);
+        featureSelector.fit_transform(trainingData);
+        featureSelector.close();
+
+
 
         NLMS.TrainingParameters param = new NLMS.TrainingParameters();
         param.setTotalIterations(500);
         param.setL1(0.001);
         param.setL2(0.001);
         
-        NLMS.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
 
-        df.denormalize(trainingData);
 
-        
-        double expResult = 0.7748106446239166;
+        double expResult = 0.7773836265592338;
         double result = vm.getRSquare();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
+
+        numericalScaler.close();
+        categoricalEncoder.close();
         
-        df.delete();
-        instance.delete();
-        
-        trainingData.delete();
+        trainingData.close();
     }
 
 }

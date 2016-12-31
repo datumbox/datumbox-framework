@@ -15,10 +15,7 @@
  */
 package com.datumbox.framework.common.interfaces;
 
-import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * This interface is used to mark classes that can be trained. This interface 
@@ -28,30 +25,8 @@ import java.lang.reflect.InvocationTargetException;
  * @param <MP>
  * @param <TP>
  */
-public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends AutoCloseable {
+public interface Trainable<MP extends Learnable, TP extends Parameterizable> extends Savable {
 
-    /**
-     * Generates a new instance of a Trainable by providing the Class of
-     * the algorithm.
-     * 
-     * @param <BT>
-     * @param aClass
-     * @param dbName
-     * @param conf
-     * @return 
-     */
-    public static <BT extends Trainable> BT newInstance(Class<BT> aClass, String dbName, Configuration conf) {
-        BT algorithm = null;
-        try {
-            algorithm = aClass.getConstructor(String.class, Configuration.class).newInstance(dbName, conf);
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        return algorithm;
-    }
-    
     /**
      * Returns the model parameters that were estimated after training.
      * 
@@ -65,18 +40,12 @@ public interface Trainable<MP extends Learnable, TP extends Parameterizable> ext
      * @return 
      */
     public TP getTrainingParameters();
-    
+
     /**
      * Trains a model using the provided training parameters and data.
      * 
      * @param trainingData
-     * @param trainingParameters
      */
-    public void fit(Dataframe trainingData, TP trainingParameters);
-            
-    /**
-     * Deletes the database of the algorithm. 
-     */
-    public void delete();
+    public void fit(Dataframe trainingData);
     
 }

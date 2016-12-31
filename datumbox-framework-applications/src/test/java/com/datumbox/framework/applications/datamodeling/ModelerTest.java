@@ -18,12 +18,14 @@ package com.datumbox.framework.applications.datamodeling;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -45,55 +47,57 @@ public class ModelerTest extends AbstractTest {
     public void testTrainAndValidate() {
         logger.info("testTrainAndValidate");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
+
         Dataframe trainingData = data[0];
-        
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
-        
-        Modeler instance = new Modeler(dbName, conf);
+        String storageName = this.getClass().getSimpleName();
+
         Modeler.TrainingParameters trainingParameters = new Modeler.TrainingParameters();
         
+
+        //numerical scaling configuration
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        trainingParameters.setNumericalScalerTrainingParameters(nsParams);
+
+        //categorical encoding configuration
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        trainingParameters.setCategoricalEncoderTrainingParameters(ceParams);
         
-        //Model Configuration
-        
-        trainingParameters.setModelerClass(MultinomialNaiveBayes.class);
+        //feature selection configuration
+        trainingParameters.setFeatureSelectorTrainingParameters(null);
+
+        //model Configuration
         MultinomialNaiveBayes.TrainingParameters modelTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
         modelTrainingParameters.setMultiProbabilityWeighted(true);
         trainingParameters.setModelerTrainingParameters(modelTrainingParameters);
 
-        //data transfomation configuration
-        trainingParameters.setDataTransformerClass(DummyXMinMaxNormalizer.class);
-        DummyXMinMaxNormalizer.TrainingParameters dtParams = new DummyXMinMaxNormalizer.TrainingParameters();
-        trainingParameters.setDataTransformerTrainingParameters(dtParams);
-        
-        //feature selection configuration
-        trainingParameters.setFeatureSelectorClass(null);
-        trainingParameters.setFeatureSelectorTrainingParameters(null);
-        
-        instance.fit(trainingData, trainingParameters);
-        
-        
-        MultinomialNaiveBayes.ValidationMetrics vm = (MultinomialNaiveBayes.ValidationMetrics) instance.validate(trainingData);
-        
-        instance.setValidationMetrics(vm);
-        
-        double expResult2 = 0.8;
-        Assert.assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
+        Modeler instance = MLBuilder.create(trainingParameters, configuration);
+        instance.fit(trainingData);
+        instance.save(storageName);
+
         instance.close();
-        //instance = null;
+
+        instance = MLBuilder.load(Modeler.class, storageName, configuration);
+
+        instance.predict(trainingData);
+
+        ClassificationMetrics vm = new ClassificationMetrics(trainingData);
+
+        double expResult2 = 0.7867564534231202;
+        assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
+
+        trainingData.close();
+        instance.close();
+
+
+        instance = MLBuilder.load(Modeler.class, storageName, configuration);
         
-        
-        logger.info("validate");
-        
-        
-        instance = new Modeler(dbName, conf);
-        
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         
         
@@ -108,9 +112,8 @@ public class ModelerTest extends AbstractTest {
         assertEquals(expResult, result);
         
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
     
 }

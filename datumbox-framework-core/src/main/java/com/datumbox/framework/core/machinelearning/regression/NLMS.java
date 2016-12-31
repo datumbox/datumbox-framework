@@ -22,11 +22,12 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractLinearRegression;
+import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
 import com.datumbox.framework.core.utilities.regularization.ElasticNetRegularizer;
@@ -48,24 +49,44 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.TrainingParameters, NLMS.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class NLMS extends AbstractRegressor<NLMS.ModelParameters, NLMS.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
      
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractLinearRegression.AbstractModelParameters {
+    public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
+        private Map<Object, Double> thitas; //the thita parameters of the model
+
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
-        
+
+        /**
+         * Getter for the Thita coefficients.
+         *
+         * @return
+         */
+        public Map<Object, Double> getThitas() {
+            return thitas;
+        }
+
+        /**
+         * Setter for the Thita coefficients.
+         *
+         * @param thitas
+         */
+        protected void setThitas(Map<Object, Double> thitas) {
+            this.thitas = thitas;
+        }
     } 
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractLinearRegression.AbstractTrainingParameters {  
+    public static class TrainingParameters extends AbstractRegressor.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private int totalIterations=1000; 
@@ -146,23 +167,26 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             this.l2 = l2;
         }
 
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractLinearRegression.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
     }
 
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public NLMS(String dbName, Configuration conf) {
-        super(dbName, conf, NLMS.ModelParameters.class, NLMS.TrainingParameters.class, NLMS.ValidationMetrics.class);
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+    protected NLMS(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected NLMS(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     private boolean parallelized = true;
@@ -187,17 +211,14 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
-        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+    protected void _predict(Dataframe newData) {
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        Map<Object, Double> thitas = kb().getModelParameters().getThitas();
+        Map<Object, Double> thitas = knowledgeBase.getModelParameters().getThitas();
         
         double yPredicted = hypothesisFunction(r.getX(), thitas);
         
@@ -207,7 +228,7 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Map<Object, Double> thitas = modelParameters.getThitas();
         
@@ -217,18 +238,18 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             thitas.put(feature, 0.0);
         }
         
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
 
         double minError = Double.POSITIVE_INFINITY;
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = kb().getDbc();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
-            Map<Object, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
+            Map<Object, Double> tmp_newThitas = storageEngine.getBigMap("tmp_newThitas", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, false, true);
             
             tmp_newThitas.putAll(thitas);
             
@@ -250,14 +271,14 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
+            storageEngine.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<Object, Double> newThitas, double learningRate) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        double multiplier = learningRate/modelParameters.getN();
+        double multiplier = learningRate/trainingData.size();
         Map<Object, Double> thitas = modelParameters.getThitas();
         
         streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> { 
@@ -278,8 +299,8 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             }
         });
 
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
+        double l1 = knowledgeBase.getTrainingParameters().getL1();
+        double l2 = knowledgeBase.getTrainingParameters().getL2();
 
         if(l1>0.0 && l2>0.0) {
             ElasticNetRegularizer.updateWeights(l1, l2, learningRate, thitas, newThitas);
@@ -299,10 +320,10 @@ public class NLMS extends AbstractLinearRegression<NLMS.ModelParameters, NLMS.Tr
             double yPredicted = hypothesisFunction(r.getX(), thitas);
             return Math.pow(TypeInference.toDouble(r.getY()) -yPredicted, 2);
         }));
-        error /= kb().getModelParameters().getN();
+        error /= trainingData.size();
 
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
+        double l1 = knowledgeBase.getTrainingParameters().getL1();
+        double l2 = knowledgeBase.getTrainingParameters().getL2();
 
         if(l1>0.0 && l2>0.0) {
             error += ElasticNetRegularizer.estimatePenalty(l1, l2, thitas);

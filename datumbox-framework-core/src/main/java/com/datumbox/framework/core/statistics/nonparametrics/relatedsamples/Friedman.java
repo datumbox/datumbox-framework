@@ -50,7 +50,6 @@ public class Friedman {
 
         //Find Ranks from Data Table. We don't store them to reduce memory consumption
         for(Map.Entry<Object, AssociativeArray> entry1 : dataTable.entrySet()) {
-            Object i = entry1.getKey();
             AssociativeArray row = entry1.getValue(); 
             
             //find the number of tied values and convert values into ranks

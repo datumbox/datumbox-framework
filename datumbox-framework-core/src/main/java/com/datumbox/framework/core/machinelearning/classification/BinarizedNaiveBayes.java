@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.classification;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -32,18 +32,18 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters, BinarizedNaiveBayes.ValidationMetrics> {
+public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.ModelParameters, BinarizedNaiveBayes.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
     } 
@@ -53,28 +53,34 @@ public class BinarizedNaiveBayes extends AbstractNaiveBayes<BinarizedNaiveBayes.
         private static final long serialVersionUID = 1L;
 
     }
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
 
-    }
-    
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    public BinarizedNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, BinarizedNaiveBayes.ModelParameters.class, BinarizedNaiveBayes.TrainingParameters.class, BinarizedNaiveBayes.ValidationMetrics.class, true);
+    protected BinarizedNaiveBayes(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected BinarizedNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+    /** {@inheritDoc} */
+    protected boolean isBinarized() {
+        return true;
     }
     
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }
-    
 }

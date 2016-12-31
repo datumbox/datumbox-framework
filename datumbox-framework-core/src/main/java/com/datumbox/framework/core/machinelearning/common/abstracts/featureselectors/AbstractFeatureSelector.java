@@ -16,9 +16,13 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnowledgeBase;
+import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
+
+import java.util.Set;
 
 /**
  * Base class for all the Feature Selectors of the framework.
@@ -27,48 +31,98 @@ import com.datumbox.framework.core.machinelearning.common.dataobjects.DoubleKnow
  * @param <MP>
  * @param <TP>
  */
-public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP, DoubleKnowledgeBase<MP, TP>> {
- 
-    /** 
-     * @param dbName
-     * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector.AbstractModelParameters, TP extends AbstractFeatureSelector.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> implements Parallelizable {
+
+    /**
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    protected AbstractFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, DoubleKnowledgeBase.class, mpClass, tpClass);
+    protected AbstractFeatureSelector(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
-    
-    
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected AbstractFeatureSelector(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+    }
+
+    private boolean parallelized = true;
+
+    /**
+     * This executor is used for the parallel processing of streams with custom
+     * Thread pool.
+     */
+    protected final ForkJoinStream streamExecutor;
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+
     /**
      * Fits and transforms the data of the provided dataset. 
      * 
      * @param trainingData
-     * @param trainingParameters 
      */
-    public void fit_transform(Dataframe trainingData, TP trainingParameters) {
-        fit(trainingData, trainingParameters);
+    public void fit_transform(Dataframe trainingData) {
+        fit(trainingData);
         transform(trainingData);
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public void fit(Dataframe trainingData) {
+        Set<TypeInference.DataType> supportedYDataTypes = getSupportedYDataTypes();
+        if(supportedYDataTypes != null && !supportedYDataTypes.contains(trainingData.getYDataType())) {
+            throw new IllegalArgumentException("The response variable DataType of the Dataframe is not supported by this method.");
+        }
+        super.fit(trainingData);
+    }
+
     /**
      * Performs feature selection on the provided dataset.
      * 
-     * @param newData 
+     * @param newData
      */
     public void transform(Dataframe newData) {
         logger.info("transform()");
         
-        kb().load();
-        
-        filterFeatures(newData);
+        _transform(newData);
     }
     
     /**
      * Performs the filtering of the features.
      * 
-     * @param newdata 
+     * @param newData
      */
-    protected abstract void filterFeatures(Dataframe newdata);
+    protected abstract void _transform(Dataframe newData);
+
+    /**
+     * Returns a set with the supported DataTypes of X (features).
+     *
+     * @return
+     */
+    protected abstract Set<TypeInference.DataType> getSupportedXDataTypes();
+
+    /**
+     * Returns a set with the supported DataTypes of Y (response variable) or null if the method is unsupervised.
+     *
+     * @return
+     */
+    protected abstract Set<TypeInference.DataType> getSupportedYDataTypes();
+
 }

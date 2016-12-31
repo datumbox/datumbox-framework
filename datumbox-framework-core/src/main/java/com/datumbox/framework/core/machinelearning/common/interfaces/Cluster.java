@@ -27,19 +27,11 @@ import com.datumbox.framework.common.interfaces.Learnable;
 public interface Cluster extends Learnable {
 
     /**
-     * Getter for the label Y of the cluster.
-     * 
-     * @return 
-     */
-    public Object getLabelY();
-
-    /**
      * Returns the number of records assigned to this cluster.
      * 
      * @return 
      */
     public int size();
-
 
 }
     

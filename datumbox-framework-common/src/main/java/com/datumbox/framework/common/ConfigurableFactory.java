@@ -25,26 +25,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
- * Factory that initializes and returns the Configurable objects based on the datumbox.config.properties file.
+ * Factory that initializes and returns the Configurable objects based on the datumbox configuration properties file.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ConfigurableFactory {
     
     /**
-     * Initializes the Configuration Object based on the config file.
+     * Initializes the Configuration Object based on the configuration file.
      * 
      * @param <C>
      * @param klass
      * @return 
      */
     public static <C extends Configurable> C getConfiguration(Class<C> klass) {
-        //Initialize config object
-        C conf;
+        //Initialize configuration object
+        C configuration;
         try {
             Constructor<C> constructor = klass.getDeclaredConstructor();
             constructor.setAccessible(true);
-            conf = constructor.newInstance();
+            configuration = constructor.newInstance();
         } 
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
@@ -55,7 +55,7 @@ public class ConfigurableFactory {
         ClassLoader cl = ConfigurableFactory.class.getClassLoader();
         
         //Load default properties from jar
-        try (InputStream in = cl.getResourceAsStream("datumbox.config.default.properties")) {
+        try (InputStream in = cl.getResourceAsStream("datumbox.configuration.default.properties")) {
             properties.load(in);
         }
         catch(IOException ex) {
@@ -63,9 +63,9 @@ public class ConfigurableFactory {
         }
         
         //Look for user defined properties
-        if(cl.getResource("datumbox.config.properties")!=null) {
+        if(cl.getResource("datumbox.configuration.properties")!=null) {
             //Override the default if they exist
-            try (InputStream in = cl.getResourceAsStream("datumbox.config.properties")) {
+            try (InputStream in = cl.getResourceAsStream("datumbox.configuration.properties")) {
                 properties.load(in);
             }
             catch(IOException ex) {
@@ -73,8 +73,8 @@ public class ConfigurableFactory {
             }
         }
         
-        conf.load(properties);
+        configuration.load(properties);
         
-        return conf;
+        return configuration;
     }
 }

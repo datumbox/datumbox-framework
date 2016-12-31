@@ -18,6 +18,10 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -36,34 +40,36 @@ import static org.junit.Assert.assertEquals;
 public class MaximumEntropyTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class MaximumEntropy.
+     * Test of predict method, of class MaximumEntropy.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
-        MaximumEntropy instance = new MaximumEntropy(dbName, conf);
-        
+        String storageName = this.getClass().getSimpleName();
+
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
+
+        MaximumEntropy instance = MLBuilder.create(param, configuration);
         
-        instance.fit(trainingData, param);
+        instance.fit(trainingData);
+        instance.save(storageName);
         
         instance.close();
-        //instance = null;
-        instance = new MaximumEntropy(dbName, conf);
+
+        instance = MLBuilder.load(MaximumEntropy.class, storageName, configuration);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -77,41 +83,38 @@ public class MaximumEntropyTest extends AbstractTest {
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
 
     /**
-     * Test of kFoldCrossValidation method, of class MaximumEntropy.
+     * Test of validate method, of class MaximumEntropy.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        MaximumEntropy instance = new MaximumEntropy(dbName, conf);
+        data[1].close();
+
         
         MaximumEntropy.TrainingParameters param = new MaximumEntropy.TrainingParameters();
         param.setTotalIterations(10);
-        
-        MaximumEntropy.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
         
         double expResult = 0.6051098901098901;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

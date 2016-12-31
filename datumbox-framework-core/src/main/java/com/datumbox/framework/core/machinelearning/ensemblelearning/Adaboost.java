@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
@@ -33,18 +33,18 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters, Adaboost.ValidationMetrics> {
+public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, Adaboost.TrainingParameters> {
  
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractBoostingBagging.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
     } 
@@ -53,23 +53,25 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
     public static class TrainingParameters extends AbstractBoostingBagging.AbstractTrainingParameters {    
         private static final long serialVersionUID = 1L;
         
-    } 
-        
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractBoostingBagging.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
-    
+
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    public Adaboost(String dbName, Configuration conf) {
-        super(dbName, conf, Adaboost.ModelParameters.class, Adaboost.TrainingParameters.class, Adaboost.ValidationMetrics.class);
-    } 
+    protected Adaboost(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected Adaboost(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -84,7 +86,7 @@ public class Adaboost extends AbstractBoostingBagging<Adaboost.ModelParameters, 
             }
         }
         
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
         Status status;
         int c = modelParameters.getC();

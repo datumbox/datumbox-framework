@@ -18,6 +18,10 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -36,34 +40,32 @@ import static org.junit.Assert.assertEquals;
 public class BinarizedNaiveBayesTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class BinarizedNaiveBayes.
+     * Test of predict method, of class BinarizedNaiveBayes.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, conf);
-        
-        BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
-        
-        
-        instance.fit(trainingData, param);
+        String storageName = this.getClass().getSimpleName();
+        BinarizedNaiveBayes instance = MLBuilder.create(new BinarizedNaiveBayes.TrainingParameters(), configuration);
+
+        instance.fit(trainingData);
+        instance.save(storageName);
         
         instance.close();
-        //instance = null;
-        instance = new BinarizedNaiveBayes(dbName, conf);
+
+        instance = MLBuilder.load(BinarizedNaiveBayes.class, storageName, configuration);
         
-        instance.validate(validationData);
+        instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -77,40 +79,34 @@ public class BinarizedNaiveBayesTest extends AbstractTest {
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
 
     /**
-     * Test of kFoldCrossValidation method, of class BinarizedNaiveBayes.
+     * Test of validate method, of class BinarizedNaiveBayes.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        BinarizedNaiveBayes instance = new BinarizedNaiveBayes(dbName, conf);
-        
-        BinarizedNaiveBayes.TrainingParameters param = new BinarizedNaiveBayes.TrainingParameters();
-        
-        BinarizedNaiveBayes.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+        data[1].close();
+
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), new BinarizedNaiveBayes.TrainingParameters());
         
         double expResult = 0.6631318681318682;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
-        trainingData.delete();
+        trainingData.close();
     }
     
 }

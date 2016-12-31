@@ -58,10 +58,10 @@ public class Datasets {
     /**
      * Cars Numeric Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] carsNumeric(Configuration conf) {
+    public static Dataframe[] carsNumeric(Configuration configuration) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
         FeatureList: 
@@ -85,14 +85,14 @@ public class Datasets {
             headerDataTypes.put("imported", TypeInference.DataType.BOOLEAN);
             headerDataTypes.put("stolen", TypeInference.DataType.BOOLEAN);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }
         
         
-        Dataframe validationData = new Dataframe(conf);
+        Dataframe validationData = new Dataframe(configuration);
         AssociativeArray xData = new AssociativeArray();
         xData.put("red", true);
         xData.put("yellow", false);
@@ -108,10 +108,10 @@ public class Datasets {
     /**
      * Cars Categorical Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] carsCategorical(Configuration conf) {
+    public static Dataframe[] carsCategorical(Configuration configuration) {
         /*
         Example from http://www.inf.u-szeged.hu/~ormandi/ai2/06-naiveBayes-example.pdf
         FeatureList: 
@@ -128,13 +128,13 @@ public class Datasets {
             headerDataTypes.put("origin", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("stolen", TypeInference.DataType.CATEGORICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "stolen", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }
         
-        Dataframe validationData = new Dataframe(conf);
+        Dataframe validationData = new Dataframe(configuration);
         AssociativeArray xData = new AssociativeArray();
         xData.put("color", "red");
         xData.put("type", "suv");
@@ -147,10 +147,10 @@ public class Datasets {
     /**
      * Housing numerical Dataframe.
      *
-     * @param conf
+     * @param configuration
      * @return
      */
-    public static Dataframe[] housingNumerical(Configuration conf) {
+    public static Dataframe[] housingNumerical(Configuration configuration) {
         //Data from https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/housing.csv"), "UTF-8")) {
@@ -170,7 +170,7 @@ public class Datasets {
             headerDataTypes.put("LSTAT", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("MEDV", TypeInference.DataType.NUMERICAL);
 
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "MEDV", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "MEDV", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -184,10 +184,10 @@ public class Datasets {
     /**
      * Wines Ordinal Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] winesOrdinal(Configuration conf) {   
+    public static Dataframe[] winesOrdinal(Configuration configuration) {
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         Dataframe trainingData;
         try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/winesOrdinal.csv"), "UTF-8")) {
@@ -197,14 +197,14 @@ public class Datasets {
             headerDataTypes.put("c3", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("class", TypeInference.DataType.ORDINAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "class", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "class", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }
         
         
-        Dataframe validationData = new Dataframe(conf);
+        Dataframe validationData = new Dataframe(configuration);
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("c1", 5.92085126899850);
         xData1.put("c2", 6.01037072456601);
@@ -227,11 +227,11 @@ public class Datasets {
     /**
      * Gaussian Clusters Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] gaussianClusters(Configuration conf) {
-        Dataframe trainingData = new Dataframe(conf);
+    public static Dataframe[] gaussianClusters(Configuration configuration) {
+        Dataframe trainingData = new Dataframe(configuration);
         int observationsPerCluster = 50;
         Random rnd = RandomGenerator.getThreadLocalRandom();
         for(int i=0;i<observationsPerCluster;++i) {
@@ -254,11 +254,11 @@ public class Datasets {
     /**
      * Multinomial Clusters Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] multinomialClusters(Configuration conf) {
-        Dataframe trainingData = new Dataframe(conf);
+    public static Dataframe[] multinomialClusters(Configuration configuration) {
+        Dataframe trainingData = new Dataframe(configuration);
         //cluster 1
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {10.0,13.0, 5.0,6.0,5.0,4.0, 0.0,0.0,0.0,0.0}, "c1"));
         trainingData.add(Datasets.<Object>newDataVector(new Object[] {11.0,11.0, 6.0,7.0,7.0,3.0, 0.0,0.0,1.0,0.0}, "c1"));
@@ -308,10 +308,10 @@ public class Datasets {
     /**
      * Heart Disease Clusters Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] heartDiseaseClusters(Configuration conf) {
+    public static Dataframe[] heartDiseaseClusters(Configuration configuration) {
         //Heart Disease - C2: Age, Sex, ChestPain, RestBP, Cholesterol, BloodSugar, ECG, MaxHeartRate, Angina, OldPeak, STSlope, Vessels, Thal
         //http://www.sgi.com/tech/mlc/db/heart.names
         Dataframe trainingData;
@@ -332,14 +332,14 @@ public class Datasets {
             headerDataTypes.put("Thal", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("Status", TypeInference.DataType.CATEGORICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "Status", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "Status", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
         }       
         
         
-        Dataframe validationData = new Dataframe(conf);
+        Dataframe validationData = new Dataframe(configuration);
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("Age", 51);
         xData1.put("Sex", "M");
@@ -377,11 +377,11 @@ public class Datasets {
     /**
      * Ensemble Learning Responses Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] ensembleLearningResponses(Configuration conf) {
-        Dataframe trainingData = new Dataframe(conf);
+    public static Dataframe[] ensembleLearningResponses(Configuration configuration) {
+        Dataframe trainingData = new Dataframe(configuration);
         trainingData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         trainingData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
@@ -402,7 +402,7 @@ public class Datasets {
         trainingData.add(Datasets.<String>newDataVector(new String[] {"neg","neg"}, "neg"));
         
         
-        Dataframe validationData = new Dataframe(conf);
+        Dataframe validationData = new Dataframe(configuration);
         validationData.add(Datasets.<String>newDataVector(new String[] {"pos","pos"}, "pos"));
         validationData.add(Datasets.<String>newDataVector(new String[] {"pos","neg"}, "pos"));
         validationData.add(Datasets.<String>newDataVector(new String[] {"neg","pos"}, "neg"));
@@ -414,12 +414,12 @@ public class Datasets {
     /**
      * Categorical Feature Selection Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @param n
      * @return 
      */
-    public static Dataframe[] featureSelectorCategorical(Configuration conf, int n) {
-        Dataframe data = new Dataframe(conf);
+    public static Dataframe[] featureSelectorCategorical(Configuration configuration, int n) {
+        Dataframe data = new Dataframe(configuration);
         for(int i=0;i<n;++i) {
             AssociativeArray xData = new AssociativeArray();
             //important fields
@@ -457,11 +457,11 @@ public class Datasets {
     /**
      * PCA Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] featureTransformationPCA(Configuration conf) {
-        Dataframe originalData = new Dataframe(conf);
+    public static Dataframe[] featureTransformationPCA(Configuration configuration) {
+        Dataframe originalData = new Dataframe(configuration);
         originalData.add(Datasets.<Double>newDataVector(new Double[]{1.0, 2.0, 3.0}, null));
         originalData.add(Datasets.<Double>newDataVector(new Double[]{0.0, 5.0, 6.0}, null));
         originalData.add(Datasets.<Double>newDataVector(new Double[]{7.0, 8.0, 0.0}, null));
@@ -469,7 +469,7 @@ public class Datasets {
         originalData.add(Datasets.<Double>newDataVector(new Double[]{13.0, 14.0, 15.0}, null));
         
         
-        Dataframe transformedData = new Dataframe(conf);
+        Dataframe transformedData = new Dataframe(configuration);
         transformedData.add(Datasets.<Double>newDataVector(new Double[]{-3.4438, 0.0799, -1.4607}, null));
         transformedData.add(Datasets.<Double>newDataVector(new Double[]{-6.0641, 1.0143, -4.8165}, null));
         transformedData.add(Datasets.<Double>newDataVector(new Double[]{-7.7270, 6.7253, 2.8399}, null));
@@ -482,11 +482,11 @@ public class Datasets {
     /**
      * TF-IDF Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] featureSelectorTFIDF(Configuration conf) {
-        Dataframe trainingData = new Dataframe(conf);
+    public static Dataframe[] featureSelectorTFIDF(Configuration configuration) {
+        Dataframe trainingData = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("important1", 2.0);
@@ -520,11 +520,11 @@ public class Datasets {
     /**
      * Recommender System Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] recommenderSystemFood(Configuration conf) {
-        Dataframe trainingData = new Dataframe(conf);
+    public static Dataframe[] recommenderSystemFood(Configuration configuration) {
+        Dataframe trainingData = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("ml1", 5.0);
@@ -625,7 +625,7 @@ public class Datasets {
         xData11.put("vg3", 0.5);
         trainingData.add(new Record(xData11, "pitta"));
         
-        Dataframe validationData = new Dataframe(conf);
+        Dataframe validationData = new Dataframe(configuration);
         
         AssociativeArray profileData = new AssociativeArray();
         profileData.put("pizza", 4.5);
@@ -639,10 +639,10 @@ public class Datasets {
     /**
      * Regression Numeric Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] regressionNumeric(Configuration conf) {
+    public static Dataframe[] regressionNumeric(Configuration configuration) {
         /*
         Synthetic Data generated with:
         
@@ -659,7 +659,7 @@ public class Datasets {
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);
@@ -673,10 +673,10 @@ public class Datasets {
     /**
      * Regression Mixed Dataframe.
      * 
-     * @param conf
+     * @param configuration
      * @return 
      */
-    public static Dataframe[] regressionMixed(Configuration conf) {
+    public static Dataframe[] regressionMixed(Configuration configuration) {
         /*
         Synthetic Data generated with:
         
@@ -697,7 +697,7 @@ public class Datasets {
             headerDataTypes.put("c4", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("y", TypeInference.DataType.NUMERICAL);
             
-            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            trainingData = Dataframe.Builder.parseCSVFile(fileReader, "y", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(IOException ex) {
             throw new UncheckedIOException(ex);

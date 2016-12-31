@@ -18,8 +18,13 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.StandardScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -38,33 +43,38 @@ import static org.junit.Assert.assertEquals;
 public class AdaboostTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class Adaboost.
+     * Test of predict method, of class Adaboost.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.carsCategorical(conf);
+        Dataframe[] data = Datasets.carsCategorical(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
-        df.transform(validationData);
-        
-        
-        Adaboost instance = new Adaboost(dbName, conf);
+        String storageName = this.getClass().getSimpleName();
+
+        StandardScaler.TrainingParameters nsParams = new StandardScaler.TrainingParameters();
+        StandardScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
+
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
-        param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
         
         MultinomialNaiveBayes.TrainingParameters trainingParameters = new MultinomialNaiveBayes.TrainingParameters();
@@ -72,26 +82,27 @@ public class AdaboostTest extends AbstractTest {
         
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
+
+        Adaboost instance = MLBuilder.create(param, configuration);
         
-        
-        instance.fit(trainingData, param);
-        
+        instance.fit(trainingData);
+        instance.save(storageName);
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(StandardScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(OneHotEncoder.class, storageName, configuration);
+        instance = MLBuilder.load(Adaboost.class, storageName, configuration);
+
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
+        instance.predict(validationData);
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new Adaboost(dbName, conf);
-        
-        instance.validate(validationData);
-        
-        
-        
-        
-        df.denormalize(trainingData);
-        df.denormalize(validationData);
+
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -102,37 +113,33 @@ public class AdaboostTest extends AbstractTest {
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
     
 
     /**
-     * Test of kFoldCrossValidation method, of class Adaboost.
+     * Test of validate method, of class Adaboost.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.carsNumeric(conf);
+        Dataframe[] data = Datasets.carsNumeric(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        Adaboost instance = new Adaboost(dbName, conf);
+        data[1].close();
+
         
         Adaboost.TrainingParameters param = new Adaboost.TrainingParameters();
         param.setMaxWeakClassifiers(5);
-        param.setWeakClassifierClass(MultinomialNaiveBayes.class);
         
         
         MultinomialNaiveBayes.TrainingParameters trainingParameters = new MultinomialNaiveBayes.TrainingParameters();
@@ -140,15 +147,15 @@ public class AdaboostTest extends AbstractTest {
         
         param.setWeakClassifierTrainingParameters(trainingParameters);
 
-        
-        Adaboost.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
         
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
-        trainingData.delete();
+        trainingData.close();
     }
     
 }

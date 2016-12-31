@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 
@@ -31,18 +31,18 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.A
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters, BayesianEnsembleMethod.ValidationMetrics> {
+public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleMethod.ModelParameters, BayesianEnsembleMethod.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
     } 
@@ -51,28 +51,35 @@ public class BayesianEnsembleMethod extends AbstractNaiveBayes<BayesianEnsembleM
     public static class TrainingParameters extends AbstractNaiveBayes.AbstractTrainingParameters { 
         private static final long serialVersionUID = 1L;
 
-    } 
-        
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
-    
+
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    public BayesianEnsembleMethod(String dbName, Configuration conf) {
-        super(dbName, conf, BayesianEnsembleMethod.ModelParameters.class, BayesianEnsembleMethod.TrainingParameters.class, BayesianEnsembleMethod.ValidationMetrics.class, true);
+    protected BayesianEnsembleMethod(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected BayesianEnsembleMethod(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+    /** {@inheritDoc} */
+    protected boolean isBinarized() {
+        return true;
     }
     
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         super._fit(trainingData);
     }
     

@@ -18,7 +18,11 @@ package com.datumbox.framework.core.machinelearning.topicmodeling;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegression;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.core.utilities.text.extractors.UniqueWordSequenceExtractor;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -40,16 +44,16 @@ import static org.junit.Assert.assertEquals;
 public class LatentDirichletAllocationTest extends AbstractTest {
     
     /**
-     * Test of validate method, of class LatentDirichletAllocation.
+     * Test of predict method, of class LatentDirichletAllocation.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName();
 
         
         Map<Object, URI> dataset = new HashMap<>();
@@ -64,43 +68,46 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         
-        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, conf);
-        
-        
-        LatentDirichletAllocation lda = new LatentDirichletAllocation(dbName, conf);
-        
+        Dataframe trainingData = Dataframe.Builder.parseTextFiles(dataset, wsExtractor, configuration);
+
+
         LatentDirichletAllocation.TrainingParameters trainingParameters = new LatentDirichletAllocation.TrainingParameters();
         trainingParameters.setMaxIterations(15);
         trainingParameters.setAlpha(0.01);
         trainingParameters.setBeta(0.01);
-        trainingParameters.setK(25);        
+        trainingParameters.setK(25);
+
+        LatentDirichletAllocation lda = MLBuilder.create(trainingParameters, configuration);
         
-        lda.fit(trainingData, trainingParameters); 
+        lda.fit(trainingData);
+        lda.save(storageName);
+
+        lda.close();
+        lda = MLBuilder.load(LatentDirichletAllocation.class, storageName, configuration);
+
+        lda.predict(trainingData);
         
-        lda.validate(trainingData);
-        
-        Dataframe reducedTrainingData = new Dataframe(conf);
+        Dataframe reducedTrainingData = new Dataframe(configuration);
         for(Record r : trainingData) {
             //take the topic assignments and convert them into a new Record
             reducedTrainingData.add(new Record(r.getYPredictedProbabilities(), r.getY()));
         }
-        
-        SoftMaxRegression smr = new SoftMaxRegression(dbName, conf);
+
         SoftMaxRegression.TrainingParameters tp = new SoftMaxRegression.TrainingParameters();
         tp.setLearningRate(1.0);
         tp.setTotalIterations(50);
-        
-        SoftMaxRegression.ValidationMetrics vm = smr.kFoldCrossValidation(reducedTrainingData, tp, 1);
+
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
+                .validate(new KFoldSplitter(1).split(reducedTrainingData), tp);
         
         double expResult = 0.6843125117743629;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
 
-        smr.delete();
         lda.delete();
-        reducedTrainingData.delete();
+        reducedTrainingData.close();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

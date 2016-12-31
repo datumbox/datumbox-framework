@@ -45,7 +45,7 @@ public class DataframeTest extends AbstractTest {
     public void testParseCSVFile() {
         logger.info("parseCSVFile");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
         LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
@@ -59,14 +59,14 @@ public class DataframeTest extends AbstractTest {
         
         Dataframe dataset;
         try (Reader fileReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("datasets/cities.csv"), "UTF-8")) {
-            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", null, null, conf);
+            dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(UncheckedIOException | IOException ex) {
             logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }
         
-        Dataframe expResult = new Dataframe(conf);
+        Dataframe expResult = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("city", "Athens");
@@ -117,8 +117,8 @@ public class DataframeTest extends AbstractTest {
         
         assertEquals(expResult.getXDataTypes().equals(dataset.getXDataTypes()),true);
         
-        expResult.delete();
-        dataset.delete();
+        expResult.close();
+        dataset.close();
     }
     
     /**
@@ -140,9 +140,9 @@ public class DataframeTest extends AbstractTest {
     public void testGetColumns() {
         logger.info("getColumns");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe dataset = new Dataframe(conf);
+        Dataframe dataset = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
@@ -170,7 +170,7 @@ public class DataframeTest extends AbstractTest {
         
         assertEquals(dataset.getYDataType(), null);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -180,10 +180,10 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValues() {
         logger.info("extractColumnValues");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         Object column = "height";
-        Dataframe dataset = new Dataframe(conf);
+        Dataframe dataset = new Dataframe(configuration);
         
         
         AssociativeArray xData1 = new AssociativeArray();
@@ -206,7 +206,7 @@ public class DataframeTest extends AbstractTest {
         FlatDataList result = dataset.getXColumn(column);
         assertEquals(expResult, result);
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -216,10 +216,9 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValuesByY() {
         logger.info("extractColumnValuesByY");
         
-        Configuration conf = Configuration.getConfiguration();
-        
-        Object column = "height";
-        Dataframe dataset = new Dataframe(conf);
+        Configuration configuration = Configuration.getConfiguration();
+
+        Dataframe dataset = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("height", 188.0);
@@ -236,7 +235,7 @@ public class DataframeTest extends AbstractTest {
         xData3.put("weight", null);
         dataset.add(new Record(xData3, "Class2"));
         
-        dataset.delete();
+        dataset.close();
     }
 
     /**
@@ -246,9 +245,9 @@ public class DataframeTest extends AbstractTest {
     public void testRemove() {
         logger.info("remove");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe dataset = new Dataframe(conf);
+        Dataframe dataset = new Dataframe(configuration);
         
         AssociativeArray xData1 = new AssociativeArray();
         xData1.put("1", true);
@@ -270,7 +269,7 @@ public class DataframeTest extends AbstractTest {
         
         assertEquals(3, dataset.size());
         
-        dataset.delete();
+        dataset.close();
     }
 
 }

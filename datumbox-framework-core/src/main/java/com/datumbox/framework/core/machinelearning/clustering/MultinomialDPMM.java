@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.clustering;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.MatrixDataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
@@ -41,16 +41,13 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters, MultinomialDPMM.ValidationMetrics> {
+public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, MultinomialDPMM.ModelParameters, MultinomialDPMM.TrainingParameters> {
     
     /**
      * The AbstractCluster class of the MultinomialDPMM model.
      */
     public static class Cluster extends AbstractDPMM.AbstractCluster {
-        private static final long serialVersionUID = 1L;
-        
-        //informational fields
-        private final int dimensions;
+        private static final long serialVersionUID = 2L;
         
         //hyper parameters
         private final double alphaWords; //effectively we set alphaWords = 50. The alphaWords controls the amount of words in each cluster. In most notes it is notated as alpha.
@@ -68,9 +65,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
          */
         protected Cluster(Integer clusterId, int dimensions, double alphaWords) {
             super(clusterId);
-            
-            
-            this.dimensions = dimensions;
+
             this.alphaWords = alphaWords;
             
             wordCounts = new OpenMapRealVector(dimensions);
@@ -184,11 +179,11 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         private static final long serialVersionUID = 1L;
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
 
     }
@@ -218,28 +213,31 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         }
         
     }
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractDPMM.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
+
+
+    /**
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
+     */
+    protected MultinomialDPMM(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
 
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    public MultinomialDPMM(String dbName, Configuration conf) {
-        super(dbName, conf, MultinomialDPMM.ModelParameters.class, MultinomialDPMM.TrainingParameters.class, MultinomialDPMM.ValidationMetrics.class);
+    protected MultinomialDPMM(String storageName, Configuration configuration) {
+        super(storageName, configuration);
     }
     
     /** {@inheritDoc} */
     @Override
     protected Cluster createNewCluster(Integer clusterId) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         Cluster c = new Cluster(clusterId, modelParameters.getD(), trainingParameters.getAlphaWords());
         c.setFeatureIds(modelParameters.getFeatureIds());
         

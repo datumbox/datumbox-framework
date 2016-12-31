@@ -16,16 +16,21 @@
 package com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.concurrency.StreamMethods;
+import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.dataobjects.TypeInference;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.SelectKth;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
- * Abstract class which is the base of every Scored Based Feature Selection algorithm.
+ * Abstract class which is the base of every Score Based Feature Selection algorithm.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
@@ -33,38 +38,154 @@ import java.util.Map;
  */
 public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScoreBasedFeatureSelector.AbstractModelParameters, TP extends AbstractScoreBasedFeatureSelector.AbstractTrainingParameters> extends AbstractFeatureSelector<MP, TP> {
 
-    /** 
-     * @param dbName
-     * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
-     */
-    protected AbstractScoreBasedFeatureSelector(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass) {
-        super(dbName, conf, mpClass, tpClass);
+    /** {@inheritDoc} */
+    public static abstract class AbstractModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
+
+        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=true)
+        private Map<Object, Double> featureScores; //map which stores the scores of the features
+
+        /** 
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
+         */
+        protected AbstractModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
+        }
+        
+        /**
+         * Getter of the Feature Scores.
+         * 
+         * @return 
+         */
+        public Map<Object, Double> getFeatureScores() {
+            return featureScores;
+        }
+        
+        /**
+         * Setter of the Feature Scores.
+         * 
+         * @param featureScores 
+         */
+        protected void setFeatureScores(Map<Object, Double> featureScores) {
+            this.featureScores = featureScores;
+        }
+        
     }
     
+    /** {@inheritDoc} */
+    public static abstract class AbstractTrainingParameters extends AbstractFeatureSelector.AbstractTrainingParameters {
+        
+        private Integer rareFeatureThreshold = null;
+        private Integer maxFeatures = null;
+
+        /**
+         * Getter for the rare feature threshold. Any feature that exists
+         * in the training dataset less times than this number will be removed
+         * directly. 
+         * 
+         * @return 
+         */
+        public Integer getRareFeatureThreshold() {
+            return rareFeatureThreshold;
+        }
+        
+        /**
+         * Setter for the rare feature threshold. Set to null to deactivate this 
+         * feature. Any feature that exists in the training dataset less times 
+         * than this number will be removed directly. 
+         * 
+         * @param rareFeatureThreshold 
+         */
+        public void setRareFeatureThreshold(Integer rareFeatureThreshold) {
+            this.rareFeatureThreshold = rareFeatureThreshold;
+        }
+        
+        /**
+         * Getter for the maximum number of features that should be kept in the
+         * dataset.
+         * 
+         * @return 
+         */
+        public Integer getMaxFeatures() {
+            return maxFeatures;
+        }
+        
+        /**
+         * Setter for the maximum number of features that should be kept in the
+         * dataset. Set to null for unlimited.
+         * 
+         * @param maxFeatures 
+         */
+        public void setMaxFeatures(Integer maxFeatures) {
+            this.maxFeatures = maxFeatures;
+        }
+        
+    }
+
+    /**
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
+     */
+    protected AbstractScoreBasedFeatureSelector(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected AbstractScoreBasedFeatureSelector(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void _transform(Dataframe newData) {
+        Set<Object> selectedFeatures = knowledgeBase.getModelParameters().getFeatureScores().keySet();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
+
+        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, StorageEngine.MapType.HASHMAP, StorageEngine.StorageHint.IN_MEMORY, true, true);
+
+        //keep only the columns which are compatible with the algorithm
+        Stream<Object> compatibleColumns = newData.getXDataTypes().entrySet().stream()
+            .filter(e -> supportedXDataTypes.contains(e.getValue()))
+            .map(e -> e.getKey());
+
+        streamExecutor.forEach(StreamMethods.stream(compatibleColumns, isParallelized()), column -> {
+            if(!selectedFeatures.contains(column)) {
+                tmp_removedColumns.put(column, true);
+            }
+        });
+
+        logger.debug("Removing Columns");
+        newData.dropXColumns(tmp_removedColumns.keySet());
+
+        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
+    }
+
     /**
      * This method keeps the highest scoring features of the provided feature map
      * and removes all the others.
-     * 
+     *
      * @param featureScores
-     * @param maxFeatures 
+     * @param maxFeatures
      */
-    public static void selectHighScoreFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
-        Logger logger = LoggerFactory.getLogger(AbstractScoreBasedFeatureSelector.class);
-        logger.debug("selectHighScoreFeatures()");
-        
+    protected void keepTopFeatures(Map<Object, Double> featureScores, int maxFeatures) {
+        logger.debug("keepTopFeatures()");
+
         logger.debug("Estimating the minPermittedScore");
         Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
-        
+
         //remove any entry with score less than the minimum permitted one
         logger.debug("Removing features with scores less than threshold");
         Iterator<Map.Entry<Object, Double>> it = featureScores.entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<Object, Double> entry = it.next();
-            if(entry.getValue()<minPermittedScore) { 
-                it.remove(); 
+            if(entry.getValue()<minPermittedScore) {
+                it.remove();
             }
         }
 
@@ -76,11 +197,29 @@ public abstract class AbstractScoreBasedFeatureSelector<MP extends AbstractScore
             while(it.hasNext() && numOfExtraFeatures>0) {
                 Map.Entry<Object, Double> entry = it.next();
                 if(entry.getValue()-minPermittedScore<=0.0) { //DO NOT COMPARE THEM DIRECTLY USE SUBTRACTION!
-                    it.remove(); 
+                    it.remove();
                     --numOfExtraFeatures;
                 }
             }
         }
     }
-    
+
+    /**
+     * Removes any feature with less occurrences than the threshold.
+     *
+     * @param featureCounts
+     * @param rareFeatureThreshold
+     */
+    protected void removeRareFeatures(Map<Object, Double> featureCounts, int rareFeatureThreshold) {
+        logger.debug("removeRareFeatures()");
+
+        Iterator<Map.Entry<Object, Double>> it = featureCounts.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<Object, Double> entry = it.next();
+            if(entry.getValue()<rareFeatureThreshold) {
+                it.remove();
+            }
+        }
+    }
+
 }

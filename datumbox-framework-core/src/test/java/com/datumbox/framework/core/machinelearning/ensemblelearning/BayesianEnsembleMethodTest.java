@@ -18,7 +18,9 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
@@ -37,45 +39,54 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
 
 
     /**
-     * Test of validate method, of class BayesianEnsembleMethod.
+     * Test of predict method, of class BayesianEnsembleMethod.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.ensembleLearningResponses(conf);
+        Dataframe[] data = Datasets.ensembleLearningResponses(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
-        df.transform(validationData);
-        
-        
-        BayesianEnsembleMethod instance = new BayesianEnsembleMethod(dbName, conf);
-        
-        BayesianEnsembleMethod.TrainingParameters param = new BayesianEnsembleMethod.TrainingParameters();
-        
-        instance.fit(trainingData, param);
-        
-        
+        String storageName = this.getClass().getSimpleName();
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
+
+
+        BayesianEnsembleMethod instance = MLBuilder.create(new BayesianEnsembleMethod.TrainingParameters(), configuration);
+
+        instance.fit(trainingData);
+        instance.save(storageName);
+
+        trainingData.close();
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(OneHotEncoder.class, storageName, configuration);
+        instance = MLBuilder.load(BayesianEnsembleMethod.class, storageName, configuration);
+
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
         
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new BayesianEnsembleMethod(dbName, conf);
-        
-        instance.validate(validationData);
-        
-        df.denormalize(trainingData);
-        df.denormalize(validationData);
+        instance.predict(validationData);
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -86,12 +97,12 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
 
 }

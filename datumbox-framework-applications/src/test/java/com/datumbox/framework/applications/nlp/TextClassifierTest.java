@@ -18,13 +18,16 @@ package com.datumbox.framework.applications.nlp;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.classification.*;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
-import com.datumbox.framework.core.machinelearning.featureselection.categorical.ChisquareSelect;
-import com.datumbox.framework.core.machinelearning.featureselection.categorical.MutualInformation;
-import com.datumbox.framework.core.machinelearning.featureselection.scorebased.TFIDF;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
+import com.datumbox.framework.core.machinelearning.featureselection.ChisquareSelect;
+import com.datumbox.framework.core.machinelearning.featureselection.MutualInformation;
+import com.datumbox.framework.core.machinelearning.featureselection.TFIDF;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.preprocessing.BinaryScaler;
 import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -58,16 +61,15 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                BernoulliNaiveBayes.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.8393075950598075
+                null,
+                0.8393075950598075,
+                1
         );
     }
 
@@ -82,16 +84,15 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                BinarizedNaiveBayes.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.8413587159387832
+                null,
+                0.8413587159387832,
+                2
         );
     }
 
@@ -106,16 +107,15 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                MaximumEntropy.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.9411031042128604
+                null,
+                0.9411031042128604,
+                3
         );
     }
 
@@ -130,16 +130,15 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                MultinomialNaiveBayes.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.8685865263692268
+                null,
+                0.8685865263692268,
+                4
         );
     }
 
@@ -154,16 +153,19 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
-        
+
+        BinaryScaler.TrainingParameters nsParams = new BinaryScaler.TrainingParameters();
+        nsParams.setScaleResponse(false);
+        nsParams.setThreshold(0.0);
+
         trainAndValidate(
-                OrdinalRegression.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.8290058479532163
+                nsParams,
+                0.9272762308507563,
+                5
         );
     }
 
@@ -178,16 +180,19 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
+
+        BinaryScaler.TrainingParameters nsParams = new BinaryScaler.TrainingParameters();
+        nsParams.setScaleResponse(false);
+        nsParams.setThreshold(0.0);
         
         trainAndValidate(
-                SoftMaxRegression.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.7663106693454584
+                nsParams,
+                0.8979999999999999,
+                6
         );
     }
 
@@ -202,16 +207,15 @@ public class TextClassifierTest extends AbstractTest {
         
         ChisquareSelect.TrainingParameters fsParams = new ChisquareSelect.TrainingParameters();
         fsParams.setALevel(0.05);
-        fsParams.setIgnoringNumericalFeatures(false);
         fsParams.setMaxFeatures(1000);
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                SupportVectorMachine.class,
                 mlParams,
-                ChisquareSelect.class,
                 fsParams,
-                0.9803846153846154
+                null,
+                0.9803846153846154,
+                7
         );
     }
 
@@ -229,11 +233,11 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setRareFeatureThreshold(3);
         
         trainAndValidate(
-                MultinomialNaiveBayes.class,
                 mlParams,
-                MutualInformation.class,
                 fsParams,
-                0.8954671493044679
+                null,
+                0.91926983796055,
+                8
         );
     }
 
@@ -250,11 +254,11 @@ public class TextClassifierTest extends AbstractTest {
         fsParams.setMaxFeatures(1000);
         
         trainAndValidate(
-                MultinomialNaiveBayes.class,
                 mlParams,
-                TFIDF.class,
                 fsParams,
-                0.80461962936161
+                null,
+                0.80461962936161,
+                9
         );
     }
     
@@ -263,21 +267,22 @@ public class TextClassifierTest extends AbstractTest {
      * 
      * @param <ML>
      * @param <FS>
-     * @param modelerClass
+     * @param <NS>
      * @param modelerTrainingParameters
-     * @param featureSelectorClass
-     * @param featureSelectorTrainingParameters 
+     * @param featureSelectorTrainingParameters
+     * @param numericalScalerTrainingParameters
+     * @param testId
      */
-    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector> void trainAndValidate(
-            Class<ML> modelerClass, 
+    private <ML extends AbstractClassifier, FS extends AbstractFeatureSelector, NS extends AbstractScaler> void trainAndValidate(
             ML.AbstractTrainingParameters modelerTrainingParameters,
-            Class<FS> featureSelectorClass, 
             FS.AbstractTrainingParameters featureSelectorTrainingParameters,
-            double expectedF1score) {
-        Configuration conf = Configuration.getConfiguration();
+            NS.AbstractTrainingParameters numericalScalerTrainingParameters,
+            double expectedF1score,
+            int testId) {
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        String dbName = this.getClass().getSimpleName();
+        String storageName = this.getClass().getSimpleName() + testId;
         
         Map<Object, URI> dataset = new HashMap<>();
         try {
@@ -288,45 +293,41 @@ public class TextClassifierTest extends AbstractTest {
             logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }
-        
-        TextClassifier instance = new TextClassifier(dbName, conf);
+
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
-        
-        //Classifier configuration
-        trainingParameters.setModelerClass(modelerClass);
-        trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
-        
-        //data transfomation configuration
-        trainingParameters.setDataTransformerClass(null);
-        trainingParameters.setDataTransformerTrainingParameters(null);
+
+        //numerical scaling configuration
+        trainingParameters.setNumericalScalerTrainingParameters(numericalScalerTrainingParameters);
+
+        //categorical encoding configuration
+        trainingParameters.setCategoricalEncoderTrainingParameters(null);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectorClass(featureSelectorClass);
         trainingParameters.setFeatureSelectorTrainingParameters(featureSelectorTrainingParameters);
+
+        //classifier configuration
+        trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
         
         //text extraction configuration
-        trainingParameters.setTextExtractorClass(NgramsExtractor.class);
         NgramsExtractor.Parameters exParams = new NgramsExtractor.Parameters();
         exParams.setMaxDistanceBetweenKwds(2);
         exParams.setExaminationWindowLength(6);
         trainingParameters.setTextExtractorParameters(exParams);
-        
-        instance.fit(dataset, trainingParameters);
-        
-        
-        
-        ValidationMetrics vm = instance.validate(dataset);
-        
-        instance.setValidationMetrics(vm);
-        
-        assertEquals(expectedF1score, ((AbstractClassifier.AbstractValidationMetrics)vm).getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
+
+        TextClassifier instance = MLBuilder.create(trainingParameters, configuration);
+        instance.fit(dataset);
+        instance.save(storageName);
+
+
+        ClassificationMetrics vm = instance.validate(dataset);
+        assertEquals(expectedF1score, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
+
         instance.close();
-        //instance = null;
         
         
         
-        instance = new TextClassifier(dbName, conf);
-        Dataframe validationData = null;
+        instance = MLBuilder.load(TextClassifier.class, storageName, configuration);
+        Dataframe validationData;
         try {
             validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());
         }
@@ -343,7 +344,7 @@ public class TextClassifierTest extends AbstractTest {
         }
         
         instance.delete();
-        validationData.delete();
+        validationData.close();
     }
 
 }

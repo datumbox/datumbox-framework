@@ -117,11 +117,11 @@ public class DataEnvelopmentAnalysis {
     /**
      * Estimates the efficiency of the records by running DEA
      * 
-     * @param id2DeaRecordMapDatabase   AssociativeArray with the DeaRecords
-     * @param id2DeaRecordMapEvaluation
+     * @param id2DeaRecordMapInput   AssociativeArray with the DeaRecords
+     * @param id2DeaRecordMapOutput
      * @return          Map with the scores of the records 
      */
-    public AssociativeArray estimateEfficiency(Map<Object, DeaRecord> id2DeaRecordMapDatabase, Map<Object, DeaRecord> id2DeaRecordMapEvaluation) {
+    public AssociativeArray estimateEfficiency(Map<Object, DeaRecord> id2DeaRecordMapInput, Map<Object, DeaRecord> id2DeaRecordMapOutput) {
         AssociativeArray evaluatedResults = new AssociativeArray();
         
         List<LPSolver.LPConstraint> constraints = new ArrayList<>();
@@ -129,7 +129,7 @@ public class DataEnvelopmentAnalysis {
         //initialize the constraints list
         Integer totalColumns = null;
         boolean hasInput = false;
-        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapDatabase.entrySet()) {
+        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapInput.entrySet()) {
             DeaRecord currentRecord = entry.getValue();
             int currentColumns = currentRecord.getInput().length; //add the size of input array
             boolean currentHasInput=(currentColumns > 0); //check if the input is defined
@@ -155,7 +155,7 @@ public class DataEnvelopmentAnalysis {
             //The mathematical model is formulated differently depending the case
             if(hasInput==false) {
                 //if no input then change the way that the linear problem formulates
-                constraints.add(new LPSolver.LPConstraint(currentRecord.getOutput(), "<=", 1.0)); //less than 1
+                constraints.add(new LPSolver.LPConstraint(currentRecord.getOutput(), LPSolver.LEQ, 1.0)); //less than 1
             }
             else {
                 //create a double[] with size both of the input and output
@@ -176,12 +176,12 @@ public class DataEnvelopmentAnalysis {
                 //conInput=null;
                 
                 //add the constrain on the list
-                constraints.add(new LPSolver.LPConstraint(currentConstraintBody, "<=", 0.0)); //less than 0
+                constraints.add(new LPSolver.LPConstraint(currentConstraintBody, LPSolver.LEQ, 0.0)); //less than 0
             }    
         }
         
         
-        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapEvaluation.entrySet()) {
+        for(Map.Entry<Object, DeaRecord> entry : id2DeaRecordMapOutput.entrySet()) {
             Object currentRecordId = entry.getKey();
             DeaRecord currentRecord = entry.getValue();
             
@@ -212,7 +212,7 @@ public class DataEnvelopmentAnalysis {
                 //conOutput=null;
                 
                 //set the denominator equal to 1
-                constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, "=", 1.0));
+                constraints.add(new LPSolver.LPConstraint(denominatorConstraintBody, LPSolver.EQ, 1.0));
             }
             
             //RUN SOLVE

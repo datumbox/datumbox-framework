@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractNaiveBayes;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
@@ -39,7 +39,7 @@ import java.util.*;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters, BernoulliNaiveBayes.ValidationMetrics> {
+public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.ModelParameters, BernoulliNaiveBayes.TrainingParameters> {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractNaiveBayes.AbstractModelParameters {
@@ -48,11 +48,11 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         private Map<Object, Double> sumOfLog1minusProb = new HashMap<>(); //the Sum Of Log(1-prob) for each class. This is used to optimize the speed of validation. Instead of looping through all the keywords by having this Sum we are able to loop only through the features of the observation
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**
@@ -78,28 +78,35 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
     public static class TrainingParameters extends AbstractNaiveBayes.AbstractTrainingParameters {   
         private static final long serialVersionUID = 1L;
 
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractNaiveBayes.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
 
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    public BernoulliNaiveBayes(String dbName, Configuration conf) {
-        super(dbName, conf, BernoulliNaiveBayes.ModelParameters.class, BernoulliNaiveBayes.TrainingParameters.class, BernoulliNaiveBayes.ValidationMetrics.class, true);
+    protected BernoulliNaiveBayes(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected BernoulliNaiveBayes(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+    /** {@inheritDoc} */
+    protected boolean isBinarized() {
+        return true;
     }
     
     /** {@inheritDoc} */
     @Override
     public PredictParallelizable.Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<List<Object>, Double> logLikelihoods = modelParameters.getLogLikelihoods();
         Map<Object, Double> logPriors = modelParameters.getLogPriors();
         Set<Object> classesSet = modelParameters.getClasses();
@@ -129,14 +136,14 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
             //So if the feature has no value for one random class (someClass has 
             //no particular significance), then it will not have for any class
             //and thus the feature is not in the dictionary and can be ignored.
-            if(!logLikelihoods.containsKey(Arrays.<Object>asList(feature, someClass))) {
+            if(!logLikelihoods.containsKey(Arrays.asList(feature, someClass))) {
                 continue;
             }
 
             //extract the feature scores for each class for the particular feature
             AssociativeArray classLogScoresForThisFeature = new AssociativeArray(); 
             for(Object theClass : classesSet) {
-                Double logScore = logLikelihoods.get(Arrays.<Object>asList(feature, theClass));
+                Double logScore = logLikelihoods.get(Arrays.asList(feature, theClass));
                 classLogScoresForThisFeature.put(theClass, logScore);
             }
 
@@ -153,7 +160,6 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
                 Double previousValue = predictionScores.getDouble(theClass);
                 predictionScores.put(theClass, previousValue + Math.log(probability)-Math.log(1.0-probability));
             }
-            //classLogScoresForThisFeature=null;
         }
 
         Object predictedClass=getSelectedClassFromClassScores(predictionScores);
@@ -166,11 +172,11 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        int n = modelParameters.getN();
-        int d = modelParameters.getD();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        int n = trainingData.size();
+        int d = trainingData.xColumnSize();
         
-        kb().getTrainingParameters().setMultiProbabilityWeighted(false);
+        knowledgeBase.getTrainingParameters().setMultiProbabilityWeighted(false);
         
         
         Map<List<Object>, Double> likelihoods = modelParameters.getLogLikelihoods();
@@ -206,7 +212,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         */
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 likelihoods.put(featureClassTuple, 0.0); //the key unique across threads and the map is concurrent
             }
         });
@@ -224,7 +230,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
                 
                 if(occurrences!= null && occurrences>0.0) {
                     //The below block of code clips occurrences to 1
-                    List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass); 
+                    List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                     likelihoods.put(featureClassTuple, likelihoods.get(featureClassTuple)+1.0); //each thread updates a unique key and the map is cuncurrent
                     
                     sumOfOccurrences++;
@@ -249,7 +255,7 @@ public class BernoulliNaiveBayes extends AbstractNaiveBayes<BernoulliNaiveBayes.
         //update log likelihood
         for(Object theClass : classesSet) {
             double sumLog1minusP = streamExecutor.sum(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()).mapToDouble(feature -> {
-                List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass); 
+                List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                 Double occurrences = likelihoods.get(featureClassTuple);
 
                 //We perform laplace smoothing (also known as add-1)

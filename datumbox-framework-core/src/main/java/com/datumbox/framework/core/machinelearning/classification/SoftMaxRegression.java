@@ -22,15 +22,14 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.persistentstorage.interfaces.BigMap;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.MapType;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector.StorageHint;
+import com.datumbox.framework.common.storageengines.interfaces.BigMap;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.machinelearning.common.validators.SoftMaxRegressionValidator;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
 import com.datumbox.framework.core.utilities.regularization.ElasticNetRegularizer;
 import com.datumbox.framework.core.utilities.regularization.L1Regularizer;
@@ -54,7 +53,7 @@ import java.util.Set;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters, SoftMaxRegression.ValidationMetrics> implements PredictParallelizable, TrainParallelizable {
+public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.ModelParameters, SoftMaxRegression.TrainingParameters> implements PredictParallelizable, TrainParallelizable {
     
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractClassifier.AbstractModelParameters {
@@ -64,11 +63,11 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         private Map<List<Object>, Double> thitas; //the thita parameters of the model
         
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
         /**
@@ -172,62 +171,27 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             this.l2 = l2;
         }
 
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractClassifier.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
-        private double SSE = 0.0; 
-        private double CountRSquare = 0.0; // http://www.ats.ucla.edu/stat/mult_pkg/faq/general/Psuedo_RSquareds.htm
-        
-        /**
-         * Getter for the SSE metric.
-         * 
-         * @return 
-         */
-        public double getSSE() {
-            return SSE;
-        }
-        
-        /**
-         * Setter for the SSE metric.
-         * 
-         * @param SSE 
-         */
-        public void setSSE(double SSE) {
-            this.SSE = SSE;
-        }
-        
-        /**
-         * Getter for the Count R^2 metric.
-         * 
-         * @return 
-         */
-        public double getCountRSquare() {
-            return CountRSquare;
-        }
-        
-        /**
-         * Setter for the Count R^2 metric.
-         * 
-         * @param CountRSquare 
-         */
-        public void setCountRSquare(double CountRSquare) {
-            this.CountRSquare = CountRSquare;
-        }
-        
     }
-    
+
+
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public SoftMaxRegression(String dbName, Configuration conf) {
-        super(dbName, conf, SoftMaxRegression.ModelParameters.class, SoftMaxRegression.TrainingParameters.class, SoftMaxRegression.ValidationMetrics.class, new SoftMaxRegressionValidator());
-        streamExecutor = new ForkJoinStream(kb().getConf().getConcurrencyConfig());
+    protected SoftMaxRegression(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected SoftMaxRegression(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        streamExecutor = new ForkJoinStream(knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
     
     private boolean parallelized = true;
@@ -252,17 +216,14 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        DatabaseConnector dbc = kb().getDbc();
-        Map<Integer, Prediction> resultsBuffer = dbc.getBigMap("tmp_resultsBuffer", Integer.class, Prediction.class, MapType.HASHMAP, StorageHint.IN_DISK, true, true);
-        _predictDatasetParallel(newData, resultsBuffer, kb().getConf().getConcurrencyConfig());
-        dbc.dropBigMap("tmp_resultsBuffer", resultsBuffer);
+    protected void _predict(Dataframe newData) {
+        _predictDatasetParallel(newData, knowledgeBase.getStorageEngine(), knowledgeBase.getConfiguration().getConcurrencyConfiguration());
     }
 
     /** {@inheritDoc} */
     @Override
     public Prediction _predictRecord(Record r) {
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         Set<Object> classesSet = modelParameters.getClasses();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
@@ -282,8 +243,8 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        ModelParameters modelParameters = kb().getModelParameters();
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
         
         
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
@@ -298,12 +259,12 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         
         //we initialize the thitas to zero for all features and all classes compinations
         for(Object theClass : classesSet) {
-            thitas.put(Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass), 0.0);
+            thitas.put(Arrays.asList(Dataframe.COLUMN_NAME_CONSTANT, theClass), 0.0);
         }
         
         streamExecutor.forEach(StreamMethods.stream(trainingData.getXDataTypes().keySet().stream(), isParallelized()), feature -> {
             for(Object theClass : classesSet) {
-                thitas.putIfAbsent(Arrays.<Object>asList(feature, theClass), 0.0);
+                thitas.putIfAbsent(Arrays.asList(feature, theClass), 0.0);
             }
         });
         
@@ -312,12 +273,12 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
         
         double learningRate = trainingParameters.getLearningRate();
         int totalIterations = trainingParameters.getTotalIterations();
-        DatabaseConnector dbc = kb().getDbc();
+        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
         for(int iteration=0;iteration<totalIterations;++iteration) {
             
             logger.debug("Iteration {}", iteration);
             
-            Map<List<Object>, Double> tmp_newThitas = dbc.getBigMap("tmp_newThitas", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
+            Map<List<Object>, Double> tmp_newThitas = storageEngine.getBigMap("tmp_newThitas", (Class<List<Object>>)(Class<?>)List.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
             
             tmp_newThitas.putAll(thitas);
             batchGradientDescent(trainingData, tmp_newThitas, learningRate);
@@ -338,30 +299,17 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             }
             
             //Drop the temporary Collection
-            dbc.dropBigMap("tmp_newThitas", tmp_newThitas);
+            storageEngine.dropBigMap("tmp_newThitas", tmp_newThitas);
         }
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected SoftMaxRegression.ValidationMetrics validateModel(Dataframe validationData) {
-        SoftMaxRegression.ValidationMetrics validationMetrics = super.validateModel(validationData);
-        
-        validationMetrics.setCountRSquare(validationMetrics.getAccuracy()); //CountRSquare is equal to Accuracy
-        
-        double SSE = calculateError(validationData,kb().getModelParameters().getThitas());
-        validationMetrics.setSSE(SSE);
-        
-        return validationMetrics;
     }
 
     private void batchGradientDescent(Dataframe trainingData, Map<List<Object>, Double> newThitas, double learningRate) {
         //NOTE! This is not the stochastic gradient descent. It is the batch gradient descent optimized for speed (despite it looks more than the stochastic). 
         //Despite the fact that the loops are inverse, the function still changes the values of Thitas at the end of the function. We use the previous thitas 
         //to estimate the costs and only at the end we update the new thitas.
-        ModelParameters modelParameters = kb().getModelParameters();
+        ModelParameters modelParameters = knowledgeBase.getModelParameters();
 
-        double multiplier = learningRate/modelParameters.getN();
+        double multiplier = learningRate/trainingData.size();
         Map<List<Object>, Double> thitas = modelParameters.getThitas();
         Set<Object> classesSet = modelParameters.getClasses();
         
@@ -387,18 +335,18 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
                         Double value = TypeInference.toDouble(entry.getValue());
 
                         Object feature = entry.getKey();
-                        List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+                        List<Object> featureClassTuple = Arrays.asList(feature, theClass);
                         
                         newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier*value);   
                     }
-                    List<Object> featureClassTuple = Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
+                    List<Object> featureClassTuple = Arrays.asList(Dataframe.COLUMN_NAME_CONSTANT, theClass);
                     newThitas.put(featureClassTuple, newThitas.get(featureClassTuple)+errorMultiplier); //update the weight of constant
                 }
             }
         });
 
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
+        double l1 = knowledgeBase.getTrainingParameters().getL1();
+        double l2 = knowledgeBase.getTrainingParameters().getL2();
 
         if(l1>0.0 && l2>0.0) {
             ElasticNetRegularizer.updateWeights(l1, l2, learningRate, thitas, newThitas);
@@ -413,13 +361,13 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     }
     
     private Double calculateClassScore(AssociativeArray x, Object theClass, Map<List<Object>, Double> thitas) {
-        double score = thitas.get(Arrays.<Object>asList(Dataframe.COLUMN_NAME_CONSTANT, theClass));
+        double score = thitas.get(Arrays.asList(Dataframe.COLUMN_NAME_CONSTANT, theClass));
         
         for(Map.Entry<Object, Object> entry : x.entrySet()) {
             Double value = TypeInference.toDouble(entry.getValue());
             
             Object feature = entry.getKey();
-            List<Object> featureClassTuple = Arrays.<Object>asList(feature, theClass);
+            List<Object> featureClassTuple = Arrays.asList(feature, theClass);
             
             Double thitaWeight = thitas.get(featureClassTuple);
             if(thitaWeight!=null) {//ensure that the feature is in the dictionary
@@ -440,10 +388,10 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
             return Math.log(score); //no need to loop through the categories. Just grab the one that we are interested in
         }));
 
-        error = -error/kb().getModelParameters().getN();
+        error = -error/trainingData.size();
 
-        double l1 = kb().getTrainingParameters().getL1();
-        double l2 = kb().getTrainingParameters().getL2();
+        double l1 = knowledgeBase.getTrainingParameters().getL1();
+        double l2 = knowledgeBase.getTrainingParameters().getL2();
 
         if(l1>0.0 && l2>0.0) {
             error += ElasticNetRegularizer.estimatePenalty(l1, l2, thitas);
@@ -459,7 +407,7 @@ public class SoftMaxRegression extends AbstractClassifier<SoftMaxRegression.Mode
     }
     
     private AssociativeArray hypothesisFunction(AssociativeArray x, Map<List<Object>, Double> thitas) {
-        Set<Object> classesSet = kb().getModelParameters().getClasses();
+        Set<Object> classesSet = knowledgeBase.getModelParameters().getClasses();
         AssociativeArray predictionProbabilities = new AssociativeArray(); 
         
         for(Object theClass : classesSet) {

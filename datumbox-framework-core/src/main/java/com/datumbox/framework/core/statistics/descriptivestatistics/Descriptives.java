@@ -112,27 +112,22 @@ public class Descriptives {
     }
     
     /**
-     * Calculates Minimum - Nulls are handled as zeros.
+     * Calculates Minimum - Nulls are ignored.
      * 
      * @param flatDataCollection
      * @return
      */
     public static double min(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
+        if(flatDataCollection.isEmpty()) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
-        double min=Double.MAX_VALUE;
-        
+        double min=Double.POSITIVE_INFINITY;
         
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = it.next();
-            if(v==null) {
-                v=0.0;
-            }
-            if(min>v) {
+            if(v!=null && min > v) {
                 min=v;
             }
         } 
@@ -141,14 +136,13 @@ public class Descriptives {
     }
     
     /**
-     * Calculates Maximum - Nulls are handled as zeros.
+     * Calculates Maximum - Nulls are ignored.
      * 
      * @param flatDataCollection
      * @return
      */
     public static double max(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
+        if(flatDataCollection.isEmpty()) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
         
@@ -157,15 +151,60 @@ public class Descriptives {
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = it.next();
-            if(v==null) {
-                v=0.0;
-            }
-            if(max<v) {
+            if(v!=null && max < v) {
                 max=v;
             }
         }          
         
         return max;
+    }
+
+    /**
+     * Calculates Minimum absolute value - Nulls are ignored.
+     *
+     * @param flatDataCollection
+     * @return
+     */
+    public static double minAbsolute(FlatDataCollection flatDataCollection) {
+        if(flatDataCollection.isEmpty()) {
+            throw new IllegalArgumentException("The provided collection can't be empty.");
+        }
+
+        double minAbs=Double.POSITIVE_INFINITY;
+
+        Iterator<Double> it = flatDataCollection.iteratorDouble();
+        while(it.hasNext()) {
+            Double v = Math.abs(it.next());
+            if(v!=null && minAbs > v) {
+                minAbs=v;
+            }
+        }
+
+        return minAbs;
+    }
+
+    /**
+     * Calculates Maximum absolute value - Nulls are ignored.
+     *
+     * @param flatDataCollection
+     * @return
+     */
+    public static double maxAbsolute(FlatDataCollection flatDataCollection) {
+        if(flatDataCollection.isEmpty()) {
+            throw new IllegalArgumentException("The provided collection can't be empty.");
+        }
+
+        double maxAbs=0.0;
+
+        Iterator<Double> it = flatDataCollection.iteratorDouble();
+        while(it.hasNext()) {
+            Double v = Math.abs(it.next());
+            if(v!=null && maxAbs < v) {
+                maxAbs=v;
+            }
+        }
+
+        return maxAbs;
     }
     
     /**

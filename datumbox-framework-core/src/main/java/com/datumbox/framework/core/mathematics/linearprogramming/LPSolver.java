@@ -30,7 +30,22 @@ import java.util.List;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class LPSolver {
-    
+
+    /**
+     * Greater or equal.
+     */
+    public static String GEQ = ">=";
+
+    /**
+     * Less or equal
+     */
+    public static String LEQ = "<=";
+
+    /**
+     * Equal.
+     */
+    public static String EQ = "=";
+
     /**
      * The Result class of the LP problem.
      */
@@ -152,13 +167,13 @@ public class LPSolver {
         for(LPSolver.LPConstraint constraint : linearConstraintsList) {
             String sign = constraint.getSign();
             Relationship relationship = null;
-            if(">=".equals(sign)) {
+            if(LPSolver.GEQ.equals(sign)) {
                 relationship = Relationship.GEQ;
             }
-            else if("<=".equals(sign)) {
+            else if(LPSolver.LEQ.equals(sign)) {
                 relationship = Relationship.LEQ;
             }
-            else if("=".equals(sign)) {
+            else if(LPSolver.EQ.equals(sign)) {
                 relationship = Relationship.EQ;
             }
             constraints.add(

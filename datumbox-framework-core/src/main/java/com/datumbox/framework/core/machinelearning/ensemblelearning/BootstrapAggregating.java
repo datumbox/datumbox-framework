@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.ensemblelearning;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractBoostingBagging;
 
@@ -36,18 +36,18 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters, BootstrapAggregating.ValidationMetrics> {
+public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggregating.ModelParameters, BootstrapAggregating.TrainingParameters> {
 
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractBoostingBagging.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
         
     } 
@@ -56,23 +56,25 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
     public static class TrainingParameters extends AbstractBoostingBagging.AbstractTrainingParameters { 
         private static final long serialVersionUID = 1L;
         
-    } 
-    
-    /** {@inheritDoc} */
-    public static class ValidationMetrics extends AbstractBoostingBagging.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-
     }
-    
+
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
-    public BootstrapAggregating(String dbName, Configuration conf) {
-        super(dbName, conf, BootstrapAggregating.ModelParameters.class, BootstrapAggregating.TrainingParameters.class, BootstrapAggregating.ValidationMetrics.class);
-    } 
+    protected BootstrapAggregating(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+    }
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected BootstrapAggregating(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -80,7 +82,7 @@ public class BootstrapAggregating extends AbstractBoostingBagging<BootstrapAggre
         //no update on the observationWeights, all observations have equal probability 1/n
         
         //update classifier weights with equal weights
-        List<Double> weakClassifierWeights = kb().getModelParameters().getWeakClassifierWeights();
+        List<Double> weakClassifierWeights = knowledgeBase.getModelParameters().getWeakClassifierWeights();
 
         //add the new weak learner in the list of weights
         weakClassifierWeights.add(0.0);

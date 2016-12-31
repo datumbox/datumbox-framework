@@ -17,15 +17,16 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,120 +38,120 @@ import static org.junit.Assert.assertEquals;
 public class HierarchicalAgglomerativeTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class HierarchicalAgglomerative.
+     * Test of predict method, of class HierarchicalAgglomerative.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate"); 
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        df.transform(validationData);
-        
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf);
+        String storageName = this.getClass().getSimpleName();
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
+
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        
-        instance.fit(trainingData, param);
-        
+
+        HierarchicalAgglomerative instance = MLBuilder.create(param, configuration);
+        instance.fit(trainingData);
+        instance.save(storageName);
+
+        trainingData.close();
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        instance = new HierarchicalAgglomerative(dbName, conf);
-        
-        instance.validate(validationData);
-        
-        df.denormalize(trainingData);
-        df.denormalize(validationData);
-        
-        Map<Integer, Object> expResult = new HashMap<>();
-        Map<Integer, Object> result = new HashMap<>();
-        
-        Map<Integer, HierarchicalAgglomerative.Cluster> clusters = instance.getClusters();
-        for(Map.Entry<Integer, Record> e : validationData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            expResult.put(rId, r.getY());
-            Integer clusterId = (Integer) r.getYPredicted();
-            Object label = clusters.get(clusterId).getLabelY();
-            if(label==null) {
-                label = clusterId;
-            }
-            result.put(rId, label);
-        }
-        assertEquals(expResult, result);
-        
-        df.delete();
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
+        instance = MLBuilder.load(HierarchicalAgglomerative.class, storageName, configuration);
+
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
+        instance.predict(validationData);
+        ClusteringMetrics vm = new ClusteringMetrics(validationData);
+
+        double expResult = 1.0;
+        double result = vm.getPurity();
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
 
     
     /**
-     * Test of kFoldCrossValidation method, of class HierarchicalAgglomerative.
+     * Test of validate method, of class HierarchicalAgglomerative.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.heartDiseaseClusters(conf);
+        Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
+        data[1].close();
 
-        
-        
-        
-        HierarchicalAgglomerative instance = new HierarchicalAgglomerative(dbName, conf);
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+
         
         HierarchicalAgglomerative.TrainingParameters param = new HierarchicalAgglomerative.TrainingParameters();
         param.setDistanceMethod(HierarchicalAgglomerative.TrainingParameters.Distance.EUCLIDIAN);
         param.setLinkageMethod(HierarchicalAgglomerative.TrainingParameters.Linkage.COMPLETE);
         param.setMinClustersThreshold(2);
         param.setMaxDistanceThreshold(Double.MAX_VALUE);
-        
-        HierarchicalAgglomerative.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
-        df.denormalize(trainingData);
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
 
-        
+
         double expResult = 0.7666666666666667;
         double result = vm.getPurity();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
+
+        numericalScaler.close();
+        categoricalEncoder.close();
         
-        df.delete();
-        instance.delete();
-        
-        trainingData.delete();
+        trainingData.close();
     }
 
 }

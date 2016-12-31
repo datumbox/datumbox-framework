@@ -1,13 +1,26 @@
 language: java
 sudo: required
 dist: trusty
-os:
-  - linux
-jdk:
-  - openjdk8
-  - oraclejdk8
-install: mvn install -DskipTests=true
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
+before_install:
+   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export JAVA_HOME=$(/usr/libexec/java_home); fi
+   - echo $JAVA_HOME
+matrix:
+  include:
+    - os: linux
+      jdk: oraclejdk8
+    - os: linux
+      jdk: openjdk8
+    - os: osx
+      env: JAVA_HOME=/usr/libexec/java_home
+install:
+  - mvn clean install -DskipTests=true
 script:
   - mvn clean install
 notifications:
-  email: false
+  email:
+    on_success: never
+    on_failure: always

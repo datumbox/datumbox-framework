@@ -19,7 +19,9 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXYMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
@@ -34,60 +36,69 @@ import org.junit.Test;
 public class StepwiseRegressionTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class StepwiseRegression.
+     * Test of predict method, of class StepwiseRegression.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.regressionNumeric(conf);
+        Dataframe[] data = Datasets.regressionNumeric(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
-        String dbName = this.getClass().getSimpleName();
-        
-        DummyXYMinMaxNormalizer df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.fit_transform(trainingData, new DummyXYMinMaxNormalizer.TrainingParameters());
-        
-        StepwiseRegression instance = new StepwiseRegression(dbName, conf);
+        String storageName = this.getClass().getSimpleName();
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        CornerConstraintsEncoder.TrainingParameters ceParams = new CornerConstraintsEncoder.TrainingParameters();
+        CornerConstraintsEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
         
         StepwiseRegression.TrainingParameters param = new StepwiseRegression.TrainingParameters();
         param.setAout(0.05);
-        param.setRegressionClass(MatrixLinearRegression.class);
         
         MatrixLinearRegression.TrainingParameters trainingParams = new MatrixLinearRegression.TrainingParameters();
         param.setRegressionTrainingParameters(trainingParams);
-                
-        instance.fit(trainingData, param);
-        
-        df.denormalize(trainingData);
+
+
+        StepwiseRegression instance = MLBuilder.create(param, configuration);
+        instance.fit(trainingData);
+        instance.save(storageName);
+
+        trainingData.close();
         
         
         instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = new DummyXYMinMaxNormalizer(dbName, conf);
-        df.transform(validationData);
-        
-        instance = new StepwiseRegression(dbName, conf);
-        instance.validate(validationData);
-        
-        df.denormalize(validationData);
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(CornerConstraintsEncoder.class, storageName, configuration);
+        instance = MLBuilder.load(StepwiseRegression.class, storageName, configuration);
+
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
+        instance.predict(validationData);
         
         for(Record r : validationData) {
             Assert.assertEquals(TypeInference.toDouble(r.getY()), TypeInference.toDouble(r.getYPredicted()), Constants.DOUBLE_ACCURACY_HIGH);
         }
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
 
 

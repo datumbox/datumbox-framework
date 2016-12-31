@@ -17,7 +17,6 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
 
 /**
  * Base Class for all the Regression algorithms.
@@ -25,29 +24,26 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.validators.A
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractModelParameters, TP extends AbstractRegressor.AbstractTrainingParameters, VM extends AbstractRegressor.ValidationMetrics> extends AbstractModeler<MP, TP, VM> {
-    
+public abstract class AbstractRegressor<MP extends AbstractRegressor.AbstractModelParameters, TP extends AbstractRegressor.AbstractTrainingParameters> extends AbstractModeler<MP, TP> {
+
     /**
-     * {@inheritDoc}
-     * DO NOT DECLARE ABSTRACT!!!! IT IS INITIALIZED BY StepwiseRegression class
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public static class ValidationMetrics extends AbstractModeler.AbstractValidationMetrics {
-        private static final long serialVersionUID = 1L;
-        
+    protected AbstractRegressor(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
-    
-    /** 
-     * @param dbName
-     * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass
-     * @param modelValidator
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
      */
-    protected AbstractRegressor(String dbName, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
-        super(dbName, conf, mpClass, tpClass, vmClass, modelValidator);
-    } 
+    protected AbstractRegressor(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+
 }

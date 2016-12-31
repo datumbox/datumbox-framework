@@ -18,144 +18,50 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.validators.AbstractValidator;
-import com.datumbox.framework.core.machinelearning.common.dataobjects.TripleKnowledgeBase;
-import com.datumbox.framework.core.machinelearning.common.interfaces.KnowledgeBase;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 
 /**
  * Base Class for Machine Learning algorithms.
- * 
+ *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  * @param <MP>
  * @param <TP>
- * @param <VM>
  */
-public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelParameters, TP extends AbstractModeler.AbstractTrainingParameters, VM extends AbstractModeler.AbstractValidationMetrics> extends AbstractTrainer<MP, TP, TripleKnowledgeBase<MP, TP, VM>> {
-    
-    private final AbstractValidator<MP, TP, VM> modelValidator;
-    
+public abstract class AbstractModeler<MP extends AbstractModeler.AbstractModelParameters, TP extends AbstractModeler.AbstractTrainingParameters> extends AbstractTrainer<MP, TP> {
+
     /**
-     * The AbstractValidationMetrics class stores information about the performance of the
- algorithm.
-     */
-    public static abstract class AbstractValidationMetrics implements ValidationMetrics {   
-        
-    }
-    
-    /** 
-     * @param baseDBname
-     * @param conf
-     * @param mpClass
-     * @param tpClass
-     * @param vmClass
-     * @param modelValidator
-     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration, java.lang.Class, java.lang.Class...)
-     */
-    protected AbstractModeler(String baseDBname, Configuration conf, Class<MP> mpClass, Class<TP> tpClass, Class<VM> vmClass, AbstractValidator<MP, TP, VM> modelValidator) {
-        super(baseDBname, conf, TripleKnowledgeBase.class, mpClass, tpClass, vmClass);
-        this.modelValidator = modelValidator;
-    } 
-    
-    /**
-     * Performs k-fold cross validation on the dataset and returns the AbstractValidationMetrics
- Object.
-     * 
-     * @param trainingData
      * @param trainingParameters
-     * @param k
-     * @return  
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    public VM kFoldCrossValidation(Dataframe trainingData, TP trainingParameters, int k) {
-        logger.info("kFoldCrossValidation()");
-        
-        return modelValidator.kFoldCrossValidation(trainingData, k, dbName, kb().getConf(), this.getClass(), trainingParameters);
+    protected AbstractModeler(TP trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
     }
-    
+
     /**
-     * Calculates the predictions for the newData and stores them in the provided 
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected AbstractModeler(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+    }
+
+    /**
+     * Calculates the predictions for the newData and stores them in the provided
      * Dataframe.
-     * 
-     * @param newData 
+     *
+     * @param newData
      */
-    public void predict(Dataframe newData) { 
+    public void predict(Dataframe newData) {
         logger.info("predict()");
-        
-        kb().load();
-        
-        _predictDataset(newData);
 
+        _predict(newData);
     }
-    
-    /**
-     * Validate the model against the testingData and returns the validationMetrics;
-     * It does not update the validationMetrics.
-     * 
-     * @param testingData
-     * @return 
-     */
-     public VM validate(Dataframe testingData) {  
-        logger.info("validate()");
-        
-        kb().load();
 
-        //validate the model with the testing data and update the validationMetrics
-        VM validationMetrics = validateModel(testingData);
-        
-        return validationMetrics;
-    }
-    
-    
-    /**
-     * Setter for the Validation Metrics of the algorithm. Usually used to set 
-     * the metrics after running a validate() or when doing K-fold cross validation.
-     * 
-     * @param validationMetrics 
-     */
-    public void setValidationMetrics(VM validationMetrics) {
-        kb().setValidationMetrics(validationMetrics);
-    }
-    
-    /**
-     * Getter for the Validation Metrics of the algorithm.
-     * 
-     * @return 
-     */
-    public VM getValidationMetrics() {
-        return kb().getValidationMetrics();
-    }
-    
-    /**
-     * Getter for KnowledgeBase; this version returns the object explicitly casted to 
- TripleKnowledgeBase. This method exists to resolve any Unchecked/unconfirmed 
-     * cast warnings.
-     * 
-     * @return 
-     */
-    @Override
-    protected TripleKnowledgeBase<MP, TP, VM> kb() {
-        KnowledgeBase kbObj = super.kb();
-        if(kbObj instanceof TripleKnowledgeBase) {
-            return (TripleKnowledgeBase<MP, TP, VM>) kbObj;
-        }
-        else {
-            throw new ClassCastException("Invalid KnowledgeBase type."); //we will never get here
-        }
-    }
-    
-    /**
-     * Validates the model with the provided dataset and returns the validation
-     * metrics.
-     * 
-     * @param validationData
-     * @return 
-     */
-    protected abstract VM validateModel(Dataframe validationData);
-    
     /**
      * Estimates the predictions for a new Dataframe.
-     * 
-     * @param newData 
+     *
+     * @param newData
      */
-    protected abstract void _predictDataset(Dataframe newData);
+    protected abstract void _predict(Dataframe newData);
 }

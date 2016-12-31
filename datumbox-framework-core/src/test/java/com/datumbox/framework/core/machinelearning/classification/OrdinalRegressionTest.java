@@ -18,13 +18,20 @@ package com.datumbox.framework.core.machinelearning.classification;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.core.machinelearning.datatransformation.DummyXMinMaxNormalizer;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
+import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
+import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -37,48 +44,66 @@ import static org.junit.Assert.assertEquals;
 public class OrdinalRegressionTest extends AbstractTest {
 
     /**
-     * Test of validate method, of class OrdinalRegression.
+     * Test of predict method, of class OrdinalRegression.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate");
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         
-        Dataframe[] data = Datasets.winesOrdinal(conf);
+        Dataframe[] data = Datasets.winesOrdinal(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
         
         
-        String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
-        
-        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
-        df.transform(validationData);
-        
-        OrdinalRegression instance = new OrdinalRegression(dbName, conf);
-        
+        String storageName = this.getClass().getSimpleName();
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+
+        numericalScaler.fit_transform(trainingData);
+        numericalScaler.save(storageName);
+
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+
+        categoricalEncoder.fit_transform(trainingData);
+        categoricalEncoder.save(storageName);
+
+        String datasetName = "winesOrdinal";
+        trainingData.save(datasetName);
+        trainingData.close();
+
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         param.setL2(0.001);
-        
-        instance.fit(trainingData, param);
-        
-        instance.close();
-        df.close();
-        //instance = null;
-        //df = null;
-        
-        df = new DummyXMinMaxNormalizer(dbName, conf);
-        instance = new OrdinalRegression(dbName, conf);
-        
-        instance.validate(validationData);
 
-        
-        df.denormalize(trainingData);
-        df.denormalize(validationData);
+        OrdinalRegression instance = MLBuilder.create(param, configuration);
+        trainingData = Dataframe.Builder.load(datasetName,configuration);
+
+        instance.fit(trainingData);
+        instance.save(storageName);
+
+        trainingData.delete();
+
+        instance.close();
+        numericalScaler.close();
+        categoricalEncoder.close();
+
+
+
+        numericalScaler = MLBuilder.load(MinMaxScaler.class, storageName, configuration);
+        categoricalEncoder = MLBuilder.load(OneHotEncoder.class, storageName, configuration);
+
+        instance = MLBuilder.load(OrdinalRegression.class, storageName, configuration);
+
+        numericalScaler.transform(validationData);
+        categoricalEncoder.transform(validationData);
+        instance.predict(validationData);
+
 
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
@@ -89,57 +114,55 @@ public class OrdinalRegressionTest extends AbstractTest {
             result.put(rId, r.getYPredicted());
         }
         assertEquals(expResult, result);
-        
-        df.delete();
+
+        numericalScaler.delete();
+        categoricalEncoder.delete();
         instance.delete();
-        
-        trainingData.delete();
-        validationData.delete();
+
+        validationData.close();
     }
 
 
     /**
-     * Test of kFoldCrossValidation method, of class OrdinalRegression.
+     * Test of validate method, of class OrdinalRegression.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.winesOrdinal(conf);
+        Dataframe[] data = Datasets.winesOrdinal(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
-        
-        
-        String dbName = this.getClass().getSimpleName();
-        DummyXMinMaxNormalizer df = new DummyXMinMaxNormalizer(dbName, conf);
-        
-        df.fit_transform(trainingData, new DummyXMinMaxNormalizer.TrainingParameters());
-        
-        OrdinalRegression instance = new OrdinalRegression(dbName, conf);
-        
+        data[1].close();
+
+
+        MinMaxScaler.TrainingParameters nsParams = new MinMaxScaler.TrainingParameters();
+        MinMaxScaler numericalScaler = MLBuilder.create(nsParams, configuration);
+        numericalScaler.fit_transform(trainingData);
+
+        OneHotEncoder.TrainingParameters ceParams = new OneHotEncoder.TrainingParameters();
+        OneHotEncoder categoricalEncoder = MLBuilder.create(ceParams, configuration);
+        categoricalEncoder.fit_transform(trainingData);
+
         OrdinalRegression.TrainingParameters param = new OrdinalRegression.TrainingParameters();
         param.setTotalIterations(100);
         param.setL2(0.001);
-        
-        OrdinalRegression.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
 
-        	        
-        df.denormalize(trainingData);
+        ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
 
 
-        
         double expResult = 0.9823403146614675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
+
+        numericalScaler.close();
+        categoricalEncoder.close();
         
-        df.delete();
-        instance.delete();
-        
-        trainingData.delete();
+        trainingData.close();
     }
 
 }

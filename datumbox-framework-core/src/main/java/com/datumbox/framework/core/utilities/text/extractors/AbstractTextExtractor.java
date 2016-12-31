@@ -114,19 +114,17 @@ public abstract class AbstractTextExtractor<TP extends AbstractTextExtractor.Abs
      * 
      * @param <T>
      * @param <TP>
-     * @param tClass
      * @param parameters
      * @return 
      */
-    public static <T extends AbstractTextExtractor, TP extends AbstractTextExtractor.AbstractParameters> T newInstance(Class<T> tClass, TP parameters) {
-        T textExtractor = null;
+    public static <T extends AbstractTextExtractor, TP extends AbstractTextExtractor.AbstractParameters> T newInstance(TP parameters) {
         try {
-            textExtractor = (T) tClass.getConstructors()[0].newInstance(parameters);
+            //By convention the Parameters are enclosed in the Extactor.
+            Class<T> tClass = (Class<T>) parameters.getClass().getEnclosingClass();
+            return tClass.getConstructor(parameters.getClass()).newInstance(parameters);
         } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException ex) {
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException | NoSuchMethodException ex) {
             throw new RuntimeException(ex);
         }
-        
-        return textExtractor;
     }
 }

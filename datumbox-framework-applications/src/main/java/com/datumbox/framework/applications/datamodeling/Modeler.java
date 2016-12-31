@@ -17,14 +17,15 @@ package com.datumbox.framework.applications.datamodeling;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.interfaces.Trainable;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.datatransformers.AbstractTransformer;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
+import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractScaler;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
-import com.datumbox.framework.core.machinelearning.common.abstracts.wrappers.AbstractWrapper;
-import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
+import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableBundle;
+import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 /**
  * Modeler is a convenience class which can be used to train Machine Learning
@@ -33,177 +34,301 @@ import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationM
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class Modeler extends AbstractWrapper<Modeler.ModelParameters, Modeler.TrainingParameters> {
-    
+public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.TrainingParameters> implements Parallelizable {
+
+    private static final String NS_KEY = "ns";
+    private static final String CE_KEY = "ce";
+    private static final String FS_KEY = "fs";
+    private static final String ML_KEY = "ml";
+
+    private final TrainableBundle bundle;
+
     /**
      * It contains all the Model Parameters which are learned during the training.
      */
-    public static class ModelParameters extends AbstractWrapper.AbstractModelParameters {
+    public static class ModelParameters extends AbstractModeler.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
         
         /**
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
-        
+
     }
     
     /**
      * It contains the Training Parameters of the Modeler.
      */
-    public static class TrainingParameters extends AbstractWrapper.AbstractTrainingParameters<AbstractTransformer, AbstractFeatureSelector, AbstractModeler> {
+    public static class TrainingParameters extends AbstractModeler.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
+        //Parameter Objects
+        private AbstractScaler.AbstractTrainingParameters numericalScalerTrainingParameters;
+        private AbstractEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters;
+        private AbstractFeatureSelector.AbstractTrainingParameters featureSelectorTrainingParameters;
+        private AbstractModeler.AbstractTrainingParameters modelerTrainingParameters;
+
+        /**
+         * Getter for the Training Parameters of the numerical scaler.
+         *
+         * @return
+         */
+        public AbstractScaler.AbstractTrainingParameters getNumericalScalerTrainingParameters() {
+            return numericalScalerTrainingParameters;
+        }
+
+        /**
+         * Setter for the Training Parameters of the numerical scaler.
+         *
+         * @param numericalScalerTrainingParameters
+         */
+        public void setNumericalScalerTrainingParameters(AbstractScaler.AbstractTrainingParameters numericalScalerTrainingParameters) {
+            this.numericalScalerTrainingParameters = numericalScalerTrainingParameters;
+        }
+
+        /**
+         * Getter for the Training Parameters of the categorical encoder.
+         *
+         * @return
+         */
+        public AbstractEncoder.AbstractTrainingParameters getCategoricalEncoderTrainingParameters() {
+            return categoricalEncoderTrainingParameters;
+        }
+
+        /**
+         * Setter for the Training Parameters of the categorical encoder.
+         *
+         * @param categoricalEncoderTrainingParameters
+         */
+        public void setCategoricalEncoderTrainingParameters(AbstractEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters) {
+            this.categoricalEncoderTrainingParameters = categoricalEncoderTrainingParameters;
+        }
+
+        /**
+         * Getter for the Training Parameters of the Feature Selector.
+         *
+         * @return
+         */
+        public AbstractFeatureSelector.AbstractTrainingParameters getFeatureSelectorTrainingParameters() {
+            return featureSelectorTrainingParameters;
+        }
+
+        /**
+         * Setter for the Training Parameters of the Feature Selector. Pass null
+         * for none.
+         *
+         * @param featureSelectorTrainingParameters
+         */
+        public void setFeatureSelectorTrainingParameters(AbstractFeatureSelector.AbstractTrainingParameters featureSelectorTrainingParameters) {
+            this.featureSelectorTrainingParameters = featureSelectorTrainingParameters;
+        }
+
+        /**
+         * Getter for the Training Parameters of the Machine Learning modeler.
+         *
+         * @return
+         */
+        public AbstractModeler.AbstractTrainingParameters getModelerTrainingParameters() {
+            return modelerTrainingParameters;
+        }
+
+        /**
+         * Setter for the Training Parameters of the Machine Learning modeler.
+         *
+         * @param modelerTrainingParameters
+         */
+        public void setModelerTrainingParameters(AbstractModeler.AbstractTrainingParameters modelerTrainingParameters) {
+            this.modelerTrainingParameters = modelerTrainingParameters;
+        }
+
+    }
+
+
+    /**
+     * @param trainingParameters
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
+     */
+    protected Modeler(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
     /**
-     * Constructor for the Modeler class. It accepts as arguments the name of the
-     * database were the results are stored and the Database Configuration.
-     * 
-     * @param dbName
-     * @param conf 
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(java.lang.String, Configuration)
      */
-    public Modeler(String dbName, Configuration conf) {
-        super(dbName, conf, Modeler.ModelParameters.class, Modeler.TrainingParameters.class);
+    protected Modeler(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
-    /**
-     * Generates predictions for the given dataset.
-     * 
-     * @param newData 
-     */
-    public void predict(Dataframe newData) {
-        logger.info("predict()");
-        
-        evaluateData(newData, false);
+
+    private boolean parallelized = true;
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isParallelized() {
+        return parallelized;
     }
-    
-    /**
-     * Validates the algorithm with the provided dataset and returns the Validation
-     * Metrics. The provided dataset must contain the real response variables.
-     * 
-     * @param testData
-     * @return 
-     */
-    public ValidationMetrics validate(Dataframe testData) {
-        logger.info("validate()");
-        
-        return evaluateData(testData, true);
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParallelized(boolean parallelized) {
+        this.parallelized = parallelized;
+    }
+
+    /** {@inheritDoc} */
+    public void _predict(Dataframe newData) {
+        //load all trainables on the bundles
+        initBundle();
+
+        //set the parallized flag to all algorithms
+        bundle.setParallelized(isParallelized());
+
+        //run the pipeline
+        AbstractScaler numericalScaler = (AbstractScaler) bundle.get(NS_KEY);
+        if(numericalScaler != null) {
+            numericalScaler.transform(newData);
+        }
+        AbstractEncoder categoricalEncoder = (AbstractEncoder) bundle.get(CE_KEY);
+        if(categoricalEncoder != null) {
+            categoricalEncoder.transform(newData);
+        }
+        AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY);
+        if(featureSelector != null) {
+            featureSelector.transform(newData);
+        }
+        AbstractModeler modeler = (AbstractModeler) bundle.get(ML_KEY);
+        modeler.predict(newData);
     }
     
     /** {@inheritDoc} */
     @Override
-    protected void _fit(Dataframe trainingData) { 
-        
-        //get the training parameters
-        Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        Configuration conf = kb().getConf();
-        
-        //transform the training dataset
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
-        if(transformData) {
-            dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
-            
-            setParallelized(dataTransformer);
-            
-            dataTransformer.fit_transform(trainingData, trainingParameters.getDataTransformerTrainingParameters());
+    protected void _fit(Dataframe trainingData) {
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration configuration = knowledgeBase.getConfiguration();
+
+        //reset previous entries on the bundle
+        resetBundle();
+
+        //initialize the parts of the pipeline
+        AbstractScaler.AbstractTrainingParameters nsParams = trainingParameters.getNumericalScalerTrainingParameters();
+        AbstractScaler numericalScaler = null;
+        if(nsParams != null) {
+            numericalScaler = MLBuilder.create(nsParams, configuration);
         }
-        
-        
-        //find the most popular features
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-        
-        boolean selectFeatures = (fsClass!=null);
-        if(selectFeatures) {
-            featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
-            
-            setParallelized(featureSelector);
-            
-            featureSelector.fit_transform(trainingData, trainingParameters.getFeatureSelectorTrainingParameters()); 
+        bundle.put(NS_KEY, numericalScaler);
+
+        AbstractEncoder.AbstractTrainingParameters ceParams = trainingParameters.getCategoricalEncoderTrainingParameters();
+        AbstractEncoder categoricalEncoder = null;
+        if(ceParams != null) {
+            categoricalEncoder = MLBuilder.create(ceParams, configuration);
         }
-        
-        
-        
-        
-        //initialize modeler
-        Class mlClass = trainingParameters.getModelerClass();
-        modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
-        
-        setParallelized(modeler);
-        
-        //train the modeler on the whole dataset
-        modeler.fit(trainingData, trainingParameters.getModelerTrainingParameters());
-        
-        if(transformData) {
-            dataTransformer.denormalize(trainingData); //optional denormalization
+        bundle.put(CE_KEY, categoricalEncoder);
+
+        AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
+        AbstractFeatureSelector featureSelector = null;
+        if(fsParams != null) {
+            featureSelector = MLBuilder.create(fsParams, configuration);
         }
+        bundle.put(FS_KEY, featureSelector);
+
+        AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
+        AbstractModeler modeler = MLBuilder.create(mlParams, configuration);
+        bundle.put(ML_KEY, modeler);
+
+        //set the parallized flag to all algorithms
+        bundle.setParallelized(isParallelized());
+
+        //run the pipeline
+        if(numericalScaler != null) {
+            numericalScaler.fit_transform(trainingData);
+        }
+        if(categoricalEncoder != null) {
+            categoricalEncoder.fit_transform(trainingData);
+        }
+        if(featureSelector != null) {
+            featureSelector.fit_transform(trainingData);
+        }
+        modeler.fit(trainingData);
     }
-    
-    private ValidationMetrics evaluateData(Dataframe data, boolean estimateValidationMetrics) {
-        //ensure db loaded
-        kb().load();
-        Modeler.TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        Configuration conf = kb().getConf();
-        
-        Class dtClass = trainingParameters.getDataTransformerClass();
-        
-        boolean transformData = (dtClass!=null);
-        if(transformData) {
-            if(dataTransformer==null) {
-                dataTransformer = Trainable.<AbstractTransformer>newInstance(dtClass, dbName, conf);
-            }        
-            
-            setParallelized(dataTransformer);
-        
-            dataTransformer.transform(data);
-        }
-        
-        Class fsClass = trainingParameters.getFeatureSelectorClass();
-        
-        boolean selectFeatures = (fsClass!=null);
-        if(selectFeatures) {
-            if(featureSelector==null) {
-                featureSelector = Trainable.<AbstractFeatureSelector>newInstance(fsClass, dbName, conf);
+
+    /** {@inheritDoc} */
+    @Override
+    public void save(String storageName) {
+        initBundle();
+        super.save(storageName);
+
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
+        bundle.save(knowledgeBaseName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete() {
+        initBundle();
+        bundle.delete();
+        super.delete();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        initBundle();
+        bundle.close();
+        super.close();
+    }
+
+    private void resetBundle() {
+        bundle.delete();
+    }
+
+    private void initBundle() {
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration configuration = knowledgeBase.getConfiguration();
+        String storageName = knowledgeBase.getStorageEngine().getStorageName();
+        String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
+
+        if(!bundle.containsKey(NS_KEY)) {
+            AbstractScaler.AbstractTrainingParameters nsParams = trainingParameters.getNumericalScalerTrainingParameters();
+
+            AbstractScaler numericalScaler = null;
+            if(nsParams != null) {
+                numericalScaler = MLBuilder.load(nsParams.getTClass(), storageName + separator + NS_KEY, configuration);
             }
-            
-            setParallelized(featureSelector);
-            
-            //remove unnecessary features
-            featureSelector.transform(data);
+            bundle.put(NS_KEY, numericalScaler);
         }
-        
-        
-        //initialize modeler
-        if(modeler==null) {
-            Class mlClass = trainingParameters.getModelerClass();
-            modeler = Trainable.<AbstractModeler>newInstance(mlClass, dbName, conf); 
+
+        if(!bundle.containsKey(CE_KEY)) {
+            AbstractEncoder.AbstractTrainingParameters ceParams = trainingParameters.getCategoricalEncoderTrainingParameters();
+
+            AbstractEncoder categoricalEncoder = null;
+            if(ceParams != null) {
+                categoricalEncoder = MLBuilder.load(ceParams.getTClass(), storageName + separator + CE_KEY, configuration);
+            }
+            bundle.put(CE_KEY, categoricalEncoder);
         }
-        
-        setParallelized(modeler);
-        
-        //call predict of the modeler for the new dataset
-        
-        ValidationMetrics vm = null;
-        if(estimateValidationMetrics) {
-            //run validate which calculates validation metrics. It is used by validate() method
-            vm = modeler.validate(data);
+
+        if(!bundle.containsKey(FS_KEY)) {
+            AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
+
+            AbstractFeatureSelector featureSelector = null;
+            if(fsParams != null) {
+                featureSelector = MLBuilder.load(fsParams.getTClass(), storageName + separator + FS_KEY, configuration);
+            }
+            bundle.put(FS_KEY, featureSelector);
         }
-        else {
-            //run predict which does not calculate validation metrics. It is used in from predict() method
-            modeler.predict(data);
+
+        if(!bundle.containsKey(ML_KEY)) {
+            AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
+
+            bundle.put(ML_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + ML_KEY, configuration));
         }
-        
-        if(transformData) {
-            dataTransformer.denormalize(data); //optional denormization
-        }
-        
-        return vm;
     }
+
 }

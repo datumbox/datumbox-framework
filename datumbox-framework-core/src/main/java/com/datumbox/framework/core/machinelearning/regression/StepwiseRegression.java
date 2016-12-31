@@ -17,11 +17,12 @@ package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.interfaces.Trainable;
-import com.datumbox.framework.common.persistentstorage.interfaces.DatabaseConnector;
+import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
+import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableBundle;
 import com.datumbox.framework.core.machinelearning.common.interfaces.StepwiseCompatible;
 
 import java.util.HashSet;
@@ -36,23 +37,24 @@ import java.util.Set;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters, AbstractRegressor.ValidationMetrics>  {
-    
-    private transient AbstractRegressor mlregressor = null;
-    
+public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.ModelParameters, StepwiseRegression.TrainingParameters>  {
+
+    private static final String REG_KEY = "reg";
+
+    private final TrainableBundle bundle;
+
     /** {@inheritDoc} */
     public static class ModelParameters extends AbstractRegressor.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
-         * @param dbc
-         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(DatabaseConnector)
+         * @param storageEngine
+         * @see AbstractTrainer.AbstractModelParameters#AbstractModelParameters(StorageEngine)
          */
-        protected ModelParameters(DatabaseConnector dbc) {
-            super(dbc);
+        protected ModelParameters(StorageEngine storageEngine) {
+            super(storageEngine);
         }
-        
-        //EMPTY Model parameters. It relies on the mlregressor DB instead        
+
     } 
 
     /** {@inheritDoc} */
@@ -60,12 +62,9 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         private static final long serialVersionUID = 1L;
         
         //primitives/wrappers
-        private Integer maxIterations = null;
+        private int maxIterations = Integer.MAX_VALUE;
         
-        private Double aout = 0.05;
-        
-        //Classes
-        private Class<? extends AbstractRegressor> regressionClass;
+        private double aout = 0.05;
 
         //Parameter Objects
         private AbstractRegressor.AbstractTrainingParameters regressionTrainingParameters;
@@ -77,7 +76,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @return 
          */
-        public Integer getMaxIterations() {
+        public int getMaxIterations() {
             return maxIterations;
         }
 
@@ -86,7 +85,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @param maxIterations 
          */
-        public void setMaxIterations(Integer maxIterations) {
+        public void setMaxIterations(int maxIterations) {
             this.maxIterations = maxIterations;
         }
         
@@ -98,7 +97,7 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @return 
          */
-        public Double getAout() {
+        public double getAout() {
             return aout;
         }
         
@@ -109,35 +108,10 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
          * 
          * @param aout 
          */
-        public void setAout(Double aout) {
+        public void setAout(double aout) {
             this.aout = aout;
         }
-        
-        /**
-         * Getter for the class of the regression algorithm that is used internally
-         * by the Stepwise Regression. The regressor must implement the StepwiseCompatible
-         * interface in order to be used in the analysis.
-         * 
-         * @return 
-         */
-        public Class<? extends AbstractRegressor> getRegressionClass() {
-            return regressionClass;
-        }
-        
-        /**
-         * Setter for the class of the regression algorithm that is used internally
-         * by the Stepwise Regression. The regressor must implement the StepwiseCompatible
-         * interface in order to be used in the analysis.
-         * 
-         * @param regressionClass 
-         */
-        public void setRegressionClass(Class<? extends AbstractRegressor> regressionClass) {
-            if(!StepwiseCompatible.class.isAssignableFrom(regressionClass)) {
-                throw new IllegalArgumentException("The regression model is not Stepwise Compatible.");
-            }
-            this.regressionClass = regressionClass;
-        }
-        
+
         /**
          * Getter for the training parameters of the regression algorithm that is
          * used internally by the Stepwise Regression.
@@ -160,89 +134,48 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         
     }
 
-
-    /*
-    The no ValidationMetrics Class here!!!!!! The algorithm fetches the
-    validations metrics of the mlregressor and cast them to AbstractRegressor.ValidationMetrics.
-    */
-    //public static class ValidationMetrics extends AbstractRegressor.ValidationMetrics { }
-    
-    
     /**
-     * Public constructor of the algorithm.
-     * 
-     * @param dbName
-     * @param conf 
-     */
-    public StepwiseRegression(String dbName, Configuration conf) {
-        super(dbName, conf, StepwiseRegression.ModelParameters.class, StepwiseRegression.TrainingParameters.class, StepwiseRegression.ValidationMetrics.class, null); //do not define a validator. pass null and overload the kcross validation method to validate with the mlregressor object
-    } 
-     
-    /** {@inheritDoc} */
-    @Override
-    public void delete() {
-        loadRegressor();
-        mlregressor.delete();
-        mlregressor = null;
-        
-        super.delete();
-    }
-         
-    /** {@inheritDoc} */
-    @Override
-    public void close() {
-        loadRegressor();
-        mlregressor.close();
-        mlregressor = null;
-        
-        super.close();
-    }
-    
-    /**
-     * Performs k-fold cross validation on the dataset using an already trained
-     * Regressor and returns its ValidationMetrics Object. Before calling this method
-     * you must have already trained a model.
-     * 
-     * @param trainingData
      * @param trainingParameters
-     * @param k
-     * @return 
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
      */
-    @Override
-    public AbstractRegressor.ValidationMetrics kFoldCrossValidation(Dataframe trainingData, TrainingParameters trainingParameters, int k) {
-        if(mlregressor == null) {
-            throw new RuntimeException("You need to train a Regressor before running k-fold cross validation.");
-        }
-        else {
-            return (ValidationMetrics) mlregressor.kFoldCrossValidation(trainingData, trainingParameters, k);
-        }
+    protected StepwiseRegression(TrainingParameters trainingParameters, Configuration configuration) {
+        super(trainingParameters, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
-    
-    /** {@inheritDoc} */
-    @Override
-    protected AbstractRegressor.ValidationMetrics validateModel(Dataframe validationData) {
-        loadRegressor();
-        
-        return (AbstractRegressor.ValidationMetrics) mlregressor.validate(validationData);
+
+    /**
+     * @param storageName
+     * @param configuration
+     * @see AbstractTrainer#AbstractTrainer(String, Configuration)
+     */
+    protected StepwiseRegression(String storageName, Configuration configuration) {
+        super(storageName, configuration);
+        bundle  = new TrainableBundle(configuration.getStorageConfiguration().getStorageNameSeparator());
     }
 
     /** {@inheritDoc} */
     @Override
-    protected void _predictDataset(Dataframe newData) {
-        loadRegressor();
-        
+    protected void _predict(Dataframe newData) {
+        //load all trainables on the bundles
+        initBundle();
+
+        //run the pipeline
+        AbstractRegressor mlregressor = (AbstractRegressor) bundle.get(REG_KEY);
         mlregressor.predict(newData);
     }
     
     /** {@inheritDoc} */
     @Override
     protected void _fit(Dataframe trainingData) {
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        Integer maxIterations = trainingParameters.getMaxIterations();
-        if(maxIterations==null) {
-            maxIterations = Integer.MAX_VALUE;
-        }
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration configuration = knowledgeBase.getConfiguration();
+
+        //reset previous entries on the bundle
+        resetBundle();
+
+        //perform stepwise
+        int maxIterations = trainingParameters.getMaxIterations();
         double aOut = trainingParameters.getAout();
         
         //copy data before starting
@@ -278,35 +211,69 @@ public class StepwiseRegression extends AbstractRegressor<StepwiseRegression.Mod
         }
         
         //once we have the dataset has been cleared from the unnecessary columns train the model once again
-        mlregressor = generateRegressor();
-        
-        mlregressor.fit(copiedTrainingData, trainingParameters.getRegressionTrainingParameters());
-        copiedTrainingData.delete();
-        //copiedTrainingData = null;
+        AbstractRegressor mlregressor = MLBuilder.create(
+                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
+                configuration
+        );
+        mlregressor.fit(copiedTrainingData);
+        bundle.put(REG_KEY, mlregressor);
+
+        copiedTrainingData.close();
     }
 
-    private void loadRegressor() {
-        if(mlregressor==null) {
-            mlregressor = generateRegressor();
+    /** {@inheritDoc} */
+    @Override
+    public void save(String storageName) {
+        initBundle();
+        super.save(storageName);
+
+        String knowledgeBaseName = createKnowledgeBaseName(storageName, knowledgeBase.getConfiguration().getStorageConfiguration().getStorageNameSeparator());
+        bundle.save(knowledgeBaseName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete() {
+        initBundle();
+        bundle.delete();
+        super.delete();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        initBundle();
+        bundle.close();
+        super.close();
+    }
+
+    private void resetBundle() {
+        bundle.delete();
+    }
+
+    private void initBundle() {
+        TrainingParameters trainingParameters = knowledgeBase.getTrainingParameters();
+        Configuration configuration = knowledgeBase.getConfiguration();
+        String storageName = knowledgeBase.getStorageEngine().getStorageName();
+        String separator = configuration.getStorageConfiguration().getStorageNameSeparator();
+
+        if(!bundle.containsKey(REG_KEY)) {
+            AbstractTrainingParameters mlParams = trainingParameters.getRegressionTrainingParameters();
+
+            bundle.put(REG_KEY, MLBuilder.load(mlParams.getTClass(), storageName + separator + REG_KEY, configuration));
         }
     }
-    
-    private AbstractRegressor generateRegressor() {
-        return Trainable.<AbstractRegressor>newInstance((Class<AbstractRegressor>) kb().getTrainingParameters().getRegressionClass(), dbName, kb().getConf());
-    }
-    
+
     private Map<Object, Double> runRegression(Dataframe trainingData) {
-        TrainingParameters trainingParameters = kb().getTrainingParameters();
-        
-        //initialize algorithm
-        mlregressor = generateRegressor();
+        AbstractRegressor mlregressor = MLBuilder.create(
+                knowledgeBase.getTrainingParameters().getRegressionTrainingParameters(),
+                knowledgeBase.getConfiguration()
+        );
+        mlregressor.fit(trainingData);
 
-        //train the regressor
-        mlregressor.fit(trainingData, trainingParameters.getRegressionTrainingParameters());
-
-        //get pvalues
         Map<Object, Double> pvalues = ((StepwiseCompatible)mlregressor).getFeaturePvalues();
-        mlregressor.delete();
+
+        mlregressor.close();
         
         return pvalues;
     }

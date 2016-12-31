@@ -17,15 +17,15 @@ package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.machinelearning.MLBuilder;
+import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClusteringMetrics;
+import com.datumbox.framework.core.machinelearning.modelselection.Validator;
+import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,96 +37,82 @@ import static org.junit.Assert.assertEquals;
 public class MultinomialDPMMTest extends AbstractTest {
     
     /**
-     * Test of validate method, of class MultinomialDPMM.
+     * Test of predict method, of class MultinomialDPMM.
      */
     @Test
-    public void testValidate() {
-        logger.info("validate"); 
+    public void testPredict() {
+        logger.info("testPredict");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
-        Dataframe[] data = Datasets.multinomialClusters(conf);
+        Dataframe[] data = Datasets.multinomialClusters(configuration);
         
         Dataframe trainingData = data[0];
         Dataframe validationData = data[1];
 
         
-        String dbName = this.getClass().getSimpleName();
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, conf);
+        String storageName = this.getClass().getSimpleName();
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        
-        instance.fit(trainingData, param);
+
+        MultinomialDPMM instance = MLBuilder.create(param, configuration);
+        instance.fit(trainingData);
+        instance.save(storageName);
         
         instance.close();
-        //instance = null;
-        instance = new MultinomialDPMM(dbName, conf);
-        
-        instance.validate(validationData);
-        
-        
-        Map<Integer, Object> expResult = new HashMap<>();
-        Map<Integer, Object> result = new HashMap<>();
-        
-        Map<Integer, MultinomialDPMM.Cluster> clusters = instance.getClusters();
-        for(Map.Entry<Integer, Record> e : validationData.entries()) {
-            Integer rId = e.getKey();
-            Record r = e.getValue();
-            expResult.put(rId, r.getY());
-            Integer clusterId = (Integer) r.getYPredicted();
-            Object label = clusters.get(clusterId).getLabelY();
-            if(label==null) {
-                label = clusterId;
-            }
-            result.put(rId, label);
-        }
-        assertEquals(expResult, result);
+
+        instance = MLBuilder.load(MultinomialDPMM.class, storageName, configuration);
+
+        instance.predict(validationData);
+        ClusteringMetrics vm = new ClusteringMetrics(validationData);
+
+        double expResult = 1.0;
+        double result = vm.getPurity();
+        assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
         
         instance.delete();
         
-        trainingData.delete();
-        validationData.delete();
+        trainingData.close();
+        validationData.close();
     }
 
     
     /**
-     * Test of kFoldCrossValidation method, of class MultinomialDPMM.
+     * Test of validate method, of class MultinomialDPMM.
      */
     @Test
     public void testKFoldCrossValidation() {
-        logger.info("kFoldCrossValidation");
+        logger.info("testKFoldCrossValidation");
         
-        Configuration conf = Configuration.getConfiguration();
+        Configuration configuration = Configuration.getConfiguration();
         
         int k = 5;
         
-        Dataframe[] data = Datasets.multinomialClusters(conf);
+        Dataframe[] data = Datasets.multinomialClusters(configuration);
         Dataframe trainingData = data[0];
-        data[1].delete();
+        data[1].close();
         
-        
-        String dbName = this.getClass().getSimpleName();
-        MultinomialDPMM instance = new MultinomialDPMM(dbName, conf);
+
         
         MultinomialDPMM.TrainingParameters param = new MultinomialDPMM.TrainingParameters();
         param.setAlpha(0.01);
         param.setMaxIterations(100);
         param.setInitializationMethod(MultinomialDPMM.TrainingParameters.Initialization.ONE_CLUSTER_PER_RECORD);
         param.setAlphaWords(1);
-        
-        MultinomialDPMM.ValidationMetrics vm = instance.kFoldCrossValidation(trainingData, param, k);
+
+        ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
+                .validate(new KFoldSplitter(k).split(trainingData), param);
 
         
         double expResult = 1.0;
         double result = vm.getPurity();
         Assert.assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);
-        instance.delete();
         
-        trainingData.delete();
+        trainingData.close();
     }
 
     

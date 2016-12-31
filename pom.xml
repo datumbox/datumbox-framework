@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
     <artifactId>datumbox-framework</artifactId>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.8.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>Datumbox Machine Learning Framework</name>
@@ -203,7 +203,7 @@
                     <version>${maven-surefire-plugin-version}</version>
                     <configuration>
                         <threadCount>3</threadCount>
-                        <parallel>classes</parallel>
+                        <parallel>all</parallel>
                         <argLine>-Xmx512M -Dfile.encoding=${project.build.sourceEncoding} -DskipAfterFailureCount=false</argLine>
                     </configuration>
                 </plugin>
@@ -275,6 +275,9 @@
                             <exclude>NOTICE</exclude>
                             <exclude>README.md</exclude>
                             <exclude>TODO.txt</exclude>
+                            <exclude>.travis.yml</exclude>
+                            <exclude>appveyor.yml</exclude>
+                            <exclude>.codeclimate.yml</exclude>
                             <exclude>**/license.txt</exclude>
                             <exclude>**/datasets/*</exclude>
                         </excludes>

@@ -1,13 +1,22 @@
 CODE IMPROVEMENTS
 =================
 
-- Support MapDB 3.0 once a stable version is released. Remove the HOTFIX for MapDB bug #664.
-- Try to separate persistent storage in a separate module that is inherited by common.
+- Create a AnovaSelect feature selector and use it on the tests.
+- The Modeler should get a list of feature selectors.
+
+- Consider dropping all the common.dataobjects and use their internalData directly instead.
+- Refactor the statistics package and replace all the static methods with proper inheritance.
+- Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
+
+- Consider moving storages in a separate module that is inherited by common.
+- Consider moving all tests in a separate module.
+- Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
 
 
 NEW FEATURES
 ============
 
+- Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
 - Create a storage engine for BerkeleyDB.
 - Add the ability to call Machine Learning algorithms from command line or Python:
     - https://pypi.python.org/pypi/javabridge
@@ -20,11 +29,14 @@ DOCUMENTATION
 
 - Improve the code documentation.
 - Write How-to blog posts on building Text Classification models.
+- Update the website and link directly to the latest and previous documentations.
 
 
 NEW ALGORITHMS
 ==============
 
+- Create a PercentileScaler numerical scaler.
+- Create the following FeatureSelectors: KruskalWallisSelect, SpearmanSelect.
 - Speed up LDA: http://www.cs.ucsb.edu/~mingjia/cs240/doc/273811.pdf
 - Factorization Machines: http://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.
@@ -62,3 +74,10 @@ Huge Collection libs, DBs and Storage
 
 - H2 Database:
     http://www.h2database.com/html/main.html
+
+- ehcache:
+    http://www.ehcache.org/
+    http://stackoverflow.com/questions/4726370/looking-for-a-drop-in-replacement-for-a-java-util-map
+
+- redisson:
+    https://github.com/redisson/redisson
