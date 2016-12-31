@@ -74,3 +74,7 @@ Huge Collection libs, DBs and Storage
 
 - H2 Database:
     http://www.h2database.com/html/main.html
+
+- ehcache:
+    http://www.ehcache.org/
+    http://stackoverflow.com/questions/4726370/looking-for-a-drop-in-replacement-for-a-java-util-map
