@@ -27,10 +27,7 @@ import java.io.UncheckedIOException;
 import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -180,6 +177,12 @@ public class InMemoryEngine extends AbstractFileStorageEngine<InMemoryConfigurat
         assertConnectionOpen();
         map.clear();
         catalog.remove(name);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected Set<Class> nonSerializableBigMaps() {
+        return Collections.emptySet();
     }
 
 }
