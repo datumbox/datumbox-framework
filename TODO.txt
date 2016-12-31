@@ -1,7 +1,9 @@
 CODE IMPROVEMENTS
 =================
 
+- Create a AnovaSelect feature selector and use it on the tests.
 - The Modeler should get a list of feature selectors.
+
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 - Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
@@ -14,8 +16,6 @@ CODE IMPROVEMENTS
 NEW FEATURES
 ============
 
-- Create the following FeatureSelectors: AnovaSelect, KruskalWallisSelect, SpearmanSelect.
-- Create a PercentileScaler numerical scaler.
 - Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
 - Create a storage engine for BerkeleyDB.
 - Add the ability to call Machine Learning algorithms from command line or Python:
@@ -35,6 +35,8 @@ DOCUMENTATION
 NEW ALGORITHMS
 ==============
 
+- Create a PercentileScaler numerical scaler.
+- Create the following FeatureSelectors: KruskalWallisSelect, SpearmanSelect.
 - Speed up LDA: http://www.cs.ucsb.edu/~mingjia/cs240/doc/273811.pdf
 - Factorization Machines: http://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.
