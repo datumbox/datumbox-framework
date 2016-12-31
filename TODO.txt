@@ -1,8 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- Create a AnovaSelect feature selector and use it on the tests.
-
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 - Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
@@ -35,7 +33,7 @@ NEW ALGORITHMS
 ==============
 
 - Create a PercentileScaler numerical scaler.
-- Create the following FeatureSelectors: KruskalWallisSelect, SpearmanSelect.
+- Create the following FeatureSelectors: AnovaSelect, KruskalWallisSelect, SpearmanSelect.
 - Speed up LDA: http://www.cs.ucsb.edu/~mingjia/cs240/doc/273811.pdf
 - Factorization Machines: http://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf
 - Develop the FunkSVD and PLSI as probabilistic version of SVD.

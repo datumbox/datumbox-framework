@@ -134,13 +134,13 @@ public abstract class AbstractCountBasedFeatureSelector<MP extends AbstractCount
     /** {@inheritDoc} */
     @Override
     protected Set<TypeInference.DataType> getSupportedXDataTypes() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL)));
+        return new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL));
     }
 
     /** {@inheritDoc} */
     @Override
     protected Set<TypeInference.DataType> getSupportedYDataTypes() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL)));
+        return new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL));
     }
 
     /**

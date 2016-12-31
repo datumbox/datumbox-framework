@@ -211,7 +211,7 @@ public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParamete
     /** {@inheritDoc} */
     @Override
     protected Set<TypeInference.DataType> getSupportedXDataTypes() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL)));
+        return new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL));
     }
 
     /** {@inheritDoc} */

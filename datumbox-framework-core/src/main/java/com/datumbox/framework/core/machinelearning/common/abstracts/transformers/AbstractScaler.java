@@ -21,7 +21,6 @@ import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -92,7 +91,7 @@ public abstract class AbstractScaler<MP extends AbstractScaler.AbstractModelPara
     /** {@inheritDoc} */
     @Override
     protected Set<TypeInference.DataType> getSupportedXDataTypes() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.NUMERICAL)));
+        return new HashSet<>(Arrays.asList(TypeInference.DataType.NUMERICAL));
     }
 
 }

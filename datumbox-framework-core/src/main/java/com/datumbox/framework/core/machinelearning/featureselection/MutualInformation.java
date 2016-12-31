@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Implementation of the Mutual Information Feature Selection algorithm which can be used
- * for evaluating categorical and boolean variables.
+ * for evaluating boolean variables.
  * 
  * References: 
  * http://nlp.stanford.edu/IR-book/html/htmledition/mutual-information-1.html

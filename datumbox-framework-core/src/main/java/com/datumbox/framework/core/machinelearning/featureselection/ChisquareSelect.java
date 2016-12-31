@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * Implementation of the Chisquare Feature Selection algorithm which can be used
- * for evaluating categorical and boolean variables.
+ * for evaluating boolean variables.
  * 
  * References: 
  * http://nlp.stanford.edu/IR-book/html/htmledition/feature-selectionchi2-feature-selection-1.html
