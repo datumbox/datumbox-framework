@@ -20,6 +20,7 @@ import com.datumbox.framework.common.storageengines.abstracts.AbstractStorageEng
 import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import org.mapdb.*;
+import org.mapdb.serializer.GroupSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -97,8 +97,8 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
             return false;
         }
 
-        blockedStorageClose(StorageType.PRIMARY_STORAGE);
-        blockedStorageClose(StorageType.SECONDARY_STORAGE);
+        safeStorageClose(StorageType.PRIMARY_STORAGE);
+        safeStorageClose(StorageType.SECONDARY_STORAGE);
 
         try {
             moveDirectory(getRootPath(storageName), getRootPath(newStorageName));
@@ -126,7 +126,7 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
     public <T extends Serializable> void saveObject(String name, T serializableObject) {
         assertConnectionOpen();
         DB storage = openStorage(StorageType.PRIMARY_STORAGE);
-        Atomic.Var<T> atomicVar = storage.getAtomicVar(name);
+        Atomic.Var<Object> atomicVar = storage.atomicVar(name).createOrOpen();
 
         Map<String, Object> objRefs = preSerializer(serializableObject);
 
@@ -147,7 +147,7 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
         }
 
         DB storage = openStorage(StorageType.PRIMARY_STORAGE);
-        Atomic.Var<T> atomicVar = storage.getAtomicVar(name);
+        Atomic.Var<Object> atomicVar = storage.atomicVar(name).createOrOpen();
         T serializableObject = klass.cast(atomicVar.get());
 
         postDeserializer(serializableObject);
@@ -241,24 +241,19 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
             //return the appropriate type
             Map<K,V> map;
             if(StorageEngine.MapType.HASHMAP.equals(type)) {
-                map = storage.createHashMap(name)
+                map = (Map<K,V>)storage.hashMap(name)
                 .counterEnable()
                 .keySerializer(getSerializerFromClass(keyClass))
                 .valueSerializer(getSerializerFromClass(valueClass))
-                .makeOrGet();
+                .createOrOpen();
             }
             else if(StorageEngine.MapType.TREEMAP.equals(type)) {
-                map = storage.createTreeMap(name)
+                map = (Map<K,V>)storage.treeMap(name)
                 .valuesOutsideNodesEnable()
                 .counterEnable()
-                .keySerializer(getBTreeKeySerializerFromClass(keyClass))
+                .keySerializer(getSerializerFromClass(keyClass))
                 .valueSerializer(getSerializerFromClass(valueClass))
-                .makeOrGet();
-
-                //HOTFIX: There is a race condition in BTreeMap (MapDB v1.0.9 - https://github.com/jankotek/mapdb/issues/664). Remove it once it's patched.
-                if(isConcurrent) {
-                    map = Collections.synchronizedMap(map);
-                }
+                .createOrOpen();
             }
             else {
                 throw new IllegalArgumentException("Unsupported MapType.");
@@ -290,12 +285,12 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
     //private methods of storage engine class
 
     /**
-     * Returns the appropriate Serializer (if one exists) else null.
+     * Returns the appropriate Serializer (if one exists) else ELSA.
      *
      * @param klass
      * @return
      */
-    private Serializer<?> getSerializerFromClass(Class<?> klass) {
+    private GroupSerializer<?> getSerializerFromClass(Class<?> klass) {
         if(klass == Integer.class) {
             return Serializer.INTEGER;
         }
@@ -305,29 +300,25 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
         else if(klass == Boolean.class) {
             return Serializer.BOOLEAN;
         }
+        else if(klass == Double.class) {
+            return Serializer.DOUBLE;
+        }
         else if(klass == String.class) {
             return Serializer.STRING;
         }
-        return null; //Default POJO serializer
-    }
-
-    /**
-     * Returns the appropriate BTreeKeySerializer (if one exists) else null.
-     *
-     * @param klass
-     * @return
-     */
-    private BTreeKeySerializer<?> getBTreeKeySerializerFromClass(Class<?> klass) {
-        if(klass == Integer.class) {
-            return BTreeKeySerializer.ZERO_OR_POSITIVE_INT;
+        else if(klass == Byte.class) {
+            return Serializer.BYTE;
         }
-        else if(klass == Long.class) {
-            return BTreeKeySerializer.ZERO_OR_POSITIVE_LONG;
+        else if(klass == Short.class) {
+            return Serializer.SHORT;
         }
-        else if(klass == String.class) {
-            return BTreeKeySerializer.STRING;
+        else if(klass == Character.class) {
+            return Serializer.CHAR;
         }
-        return null; //Default POJO serializer
+        else if(klass == Float.class) {
+            return Serializer.FLOAT;
+        }
+        return Serializer.ELSA; //Default POJO serializer
     }
 
     private boolean isOpenStorage(DB storage) {
@@ -343,7 +334,7 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
     private DB openStorage(StorageType storageType) {
         DB storage = storageRegistry.get(storageType);
         if(!isOpenStorage(storage)) {
-            DBMaker m;
+            DBMaker.Maker m;
             if(storageType == StorageType.PRIMARY_STORAGE || storageType == StorageType.SECONDARY_STORAGE) {
                 //main storage
                 Path rootPath = getRootPath(storageName);
@@ -354,33 +345,28 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
                     throw new UncheckedIOException(ex);
                 }
 
-                m = DBMaker.newFileDB(new File(rootPath.toFile(), storageType.toString()));
+                m = DBMaker.fileDB(new File(rootPath.toFile(), storageType.toString()));
             }
             else if(storageType == StorageType.TEMP_PRIMARY_STORAGE || storageType == StorageType.TEMP_SECONDARY_STORAGE) {
                 //temporary storage
-                m = DBMaker.newTempFileDB().deleteFilesAfterClose();
+                m = DBMaker.tempFileDB().fileDeleteAfterClose();
             }
             else {
                 throw new IllegalArgumentException("Unsupported StorageType.");
             }
             
             if(storageConfiguration.isCompressed()) {
-                m = m.compressionEnable();
+                //m = m.compressionEnable(); //TODO: restore once implemented
             }
 
             boolean permitCaching = storageType == StorageType.PRIMARY_STORAGE || storageType == StorageType.TEMP_PRIMARY_STORAGE;
             if(permitCaching && storageConfiguration.getCacheSize()>0) {
-                m = m.cacheLRUEnable().cacheSize(storageConfiguration.getCacheSize()) ;
-            }
-            else {
-                m = m.cacheDisable();
+                //m = m.cacheLRUEnable().cacheSize(storageConfiguration.getCacheSize()); //TODO: restore once implemented
             }
 
             if(storageConfiguration.isAsynchronous()) {
-                m = m.asyncWriteEnable();
+                //m = m.asyncWriteEnable(); //TODO: restore once implemented
             }
-            
-            m = m.transactionDisable();
             
             m = m.closeOnJvmShutdown();
             
@@ -421,34 +407,18 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
     }
 
     /**
-     * Closes the provided storage and waits until all changes are written to disk. It should be used when
-     * we move the storage to a different location. Returns true if the storage needed to be closed and
-     * false if it was not necessary.
+     * Commits all changes and closes the provided storage. It should be used when we move the storage to a different
+     * location. Returns true if the storage needed to be closed and false if it was not necessary.
      *
      * @param storageType
      * @return
      */
-    private boolean blockedStorageClose(StorageType storageType) {
+    private boolean safeStorageClose(StorageType storageType) {
         DB storage = storageRegistry.get(storageType);
         if(isOpenStorage(storage)) {
             storage.commit();
 
-            //find the underlying engine
-            Engine e = storage.getEngine();
-            while (EngineWrapper.class.isAssignableFrom(e.getClass())) {
-                e = ((EngineWrapper) e).getWrappedEngine();
-            }
-
-            //close and wait until the close on the underlying engine is also finished
             storage.close();
-            while (!e.isClosed()) {
-                logger.trace("Waiting for the engine to close");
-                try {
-                    TimeUnit.MILLISECONDS.sleep(100);
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
 
             return true;
         }

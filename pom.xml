@@ -84,6 +84,15 @@
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
+        <!-- TODO: remove the following repo -->
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>ossrh-snapshots</id>
+            <name>Sonatype Repository Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
@@ -111,7 +120,7 @@
         <commons-csv-version>1.4</commons-csv-version>
         <slf4j-api-version>1.7.21</slf4j-api-version>
         <libsvm-version>3.21</libsvm-version>
-        <mapdb-version>3.0.2</mapdb-version>
+        <mapdb-version>3.1.0-SNAPSHOT</mapdb-version>
         
         <!-- Test Dependencies -->
         <junit-version>4.12</junit-version>
