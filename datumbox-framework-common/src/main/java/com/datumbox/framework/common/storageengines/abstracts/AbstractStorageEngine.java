@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -142,16 +143,29 @@ public abstract class AbstractStorageEngine<SC extends StorageConfiguration> imp
         return objReferences;
     }
 
+    /**
+     * Returns a list of non-serializable bigmap classes which are dependent to the StorageEngine.
+     *
+     * @return
+     */
+    protected abstract Set<Class> nonSerializableBigMaps();
+
     private boolean isSerializableBigMap(Object value) {
+        Class valueClass = value.getClass();
         //Check if the class is not serializable directly
-        if(!Serializable.class.isAssignableFrom(value.getClass())) {
+        if(!Serializable.class.isAssignableFrom(valueClass)) {
+            return false;
+        }
+
+        //Check the black listed bigmap types of the storage engine
+        if(nonSerializableBigMaps().contains(valueClass)) {
             return false;
         }
 
         //Also check that we are not dealing with a SynchronizedMap that has a non-serializable map inside.
-        if(value.getClass().getCanonicalName().equals("java.util.Collections.SynchronizedMap")) {
+        if(valueClass.getCanonicalName().equals("java.util.Collections.SynchronizedMap")) {
             try {
-                Field field = value.getClass().getDeclaredField("m");
+                Field field = valueClass.getDeclaredField("m");
                 field.setAccessible(true);
                 if(!Serializable.class.isAssignableFrom(field.get(value).getClass())) {
                     return false;

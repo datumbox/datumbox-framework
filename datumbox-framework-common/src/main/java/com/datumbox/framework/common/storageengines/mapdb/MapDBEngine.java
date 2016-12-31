@@ -282,6 +282,12 @@ public class MapDBEngine extends AbstractFileStorageEngine<MapDBConfiguration> {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    protected Set<Class> nonSerializableBigMaps() {
+        return new HashSet<>(Arrays.asList(HTreeMap.class, BTreeMap.class));
+    }
+
     //private methods of storage engine class
 
     /**
