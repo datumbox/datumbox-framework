@@ -6,7 +6,7 @@ Version 0.8.0-SNAPSHOT - Build 20161231
 
 - Initial Updates:
     - Dependencies:
-        - Upgraded commons-math, commons-csv, slf4j and logback-classic to latest stable versions.
+        - Upgraded libsvm, commons-math, commons-csv, slf4j and logback-classic to latest stable versions.
         - Removed commons-lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
         - Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
     - Memory & Storage:
