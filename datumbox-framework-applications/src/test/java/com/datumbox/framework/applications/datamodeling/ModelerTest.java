@@ -28,6 +28,7 @@ import com.datumbox.framework.tests.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class ModelerTest extends AbstractTest {
         trainingParameters.setCategoricalEncoderTrainingParameters(ceParams);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectorTrainingParameters(null);
+        trainingParameters.setFeatureSelectorTrainingParametersList(Arrays.asList());
 
         //model Configuration
         MultinomialNaiveBayes.TrainingParameters modelTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();

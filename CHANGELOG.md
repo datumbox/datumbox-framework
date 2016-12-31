@@ -72,6 +72,7 @@ Version 0.8.0-SNAPSHOT - Build 20161231
     - Rewrote the FeatureSelection package:
         - Each method can now be used only for specific X and Y DataTypes.
         - Every method filters only the X DataTypes that it supports, making it possible to chain different methods together.
+    - The Modeler now receives a list of feature selector parameters.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

@@ -2,7 +2,6 @@ CODE IMPROVEMENTS
 =================
 
 - Create a AnovaSelect feature selector and use it on the tests.
-- The Modeler should get a list of feature selectors.
 
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.

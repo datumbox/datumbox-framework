@@ -303,7 +303,7 @@ public class TextClassifierTest extends AbstractTest {
         trainingParameters.setCategoricalEncoderTrainingParameters(null);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectorTrainingParameters(featureSelectorTrainingParameters);
+        trainingParameters.setFeatureSelectorTrainingParametersList(Arrays.asList(featureSelectorTrainingParameters));
 
         //classifier configuration
         trainingParameters.setModelerTrainingParameters(modelerTrainingParameters);
