@@ -24,7 +24,6 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.transformers
 
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Rescales the numerical features of the dataset between -1 and 1.
@@ -104,7 +103,7 @@ public class BinaryScaler extends AbstractScaler<BinaryScaler.ModelParameters, B
         boolean scaleResponse = trainingParameters.getScaleResponse() && newData.getYDataType() == TypeInference.DataType.NUMERICAL;
         double threshold = trainingParameters.getThreshold();
 
-        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
         Map<Object, TypeInference.DataType> xDataTypes = newData.getXDataTypes();
 
         streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
@@ -114,7 +113,7 @@ public class BinaryScaler extends AbstractScaler<BinaryScaler.ModelParameters, B
 
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
-                if(!supportedTypes.contains(xDataTypes.get(column))) {
+                if(!supportedXDataTypes.contains(xDataTypes.get(column))) {
                     continue;
                 }
                 Object value = xData.remove(column);

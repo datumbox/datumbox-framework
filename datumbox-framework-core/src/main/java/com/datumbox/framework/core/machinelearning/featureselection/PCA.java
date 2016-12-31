@@ -16,24 +16,18 @@
 package com.datumbox.framework.core.machinelearning.featureselection;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
-import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.MatrixDataframe;
-import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
-import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 import org.apache.commons.math3.linear.*;
 import org.apache.commons.math3.util.FastMath;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -229,18 +223,30 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
     protected PCA(String storageName, Configuration configuration) {
         super(storageName, configuration);
     }
-    
+
     /** {@inheritDoc} */
     @Override
-    protected void _fit(Dataframe originalData) {
+    public void fit(Dataframe trainingData) {
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
+        for(TypeInference.DataType d : trainingData.getXDataTypes().values()) {
+            if(!supportedXDataTypes.contains(d)) {
+                throw new IllegalArgumentException("A DataType that is not supported by this method was detected in the Dataframe.");
+            }
+        }
+        super.fit(trainingData);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void _fit(Dataframe trainingData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
-        int n = originalData.size();
-        int d = originalData.xColumnSize();
+        int n = trainingData.size();
+        int d = trainingData.xColumnSize();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(originalData, false, null, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, false, null, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -318,14 +324,14 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
 
     /** {@inheritDoc} */
     @Override
-    protected void _transform(Dataframe dataset) {
+    protected void _transform(Dataframe newData) {
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(dataset, recordIdsReference, featureIds);
+        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
         
         RealMatrix components = modelParameters.getComponents();
         
@@ -333,7 +339,7 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
         //multiplying the data with components
         final RealMatrix X = matrixDataset.getX().multiply(components);
         
-        streamExecutor.forEach(StreamMethods.stream(dataset.entries(), isParallelized()), e -> {
+        streamExecutor.forEach(StreamMethods.stream(newData.entries(), isParallelized()), e -> {
             Integer rId = e.getKey();
             Record r = e.getValue();
             int rowId = recordIdsReference.get(rId);
@@ -347,13 +353,25 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
             Record newR = new Record(xData, r.getY(), r.getYPredicted(), r.getYPredictedProbabilities());
             
             //we call below the recalculateMeta()
-            dataset._unsafe_set(rId, newR);
+            newData._unsafe_set(rId, newR);
         });
         
         //recordIdsReference = null;
         //matrixDataset = null;
         
-        dataset.recalculateMeta(); 
+        newData.recalculateMeta();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected Set<TypeInference.DataType> getSupportedXDataTypes() {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL)));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected Set<TypeInference.DataType> getSupportedYDataTypes() {
+        return null;
     }
     
 }

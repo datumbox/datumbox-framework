@@ -89,12 +89,10 @@ public abstract class AbstractScaler<MP extends AbstractScaler.AbstractModelPara
         super(storageName, configuration);
     }
 
-    private static Set<TypeInference.DataType> supportedTypes = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.NUMERICAL)));
-
     /** {@inheritDoc} */
     @Override
-    protected Set<TypeInference.DataType> getSupportedTypes() {
-        return supportedTypes;
+    protected Set<TypeInference.DataType> getSupportedXDataTypes() {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.NUMERICAL)));
     }
 
 }

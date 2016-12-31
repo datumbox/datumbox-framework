@@ -24,10 +24,8 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Encodes the categorical columns of the dataset into booleans using the Corner Constraints encoding (also known
@@ -104,7 +102,7 @@ public class CornerConstraintsEncoder extends AbstractEncoder<CornerConstraintsE
         ModelParameters modelParameters = knowledgeBase.getModelParameters();
         Map<Object, Object> referenceLevels = modelParameters.getReferenceLevels();
 
-        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
         Map<Object, TypeInference.DataType> xDataTypes = trainingData.getXDataTypes();
 
         //find the referenceLevels for each supported variable
@@ -112,7 +110,7 @@ public class CornerConstraintsEncoder extends AbstractEncoder<CornerConstraintsE
             for(Map.Entry<Object, Object> entry: r.getX().entrySet()) {
                 Object column = entry.getKey();
                 Object value = entry.getValue();
-                if(value != null && supportedTypes.contains(xDataTypes.get(column)) ) {
+                if(value != null && supportedXDataTypes.contains(xDataTypes.get(column)) ) {
                     referenceLevels.putIfAbsent(column, value);
                 }
             }

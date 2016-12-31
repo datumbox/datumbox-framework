@@ -104,9 +104,9 @@ public class MaxAbsScaler extends AbstractScaler<MaxAbsScaler.ModelParameters, M
         Map<Object, Double> maxAbsoluteColumnValues = modelParameters.getMaxAbsoluteColumnValues();
         boolean scaleResponse = knowledgeBase.getTrainingParameters().getScaleResponse();
 
-        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
         Stream<Object> transformedColumns = trainingData.getXDataTypes().entrySet().stream()
-                .filter(e -> supportedTypes.contains(e.getValue()))
+                .filter(e -> supportedXDataTypes.contains(e.getValue()))
                 .map(e -> e.getKey());
 
         streamExecutor.forEach(StreamMethods.stream(transformedColumns, isParallelized()), column -> {

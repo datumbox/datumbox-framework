@@ -51,11 +51,9 @@ public abstract class AbstractEncoder<MP extends AbstractEncoder.AbstractModelPa
         super(storageName, configuration);
     }
 
-    private static Set<TypeInference.DataType> supportedTypes = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL)));
-
     /** {@inheritDoc} */
     @Override
-    protected Set<TypeInference.DataType> getSupportedTypes() {
-        return supportedTypes;
+    protected Set<TypeInference.DataType> getSupportedXDataTypes() {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL)));
     }
 }

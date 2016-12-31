@@ -23,10 +23,8 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Encodes the categorical columns of the dataset into booleans using the One Hot Encoding method.
@@ -82,7 +80,7 @@ public class OneHotEncoder extends AbstractEncoder<OneHotEncoder.ModelParameters
     /** {@inheritDoc} */
     @Override
     protected void _transform(Dataframe newData) {
-        Set<TypeInference.DataType> supportedTypes = getSupportedTypes();
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
         Map<Object, TypeInference.DataType> xDataTypes = newData.getXDataTypes();
 
         //Replace variables with dummy versions
@@ -94,7 +92,7 @@ public class OneHotEncoder extends AbstractEncoder<OneHotEncoder.ModelParameters
 
             boolean modified = false;
             for(Object column : r.getX().keySet()) {
-                if(!supportedTypes.contains(xDataTypes.get(column))) {
+                if(!supportedXDataTypes.contains(xDataTypes.get(column))) {
                     continue;
                 }
                 Object value = xData.remove(column);

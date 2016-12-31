@@ -21,7 +21,7 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.DataTable2D;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
+import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCountBasedFeatureSelector;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 import com.datumbox.framework.core.statistics.nonparametrics.independentsamples.Chisquare;
 
@@ -38,10 +38,10 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class ChisquareSelect extends AbstractCategoricalFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters> {
+public class ChisquareSelect extends AbstractCountBasedFeatureSelector<ChisquareSelect.ModelParameters, ChisquareSelect.TrainingParameters> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
+    public static class ModelParameters extends AbstractCountBasedFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -55,7 +55,7 @@ public class ChisquareSelect extends AbstractCategoricalFeatureSelector<Chisquar
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractCategoricalFeatureSelector.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractCountBasedFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private double aLevel = 0.05; 

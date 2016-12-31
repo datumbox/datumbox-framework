@@ -236,7 +236,7 @@ public class TextClassifierTest extends AbstractTest {
                 mlParams,
                 fsParams,
                 null,
-                0.8954671493044679,
+                0.91926983796055,
                 8
         );
     }

@@ -19,7 +19,7 @@ import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCategoricalFeatureSelector;
+import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractCountBasedFeatureSelector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,10 +34,10 @@ import java.util.Map;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MutualInformation extends AbstractCategoricalFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters> {
+public class MutualInformation extends AbstractCountBasedFeatureSelector<MutualInformation.ModelParameters, MutualInformation.TrainingParameters> {
     
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractCategoricalFeatureSelector.AbstractModelParameters {
+    public static class ModelParameters extends AbstractCountBasedFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 1L;
 
         /** 
@@ -51,7 +51,7 @@ public class MutualInformation extends AbstractCategoricalFeatureSelector<Mutual
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractCategoricalFeatureSelector.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractCountBasedFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
 
     }

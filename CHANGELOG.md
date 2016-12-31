@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161230
+Version 0.8.0-SNAPSHOT - Build 20161231
 ---------------------------------------
 
 - Initial Updates:
@@ -69,6 +69,9 @@ Version 0.8.0-SNAPSHOT - Build 20161230
     - Removed unnecessary Score-Based and Numerical abstract feature selectors.
     - Simplified and refactored the logic of AbstractFeatureSelector and AbstractCategoricalFeatureSelector. 
     - All the Scalers and Encoders drop null values of known columns. 
+    - Rewrote the FeatureSelection package:
+        - Each method can now be used only for specific X and Y DataTypes.
+        - Every method filters only the X DataTypes that it supports, making it possible to chain different methods together.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

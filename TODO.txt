@@ -1,10 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
-- Rewrite the FeatureSelection package:
-    - Improve the API of Feature Selection and how we handle different data types.
-    - Convert AbstractCategoricalFeatureSelector to Boolean.
-    - In AbstractCategoricalFeatureSelector and TFIDF we should keep track of the kept columns not the removedColumns.
+- The Modeler should get a list of feature selectors.
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 - Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
@@ -17,6 +14,7 @@ CODE IMPROVEMENTS
 NEW FEATURES
 ============
 
+- Create the following FeatureSelectors: AnovaSelect, KruskalWallisSelect, SpearmanSelect.
 - Create a PercentileScaler numerical scaler.
 - Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
 - Create a storage engine for BerkeleyDB.

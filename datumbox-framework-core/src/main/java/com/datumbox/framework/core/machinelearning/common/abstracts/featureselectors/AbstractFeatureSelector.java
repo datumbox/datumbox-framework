@@ -18,13 +18,10 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
-import com.datumbox.framework.common.utilities.SelectKth;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -85,11 +82,21 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
         fit(trainingData);
         transform(trainingData);
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public void fit(Dataframe trainingData) {
+        Set<TypeInference.DataType> supportedYDataTypes = getSupportedYDataTypes();
+        if(supportedYDataTypes != null && !supportedYDataTypes.contains(trainingData.getYDataType())) {
+            throw new IllegalArgumentException("The response variable DataType of the Dataframe is not supported by this method.");
+        }
+        super.fit(trainingData);
+    }
+
     /**
      * Performs feature selection on the provided dataset.
      * 
-     * @param newData 
+     * @param newData
      */
     public void transform(Dataframe newData) {
         logger.info("transform()");
@@ -100,67 +107,22 @@ public abstract class AbstractFeatureSelector<MP extends AbstractFeatureSelector
     /**
      * Performs the filtering of the features.
      * 
-     * @param newdata 
+     * @param newData
      */
-    protected abstract void _transform(Dataframe newdata);
+    protected abstract void _transform(Dataframe newData);
 
     /**
-     * This method keeps the highest scoring features of the provided feature map
-     * and removes all the others.
+     * Returns a set with the supported DataTypes of X (features).
      *
-     * @param featureScores
-     * @param maxFeatures
+     * @return
      */
-    protected void selectTopFeatures(Map<Object, Double> featureScores, Integer maxFeatures) {
-        logger.debug("selectTopFeatures()");
-
-        logger.debug("Estimating the minPermittedScore");
-        Double minPermittedScore = SelectKth.largest(featureScores.values().iterator(), maxFeatures);
-
-        //remove any entry with score less than the minimum permitted one
-        logger.debug("Removing features with scores less than threshold");
-        Iterator<Map.Entry<Object, Double>> it = featureScores.entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry<Object, Double> entry = it.next();
-            if(entry.getValue()<minPermittedScore) {
-                it.remove();
-            }
-        }
-
-        //if some extra features still exist (due to ties on the scores) remove some of those extra features
-        int numOfExtraFeatures = featureScores.size()-maxFeatures;
-        if(numOfExtraFeatures>0) {
-            logger.debug("Removing extra features caused by ties");
-            it = featureScores.entrySet().iterator();
-            while(it.hasNext() && numOfExtraFeatures>0) {
-                Map.Entry<Object, Double> entry = it.next();
-                if(entry.getValue()-minPermittedScore<=0.0) { //DO NOT COMPARE THEM DIRECTLY USE SUBTRACTION!
-                    it.remove();
-                    --numOfExtraFeatures;
-                }
-            }
-        }
-    }
+    protected abstract Set<TypeInference.DataType> getSupportedXDataTypes();
 
     /**
-     * Drops any column of the Dataframe that is not included in the selected features.
+     * Returns a set with the supported DataTypes of Y (response variable) or null if the method is unsupervised.
      *
-     * @param data
-     * @param selectedFeatures
+     * @return
      */
-    protected void dropFeatures(Dataframe data, Set<Object> selectedFeatures) {
-        StorageEngine storageEngine = knowledgeBase.getStorageEngine();
-        Map<Object, Boolean> tmp_removedColumns = storageEngine.getBigMap("tmp_removedColumns", Object.class, Boolean.class, StorageEngine.MapType.HASHMAP, StorageEngine.StorageHint.IN_MEMORY, false, true);
+    protected abstract Set<TypeInference.DataType> getSupportedYDataTypes();
 
-        for(Object feature: data.getXDataTypes().keySet()) {
-            if(!selectedFeatures.contains(feature)) {
-                tmp_removedColumns.put(feature, true);
-            }
-        }
-
-        logger.debug("Removing Columns");
-        data.dropXColumns(tmp_removedColumns.keySet());
-
-        storageEngine.dropBigMap("tmp_removedColumns", tmp_removedColumns);
-    }
 }

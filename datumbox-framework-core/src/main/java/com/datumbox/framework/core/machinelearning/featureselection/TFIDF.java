@@ -20,14 +20,13 @@ import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
-import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
+import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractScoreBasedFeatureSelector;
 
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 
 
@@ -41,14 +40,11 @@ import java.util.function.BiFunction;
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
+public class TFIDF extends AbstractScoreBasedFeatureSelector<TFIDF.ModelParameters, TFIDF.TrainingParameters> {
 
     /** {@inheritDoc} */
-    public static class ModelParameters extends AbstractFeatureSelector.AbstractModelParameters {
+    public static class ModelParameters extends AbstractScoreBasedFeatureSelector.AbstractModelParameters {
         private static final long serialVersionUID = 2L;
-
-        @BigMap(keyClass=Object.class, valueClass=Double.class, mapType=MapType.HASHMAP, storageHint=StorageHint.IN_MEMORY, concurrent=false)
-        private Map<Object, Double> featureScores; //map which stores the max tfidf of the features
 
         /**
          * @param storageEngine
@@ -58,32 +54,13 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
             super(storageEngine);
         }
 
-        /**
-         * Getter for the maximum TFIDF scores of each keyword in the vocabulary.
-         *
-         * @return
-         */
-        public Map<Object, Double> getFeatureScores() {
-            return featureScores;
-        }
-
-        /**
-         * Setter for the maximum TFIDF scores of each keyword in the vocabulary.
-         *
-         * @param featureScores
-         */
-        protected void setFeatureScores(Map<Object, Double> featureScores) {
-            this.featureScores = featureScores;
-        }
-
     }
 
     /** {@inheritDoc} */
-    public static class TrainingParameters extends AbstractFeatureSelector.AbstractTrainingParameters {
+    public static class TrainingParameters extends AbstractScoreBasedFeatureSelector.AbstractTrainingParameters {
         private static final long serialVersionUID = 1L;
         
         private boolean binarized = false;
-        private Integer maxFeatures=null;
         
         /**
          * Getter for the binarized flag; when it is set on the frequencies of the
@@ -104,31 +81,13 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         public void setBinarized(boolean binarized) {
             this.binarized = binarized;
         }
-        
-        /**
-         * Getter for the threshold of maximum selected features.
-         * 
-         * @return 
-         */
-        public Integer getMaxFeatures() {
-            return maxFeatures;
-        }
-        
-        /**
-         * Setter for the threshold of maximum selected features.
-         * 
-         * @param maxFeatures 
-         */
-        public void setMaxFeatures(Integer maxFeatures) {
-            this.maxFeatures = maxFeatures;
-        }
-        
+
     }
 
     /**
      * @param trainingParameters
      * @param configuration
-     * @see AbstractTrainer#AbstractTrainer(AbstractTrainingParameters, Configuration)
+     * @see AbstractTrainer#AbstractTrainer(AbstractTrainer.AbstractTrainingParameters, Configuration)
      */
     protected TFIDF(TrainingParameters trainingParameters, Configuration configuration) {
         super(trainingParameters, configuration);
@@ -141,6 +100,18 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
      */
     protected TFIDF(String storageName, Configuration configuration) {
         super(storageName, configuration);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void fit(Dataframe trainingData) {
+        Set<TypeInference.DataType> supportedXDataTypes = getSupportedXDataTypes();
+        for(TypeInference.DataType d : trainingData.getXDataTypes().values()) {
+            if(!supportedXDataTypes.contains(d)) {
+                throw new IllegalArgumentException("A DataType that is not supported by this method was detected in the Dataframe.");
+            }
+        }
+        super.fit(trainingData);
     }
 
     /** {@inheritDoc} */
@@ -158,17 +129,22 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         Map<Object, Double> tmp_idfMap = storageEngine.getBigMap("tmp_idf", Object.class, Double.class, MapType.HASHMAP, StorageHint.IN_MEMORY, true, true);
 
         //initially estimate the counts of the terms in the dataset and store this temporarily
-        //in idf map. this help us avoid using twice much memory comparing to
-        //using two different maps
+        //in idf map. this help us avoid using twice much memory comparing to using two different maps
         for(Record r : trainingData) { 
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
                 Object keyword = entry.getKey();
                 Double counts = TypeInference.toDouble(entry.getValue());
                 
-                if(counts!=null && counts > 0.0) {
+                if(counts > 0.0) {
                     tmp_idfMap.put(keyword, tmp_idfMap.getOrDefault(keyword, 0.0)+1.0);
                 }
             }
+        }
+
+        //remove rare features
+        Integer rareFeatureThreshold = trainingParameters.getRareFeatureThreshold();
+        if(rareFeatureThreshold != null && rareFeatureThreshold>0) {
+            removeRareFeatures(tmp_idfMap, rareFeatureThreshold);
         }
         
         //convert counts to idf scores
@@ -192,18 +168,13 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         streamExecutor.forEach(StreamMethods.stream(trainingData.stream(), isParallelized()), r -> {
             //calculate the tfidf scores
             for(Map.Entry<Object, Object> entry : r.getX().entrySet()) {
-                Object keyword = entry.getKey();
                 Double counts = TypeInference.toDouble(entry.getValue());
                 
-                if(counts != null && counts > 0.0) {
+                if(counts > 0.0) {
+                    Object keyword = entry.getKey();
 
-                    if(binarized) {
-                        counts = 1.0;
-                    }
-
-                    //double tf = counts/documentLength;
-                    double tf = counts;
-                    double idf = tmp_idfMap.get(keyword);
+                    double tf = binarized?1.0:counts;
+                    double idf = tmp_idfMap.getOrDefault(keyword, 0.0);
 
                     double tfidf = tf*idf;
                     
@@ -233,14 +204,20 @@ public class TFIDF extends AbstractFeatureSelector<TFIDF.ModelParameters, TFIDF.
         //keep only the top features
         Integer maxFeatures = trainingParameters.getMaxFeatures();
         if(maxFeatures!=null && maxFeatures<featureScores.size()) {
-            selectTopFeatures(featureScores, maxFeatures);
+            keepTopFeatures(featureScores, maxFeatures);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    protected void _transform(Dataframe newData) {
-        dropFeatures(newData, knowledgeBase.getModelParameters().getFeatureScores().keySet());
+    protected Set<TypeInference.DataType> getSupportedXDataTypes() {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL)));
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    protected Set<TypeInference.DataType> getSupportedYDataTypes() {
+        return null;
+    }
+
 }

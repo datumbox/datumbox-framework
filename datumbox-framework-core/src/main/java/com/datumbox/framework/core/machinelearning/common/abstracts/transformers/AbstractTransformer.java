@@ -81,7 +81,7 @@ public abstract class AbstractTransformer<MP extends AbstractTransformer.Abstrac
      *
      * @return
      */
-    protected abstract Set<TypeInference.DataType> getSupportedTypes();
+    protected abstract Set<TypeInference.DataType> getSupportedXDataTypes();
 
     /**
      * Fits, transforms and normalizes the data of the provided dataset.
