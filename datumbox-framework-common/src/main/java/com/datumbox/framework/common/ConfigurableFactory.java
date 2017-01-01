@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -30,6 +31,8 @@ import java.util.Properties;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class ConfigurableFactory {
+
+    private static final String DEFAULT_POSTFIX = ".default";
     
     /**
      * Initializes the Configuration Object based on the configuration file.
@@ -39,6 +42,8 @@ public class ConfigurableFactory {
      * @return 
      */
     public static <C extends Configurable> C getConfiguration(Class<C> klass) {
+        String defaultPropertyFile = "datumbox." + klass.getSimpleName().toLowerCase(Locale.ENGLISH) + DEFAULT_POSTFIX + ".properties";
+
         //Initialize configuration object
         C configuration;
         try {
@@ -55,7 +60,7 @@ public class ConfigurableFactory {
         ClassLoader cl = ConfigurableFactory.class.getClassLoader();
         
         //Load default properties from jar
-        try (InputStream in = cl.getResourceAsStream("datumbox.configuration.default.properties")) {
+        try (InputStream in = cl.getResourceAsStream(defaultPropertyFile)) {
             properties.load(in);
         }
         catch(IOException ex) {
@@ -63,9 +68,10 @@ public class ConfigurableFactory {
         }
         
         //Look for user defined properties
-        if(cl.getResource("datumbox.configuration.properties")!=null) {
+        String propertyFile = defaultPropertyFile.replaceFirst(DEFAULT_POSTFIX, "");
+        if(cl.getResource(propertyFile)!=null) {
             //Override the default if they exist
-            try (InputStream in = cl.getResourceAsStream("datumbox.configuration.properties")) {
+            try (InputStream in = cl.getResourceAsStream(propertyFile)) {
                 properties.load(in);
             }
             catch(IOException ex) {

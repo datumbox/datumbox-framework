@@ -77,7 +77,7 @@ public class Configuration implements Configurable {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        String storageConfigurationClassName = properties.getProperty("storageConfiguration.className");
+        String storageConfigurationClassName = properties.getProperty("configuration.storageConfiguration");
         try {
             storageConfiguration = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfigurationClassName));
         }
