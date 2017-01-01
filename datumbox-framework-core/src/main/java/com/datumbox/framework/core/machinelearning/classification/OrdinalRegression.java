@@ -30,7 +30,7 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClassifier;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.common.regularization.L2Regularizer;
+import com.datumbox.framework.core.mathematics.regularization.L2Regularizer;
 
 import java.util.HashMap;
 import java.util.Map;

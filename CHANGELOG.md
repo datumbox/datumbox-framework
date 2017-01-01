@@ -77,6 +77,7 @@ Version 0.8.0-SNAPSHOT - Build 20170101
     - Restructued the packages and maven modules:
         - Renamed the core.utilities to core.common.
         - Moved Trainable interface from common to core package.
+        - Moved regularization package to mathematics.
 
 Version 0.7.0 - Build 20160319
 ------------------------------
