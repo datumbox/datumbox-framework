@@ -1,6 +1,7 @@
 CODE IMPROVEMENTS
 =================
 
+- Move the storageConfiguration properties of the storage engines to separate files.
 - Consider moving all tests in a separate module.
 - Consider moving storages in a separate module that is inherited by common.
 - Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
