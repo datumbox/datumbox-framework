@@ -30,9 +30,9 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrai
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractRegressor;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.TrainParallelizable;
-import com.datumbox.framework.core.utilities.regularization.ElasticNetRegularizer;
-import com.datumbox.framework.core.utilities.regularization.L1Regularizer;
-import com.datumbox.framework.core.utilities.regularization.L2Regularizer;
+import com.datumbox.framework.core.common.regularization.ElasticNetRegularizer;
+import com.datumbox.framework.core.common.regularization.L1Regularizer;
+import com.datumbox.framework.core.common.regularization.L2Regularizer;
 
 import java.util.Map;
 

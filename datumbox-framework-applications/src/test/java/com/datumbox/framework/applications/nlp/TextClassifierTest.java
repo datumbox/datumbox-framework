@@ -28,7 +28,7 @@ import com.datumbox.framework.core.machinelearning.featureselection.MutualInform
 import com.datumbox.framework.core.machinelearning.featureselection.TFIDF;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.preprocessing.BinaryScaler;
-import com.datumbox.framework.core.utilities.text.extractors.NgramsExtractor;
+import com.datumbox.framework.core.common.text.extractors.NgramsExtractor;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;

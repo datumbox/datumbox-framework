@@ -23,7 +23,7 @@ import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegress
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
-import com.datumbox.framework.core.utilities.text.extractors.UniqueWordSequenceExtractor;
+import com.datumbox.framework.core.common.text.extractors.UniqueWordSequenceExtractor;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;

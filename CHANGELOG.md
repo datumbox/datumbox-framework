@@ -74,6 +74,9 @@ Version 0.8.0-SNAPSHOT - Build 20170101
         - Every method filters only the X DataTypes that it supports, making it possible to chain different methods together.
     - The Modeler now receives a list of feature selector parameters.
     - Rename MatrixDataframe to DataframeMatrix.
+    - Restructued the packages and maven modules:
+        - Renamed the core.utilities to core.common.
+        - Moved Trainable interface from common to core package.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

@@ -16,7 +16,6 @@
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.common.interfaces.Parameterizable;
-import com.datumbox.framework.common.interfaces.Trainable;
 
 /**
  * The TrainingParameters objects store all the initial parameters provided

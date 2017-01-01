@@ -27,7 +27,7 @@ import com.datumbox.framework.common.utilities.StringCleaner;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
-import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
+import com.datumbox.framework.core.common.text.parsers.HTMLParser;
 
 import java.util.*;
 import java.util.regex.Matcher;

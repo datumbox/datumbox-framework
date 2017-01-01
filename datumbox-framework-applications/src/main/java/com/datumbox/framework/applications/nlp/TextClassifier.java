@@ -24,7 +24,7 @@ import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
-import com.datumbox.framework.core.utilities.text.extractors.AbstractTextExtractor;
+import com.datumbox.framework.core.common.text.extractors.AbstractTextExtractor;
 
 import java.net.URI;
 import java.util.HashMap;
