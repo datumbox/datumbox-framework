@@ -9,14 +9,14 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 Copyright & License
 -------------------
 
-Copyright (C) 2013-2016 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
+Copyright (C) 2013-2017 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
 
 The code is licensed under the [Apache License, Version 2.0](./LICENSE).
 
 Version
 -------
 
-The latest version is 0.8.0-SNAPSHOT (Build 20161231).
+The latest version is 0.8.0-SNAPSHOT (Build 20170101).
 
 The [devel branch](https://github.com/datumbox/datumbox-framework/tree/devel) is the development branch (default github branch). The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) contains the latest stable version of the framework. All the stable releases are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
