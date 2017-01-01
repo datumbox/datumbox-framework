@@ -260,7 +260,7 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
 
     /**
      * The configuration object used to create the Dataframe. It is defined as protected to be accessible by classes
-     * that extend the Dataframe or the MatrixDataframe class which is on the same package.
+     * that extend the Dataframe or the DataframeMatrix class which is on the same package.
      */
     protected final Configuration configuration;
 

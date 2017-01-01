@@ -15,10 +15,8 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
-import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.linear.AbstractRealMatrix;
@@ -68,12 +66,12 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
         this.rowDimension = rowDimension;
         this.columnDimension = columnDimension;
 
-        if(MatrixDataframe.storageEngine == null) {
-            throw new NullPointerException("The MatrixDataframe storage engine is not initialized.");
+        if(DataframeMatrix.storageEngine == null) {
+            throw new NullPointerException("The DataframeMatrix storage engine is not initialized.");
         }
 
-        id = MatrixDataframe.storageId.getAndIncrement();
-        entries = MatrixDataframe.storageEngine.getBigMap("tmp_mrmentries"+id, Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
+        id = DataframeMatrix.storageId.getAndIncrement();
+        entries = DataframeMatrix.storageEngine.getBigMap("tmp_mrmentries"+id, Long.class, Double.class, MapType.HASHMAP, StorageHint.IN_DISK, false, true);
     }
 
     /**
@@ -85,7 +83,7 @@ public class MapRealMatrix extends AbstractRealMatrix implements SparseRealMatri
     @Override
     protected void finalize() throws Throwable {
         try {
-            MatrixDataframe.storageEngine.dropBigMap("tmp_mrmentries"+id, entries);
+            DataframeMatrix.storageEngine.dropBigMap("tmp_mrmentries"+id, entries);
         }
         finally {
             super.finalize();

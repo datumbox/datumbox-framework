@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.MatrixDataframe;
+import com.datumbox.framework.common.dataobjects.DataframeMatrix;
 import com.datumbox.framework.common.dataobjects.Record;
 import com.datumbox.framework.common.storageengines.interfaces.BigMap;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
@@ -168,7 +168,7 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
         }
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>(); //use a mapping between recordIds and rowIds in Matrix
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
+        DataframeMatrix matrixDataset = DataframeMatrix.parseDataset(newData, recordIdsReference, featureIds);
         
         RealMatrix X = matrixDataset.getX();
         
@@ -194,7 +194,7 @@ public class MatrixLinearRegression extends AbstractRegressor<MatrixLinearRegres
         Map<Object, Double> thitas = modelParameters.getThitas();
         Map<Object, Integer> featureIds = modelParameters.getFeatureIds();
         //Map<Integer, Integer> recordIdsReference = null;
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, true, null, featureIds);
+        DataframeMatrix matrixDataset = DataframeMatrix.newInstance(trainingData, true, null, featureIds);
         
         RealVector Y = matrixDataset.getY();
         RealMatrix X = matrixDataset.getX();

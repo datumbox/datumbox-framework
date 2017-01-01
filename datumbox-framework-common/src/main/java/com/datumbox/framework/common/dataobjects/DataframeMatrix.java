@@ -25,16 +25,16 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The MatrixDataframe class is responsible for converting a Dataframe object to a
+ * The DataframeMatrix class is responsible for converting a Dataframe object to a
  Matrix representation. Some of the methods on framework require working with
  matrices and this class provides the tools to achieve the necessary conversions.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class MatrixDataframe {
+public class DataframeMatrix {
 
     /**
-     * We create a single storage engine for all MatrixDataframe and MapRealMatrix objects. It is necessary to define it static
+     * We create a single storage engine for all DataframeMatrix and MapRealMatrix objects. It is necessary to define it static
      * and package protected to make it accessible to other classes such as the MapRealMatrix. This is because
      * some methods of the RealMatrix require generating new object without passing the configuration file. The engine
      * is created only once to avoid hurting performance. Thus the storageEngine is initialized once in a thread-safe manner.
@@ -77,7 +77,7 @@ public class MatrixDataframe {
      * @param Y
      * @param X
      */
-    private MatrixDataframe(RealMatrix X, RealVector Y) {
+    private DataframeMatrix(RealMatrix X, RealVector Y) {
         //this constructor must be private because it is used only internally
         this.Y = Y;
         this.X = X;
@@ -91,7 +91,7 @@ public class MatrixDataframe {
     private static void setStorageEngine(Dataframe dataset) {
         //create a single storage engine for all the MapRealMatrixes
         if (storageEngine == null) {
-            synchronized(MatrixDataframe.class) {
+            synchronized(DataframeMatrix.class) {
                 if (storageEngine == null) {
                     String storageName = "mdf" + RandomGenerator.getThreadLocalRandomUnseeded().nextLong();
                     storageEngine = dataset.configuration.getStorageConfiguration().createStorageEngine(storageName);
@@ -101,7 +101,7 @@ public class MatrixDataframe {
     }
     
     /**
-     * Method used to generate a training Dataframe to a MatrixDataframe and extracts its contents
+     * Method used to generate a training Dataframe to a DataframeMatrix and extracts its contents
  to Matrixes. It populates the featureIdsReference map with the mappings
      * between the feature names and the column ids of the matrix. Typically used
      * to convert the training dataset.
@@ -112,7 +112,7 @@ public class MatrixDataframe {
      * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataframe newInstance(Dataframe dataset, boolean addConstantColumn, Map<Integer, Integer> recordIdsReference, Map<Object, Integer> featureIdsReference) {
+    public static DataframeMatrix newInstance(Dataframe dataset, boolean addConstantColumn, Map<Integer, Integer> recordIdsReference, Map<Object, Integer> featureIdsReference) {
         if(!featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should be empty.");
         }
@@ -127,7 +127,7 @@ public class MatrixDataframe {
             ++d;
         }
 
-        MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
+        DataframeMatrix m = new DataframeMatrix(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(dataset.isEmpty()) {
             return m;
@@ -179,7 +179,7 @@ public class MatrixDataframe {
     }
     
     /**
-     * Parses a testing dataset and converts it to MatrixDataframe by using an already
+     * Parses a testing dataset and converts it to DataframeMatrix by using an already
  existing mapping between feature names and column ids. Typically used
      * to parse the testing or validation dataset.
      * 
@@ -188,7 +188,7 @@ public class MatrixDataframe {
      * @param featureIdsReference
      * @return 
      */
-    public static MatrixDataframe parseDataset(Dataframe newData, Map<Integer, Integer> recordIdsReference, Map<Object, Integer> featureIdsReference) {
+    public static DataframeMatrix parseDataset(Dataframe newData, Map<Integer, Integer> recordIdsReference, Map<Object, Integer> featureIdsReference) {
         if(featureIdsReference.isEmpty()) {
             throw new IllegalArgumentException("The featureIdsReference map should not be empty.");
         }
@@ -198,7 +198,7 @@ public class MatrixDataframe {
         int n = newData.size();
         int d = featureIdsReference.size();
 
-        MatrixDataframe m = new MatrixDataframe(new MapRealMatrix(n, d), new MapRealVector(n));
+        DataframeMatrix m = new DataframeMatrix(new MapRealMatrix(n, d), new MapRealVector(n));
         
         if(newData.isEmpty()) {
             return m;

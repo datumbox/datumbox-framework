@@ -246,7 +246,7 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, false, null, featureIds);
+        DataframeMatrix matrixDataset = DataframeMatrix.newInstance(trainingData, false, null, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -331,7 +331,7 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
+        DataframeMatrix matrixDataset = DataframeMatrix.parseDataset(newData, recordIdsReference, featureIds);
         
         RealMatrix components = modelParameters.getComponents();
         
