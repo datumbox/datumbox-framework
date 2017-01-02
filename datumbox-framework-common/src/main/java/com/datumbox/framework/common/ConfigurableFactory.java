@@ -16,6 +16,8 @@
 package com.datumbox.framework.common;
 
 import com.datumbox.framework.common.interfaces.Configurable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +35,8 @@ import java.util.Properties;
 public class ConfigurableFactory {
 
     private static final String DEFAULT_POSTFIX = ".default";
+
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurableFactory.class);
     
     /**
      * Initializes the Configuration Object based on the configuration file.
@@ -57,7 +61,7 @@ public class ConfigurableFactory {
         
         Properties properties = new Properties();
         
-        ClassLoader cl = ConfigurableFactory.class.getClassLoader();
+        ClassLoader cl = klass.getClassLoader();
         
         //Load default properties from jar
         try (InputStream in = cl.getResourceAsStream(defaultPropertyFile)) {
@@ -77,7 +81,12 @@ public class ConfigurableFactory {
             catch(IOException ex) {
                 throw new UncheckedIOException(ex);
             }
+            logger.trace("Merging the properties files {} and {}: {}", defaultPropertyFile, propertyFile, properties);
         }
+        else {
+            logger.warn("The properties file {} was not found. Falling back to the default {} properties file: {}", propertyFile, defaultPropertyFile, properties);
+        }
+
         
         configuration.load(properties);
         
