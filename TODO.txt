@@ -1,17 +1,15 @@
 CODE IMPROVEMENTS
 =================
 
-- The examples should be updated to use the latest storage modules.
-- Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
-
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 - Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
+- Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
 
 NEW FEATURES
 ============
 
-- Create a storage engine for MapDB 3 once caching & asynchronous writing is supported. Remove the HOTFIX for MapDB bug #664.
+- Create a storage engine for MapDB 3 once caching & asynchronous writing is supported.
 - Create a storage engine for BerkeleyDB.
 - Add the ability to call Machine Learning algorithms from command line or Python:
     - https://pypi.python.org/pypi/javabridge
