@@ -137,15 +137,23 @@
         <resources>
             <resource>
                 <directory>${main.basedir}/datumbox-framework-common/src/main/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <excludes>
                     <exclude>license.txt</exclude>
                 </excludes>
+            </resource>
+            <resource>
+                <directory>${main.basedir}/datumbox-framework-core/src/main/resources</directory>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <testResources>
             <testResource>
                 <directory>${main.basedir}/datumbox-framework-common/src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>${main.basedir}/datumbox-framework-core/src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>

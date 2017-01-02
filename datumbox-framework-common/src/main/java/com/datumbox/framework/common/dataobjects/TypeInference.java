@@ -61,7 +61,7 @@ public class TypeInference {
          * @param dataType
          * @return 
          */
-        protected static Object parse(String s, DataType dataType) {
+        public static Object parse(String s, DataType dataType) {
             if(s==null || s.isEmpty() || "null".equalsIgnoreCase(s)) {
                 return null;
             }
