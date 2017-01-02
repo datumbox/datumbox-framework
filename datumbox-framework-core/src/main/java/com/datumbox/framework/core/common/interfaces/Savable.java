@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.interfaces;
-
-import java.io.Serializable;
+package com.datumbox.framework.core.common.interfaces;
 
 /**
- * This interface is used to mark classes that work as wrappers/containers of 
- * fields that parameterize other algorithms. 
- * 
+ * The Savable interface is implemented by all the objects that can be stored.
+ *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public interface Parameterizable extends Serializable {
-    
+public interface Savable extends AutoCloseable {
+
+    /**
+     * Saves the data of the object.
+     *
+     * @param storageName
+     */
+    public void save(String storageName);
+
+    /**
+     * Deletes the data of the object.
+     */
+    public void delete();
+
 }

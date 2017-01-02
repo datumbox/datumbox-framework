@@ -13,16 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.interfaces;
+package com.datumbox.framework.core.common.interfaces;
 
-import java.io.Serializable;
+import java.util.Map;
 
 /**
- * This interface is used to mark classes which store parameters that are learned 
- * during training.
+ * This interface is used to mark classes that work as extractors. 
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * @param <K>
+ * @param <V>
+ * @param <I>
  */
-public interface Learnable extends Serializable {
+public interface Extractable<K, V, I> {
+    
+    /**
+     * The extract method gets an input, performs extraction and returns the output 
+     * in a map.
+     * 
+     * @param input
+     * @return 
+     */
+    public Map<K, V> extract(final I input);
     
 }

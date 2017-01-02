@@ -2,7 +2,6 @@ CODE IMPROVEMENTS
 =================
 
 - Consider moving storages in a separate module that is inherited by common. Use nested maven modules like: https://github.com/google/guice
-- Consider moving all tests in a separate module.
 - Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
 
 - Consider dropping all the common.dataobjects and use their internalData directly instead.

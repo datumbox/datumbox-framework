@@ -16,7 +16,7 @@
 package com.datumbox.framework.core.machinelearning;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.interfaces.Parameterizable;
+import com.datumbox.framework.core.common.interfaces.Parameterizable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Trainable;
 
 import java.lang.reflect.Constructor;

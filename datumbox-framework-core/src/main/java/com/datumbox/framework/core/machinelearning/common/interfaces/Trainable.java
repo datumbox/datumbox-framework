@@ -16,9 +16,9 @@
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.interfaces.Learnable;
-import com.datumbox.framework.common.interfaces.Parameterizable;
-import com.datumbox.framework.common.interfaces.Savable;
+import com.datumbox.framework.core.common.interfaces.Learnable;
+import com.datumbox.framework.core.common.interfaces.Parameterizable;
+import com.datumbox.framework.core.common.interfaces.Savable;
 
 /**
  * This interface is used to mark classes that can be trained. This interface 

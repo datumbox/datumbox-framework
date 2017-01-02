@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.core.machinelearning.common.dataobjects;
 
-import com.datumbox.framework.common.interfaces.Savable;
+import com.datumbox.framework.core.common.interfaces.Savable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Trainable;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 

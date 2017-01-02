@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.core.common.text.extractors;
 
-import com.datumbox.framework.common.interfaces.Extractable;
-import com.datumbox.framework.common.interfaces.Parameterizable;
+import com.datumbox.framework.core.common.interfaces.Extractable;
+import com.datumbox.framework.core.common.interfaces.Parameterizable;
 import com.datumbox.framework.core.common.text.tokenizers.AbstractTokenizer;
 import com.datumbox.framework.core.common.text.tokenizers.WhitespaceTokenizer;
 

@@ -20,7 +20,7 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
 import com.datumbox.framework.core.common.dataobjects.Record;
-import com.datumbox.framework.common.interfaces.Parameterizable;
+import com.datumbox.framework.core.common.interfaces.Parameterizable;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.common.utilities.StringCleaner;
