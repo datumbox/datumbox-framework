@@ -51,7 +51,7 @@ public class ModelerTest extends AbstractTest {
         logger.info("testTrainAndValidate");
         
         Configuration configuration = Configuration.getConfiguration();
-        
+
         Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
 
         Dataframe trainingData = data[0];

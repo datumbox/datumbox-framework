@@ -16,15 +16,9 @@
 package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.core.common.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,20 +37,8 @@ public class CETRTest extends AbstractTest {
         logger.info("extract");
          
         Configuration configuration = Configuration.getConfiguration();
-        
-        String text;        
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(this.getClass().getClassLoader().getResource("datasets/example.com.html").toURI()), StandardCharsets.UTF_8);
-            StringBuilder sb = new StringBuilder();
-            for(String line: lines){
-                sb.append(line);
-                sb.append("\r\n");
-            }
-            text = sb.toString().trim();
-        }
-        catch(IOException | URISyntaxException ex) {
-            throw new RuntimeException(ex);
-        }
+
+        String text = Datasets.exampleHtmlCode();
         
         CETR.Parameters parameters = new CETR.Parameters();
         parameters.setNumberOfClusters(2);

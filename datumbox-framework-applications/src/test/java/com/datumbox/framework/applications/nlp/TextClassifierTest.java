@@ -16,6 +16,7 @@
 package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.core.common.Datasets;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
@@ -33,11 +34,8 @@ import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
-import java.io.UncheckedIOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -283,16 +281,8 @@ public class TextClassifierTest extends AbstractTest {
         
         
         String storageName = this.getClass().getSimpleName() + testId;
-        
-        Map<Object, URI> dataset = new HashMap<>();
-        try {
-            dataset.put("negative", this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.neg.txt").toURI());
-            dataset.put("positive", this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.pos.txt").toURI());
-        }
-        catch(UncheckedIOException | URISyntaxException ex) {
-            logger.warn("Unable to download datasets, skipping test.");
-            throw new RuntimeException(ex);
-        }
+
+        Map<Object, URI> dataset = Datasets.sentimentAnalysis();
 
         TextClassifier.TrainingParameters trainingParameters = new TextClassifier.TrainingParameters();
 
@@ -327,14 +317,7 @@ public class TextClassifierTest extends AbstractTest {
         
         
         instance = MLBuilder.load(TextClassifier.class, storageName, configuration);
-        Dataframe validationData;
-        try {
-            validationData = instance.predict(this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.unlabelled.txt").toURI());
-        }
-        catch(UncheckedIOException | URISyntaxException ex) {
-            logger.warn("Unable to download datasets, skipping test.");
-            throw new RuntimeException(ex);
-        }
+        Dataframe validationData = instance.predict(Datasets.sentimentAnalysisUnlabeled());
         
         List<Object> expResult = Arrays.asList("negative","positive");
         int i = 0;

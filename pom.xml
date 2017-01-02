@@ -135,25 +135,6 @@
     </modules>
     
     <build>
-        <resources>
-            <resource>
-                <directory>${main.basedir}/datumbox-framework-common/src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>license.txt</exclude>
-                </excludes>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>${main.basedir}/datumbox-framework-common/src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${main.basedir}/datumbox-framework-core/src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-        </testResources>
         <pluginManagement>
             <plugins>
                 <plugin>
