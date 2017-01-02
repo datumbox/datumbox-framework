@@ -41,30 +41,6 @@
         <module>datumbox-framework-storage-mapdb</module>
     </modules>
 
-
-    <build>
-        <resources>
-            <resource>
-                <directory>${main.basedir}/datumbox-framework-storage/datumbox-framework-storage-inmemory/src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>${main.basedir}/datumbox-framework-storage/datumbox-framework-storage-mapdb/src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>${main.basedir}/datumbox-framework-storage/datumbox-framework-storage-inmemory/src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${main.basedir}/datumbox-framework-storage/datumbox-framework-storage-mapdb/src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-        </testResources>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>com.datumbox</groupId>
