@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.dataobjects;
+package com.datumbox.framework.core.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.concurrency.ThreadMethods;
+import com.datumbox.framework.common.dataobjects.AssociativeArray;
+import com.datumbox.framework.common.dataobjects.FlatDataList;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.interfaces.Copyable;
 import com.datumbox.framework.common.interfaces.Extractable;
 import com.datumbox.framework.common.interfaces.Savable;

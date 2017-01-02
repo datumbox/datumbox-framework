@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.dataobjects;
+package com.datumbox.framework.core.common.dataobjects;
 
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.linear.OpenMapRealVector;
@@ -133,7 +134,7 @@ public class DataframeMatrix {
             return m;
         }
         
-        boolean extractY=(dataset.getYDataType()==TypeInference.DataType.NUMERICAL);
+        boolean extractY=(dataset.getYDataType()== TypeInference.DataType.NUMERICAL);
         
         int featureId=0; 
         if(addConstantColumn) {

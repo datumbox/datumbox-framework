@@ -142,10 +142,6 @@
                     <exclude>license.txt</exclude>
                 </excludes>
             </resource>
-            <resource>
-                <directory>${main.basedir}/datumbox-framework-core/src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
         </resources>
         <testResources>
             <testResource>

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.core.machinelearning.modelselection.splitters;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.AbstractSplitter;

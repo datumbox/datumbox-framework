@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.core.machinelearning.common.abstracts.modelselection;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.common.interfaces.ValidationMetrics;
 
 import java.util.List;

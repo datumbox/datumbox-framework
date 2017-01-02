@@ -17,7 +17,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.featuresele
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.ForkJoinStream;
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;

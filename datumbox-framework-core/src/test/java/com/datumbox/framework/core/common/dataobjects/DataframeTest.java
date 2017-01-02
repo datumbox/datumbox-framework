@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.dataobjects;
+package com.datumbox.framework.core.common.dataobjects;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.common.dataobjects.AssociativeArray;
+import com.datumbox.framework.common.dataobjects.FlatDataCollection;
+import com.datumbox.framework.common.dataobjects.FlatDataList;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
@@ -48,7 +52,7 @@ public class DataframeTest extends AbstractTest {
         Configuration configuration = Configuration.getConfiguration();
         
         
-        LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
+        LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>();
         headerDataTypes.put("city", TypeInference.DataType.CATEGORICAL);
         headerDataTypes.put("temperature", TypeInference.DataType.NUMERICAL);
         headerDataTypes.put("is_sunny", TypeInference.DataType.BOOLEAN);

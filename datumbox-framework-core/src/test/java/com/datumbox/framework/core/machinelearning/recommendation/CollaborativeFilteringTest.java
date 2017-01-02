@@ -17,12 +17,12 @@ package com.datumbox.framework.core.machinelearning.recommendation;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.RecommendationMetrics;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.tests.Datasets;
+import com.datumbox.framework.core.common.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 

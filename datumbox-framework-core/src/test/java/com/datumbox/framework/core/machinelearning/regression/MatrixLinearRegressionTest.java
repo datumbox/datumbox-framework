@@ -16,8 +16,8 @@
 package com.datumbox.framework.core.machinelearning.regression;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.LinearRegressionMetrics;
@@ -26,7 +26,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFol
 import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MaxAbsScaler;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.tests.Datasets;
+import com.datumbox.framework.core.common.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 

@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
