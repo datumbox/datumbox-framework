@@ -16,7 +16,7 @@
 package com.datumbox.framework.core.common.dataobjects;
 
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import org.apache.commons.math3.linear.OpenMapRealVector;
 import org.apache.commons.math3.linear.RealMatrix;

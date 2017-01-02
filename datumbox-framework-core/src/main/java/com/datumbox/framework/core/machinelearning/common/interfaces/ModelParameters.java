@@ -16,7 +16,7 @@
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
 import com.datumbox.framework.core.common.interfaces.Learnable;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

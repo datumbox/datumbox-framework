@@ -17,7 +17,7 @@ package com.datumbox.framework.applications.datamodeling;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;

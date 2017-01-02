@@ -17,10 +17,10 @@ package com.datumbox.framework.core.machinelearning.topicmodeling;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.storageengines.interfaces.BigMap;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.common.storage.interfaces.BigMap;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;

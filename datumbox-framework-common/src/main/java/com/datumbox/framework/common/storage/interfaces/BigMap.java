@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storageengines.interfaces;
+package com.datumbox.framework.common.storage.interfaces;
 
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
 
 import java.lang.annotation.*;
 

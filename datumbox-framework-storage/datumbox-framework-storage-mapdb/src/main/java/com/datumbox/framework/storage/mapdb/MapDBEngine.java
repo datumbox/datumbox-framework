@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storageengines.mapdb;
+package com.datumbox.framework.storage.mapdb;
 
-import com.datumbox.framework.common.storageengines.abstracts.AbstractFileStorageEngine;
-import com.datumbox.framework.common.storageengines.abstracts.AbstractStorageEngine;
-import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.abstracts.AbstractFileStorageEngine;
+import com.datumbox.framework.common.storage.abstracts.AbstractStorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import org.mapdb.*;
 
 import java.io.File;

@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.core.common.dataobjects;
 
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
 import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
 import org.apache.commons.math3.linear.AbstractRealMatrix;

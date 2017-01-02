@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storageengines.inmemory;
+package com.datumbox.framework.storage.inmemory;
 
-import com.datumbox.framework.common.storageengines.abstracts.AbstractFileStorageEngine;
-import com.datumbox.framework.common.storageengines.abstracts.AbstractStorageEngine;
-import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storage.abstracts.AbstractFileStorageEngine;
+import com.datumbox.framework.common.storage.abstracts.AbstractStorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageConfiguration;
 import com.datumbox.framework.common.utilities.DeepCopy;
 
 import java.io.File;

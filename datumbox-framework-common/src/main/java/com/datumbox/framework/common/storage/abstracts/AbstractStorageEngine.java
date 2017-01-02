@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.storageengines.abstracts;
+package com.datumbox.framework.common.storage.abstracts;
 
-import com.datumbox.framework.common.storageengines.interfaces.BigMap;
-import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.BigMap;
+import com.datumbox.framework.common.storage.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.common.utilities.ReflectionMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

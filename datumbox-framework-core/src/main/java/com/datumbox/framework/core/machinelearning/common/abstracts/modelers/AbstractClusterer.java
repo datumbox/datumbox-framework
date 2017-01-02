@@ -17,10 +17,10 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.core.common.dataobjects.Record;
-import com.datumbox.framework.common.storageengines.interfaces.BigMap;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.common.storage.interfaces.BigMap;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Cluster;
 

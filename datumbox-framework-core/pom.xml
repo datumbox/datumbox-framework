@@ -47,9 +47,20 @@
             <groupId>com.datumbox</groupId>
             <artifactId>libsvm</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.datumbox</groupId>
             <artifactId>datumbox-framework-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datumbox</groupId>
+            <artifactId>datumbox-framework-storage-inmemory</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datumbox</groupId>
+            <artifactId>datumbox-framework-storage-mapdb</artifactId>
             <version>${project.version}</version>
         </dependency>
         
