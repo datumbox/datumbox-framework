@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,6 +53,6 @@ public abstract class AbstractEncoder<MP extends AbstractEncoder.AbstractModelPa
     /** {@inheritDoc} */
     @Override
     protected Set<TypeInference.DataType> getSupportedXDataTypes() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL)));
+        return new HashSet<>(Arrays.asList(TypeInference.DataType.CATEGORICAL, TypeInference.DataType.ORDINAL));
     }
 }

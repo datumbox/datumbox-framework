@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@ package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
-import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.interfaces.Parameterizable;
+import com.datumbox.framework.core.common.dataobjects.Record;
+import com.datumbox.framework.core.common.interfaces.Parameterizable;
 import com.datumbox.framework.common.utilities.MapMethods;
 import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.common.utilities.StringCleaner;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.clustering.Kmeans;
 import com.datumbox.framework.core.statistics.descriptivestatistics.Descriptives;
-import com.datumbox.framework.core.utilities.text.parsers.HTMLParser;
+import com.datumbox.framework.core.common.text.parsers.HTMLParser;
 
 import java.util.*;
 import java.util.regex.Matcher;

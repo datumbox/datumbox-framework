@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+    Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -47,9 +47,20 @@
             <groupId>com.datumbox</groupId>
             <artifactId>libsvm</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.datumbox</groupId>
             <artifactId>datumbox-framework-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datumbox</groupId>
+            <artifactId>datumbox-framework-storage-inmemory</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datumbox</groupId>
+            <artifactId>datumbox-framework-storage-mapdb</artifactId>
             <version>${project.version}</version>
         </dependency>
         
@@ -65,7 +76,7 @@
             <groupId>com.datumbox</groupId>
             <artifactId>datumbox-framework-common</artifactId>
             <version>${project.version}</version>
-            <type>test-jar</type>
+            <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@
 package com.datumbox.framework.applications.datamodeling;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.machinelearning.classification.MultinomialNaiveBayes;
+import com.datumbox.framework.core.machinelearning.classification.SoftMaxRegression;
+import com.datumbox.framework.core.machinelearning.featureselection.ChisquareSelect;
+import com.datumbox.framework.core.machinelearning.featureselection.PCA;
 import com.datumbox.framework.core.machinelearning.modelselection.metrics.ClassificationMetrics;
 import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.tests.Datasets;
+import com.datumbox.framework.core.common.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +55,8 @@ public class ModelerTest extends AbstractTest {
         Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
 
         Dataframe trainingData = data[0];
-        Dataframe validationData = data[1];
-        
+        Dataframe validationData = data[0].copy();
+        Dataframe testData = data[1];
         
         String storageName = this.getClass().getSimpleName();
 
@@ -69,11 +72,16 @@ public class ModelerTest extends AbstractTest {
         trainingParameters.setCategoricalEncoderTrainingParameters(ceParams);
         
         //feature selection configuration
-        trainingParameters.setFeatureSelectorTrainingParameters(null);
+
+        PCA.TrainingParameters pcaParams = new PCA.TrainingParameters();
+        pcaParams.setVariancePercentageThreshold(0.99999995);
+        trainingParameters.setFeatureSelectorTrainingParametersList(Arrays.asList(new ChisquareSelect.TrainingParameters(), pcaParams));
 
         //model Configuration
-        MultinomialNaiveBayes.TrainingParameters modelTrainingParameters = new MultinomialNaiveBayes.TrainingParameters();
-        modelTrainingParameters.setMultiProbabilityWeighted(true);
+        SoftMaxRegression.TrainingParameters modelTrainingParameters = new SoftMaxRegression.TrainingParameters();
+        modelTrainingParameters.setL1(0.0001);
+        modelTrainingParameters.setL2(0.0001);
+        modelTrainingParameters.setTotalIterations(100);
         trainingParameters.setModelerTrainingParameters(modelTrainingParameters);
 
         Modeler instance = MLBuilder.create(trainingParameters, configuration);
@@ -81,29 +89,30 @@ public class ModelerTest extends AbstractTest {
         instance.save(storageName);
 
         instance.close();
+        trainingData.close();
 
         instance = MLBuilder.load(Modeler.class, storageName, configuration);
 
-        instance.predict(trainingData);
+        instance.predict(validationData);
 
-        ClassificationMetrics vm = new ClassificationMetrics(trainingData);
+        ClassificationMetrics vm = new ClassificationMetrics(validationData);
 
-        double expResult2 = 0.7867564534231202;
+        double expResult2 = 0.8428731762065095;
         assertEquals(expResult2, vm.getMacroF1(), Constants.DOUBLE_ACCURACY_HIGH);
 
-        trainingData.close();
+        validationData.close();
         instance.close();
 
 
         instance = MLBuilder.load(Modeler.class, storageName, configuration);
         
-        instance.predict(validationData);
+        instance.predict(testData);
         
         
         
         Map<Integer, Object> expResult = new HashMap<>();
         Map<Integer, Object> result = new HashMap<>();
-        for(Map.Entry<Integer, Record> e : validationData.entries()) {
+        for(Map.Entry<Integer, Record> e : testData.entries()) {
             Integer rId = e.getKey();
             Record r = e.getValue();
             expResult.put(rId, r.getY());
@@ -113,7 +122,7 @@ public class ModelerTest extends AbstractTest {
         
         instance.delete();
 
-        validationData.close();
+        testData.close();
     }
     
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 package com.datumbox.framework.core.machinelearning.clustering;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.MatrixDataframe;
-import com.datumbox.framework.common.dataobjects.Record;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.core.common.dataobjects.DataframeMatrix;
+import com.datumbox.framework.core.common.dataobjects.Record;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.algorithms.AbstractDPMM;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
@@ -75,7 +75,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         /** {@inheritDoc} */
         @Override
         protected double posteriorLogPdf(Record r) {
-            RealVector x_mu = MatrixDataframe.parseRecord(r, featureIds);
+            RealVector x_mu = DataframeMatrix.parseRecord(r, featureIds);
 
             RealVector wordCountsPlusAlpha = wordCounts.mapAdd(alphaWords);
 
@@ -98,7 +98,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         /** {@inheritDoc} */
         @Override
         protected void add(Record r) {
-            RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
+            RealVector rv = DataframeMatrix.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
             if(size==0) {
@@ -118,7 +118,7 @@ public class MultinomialDPMM extends AbstractDPMM<MultinomialDPMM.Cluster, Multi
         protected void remove(Record r) {
             size--;
             
-            RealVector rv = MatrixDataframe.parseRecord(r, featureIds);
+            RealVector rv = DataframeMatrix.parseRecord(r, featureIds);
 
             //update cluster clusterParameters
             wordCounts=wordCounts.subtract(rv);

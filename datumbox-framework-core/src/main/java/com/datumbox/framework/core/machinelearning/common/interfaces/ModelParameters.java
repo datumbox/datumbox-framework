@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.core.machinelearning.common.interfaces;
 
-import com.datumbox.framework.common.interfaces.Learnable;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.core.common.interfaces.Learnable;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

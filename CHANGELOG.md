@@ -1,12 +1,12 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20161231
+Version 0.8.0-SNAPSHOT - Build 20170102
 ---------------------------------------
 
 - Initial Updates:
     - Dependencies:
-        - Upgraded commons-math, commons-csv, slf4j and logback-classic to latest stable versions.
+        - Upgraded libsvm, commons-math, commons-csv, slf4j and logback-classic to latest stable versions.
         - Removed commons-lang from the dependencies. Added a faster custom unescapeHtml method in HTMLParser.
         - Removed lp_solve from dependencies. Now we use a pure Java simplex solver. This brings changes to the signatures of LPSolver methods.
     - Memory & Storage:
@@ -72,6 +72,17 @@ Version 0.8.0-SNAPSHOT - Build 20161231
     - Rewrote the FeatureSelection package:
         - Each method can now be used only for specific X and Y DataTypes.
         - Every method filters only the X DataTypes that it supports, making it possible to chain different methods together.
+    - The Modeler now receives a list of feature selector parameters.
+    - Rename MatrixDataframe to DataframeMatrix.
+    - Restructured the packages and maven modules:
+        - Renamed the core.utilities to core.common.
+        - Moved Trainable interface from common to core package.
+        - Moved regularization package to mathematics.
+        - Moved Dataframe, Record, *Vector and *Matrix classes from common to the core module.
+        - Moved Datasets and test data from common to core.
+        - Moved the Extractable, Learnable, Parameterizable and Savable interfaces from common to core.
+        - Renamed the common.storageengines to common.storage.
+        - Created a new module called storage with two submodules the inmemory and mapdb. The code of the two engines moved to the submodules.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

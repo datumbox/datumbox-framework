@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package com.datumbox.framework.applications.datamodeling;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.common.dataobjects.Dataframe;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.transformers.AbstractEncoder;
@@ -26,6 +26,9 @@ import com.datumbox.framework.core.machinelearning.common.abstracts.featureselec
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractModeler;
 import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableBundle;
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Modeler is a convenience class which can be used to train Machine Learning
@@ -68,7 +71,7 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         //Parameter Objects
         private AbstractScaler.AbstractTrainingParameters numericalScalerTrainingParameters;
         private AbstractEncoder.AbstractTrainingParameters categoricalEncoderTrainingParameters;
-        private AbstractFeatureSelector.AbstractTrainingParameters featureSelectorTrainingParameters;
+        private List<AbstractTrainingParameters> featureSelectorTrainingParametersList = new ArrayList<>();
         private AbstractModeler.AbstractTrainingParameters modelerTrainingParameters;
 
         /**
@@ -108,22 +111,21 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         }
 
         /**
-         * Getter for the Training Parameters of the Feature Selector.
+         * Getter for the Training Parameters of the Feature Selectors.
          *
          * @return
          */
-        public AbstractFeatureSelector.AbstractTrainingParameters getFeatureSelectorTrainingParameters() {
-            return featureSelectorTrainingParameters;
+        public List<AbstractFeatureSelector.AbstractTrainingParameters> getFeatureSelectorTrainingParametersList() {
+            return featureSelectorTrainingParametersList;
         }
 
         /**
-         * Setter for the Training Parameters of the Feature Selector. Pass null
-         * for none.
+         * Setter for the Training Parameters of the Feature Selectors.
          *
-         * @param featureSelectorTrainingParameters
+         * @param featureSelectorTrainingParametersList
          */
-        public void setFeatureSelectorTrainingParameters(AbstractFeatureSelector.AbstractTrainingParameters featureSelectorTrainingParameters) {
-            this.featureSelectorTrainingParameters = featureSelectorTrainingParameters;
+        public void setFeatureSelectorTrainingParametersList(List<AbstractFeatureSelector.AbstractTrainingParameters> featureSelectorTrainingParametersList) {
+            this.featureSelectorTrainingParametersList = featureSelectorTrainingParametersList;
         }
 
         /**
@@ -199,8 +201,9 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         if(categoricalEncoder != null) {
             categoricalEncoder.transform(newData);
         }
-        AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY);
-        if(featureSelector != null) {
+        int numOfFS = getTrainingParameters().getFeatureSelectorTrainingParametersList().size();
+        for(int i=0;i<numOfFS;i++) {
+            AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY+i);
             featureSelector.transform(newData);
         }
         AbstractModeler modeler = (AbstractModeler) bundle.get(ML_KEY);
@@ -231,12 +234,13 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         }
         bundle.put(CE_KEY, categoricalEncoder);
 
-        AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
-        AbstractFeatureSelector featureSelector = null;
-        if(fsParams != null) {
-            featureSelector = MLBuilder.create(fsParams, configuration);
+        List<AbstractFeatureSelector.AbstractTrainingParameters> fsParamsList = trainingParameters.getFeatureSelectorTrainingParametersList();
+        int numOfFS = fsParamsList.size();
+        for(int i=0;i<numOfFS;i++) {
+            AbstractFeatureSelector.AbstractTrainingParameters fsParams = fsParamsList.get(i);
+            AbstractFeatureSelector featureSelector = MLBuilder.create(fsParams, configuration);
+            bundle.put(FS_KEY+i, featureSelector);
         }
-        bundle.put(FS_KEY, featureSelector);
 
         AbstractModeler.AbstractTrainingParameters mlParams = trainingParameters.getModelerTrainingParameters();
         AbstractModeler modeler = MLBuilder.create(mlParams, configuration);
@@ -252,7 +256,8 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         if(categoricalEncoder != null) {
             categoricalEncoder.fit_transform(trainingData);
         }
-        if(featureSelector != null) {
+        for(int i=0;i<numOfFS;i++) {
+            AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY+i);
             featureSelector.fit_transform(trainingData);
         }
         modeler.fit(trainingData);
@@ -314,14 +319,15 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
             bundle.put(CE_KEY, categoricalEncoder);
         }
 
-        if(!bundle.containsKey(FS_KEY)) {
-            AbstractFeatureSelector.AbstractTrainingParameters fsParams = trainingParameters.getFeatureSelectorTrainingParameters();
 
-            AbstractFeatureSelector featureSelector = null;
-            if(fsParams != null) {
-                featureSelector = MLBuilder.load(fsParams.getTClass(), storageName + separator + FS_KEY, configuration);
+        List<AbstractFeatureSelector.AbstractTrainingParameters> fsParamsList = trainingParameters.getFeatureSelectorTrainingParametersList();
+        int numOfFS = fsParamsList.size();
+        for(int i=0;i<numOfFS;i++) {
+            if(!bundle.containsKey(FS_KEY+i)) {
+                AbstractFeatureSelector.AbstractTrainingParameters fsParams = fsParamsList.get(i);
+                AbstractFeatureSelector featureSelector = MLBuilder.load(fsParams.getTClass(), storageName + separator + FS_KEY + i, configuration);
+                bundle.put(FS_KEY+i, featureSelector);
             }
-            bundle.put(FS_KEY, featureSelector);
         }
 
         if(!bundle.containsKey(ML_KEY)) {

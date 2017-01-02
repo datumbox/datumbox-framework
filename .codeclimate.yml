@@ -8,7 +8,7 @@ engines:
     enabled: true
     channel: "beta"
     exclude_fingerprints:
-    - da318026c3b8f2eaaaae8d9645a4dda3
+    - d58713d342d24b2a02c9b3d13755d65d
 ratings:
   paths:
   - "**.java"

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class TypeInference {
          * @param dataType
          * @return 
          */
-        protected static Object parse(String s, DataType dataType) {
+        public static Object parse(String s, DataType dataType) {
             if(s==null || s.isEmpty() || "null".equalsIgnoreCase(s)) {
                 return null;
             }

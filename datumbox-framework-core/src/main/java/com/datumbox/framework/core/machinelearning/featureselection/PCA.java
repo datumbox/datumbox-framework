@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@ package com.datumbox.framework.core.machinelearning.featureselection;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.concurrency.StreamMethods;
 import com.datumbox.framework.common.dataobjects.*;
-import com.datumbox.framework.common.storageengines.interfaces.BigMap;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.MapType;
-import com.datumbox.framework.common.storageengines.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.common.storage.interfaces.BigMap;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
+import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.DataframeMatrix;
+import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.featureselectors.AbstractFeatureSelector;
 import org.apache.commons.math3.linear.*;
@@ -246,7 +249,7 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
         
         //convert data into matrix
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
-        MatrixDataframe matrixDataset = MatrixDataframe.newInstance(trainingData, false, null, featureIds);
+        DataframeMatrix matrixDataset = DataframeMatrix.newInstance(trainingData, false, null, featureIds);
         RealMatrix X = matrixDataset.getX();
         
         //calculate means and subtract them from data
@@ -331,7 +334,7 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
         Map<Object, Integer> featureIds= modelParameters.getFeatureIds();
         
         Map<Integer, Integer> recordIdsReference = new HashMap<>();
-        MatrixDataframe matrixDataset = MatrixDataframe.parseDataset(newData, recordIdsReference, featureIds);
+        DataframeMatrix matrixDataset = DataframeMatrix.parseDataset(newData, recordIdsReference, featureIds);
         
         RealMatrix components = modelParameters.getComponents();
         
@@ -365,7 +368,7 @@ public class PCA extends AbstractFeatureSelector<PCA.ModelParameters, PCA.Traini
     /** {@inheritDoc} */
     @Override
     protected Set<TypeInference.DataType> getSupportedXDataTypes() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL)));
+        return new HashSet<>(Arrays.asList(TypeInference.DataType.BOOLEAN, TypeInference.DataType.NUMERICAL));
     }
 
     /** {@inheritDoc} */

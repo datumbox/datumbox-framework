@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package com.datumbox.framework.core.machinelearning.modelselection.metrics;
 
-import com.datumbox.framework.common.dataobjects.Dataframe;
+import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.dataobjects.Record;
+import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelselection.AbstractMetrics;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;

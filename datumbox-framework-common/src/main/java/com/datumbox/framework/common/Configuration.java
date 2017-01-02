@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Vasilis Vryniotis <bbriniotis@datumbox.com>
+ * Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package com.datumbox.framework.common;
 
 import com.datumbox.framework.common.concurrency.ConcurrencyConfiguration;
 import com.datumbox.framework.common.interfaces.Configurable;
-import com.datumbox.framework.common.storageengines.interfaces.StorageConfiguration;
+import com.datumbox.framework.common.storage.interfaces.StorageConfiguration;
 
 import java.util.Properties;
 
@@ -77,7 +77,7 @@ public class Configuration implements Configurable {
     /** {@inheritDoc} */
     @Override
     public void load(Properties properties) {
-        String storageConfigurationClassName = properties.getProperty("storageConfiguration.className");
+        String storageConfigurationClassName = properties.getProperty("configuration.storageConfiguration");
         try {
             storageConfiguration = ConfigurableFactory.getConfiguration((Class<StorageConfiguration>) Class.forName(storageConfigurationClassName));
         }
