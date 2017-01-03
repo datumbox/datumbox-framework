@@ -23,7 +23,7 @@ import com.datumbox.framework.common.storage.interfaces.BigMap;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
-import com.datumbox.framework.common.utilities.SelectKth;
+import com.datumbox.framework.core.common.utilities.SelectKth;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 import java.util.*;

@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.common.abstracts.modelers;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine;
-import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 
 import java.util.*;

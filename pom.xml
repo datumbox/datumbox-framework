@@ -128,6 +128,7 @@
 
     <modules>
         <module>datumbox-framework-common</module>
+        <module>datumbox-framework-tests</module>
         <module>datumbox-framework-storage</module>
         <module>datumbox-framework-core</module>
         <module>datumbox-framework-applications</module>
@@ -334,6 +335,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Main dependencies -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
@@ -360,17 +362,16 @@
                 <version>${mapdb-version}</version>
             </dependency>
 
+            <!-- Test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit-version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback-classic-version}</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

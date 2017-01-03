@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20170102
+Version 0.8.0-SNAPSHOT - Build 20170103
 ---------------------------------------
 
 - Initial Updates:
@@ -81,8 +81,10 @@ Version 0.8.0-SNAPSHOT - Build 20170102
         - Moved Dataframe, Record, *Vector and *Matrix classes from common to the core module.
         - Moved Datasets and test data from common to core.
         - Moved the Extractable, Learnable, Parameterizable and Savable interfaces from common to core.
+        - Moved the MapMethods, PHPMethods, SelectKth, StringCleaner from common to the core module.
         - Renamed the common.storageengines to common.storage.
         - Created a new module called storage with two submodules the inmemory and mapdb. The code of the two engines moved to the submodules.
+        - Created a new module called tests that contains the configuration files and the Test Base classes for unit-tests.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

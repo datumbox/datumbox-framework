@@ -31,7 +31,7 @@ import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
 import com.datumbox.framework.common.utilities.RandomGenerator;
-import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.common.text.StringCleaner;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;

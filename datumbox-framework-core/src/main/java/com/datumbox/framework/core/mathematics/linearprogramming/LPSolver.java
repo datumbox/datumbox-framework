@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.core.mathematics.linearprogramming;
 
-import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.core.common.utilities.PHPMethods;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.*;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;

@@ -16,7 +16,7 @@
 package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;

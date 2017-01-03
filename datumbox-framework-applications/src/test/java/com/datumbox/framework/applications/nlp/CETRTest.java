@@ -16,7 +16,7 @@
 package com.datumbox.framework.applications.nlp;
 
 import com.datumbox.framework.common.Configuration;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 

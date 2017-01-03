@@ -81,10 +81,10 @@ public class ConfigurableFactory {
             catch(IOException ex) {
                 throw new UncheckedIOException(ex);
             }
-            logger.trace("Merging the properties files {} and {}: {}", defaultPropertyFile, propertyFile, properties);
+            logger.trace("Loading properties file {}: {}", propertyFile, properties);
         }
         else {
-            logger.warn("The properties file {} was not found. Falling back to the default {} properties file: {}", propertyFile, defaultPropertyFile, properties);
+            logger.warn("Using default properties file {}: {}", defaultPropertyFile, properties);
         }
 
         

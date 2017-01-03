@@ -18,7 +18,7 @@ package com.datumbox.framework.core.machinelearning.featureselection;
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 

@@ -17,7 +17,7 @@ package com.datumbox.framework.core.mathematics.linearprogramming;
 
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
-import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.core.common.utilities.PHPMethods;
 
 import java.util.ArrayList;
 import java.util.Iterator;

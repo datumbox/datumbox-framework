@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.common.utilities;
+package com.datumbox.framework.core.common.text;
+
+import com.datumbox.framework.core.common.utilities.PHPMethods;
 
 import java.text.Normalizer;
 import java.util.HashMap;

@@ -40,20 +40,11 @@
             <artifactId>datumbox-framework-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.datumbox</groupId>
-            <artifactId>datumbox-framework-common</artifactId>
+            <artifactId>datumbox-framework-tests</artifactId>
             <version>${project.version}</version>
-            <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -25,7 +25,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.splitters.Shuf
 import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
