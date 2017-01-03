@@ -19,9 +19,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datumbox</groupId>
-    <artifactId>datumbox-framework-common</artifactId>
+    <artifactId>datumbox-framework-tests</artifactId>
 
-    <name>Datumbox Framework Common</name>
+    <name>Datumbox Framework Tests</name>
 
     <parent>
         <groupId>com.datumbox</groupId>
@@ -36,13 +36,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.datumbox</groupId>
+            <artifactId>datumbox-framework-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
-
+    
 </project>

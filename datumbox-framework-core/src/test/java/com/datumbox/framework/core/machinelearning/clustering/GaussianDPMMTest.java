@@ -22,7 +22,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.metrics.Cluste
 import com.datumbox.framework.core.machinelearning.modelselection.Validator;
 import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFoldSplitter;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.OpenMapRealVector;

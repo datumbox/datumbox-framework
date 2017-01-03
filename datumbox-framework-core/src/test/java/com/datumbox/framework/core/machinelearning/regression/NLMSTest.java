@@ -27,7 +27,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.splitters.KFol
 import com.datumbox.framework.core.machinelearning.preprocessing.CornerConstraintsEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.StandardScaler;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 

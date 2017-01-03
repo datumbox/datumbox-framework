@@ -40,19 +40,10 @@
             <artifactId>commons-math3</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.datumbox</groupId>
             <artifactId>libsvm</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.datumbox</groupId>
-            <artifactId>datumbox-framework-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.datumbox</groupId>
             <artifactId>datumbox-framework-storage-inmemory</artifactId>
@@ -63,20 +54,11 @@
             <artifactId>datumbox-framework-storage-mapdb</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.datumbox</groupId>
-            <artifactId>datumbox-framework-common</artifactId>
+            <artifactId>datumbox-framework-tests</artifactId>
             <version>${project.version}</version>
-            <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>

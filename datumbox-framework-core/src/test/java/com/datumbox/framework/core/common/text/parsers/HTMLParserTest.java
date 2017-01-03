@@ -15,7 +15,7 @@
  */
 package com.datumbox.framework.core.common.text.parsers;
 
-import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.common.text.StringCleaner;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 

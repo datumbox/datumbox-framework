@@ -26,7 +26,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.metrics.Classi
 import com.datumbox.framework.core.machinelearning.preprocessing.OneHotEncoder;
 import com.datumbox.framework.core.machinelearning.preprocessing.MinMaxScaler;
 import com.datumbox.framework.tests.Constants;
-import com.datumbox.framework.core.common.Datasets;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
@@ -51,7 +51,7 @@ public class ModelerTest extends AbstractTest {
         logger.info("testTrainAndValidate");
         
         Configuration configuration = Configuration.getConfiguration();
-        
+
         Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
 
         Dataframe trainingData = data[0];

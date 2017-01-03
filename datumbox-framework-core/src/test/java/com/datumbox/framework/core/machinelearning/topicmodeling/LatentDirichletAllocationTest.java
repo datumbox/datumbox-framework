@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.machinelearning.topicmodeling;
 
 import com.datumbox.framework.common.Configuration;
+import com.datumbox.framework.core.Datasets;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;
@@ -28,10 +29,7 @@ import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;
 
-import java.io.UncheckedIOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -55,16 +53,8 @@ public class LatentDirichletAllocationTest extends AbstractTest {
         
         String storageName = this.getClass().getSimpleName();
 
-        
-        Map<Object, URI> dataset = new HashMap<>();
-        try {
-            dataset.put("negative", this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.neg.txt").toURI());
-            dataset.put("positive", this.getClass().getClassLoader().getResource("datasets/sentimentAnalysis.pos.txt").toURI());
-        }
-        catch(UncheckedIOException | URISyntaxException ex) {
-            logger.warn("Unable to download datasets, skipping test.");
-            throw new RuntimeException(ex);
-        }
+
+        Map<Object, URI> dataset = Datasets.sentimentAnalysis();
         
         UniqueWordSequenceExtractor wsExtractor = new UniqueWordSequenceExtractor(new UniqueWordSequenceExtractor.Parameters());
         

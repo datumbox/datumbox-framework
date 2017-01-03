@@ -66,7 +66,6 @@ public class DataframeTest extends AbstractTest {
             dataset = Dataframe.Builder.parseCSVFile(fileReader, "metro_population", headerDataTypes, ',', '"', "\r\n", null, null, configuration);
         }
         catch(UncheckedIOException | IOException ex) {
-            logger.warn("Unable to download datasets, skipping test.");
             throw new RuntimeException(ex);
         }
         

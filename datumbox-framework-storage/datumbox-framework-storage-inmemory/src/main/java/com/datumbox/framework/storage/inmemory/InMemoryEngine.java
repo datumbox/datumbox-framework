@@ -18,7 +18,6 @@ package com.datumbox.framework.storage.inmemory;
 import com.datumbox.framework.common.storage.abstracts.AbstractFileStorageEngine;
 import com.datumbox.framework.common.storage.abstracts.AbstractStorageEngine;
 import com.datumbox.framework.common.storage.interfaces.StorageConfiguration;
-import com.datumbox.framework.common.utilities.DeepCopy;
 
 import java.io.File;
 import java.io.IOException;

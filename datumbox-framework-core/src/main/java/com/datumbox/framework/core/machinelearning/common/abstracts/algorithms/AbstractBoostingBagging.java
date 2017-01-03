@@ -20,7 +20,7 @@ import com.datumbox.framework.common.dataobjects.*;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
-import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.common.utilities.MapMethods;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.core.machinelearning.MLBuilder;

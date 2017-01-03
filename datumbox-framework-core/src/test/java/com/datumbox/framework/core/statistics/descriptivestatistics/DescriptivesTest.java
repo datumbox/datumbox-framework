@@ -19,7 +19,7 @@ import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
 import com.datumbox.framework.common.dataobjects.FlatDataList;
 import com.datumbox.framework.common.dataobjects.TransposeDataList;
-import com.datumbox.framework.common.utilities.PHPMethods;
+import com.datumbox.framework.core.common.utilities.PHPMethods;
 import com.datumbox.framework.tests.Constants;
 import com.datumbox.framework.tests.abstracts.AbstractTest;
 import org.junit.Test;

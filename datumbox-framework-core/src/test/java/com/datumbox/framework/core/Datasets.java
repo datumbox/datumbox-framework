@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.datumbox.framework.core.common;
+package com.datumbox.framework.core;
 
 import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.dataobjects.AssociativeArray;
 import com.datumbox.framework.common.dataobjects.TypeInference;
-import com.datumbox.framework.common.utilities.PHPMethods;
 import com.datumbox.framework.common.utilities.RandomGenerator;
+import com.datumbox.framework.core.common.utilities.PHPMethods;
 import com.datumbox.framework.core.common.dataobjects.Dataframe;
 import com.datumbox.framework.core.common.dataobjects.Record;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.util.LinkedHashMap;
-import java.util.Random;
+import java.io.*;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 
 /**
@@ -75,7 +75,7 @@ public class Datasets {
             - c2: no
         */
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/carsNumeric.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/carsNumeric.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("red", TypeInference.DataType.BOOLEAN);
             headerDataTypes.put("yellow", TypeInference.DataType.BOOLEAN);
@@ -121,7 +121,7 @@ public class Datasets {
             - stolen: yes/no
         */
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/carsCategorical.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/carsCategorical.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("color", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("type", TypeInference.DataType.CATEGORICAL);
@@ -153,7 +153,7 @@ public class Datasets {
     public static Dataframe[] housingNumerical(Configuration configuration) {
         //Data from https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/housing.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/housing.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>();
             headerDataTypes.put("CRIM", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("ZN", TypeInference.DataType.NUMERICAL);
@@ -190,7 +190,7 @@ public class Datasets {
     public static Dataframe[] winesOrdinal(Configuration configuration) {
         //Data from http://www.unt.edu/rss/class/Jon/R_SC/
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/winesOrdinal.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/winesOrdinal.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("c1", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
@@ -315,7 +315,7 @@ public class Datasets {
         //Heart Disease - C2: Age, Sex, ChestPain, RestBP, Cholesterol, BloodSugar, ECG, MaxHeartRate, Angina, OldPeak, STSlope, Vessels, Thal
         //http://www.sgi.com/tech/mlc/db/heart.names
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/heart.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/heart.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("Age", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("Sex", TypeInference.DataType.CATEGORICAL);
@@ -653,7 +653,7 @@ public class Datasets {
         $dataTable[]=array(array($x1,$x2),null);
         */
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionNumeric.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionNumeric.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("c1", TypeInference.DataType.NUMERICAL);
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
@@ -689,7 +689,7 @@ public class Datasets {
         $dataTable[]=array(array((string)$x1,$x2,$x3,(string)$x4),null);
         */
         Dataframe trainingData;
-        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionMixed.csv"), "UTF-8")) {
+        try (Reader fileReader = new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/regressionMixed.csv"), StandardCharsets.UTF_8)) {
             LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>(); 
             headerDataTypes.put("c1", TypeInference.DataType.CATEGORICAL);
             headerDataTypes.put("c2", TypeInference.DataType.NUMERICAL);
@@ -707,5 +707,70 @@ public class Datasets {
         
         return new Dataframe[] {trainingData, validationData};
     }
-    
+
+    /**
+     * Returns a map with the URIs of a sentiment analysis dataset.
+     *
+     * @return
+     */
+    public static Map<Object, URI> sentimentAnalysis() {
+        Map<Object, URI> dataset = new HashMap<>();
+        dataset.put("negative", inputStreamToURI(Datasets.class.getClassLoader().getResourceAsStream("datasets/sentimentAnalysis.neg.txt")));
+        dataset.put("positive", inputStreamToURI(Datasets.class.getClassLoader().getResourceAsStream("datasets/sentimentAnalysis.pos.txt")));
+        return dataset;
+    }
+
+    /**
+     * Returns the URI of an unlabelled sentiment analysis dataset.
+     *
+     * @return
+     */
+    public static URI sentimentAnalysisUnlabeled() {
+        return inputStreamToURI(Datasets.class.getClassLoader().getResourceAsStream("datasets/sentimentAnalysis.unlabelled.txt"));
+    }
+
+    /**
+     * Returns the HTML code of example.com.
+     *
+     * @return
+     */
+    public static String exampleHtmlCode() {
+        try(BufferedReader fileReader = new BufferedReader(new InputStreamReader(Datasets.class.getClassLoader().getResourceAsStream("datasets/example.com.html"), StandardCharsets.UTF_8))) {
+            StringBuilder sb = new StringBuilder();
+            for(String line;(line = fileReader.readLine()) != null;){
+                sb.append(line);
+                sb.append("\r\n");
+            }
+            return sb.toString().trim();
+        }
+        catch(IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    /**
+     * Converts an input stream to a URI.
+     *
+     * @param is
+     * @return
+     */
+    private static URI inputStreamToURI(InputStream is) {
+        try {
+            File f = File.createTempFile("is2uri", "tmp");
+            f.deleteOnExit();
+            Files.copy(is, f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return f.toURI();
+        }
+        catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+        finally {
+            try {
+                is.close();
+            }
+            catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
+        }
+    }
 }

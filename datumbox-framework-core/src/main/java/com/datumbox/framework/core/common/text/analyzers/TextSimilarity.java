@@ -15,8 +15,8 @@
  */
 package com.datumbox.framework.core.common.text.analyzers;
 
-import com.datumbox.framework.common.utilities.PHPMethods;
-import com.datumbox.framework.common.utilities.StringCleaner;
+import com.datumbox.framework.core.common.utilities.PHPMethods;
+import com.datumbox.framework.core.common.text.StringCleaner;
 import com.datumbox.framework.core.common.text.extractors.NgramsExtractor;
 import com.datumbox.framework.core.common.text.parsers.HTMLParser;
 

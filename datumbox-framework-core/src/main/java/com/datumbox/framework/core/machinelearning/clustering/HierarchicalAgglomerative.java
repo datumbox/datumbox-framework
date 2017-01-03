@@ -24,7 +24,7 @@ import com.datumbox.framework.core.common.dataobjects.Record;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.MapType;
 import com.datumbox.framework.common.storage.interfaces.StorageEngine.StorageHint;
-import com.datumbox.framework.common.utilities.MapMethods;
+import com.datumbox.framework.core.common.utilities.MapMethods;
 import com.datumbox.framework.core.machinelearning.common.abstracts.AbstractTrainer;
 import com.datumbox.framework.core.machinelearning.common.abstracts.modelers.AbstractClusterer;
 import com.datumbox.framework.core.machinelearning.common.interfaces.PredictParallelizable;
