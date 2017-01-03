@@ -9,7 +9,7 @@ CODE IMPROVEMENTS
 NEW FEATURES
 ============
 
-- Create a storage engine for MapDB 3 once caching & asynchronous writing is supported.
+- Create a storage engine for MapDB 3 once caching, asynchronous writing and compression is supported.
 - Create a storage engine for BerkeleyDB.
 - Add the ability to call Machine Learning algorithms from command line or Python:
     - https://pypi.python.org/pypi/javabridge
