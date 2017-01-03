@@ -50,7 +50,7 @@ public class SupportVectorMachineTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
 
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         Dataframe[] data = Datasets.carsCategorical(configuration);
@@ -122,7 +122,7 @@ public class SupportVectorMachineTest extends AbstractTest {
     @Test
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         int k = 5;
         

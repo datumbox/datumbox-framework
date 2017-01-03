@@ -85,6 +85,7 @@ Version 0.8.0-SNAPSHOT - Build 20170103
         - Renamed the common.storageengines to common.storage.
         - Created a new module called storage with two submodules the inmemory and mapdb. The code of the two engines moved to the submodules.
         - Created a new module called tests that contains the configuration files and the Test Base classes for unit-tests.
+    - The CI tests the code using different configurations (one for each storge engine).
 
 Version 0.7.0 - Build 20160319
 ------------------------------

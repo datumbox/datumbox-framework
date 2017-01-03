@@ -48,17 +48,6 @@ public class ConfigurableFactory {
     public static <C extends Configurable> C getConfiguration(Class<C> klass) {
         String defaultPropertyFile = "datumbox." + klass.getSimpleName().toLowerCase(Locale.ENGLISH) + DEFAULT_POSTFIX + ".properties";
 
-        //Initialize configuration object
-        C configuration;
-        try {
-            Constructor<C> constructor = klass.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            configuration = constructor.newInstance();
-        } 
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
-        
         Properties properties = new Properties();
         
         ClassLoader cl = klass.getClassLoader();
@@ -87,9 +76,31 @@ public class ConfigurableFactory {
             logger.warn("Using default properties file {}: {}", defaultPropertyFile, properties);
         }
 
-        
+        return getConfiguration(klass, properties);
+    }
+
+    /**
+     * Initializes the Configuration Object using a properties object.
+     *
+     * @param klass
+     * @param properties
+     * @param <C>
+     * @return
+     */
+    public static <C extends Configurable> C getConfiguration(Class<C> klass, Properties properties) {
+        //Initialize configuration object
+        C configuration;
+        try {
+            Constructor<C> constructor = klass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            configuration = constructor.newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+
         configuration.load(properties);
-        
+
         return configuration;
     }
 }

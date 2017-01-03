@@ -44,7 +44,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         Dataframe[] data = Datasets.heartDiseaseClusters(configuration);
@@ -114,7 +114,7 @@ public class HierarchicalAgglomerativeTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         int k = 5;
         

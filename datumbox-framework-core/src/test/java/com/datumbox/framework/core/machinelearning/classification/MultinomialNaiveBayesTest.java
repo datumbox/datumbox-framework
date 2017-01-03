@@ -48,7 +48,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         Dataframe[] data = Datasets.carsCategorical(configuration);
@@ -121,7 +121,7 @@ public class MultinomialNaiveBayesTest extends AbstractTest {
     public void testShuffleValidation() {
         logger.info("testShuffleValidation");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
 
         double proportion = 0.8;
         int splits = 5;

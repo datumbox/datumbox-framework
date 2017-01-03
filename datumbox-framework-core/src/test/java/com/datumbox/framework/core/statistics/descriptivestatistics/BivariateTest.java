@@ -156,7 +156,7 @@ public class BivariateTest extends AbstractTest {
     public void testCovarianceMatrix() {
         logger.info("covarianceMatrix");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
@@ -190,7 +190,7 @@ public class BivariateTest extends AbstractTest {
     public void testPearsonMatrix() {
         logger.info("pearsonMatrix");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
@@ -224,7 +224,7 @@ public class BivariateTest extends AbstractTest {
     public void testSpearmanMatrix() {
         logger.info("spearmanMatrix");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();
@@ -259,7 +259,7 @@ public class BivariateTest extends AbstractTest {
     public void testKendalltauMatrix() {
         logger.info("kendalltauMatrix");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe dataset = generateDataset(configuration);
         DataTable2D expResult = new DataTable2D();

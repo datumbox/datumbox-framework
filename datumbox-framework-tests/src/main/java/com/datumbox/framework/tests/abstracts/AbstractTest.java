@@ -15,11 +15,15 @@
  */
 package com.datumbox.framework.tests.abstracts;
 
+import com.datumbox.framework.common.ConfigurableFactory;
+import com.datumbox.framework.common.Configuration;
 import com.datumbox.framework.common.utilities.RandomGenerator;
 import com.datumbox.framework.tests.Constants;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 
 /**
  * The abstract class for all the Tests of the framework.
@@ -49,5 +53,29 @@ public abstract class AbstractTest {
     public void setUp() {
         //Reset the seed of the local Random before every method execution
         RandomGenerator.getThreadLocalRandom().setSeed(Constants.RANDOM_SEED);
+    }
+
+    /**
+     * Builds a configuration object.
+     */
+    protected Configuration getConfiguration() {
+        String storageEngine = System.getProperty("storageEngine");
+        if(storageEngine == null) {
+            return Configuration.getConfiguration();
+        }
+        else {
+            Properties p = new Properties();
+            if("InMemory".equals(storageEngine)) {
+                p.setProperty("configuration.storageConfiguration", "com.datumbox.framework.storage.inmemory.InMemoryConfiguration");
+
+            }
+            else if("MapDB".equals(storageEngine)) {
+                p.setProperty("configuration.storageConfiguration", "com.datumbox.framework.storage.mapdb.MapDBConfiguration");
+            }
+            else {
+                throw new IllegalArgumentException("Unsupported option.");
+            }
+            return ConfigurableFactory.getConfiguration(Configuration.class, p);
+        }
     }
 }
