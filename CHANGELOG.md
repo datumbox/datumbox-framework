@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20170103
+Version 0.8.0-SNAPSHOT - Build 20170107
 ---------------------------------------
 
 - Initial Updates:
@@ -86,6 +86,7 @@ Version 0.8.0-SNAPSHOT - Build 20170103
         - Created a new module called storage with two submodules the inmemory and mapdb. The code of the two engines moved to the submodules.
         - Created a new module called tests that contains the configuration files and the Test Base classes for unit-tests.
     - The CI tests the code using different configurations (one for each storge engine).
+    - All ValidationMetrics classes override the toString() and return the metrics in a user-friendly manner.
 
 Version 0.7.0 - Build 20160319
 ------------------------------

@@ -1,7 +1,6 @@
 CODE IMPROVEMENTS
 =================
 
-- ValidationMetrics should override toString() and print the metrics in a user-friendly manner.
 - Release a Datumbox Zoo with pretrained models.
 
 - Consider dropping all the common.dataobjects and use their internalData directly instead.

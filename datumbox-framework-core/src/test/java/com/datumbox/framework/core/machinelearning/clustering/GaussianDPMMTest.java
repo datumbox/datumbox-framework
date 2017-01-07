@@ -113,6 +113,7 @@ public class GaussianDPMMTest extends AbstractTest {
 
         ClusteringMetrics vm = new Validator<>(ClusteringMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
+        System.out.println(vm);
 
         
         double expResult = 1.0;

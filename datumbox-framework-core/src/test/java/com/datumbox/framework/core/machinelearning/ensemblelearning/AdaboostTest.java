@@ -150,7 +150,8 @@ public class AdaboostTest extends AbstractTest {
 
         ClassificationMetrics vm = new Validator<>(ClassificationMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
-        
+        System.out.println(vm);
+
         double expResult = 0.6923992673992675;
         double result = vm.getMacroF1();
         assertEquals(expResult, result, Constants.DOUBLE_ACCURACY_HIGH);

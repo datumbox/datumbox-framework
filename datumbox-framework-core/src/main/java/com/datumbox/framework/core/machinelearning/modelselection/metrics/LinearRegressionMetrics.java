@@ -247,4 +247,26 @@ public class LinearRegressionMetrics extends AbstractMetrics {
             }
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        String sep = System.lineSeparator();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(":").append(sep);
+        sb.append("RSqure=").append(RSquare).append(sep);
+        sb.append("RSquareAdjusted=").append(RSquareAdjusted).append(sep);
+        sb.append("SSE=").append(SSE).append(sep);
+        sb.append("SSR=").append(SSR).append(sep);
+        sb.append("SST=").append(SST).append(sep);
+        sb.append("dfRegression=").append(dfRegression).append(sep);
+        sb.append("dfResidual=").append(dfResidual).append(sep);
+        sb.append("dfTotal=").append(dfTotal).append(sep);
+        sb.append("F=").append(F).append(sep);
+        sb.append("FPValue=").append(FPValue).append(sep);
+        sb.append("StdErrorOfEstimate=").append(StdErrorOfEstimate).append(sep);
+        sb.append("DW=").append(DW).append(sep);
+        sb.append("NormalResiduals=").append(NormalResiduals).append(sep);
+        return sb.toString();
+    }
 }
