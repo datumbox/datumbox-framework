@@ -38,7 +38,7 @@ public abstract class AbstractFileStorageConfiguration implements StorageConfigu
     }
 
     /**
-     * Getter for the output directory where the InMemory data files are stored.
+     * Getter for the output directory where the data files are stored.
      *
      * @return
      */
@@ -47,7 +47,7 @@ public abstract class AbstractFileStorageConfiguration implements StorageConfigu
     }
 
     /**
-     * Setter for the output directory where the InMemory data files are stored.
+     * Setter for the output directory where the data files are stored.
      *
      * @param outputDirectory
      */
