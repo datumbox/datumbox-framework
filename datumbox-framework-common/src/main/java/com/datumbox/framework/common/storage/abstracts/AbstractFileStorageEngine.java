@@ -40,19 +40,19 @@ public abstract class AbstractFileStorageEngine<SC extends AbstractFileStorageCo
     }
 
     /**
-     * Returns the location of the output directory from the configuration or the temporary directory if not defined.
+     * Returns the location of the directory from the configuration or the temporary directory if not defined.
      *
      * @return
      */
-    protected String getOutputDirectory() {
+    protected String getDirectory() {
         //get the default filepath of the permanet storage file
-        String outputDirectory = storageConfiguration.getOutputDirectory();
+        String directory = storageConfiguration.getDirectory();
 
-        if(outputDirectory == null || outputDirectory.isEmpty()) {
-            outputDirectory = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
+        if(directory == null || directory.isEmpty()) {
+            directory = System.getProperty("java.io.tmpdir"); //write them to the tmp directory
         }
 
-        return outputDirectory;
+        return directory;
     }
 
     /**
@@ -62,7 +62,7 @@ public abstract class AbstractFileStorageEngine<SC extends AbstractFileStorageCo
      * @return
      */
     protected Path getRootPath(String storageName) {
-        return Paths.get(getOutputDirectory() + File.separator + storageName);
+        return Paths.get(getDirectory() + File.separator + storageName);
     }
 
     /**
@@ -113,14 +113,14 @@ public abstract class AbstractFileStorageEngine<SC extends AbstractFileStorageCo
     }
 
     /**
-     * Removes recursively all empty parent directories up to and excluding the output directory.
+     * Removes recursively all empty parent directories up to and excluding the storage directory.
      *
      * @param path
      * @throws IOException
      */
     private void cleanEmptyParentDirectory(Path path) throws IOException {
         Path normPath = path.normalize();
-        if(normPath.equals(Paths.get(getOutputDirectory()).normalize()) || normPath.equals(Paths.get(System.getProperty("java.io.tmpdir")).normalize())) { //stop if we reach the output or temporary directory
+        if(normPath.equals(Paths.get(getDirectory()).normalize()) || normPath.equals(Paths.get(System.getProperty("java.io.tmpdir")).normalize())) { //stop if we reach the output or temporary directory
             return;
         }
         try {

@@ -47,7 +47,8 @@ Version 0.8.0-SNAPSHOT - Build 20170113
     - When we close() a Trainer that has not be saved or loaded the knowledgeBase will be deleted to remove any temporary files. 
     - The models of a specific storageName are added in a directory structure.
     - Created an other level of abstraction for File-based Storage Engines and Configurations.
-    - Rename Folder to Directory on comments, methods, vars and configuration files.
+    - Rename Folder to Directory on comments, methods, vars and configuration files. 
+    - Rename outputDirectory to directory in storage engines.
     - Empty parent directories of the algorithm output are automatically cleaned up.
     - The Dataset can now be saved and loaded.
     - All objects that save, delete and close implement the savable interfrace.

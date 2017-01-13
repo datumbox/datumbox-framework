@@ -55,7 +55,7 @@ All the public methods and classes of the Framework are documented with Javadoc 
 Pre-trained Models
 ------------------
 
-Datumbox comes with a large number of pre-trained models which allow you to perform Sentiment Analysis (Document & Twitter), Subjectivity Analysis, Topic Classification, Spam Detection, Adult Content Detection, Language Detection, Commercial Detection, Educational Detection and Gender Detection. To get the binary models check out the [Datumbox Zoo](https://github.com/datumbox/datumbox-framework-zoo).
+Datumbox comes with a large number of pre-trained models which allow you to perform Sentiment Analysis (Document & Twitter), Subjectivity Analysis, Topic Classification, Spam Detection, Adult Content Detection, Language Detection, Commercial Detection, Educational Detection and Gender Detection. To get the binary models check out the [Datumbox Zoo](https://github.com/datumbox/datumbox-framework-zoo/).
 
 Which methods/algorithms are supported?
 ---------------------------------------
@@ -81,7 +81,7 @@ Useful Links
 ------------
 
 - [Code Examples](https://github.com/datumbox/datumbox-framework-examples/)
-- [Datumbox Zoo: Pre-trained models](https://github.com/datumbox/datumbox-framework-zoo)
+- [Datumbox Zoo: Pre-trained models](https://github.com/datumbox/datumbox-framework-zoo/)
 - [Datumbox.com](http://www.datumbox.com/)
 - [Machine Learning Blog](http://blog.datumbox.com/)
 
