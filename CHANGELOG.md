@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20170108
+Version 0.8.0-SNAPSHOT - Build 20170113
 ---------------------------------------
 
 - Initial Updates:

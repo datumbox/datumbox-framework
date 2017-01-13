@@ -27,7 +27,7 @@ The latest stable version of the framework is 0.7.0 (Build 20160319). To use it,
     </dependency>
 ```
 
-The latest snapshot version of the framework is 0.8.0-SNAPSHOT (Build 20170108). To test it, update your pom.xml as follows:
+The latest snapshot version of the framework is 0.8.0-SNAPSHOT (Build 20170113). To test it, update your pom.xml as follows:
 
 ```
     <repository>
@@ -76,7 +76,7 @@ Useful Links
 ------------
 
 - [Code Examples](https://github.com/datumbox/datumbox-framework-examples/)
-- [Project Description](http://blog.datumbox.com/new-open-source-machine-learning-framework-written-in-java/)
+- [Datumbox Zoo: Pre-trained models](https://github.com/datumbox/datumbox-framework-zoo)
 - [Datumbox.com](http://www.datumbox.com/)
 - [Machine Learning Blog](http://blog.datumbox.com/)
 
