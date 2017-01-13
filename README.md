@@ -47,6 +47,11 @@ The [develop branch](https://github.com/datumbox/datumbox-framework/tree/develop
 
 The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](./CHANGELOG.md).
 
+Pre-trained Models
+------------------
+
+Datumbox comes with a large number of pre-trained models which allow you to perform Sentiment Analysis (Document & Twitter), Subjectivity Analysis, Topic Classification, Spam Detection, Adult Content Detection, Language Detection, Commercial Detection, Educational Detection and Gender Detection. To get the binary models check out the [Datumbox Zoo](https://github.com/datumbox/datumbox-framework-zoo).
+
 Documentation and Code Examples
 -------------------------------
 
