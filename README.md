@@ -27,6 +27,21 @@ The latest stable version of the framework is 0.8.0 (Build 20170114). To use it,
     </dependency>
 ```
 
+The latest snapshot version of the framework is 0.8.1-SNAPSHOT (Build 20170114). To test it, update your pom.xml as follows:
+```
+    <repository>
+       <id>sonatype-snapshots</id>
+       <name>sonatype snapshots repo</name>
+       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+
+    <dependency>
+        <groupId>com.datumbox</groupId>
+        <artifactId>datumbox-framework-lib</artifactId>
+        <version>0.8.1-SNAPSHOT</version>
+    </dependency>
+```
+
 The [develop branch](https://github.com/datumbox/datumbox-framework/tree/develop) is the development branch (default github branch), while the [master branch](https://github.com/datumbox/datumbox-framework/tree/master) contains the latest stable version of the framework. All the stable releases are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
 
 The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](./CHANGELOG.md).
