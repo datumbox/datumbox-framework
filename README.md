@@ -27,7 +27,7 @@ The latest stable version of the framework is 0.7.0 (Build 20160319). To use it,
     </dependency>
 ```
 
-The latest snapshot version of the framework is 0.8.0-SNAPSHOT (Build 20170113). To test it, update your pom.xml as follows:
+The latest snapshot version of the framework is 0.8.0-SNAPSHOT (Build 20170114). To test it, update your pom.xml as follows:
 
 ```
     <repository>
