@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-Version 0.8.0-SNAPSHOT - Build 20170114
----------------------------------------
+Version 0.8.0 - Build 20170114
+------------------------------
 
 - Storage/Persistence:
     - The old database connectors are replaced with a new storage mechanism where every engine is a separate module.
