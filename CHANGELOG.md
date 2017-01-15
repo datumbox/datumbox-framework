@@ -30,7 +30,7 @@ Version 0.8.0 - Build 20170114
         - The ValidationMetrics are no longer stored inside the model and k-Fold validation is no longer part of model's methods.
     - New Preprocessing package:
         - The old data transformation package is replaced with a new that decouples numerical scaling from categorical encoding.
-        - The following numeric scalers are now supported: MinMaxScalaer, StandardScaler, MaxAbsScaler and BinaryScaler.
+        - The following numeric scalers are now supported: MinMaxScaler, StandardScaler, MaxAbsScaler and BinaryScaler.
         - The following categorical encoders are now supported: OneHotEncoder and CornerConstraintsEncoder.
     - Improved Feature Selection package:
         - All feature selection algorithms focus on specific datatypes, making it possible to chain different methods together.
