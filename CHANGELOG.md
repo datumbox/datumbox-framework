@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-Version 0.8.1-SNAPSHOT - Build 20170114
+Version 0.8.1-SNAPSHOT - Build 20170212
 ---------------------------------------
 
-- Add changes here.
+- Updated the Maven Compiler and Logback Classic plugins to the latest stable versions. 
 
 Version 0.8.0 - Build 20170114
 ------------------------------
