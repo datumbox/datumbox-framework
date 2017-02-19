@@ -48,7 +48,7 @@ public class LatentDirichletAllocationTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         String storageName = this.getClass().getSimpleName();

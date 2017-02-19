@@ -36,7 +36,7 @@ public class CETRTest extends AbstractTest {
     public void testExtract() {
         logger.info("extract");
          
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
 
         String text = Datasets.exampleHtmlCode();
         

@@ -165,4 +165,16 @@ public class ClusteringMetrics extends AbstractMetrics {
             purity /= k;
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        String sep = System.lineSeparator();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(":").append(sep);
+        sb.append("purity=").append(purity).append(sep);
+        sb.append("NMI=").append(NMI).append(sep);
+        return sb.toString();
+    }
+
 }

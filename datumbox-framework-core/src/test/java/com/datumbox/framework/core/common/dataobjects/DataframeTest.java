@@ -49,7 +49,7 @@ public class DataframeTest extends AbstractTest {
     public void testParseCSVFile() {
         logger.info("parseCSVFile");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         LinkedHashMap<String, TypeInference.DataType> headerDataTypes = new LinkedHashMap<>();
@@ -143,7 +143,7 @@ public class DataframeTest extends AbstractTest {
     public void testGetColumns() {
         logger.info("getColumns");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe dataset = new Dataframe(configuration);
         
@@ -183,7 +183,7 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValues() {
         logger.info("extractColumnValues");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Object column = "height";
         Dataframe dataset = new Dataframe(configuration);
@@ -219,7 +219,7 @@ public class DataframeTest extends AbstractTest {
     public void testExtractColumnValuesByY() {
         logger.info("extractColumnValuesByY");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
 
         Dataframe dataset = new Dataframe(configuration);
         
@@ -248,7 +248,7 @@ public class DataframeTest extends AbstractTest {
     public void testRemove() {
         logger.info("remove");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe dataset = new Dataframe(configuration);
         

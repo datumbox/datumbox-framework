@@ -4,7 +4,6 @@ CODE IMPROVEMENTS
 - Consider dropping all the common.dataobjects and use their internalData directly instead.
 - Refactor the statistics package and replace all the static methods with proper inheritance.
 - Write generic optimizers instead of having optimization methods in the algorithms. Add the optimizers and regularization packages under mathematics.
-- Run the tests with different configurations (one for each storage engine). Create a profile that runs them all & connect it with CI.
 
 NEW FEATURES
 ============

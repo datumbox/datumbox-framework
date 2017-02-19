@@ -45,7 +45,7 @@ public class BayesianEnsembleMethodTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe[] data = Datasets.ensembleLearningResponses(configuration);
         

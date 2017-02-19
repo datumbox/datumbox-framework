@@ -48,7 +48,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         Dataframe[] data = Datasets.carsCategorical(configuration);
@@ -123,7 +123,7 @@ public class SoftMaxRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         int k = 5;
         

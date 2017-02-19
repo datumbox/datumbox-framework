@@ -37,6 +37,17 @@ public class Configuration implements Configurable {
     protected Configuration() {
         
     }
+
+    /**
+     * Public constructor, which receives the storage and concurrency configurations as arguments.
+     *
+     * @param storageConfiguration
+     * @param concurrencyConfiguration
+     */
+    public Configuration(StorageConfiguration storageConfiguration, ConcurrencyConfiguration concurrencyConfiguration) {
+        this.storageConfiguration = storageConfiguration;
+        this.concurrencyConfiguration = concurrencyConfiguration;
+    }
     
     /**
      * Getter for the Storage Configuration object.

@@ -27,9 +27,9 @@ import java.io.File;
 public abstract class AbstractFileStorageConfiguration implements StorageConfiguration {
 
     /**
-     * The output directory of the models.
+     * The directory of the models.
      */
-    protected String outputDirectory = null;
+    protected String directory = null;
 
     /** {@inheritDoc} */
     @Override
@@ -38,21 +38,21 @@ public abstract class AbstractFileStorageConfiguration implements StorageConfigu
     }
 
     /**
-     * Getter for the output directory where the InMemory data files are stored.
+     * Getter for the directory where the data files are stored.
      *
      * @return
      */
-    public String getOutputDirectory() {
-        return outputDirectory;
+    public String getDirectory() {
+        return directory;
     }
 
     /**
-     * Setter for the output directory where the InMemory data files are stored.
+     * Setter for the directory where the data files are stored.
      *
-     * @param outputDirectory
+     * @param directory
      */
-    public void setOutputDirectory(String outputDirectory) {
-        this.outputDirectory = outputDirectory;
+    public void setDirectory(String directory) {
+        this.directory = directory;
     }
 
 }

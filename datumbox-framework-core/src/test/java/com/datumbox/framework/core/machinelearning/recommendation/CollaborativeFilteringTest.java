@@ -45,7 +45,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe[] data = Datasets.recommenderSystemFood(configuration);
         
@@ -68,6 +68,7 @@ public class CollaborativeFilteringTest extends AbstractTest {
 
         instance.predict(validationData);
         RecommendationMetrics vm = new RecommendationMetrics(validationData);
+        System.out.println(vm);
         
         Map<Object, Double> expResult = new HashMap<>();
         expResult.put("pitta", 4.686394033077408);

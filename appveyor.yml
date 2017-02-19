@@ -9,6 +9,7 @@ install:
 build_script:
   - mvn clean install -DskipTests=true
 test_script:
-  - mvn clean install
+  - mvn clean test -DstorageEngine=InMemory
+  - mvn clean test -DstorageEngine=MapDB
 cache:
   - C:\Users\appveyor\.m2

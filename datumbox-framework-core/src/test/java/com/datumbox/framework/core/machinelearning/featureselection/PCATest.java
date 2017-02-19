@@ -44,7 +44,7 @@ public class PCATest extends AbstractTest {
     public void testSelectFeatures() {
         logger.info("selectFeatures");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe[] data = Datasets.featureTransformationPCA(configuration);
         

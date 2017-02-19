@@ -325,7 +325,9 @@ public class SupportVectorMachine extends AbstractClassifier<SupportVectorMachin
         
         //train the model
         svm.svm_set_print_string_function((String s) -> {
-            logger.debug(s);
+            if(s != null) {
+                logger.debug(s.trim());
+            }
         });
         svm_model model = svm.svm_train(prob, params);
         

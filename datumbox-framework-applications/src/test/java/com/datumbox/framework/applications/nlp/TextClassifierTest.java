@@ -277,7 +277,7 @@ public class TextClassifierTest extends AbstractTest {
             NS.AbstractTrainingParameters numericalScalerTrainingParameters,
             double expectedF1score,
             int testId) {
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         String storageName = this.getClass().getSimpleName() + testId;

@@ -285,4 +285,21 @@ public class ClassificationMetrics extends AbstractMetrics {
             macroF1 += vmSample.getMacroF1()/k;
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        String sep = System.lineSeparator();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(":").append(sep);
+        sb.append("accuracy=").append(accuracy).append(sep);
+        sb.append("macroPrecision=").append(macroPrecision).append(sep);
+        sb.append("macroRecall=").append(macroRecall).append(sep);
+        sb.append("macroF1=").append(macroF1).append(sep);
+        sb.append("microPrecision=").append(microPrecision).append(sep);
+        sb.append("microRecall=").append(microRecall).append(sep);
+        sb.append("microF1=").append(microF1).append(sep);
+        sb.append("contingencyTable=").append(contingencyTable).append(sep);
+        return sb.toString();
+    }
 }

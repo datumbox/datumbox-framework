@@ -46,7 +46,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         Dataframe[] data = Datasets.regressionNumeric(configuration);
         
@@ -100,7 +100,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         int k = 5;
         
@@ -124,6 +124,7 @@ public class MatrixLinearRegressionTest extends AbstractTest {
         
         LinearRegressionMetrics vm = new Validator<>(LinearRegressionMetrics.class, configuration)
                 .validate(new KFoldSplitter(k).split(trainingData), param);
+        System.out.println(vm);
 
         double expResult = 1;
         double result = vm.getRSquare();

@@ -19,7 +19,8 @@ matrix:
 install:
   - mvn clean install -DskipTests=true
 script:
-  - mvn clean install
+  - mvn clean test -DstorageEngine=InMemory
+  - mvn clean test -DstorageEngine=MapDB
 notifications:
   email:
     on_success: never

@@ -46,7 +46,7 @@ public class MaximumEntropyTest extends AbstractTest {
     public void testPredict() {
         logger.info("testPredict");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         
         Dataframe[] data = Datasets.carsNumeric(configuration);
@@ -95,7 +95,7 @@ public class MaximumEntropyTest extends AbstractTest {
     public void testKFoldCrossValidation() {
         logger.info("testKFoldCrossValidation");
         
-        Configuration configuration = Configuration.getConfiguration();
+        Configuration configuration = getConfiguration();
         
         int k = 5;
         

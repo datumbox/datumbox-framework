@@ -13,38 +13,48 @@ Copyright (C) 2013-2017 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbri
 
 The code is licensed under the [Apache License, Version 2.0](./LICENSE).
 
-Version
--------
-
-The latest version is 0.8.0-SNAPSHOT (Build 20170103).
-
-The [develop branch](https://github.com/datumbox/datumbox-framework/tree/develop) is the development branch (default github branch). The [master branch](https://github.com/datumbox/datumbox-framework/tree/master) contains the latest stable version of the framework. All the stable releases are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
-
-The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](./CHANGELOG.md).
-
-Installation
-------------
+Installation & Versioning
+-------------------------
 
 Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.datumbox%22%20AND%20a%3A%22datumbox-framework-lib%22). 
 
-Maven:
+The latest stable version of the framework is 0.8.0 (Build 20170114). To use it, add the following snippet in your pom.xml:
 ```
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework-lib</artifactId>
-        <version>0.8.0-SNAPSHOT</version>
+        <version>0.8.0</version>
     </dependency>
 ```
+
+The latest snapshot version of the framework is 0.8.1-SNAPSHOT (Build 20170212). To test it, update your pom.xml as follows:
+```
+    <repository>
+       <id>sonatype-snapshots</id>
+       <name>sonatype snapshots repo</name>
+       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+
+    <dependency>
+        <groupId>com.datumbox</groupId>
+        <artifactId>datumbox-framework-lib</artifactId>
+        <version>0.8.1-SNAPSHOT</version>
+    </dependency>
+```
+
+The [develop branch](https://github.com/datumbox/datumbox-framework/tree/develop) is the development branch (default github branch), while the [master branch](https://github.com/datumbox/datumbox-framework/tree/master) contains the latest stable version of the framework. All the stable releases are marked with [tags](https://github.com/datumbox/datumbox-framework/releases).
+
+The releases of the framework follow the [Semantic Versioning](http://semver.org/) approach. For detailed information about the various releases check out the [Changelog](./CHANGELOG.md).
 
 Documentation and Code Examples
 -------------------------------
 
 All the public methods and classes of the Framework are documented with Javadoc comments. Moreover for every model there is a JUnit Test which clearly shows how to train and use the models. Finally for more examples on how to use the framework checkout the [Code Examples](https://github.com/datumbox/datumbox-framework-examples/) or the [official Blog](http://blog.datumbox.com/).
 
-Technical Details
------------------
+Pre-trained Models
+------------------
 
-The framework requires Java 8, it uses a Maven Project Structure and it is separated in different modules. 
+Datumbox comes with a large number of pre-trained models which allow you to perform Sentiment Analysis (Document & Twitter), Subjectivity Analysis, Topic Classification, Spam Detection, Adult Content Detection, Language Detection, Commercial Detection, Educational Detection and Gender Detection. To get the binary models check out the [Datumbox Zoo](https://github.com/datumbox/datumbox-framework-zoo/).
 
 Which methods/algorithms are supported?
 ---------------------------------------
@@ -70,7 +80,7 @@ Useful Links
 ------------
 
 - [Code Examples](https://github.com/datumbox/datumbox-framework-examples/)
-- [Project Description](http://blog.datumbox.com/new-open-source-machine-learning-framework-written-in-java/)
+- [Datumbox Zoo: Pre-trained models](https://github.com/datumbox/datumbox-framework-zoo/)
 - [Datumbox.com](http://www.datumbox.com/)
 - [Machine Learning Blog](http://blog.datumbox.com/)
 

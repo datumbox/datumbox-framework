@@ -42,7 +42,6 @@ public class RecommendationMetrics extends AbstractMetrics {
         return RMSE;
     }
 
-
     /**
      * @param predictedData
      * @see AbstractMetrics#AbstractMetrics(Dataframe)
@@ -77,5 +76,15 @@ public class RecommendationMetrics extends AbstractMetrics {
                 RMSE += vmSample.getRMSE()/k;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        String sep = System.lineSeparator();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(":").append(sep);
+        sb.append("RMSE=").append(RMSE).append(sep);
+        return sb.toString();
     }
 }
