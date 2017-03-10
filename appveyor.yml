@@ -3,8 +3,7 @@ environment:
   matrix:
     - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
 install:
-  - ps: choco install maven
-  - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%
+  - ps: choco install -i maven
   - cmd: mvn --version
   - cmd: java -version
 build_script:
