@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-Version 0.8.1-SNAPSHOT - Build 20170212
+Version 0.8.1-SNAPSHOT - Build 20170310
 ---------------------------------------
 
-- Updated the Maven Compiler and Logback Classic plugins to the latest stable versions. 
+- Updated the Maven Compiler, Nexus Staging, SLF4J and Logback Classic plugins to the latest stable versions. 
 
 Version 0.8.0 - Build 20170114
 ------------------------------

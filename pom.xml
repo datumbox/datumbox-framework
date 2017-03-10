@@ -103,13 +103,13 @@
         <maven-jar-plugin-version>3.0.2</maven-jar-plugin-version>
         <gmaven-plugin-version>1.5</gmaven-plugin-version>
         <license-maven-plugin-version>3.0</license-maven-plugin-version>
-        <nexus-staging-maven-plugin-version>1.6.7</nexus-staging-maven-plugin-version>
+        <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
         <gpg-plugin-version>1.6</gpg-plugin-version>
         
         <!-- Code Dependencies -->
         <commons-math-version>3.6.1</commons-math-version>
         <commons-csv-version>1.4</commons-csv-version>
-        <slf4j-api-version>1.7.22</slf4j-api-version>
+        <slf4j-api-version>1.7.24</slf4j-api-version>
         <libsvm-version>3.22</libsvm-version>
         <mapdb-version>1.0.9</mapdb-version>
         
