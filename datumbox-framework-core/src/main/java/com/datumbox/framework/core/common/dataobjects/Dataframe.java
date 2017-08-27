@@ -670,7 +670,11 @@ public class Dataframe implements Collection<Record>, Copyable<Dataframe>, Savab
         FlatDataList flatDataList = new FlatDataList();
 
         for(Record r : values()) {
-            flatDataList.add(r.getX().get(column));
+            Object v = r.getX().get(column);
+            if (v == null)
+                flatDataList.add(new Double(0.0));
+            else
+                flatDataList.add(v);
         }
 
         return flatDataList;
