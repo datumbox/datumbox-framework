@@ -4,7 +4,8 @@ CHANGELOG
 Version 0.8.1-SNAPSHOT - Build 20170830
 ---------------------------------------
 
-- Updated the Maven Compiler, Nexus Staging, SLF4J and Logback Classic plugins to the latest stable versions. 
+- Dependencies:
+	- Updated the Maven Compiler, Nexus Staging, Surefire, SLF4J and Logback Classic plugins to the latest stable versions. 
 - FlatDataColletion changes:
 	- The copyCollection2DoubleArray() and copyCollection2Array() methods are removed.
 	- It now implements the Collection Interface instead of the Iterable.
