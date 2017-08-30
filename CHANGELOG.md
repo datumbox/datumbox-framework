@@ -6,12 +6,16 @@ Version 0.8.1-SNAPSHOT - Build 20170830
 
 - Dependencies:
 	- Updated the Maven Compiler, Nexus Staging, Surefire, SLF4J and Logback Classic plugins to the latest stable versions. 
-- FlatDataColletion changes:
-	- The copyCollection2DoubleArray() and copyCollection2Array() methods are removed.
-	- It now implements the Collection Interface instead of the Iterable.
-- Descriptives class:
-	- New count() method returns the number of non-null elements.
-	- All methods can now handle null values. Null values are considered missing and they are ignored from the calculations.
+- Code Improvements & Bug Fixes:
+	- FlatDataColletion:
+		- The copyCollection2DoubleArray() and copyCollection2Array() methods have been removed.
+		- It now implements the Collection Interface instead of the Iterable.
+	- Descriptives:
+		- New count() method returns the number of non-null elements.
+		- All methods can now handle null values. Null values are considered missing and they are ignored from the calculations [#23](https://github.com/datumbox/datumbox-framework/issues/23).
+	- TextClassifier:
+		- The pipeline steps of the Text Classifier change to Feature Selection, Numerical Standardization and Modeling [#24](https://github.com/datumbox/datumbox-framework/issues/24).
+		- The Categorical Encoding step is no longer executed as the Text Extractor already encodes the words as numeric values.
 
 Version 0.8.0 - Build 20170114
 ------------------------------

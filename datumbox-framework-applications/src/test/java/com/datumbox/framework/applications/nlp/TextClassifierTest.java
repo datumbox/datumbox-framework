@@ -289,9 +289,6 @@ public class TextClassifierTest extends AbstractTest {
         //numerical scaling configuration
         trainingParameters.setNumericalScalerTrainingParameters(numericalScalerTrainingParameters);
 
-        //categorical encoding configuration
-        trainingParameters.setCategoricalEncoderTrainingParameters(null);
-        
         //feature selection configuration
         trainingParameters.setFeatureSelectorTrainingParametersList(Arrays.asList(featureSelectorTrainingParameters));
 

@@ -28,6 +28,7 @@ import com.datumbox.framework.core.machinelearning.common.dataobjects.TrainableB
 import com.datumbox.framework.core.machinelearning.common.interfaces.Parallelizable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,11 +39,30 @@ import java.util.List;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.TrainingParameters> implements Parallelizable {
+    /**
+     * Key for Numeric Scaling.
+     */
+    protected static final String NS_KEY = "ns";
 
-    private static final String NS_KEY = "ns";
-    private static final String CE_KEY = "ce";
-    private static final String FS_KEY = "fs";
-    private static final String ML_KEY = "ml";
+    /**
+     * Key for Categorical Encoding.
+     */
+    protected static final String CE_KEY = "ce";
+
+    /**
+     * Key for Feature Selection.
+     */
+    protected static final String FS_KEY = "fs";
+
+    /**
+     * Key for Modeling.
+     */
+    protected static final String ML_KEY = "ml";
+
+    /**
+     * The steps of the pipeline.
+     */
+    protected List<String> pipeline = Arrays.asList(NS_KEY, CE_KEY, FS_KEY, ML_KEY);
 
     private final TrainableBundle bundle;
 
@@ -193,21 +213,35 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         bundle.setParallelized(isParallelized());
 
         //run the pipeline
-        AbstractScaler numericalScaler = (AbstractScaler) bundle.get(NS_KEY);
-        if(numericalScaler != null) {
-            numericalScaler.transform(newData);
+        for(String step : pipeline) {
+            switch (step) {
+                case NS_KEY:
+                    AbstractScaler numericalScaler = (AbstractScaler) bundle.get(NS_KEY);
+                    if(numericalScaler != null) {
+                        numericalScaler.transform(newData);
+                    }
+                    break;
+                case CE_KEY:
+                    AbstractEncoder categoricalEncoder = (AbstractEncoder) bundle.get(CE_KEY);
+                    if(categoricalEncoder != null) {
+                        categoricalEncoder.transform(newData);
+                    }
+                    break;
+                case FS_KEY:
+                    int numOfFS = getTrainingParameters().getFeatureSelectorTrainingParametersList().size();
+                    for(int i=0;i<numOfFS;i++) {
+                        AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY+i);
+                        featureSelector.transform(newData);
+                    }
+                    break;
+                case ML_KEY:
+                    AbstractModeler modeler = (AbstractModeler) bundle.get(ML_KEY);
+                    modeler.predict(newData);
+                    break;
+                default:
+                    throw new RuntimeException("Invalid Pipeline Step");
+            }
         }
-        AbstractEncoder categoricalEncoder = (AbstractEncoder) bundle.get(CE_KEY);
-        if(categoricalEncoder != null) {
-            categoricalEncoder.transform(newData);
-        }
-        int numOfFS = getTrainingParameters().getFeatureSelectorTrainingParametersList().size();
-        for(int i=0;i<numOfFS;i++) {
-            AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY+i);
-            featureSelector.transform(newData);
-        }
-        AbstractModeler modeler = (AbstractModeler) bundle.get(ML_KEY);
-        modeler.predict(newData);
     }
     
     /** {@inheritDoc} */
@@ -250,17 +284,31 @@ public class Modeler extends AbstractModeler<Modeler.ModelParameters, Modeler.Tr
         bundle.setParallelized(isParallelized());
 
         //run the pipeline
-        if(numericalScaler != null) {
-            numericalScaler.fit_transform(trainingData);
+        for(String step : pipeline) {
+            switch (step) {
+                case NS_KEY:
+                    if(numericalScaler != null) {
+                        numericalScaler.fit_transform(trainingData);
+                    }
+                    break;
+                case CE_KEY:
+                    if(categoricalEncoder != null) {
+                        categoricalEncoder.fit_transform(trainingData);
+                    }
+                    break;
+                case FS_KEY:
+                    for(int i=0;i<numOfFS;i++) {
+                        AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY+i);
+                        featureSelector.fit_transform(trainingData);
+                    }
+                    break;
+                case ML_KEY:
+                    modeler.fit(trainingData);
+                    break;
+                default:
+                    throw new RuntimeException("Invalid Pipeline Step");
+            }
         }
-        if(categoricalEncoder != null) {
-            categoricalEncoder.fit_transform(trainingData);
-        }
-        for(int i=0;i<numOfFS;i++) {
-            AbstractFeatureSelector featureSelector = (AbstractFeatureSelector) bundle.get(FS_KEY+i);
-            featureSelector.fit_transform(trainingData);
-        }
-        modeler.fit(trainingData);
     }
 
     /** {@inheritDoc} */

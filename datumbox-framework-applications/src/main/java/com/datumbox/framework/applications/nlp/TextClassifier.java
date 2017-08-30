@@ -27,6 +27,7 @@ import com.datumbox.framework.core.machinelearning.modelselection.metrics.Classi
 import com.datumbox.framework.core.common.text.extractors.AbstractTextExtractor;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,14 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class TextClassifier extends Modeler {
-    
+    /**
+     * Overwrite the pipeline steps and their order. No need for Categorical Encoding as the words are already encoded
+     * by the Text Extractor.
+     */
+    {
+        pipeline = Arrays.asList(FS_KEY, NS_KEY, /* CE_KEY, */ ML_KEY);
+    }
+
     /**
      * It contains all the Model AbstractParameters which are learned during the training.
      */
