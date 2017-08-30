@@ -28,7 +28,25 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
 public class Descriptives {
-    
+
+    /**
+     * Returns the number of not-null items in the iteratable.
+     *
+     * @param it
+     * @return
+     */
+    public static int count(Iterable it) {
+        int n = 0;
+
+        for(Object v: it) {
+            if(v != null) {
+                ++n;
+            }
+        }
+
+        return n;
+    }
+
     /**
      * Returns the sum of a Collection
      * 
@@ -36,17 +54,12 @@ public class Descriptives {
      * @return
      */
     public static double sum(FlatDataCollection flatDataCollection) {
-        int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        
         double sum = 0.0;
         
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double value = it.next();
-            if(value!=null) {
+            if(value != null) {
                 sum+= value;
             }
         }
@@ -61,12 +74,21 @@ public class Descriptives {
      * @return
      */
     public static double mean(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
+        int n = 0;
+        double mean = 0.0;
+        Iterator<Double> it = flatDataCollection.iteratorDouble();
+        while(it.hasNext()) {
+            Double value = it.next();
+            if(value != null) {
+                ++n;
+                mean += value;
+            }
         }
-        
-        double mean = sum(flatDataCollection)/n;
+
+        if(n==0) {
+            throw new IllegalArgumentException("No not null values where found in the collection.");
+        }
+        mean /= n;
         
         return mean;
     }
@@ -79,7 +101,7 @@ public class Descriptives {
      */
     public static double meanSE(FlatDataCollection flatDataCollection) {
         double std = std(flatDataCollection, true);
-        double meanSE = std/Math.sqrt(flatDataCollection.size());
+        double meanSE = std/Math.sqrt(count(flatDataCollection));
         
         return meanSE;
     }
@@ -91,13 +113,11 @@ public class Descriptives {
      * @return
      */
     public static double median(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
+        double[] doubleArray = flatDataCollection.stream().filter(x -> x!=null).mapToDouble(TypeInference::toDouble).toArray();
+        int n = doubleArray.length;
         if(n==0) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
-        
-            
-        Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
         
         double median;
@@ -112,22 +132,18 @@ public class Descriptives {
     }
     
     /**
-     * Calculates Minimum - Nulls are ignored.
+     * Calculates Minimum.
      * 
      * @param flatDataCollection
      * @return
      */
     public static double min(FlatDataCollection flatDataCollection) {
-        if(flatDataCollection.isEmpty()) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        
         double min=Double.POSITIVE_INFINITY;
         
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = it.next();
-            if(v!=null && min > v) {
+            if(v != null && min > v) {
                 min=v;
             }
         } 
@@ -136,22 +152,18 @@ public class Descriptives {
     }
     
     /**
-     * Calculates Maximum - Nulls are ignored.
+     * Calculates Maximum.
      * 
      * @param flatDataCollection
      * @return
      */
     public static double max(FlatDataCollection flatDataCollection) {
-        if(flatDataCollection.isEmpty()) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        
         double max=Double.NEGATIVE_INFINITY;
             
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
             Double v = it.next();
-            if(v!=null && max < v) {
+            if(v != null && max < v) {
                 max=v;
             }
         }          
@@ -160,23 +172,19 @@ public class Descriptives {
     }
 
     /**
-     * Calculates Minimum absolute value - Nulls are ignored.
+     * Calculates Minimum absolute value.
      *
      * @param flatDataCollection
      * @return
      */
     public static double minAbsolute(FlatDataCollection flatDataCollection) {
-        if(flatDataCollection.isEmpty()) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-
         double minAbs=Double.POSITIVE_INFINITY;
 
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
-            Double v = Math.abs(it.next());
-            if(v!=null && minAbs > v) {
-                minAbs=v;
+            Double v = it.next();
+            if(v != null) {
+                minAbs= Math.min(minAbs, Math.abs(v));
             }
         }
 
@@ -184,23 +192,19 @@ public class Descriptives {
     }
 
     /**
-     * Calculates Maximum absolute value - Nulls are ignored.
+     * Calculates Maximum absolute value.
      *
      * @param flatDataCollection
      * @return
      */
     public static double maxAbsolute(FlatDataCollection flatDataCollection) {
-        if(flatDataCollection.isEmpty()) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-
         double maxAbs=0.0;
 
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
-            Double v = Math.abs(it.next());
-            if(v!=null && maxAbs < v) {
-                maxAbs=v;
+            Double v = it.next();
+            if(v != null) {
+                maxAbs= Math.max(maxAbs, Math.abs(v));
             }
         }
 
@@ -226,19 +230,19 @@ public class Descriptives {
      * @return
      */
     public static double geometricMean(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        else if(min(flatDataCollection)<=0) {
-            throw new IllegalArgumentException("Negative or zero values are not allowed.");
-        }
-        
+	    int n = 0;
         double geometricMean = 0.0;
 
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
-            geometricMean+= Math.log(it.next());
+            Double v = it.next();
+            if(v != null) {
+                if(v <= 0.0) {
+                    throw new IllegalArgumentException("Negative or zero values are not allowed.");
+                }
+                ++n;
+                geometricMean+= Math.log(v);
+            }
         }
         
         geometricMean= Math.exp(geometricMean/n);
@@ -253,16 +257,16 @@ public class Descriptives {
      * @return
      */
     public static double harmonicMean(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        
+	    int n = 0;
         double harmonicMean = 0.0;
         
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
-            harmonicMean+=1.0/it.next();
+            Double v = it.next();
+            if(v!=null) {
+                ++n;
+                harmonicMean+=1.0/v;
+            }
         }
         
         harmonicMean=n/harmonicMean;
@@ -278,21 +282,22 @@ public class Descriptives {
      * @return
      */
     public static double variance(FlatDataCollection flatDataCollection, boolean isSample) {
-        int n = flatDataCollection.size();
-        if(n<=1) {
-            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
-        }
-        
-        
         /* Uses the formal Variance = E(X^2) - mean^2 */
-        
+        int n = 0;
         double mean = 0.0;
         double squaredMean = 0.0;
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
-            double v = it.next();
-            mean+=v;
-            squaredMean+=v*v;
+            Double v = it.next();
+            if(v != null) {
+                ++n;
+                mean+=v;
+                squaredMean+=v*v;
+            }
+        }
+
+        if(n<=1) {
+            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
         
         mean/=n;
@@ -360,16 +365,20 @@ public class Descriptives {
      * @return
      */
     public static double moment(FlatDataCollection flatDataCollection, int r, double mean) {
-        int n = flatDataCollection.size();
-        if(n<=1) {
-            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
-        }
-        
+        int n = 0;
         double moment=0.0;
         
         Iterator<Double> it = flatDataCollection.iteratorDouble();
         while(it.hasNext()) {
-            moment+=Math.pow(it.next()-mean, r);
+            Double v = it.next();
+            if(v != null) {
+                ++n;
+                moment+=Math.pow(v-mean, r);
+            }
+        }
+
+        if(n<=1) {
+            throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
         
         moment/=n;
@@ -384,7 +393,7 @@ public class Descriptives {
      * @return
      */
     public static double kurtosis(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
+	    int n = count(flatDataCollection);
         if(n<=3) {
             throw new IllegalArgumentException("The provided collection must have more than 3 elements.");
         }
@@ -419,7 +428,7 @@ public class Descriptives {
      * @return
      */
     public static double kurtosisSE(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
+	    int n = count(flatDataCollection);
         if(n<=3) {
             throw new IllegalArgumentException("The provided collection must have more than 3 elements.");
         }
@@ -436,7 +445,7 @@ public class Descriptives {
      * @return
      */
     public static double skewness(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
+	    int n = count(flatDataCollection);
         if(n<=1) {
             throw new IllegalArgumentException("The provided collection must have more than 1 elements.");
         }
@@ -459,7 +468,7 @@ public class Descriptives {
      * @return
      */
     public static double skewnessSE(FlatDataCollection flatDataCollection) {
-	int n = flatDataCollection.size();
+	    int n = count(flatDataCollection);
         if(n<=2) {
             throw new IllegalArgumentException("The provided collection must have more than 2 elements.");
         }
@@ -477,21 +486,19 @@ public class Descriptives {
      * @return
      */
     public static AssociativeArray percentiles(FlatDataCollection flatDataCollection, int cutPoints) {
-	int n = flatDataCollection.size();
+        double[] doubleArray = flatDataCollection.stream().filter(x -> x!=null).mapToDouble(TypeInference::toDouble).toArray();
+        int n = doubleArray.length;
         if(n<=0 || cutPoints<=0 || n<cutPoints) {
             throw new IllegalArgumentException("All the parameters must be positive and n larger than cutPoints.");
         }
-        
-        AssociativeArray percintiles = new AssociativeArray();
-        
-        Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
         
         /*
         Uses the Haverage algorithm which is used by SPSS as described at: 
         http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Falg_examine_haverage.htm        
         */
-        
+
+        AssociativeArray percintiles = new AssociativeArray();
         double counter = 1.0;
         while(true) {
             double perc = counter/cutPoints;
@@ -592,7 +599,7 @@ public class Descriptives {
      * @return
      */
     public static double autocorrelation(FlatDataList flatDataList, int lags) {
-        int n = flatDataList.size();
+        int n = count(flatDataList);
         if(n<=0 || lags<=0 || n<lags) {
             throw new IllegalArgumentException("All the parameters must be positive and n larger than lags.");
         }
@@ -605,7 +612,6 @@ public class Descriptives {
         
         int maxI=n-lags;
         for(int i=0;i<maxI;++i) {
-            
             Ak += (flatDataList.getDouble(i) - mean)*
                   (flatDataList.getDouble(i+lags) - mean);
         }
@@ -624,11 +630,6 @@ public class Descriptives {
      * @return
      */
     public static AssociativeArray frequencies(FlatDataCollection flatDataCollection) {
-        int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        
         AssociativeArray frequencies = new AssociativeArray();
         
         for (Object value : flatDataCollection) {
@@ -651,11 +652,6 @@ public class Descriptives {
      * @return
      */
     public static FlatDataCollection mode(FlatDataCollection flatDataCollection) {
-        int n = flatDataCollection.size();
-        if(n==0) {
-            throw new IllegalArgumentException("The provided collection can't be empty.");
-        }
-        
         AssociativeArray frequencies = frequencies(flatDataCollection);
         
         int maxCounter=0;

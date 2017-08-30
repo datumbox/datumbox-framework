@@ -16,6 +16,7 @@
 package com.datumbox.framework.core.statistics.nonparametrics.onesample;
 
 import com.datumbox.framework.common.dataobjects.FlatDataCollection;
+import com.datumbox.framework.common.dataobjects.TypeInference;
 import com.datumbox.framework.core.statistics.distributions.ContinuousDistributions;
 
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public class ShapiroWilk {
     public static boolean test(FlatDataCollection flatDataCollection, double aLevel) {
         boolean rejectH0=false;
 
-        double probability = shapiroWilkW(flatDataCollection.copyCollection2DoubleArray());
+        double probability = shapiroWilkW(flatDataCollection.stream().filter(x -> x!=null).mapToDouble(TypeInference::toDouble).toArray());
 
         double a=aLevel;
         if(probability<=a || probability>=(1.0-a)) {
@@ -97,7 +98,7 @@ public class ShapiroWilk {
      * @param x
      * @return
      */
-    private static double shapiroWilkW(Double[] x) {
+    private static double shapiroWilkW(double[] x) {
         Arrays.sort(x);
         
         int n = x.length;

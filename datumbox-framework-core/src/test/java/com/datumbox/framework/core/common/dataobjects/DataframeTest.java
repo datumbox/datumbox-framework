@@ -123,18 +123,6 @@ public class DataframeTest extends AbstractTest {
         expResult.close();
         dataset.close();
     }
-    
-    /**
-     * Test of copyCollection2Array method, of class Dataframe.
-     */
-    @Test
-    public void testCopyCollection2Array() {
-        logger.info("copyCollection2Array");
-        FlatDataCollection flatDataCollection = new FlatDataCollection(Arrays.asList(new Object[]{1,2,3,4,5}));
-        Object[] expResult = new Object[]{1,2,3,4,5};
-        Object[] result = flatDataCollection.<Object>copyCollection2Array(Object.class);
-        assertArrayEquals(expResult, result);
-    }
 
     /**
      * Test of getColumns method, of class Dataframe.

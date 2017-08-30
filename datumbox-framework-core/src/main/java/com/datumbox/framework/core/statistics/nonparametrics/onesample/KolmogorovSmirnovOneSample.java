@@ -55,13 +55,11 @@ public class KolmogorovSmirnovOneSample {
      * @return
      */
     public static boolean test(FlatDataCollection flatDataCollection, String cdfMethod, AssociativeArray params, boolean is_twoTailed, double aLevel) {
-
-        int n=flatDataCollection.size();
+        double[] doubleArray = flatDataCollection.stream().filter(x -> x!=null).mapToDouble(TypeInference::toDouble).toArray();
+        int n = doubleArray.length;
         if(n<=0) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
-
-        Double[] doubleArray = flatDataCollection.copyCollection2DoubleArray();
         Arrays.sort(doubleArray);
 
         //Calculation of expected Probabilities
@@ -73,7 +71,7 @@ public class KolmogorovSmirnovOneSample {
         try {    
             Method method = KolmogorovSmirnovOneSample.class.getMethod(cdfMethod, Double.class, AssociativeArray.class);
             for(int i=0;i<doubleArray.length;++i) {
-                Double x = doubleArray[i];
+                double x = doubleArray[i];
                 
                 double observedProbabilityI=rank/(double)n;
                 

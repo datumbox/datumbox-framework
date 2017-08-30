@@ -15,7 +15,6 @@
  */
 package com.datumbox.framework.common.dataobjects;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,44 +28,8 @@ import java.util.List;
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
-public class FlatDataCollection extends AbstractDataStructureCollection<Collection<Object>> implements Iterable<Object> {
+public class FlatDataCollection extends AbstractDataStructureCollection<Collection<Object>> implements Collection<Object> {
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * Converts to Object[] the original FlatDataCollection. The method is used to
-     * generate a copy of the flatDataCollection and it is called in order to
-     * avoid modifying the original array.
-     *
-     * @param <T>
-     * @param c
-     * @return
-     */
-    public final <T> T[] copyCollection2Array(Class<T> c) {
-        int n = internalData.size();
-        T[] copy = (T[]) Array.newInstance(c, n);
-        int i = 0;
-        for (Object value : internalData) {
-            copy[i++] = c.cast(value);
-        }
-        return copy;
-    }
-
-    /**
-     * Converts to Double[] safely the original FlatDataCollection by using the
-     * iteratorDouble.
-     *
-     * @return
-     */
-    public final Double[] copyCollection2DoubleArray() {
-        int n = internalData.size();
-        Double[] doubleArray = new Double[n];
-        int i = 0;
-        Iterator<Double> it = this.iteratorDouble();
-        while (it.hasNext()) {
-            doubleArray[i++] = it.next();
-        }
-        return doubleArray;
-    }
     
     /**
      * Public constructor which accepts as argument a Collection of Objects.
@@ -87,7 +50,31 @@ public class FlatDataCollection extends AbstractDataStructureCollection<Collecti
     public final boolean remove(Object o) {
         return internalData.remove(o);
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return internalData.containsAll(c);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean addAll(Collection<?> c) {
+        return internalData.addAll(c);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return internalData.removeAll(c);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return internalData.retainAll(c);
+    }
+
     /**
      * It adds an object in the collection. It returns a boolean which indicates 
      * whether the collection changed as a result of the call.
@@ -99,24 +86,18 @@ public class FlatDataCollection extends AbstractDataStructureCollection<Collecti
         return internalData.add(e);
     }
     
-    /**
-     * Adds all the objects of the provided collection to the internal data. It 
-     * returns a boolean which indicates whether the collection changed as a 
-     * result of the call.
-     * 
-     * @param c
-     * @return 
-     */
-    public final boolean addAll(Collection<Object> c) {
-        return internalData.addAll(c);
-    }
-    
     /** {@inheritDoc} */
     @Override
     public final Iterator<Object> iterator() {
         return internalData.iterator();
     }
-    
+
+    /** {@inheritDoc} */
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return internalData.toArray(a);
+    }
+
     /**
      * Converts the FlatDataCollection to a FlatDataList trying (if possible)
      * not to copy the data.

@@ -1,10 +1,16 @@
 CHANGELOG
 =========
 
-Version 0.8.1-SNAPSHOT - Build 20170310
+Version 0.8.1-SNAPSHOT - Build 20170830
 ---------------------------------------
 
 - Updated the Maven Compiler, Nexus Staging, SLF4J and Logback Classic plugins to the latest stable versions. 
+- FlatDataColletion changes:
+	- The copyCollection2DoubleArray() and copyCollection2Array() methods are removed.
+	- It now implements the Collection Interface instead of the Iterable.
+- Descriptives class:
+	- New count() method returns the number of non-null elements.
+	- All methods can now handle null values. Null values are considered missing and they are ignored from the calculations.
 
 Version 0.8.0 - Build 20170114
 ------------------------------

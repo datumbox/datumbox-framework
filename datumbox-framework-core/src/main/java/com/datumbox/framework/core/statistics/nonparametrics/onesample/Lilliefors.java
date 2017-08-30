@@ -56,13 +56,12 @@ public class Lilliefors {
      * @return
      */
     public static boolean test(FlatDataCollection flatDataCollection, String cdfMethod, double aLevel) {
-        int n=flatDataCollection.size();
+        double[] doubleArray = flatDataCollection.stream().filter(x -> x!=null).mapToDouble(TypeInference::toDouble).toArray();
+        int n = doubleArray.length;
         if(n<=0) {
             throw new IllegalArgumentException("The provided collection can't be empty.");
         }
-
-        Double[] numberList = flatDataCollection.copyCollection2DoubleArray();
-        Arrays.sort(numberList);        
+        Arrays.sort(doubleArray);
         
         //Calculation of expected Probabilities
         double observedProbabilityIminus1=0;//the exact previous observed probability (i-1)
@@ -78,8 +77,8 @@ public class Lilliefors {
 
             //Fetch the method of the distribution.
             method = Lilliefors.class.getMethod(cdfMethod, Double.class, AssociativeArray.class);
-            for(int i=0;i<numberList.length;++i) {
-                Double x = numberList[i];
+            for(int i=0;i<doubleArray.length;++i) {
+                double x = doubleArray[i];
 
                 double observedProbabilityI=(double)rank/n;
 
