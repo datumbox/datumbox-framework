@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Version 0.8.1-SNAPSHOT - Build 20170830
+Version 0.8.1-SNAPSHOT - Build 20170831
 ---------------------------------------
 
 - Dependencies:
