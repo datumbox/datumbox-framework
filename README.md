@@ -18,16 +18,16 @@ Installation & Versioning
 
 Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.datumbox%22%20AND%20a%3A%22datumbox-framework-lib%22). 
 
-The latest stable version of the framework is 0.8.0 (Build 20170114). To use it, add the following snippet in your pom.xml:
+The latest stable version of the framework is 0.8.1 (Build 20170831). To use it, add the following snippet in your pom.xml:
 ```
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework-lib</artifactId>
-        <version>0.8.0</version>
+        <version>0.8.1</version>
     </dependency>
 ```
 
-The latest snapshot version of the framework is 0.8.1-SNAPSHOT (Build 20170831). To test it, update your pom.xml as follows:
+The latest snapshot version of the framework is 0.8.2-SNAPSHOT (Build 20170831). To test it, update your pom.xml as follows:
 ```
     <repository>
        <id>sonatype-snapshots</id>
@@ -38,7 +38,7 @@ The latest snapshot version of the framework is 0.8.1-SNAPSHOT (Build 20170831).
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework-lib</artifactId>
-        <version>0.8.1-SNAPSHOT</version>
+        <version>0.8.2-SNAPSHOT</version>
     </dependency>
 ```
 

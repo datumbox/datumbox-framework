@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-Version 0.8.1-SNAPSHOT - Build 20170831
----------------------------------------
+Version 0.8.1 - Build 20170831
+------------------------------
 
 - Dependencies:
 	- Updated the Maven Compiler, Nexus Staging, Surefire, SLF4J and Logback Classic plugins to the latest stable versions. 
