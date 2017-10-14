@@ -1,10 +1,11 @@
 CHANGELOG
 =========
 
-Version 0.8.2-SNAPSHOT - Build 20170831
+Version 0.8.2-SNAPSHOT - Build 20171014
 ---------------------------------------
 
-- Changes go here.
+- Dependencies:
+	- Updated the Maven Compiler, Surefire and Commons CSV to the latest stable versions. 
 
 Version 0.8.1 - Build 20170831
 ------------------------------
