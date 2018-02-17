@@ -11,9 +11,9 @@ before_install:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: oraclejdk9
     - os: linux
-      jdk: openjdk8
+      jdk: openjdk9
     - os: osx
       env: JAVA_HOME=/usr/libexec/java_home
 install:

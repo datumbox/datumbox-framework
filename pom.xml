@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2013-2017 Vasilis Vryniotis <bbriniotis@datumbox.com>
+    Copyright (C) 2013-2018 Vasilis Vryniotis <bbriniotis@datumbox.com>
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -95,9 +95,9 @@
 
     <properties>
         <!-- Build Plugins -->
-        <java-version>1.8</java-version>
+        <java-version>9</java-version>
         <maven-compiler-plugin-version>3.7.0</maven-compiler-plugin-version>
-        <maven-javadoc-plugin-version>2.10.4</maven-javadoc-plugin-version>
+        <maven-javadoc-plugin-version>3.0.0</maven-javadoc-plugin-version>
         <maven-source-plugin-version>3.0.1</maven-source-plugin-version>
         <maven-surefire-plugin-version>2.20.1</maven-surefire-plugin-version>
         <maven-jar-plugin-version>3.0.2</maven-jar-plugin-version>
