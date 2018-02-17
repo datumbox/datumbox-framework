@@ -15,13 +15,6 @@
  */
 package com.datumbox.framework.lib;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.jar.Manifest;
-
 /**
  * Main class of the Framework.
  * 
@@ -30,36 +23,12 @@ import java.util.jar.Manifest;
 public class Datumbox {
 
     /**
-     * It prints on stdout the Version and Build of the Framework.
+     * It prints on stdout the Name of the Framework.
      * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String[] versionInfo = getVersionBuild();
-        System.out.println("Datumbox Machine Learning Framework "+versionInfo[0]+" "+versionInfo[1]);
+        System.out.println("Datumbox Machine Learning Framework");
     }
-    
-    /**
-     * Gets the Version and Build of the Framework from the manifest file.
-     * 
-     * @return 
-     */
-    private static String[] getVersionBuild() {
-        String version = null;
-        String build = null;
-        
-        URLClassLoader cl = (URLClassLoader) Datumbox.class.getClassLoader();
-        URL url = cl.findResource("META-INF/MANIFEST.MF");
-        if (url!=null) {
-            try (InputStream in = url.openStream()) {
-                Manifest manifest = new Manifest(in);
-                version = manifest.getMainAttributes().getValue("Implementation-Version");
-                build = manifest.getMainAttributes().getValue("Implementation-Build");
-            } 
-            catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
-        }
-        return new String[]{version, build};
-    }
+
 }

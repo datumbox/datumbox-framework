@@ -12,10 +12,9 @@ matrix:
   include:
     - os: linux
       jdk: oraclejdk9
-    - os: linux
-      jdk: openjdk9
     - os: osx
-      env: JAVA_HOME=/usr/libexec/java_home
+      osx_image: xcode9
+      env: TRAVIS_JAVA_VERSION="9"
 install:
   - mvn clean install -DskipTests=true
 script:
