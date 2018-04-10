@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * This class contains a number of helper methods for Java 8 streams.
+ * This class contains a number of helper methods for Java streams.
  * 
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */

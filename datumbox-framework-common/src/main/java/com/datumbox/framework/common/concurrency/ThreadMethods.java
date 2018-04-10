@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * This class contains a number of helper methods for Java 8 Threads.
+ * This class contains a number of helper methods for Java Threads.
  *
  * @author Vasilis Vryniotis <bbriniotis@datumbox.com>
  */
