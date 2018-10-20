@@ -1,10 +1,10 @@
 version: '{build}'
 
 environment:
-  JAVA_HOME: C:\Program Files\Java\jdk11
+  JAVA_HOME: 'C:\Program Files\Java\jdk11'
 install:
   - ps: (new-object net.webclient).DownloadFile('https://download.java.net/java/GA/jdk11/28/GPL/openjdk-11+28_windows-x64_bin.zip', 'C:\Program Files\Java\openjdk11.zip')
-  - ps: Expand-Archive -Path C:\Program Files\Java\openjdk11.zip -DestinationPath C:\Program Files\Java
+  - ps: Expand-Archive -Path 'C:\Program Files\Java\openjdk11.zip' -DestinationPath 'C:\Program Files\Java'
   - cmd: echo "%JAVA_HOME%"
   - cmd: java -version
   - ps: choco install -i maven
