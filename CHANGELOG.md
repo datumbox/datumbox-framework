@@ -1,13 +1,13 @@
 CHANGELOG
 =========
 
-Version 0.8.2-SNAPSHOT - Build 20180410
+Version 0.8.2-SNAPSHOT - Build 20181020
 ---------------------------------------
 
 - Dependencies:
-    - Java: The framework is now compiled with Java 9.
+    - Java: The framework is now compiled with Java 11.
     - Build Plugins: Updated Maven Compiler, Maven Javadoc, Maven JAR and Surefire to the latest stable version.
-	- Libraries: Updated Commons CSV to the latest stable version.
+	- Libraries: Updated Commons CSV and LIBSVM to the latest stable version.
 
 Version 0.8.1 - Build 20170831
 ------------------------------
