@@ -11,10 +11,9 @@ before_install:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk9
-    # TODO: Restore once Travis OSX + Java 9
-    # - os: osx
-    #   env: TRAVIS_JAVA_VERSION="9"
+      jdk: oraclejdk11
+    - os: osx
+      jdk: oraclejdk11
 install:
   - mvn clean install -DskipTests=true
 script:
