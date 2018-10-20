@@ -15,6 +15,7 @@ install:
       Copy-Item -Path 'C:\Users\appveyor\openjdk11\*\' -Destination 'C:\jdk11' -Recurse -Force
   - cmd: echo "%JAVA_HOME%"
   - cmd: set PATH=%JAVA_HOME%\bin;%PATH%
+  - cmd: echo "%PATH%"
   - cmd: java -version
   - ps: choco install -i maven
   - cmd: mvn --version
