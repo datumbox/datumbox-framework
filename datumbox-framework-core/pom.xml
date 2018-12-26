@@ -40,7 +40,7 @@
             <artifactId>commons-math3</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.datumbox</groupId>
+            <groupId>tw.edu.ntu.csie</groupId>
             <artifactId>libsvm</artifactId>
         </dependency>
 

@@ -352,7 +352,7 @@
                 <version>${slf4j-api-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.datumbox</groupId>
+                <groupId>tw.edu.ntu.csie</groupId>
                 <artifactId>libsvm</artifactId>
                 <version>${libsvm-version}</version>
             </dependency>
