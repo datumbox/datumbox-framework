@@ -100,7 +100,7 @@
         <maven-javadoc-plugin-version>3.0.1</maven-javadoc-plugin-version>
         <maven-source-plugin-version>3.0.1</maven-source-plugin-version>
         <maven-surefire-plugin-version>2.22.1</maven-surefire-plugin-version>
-        <maven-jar-plugin-version>3.1.0</maven-jar-plugin-version>
+        <maven-jar-plugin-version>3.1.1</maven-jar-plugin-version>
         <gmaven-plugin-version>1.5</gmaven-plugin-version>
         <license-maven-plugin-version>3.0</license-maven-plugin-version>
         <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
