@@ -27,7 +27,7 @@ The latest stable version of the framework is 0.8.1 (Build 20170831). To use it,
     </dependency>
 ```
 
-The latest snapshot version of the framework is 0.8.2-SNAPSHOT (Build 20181226). To test it, update your pom.xml as follows:
+The latest snapshot version of the framework is 0.8.2-SNAPSHOT (Build 20190918). To test it, update your pom.xml as follows:
 ```
     <repository>
        <id>sonatype-snapshots</id>
