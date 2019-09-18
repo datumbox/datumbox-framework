@@ -3,16 +3,8 @@ version: '{build}'
 image: Visual Studio 2017
 
 environment:
-  JAVA_HOME: 'C:\jdk11'
+  JAVA_HOME: 'C:\Program Files\Java\jdk11'
 install:
-  - ps: |
-      $client = New-Object net.webclient
-      $client.DownloadFile('http://jdk.java.net/11/', 'C:\Users\appveyor\openjdk11.html')
-      $openJdk11 = cat C:\Users\appveyor\openjdk11.html | where { $_ -match "href.*https://download.java.net.*jdk11.*windows-x64.*zip\`"" } | %{ $_ -replace "^.*https:", "https:" } | %{ $_ -replace ".zip\`".*$", ".zip" }
-      echo "Download boot JDK from: $openJdk11"
-      $client.DownloadFile($openJdk11, 'C:\Users\appveyor\openjdk11.zip')
-      Expand-Archive -Path 'C:\Users\appveyor\openjdk11.zip' -DestinationPath 'C:\Users\appveyor\openjdk11'
-      Copy-Item -Path 'C:\Users\appveyor\openjdk11\*\' -Destination 'C:\jdk11' -Recurse -Force
   - cmd: echo "%JAVA_HOME%"
   - cmd: set PATH=%JAVA_HOME%\bin;%PATH%
   - cmd: echo "%PATH%"
