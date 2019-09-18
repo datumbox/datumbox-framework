@@ -104,7 +104,7 @@
         <gmaven-plugin-version>1.5</gmaven-plugin-version>
         <license-maven-plugin-version>3.0</license-maven-plugin-version>
         <nexus-staging-maven-plugin-version>1.6.8</nexus-staging-maven-plugin-version>
-        <gpg-plugin-version>1.6.8</gpg-plugin-version>
+        <gpg-plugin-version>1.6</gpg-plugin-version>
         
         <!-- Code Dependencies -->
         <commons-math-version>3.6.1</commons-math-version>
