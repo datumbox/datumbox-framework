@@ -240,7 +240,6 @@ public class ShapiroWilk {
             gamma = poly(g, 2, an);
             if (y >= gamma) {
                 pw = 1e-99; /* an "obvious" value, was 'small' which was 1e-19f */
-                //return w;
                 return pw;
             }
             y = -Math.log(gamma - y);
@@ -252,11 +251,9 @@ public class ShapiroWilk {
             s = Math.exp(poly(c6, 3, xx));
         }
 
-        // Oops, we don't have pnorm
         // pw = pnorm(y, m, s, 0/* upper tail */, 0);
-        pw=ContinuousDistributions.gaussCdf((y-m)/s);
+        pw = ContinuousDistributions.gaussCdf((m-y)/s);
 
-        //return w;
         return pw;
     }
 }
