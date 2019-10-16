@@ -51,7 +51,7 @@ public class ShapiroWilk {
 
     /**
     * 
-    * The following code is ported from Javascript to PHP to JAVA.
+    * The following code is ported from Javascript.
     * Original script: https://github.com/rniwa/js-shapiro-wilk/blob/master/shapiro-wilk.js
     */
     
@@ -251,9 +251,40 @@ public class ShapiroWilk {
             s = Math.exp(poly(c6, 3, xx));
         }
 
-        // pw = pnorm(y, m, s, 0/* upper tail */, 0);
-        pw = ContinuousDistributions.gaussCdf((m-y)/s);
+        pw = alnorm((y-m)/s);
 
         return pw;
+    }
+
+    /**
+     * Converts score to p-value.
+     * Algorithm AS 66, Journal of the Royal Statistical Society Series C (Applied Statistics) vol. 22, pp. 424-427 (1973)
+     *
+     * @param x
+     * @return
+     */
+    private static double alnorm(double x) {
+        boolean up = true;
+        if (x < 0.0) {
+            up = false;
+            x = -x;
+        }
+
+        double alnorm = 0.0;
+        if (x <= 7.0 || (up && x <= 18.66)) {
+            double y = 0.5 * x * x;
+            if (x > 1.28) {
+                alnorm = 0.398942280385 * Math.exp(-y) / (x + -3.8052E-8 + 1.00000615302 / (x + 3.98064794E-4 + 1.98615381364 / (x + -0.151679116635 + 5.29330324926
+                        / (x + 4.8385912808 + -15.1508972451 / (x + 0.742380924027 + 30.789933034 / (x + 3.99019417011))))));
+            }
+            else {
+                alnorm = 0.5 - x * (0.398942280444 - 0.39990348504 * y/(y + 5.75885480458 + -29.8213557807 /(y + 2.62433121679 + 48.6959930692/(y + 5.92885724438))));
+            }
+        }
+
+        if(!up) {
+            alnorm = 1.0 - alnorm;
+        }
+        return alnorm;
     }
 }

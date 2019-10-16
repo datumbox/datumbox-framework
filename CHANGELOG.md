@@ -1,11 +1,11 @@
 CHANGELOG
 =========
 
-Version 0.8.2-SNAPSHOT - Build 20191015
+Version 0.8.2-SNAPSHOT - Build 20191016
 ---------------------------------------
 
 - Bug Fixes:
-    - Resolved an issue on ShapiroWilk which led to the estimation of 1-pvalue instead of pvalue.
+    - Resolved an issue on ShapiroWilk which led to the incorrect estimation of the p-value.
 - Dependencies:
     - Java: The framework is now compiled with Java 11.
     - Build Plugins: Updated Maven Compiler, Maven Javadoc, Maven Source, Maven JAR and Surefire to the latest stable version.
