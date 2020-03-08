@@ -376,9 +376,9 @@ public class Anova {
                                    -Yidotdot.get(IfactorAlevel)
                                    -Ydotjdot.get(JfactorBlevel) + Ydotdotdot
                           ,2);
-		}
-	    }
-	}
+                }
+            }
+        }
 
         //Yidotdot = null;
         //Ydotjdot = null;
