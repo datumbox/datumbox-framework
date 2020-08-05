@@ -5,7 +5,8 @@ Version 0.8.3-SNAPSHOT - Build 20200805
 ---------------------------------------
 
 - CI Changes:
-    - Moving from trusty to bionic.
+    - Moving from Trusty to Bionic on Travis.
+    - Moving from Visual Studio 2017 to 2019 on AppVeyor.
 
 Version 0.8.2 - Build 20200805
 ------------------------------
