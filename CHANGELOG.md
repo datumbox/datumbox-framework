@@ -4,7 +4,8 @@ CHANGELOG
 Version 0.8.3-SNAPSHOT - Build 20200805
 ---------------------------------------
 
-- Changes go here.
+- CI Changes:
+    - Moving from trusty to bionic.
 
 Version 0.8.2 - Build 20200805
 ------------------------------
