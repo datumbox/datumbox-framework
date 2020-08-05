@@ -13,8 +13,6 @@ matrix:
       jdk: openjdk11
     - os: osx
       jdk: openjdk11
-    - os: windows
-      jdk: openjdk11
 install:
   - mvn clean install -DskipTests=true
 script:
