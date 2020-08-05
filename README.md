@@ -9,7 +9,7 @@ The Datumbox Machine Learning Framework is an open-source framework written in J
 Copyright & License
 -------------------
 
-Copyright (C) 2013-2019 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
+Copyright (C) 2013-2020 [Vasilis Vryniotis](http://blog.datumbox.com/author/bbriniotis/). 
 
 The code is licensed under the [Apache License, Version 2.0](./LICENSE).
 
@@ -18,16 +18,16 @@ Installation & Versioning
 
 Datumbox Framework is available on [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.datumbox%22%20AND%20a%3A%22datumbox-framework-lib%22). 
 
-The latest stable version of the framework is 0.8.1 (Build 20170831). To use it, add the following snippet in your pom.xml:
+The latest stable version of the framework is 0.8.2 (Build 20200805). To use it, add the following snippet in your pom.xml:
 ```
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework-lib</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.2</version>
     </dependency>
 ```
 
-The latest snapshot version of the framework is 0.8.2-SNAPSHOT (Build 20191016). To test it, update your pom.xml as follows:
+The latest snapshot version of the framework is 0.8.3-SNAPSHOT (Build 20200805). To test it, update your pom.xml as follows:
 ```
     <repository>
        <id>sonatype-snapshots</id>
@@ -38,7 +38,7 @@ The latest snapshot version of the framework is 0.8.2-SNAPSHOT (Build 20191016).
     <dependency>
         <groupId>com.datumbox</groupId>
         <artifactId>datumbox-framework-lib</artifactId>
-        <version>0.8.2-SNAPSHOT</version>
+        <version>0.8.3-SNAPSHOT</version>
     </dependency>
 ```
 
