@@ -1,12 +1,15 @@
 CHANGELOG
 =========
 
-Version 0.8.3-SNAPSHOT - Build 20200805
+Version 0.8.3-SNAPSHOT - Build 20201014
 ---------------------------------------
 
 - CI Changes:
     - Moving from Trusty to Bionic on Travis.
     - Moving from Visual Studio 2017 to 2019 on AppVeyor.
+- Dependencies:
+    - Build Plugins: Maven Source to the latest stable version.
+	- Libraries: JUnit to the latest stable version.
 
 Version 0.8.2 - Build 20200805
 ------------------------------

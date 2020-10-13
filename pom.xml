@@ -98,7 +98,7 @@
         <java-version>11</java-version>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
         <maven-javadoc-plugin-version>3.2.0</maven-javadoc-plugin-version>
-        <maven-source-plugin-version>3.2.0</maven-source-plugin-version>
+        <maven-source-plugin-version>3.2.1</maven-source-plugin-version>
         <maven-surefire-plugin-version>2.22.2</maven-surefire-plugin-version>
         <maven-jar-plugin-version>3.2.0</maven-jar-plugin-version>
         <gmaven-plugin-version>1.5</gmaven-plugin-version>
@@ -114,7 +114,7 @@
         <mapdb-version>1.0.9</mapdb-version>
         
         <!-- Test Dependencies -->
-        <junit-version>4.13</junit-version>
+        <junit-version>4.13.1</junit-version>
         <logback-classic-version>1.2.3</logback-classic-version>
         
         <!-- Configuration -->
